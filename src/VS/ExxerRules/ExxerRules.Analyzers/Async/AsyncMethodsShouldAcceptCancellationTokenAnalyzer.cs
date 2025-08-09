@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ExxerRules.Analyzers.Common;
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,6 +17,7 @@ namespace ExxerRules.Analyzers.Async;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnalyzer
 {
+#pragma warning disable IDE1006 // Naming styles for analyzer fields
 	private static readonly LocalizableString Title = "Async methods should accept CancellationToken";
 	private static readonly LocalizableString MessageFormat = "Async method '{0}' should accept a CancellationToken parameter to support graceful cancellation";
 	private static readonly LocalizableString Description = "Async methods should accept a CancellationToken parameter to enable graceful cancellation and prevent unresponsive applications, following fail-safe defaults principles.";

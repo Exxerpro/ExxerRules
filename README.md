@@ -125,7 +125,7 @@ public void TestMethod()
 public Result<string> ProcessData(string input)
 {
     if (string.IsNullOrEmpty(input))
-        return Result.Fail("Input cannot be null"); // ✅ Result<T>
+        return Result.WithFailure("Input cannot be null"); // ✅ Result<T>
     
     return Result.Ok(input.ToUpper());
 }

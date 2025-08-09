@@ -46,7 +46,7 @@ namespace TestProject
 	public void Should_NotReportDiagnostic_When_ReturningResult()
 	{
 		const string testCode = @"
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 
 namespace TestProject
 {
@@ -98,7 +98,7 @@ namespace TestProject
 	public void Should_NotReportDiagnostic_When_UsingResultPattern()
 	{
 		const string testCode = @"
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 
 namespace TestProject
 {
@@ -107,7 +107,7 @@ namespace TestProject
 		public Result<string> ProcessData(string input)
 		{
 			if (string.IsNullOrEmpty(input))
-				return Result.Fail(""Input cannot be null"");
+				return Result.WithFailure(""Input cannot be null"");
 			
 			return Result.Ok(input.ToUpper());
 		}

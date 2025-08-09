@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
 using ExxerRules.Analyzers.Common;
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -16,6 +16,7 @@ namespace ExxerRules.Analyzers.Testing;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
 {
+#pragma warning disable IDE1006
 	private static readonly LocalizableString Title = "Test methods should follow naming convention";
 	private static readonly LocalizableString MessageFormat = "Test method '{0}' should follow naming convention: Should_Action_When_Condition";
 	private static readonly LocalizableString Description = "Test methods should use descriptive names following the pattern Should_Action_When_Condition for better readability and maintainability.";
@@ -45,16 +46,16 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
 	{
 		var methodDeclaration = (MethodDeclarationSyntax)context.Node;
 
-		// Check if this is a test method using FluentResults pattern
+		// Check if this is a test method using ExxerRules.Analyzers.Operations pattern
 		var testAttributeResult = PatternDetector.DetectTestAttributes(methodDeclaration, context.SemanticModel);
-		if (testAttributeResult.IsFailed || !testAttributeResult.Value.HasTestAttributes)
+		if (testAttributeResult.IsFailure || testAttributeResult.Value is null || !testAttributeResult.Value.HasTestAttributes)
 		{
 			return;
 		}
 
 		var methodName = methodDeclaration.Identifier.ValueText;
 
-		// Validate naming convention using FluentResults pattern
+		// Validate naming convention using ExxerRules.Analyzers.Operations pattern
 		var namingValidationResult = PatternDetector.ValidateMethodNaming(
 			methodName,
 			@"^Should_[A-Z][a-zA-Z0-9]*(_When_[A-Z][a-zA-Z0-9]*)?$");
@@ -66,5 +67,4 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
 			methodDeclaration.Identifier.GetLocation(),
 			methodName);
 	}
-
 }

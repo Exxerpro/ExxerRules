@@ -21,7 +21,7 @@ public class ErrorHandlingTests
 	public void Should_NotReportDiagnostic_When_UsingResultPattern()
 	{
 		const string testCode = @"
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 
 namespace TestProject
 {
@@ -30,7 +30,7 @@ namespace TestProject
 		public Result<User> GetUser(int id)
 		{
 			if (id <= 0)
-				return Result.Fail(""Invalid ID"");
+				return Result.WithFailure(""Invalid ID"");
 			
 			return Result.Ok(new User { Id = id });
 		}
@@ -80,7 +80,7 @@ namespace TestProject
 	public void Should_NotReportDiagnostic_When_AvoidingThrowStatements()
 	{
 		const string testCode = @"
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 
 namespace TestProject
 {
@@ -89,7 +89,7 @@ namespace TestProject
 		public Result<User> GetUser(int id)
 		{
 			if (id <= 0)
-				return Result.Fail(""Invalid ID"");
+				return Result.WithFailure(""Invalid ID"");
 			
 			return Result.Ok(new User { Id = id });
 		}
@@ -191,7 +191,7 @@ namespace TestProject
 	{
 		const string testCode = @"
 using System;
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 
 namespace TestProject
 {

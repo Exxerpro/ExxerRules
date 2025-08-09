@@ -1,4 +1,4 @@
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace ExxerRules.Analyzers.Common;
 
 /// <summary>
-/// Extension methods for functional analysis operations using FluentResults.
+/// Extension methods for functional analysis operations using ExxerRules.Analyzers.Operations.
 /// </summary>
 public static class AnalysisExtensions
 {
@@ -22,9 +22,14 @@ public static class AnalysisExtensions
 		this Result<TSource> result,
 		Func<TSource, TDestination> mapper)
 	{
-		if (result.IsFailed)
+		if (result.Value is null)
 		{
-			return Result.Fail<TDestination>(result.Errors);
+			return Result<TDestination>.WithFailure("Value cannot be null");
+		}
+
+		if (result.IsFailure)
+		{
+			return Result<TDestination>.WithFailure(result.Errors);
 		}
 
 		try
@@ -50,9 +55,14 @@ public static class AnalysisExtensions
 		this Result<TSource> result,
 		Func<TSource, Result<TDestination>> binder)
 	{
-		if (result.IsFailed)
+		if (result.Value is null)
 		{
-			return Result.Fail<TDestination>(result.Errors);
+			return Result<TDestination>.WithFailure("Value cannot be null");
+		}
+
+		if (result.IsFailure)
+		{
+			return Result<TDestination>.WithFailure(result.Errors);
 		}
 
 		try
@@ -74,6 +84,10 @@ public static class AnalysisExtensions
 	/// <returns>The original result unchanged.</returns>
 	public static Result<T> Tap<T>(this Result<T> result, Action<T> action)
 	{
+		if (result.Value is null)
+		{
+			return Result<T>.WithFailure("Value cannot be null");
+		}
 		if (result.IsSuccess)
 		{
 			try
@@ -95,7 +109,7 @@ public static class AnalysisExtensions
 	/// <param name="result">The source result.</param>
 	/// <param name="defaultValue">The default value to use if the result failed.</param>
 	/// <returns>A successful result with either the original value or the default value.</returns>
-	public static Result<T> IfFailed<T>(this Result<T> result, T defaultValue) => result.IsFailed ? AnalysisResult.Success(defaultValue) : result;
+	public static Result<T> IfFailed<T>(this Result<T> result, T defaultValue) => result.IsFailure ? AnalysisResult.Success(defaultValue) : result;
 
 	/// <summary>
 	/// Reports a diagnostic if the analysis result indicates a violation.
@@ -112,7 +126,7 @@ public static class AnalysisExtensions
 		Location location,
 		params object?[]? messageArgs)
 	{
-		if (result.IsFailed)
+		if (result.IsFailure)
 		{
 			var diagnostic = Diagnostic.Create(rule, location, messageArgs);
 			context.ReportDiagnostic(diagnostic);

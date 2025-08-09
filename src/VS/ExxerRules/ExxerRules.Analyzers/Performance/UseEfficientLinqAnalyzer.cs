@@ -136,7 +136,8 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 		foreach (var declaration in variableDeclarations)
 		{
 			var variableName = declaration.VariableName;
-			var collection = declaration.Collection;
+
+			_ = declaration.Collection;
 
 			// Look for subsequent operations on this variable
 			var operations = new List<string>();

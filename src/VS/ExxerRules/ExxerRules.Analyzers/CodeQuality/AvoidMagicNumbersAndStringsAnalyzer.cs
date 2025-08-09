@@ -2,7 +2,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using ExxerRules.Analyzers.Common;
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

@@ -95,6 +95,50 @@ namespace TestProject
 	}
 
 	/// <summary>
+	/// Tests that async methods accepting CancellationToken do not report diagnostic.
+	/// </summary>
+	[Fact]
+	public void Should_NotReportDiagnostic_When_PrivatePropertiesNamesContainAsync()
+	{
+		const string testCode = @"
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace TestProject
+{
+	public string mystrinc =\""AsyncService\""
+	{
+	}
+}";
+
+		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+		diagnostics.Length.ShouldBe(0);
+	}
+
+	/// <summary>
+	/// Tests that async methods accepting CancellationToken do not report diagnostic.
+	/// </summary>
+	[Fact]
+	public void Should_NotReportDiagnostic_When_StaticReadOnlyPropertiesNamesContainAsync()
+	{
+		const string testCode = @"
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace TestProject
+{
+	public static read only string mystrinc =\""AsyncService\""
+	{
+	}
+}";
+
+		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+		diagnostics.Length.ShouldBe(0);
+	}
+
+	/// <summary>
 	/// Tests that async methods not accepting CancellationToken report diagnostic.
 	/// </summary>
 	[Fact]

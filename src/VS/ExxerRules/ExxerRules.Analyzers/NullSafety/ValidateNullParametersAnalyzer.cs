@@ -1,7 +1,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using ExxerRules.Analyzers.Common;
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -254,7 +254,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 	{
 		// Check if the if statement body contains appropriate validation patterns
 		// Look for: throw new ArgumentNullException(nameof(parameter))
-		// or: return Result.Fail(...)
+		// or: return Result.WithFailure(...)
 		// or: ArgumentNullException.ThrowIfNull(parameter)
 
 		if (ifStatement.Statement is BlockSyntax block)
@@ -285,10 +285,10 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 			return true;
 		}
 
-		// Check for return Result.Fail(...)
+		// Check for return Result.WithFailure(...)
 		if (statement is ReturnStatementSyntax returnStatement &&
 			returnStatement.Expression is InvocationExpressionSyntax invocation &&
-			invocation.Expression.ToString().Contains("Result.Fail"))
+			invocation.Expression.ToString().Contains("Result.WithFailure"))
 		{
 			return true;
 		}

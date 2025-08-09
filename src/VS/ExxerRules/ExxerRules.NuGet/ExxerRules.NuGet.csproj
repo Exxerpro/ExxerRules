@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>ExxerRules</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.2</PackageVersion>
     <Title>ExxerRules - Modern Development Conventions</Title>
     <Description>Comprehensive Roslyn analyzer suite with 20 production-ready analyzers enforcing Modern Development Conventions (MDC). Includes Result pattern enforcement, Clean Architecture validation, modern testing standards, async best practices, and performance optimization.</Description>
     <Authors>ExxerAI</Authors>
@@ -33,7 +33,6 @@
 
   <!-- Add a minimal dependency to satisfy NuGet validation -->
   <ItemGroup>
-    <PackageReference Include="FluentResults" Version="3.15.2" />
     <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" PrivateAssets="all" />
   </ItemGroup>
@@ -49,7 +48,7 @@
   <ItemGroup>
     <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\ExxerRules.Analyzers.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
     <None Include="..\ExxerRules.CodeFixes\bin\Release\netstandard2.0\ExxerRules.CodeFixes.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
-    <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\FluentResults.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\ExxerRules.Analyzers.Operations.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
   </ItemGroup>
 
   <ItemGroup>

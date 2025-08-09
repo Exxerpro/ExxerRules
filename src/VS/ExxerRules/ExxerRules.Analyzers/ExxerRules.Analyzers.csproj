@@ -8,6 +8,7 @@
     <IsPackable>true</IsPackable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <RootNamespace>ExxerRules.Analyzers</RootNamespace>
+	  <WarningsNotAsErrors>IDE1006</WarningsNotAsErrors>
     <AssemblyName>ExxerRules.Analyzers</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>
@@ -55,7 +56,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FluentResults" Version="3.15.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -65,7 +65,7 @@
 
   <Target Name="CopyDependencies" AfterTargets="Build">
     <ItemGroup>
-      <AnalyzerDependencies Include="$(OutDir)\FluentResults.dll" />
+      <AnalyzerDependencies Include="$(OutDir)\ExxerRules.Analyzers.Operations.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(AnalyzerDependencies)" DestinationFolder="$(OutDir)" />
   </Target>

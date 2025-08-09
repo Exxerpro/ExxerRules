@@ -1,8 +1,5 @@
 using System.Collections.Immutable;
 using System.Composition;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ExxerRules.Analyzers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
@@ -111,7 +108,7 @@ public class UseResultPatternCodeFixProvider : CodeFixProvider
 				if (firstNode != null)
 				{
 					editor.InsertBefore(firstNode,
-						SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("FluentResults")));
+						SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("ExxerRules.Analyzers.Operations")));
 				}
 			}
 		}
@@ -148,8 +145,8 @@ public class UseResultPatternCodeFixProvider : CodeFixProvider
 			// Extract error message from exception
 			var errorMessage = ExtractErrorMessage(node.Expression);
 
-			// Create Result.Fail statement (FluentResults syntax)
-			var resultStatement = SyntaxFactory.ParseStatement($"return Result.Fail({errorMessage});")
+			// Create Result.WithFailure statement (ExxerRules.Analyzers.Operations syntax)
+			var resultStatement = SyntaxFactory.ParseStatement($"return Result.WithFailure({errorMessage});")
 				.WithLeadingTrivia(node.GetLeadingTrivia())
 				.WithTrailingTrivia(node.GetTrailingTrivia())
 				.WithAdditionalAnnotations(Formatter.Annotation);
@@ -162,8 +159,8 @@ public class UseResultPatternCodeFixProvider : CodeFixProvider
 			// Extract error message from exception
 			var errorMessage = ExtractErrorMessage(node.Expression);
 
-			// Create Result.Fail expression (FluentResults syntax)
-			var resultExpression = SyntaxFactory.ParseExpression($"Result.Fail({errorMessage})")
+			// Create Result.WithFailure expression (ExxerRules.Analyzers.Operations syntax)
+			var resultExpression = SyntaxFactory.ParseExpression($"Result.WithFailure({errorMessage})")
 				.WithAdditionalAnnotations(Formatter.Annotation);
 
 			return resultExpression;

@@ -1,12 +1,12 @@
 using System.Text.RegularExpressions;
-using FluentResults;
+using ExxerRules.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerRules.Analyzers.Common;
 
 /// <summary>
-/// Utility class for detecting code patterns using functional approach with FluentResults.
+/// Utility class for detecting code patterns using functional approach with ExxerRules.Analyzers.Operations.
 /// </summary>
 public static class PatternDetector
 {
@@ -18,7 +18,7 @@ public static class PatternDetector
 	private const string semanticModelNullErrorMessage = "Semantic model cannot be null";
 	private const string classDeclarationNullErrorMessage = "Class declaration cannot be null";
 	private const string cannotBeNullSuffix = " cannot be null";
-	
+
 	// Test framework constants
 	private const string xunitFramework = "Xunit";
 	private const string factAttribute = "Fact";
@@ -31,7 +31,7 @@ public static class PatternDetector
 	private const string xunitTheoryAttribute = "Xunit.Theory";
 	private const string nunitTestAttribute = "NUnit.Framework.Test";
 	private const string msTestMethodAttribute = "Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod";
-	
+
 	// Test class constants
 	private const string testsSuffix = "Tests";
 	private const string testSuffix = "Test";
@@ -53,7 +53,7 @@ public static class PatternDetector
 		{
 			return AnalysisResult.Failure<bool>(nameof(methodName) + cannotBeNullSuffix);
 		}
-		
+
 		if (pattern is null)
 		{
 			return AnalysisResult.Failure<bool>(nameof(pattern) + cannotBeNullSuffix);
@@ -219,7 +219,7 @@ public class TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTes
 	/// <summary>
 	/// Gets the names of the test attributes found.
 	/// </summary>
-	public IReadOnlyList<string> AttributeNames { get; } = attributeNames ?? Array.Empty<string>();
+	public IReadOnlyList<string> AttributeNames { get; } = attributeNames ?? [];
 
 	/// <summary>
 	/// Gets a value indicating whether any test attributes were found.
@@ -230,7 +230,7 @@ public class TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTes
 	/// Gets the detected test framework.
 	/// </summary>
 	public TestFramework Framework { get; } = framework;
-	
+
 	/// <summary>
 	/// Gets a value indicating whether the attribute names are valid (not null).
 	/// </summary>
@@ -246,17 +246,17 @@ public enum TestFramework
 	/// Unknown or unsupported test framework.
 	/// </summary>
 	Unknown,
-	
+
 	/// <summary>
 	/// xUnit test framework.
 	/// </summary>
 	XUnit,
-	
+
 	/// <summary>
 	/// NUnit test framework.
 	/// </summary>
 	NUnit,
-	
+
 	/// <summary>
 	/// MSTest test framework.
 	/// </summary>

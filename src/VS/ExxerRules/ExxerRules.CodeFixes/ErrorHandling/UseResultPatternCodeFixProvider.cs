@@ -12,29 +12,14 @@ using Microsoft.CodeAnalysis.Formatting;
 namespace ExxerRules.CodeFixes.ErrorHandling;
 
 /// <summary>
-/// Code fix provider that converts exception throwing methods to Result&lt;T&gt; pattern.
-/// </summary>
-using System.Collections.Immutable;
-using System.Composition;
-using ExxerRules.Analyzers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Editing;
-using Microsoft.CodeAnalysis.Formatting;
-
-namespace ExxerRules.CodeFixes.ErrorHandling;
-
-/// <summary>
-/// Code fix provider that converts exception throwing methods to Result&lt;T&gt; pattern.
+/// Code fix provider that converts exception-throwing code to use the Result pattern.
 /// </summary>
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(UseResultPatternCodeFixProvider)), Shared]
 public class UseResultPatternCodeFixProvider : CodeFixProvider
 {
 	/// <inheritdoc/>
-	public override sealed ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(DiagnosticIds.UseResultPattern);
+	public override sealed ImmutableArray<string> FixableDiagnosticIds => 
+		ImmutableArray.Create(DiagnosticIds.UseResultPattern);
 
 	/// <inheritdoc/>
 	public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
@@ -48,551 +33,201 @@ public class UseResultPatternCodeFixProvider : CodeFixProvider
 			return;
 		}
 
-		var diagnostic = context.Diagnostics.First();
-		var diagnosticSpan = diagnostic.Location.SourceSpan;
-
-		var node = root.FindNode(diagnosticSpan);
-		if (node == null)
+		foreach (var diagnostic in context.Diagnostics)
 		{
-			return;
-		}
+			var diagnosticSpan = diagnostic.Location.SourceSpan;
+			var node = root.FindNode(diagnosticSpan);
 
-		// Find the containing method
-		var methodDeclaration = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (methodDeclaration != null)
-		{
-			// Register multiple code fix options
-			RegisterCodeFixOptions(context, diagnostic, methodDeclaration);
+			if (node == null)
+			{
+				continue;
+			}
+
+			// Register fixes based on the node type
+			RegisterResultPatternFixes(context, diagnostic, node);
 		}
 	}
 
 	/// <summary>
-	/// Registers multiple code fix options for different conversion strategies.
+	/// Registers code fix options based on the type of exception-throwing code that can be converted.
 	/// </summary>
 	/// <param name="context">The code fix context.</param>
 	/// <param name="diagnostic">The diagnostic to fix.</param>
-	/// <param name="methodDeclaration">The method declaration to convert.</param>
-	private static void RegisterCodeFixOptions(CodeFixContext context, Diagnostic diagnostic, MethodDeclarationSyntax methodDeclaration)
+	/// <param name="node">The syntax node that can be converted.</param>
+	private static void RegisterResultPatternFixes(CodeFixContext context, Diagnostic diagnostic, SyntaxNode node)
 	{
-		// Basic conversion
+		switch (node)
+		{
+			case ThrowStatementSyntax throwStatement:
+				RegisterThrowStatementFixes(context, diagnostic, throwStatement);
+				break;
+			case InvocationExpressionSyntax invocationExpression:
+				RegisterInvocationFixes(context, diagnostic, invocationExpression);
+				break;
+		}
+	}
+
+	/// <summary>
+	/// Registers code fix options for throw statement conversion.
+	/// </summary>
+	private static void RegisterThrowStatementFixes(CodeFixContext context, Diagnostic diagnostic, ThrowStatementSyntax throwStatement)
+	{
 		context.RegisterCodeFix(
 			CodeAction.Create(
-				title: "🔄 Convert to Result<T> pattern",
-				createChangedDocument: c => ConvertMethodToResultPatternAsync(context.Document, methodDeclaration, c),
-				equivalenceKey: "ConvertToResultPattern"),
+				title: "🔄 Convert throw to Result.Failure",
+				createChangedDocument: c => ConvertThrowToResultFailureAsync(context.Document, throwStatement, c),
+				equivalenceKey: "ConvertThrowToResultFailure"),
 			diagnostic);
 
-		// Conversion with detailed error messages
 		context.RegisterCodeFix(
 			CodeAction.Create(
-				title: "📝 Convert with detailed error messages",
-				createChangedDocument: c => ConvertMethodToResultPatternWithDetailedErrorsAsync(context.Document, methodDeclaration, c),
-				equivalenceKey: "ConvertToResultPatternWithDetailedErrors"),
+				title: "🔄 Convert throw to Result.WithFailure",
+				createChangedDocument: c => ConvertThrowToResultWithFailureAsync(context.Document, throwStatement, c),
+				equivalenceKey: "ConvertThrowToResultWithFailure"),
 			diagnostic);
+	}
 
-		// Conversion with async support
-		if (IsAsyncMethod(methodDeclaration))
+	/// <summary>
+	/// Registers code fix options for invocation conversion.
+	/// </summary>
+	private static void RegisterInvocationFixes(CodeFixContext context, Diagnostic diagnostic, InvocationExpressionSyntax invocationExpression)
+	{
+		if (invocationExpression.Expression is MemberAccessExpressionSyntax memberAccess)
 		{
-			context.RegisterCodeFix(
-				CodeAction.Create(
-					title: "⚡ Convert async method to Result<T>",
-					createChangedDocument: c => ConvertAsyncMethodToResultPatternAsync(context.Document, methodDeclaration, c),
-					equivalenceKey: "ConvertAsyncMethodToResultPattern"),
-				diagnostic);
+			var methodName = memberAccess.Name.Identifier.ValueText;
+
+			switch (methodName)
+			{
+				case "Throw":
+					context.RegisterCodeFix(
+						CodeAction.Create(
+							title: "🔄 Convert Throw to Result.Failure",
+							createChangedDocument: c => ConvertInvocationToResultFailureAsync(context.Document, invocationExpression, c),
+							equivalenceKey: "ConvertThrowToResultFailure"),
+						diagnostic);
+					break;
+			}
 		}
 	}
 
 	/// <summary>
-	/// Converts a method to use the Result&lt;T&gt; pattern with basic error handling.
+	/// Converts a throw statement to Result.Failure.
 	/// </summary>
-	/// <param name="document">The document containing the method.</param>
-	/// <param name="methodDeclaration">The method declaration to convert.</param>
-	/// <param name="cancellationToken">Cancellation token.</param>
-	/// <returns>The modified document.</returns>
-	private static async Task<Document> ConvertMethodToResultPatternAsync(
-		Document document,
-		MethodDeclarationSyntax methodDeclaration,
-		CancellationToken cancellationToken)
+	private static async Task<Document> ConvertThrowToResultFailureAsync(Document document, ThrowStatementSyntax throwStatement, CancellationToken cancellationToken)
 	{
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
-		// Determine the new return type
-		var newReturnType = DetermineResultReturnType(methodDeclaration.ReturnType);
-
-		// Create new method with Result return type
-		var newMethod = methodDeclaration.WithReturnType(newReturnType);
-
-		// Convert throw statements to Result.WithFailure with enhanced error extraction
-		var rewriter = new EnhancedThrowToResultRewriter();
-		newMethod = (MethodDeclarationSyntax)rewriter.Visit(newMethod);
-
-		// Replace the method
-		editor.ReplaceNode(methodDeclaration, newMethod);
-
-		// Add using statement if needed
-		await AddResultUsingStatementAsync(editor, cancellationToken).ConfigureAwait(false);
+		var rewriter = new ThrowToResultRewriter("Failure");
+		var newStatement = (StatementSyntax)rewriter.Visit(throwStatement);
+		editor.ReplaceNode(throwStatement, newStatement);
 
 		return editor.GetChangedDocument();
 	}
 
 	/// <summary>
-	/// Converts a method to use the Result&lt;T&gt; pattern with detailed error messages.
+	/// Converts a throw statement to Result.WithFailure.
 	/// </summary>
-	/// <param name="document">The document containing the method.</param>
-	/// <param name="methodDeclaration">The method declaration to convert.</param>
-	/// <param name="cancellationToken">Cancellation token.</param>
-	/// <returns>The modified document.</returns>
-	private static async Task<Document> ConvertMethodToResultPatternWithDetailedErrorsAsync(
-		Document document,
-		MethodDeclarationSyntax methodDeclaration,
-		CancellationToken cancellationToken)
+	private static async Task<Document> ConvertThrowToResultWithFailureAsync(Document document, ThrowStatementSyntax throwStatement, CancellationToken cancellationToken)
 	{
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
-		// Determine the new return type
-		var newReturnType = DetermineResultReturnType(methodDeclaration.ReturnType);
-
-		// Create new method with Result return type
-		var newMethod = methodDeclaration.WithReturnType(newReturnType);
-
-		// Convert throw statements to Result.WithFailure with detailed error extraction
-		var rewriter = new DetailedErrorThrowToResultRewriter();
-		newMethod = (MethodDeclarationSyntax)rewriter.Visit(newMethod);
-
-		// Replace the method
-		editor.ReplaceNode(methodDeclaration, newMethod);
-
-		// Add using statement if needed
-		await AddResultUsingStatementAsync(editor, cancellationToken).ConfigureAwait(false);
+		var rewriter = new ThrowToResultRewriter("WithFailure");
+		var newStatement = (StatementSyntax)rewriter.Visit(throwStatement);
+		editor.ReplaceNode(throwStatement, newStatement);
 
 		return editor.GetChangedDocument();
 	}
 
 	/// <summary>
-	/// Converts an async method to use the Result&lt;T&gt; pattern with proper async support.
+	/// Converts a throw invocation to Result.Failure.
 	/// </summary>
-	/// <param name="document">The document containing the method.</param>
-	/// <param name="methodDeclaration">The method declaration to convert.</param>
-	/// <param name="cancellationToken">Cancellation token.</param>
-	/// <returns>The modified document.</returns>
-	private static async Task<Document> ConvertAsyncMethodToResultPatternAsync(
-		Document document,
-		MethodDeclarationSyntax methodDeclaration,
-		CancellationToken cancellationToken)
+	private static async Task<Document> ConvertInvocationToResultFailureAsync(Document document, InvocationExpressionSyntax invocationExpression, CancellationToken cancellationToken)
 	{
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
-		// Determine the new return type for async methods
-		var newReturnType = DetermineAsyncResultReturnType(methodDeclaration.ReturnType);
-
-		// Create new method with Result return type
-		var newMethod = methodDeclaration.WithReturnType(newReturnType);
-
-		// Convert throw statements to Result.WithFailure with async support
-		var rewriter = new AsyncThrowToResultRewriter();
-		newMethod = (MethodDeclarationSyntax)rewriter.Visit(newMethod);
-
-		// Replace the method
-		editor.ReplaceNode(methodDeclaration, newMethod);
-
-		// Add using statement if needed
-		await AddResultUsingStatementAsync(editor, cancellationToken).ConfigureAwait(false);
+		var rewriter = new ThrowToResultRewriter("Failure");
+		var newExpression = (ExpressionSyntax)rewriter.Visit(invocationExpression);
+		editor.ReplaceNode(invocationExpression, newExpression);
 
 		return editor.GetChangedDocument();
 	}
 
 	/// <summary>
-	/// Determines the appropriate Result return type for a given return type.
+	/// Rewriter that converts throw statements to Result pattern.
 	/// </summary>
-	/// <param name="currentReturnType">The current return type.</param>
-	/// <returns>The Result return type.</returns>
-	private static TypeSyntax DetermineResultReturnType(TypeSyntax currentReturnType)
+	private class ThrowToResultRewriter : CSharpSyntaxRewriter
 	{
-		if (IsTaskType(currentReturnType))
-		{
-			// Extract the inner type from Task<T> or just use Task
-			var innerType = GetTaskInnerType(currentReturnType);
-			if (innerType != null)
-			{
-				return SyntaxFactory.ParseTypeName($"Task<Result<{innerType}>>");
-			}
-			else
-			{
-				return SyntaxFactory.ParseTypeName("Task<Result>");
-			}
-		}
-		else if (currentReturnType.ToString() == "void")
-		{
-			return SyntaxFactory.ParseTypeName("Result");
-		}
-		else
-		{
-			return SyntaxFactory.ParseTypeName($"Result<{currentReturnType}>");
-		}
-	}
+		private readonly string _resultMethod;
 
-	/// <summary>
-	/// Determines the appropriate Result return type for async methods.
-	/// </summary>
-	/// <param name="currentReturnType">The current return type.</param>
-	/// <returns>The async Result return type.</returns>
-	private static TypeSyntax DetermineAsyncResultReturnType(TypeSyntax currentReturnType)
-	{
-		if (IsTaskType(currentReturnType))
+		public ThrowToResultRewriter(string resultMethod)
 		{
-			// Extract the inner type from Task<T> or just use Task
-			var innerType = GetTaskInnerType(currentReturnType);
-			if (innerType != null)
-			{
-				return SyntaxFactory.ParseTypeName($"Task<Result<{innerType}>>");
-			}
-			else
-			{
-				return SyntaxFactory.ParseTypeName("Task<Result>");
-			}
+			_resultMethod = resultMethod;
 		}
-		else if (IsValueTaskType(currentReturnType))
-		{
-			// Extract the inner type from ValueTask<T> or just use ValueTask
-			var innerType = GetValueTaskInnerType(currentReturnType);
-			if (innerType != null)
-			{
-				return SyntaxFactory.ParseTypeName($"ValueTask<Result<{innerType}>>");
-			}
-			else
-			{
-				return SyntaxFactory.ParseTypeName("ValueTask<Result>");
-			}
-		}
-		else
-		{
-			// For non-async methods, wrap in Task
-			return SyntaxFactory.ParseTypeName($"Task<Result<{currentReturnType}>>");
-		}
-	}
 
-	/// <summary>
-	/// Adds the Result using statement if it doesn't already exist.
-	/// </summary>
-	/// <param name="editor">The document editor.</param>
-	/// <param name="cancellationToken">Cancellation token.</param>
-	private static async Task AddResultUsingStatementAsync(DocumentEditor editor, CancellationToken cancellationToken)
-	{
-		var root = await editor.GetChangedDocument().GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
-		if (root is CompilationUnitSyntax compilationUnit)
+		public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
 		{
-			var hasResultUsing = compilationUnit.Usings.Any(u => u.Name?.ToString().Contains("Result") == true);
-			if (!hasResultUsing)
+			if (node.Expression != null)
 			{
-				var firstNode = compilationUnit.Usings.FirstOrDefault() as SyntaxNode ?? compilationUnit.Members.FirstOrDefault();
-				if (firstNode != null)
+				var errorMessage = ExtractErrorMessage(node.Expression);
+				return SyntaxFactory.ReturnStatement(
+					SyntaxFactory.InvocationExpression(
+						SyntaxFactory.MemberAccessExpression(
+							SyntaxKind.SimpleMemberAccessExpression,
+							SyntaxFactory.IdentifierName("Result"),
+							SyntaxFactory.IdentifierName(_resultMethod)),
+						SyntaxFactory.ArgumentList(
+							SyntaxFactory.SingletonSeparatedList(
+								SyntaxFactory.Argument(
+									SyntaxFactory.LiteralExpression(
+										SyntaxKind.StringLiteralExpression,
+										SyntaxFactory.Literal(errorMessage)))))));
+			}
+
+			return base.VisitThrowStatement(node);
+		}
+
+		public override SyntaxNode? VisitInvocationExpression(InvocationExpressionSyntax node)
+		{
+			if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
+				memberAccess.Name.Identifier.ValueText == "Throw")
+			{
+				var arguments = node.ArgumentList?.Arguments;
+				if (arguments != null && arguments.Count > 0)
 				{
-					editor.InsertBefore(firstNode,
-						SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("ExxerRules.Analyzers.Operations")));
+					var errorMessage = ExtractErrorMessage(arguments[0].Expression);
+					return SyntaxFactory.InvocationExpression(
+						SyntaxFactory.MemberAccessExpression(
+							SyntaxKind.SimpleMemberAccessExpression,
+							SyntaxFactory.IdentifierName("Result"),
+							SyntaxFactory.IdentifierName(_resultMethod)),
+						SyntaxFactory.ArgumentList(
+							SyntaxFactory.SingletonSeparatedList(
+								SyntaxFactory.Argument(
+									SyntaxFactory.LiteralExpression(
+										SyntaxKind.StringLiteralExpression,
+										SyntaxFactory.Literal(errorMessage)))))));
 				}
 			}
-		}
-	}
 
-	/// <summary>
-	/// Checks if a method is async.
-	/// </summary>
-	/// <param name="methodDeclaration">The method declaration.</param>
-	/// <returns>True if the method is async.</returns>
-	private static bool IsAsyncMethod(MethodDeclarationSyntax methodDeclaration)
-	{
-		return methodDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.AsyncKeyword));
-	}
-
-	/// <summary>
-	/// Checks if a type is a Task type.
-	/// </summary>
-	/// <param name="type">The type to check.</param>
-	/// <returns>True if the type is a Task.</returns>
-	private static bool IsTaskType(TypeSyntax type)
-	{
-		var typeString = type.ToString();
-		return typeString.StartsWith("Task<") || typeString == "Task";
-	}
-
-	/// <summary>
-	/// Checks if a type is a ValueTask type.
-	/// </summary>
-	/// <param name="type">The type to check.</param>
-	/// <returns>True if the type is a ValueTask.</returns>
-	private static bool IsValueTaskType(TypeSyntax type)
-	{
-		var typeString = type.ToString();
-		return typeString.StartsWith("ValueTask<") || typeString == "ValueTask";
-	}
-
-	/// <summary>
-	/// Gets the inner type from a Task&lt;T&gt;.
-	/// </summary>
-	/// <param name="type">The Task type.</param>
-	/// <returns>The inner type if available.</returns>
-	private static string? GetTaskInnerType(TypeSyntax type)
-	{
-		if (type is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0)
-		{
-			return genericName.TypeArgumentList.Arguments[0].ToString();
-		}
-		return null;
-	}
-
-	/// <summary>
-	/// Gets the inner type from a ValueTask&lt;T&gt;.
-	/// </summary>
-	/// <param name="type">The ValueTask type.</param>
-	/// <returns>The inner type if available.</returns>
-	private static string? GetValueTaskInnerType(TypeSyntax type)
-	{
-		if (type is GenericNameSyntax genericName && genericName.TypeArgumentList.Arguments.Count > 0)
-		{
-			return genericName.TypeArgumentList.Arguments[0].ToString();
-		}
-		return null;
-	}
-
-	/// <summary>
-	/// Enhanced rewriter that converts throw statements to Result.WithFailure with better error extraction.
-	/// </summary>
-	private class EnhancedThrowToResultRewriter : CSharpSyntaxRewriter
-	{
-		public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
-		{
-			if (node.Expression == null)
-			{
-				// Rethrow - keep as is for now
-				return base.VisitThrowStatement(node);
-			}
-
-			// Extract error message from exception with enhanced logic
-			var errorMessage = ExtractEnhancedErrorMessage(node.Expression);
-
-			// Create Result.WithFailure statement
-			var resultStatement = SyntaxFactory.ParseStatement($"return Result.WithFailure({errorMessage});")
-				.WithLeadingTrivia(node.GetLeadingTrivia())
-				.WithTrailingTrivia(node.GetTrailingTrivia())
-				.WithAdditionalAnnotations(Formatter.Annotation);
-
-			return resultStatement;
-		}
-
-		public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
-		{
-			// Extract error message from exception with enhanced logic
-			var errorMessage = ExtractEnhancedErrorMessage(node.Expression);
-
-			// Create Result.WithFailure expression
-			var resultExpression = SyntaxFactory.ParseExpression($"Result.WithFailure({errorMessage})")
-				.WithAdditionalAnnotations(Formatter.Annotation);
-
-			return resultExpression;
+			return base.VisitInvocationExpression(node);
 		}
 
 		/// <summary>
-		/// Extracts error messages with enhanced logic for better error categorization.
+		/// Extracts an error message from an expression.
 		/// </summary>
-		/// <param name="expression">The exception expression.</param>
-		/// <returns>The extracted error message.</returns>
-		private static string ExtractEnhancedErrorMessage(ExpressionSyntax expression)
+		private static string ExtractErrorMessage(ExpressionSyntax expression)
 		{
-			// Try to extract the message from exception constructor
-			if (expression is ObjectCreationExpressionSyntax objectCreation &&
-				objectCreation.ArgumentList?.Arguments.Count > 0)
+			if (expression is LiteralExpressionSyntax literal && literal.Kind() == SyntaxKind.StringLiteralExpression)
 			{
-				var firstArg = objectCreation.ArgumentList.Arguments[0].Expression;
-				return firstArg.ToString();
+				return literal.Token.ValueText;
+			}
+			else if (expression is ObjectCreationExpressionSyntax objectCreation)
+			{
+				var typeName = objectCreation.Type.ToString();
+				return $"An error occurred: {typeName}";
 			}
 
-			// Handle different exception types with specific messages
-			if (expression is IdentifierNameSyntax identifierName)
-			{
-				var exceptionName = identifierName.Identifier.ValueText;
-				return GetSpecificErrorMessageForExceptionType(exceptionName);
-			}
-
-			// Default message
-			return "\"Operation failed\"";
-		}
-
-		/// <summary>
-		/// Gets specific error messages for common exception types.
-		/// </summary>
-		/// <param name="exceptionType">The exception type name.</param>
-		/// <returns>A specific error message.</returns>
-		private static string GetSpecificErrorMessageForExceptionType(string exceptionType)
-		{
-			return exceptionType.ToLower() switch
-			{
-				"argumentnullexception" => "\"Required parameter is null\"",
-				"argumentexception" => "\"Invalid argument provided\"",
-				"invalidoperationexception" => "\"Operation is not valid in current state\"",
-				"notsupportedexception" => "\"Operation is not supported\"",
-				"notimplementedexception" => "\"Operation is not implemented\"",
-				"timeoutexception" => "\"Operation timed out\"",
-				"unauthorizedaccessexception" => "\"Access denied\"",
-				"filenotfoundexception" => "\"File not found\"",
-				"directorynotfoundexception" => "\"Directory not found\"",
-				"outofmemoryexception" => "\"Insufficient memory\"",
-				"stackoverflowexception" => "\"Stack overflow occurred\"",
-				_ => $"\"{exceptionType} occurred\""
-			};
-		}
-	}
-
-	/// <summary>
-	/// Rewriter that converts throw statements to Result.WithFailure with detailed error messages.
-	/// </summary>
-	private class DetailedErrorThrowToResultRewriter : CSharpSyntaxRewriter
-	{
-		public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
-		{
-			if (node.Expression == null)
-			{
-				return base.VisitThrowStatement(node);
-			}
-
-			var errorMessage = ExtractDetailedErrorMessage(node.Expression);
-
-			var resultStatement = SyntaxFactory.ParseStatement($"return Result.WithFailure({errorMessage});")
-				.WithLeadingTrivia(node.GetLeadingTrivia())
-				.WithTrailingTrivia(node.GetTrailingTrivia())
-				.WithAdditionalAnnotations(Formatter.Annotation);
-
-			return resultStatement;
-		}
-
-		public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
-		{
-			var errorMessage = ExtractDetailedErrorMessage(node.Expression);
-
-			var resultExpression = SyntaxFactory.ParseExpression($"Result.WithFailure({errorMessage})")
-				.WithAdditionalAnnotations(Formatter.Annotation);
-
-			return resultExpression;
-		}
-
-		/// <summary>
-		/// Extracts detailed error messages with context information.
-		/// </summary>
-		/// <param name="expression">The exception expression.</param>
-		/// <returns>The detailed error message.</returns>
-		private static string ExtractDetailedErrorMessage(ExpressionSyntax expression)
-		{
-			if (expression is ObjectCreationExpressionSyntax objectCreation &&
-				objectCreation.ArgumentList?.Arguments.Count > 0)
-			{
-				var firstArg = objectCreation.ArgumentList.Arguments[0].Expression;
-				return firstArg.ToString();
-			}
-
-			if (expression is IdentifierNameSyntax identifierName)
-			{
-				var exceptionName = identifierName.Identifier.ValueText;
-				return GetDetailedErrorMessageForExceptionType(exceptionName);
-			}
-
-			return "\"Operation failed with unknown error\"";
-		}
-
-		/// <summary>
-		/// Gets detailed error messages for exception types with context.
-		/// </summary>
-		/// <param name="exceptionType">The exception type name.</param>
-		/// <returns>A detailed error message.</returns>
-		private static string GetDetailedErrorMessageForExceptionType(string exceptionType)
-		{
-			return exceptionType.ToLower() switch
-			{
-				"argumentnullexception" => "\"Required parameter is null. Please provide a valid value.\"",
-				"argumentexception" => "\"Invalid argument provided. Please check the parameter values.\"",
-				"invalidoperationexception" => "\"Operation is not valid in the current state. Please ensure proper initialization.\"",
-				"notsupportedexception" => "\"Operation is not supported in this context.\"",
-				"notimplementedexception" => "\"Operation is not implemented yet.\"",
-				"timeoutexception" => "\"Operation timed out. Please try again or increase timeout value.\"",
-				"unauthorizedaccessexception" => "\"Access denied. Please check permissions.\"",
-				"filenotfoundexception" => "\"File not found. Please verify the file path.\"",
-				"directorynotfoundexception" => "\"Directory not found. Please verify the directory path.\"",
-				"outofmemoryexception" => "\"Insufficient memory available for this operation.\"",
-				"stackoverflowexception" => "\"Stack overflow occurred. Check for infinite recursion.\"",
-				_ => $"\"{exceptionType} occurred during operation execution.\""
-			};
-		}
-	}
-
-	/// <summary>
-	/// Rewriter that converts throw statements to Result.WithFailure with async support.
-	/// </summary>
-	private class AsyncThrowToResultRewriter : CSharpSyntaxRewriter
-	{
-		public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
-		{
-			if (node.Expression == null)
-			{
-				return base.VisitThrowStatement(node);
-			}
-
-			var errorMessage = ExtractEnhancedErrorMessage(node.Expression);
-
-			var resultStatement = SyntaxFactory.ParseStatement($"return Result.WithFailure({errorMessage});")
-				.WithLeadingTrivia(node.GetLeadingTrivia())
-				.WithTrailingTrivia(node.GetTrailingTrivia())
-				.WithAdditionalAnnotations(Formatter.Annotation);
-
-			return resultStatement;
-		}
-
-		public override SyntaxNode? VisitThrowExpression(ThrowExpressionSyntax node)
-		{
-			var errorMessage = ExtractEnhancedErrorMessage(node.Expression);
-
-			var resultExpression = SyntaxFactory.ParseExpression($"Result.WithFailure({errorMessage})")
-				.WithAdditionalAnnotations(Formatter.Annotation);
-
-			return resultExpression;
-		}
-
-		/// <summary>
-		/// Extracts error messages with async context consideration.
-		/// </summary>
-		/// <param name="expression">The exception expression.</param>
-		/// <returns>The extracted error message.</returns>
-		private static string ExtractEnhancedErrorMessage(ExpressionSyntax expression)
-		{
-			if (expression is ObjectCreationExpressionSyntax objectCreation &&
-				objectCreation.ArgumentList?.Arguments.Count > 0)
-			{
-				var firstArg = objectCreation.ArgumentList.Arguments[0].Expression;
-				return firstArg.ToString();
-			}
-
-			if (expression is IdentifierNameSyntax identifierName)
-			{
-				var exceptionName = identifierName.Identifier.ValueText;
-				return GetAsyncSpecificErrorMessageForExceptionType(exceptionName);
-			}
-
-			return "\"Async operation failed\"";
-		}
-
-		/// <summary>
-		/// Gets async-specific error messages for exception types.
-		/// </summary>
-		/// <param name="exceptionType">The exception type name.</param>
-		/// <returns>An async-specific error message.</returns>
-		private static string GetAsyncSpecificErrorMessageForExceptionType(string exceptionType)
-		{
-			return exceptionType.ToLower() switch
-			{
-				"operationcanceledexception" => "\"Async operation was canceled\"",
-				"timeoutexception" => "\"Async operation timed out\"",
-				"taskcanceledexception" => "\"Async task was canceled\"",
-				"argumentnullexception" => "\"Required parameter is null for async operation\"",
-				"invalidoperationexception" => "\"Async operation is not valid in current state\"",
-				_ => $"\"Async operation failed: {exceptionType}\""
-			};
+			return "An error occurred";
 		}
 	}
 }

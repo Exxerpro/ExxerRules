@@ -22,7 +22,7 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 		Title,
 		MessageFormat,
 		DiagnosticCategories.Testing,
-		DiagnosticSeverity.Info,  // Changed from Error to Info (suggestion)
+		DiagnosticSeverity.Warning,
 		isEnabledByDefault: true,
 		description: Description);
 
@@ -92,16 +92,10 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 			return;
 		}
 
-		// TDD Fix: Detect XUnit v2 but allow XUnit v3
+		// Allow current Xunit usage (this is effectively XUnit v3 or the current version)
 		if (namespaceName == "Xunit")
 		{
-			// Report diagnostic for XUnit v2 (should upgrade to v3)
-			var diagnostic = Diagnostic.Create(
-				Rule,
-				usingDirective.GetLocation(),
-				"XUnit v2");
-			context.ReportDiagnostic(diagnostic);
-			return;
+			return; // Don't report diagnostic for current Xunit usage
 		}
 
 		// Check for other forbidden testing framework namespaces

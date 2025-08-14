@@ -44,6 +44,12 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
 		var awaitExpression = (AwaitExpressionSyntax)context.Node;
 		var expression = awaitExpression.Expression;
 
+		// Skip if this is application code (not library code)
+		if (IsApplicationCode(awaitExpression))
+		{
+			return;
+		}
+
 		// Check if the await expression already has ConfigureAwait
 		if (HasConfigureAwait(expression))
 		{
@@ -55,6 +61,39 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
 			Rule,
 			awaitExpression.GetLocation());
 		context.ReportDiagnostic(diagnostic);
+	}
+
+	private static bool IsApplicationCode(AwaitExpressionSyntax awaitExpression)
+	{
+		// Check if we're in a class that looks like application code
+		var classDeclaration = awaitExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		if (classDeclaration != null)
+		{
+			var className = classDeclaration.Identifier.Text;
+			
+			// Common application class names that typically don't need ConfigureAwait
+			var applicationClassPatterns = new[] { "Program", "Startup", "Main" };
+			if (applicationClassPatterns.Any(pattern => className.Contains(pattern)))
+			{
+				return true;
+			}
+		}
+
+		// Check if we're in a namespace that looks like application code
+		var namespaceDeclaration = awaitExpression.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
+		if (namespaceDeclaration != null)
+		{
+			var namespaceName = namespaceDeclaration.Name.ToString();
+			
+			// Common application namespace patterns
+			var applicationNamespacePatterns = new[] { "Program", "App", "Application", "ConsoleApp", "WebApp" };
+			if (applicationNamespacePatterns.Any(pattern => namespaceName.Contains(pattern)))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private static bool HasConfigureAwait(ExpressionSyntax expression)

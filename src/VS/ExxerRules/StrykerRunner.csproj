@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+
+  <ItemGroup>
+    <Analyzer Include="c:\Users\Abel Briones\.cursor\extensions\exxerai.exxer-rules-vscode-1.0.0\analyzers\ExxerRules.Analyzers.dll" />
+    <Analyzer Include="c:\Users\Abel Briones\.cursor\extensions\exxerai.exxer-rules-vscode-1.0.0\analyzers\ExxerRules.CodeFixes.dll" />
+  </ItemGroup>
 </Project>

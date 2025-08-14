@@ -87,6 +87,22 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			return true;
 		}
 
+		// Skip methods with exception-related names
+		if (method.Identifier.Text.Contains("Throw") || method.Identifier.Text.Contains("Exception"))
+		{
+			return true;
+		}
+
+		// Skip test methods
+		var attributes = method.AttributeLists.SelectMany(al => al.Attributes);
+		var testAttributeNames = new[] { "Fact", "Theory", "Test", "TestMethod", "TestCase" };
+		
+		if (attributes.Any(attr => 
+			testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
+		{
+			return true;
+		}
+
 		return false;
 	}
 
@@ -187,8 +203,26 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			return false;
 		}
 
-		// Check for Result<T> or Task<Result<T>>
+		// Check for Result<T>, Task<Result<T>>, ValueTask<Result<T>>, etc.
 		var typeText = typeSyntax.ToString();
-		return typeText.Contains("Result<") || typeText.Contains("Result ");
+		
+		// Direct Result patterns
+		if (typeText.Contains("Result<") || typeText.Contains("Result "))
+		{
+			return true;
+		}
+		
+		// Task/ValueTask wrapping Result patterns
+		if (typeText.Contains("Task<") && typeText.Contains("Result<"))
+		{
+			return true;
+		}
+		
+		if (typeText.Contains("ValueTask<") && typeText.Contains("Result<"))
+		{
+			return true;
+		}
+
+		return false;
 	}
 }

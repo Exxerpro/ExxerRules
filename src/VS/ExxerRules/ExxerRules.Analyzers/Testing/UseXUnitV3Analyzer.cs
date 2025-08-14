@@ -22,7 +22,7 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 		Title,
 		MessageFormat,
 		DiagnosticCategories.Testing,
-		DiagnosticSeverity.Error,
+		DiagnosticSeverity.Info,  // Changed from Error to Info (suggestion)
 		isEnabledByDefault: true,
 		description: Description);
 

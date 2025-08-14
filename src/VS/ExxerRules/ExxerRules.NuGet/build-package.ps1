@@ -7,8 +7,8 @@ Write-Host "🔨 Building ExxerRules NuGet Package..." -ForegroundColor Cyan
 Write-Host ""
 
 # Build the package (ignore exit code due to false positive NU5017 error)
-$projectPath = "f:\Dynamic\ExxerRules\ExxerRules\src\VS\ExxerRules\ExxerRules.NuGet\ExxerRules.NuGet.csproj"
-$packagePath = "f:\Dynamic\ExxerRules\ExxerRules\src\VS\ExxerRules\ExxerRules.NuGet\bin\Release\ExxerRules.1.0.0.nupkg"
+$projectPath = "f:\Dynamic\ExxerRules\ExxerRulesGood\ExxerRules\src\VS\ExxerRules\ExxerRules.NuGet\ExxerRules.NuGet.csproj"
+$packagePath = "f:\Dynamic\ExxerRules\ExxerRulesGood\ExxerRules\src\VS\ExxerRules\ExxerRules.NuGet\bin\Release\ExxerRules.1.0.2.nupkg"
 
 try {
     dotnet pack $projectPath -c Release 2>&1 | Out-String | Write-Host
@@ -27,7 +27,7 @@ if (Test-Path $packagePath) {
     
     # Verify package contents
     Write-Host "🔍 Verifying package contents..." -ForegroundColor Cyan
-    $extractPath = "f:\Dynamic\ExxerRules\ExxerRules\src\VS\ExxerRules\ExxerRules.NuGet\bin\Release\extracted"
+    $extractPath = "f:\Dynamic\ExxerRules\ExxerRulesGood\ExxerRules\src\VS\ExxerRules\ExxerRules.NuGet\bin\Release\extracted"
     
     # Clean extract directory
     if (Test-Path $extractPath) {

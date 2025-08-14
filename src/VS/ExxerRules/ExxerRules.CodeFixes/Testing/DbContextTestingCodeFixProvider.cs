@@ -318,7 +318,7 @@ public class DbContextTestingCodeFixProvider : CodeFixProvider
 		}
 
 		/// <summary>
-		/// Extracts the DbContext type from Mock<T>.
+		/// Extracts the DbContext type from Mock&lt;T&gt;.
 		/// </summary>
 		private static TypeSyntax? ExtractDbContextType(TypeSyntax type)
 		{
@@ -368,7 +368,7 @@ public class DbContextTestingCodeFixProvider : CodeFixProvider
 		}
 
 		/// <summary>
-		/// Extracts the DbContext type from Mock<T>.
+		/// Extracts the DbContext type from Mock&lt;T&gt;.
 		/// </summary>
 		private static TypeSyntax? ExtractDbContextType(TypeSyntax type)
 		{

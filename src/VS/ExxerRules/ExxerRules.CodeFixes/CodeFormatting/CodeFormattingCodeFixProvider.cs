@@ -3,19 +3,6 @@ using System.Composition;
 using System.Diagnostics;
 using System.IO;
 using ExxerRules.Analyzers;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CodeActions;
-using Microsoft.CodeAnalysis.CodeFixes;
-
-namespace ExxerRules.CodeFixes.CodeFormatting;
-
-/// <summary>
-/// Code fix provider that provides formatting actions for detected formatting issues.
-/// SRP: Responsible only for providing code fix actions for formatting inconsistencies.
-/// </summary>
-using System.Collections.Immutable;
-using System.Composition;
-using ExxerRules.Analyzers;
 using ExxerRules.CodeFixes.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;

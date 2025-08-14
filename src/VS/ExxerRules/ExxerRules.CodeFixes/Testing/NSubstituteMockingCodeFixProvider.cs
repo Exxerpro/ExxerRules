@@ -407,7 +407,7 @@ public class NSubstituteMockingCodeFixProvider : CodeFixProvider
 		}
 
 		/// <summary>
-		/// Extracts the type argument from a Mock<T> type.
+		/// Extracts the type argument from a Mock&lt;T&gt; type.
 		/// </summary>
 		private static TypeSyntax? ExtractTypeArgument(TypeSyntax type)
 		{

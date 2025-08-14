@@ -43,12 +43,10 @@
     <None Include="content.txt" Pack="true" PackagePath="content" />
     <None Include="tools\install.ps1" Pack="true" PackagePath="tools" />
     <None Include="tools\uninstall.ps1" Pack="true" PackagePath="tools" />
-  </ItemGroup>
-  <!-- Analyzer DLLs - using None with proper PackagePath for analyzers -->
+  </ItemGroup>  <!-- Analyzer DLLs - using None with proper PackagePath for analyzers -->
   <ItemGroup>
     <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\ExxerRules.Analyzers.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
     <None Include="..\ExxerRules.CodeFixes\bin\Release\netstandard2.0\ExxerRules.CodeFixes.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
-    <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\ExxerRules.Analyzers.Operations.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
   </ItemGroup>
 
   <ItemGroup>

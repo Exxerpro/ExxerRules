@@ -135,9 +135,23 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 			return true;
 		}
 
+		// Check if we're in a static readonly field declaration
+		if (fieldDeclaration != null && 
+			fieldDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword) && 
+			fieldDeclaration.Modifiers.Any(SyntaxKind.ReadOnlyKeyword))
+		{
+			return true;
+		}
+
 		// Check if we're in a local const declaration
 		var localDeclaration = node.FirstAncestorOrSelf<LocalDeclarationStatementSyntax>();
 		if (localDeclaration != null && localDeclaration.Modifiers.Any(SyntaxKind.ConstKeyword))
+		{
+			return true;
+		}
+
+		// Check if we're in an array initializer (often used for initialization)
+		if (node.FirstAncestorOrSelf<InitializerExpressionSyntax>() != null)
 		{
 			return true;
 		}

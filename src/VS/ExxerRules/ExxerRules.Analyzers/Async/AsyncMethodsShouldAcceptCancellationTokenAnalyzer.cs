@@ -112,6 +112,45 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
 			return true;
 		}
 
+		// Skip if this is application code (not library code)
+		if (IsApplicationCode(method))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	private static bool IsApplicationCode(MethodDeclarationSyntax method)
+	{
+		// Check if we're in a class that looks like application code
+		var classDeclaration = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		if (classDeclaration != null)
+		{
+			var className = classDeclaration.Identifier.Text;
+			
+			// Common application class names that typically don't need cancellation tokens
+			var applicationClassPatterns = new[] { "Program", "Startup", "Main" };
+			if (applicationClassPatterns.Any(pattern => className.Contains(pattern)))
+			{
+				return true;
+			}
+		}
+
+		// Check if we're in a namespace that looks like application code
+		var namespaceDeclaration = method.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
+		if (namespaceDeclaration != null)
+		{
+			var namespaceName = namespaceDeclaration.Name.ToString();
+			
+			// Common application namespace patterns
+			var applicationNamespacePatterns = new[] { "Program", "App", "Application", "ConsoleApp", "WebApp" };
+			if (applicationNamespacePatterns.Any(pattern => namespaceName.Contains(pattern)))
+			{
+				return true;
+			}
+		}
+
 		return false;
 	}
 

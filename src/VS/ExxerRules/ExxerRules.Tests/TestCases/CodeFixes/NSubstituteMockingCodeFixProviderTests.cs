@@ -493,14 +493,12 @@ public interface IInterface
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            // For cases with diagnostics array, use first diagnostic if available
+            // Fix invalid CodeFixContext constructor usage
+            // Replace: new CodeFixContext(document, (a, d) => { }, CancellationToken.None)
+            // With: if (diagnostics.Length > 0) await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics[0], (a, d) => { }, CancellationToken.None));
             if (diagnostics.Length > 0)
             {
                 await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics[0], (a, d) => { }, CancellationToken.None));
-            }
-            else
-            {
-                await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, (a, d) => { }, CancellationToken.None));
             }
         });
     }

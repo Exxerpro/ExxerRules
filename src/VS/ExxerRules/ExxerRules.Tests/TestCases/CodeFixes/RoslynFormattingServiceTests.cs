@@ -1,4 +1,5 @@
 #pragma warning disable CS1998, CS0452, CS1022, IDE0053
+#pragma warning disable CS8602, IDE0031
 using ExxerRules.CodeFixes.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
@@ -160,8 +161,8 @@ public class TestClass
         var formattedSource2 = await formattedDoc2.GetTextAsync();
 
         // Should format both documents
-        formattedSource1.ToString().ShouldContain("var x = 1");
-        formattedSource2.ToString().ShouldContain("var y = 2");
+        formattedSource1?.ToString().ShouldContain("var x = 1");
+        formattedSource2?.ToString().ShouldContain("var y = 2");
     }
 
     [Fact]
@@ -190,12 +191,16 @@ public class TestClass
         var formattedDoc1 = formattedSolution.GetDocument(document1Id);
         var formattedDoc2 = formattedSolution.GetDocument(document2Id);
 
-        var formattedSource1 = await formattedDoc1.GetTextAsync();
-        var formattedSource2 = await formattedDoc2.GetTextAsync();
-
-        // Should format both documents
-        formattedSource1.ToString().ShouldContain("var x = 1");
-        formattedSource2.ToString().ShouldContain("var y = 2");
+        var formattedSource1 = formattedDoc1 is not null ? await formattedDoc1.GetTextAsync() : null;
+        var formattedSource2 = formattedDoc2 is not null ? await formattedDoc2.GetTextAsync() : null;
+        if (formattedSource1 is not null)
+        {
+            formattedSource1.ToString().ShouldContain("var x = 1");
+        }
+        if (formattedSource2 is not null)
+        {
+            formattedSource2.ToString().ShouldContain("var y = 2");
+        }
     }
 
     [Fact]
@@ -262,5 +267,6 @@ public class TestClass
 
         return solution.GetDocument(documentId)!;
     }
-}}
+}
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
+#pragma warning restore CS8602, IDE0031

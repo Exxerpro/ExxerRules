@@ -160,6 +160,29 @@ description: This rule defines how to properly use async and await keywords in C
 </incorrect-example>
 </requirement>
 
+### <requirement priority="critical">
+**Description**: Every new or modified rule in `.cursor/rules/` MUST update the central index `.cursor/rules/rules.json` before merge. Include the rule ID in the appropriate pack(s) and keep packs minimal and relevant.
+**Examples**:
+<correct-example>
+```json
+{
+  "version": "1.0",
+  "packs": [
+    {
+      "id": "pack.refactoring",
+      "title": "Refactoring Standards",
+      "rules": [1034, 1033, 1032, 1030, 1028, 1040] // <- new rule ID appended intentionally
+    }
+  ]
+}
+```
+</correct-example>
+<incorrect-example>
+- New file `1040_PerformanceOptimizationStandards.mdc` created without adding `1040` to any pack in `rules.json`.
+- `rules.json` left with stale references to removed/renamed rule files.
+</incorrect-example>
+</requirement>
+
 ## Naming Convention
 
 ### Prefix Categories

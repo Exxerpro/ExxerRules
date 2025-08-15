@@ -157,7 +157,7 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 	private static void RegisterUsingFixes(CodeFixContext context, Diagnostic diagnostic, UsingDirectiveSyntax usingDirective)
 	{
 		var usingName = usingDirective.Name?.ToString();
-		if (usingName == "Microsoft.EntityFrameworkCore" || usingName == "System.Data.SqlClient")
+		if (usingName is "Microsoft.EntityFrameworkCore" or "System.Data.SqlClient")
 		{
 			context.RegisterCodeFix(
 				CodeAction.Create(
@@ -278,7 +278,8 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 				var methodName = memberAccess.Name.Identifier.ValueText;
 				var arguments = node.ArgumentList?.Arguments;
 				
-				if (arguments != null && arguments.Count > 0)
+				var args = arguments;
+				if (args != null && args.Value.Count > 0)
 				{
 					return SyntaxFactory.InvocationExpression(
 						SyntaxFactory.MemberAccessExpression(
@@ -286,7 +287,7 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 							SyntaxFactory.IdentifierName("_repository"),
 							SyntaxFactory.IdentifierName(methodName)),
 						SyntaxFactory.ArgumentList(
-							SyntaxFactory.SeparatedList(arguments)));
+							SyntaxFactory.SeparatedList<ArgumentSyntax>(args.Value)));
 				}
 			}
 
@@ -307,7 +308,8 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 				var methodName = memberAccess.Name.Identifier.ValueText;
 				var arguments = node.ArgumentList?.Arguments;
 				
-				if (arguments != null && arguments.Count > 0)
+				var args = arguments;
+				if (args != null && args.Value.Count > 0)
 				{
 					return SyntaxFactory.InvocationExpression(
 						SyntaxFactory.MemberAccessExpression(
@@ -315,7 +317,7 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 							SyntaxFactory.IdentifierName("_repository"),
 							SyntaxFactory.IdentifierName(methodName)),
 						SyntaxFactory.ArgumentList(
-							SyntaxFactory.SeparatedList(arguments)));
+							SyntaxFactory.SeparatedList<ArgumentSyntax>(args.Value)));
 				}
 			}
 
@@ -336,7 +338,8 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 				var methodName = memberAccess.Name.Identifier.ValueText;
 				var arguments = node.ArgumentList?.Arguments;
 				
-				if (arguments != null && arguments.Count > 0)
+				var args = arguments;
+				if (args != null && args.Value.Count > 0)
 				{
 					return SyntaxFactory.InvocationExpression(
 						SyntaxFactory.MemberAccessExpression(
@@ -344,7 +347,7 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 							SyntaxFactory.IdentifierName("_repository"),
 							SyntaxFactory.IdentifierName(methodName)),
 						SyntaxFactory.ArgumentList(
-							SyntaxFactory.SeparatedList(arguments)));
+							SyntaxFactory.SeparatedList<ArgumentSyntax>(args.Value)));
 				}
 			}
 
@@ -365,7 +368,8 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 				var methodName = memberAccess.Name.Identifier.ValueText;
 				var arguments = node.ArgumentList?.Arguments;
 				
-				if (arguments != null && arguments.Count > 0)
+				var args = arguments;
+				if (args != null && args.Value.Count > 0)
 				{
 					return SyntaxFactory.InvocationExpression(
 						SyntaxFactory.MemberAccessExpression(
@@ -373,7 +377,7 @@ public class UseRepositoryPatternCodeFixProvider : CodeFixProvider
 							SyntaxFactory.IdentifierName("_repository"),
 							SyntaxFactory.IdentifierName(methodName)),
 						SyntaxFactory.ArgumentList(
-							SyntaxFactory.SeparatedList(arguments)));
+							SyntaxFactory.SeparatedList<ArgumentSyntax>(args.Value)));
 				}
 			}
 

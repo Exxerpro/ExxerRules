@@ -7,7 +7,6 @@ using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using System.Linq;
 
 namespace ExxerRules.CodeFixes.ErrorHandling;
 
@@ -148,11 +147,11 @@ public class UseResultPatternCodeFixProvider : CodeFixProvider
 	/// </summary>
 	private class ThrowToResultRewriter : CSharpSyntaxRewriter
 	{
-		private readonly string resultMethod;
+		private readonly string _resultMethod;
 
 		public ThrowToResultRewriter(string resultMethod)
 		{
-			this.resultMethod = resultMethod;
+			_resultMethod = resultMethod;
 		}
 
 		public override SyntaxNode? VisitThrowStatement(ThrowStatementSyntax node)
@@ -164,7 +163,7 @@ public class UseResultPatternCodeFixProvider : CodeFixProvider
 					SyntaxFactory.MemberAccessExpression(
 						SyntaxKind.SimpleMemberAccessExpression,
 						SyntaxFactory.IdentifierName("Result"),
-						SyntaxFactory.IdentifierName(resultMethod)),
+						SyntaxFactory.IdentifierName(_resultMethod)),
 					SyntaxFactory.ArgumentList(
 						SyntaxFactory.SingletonSeparatedList(
 							SyntaxFactory.Argument(
@@ -184,21 +183,20 @@ public class UseResultPatternCodeFixProvider : CodeFixProvider
 				memberAccess.Name.Identifier.ValueText == "Throw")
 			{
 				var arguments = node.ArgumentList?.Arguments;
-				var args = arguments;
-				if (args != null && args.Value.Count > 0)
+				if (arguments != null && arguments.Count > 0)
 				{
-					var errorMessage = ExtractErrorMessage(args.Value[0].Expression);
+					var errorMessage = ExtractErrorMessage(arguments[0].Expression);
 					return SyntaxFactory.InvocationExpression(
 						SyntaxFactory.MemberAccessExpression(
 							SyntaxKind.SimpleMemberAccessExpression,
 							SyntaxFactory.IdentifierName("Result"),
-							SyntaxFactory.IdentifierName(resultMethod)),
+							SyntaxFactory.IdentifierName(_resultMethod)),
 						SyntaxFactory.ArgumentList(
 							SyntaxFactory.SingletonSeparatedList(
 								SyntaxFactory.Argument(
 									SyntaxFactory.LiteralExpression(
 										SyntaxKind.StringLiteralExpression,
-										SyntaxFactory.Literal(errorMessage))))));
+										SyntaxFactory.Literal(errorMessage)))))));
 				}
 			}
 

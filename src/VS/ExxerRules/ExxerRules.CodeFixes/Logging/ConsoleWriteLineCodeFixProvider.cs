@@ -219,15 +219,11 @@ public class ConsoleWriteLineCodeFixProvider : CodeFixProvider
 		var document = editor.GetChangedDocument();
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 		
-		if (root != null && !root.ToString().Contains("Microsoft.Extensions.Logging"))
+		if (root is CompilationUnitSyntax compilationUnit && !root.ToString().Contains("Microsoft.Extensions.Logging"))
 		{
-			var compilationUnit = root as CompilationUnitSyntax;
-			if (compilationUnit != null)
-			{
-				var newUsing = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Microsoft.Extensions.Logging"));
-				var newCompilationUnit = compilationUnit.AddUsings(newUsing);
-				editor.ReplaceNode(compilationUnit, newCompilationUnit);
-			}
+			var newUsing = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("Microsoft.Extensions.Logging"));
+			var newCompilationUnit = compilationUnit.AddUsings(newUsing);
+			editor.ReplaceNode(compilationUnit, newCompilationUnit);
 		}
 	}
 
@@ -239,15 +235,11 @@ public class ConsoleWriteLineCodeFixProvider : CodeFixProvider
 		var document = editor.GetChangedDocument();
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 		
-		if (root != null && !root.ToString().Contains("System.Diagnostics"))
+		if (root is CompilationUnitSyntax compilationUnit && !root.ToString().Contains("System.Diagnostics"))
 		{
-			var compilationUnit = root as CompilationUnitSyntax;
-			if (compilationUnit != null)
-			{
-				var newUsing = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Diagnostics"));
-				var newCompilationUnit = compilationUnit.AddUsings(newUsing);
-				editor.ReplaceNode(compilationUnit, newCompilationUnit);
-			}
+			var newUsing = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Diagnostics"));
+			var newCompilationUnit = compilationUnit.AddUsings(newUsing);
+			editor.ReplaceNode(compilationUnit, newCompilationUnit);
 		}
 	}
 
@@ -259,15 +251,11 @@ public class ConsoleWriteLineCodeFixProvider : CodeFixProvider
 		var document = editor.GetChangedDocument();
 		var root = await document.GetSyntaxRootAsync(cancellationToken).ConfigureAwait(false);
 		
-		if (root != null && !root.ToString().Contains("System.Diagnostics"))
+		if (root is CompilationUnitSyntax compilationUnit && !root.ToString().Contains("System.Diagnostics"))
 		{
-			var compilationUnit = root as CompilationUnitSyntax;
-			if (compilationUnit != null)
-			{
-				var newUsing = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Diagnostics"));
-				var newCompilationUnit = compilationUnit.AddUsings(newUsing);
-				editor.ReplaceNode(compilationUnit, newCompilationUnit);
-			}
+			var newUsing = SyntaxFactory.UsingDirective(SyntaxFactory.ParseName("System.Diagnostics"));
+			var newCompilationUnit = compilationUnit.AddUsings(newUsing);
+			editor.ReplaceNode(compilationUnit, newCompilationUnit);
 		}
 	}
 
@@ -276,11 +264,11 @@ public class ConsoleWriteLineCodeFixProvider : CodeFixProvider
 	/// </summary>
 	private class ConsoleToLoggerRewriter : CSharpSyntaxRewriter
 	{
-		private readonly string _logMethod;
+		private readonly string logMethod;
 
 		public ConsoleToLoggerRewriter(string logMethod)
 		{
-			_logMethod = logMethod;
+			this.logMethod = logMethod;
 		}
 
 		public override SyntaxNode? VisitInvocationExpression(InvocationExpressionSyntax node)
@@ -290,15 +278,15 @@ public class ConsoleWriteLineCodeFixProvider : CodeFixProvider
 				(memberAccess.Name.Identifier.ValueText == "WriteLine" || memberAccess.Name.Identifier.ValueText == "Write"))
 			{
 				var arguments = node.ArgumentList?.Arguments;
-				if (arguments != null && arguments.Count > 0)
+				if (arguments != null && arguments.Value.Count > 0)
 				{
 					return SyntaxFactory.InvocationExpression(
 						SyntaxFactory.MemberAccessExpression(
 							SyntaxKind.SimpleMemberAccessExpression,
 							SyntaxFactory.IdentifierName("_logger"),
-							SyntaxFactory.IdentifierName(_logMethod)),
+							SyntaxFactory.IdentifierName(logMethod)),
 						SyntaxFactory.ArgumentList(
-							SyntaxFactory.SeparatedList(arguments)));
+							SyntaxFactory.SeparatedList<ArgumentSyntax>(arguments.Value)));
 				}
 			}
 

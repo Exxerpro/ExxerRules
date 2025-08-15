@@ -114,7 +114,7 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 	/// <summary>
 	/// Registers code fix for property documentation.
 	/// </summary>
-	private static void RegisterPropertyDocumentationFix(CodeFixContext context, Diagnostic diagnostic, PropertyDeclarationSyntax propertyDeclaration)
+private static void RegisterPropertyDocumentationFix(CodeFixContext context, Diagnostic diagnostic, PropertyDeclarationSyntax propertyDeclaration)
 	{
 		context.RegisterCodeFix(
 			CodeAction.Create(
@@ -198,10 +198,17 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 		var generator = editor.Generator;
 
-		var summary = GenerateClassSummary(classDeclaration);
-		var documentationComment = generator.DocumentationComment(summary);
+		var classSummary = GenerateClassSummary(classDeclaration);
 
-		editor.InsertBefore(classDeclaration, documentationComment);
+		// Use the correct summary variable for XML trivia construction
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(new XmlNodeSyntax[] { (XmlNodeSyntax)classSummary })
+			)
+		);
+		var newClassDeclaration = classDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(classDeclaration, newClassDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -213,13 +220,22 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 		var generator = editor.Generator;
 
-		var summary = GenerateMethodSummary(methodDeclaration);
+		var methodSummary = GenerateMethodSummary(methodDeclaration);
 		var parameters = GenerateMethodParameters(methodDeclaration);
 		var returns = GenerateMethodReturns(methodDeclaration);
 
-		var documentationComment = generator.DocumentationComment(summary, parameters, returns);
-		editor.InsertBefore(methodDeclaration, documentationComment);
-
+		// Replace generator.DocumentationComment(summary, parameters, returns) with direct XML trivia creation
+		var xmlNodes = new List<XmlNodeSyntax> { (XmlNodeSyntax)methodSummary };
+		xmlNodes.AddRange(parameters.Cast<XmlNodeSyntax>());
+		if (returns != null) { xmlNodes.Add((XmlNodeSyntax)returns); }
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(xmlNodes)
+			)
+		);
+		var newMethodDeclaration = methodDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(methodDeclaration, newMethodDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -232,9 +248,15 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var generator = editor.Generator;
 
 		var summary = GeneratePropertySummary(propertyDeclaration);
-		var documentationComment = generator.DocumentationComment(summary);
-
-		editor.InsertBefore(propertyDeclaration, documentationComment);
+		// Replace generator.DocumentationComment(summary) with direct XML trivia creation for property
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(new XmlNodeSyntax[] { (XmlNodeSyntax)summary })
+			)
+		);
+		var newPropertyDeclaration = propertyDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(propertyDeclaration, newPropertyDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -249,9 +271,17 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var summary = GenerateConstructorSummary(constructorDeclaration);
 		var parameters = GenerateMethodParameters(constructorDeclaration);
 
-		var documentationComment = generator.DocumentationComment(summary, parameters);
-		editor.InsertBefore(constructorDeclaration, documentationComment);
-
+		// Replace generator.DocumentationComment(summary, parameters) with direct XML trivia creation for constructor
+		var xmlNodes = new List<XmlNodeSyntax> { (XmlNodeSyntax)summary };
+		xmlNodes.AddRange(parameters.Cast<XmlNodeSyntax>());
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(xmlNodes)
+			)
+		);
+		var newConstructorDeclaration = constructorDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(constructorDeclaration, newConstructorDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -264,9 +294,15 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var generator = editor.Generator;
 
 		var summary = GenerateInterfaceSummary(interfaceDeclaration);
-		var documentationComment = generator.DocumentationComment(summary);
-
-		editor.InsertBefore(interfaceDeclaration, documentationComment);
+		// Replace generator.DocumentationComment(summary) with direct XML trivia creation for interface
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(new XmlNodeSyntax[] { (XmlNodeSyntax)summary })
+			)
+		);
+		var newInterfaceDeclaration = interfaceDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(interfaceDeclaration, newInterfaceDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -279,9 +315,15 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var generator = editor.Generator;
 
 		var summary = GenerateEnumSummary(enumDeclaration);
-		var documentationComment = generator.DocumentationComment(summary);
-
-		editor.InsertBefore(enumDeclaration, documentationComment);
+		// Replace generator.DocumentationComment(summary) with direct XML trivia creation for enum
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(new XmlNodeSyntax[] { (XmlNodeSyntax)summary })
+			)
+		);
+		var newEnumDeclaration = enumDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(enumDeclaration, newEnumDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -294,9 +336,15 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var generator = editor.Generator;
 
 		var summary = GenerateFieldSummary(fieldDeclaration);
-		var documentationComment = generator.DocumentationComment(summary);
-
-		editor.InsertBefore(fieldDeclaration, documentationComment);
+		// Replace generator.DocumentationComment(summary) with direct XML trivia creation for field
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(new XmlNodeSyntax[] { (XmlNodeSyntax)summary })
+			)
+		);
+		var newFieldDeclaration = fieldDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(fieldDeclaration, newFieldDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -309,9 +357,15 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 		var generator = editor.Generator;
 
 		var summary = GenerateEventSummary(eventDeclaration);
-		var documentationComment = generator.DocumentationComment(summary);
-
-		editor.InsertBefore(eventDeclaration, documentationComment);
+		// Replace generator.DocumentationComment(summary) with direct XML trivia creation for event
+		var xmlTrivia = SyntaxFactory.Trivia(
+			SyntaxFactory.DocumentationCommentTrivia(
+				SyntaxKind.SingleLineDocumentationCommentTrivia,
+				SyntaxFactory.List(new XmlNodeSyntax[] { (XmlNodeSyntax)summary })
+			)
+		);
+		var newEventDeclaration = eventDeclaration.WithLeadingTrivia(xmlTrivia);
+		editor.ReplaceNode(eventDeclaration, newEventDeclaration);
 		return editor.GetChangedDocument();
 	}
 
@@ -446,14 +500,18 @@ public class XmlDocumentationCodeFixProvider : CodeFixProvider
 			var parameterName = parameter.Identifier.ValueText;
 			var parameterType = parameter.Type?.ToString() ?? "object";
 			var summary = $"The {ToLowerFirst(parameterName)} parameter of type {parameterType}.";
-			
+
 			var paramElement = SyntaxFactory.XmlElement(
-				SyntaxFactory.XmlElementStartTag(SyntaxFactory.XmlName("param"), 
-					SyntaxFactory.SingletonList<XmlAttributeSyntax>(
-						SyntaxFactory.XmlNameAttribute("name", SyntaxFactory.XmlName("name"), 
-							SyntaxFactory.Token(SyntaxKind.DoubleQuoteToken), 
-							SyntaxFactory.IdentifierName(parameterName), 
-							SyntaxFactory.Token(SyntaxKind.DoubleQuoteToken)))),
+				SyntaxFactory.XmlElementStartTag(
+					SyntaxFactory.XmlName("param"),
+					SyntaxFactory.List(new XmlAttributeSyntax[] {
+						SyntaxFactory.XmlTextAttribute(
+							"name",
+							SyntaxFactory.Token(SyntaxKind.DoubleQuoteToken),
+							SyntaxFactory.Identifier(parameterName),
+							SyntaxFactory.Token(SyntaxKind.DoubleQuoteToken))
+					})
+				),
 				SyntaxFactory.SingletonList<XmlNodeSyntax>(
 					SyntaxFactory.XmlText(SyntaxFactory.TokenList(SyntaxFactory.XmlTextLiteral(summary)))),
 				SyntaxFactory.XmlElementEndTag(SyntaxFactory.XmlName("param")));

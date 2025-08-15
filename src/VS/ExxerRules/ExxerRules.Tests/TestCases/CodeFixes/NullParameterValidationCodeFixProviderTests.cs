@@ -1,8 +1,7 @@
 using ExxerRules.Analyzers;
-using ExxerRules.CodeFixes.NullSafety;
+using ExxerRules.CodeFixes;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using Shouldly;
 using Xunit;

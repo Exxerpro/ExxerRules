@@ -22,6 +22,11 @@ public class NSubstituteMockingCodeFixProvider : CodeFixProvider
 		ImmutableArray.Create(DiagnosticIds.UseNSubstitute);
 
 	/// <inheritdoc/>
+	/// <summary>
+	/// This method is called to register code fixes for a diagnostic.
+	/// It is an asynchronous method, and the code fixes should be registered
+	/// using the context.RegisterCodeFix method.
+	/// </summary>
 	public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
 	/// <inheritdoc/>
@@ -255,14 +260,13 @@ public class NSubstituteMockingCodeFixProvider : CodeFixProvider
 
 				if (setupArgument is LambdaExpressionSyntax lambda)
 				{
-					var methodCall = lambda.Body as InvocationExpressionSyntax;
-					if (methodCall != null)
+					if (lambda.Body is InvocationExpressionSyntax methodCall)
 					{
 						return SyntaxFactory.InvocationExpression(
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								mockExpression,
-								methodCall.Expression));
+								(methodCall.Expression as SimpleNameSyntax) ?? SyntaxFactory.IdentifierName(methodCall.Expression.ToString())));
 					}
 				}
 			}
@@ -351,8 +355,7 @@ public class NSubstituteMockingCodeFixProvider : CodeFixProvider
 
 				if (verifyArgument is LambdaExpressionSyntax lambda)
 				{
-					var methodCall = lambda.Body as InvocationExpressionSyntax;
-					if (methodCall != null)
+					if (lambda.Body is InvocationExpressionSyntax methodCall)
 					{
 						var receivedCall = SyntaxFactory.InvocationExpression(
 							SyntaxFactory.MemberAccessExpression(
@@ -368,7 +371,7 @@ public class NSubstituteMockingCodeFixProvider : CodeFixProvider
 							SyntaxFactory.MemberAccessExpression(
 								SyntaxKind.SimpleMemberAccessExpression,
 								receivedCall,
-								methodCall.Expression));
+								(methodCall.Expression as SimpleNameSyntax) ?? SyntaxFactory.IdentifierName(methodCall.Expression.ToString())));
 					}
 				}
 			}

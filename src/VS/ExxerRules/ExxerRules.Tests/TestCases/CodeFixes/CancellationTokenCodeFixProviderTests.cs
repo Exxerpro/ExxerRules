@@ -460,52 +460,52 @@ public class TestClass
 public interface ITestInterface
 {
     Task<string> TestMethodAsync(string parameter);
-}";
+
+        // Act
+        var document = CreateDocument(sourceCode);
+        var diagnostic = CreateDiagnostic(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
+
+        // Act & Assert
+        await Should.NotThrowAsync(() =>
+        {
+            var codeFixProvider = new CancellationTokenCodeFixProvider();
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
+            return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+        });
+    }
+
+    [Fact]
+    public async Task RegisterCodeFixesAsync_WithAsyncMethodInStruct_ShouldRegisterFixes()
+    {
+        // Arrange
+        var sourceCode = @"
+
+public struct TestStruct
+
+	{
+		public async Task<string> TestMethodAsync(string parameter)
+		{
+			await Task.Delay(100);
+			return parameter.ToUpper();
+		}
 	}";
 
         // Act
         private var document = CreateDocument(sourceCode);
 
-	// var codeFixProvider = new CancellationTokenCodeFixProvider();
 	private var diagnostic = CreateDiagnostic(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 	// Act & Assert
 	await Should.NotThrowAsync(() =>
 
 		{
+		var codeFixProvider = new CancellationTokenCodeFixProvider();
 		var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
 		return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 	});
     }
 
-    [Fact]
-	public async Task RegisterCodeFixesAsync_WithAsyncMethodInStruct_ShouldRegisterFixes()
-	{
-		// Arrange
-		var sourceCode = @"
-public struct TestStruct
-{
-    public async Task<string> TestMethodAsync(string parameter)
-    {
-        await Task.Delay(100);
-        return parameter.ToUpper();
-    }
-}";
-
-		// Act
-		var document = CreateDocument(sourceCode);
-		// var codeFixProvider = new CancellationTokenCodeFixProvider();
-		var diagnostic = CreateDiagnostic(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
-
-		// Act & Assert
-		await Should.NotThrowAsync(() =>
-		{
-			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
-		});
-	}
-
-	private static Document CreateDocument(string sourceCode)
+    private static Document CreateDocument(string sourceCode)
 	{
 		var workspace = new AdhocWorkspace();
 		var projectId = ProjectId.CreateNewId();

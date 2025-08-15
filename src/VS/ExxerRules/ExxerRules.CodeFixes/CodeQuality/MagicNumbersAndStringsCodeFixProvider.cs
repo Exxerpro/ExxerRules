@@ -103,9 +103,9 @@ public class MagicNumbersAndStringsCodeFixProvider : CodeFixProvider
 			var methodName = memberAccess.Name.Identifier.ValueText;
 			var arguments = invocationExpression.ArgumentList?.Arguments;
 
-			if (arguments != null && arguments.Count > 0)
+			if (arguments != null && arguments.Value.Count > 0)
 			{
-				var firstArgument = arguments[0].Expression;
+				var firstArgument = arguments.Value[0].Expression;
 				if (firstArgument is LiteralExpressionSyntax literal)
 				{
 					var value = literal.Token.ValueText;

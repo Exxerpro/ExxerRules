@@ -345,7 +345,20 @@ public class DomainShouldNotReferenceInfrastructureCodeFixProvider : CodeFixProv
 	/// </summary>
 	private class InfrastructureTypeToInterfaceRewriter : CSharpSyntaxRewriter
 	{
-		public override SyntaxNode? VisitTypeSyntax(TypeSyntax node)
+		public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
+		{
+			var typeName = node.ToString();
+			if (IsInfrastructureType(typeName))
+			{
+				// Replace infrastructure type with domain interface
+				var domainType = GetDomainType(typeName);
+				return SyntaxFactory.IdentifierName(domainType);
+			}
+
+			return base.VisitIdentifierName(node);
+		}
+
+		public override SyntaxNode? VisitGenericName(GenericNameSyntax node)
 		{
 			var typeName = node.ToString();
 			if (IsInfrastructureType(typeName))
@@ -355,7 +368,7 @@ public class DomainShouldNotReferenceInfrastructureCodeFixProvider : CodeFixProv
 				return SyntaxFactory.ParseTypeName(domainType);
 			}
 
-			return base.VisitTypeSyntax(node);
+			return base.VisitGenericName(node);
 		}
 
 		private static string GetDomainType(string infrastructureType)

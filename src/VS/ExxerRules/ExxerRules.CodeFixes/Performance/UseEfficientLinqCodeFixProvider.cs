@@ -259,9 +259,9 @@ public class UseEfficientLinqCodeFixProvider : CodeFixProvider
 			{
 				// Optimize Where clauses by combining them
 				var arguments = node.ArgumentList?.Arguments;
-				if (arguments != null && arguments.Count > 0)
+				if (arguments != null && arguments.Value.Count > 0)
 				{
-					var predicate = arguments[0].Expression;
+					var predicate = arguments.Value[0].Expression;
 					// In practice, you'd implement more sophisticated optimization logic
 					return base.VisitInvocationExpression(node);
 				}
@@ -283,9 +283,9 @@ public class UseEfficientLinqCodeFixProvider : CodeFixProvider
 			{
 				// Optimize Select clauses by combining them
 				var arguments = node.ArgumentList?.Arguments;
-				if (arguments != null && arguments.Count > 0)
+				if (arguments != null && arguments.Value.Count > 0)
 				{
-					var selector = arguments[0].Expression;
+					var selector = arguments.Value[0].Expression;
 					// In practice, you'd implement more sophisticated optimization logic
 					return base.VisitInvocationExpression(node);
 				}
@@ -383,7 +383,7 @@ public class UseEfficientLinqCodeFixProvider : CodeFixProvider
 				{
 					// Convert Where().Count() to Count(predicate)
 					var whereArguments = sourceInvocation.ArgumentList?.Arguments;
-					if (whereArguments != null && whereArguments.Count > 0)
+					if (whereArguments != null && whereArguments.Value.Count > 0)
 					{
 						return SyntaxFactory.InvocationExpression(
 							SyntaxFactory.MemberAccessExpression(
@@ -391,7 +391,7 @@ public class UseEfficientLinqCodeFixProvider : CodeFixProvider
 								sourceMemberAccess.Expression,
 								SyntaxFactory.IdentifierName("Count")),
 							SyntaxFactory.ArgumentList(
-								SyntaxFactory.SeparatedList(whereArguments)));
+								SyntaxFactory.SeparatedList<ArgumentSyntax>(whereArguments.Value)));
 					}
 				}
 			}
@@ -461,19 +461,6 @@ public class UseEfficientLinqCodeFixProvider : CodeFixProvider
 							SyntaxFactory.SeparatedList(new[]
 							{
 								SyntaxFactory.Argument(whereClause.Condition)
-							})));
-				}
-				else if (clause is SelectClauseSyntax selectClause)
-				{
-					result = SyntaxFactory.InvocationExpression(
-						SyntaxFactory.MemberAccessExpression(
-							SyntaxKind.SimpleMemberAccessExpression,
-							result,
-							SyntaxFactory.IdentifierName("Select")),
-						SyntaxFactory.ArgumentList(
-							SyntaxFactory.SeparatedList(new[]
-							{
-								SyntaxFactory.Argument(selectClause.Expression)
 							})));
 				}
 			}

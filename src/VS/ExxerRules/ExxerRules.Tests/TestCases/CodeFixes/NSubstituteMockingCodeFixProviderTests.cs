@@ -1,8 +1,7 @@
 using ExxerRules.Analyzers;
-using ExxerRules.CodeFixes.Testing;
+using ExxerRules.CodeFixes;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using Shouldly;
 using Xunit;
@@ -14,11 +13,11 @@ namespace ExxerRules.Tests.TestCases.CodeFixes;
 /// </summary>
 public class NSubstituteMockingCodeFixProviderTests : CodeFixProviderTest<NSubstituteMockingCodeFixProvider>
 {
-    [Fact]
-    public async Task RegisterCodeFixesAsync_WithMoqSetupInvocation_ShouldRegisterFixes()
-    {
-        // Arrange
-        var sourceCode = @"
+	[Fact]
+	public async Task RegisterCodeFixesAsync_WithMoqSetupInvocation_ShouldRegisterFixes()
+	{
+		// Arrange
+		var sourceCode = @"
 using Moq;
 using Xunit;
 
@@ -37,24 +36,24 @@ public interface IInterface
     string Method();
 }";
 
-        // Act
-        var document = CreateDocument(sourceCode);
-        var codeFixProvider = new NSubstituteMockingCodeFixProvider();
-        var diagnostic = CreateDiagnostic(DiagnosticIds.UseNSubstitute, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
+		// Act
+		var document = CreateDocument(sourceCode);
+		var codeFixProvider = new NSubstituteMockingCodeFixProvider();
+		var diagnostic = CreateDiagnostic(DiagnosticIds.UseNSubstitute, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
-        // Act & Assert
-        await Should.NotThrowAsync(async () =>
-        {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
-            await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
-        });
-    }
+		// Act & Assert
+		await Should.NotThrowAsync(async () =>
+		{
+			var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+		});
+	}
 
-    [Fact]
-    public async Task RegisterCodeFixesAsync_WithMoqReturnsInvocation_ShouldRegisterFixes()
-    {
-        // Arrange
-        var sourceCode = @"
+	[Fact]
+	public async Task RegisterCodeFixesAsync_WithMoqReturnsInvocation_ShouldRegisterFixes()
+	{
+		// Arrange
+		var sourceCode = @"
 using Moq;
 using Xunit;
 
@@ -73,24 +72,24 @@ public interface IInterface
     string Method();
 }";
 
-        // Act
-        var document = CreateDocument(sourceCode);
-        var codeFixProvider = new NSubstituteMockingCodeFixProvider();
-        var diagnostic = CreateDiagnostic(DiagnosticIds.UseNSubstitute, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
+		// Act
+		var document = CreateDocument(sourceCode);
+		var codeFixProvider = new NSubstituteMockingCodeFixProvider();
+		var diagnostic = CreateDiagnostic(DiagnosticIds.UseNSubstitute, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
-        // Act & Assert
-        await Should.NotThrowAsync(async () =>
-        {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
-            await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
-        });
-    }
+		// Act & Assert
+		await Should.NotThrowAsync(async () =>
+		{
+			var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+		});
+	}
 
-    [Fact]
-    public async Task RegisterCodeFixesAsync_WithMoqThrowsInvocation_ShouldRegisterFixes()
-    {
-        // Arrange
-        var sourceCode = @"
+	[Fact]
+	public async Task RegisterCodeFixesAsync_WithMoqThrowsInvocation_ShouldRegisterFixes()
+	{
+		// Arrange
+		var sourceCode = @"
 using Moq;
 using Xunit;
 

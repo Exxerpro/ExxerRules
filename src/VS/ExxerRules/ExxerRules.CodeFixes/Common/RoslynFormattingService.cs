@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Host;
 
 namespace ExxerRules.CodeFixes.Common;
 
@@ -93,7 +94,7 @@ public static class RoslynFormattingService
 
             // Create formatting options that only affect whitespace
             var workspace = document.Project.Solution.Workspace;
-            var options = workspace.Options;
+            var options = document.Project.Solution.Workspace.Options;
             
             // Apply whitespace-only formatting
             var formattedRoot = Formatter.Format(root, workspace, options, cancellationToken: cancellationToken);
@@ -178,43 +179,66 @@ public static class RoslynFormattingService
     /// <summary>
     /// Creates default C# formatting options.
     /// </summary>
+    /// <param name="workspace">The workspace to get options from.</param>
     /// <returns>Default formatting options for C#.</returns>
-    public static OptionSet CreateDefaultFormattingOptions()
+    public static OptionSet CreateDefaultFormattingOptions(Workspace workspace)
     {
-        var options = new OptionSet();
-        
+        var options = workspace.Options;
         // Set common C# formatting options
         options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInLambdaExpressionBody, false);
         options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInAnonymousMethods, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInAnonymousObjectInitializers, false);
+        // options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInAnonymousObjectInitializers, false);
         options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, false);
         options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInTypes, false);
         options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInMethods, false);
         options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInProperties, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInObjectInitializers, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInCollectionInitializers, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInArrayInitializers, false);
-        
+        // options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInObjectInitializers, false);
+        // options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInCollectionInitializers, false);
+        // options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInArrayInitializers, false);
         return options;
     }
 
     /// <summary>
-    /// Creates formatting options that match common .NET formatting standards.
+    /// Creates .NET formatting options for consistent code style.
     /// </summary>
-    /// <returns>Formatting options for .NET standards.</returns>
+    /// <param name="workspace">The workspace to get options from.</param>
+    /// <returns>OptionSet with .NET formatting rules.</returns>
+    public static OptionSet CreateDotNetFormattingOptions(Workspace workspace)
+    {
+        var options = workspace.Options;
+        // Set .NET formatting standards
+        options = options.WithChangedOption(CSharpFormattingOptions.IndentBraces, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInTypes, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInMethods, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInProperties, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInObjectCollectionArrayInitializers, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInLambdaExpressionBody, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInAnonymousTypes, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInControlBlocks, false);
+        options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInAnonymousMethods, false);
+        // options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInObjectInitializers, false);
+        // options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInCollectionInitializers, false);
+        // options = options.WithChangedOption(CSharpFormattingOptions.NewLinesForBracesInArrayInitializers, false);
+        return options;
+    }
+
+    /// <summary>
+    /// Creates default C# formatting options.
+    /// </summary>
+    /// <returns>Default formatting options for C#.</returns>
+    public static OptionSet CreateDefaultFormattingOptions()
+    {
+        var workspace = new AdhocWorkspace();
+        return CreateDefaultFormattingOptions(workspace);
+    }
+
+    /// <summary>
+    /// Creates .NET formatting options for consistent code style.
+    /// </summary>
+    /// <returns>OptionSet with .NET formatting rules.</returns>
     public static OptionSet CreateDotNetFormattingOptions()
     {
-        var options = CreateDefaultFormattingOptions();
-        
-        // Apply .NET formatting conventions
-        options = options.WithChangedOption(CSharpFormattingOptions.IndentBraces, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.SpaceAfterControlFlowStatementKeyword, true);
-        options = options.WithChangedOption(CSharpFormattingOptions.SpaceWithinExpressionParentheses, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.SpaceWithinCastParentheses, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.SpaceWithinOtherParentheses, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.SpaceAfterCast, false);
-        options = options.WithChangedOption(CSharpFormattingOptions.SpacesIgnoreAroundVariableDeclaration, false);
-        
-        return options;
+        var workspace = new AdhocWorkspace();
+        return CreateDotNetFormattingOptions(workspace);
     }
 }

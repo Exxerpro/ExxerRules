@@ -18,7 +18,7 @@ namespace ExxerRules.CodeFixes.Logging;
 public class StructuredLoggingCodeFixProvider : CodeFixProvider
 {
 	/// <inheritdoc/>
-	public override sealed ImmutableArray<string> FixableDiagnosticIds => 
+	public override sealed ImmutableArray<string> FixableDiagnosticIds =>
 		ImmutableArray.Create(DiagnosticIds.UseStructuredLogging);
 
 	/// <inheritdoc/>
@@ -61,9 +61,11 @@ public class StructuredLoggingCodeFixProvider : CodeFixProvider
 			case InvocationExpressionSyntax invocationExpression:
 				RegisterInvocationFixes(context, diagnostic, invocationExpression);
 				break;
+
 			case InterpolatedStringExpressionSyntax interpolatedString:
 				RegisterInterpolatedStringFixes(context, diagnostic, interpolatedString);
 				break;
+
 			case BinaryExpressionSyntax binaryExpression:
 				RegisterBinaryExpressionFixes(context, diagnostic, binaryExpression);
 				break;
@@ -101,15 +103,12 @@ public class StructuredLoggingCodeFixProvider : CodeFixProvider
 	/// <summary>
 	/// Registers code fix options for interpolated string conversion.
 	/// </summary>
-	private static void RegisterInterpolatedStringFixes(CodeFixContext context, Diagnostic diagnostic, InterpolatedStringExpressionSyntax interpolatedString)
-	{
-		context.RegisterCodeFix(
-			CodeAction.Create(
-				title: "🔄 Convert interpolated string to structured logging",
-				createChangedDocument: c => ConvertInterpolatedStringToStructuredLoggingAsync(context.Document, interpolatedString, c),
-				equivalenceKey: "ConvertInterpolatedStringToStructuredLogging"),
-			diagnostic);
-	}
+	private static void RegisterInterpolatedStringFixes(CodeFixContext context, Diagnostic diagnostic, InterpolatedStringExpressionSyntax interpolatedString) => context.RegisterCodeFix(
+		CodeAction.Create(
+			title: "🔄 Convert interpolated string to structured logging",
+			createChangedDocument: c => ConvertInterpolatedStringToStructuredLoggingAsync(context.Document, interpolatedString, c),
+			equivalenceKey: "ConvertInterpolatedStringToStructuredLogging"),
+		diagnostic);
 
 	/// <summary>
 	/// Registers code fix options for binary expression conversion.
@@ -178,11 +177,17 @@ public class StructuredLoggingCodeFixProvider : CodeFixProvider
 			{
 				parts.Add(text);
 			}
-			else if (content is InterpolatedStringInsertSyntax insert)
+			else if (content is InterpolationSyntax insert)
 			{
 				// Convert interpolation to structured logging parameter
 				var parameterName = GenerateParameterName(insert.Expression);
-				parts.Add(SyntaxFactory.InterpolatedStringText($"{{{parameterName}}}"));
+				parts.Add(SyntaxFactory.InterpolatedStringText(
+					SyntaxFactory.Token(
+						SyntaxTriviaList.Empty,
+						SyntaxKind.InterpolatedStringTextToken,
+						$"{{{parameterName}}}",
+						$"{{{parameterName}}}",
+						SyntaxTriviaList.Empty)));
 				parameters.Add(SyntaxFactory.Argument(insert.Expression));
 			}
 		}
@@ -262,9 +267,10 @@ public class StructuredLoggingCodeFixProvider : CodeFixProvider
 				var methodName = memberAccess.Name.Identifier.ValueText;
 				var arguments = node.ArgumentList?.Arguments;
 
-				if (arguments != null && arguments.Count > 0)
+				var args = arguments;
+				if (args != null && args.Value.Count > 0)
 				{
-					var firstArgument = arguments[0].Expression;
+					var firstArgument = args.Value[0].Expression;
 
 					// Convert string concatenation to structured logging
 					if (firstArgument is BinaryExpressionSyntax binaryExpression &&

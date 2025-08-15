@@ -1,8 +1,7 @@
 using ExxerRules.Analyzers;
-using ExxerRules.CodeFixes.ModernCSharp;
+using ExxerRules.CodeFixes;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using Shouldly;
 using Xunit;
@@ -18,7 +17,7 @@ public class ModernPatternMatchingCodeFixProviderTests : CodeFixProviderTest<Mod
     public async Task RegisterCodeFixesAsync_WithTraditionalIsExpression_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -48,7 +47,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithTraditionalSwitchStatement_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -82,7 +81,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithIsPatternExpression_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public bool TestMethod(object obj)
@@ -108,7 +107,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithSwitchExpression_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -139,7 +138,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithTraditionalIsExpressionInTernary_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -165,7 +164,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithTraditionalIsExpressionInLambda_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public void TestMethod()
@@ -192,7 +191,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithTraditionalSwitchStatementWithFallThrough_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -225,7 +224,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithTraditionalSwitchStatementWithWhenClause_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -259,7 +258,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithAlreadyModernPatternMatching_ShouldNotRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -290,7 +289,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithComplexPatternMatching_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -352,7 +351,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -382,7 +381,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithPropertyPatternMatching_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod(object obj)
@@ -412,7 +411,7 @@ public class TestClass
     public async Task RegisterCodeFixesAsync_WithTuplePatternMatching_ShouldRegisterFixes()
     {
         // Arrange
-        var sourceCode = @"
+        var sourceCode = @"""
 public class TestClass
 {
     public string TestMethod((string, int) tuple)

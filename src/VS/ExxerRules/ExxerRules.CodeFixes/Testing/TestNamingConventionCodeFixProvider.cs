@@ -171,7 +171,7 @@ public class TestNamingConventionCodeFixProvider : CodeFixProvider
 	{
 		// Convert to PascalCase and add Should prefix
 		var words = SplitIntoWords(currentName);
-		var action = string.Join("", words.Skip(1).Take(words.Length - 2));
+		var action = string.Join("", words.Skip(1).Take(words.Count - 2));
 		var subject = words.FirstOrDefault() ?? "Method";
 
 		return $"Should_{action}_When_{subject}";
@@ -192,21 +192,37 @@ public class TestNamingConventionCodeFixProvider : CodeFixProvider
 	private static string ExtractExceptionType(string methodName)
 	{
 		if (methodName.Contains("ArgumentNullException"))
+		{
 			return "ArgumentNullException";
+		}
 		if (methodName.Contains("ArgumentException"))
+		{
 			return "ArgumentException";
+		}
 		if (methodName.Contains("InvalidOperationException"))
+		{
 			return "InvalidOperationException";
+		}
 		if (methodName.Contains("NotSupportedException"))
+		{
 			return "NotSupportedException";
+		}
 		if (methodName.Contains("TimeoutException"))
+		{
 			return "TimeoutException";
+		}
 		if (methodName.Contains("UnauthorizedAccessException"))
+		{
 			return "UnauthorizedAccessException";
+		}
 		if (methodName.Contains("FileNotFoundException"))
+		{
 			return "FileNotFoundException";
+		}
 		if (methodName.Contains("OutOfMemoryException"))
+		{
 			return "OutOfMemoryException";
+		}
 
 		return "Exception";
 	}
@@ -282,22 +298,22 @@ public class TestNamingConventionCodeFixProvider : CodeFixProvider
 	/// </summary>
 	private class MethodCallRenamer : CSharpSyntaxRewriter
 	{
-		private readonly string _oldName;
-		private readonly string _newName;
+		private readonly string oldName;
+		private readonly string newName;
 
 		public MethodCallRenamer(string oldName, string newName)
 		{
-			_oldName = oldName;
-			_newName = newName;
+			this.oldName = oldName;
+			this.newName = newName;
 		}
 
 		public override SyntaxNode? VisitInvocationExpression(InvocationExpressionSyntax node)
 		{
 			if (node.Expression is MemberAccessExpressionSyntax memberAccess &&
-				memberAccess.Name.Identifier.ValueText == _oldName)
+				memberAccess.Name.Identifier.ValueText == oldName)
 			{
 				var newMemberAccess = memberAccess.WithName(
-					SyntaxFactory.IdentifierName(_newName));
+					SyntaxFactory.IdentifierName(newName));
 				return node.WithExpression(newMemberAccess);
 			}
 
@@ -306,9 +322,9 @@ public class TestNamingConventionCodeFixProvider : CodeFixProvider
 
 		public override SyntaxNode? VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
 		{
-			if (node.Name.Identifier.ValueText == _oldName)
+			if (node.Name.Identifier.ValueText == oldName)
 			{
-				return node.WithName(SyntaxFactory.IdentifierName(_newName));
+				return node.WithName(SyntaxFactory.IdentifierName(newName));
 			}
 
 			return base.VisitMemberAccessExpression(node);

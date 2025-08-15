@@ -116,7 +116,6 @@ public class TestClass
         // Assert
         // Note: In a real test environment, we would verify that the code actions were registered
         // and then execute them to verify the formatting. For now, we just verify the provider doesn't throw.
-        codeFixContext.ShouldNotBeNull();
     }
 
     private static Document CreateDocument(string sourceCode)

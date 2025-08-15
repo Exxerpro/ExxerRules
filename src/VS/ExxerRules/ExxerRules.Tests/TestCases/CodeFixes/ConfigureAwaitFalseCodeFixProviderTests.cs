@@ -1,3 +1,4 @@
+#pragma warning disable CS0103, CS8602, IDE0053, IDE0031
 using ExxerRules.Analyzers;
 using ExxerRules.CodeFixes;
 using ExxerRules.CodeFixes.Async;
@@ -34,10 +35,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -61,10 +62,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -89,10 +90,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -117,10 +118,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -145,10 +146,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -178,10 +179,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -209,10 +210,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -237,10 +238,10 @@ public class TestClass
 		var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
+		await Should.NotThrowAsync(() =>
 		{
 			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-			await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 		});
 	}
 
@@ -314,10 +315,10 @@ public class TestClass
         var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
         // Act & Assert
-        await Should.NotThrowAsync(async () =>
+        await Should.NotThrowAsync(() =>
         {
-            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-            await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
+            return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
 
@@ -345,10 +346,10 @@ public class TestClass
         var diagnostic = CreateDiagnostic(DiagnosticIds.UseConfigureAwaitFalse, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
         // Act & Assert
-        await Should.NotThrowAsync(async () =>
+        await Should.NotThrowAsync(() =>
         {
-            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-            await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
+            return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
 
@@ -371,3 +372,5 @@ public class TestClass
         return Diagnostic.Create(descriptor, location);
     }
 }
+
+#pragma warning restore CS0103, CS8602, IDE0053, IDE0031

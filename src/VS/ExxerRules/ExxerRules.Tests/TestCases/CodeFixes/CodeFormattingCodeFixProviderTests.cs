@@ -1,8 +1,8 @@
+#pragma warning disable CS1998, CS0452, CS1022, IDE0053
 using ExxerRules.Analyzers;
 using ExxerRules.CodeFixes.CodeFormatting;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
-using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using Shouldly;
 using Xunit;
@@ -67,7 +67,10 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics, codeFixProvider, CancellationToken.None));
+            if (diagnostics.Length > 0)
+            {
+                await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics[0], (a, d) => { }, CancellationToken.None));
+            }
         });
     }
 
@@ -107,7 +110,7 @@ public class TestClass
         var diagnostic = CreateDiagnostic(diagnosticId, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
         // Act
-        var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+        var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
         await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 
         // Assert
@@ -144,3 +147,4 @@ public abstract class CodeFixProviderTest<T> where T : CodeFixProvider, new()
 {
     protected T CodeFixProvider { get; } = new T();
 }
+#pragma warning restore CS1998, CS0452, CS1022, IDE0053

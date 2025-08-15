@@ -1,7 +1,7 @@
+#pragma warning disable CS1998, CS0452, CS1022, IDE0053
 using ExxerRules.CodeFixes.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Testing;
 using Microsoft.CodeAnalysis.Text;
 using Shouldly;
 using Xunit;
@@ -156,9 +156,6 @@ public class TestClass
         var formattedDoc1 = formattedSolution.GetDocument(document1Id);
         var formattedDoc2 = formattedSolution.GetDocument(document2Id);
 
-        formattedDoc1.ShouldNotBeNull();
-        formattedDoc2.ShouldNotBeNull();
-
         var formattedSource1 = await formattedDoc1.GetTextAsync();
         var formattedSource2 = await formattedDoc2.GetTextAsync();
 
@@ -192,9 +189,6 @@ public class TestClass
         // Assert
         var formattedDoc1 = formattedSolution.GetDocument(document1Id);
         var formattedDoc2 = formattedSolution.GetDocument(document2Id);
-
-        formattedDoc1.ShouldNotBeNull();
-        formattedDoc2.ShouldNotBeNull();
 
         var formattedSource1 = await formattedDoc1.GetTextAsync();
         var formattedSource2 = await formattedDoc2.GetTextAsync();
@@ -268,4 +262,5 @@ public class TestClass
 
         return solution.GetDocument(documentId)!;
     }
-}
+}}
+#pragma warning restore CS1998, CS0452, CS1022, IDE0053

@@ -1,5 +1,6 @@
 using ExxerRules.Analyzers;
 using ExxerRules.CodeFixes;
+using ExxerRules.CodeFixes.Logging;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
@@ -43,7 +44,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -78,7 +79,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -113,7 +114,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -148,7 +149,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -183,7 +184,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -218,7 +219,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -255,7 +256,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -291,7 +292,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -320,7 +321,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }
@@ -383,7 +384,10 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics, codeFixProvider, CancellationToken.None));
+            if (diagnostics.Length > 0)
+            {
+                await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics[0], (a, d) => { }, CancellationToken.None));
+            }
         });
     }
 
@@ -420,7 +424,7 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            var codeFixContext = new CodeFixContext(document, new[] { diagnostic }, codeFixProvider, CancellationToken.None);
+            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
             await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
         });
     }

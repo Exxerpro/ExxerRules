@@ -1,6 +1,7 @@
 #pragma warning disable CS1998, CS8031, CS0117, IDE0053
 
 using ExxerRules.Analyzers;
+using ExxerRules.CodeFixes.Async;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
@@ -392,26 +393,12 @@ public class TestClass
 	public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
 	{
 		// Arrange
-		var sourceCode = @"
-public class TestClass
-{
-    public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken)
-    {
-        await Task.Delay(100, cancellationToken);
-        return parameter.ToUpper();
-    }
-}";
-
-		// Act
+		var sourceCode = @"public class TestClass { public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken) { await Task.Delay(100, cancellationToken); return parameter.ToUpper(); } }";
 		var document = CreateDocument(sourceCode);
 		var diagnostics = new Diagnostic[] { };
 
 		// Act & Assert
-		await Should.NotThrowAsync(async () =>
-		{
-			// await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics, codeFixProvider, CancellationToken.None));
-			return Task.CompletedTask;
-		});
+		await Should.NotThrowAsync(() => Task.CompletedTask);
 	}
 
 	[Fact]
@@ -456,56 +443,35 @@ public class TestClass
 	public async Task RegisterCodeFixesAsync_WithAsyncMethodInInterface_ShouldRegisterFixes()
 	{
 		// Arrange
-		var sourceCode = @"
-public interface ITestInterface
-{
-    Task<string> TestMethodAsync(string parameter);
+		var sourceCode = @"public interface ITestInterface { Task<string> TestMethodAsync(string parameter); }";
+		var document = CreateDocument(sourceCode);
+		var diagnostic = CreateDiagnostic(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
+		// Act & Assert
+		await Should.NotThrowAsync(() =>
+		{
+			var codeFixProvider = new CancellationTokenCodeFixProvider();
+			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+		});
+	}
 
-        // Act
-        var document = CreateDocument(sourceCode);
-        var diagnostic = CreateDiagnostic(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
-
-        // Act & Assert
-        await Should.NotThrowAsync(() =>
-        {
-            var codeFixProvider = new CancellationTokenCodeFixProvider();
-            var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-            return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
-        });
-    }
-
-    [Fact]
-    public async Task RegisterCodeFixesAsync_WithAsyncMethodInStruct_ShouldRegisterFixes()
-    {
-        // Arrange
-        var sourceCode = @"
-
-public struct TestStruct
-
+	[Fact]
+	public async Task RegisterCodeFixesAsync_WithAsyncMethodInStruct_ShouldRegisterFixes()
 	{
-		public async Task<string> TestMethodAsync(string parameter)
+		// Arrange
+		var sourceCode = @"public struct TestStruct { public async Task<string> TestMethodAsync(string parameter) { await Task.Delay(100); return parameter.ToUpper(); } }";
+		var document = CreateDocument(sourceCode);
+		var diagnostic = CreateDiagnostic(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
+		// Act & Assert
+		await Should.NotThrowAsync(() =>
 		{
-			await Task.Delay(100);
-			return parameter.ToUpper();
-		}
-	}";
+			var codeFixProvider = new CancellationTokenCodeFixProvider();
+			var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
+			return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
+		});
+	}
 
-        // Act
-        private var document = CreateDocument(sourceCode);
-
-	private var diagnostic = CreateDiagnostic(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
-
-	// Act & Assert
-	await Should.NotThrowAsync(() =>
-
-		{
-		var codeFixProvider = new CancellationTokenCodeFixProvider();
-		var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
-		return codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
-	});
-    }
-
-    private static Document CreateDocument(string sourceCode)
+	private static Document CreateDocument(string sourceCode)
 	{
 		var workspace = new AdhocWorkspace();
 		var projectId = ProjectId.CreateNewId();

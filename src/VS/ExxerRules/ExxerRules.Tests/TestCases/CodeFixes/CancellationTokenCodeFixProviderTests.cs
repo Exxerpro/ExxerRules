@@ -22,11 +22,11 @@ public class CancellationTokenCodeFixProviderTests //: CodeFixProviderTest<Cance
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter)
-    {
-        await Task.Delay(100);
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethodAsync(string parameter)
+	{
+		await Task.Delay(100);
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -49,10 +49,10 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async void TestMethodAsync(string parameter)
-    {
-        await Task.Delay(100);
-    }
+	public async void TestMethodAsync(string parameter)
+	{
+		await Task.Delay(100);
+	}
 }";
 
 		// Act
@@ -75,11 +75,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter1, int parameter2, object parameter3)
-    {
-        await Task.Delay(100);
-        return $""{parameter1}_{parameter2}_{parameter3}"";
-    }
+	public async Task<string> TestMethodAsync(string parameter1, int parameter2, object parameter3)
+	{
+		await Task.Delay(100);
+		return $""{parameter1}_{parameter2}_{parameter3}"";
+	}
 }";
 
 		// Act
@@ -102,11 +102,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken)
-    {
-        await Task.Delay(100, cancellationToken);
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken)
+	{
+		await Task.Delay(100, cancellationToken);
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -129,10 +129,10 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public string TestMethod(string parameter)
-    {
-        return parameter.ToUpper();
-    }
+	public string TestMethod(string parameter)
+	{
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -155,11 +155,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken = default)
-    {
-        await Task.Delay(100, cancellationToken);
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken = default)
+	{
+		await Task.Delay(100, cancellationToken);
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -182,11 +182,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken = CancellationToken.None)
-    {
-        await Task.Delay(100, cancellationToken);
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken = CancellationToken.None)
+	{
+		await Task.Delay(100, cancellationToken);
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -209,11 +209,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken1, CancellationToken cancellationToken2)
-    {
-        await Task.Delay(100, cancellationToken1);
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethodAsync(string parameter, CancellationToken cancellationToken1, CancellationToken cancellationToken2)
+	{
+		await Task.Delay(100, cancellationToken1);
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -236,11 +236,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(ref string parameter)
-    {
-        await Task.Delay(100);
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethodAsync(ref string parameter)
+	{
+		await Task.Delay(100);
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -263,12 +263,12 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter, out int result)
-    {
-        await Task.Delay(100);
-        result = 42;
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethodAsync(string parameter, out int result)
+	{
+		await Task.Delay(100);
+		result = 42;
+		return parameter.ToUpper();
+	}
 }";
 
 		// Act
@@ -291,11 +291,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<T> TestMethodAsync<T>(T parameter) where T : class
-    {
-        await Task.Delay(100);
-        return parameter;
-    }
+	public async Task<T> TestMethodAsync<T>(T parameter) where T : class
+	{
+		await Task.Delay(100);
+		return parameter;
+	}
 }";
 
 		// Act
@@ -318,7 +318,7 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync(string parameter) => await Task.FromResult(parameter.ToUpper());
+	public async Task<string> TestMethodAsync(string parameter) => await Task.FromResult(parameter.ToUpper());
 }";
 
 		// Act
@@ -341,11 +341,11 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethodAsync()
-    {
-        await Task.Delay(100);
-        return ""test"";
-    }
+	public async Task<string> TestMethodAsync()
+	{
+		await Task.Delay(100);
+		return ""test"";
+	}
 }";
 
 		// Act
@@ -408,22 +408,22 @@ public class TestClass
 		var sourceCode = @"
 public class TestClass
 {
-    public async Task<string> TestMethod1Async(string parameter)
-    {
-        await Task.Delay(100);
-        return parameter.ToUpper();
-    }
+	public async Task<string> TestMethod1Async(string parameter)
+	{
+		await Task.Delay(100);
+		return parameter.ToUpper();
+	}
 
-    public async Task<int> TestMethod2Async(int parameter)
-    {
-        await Task.Delay(100);
-        return parameter * 2;
-    }
+	public async Task<int> TestMethod2Async(int parameter)
+	{
+		await Task.Delay(100);
+		return parameter * 2;
+	}
 
-    public async void TestMethod3Async()
-    {
-        await Task.Delay(100);
-    }
+	public async void TestMethod3Async()
+	{
+		await Task.Delay(100);
+	}
 }";
 
 		// Act

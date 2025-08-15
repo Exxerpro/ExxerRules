@@ -238,7 +238,6 @@ public class ModernPatternMatchingCodeFixProvider : CodeFixProvider
 			var arms = new List<SwitchExpressionArmSyntax>
 			{
 				SyntaxFactory.SwitchExpressionArm(
-					SyntaxFactory.DiscardPattern(),
 					SyntaxFactory.ConstantPattern(SyntaxFactory.LiteralExpression(SyntaxKind.TrueLiteralExpression)),
 					isPattern.Expression)
 			};
@@ -359,7 +358,9 @@ public class ModernPatternMatchingCodeFixProvider : CodeFixProvider
 					{
 						// Convert to constant pattern
 						var constantPattern = SyntaxFactory.ConstantPattern(caseSwitch.Value);
-						var newLabel = SyntaxFactory.CasePatternSwitchLabel(constantPattern);
+						var whenClause = (WhenClauseSyntax?)null; // No when clause for simple constant pattern
+						var colonToken = SyntaxFactory.Token(SyntaxKind.ColonToken);
+						var newLabel = SyntaxFactory.CasePatternSwitchLabel(constantPattern, whenClause, colonToken);
 						newLabels.Add(newLabel);
 					}
 					else

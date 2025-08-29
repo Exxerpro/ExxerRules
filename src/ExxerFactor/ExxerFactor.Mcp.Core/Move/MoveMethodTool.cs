@@ -12,6 +12,9 @@ using ExxerFactor.Mcp.Core.Tools;
 
 namespace ExxerFactor.Mcp.Core.Move;
 
+/// <summary>
+/// Server-exposed tools for moving static and instance methods between classes and files while preserving public APIs.
+/// </summary>
 [McpServerToolType]
 public static class MoveMethodTool
 {
@@ -20,6 +23,11 @@ public static class MoveMethodTool
     private static string GetKey(string filePath, string methodName) =>
         $"{Path.GetFullPath(filePath)}::{methodName}";
 
+    /// <summary>
+    /// Ensures the specified method has not already been moved during this session.
+    /// </summary>
+    /// <param name="filePath">The path to the file containing the method.</param>
+    /// <param name="methodName">The name of the method to check.</param>
     public static void EnsureNotAlreadyMoved(string filePath, string methodName)
     {
         if (_movedMethods.Contains(GetKey(filePath, methodName)))
@@ -30,9 +38,18 @@ public static class MoveMethodTool
         }
     }
 
+    /// <summary>
+    /// Records that a method has been moved during this session.
+    /// </summary>
+    /// <param name="filePath">The path to the file containing the method.</param>
+    /// <param name="methodName">The name of the method that was moved.</param>
     public static void MarkMoved(string filePath, string methodName)
         => _movedMethods.Add(GetKey(filePath, methodName));
 
+    /// <summary>
+    /// Clears the in-memory record of moved methods so they can be moved again.
+    /// </summary>
+    /// <returns>A message indicating the history was cleared.</returns>
     [McpServerTool, Description("Clear the record of moved methods so they can be moved again. Do not use unless explicitly asked to.")]
     public static string ResetMoveHistory()
     {
@@ -40,6 +57,17 @@ public static class MoveMethodTool
         return "Cleared move history";
     }
 
+    /// <summary>
+    /// Moves a static method to a target class (optionally across files) and leaves a delegating stub in the original class.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the method.</param>
+    /// <param name="methodName">Name of the static method to move.</param>
+    /// <param name="targetClass">Name of the target class.</param>
+    /// <param name="targetFilePath">Optional path to the target file.</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A status message describing the performed move.</returns>
     [McpServerTool, Description("Move a static method to another class (preferred for large C# file ExxerFactoring). " +
         "Leaves a delegating method in the original class to preserve the interface." +
         "The target class will be automatically created if it doesn't exist.")]
@@ -235,6 +263,20 @@ public static class MoveMethodTool
         progress?.Report(context.TargetPath);
     }
 
+    /// <summary>
+    /// Moves one or more instance methods to a target class while preserving public APIs with delegating wrappers.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the method(s).</param>
+    /// <param name="sourceClass">Name of the source class containing the methods.</param>
+    /// <param name="methodNames">Names of the methods to move.</param>
+    /// <param name="targetClass">Name of the target class.</param>
+    /// <param name="targetFilePath">Optional path to the target file.</param>
+    /// <param name="constructorInjections">Dependencies to inject via the target class constructor.</param>
+    /// <param name="parameterInjections">Dependencies to keep as parameters.</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A status message describing the move(s).</returns>
     [McpServerTool, Description("Move one or more instance methods to another class (preferred for large C# file ExxerFactoring). " +
         "Each original method is replaced with a wrapper that calls the moved version to maintain the public API." +
         "The target class will be automatically created if it doesn't exist.")]
@@ -456,6 +498,21 @@ public static class MoveMethodTool
         }
     }
 
+    /// <summary>
+    /// Moves instance methods using a Roslyn document and returns the status message and updated document.
+    /// </summary>
+    /// <param name="document">The Roslyn document that contains the source code.</param>
+    /// <param name="sourceClassName">Name of the class that contains the methods.</param>
+    /// <param name="methodNames">Names of the methods to move.</param>
+    /// <param name="constructorInjections">Dependencies to inject via the target class constructor.</param>
+    /// <param name="parameterInjections">Dependencies to keep as parameters on the moved methods.</param>
+    /// <param name="targetClassName">Name of the target class to receive the methods.</param>
+    /// <param name="accessMemberName">Access member name used by stubs.</param>
+    /// <param name="accessMemberType">Type of access member (field or property).</param>
+    /// <param name="targetFilePath">Optional path to the target file.</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A tuple with the status message and the updated document.</returns>
     public static async Task<(string, Document)> MoveInstanceMethodWithSolution(
         Document document,
         string sourceClassName,

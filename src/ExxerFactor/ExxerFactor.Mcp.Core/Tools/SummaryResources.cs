@@ -7,9 +7,18 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Provides a lightweight summary view of C# files by omitting method bodies.
+/// </summary>
 [McpServerResourceType]
 public static class SummaryResources
 {
+    /// <summary>
+    /// Returns a formatted summary of a C# file with bodies omitted.
+    /// </summary>
+    /// <param name="file">Path-like identifier after the summary:// scheme.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Plain text summary of the file.</returns>
     [McpServerResource(UriTemplate = "summary://{*file}", MimeType = "text/plain")]
     public static async Task<string> GetSummary(string file, CancellationToken cancellationToken = default)
     {

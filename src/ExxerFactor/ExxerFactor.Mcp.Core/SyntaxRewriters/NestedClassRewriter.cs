@@ -4,17 +4,26 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that qualifies references to nested class types with their containing outer class name.
+/// </summary>
 public class NestedClassRewriter : CSharpSyntaxRewriter
 {
     private readonly HashSet<string> _classNames;
     private readonly string _outerClass;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="NestedClassRewriter"/> class.
+    /// </summary>
+    /// <param name="classNames">Set of nested class names that should be qualified.</param>
+    /// <param name="outerClass">The name of the containing (outer) class.</param>
     public NestedClassRewriter(HashSet<string> classNames, string outerClass)
     {
         _classNames = classNames;
         _outerClass = outerClass;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
     {
         if (_classNames.Contains(node.Identifier.ValueText))

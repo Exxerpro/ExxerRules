@@ -4,10 +4,15 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
 
+/// <summary>
+/// Computes cyclomatic complexity and nesting depth by walking control-flow constructs.
+/// </summary>
 public class ComplexityWalker : CSharpSyntaxWalker
 {
+    /// <summary>Accumulated cyclomatic complexity, starting at 1.</summary>
     public int Complexity { get; private set; } = 1;
     private int _depth;
+    /// <summary>Maximum observed nesting depth during traversal.</summary>
     public int MaxDepth { get; private set; }
 
     private void Enter()

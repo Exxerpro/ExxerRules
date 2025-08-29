@@ -8,9 +8,20 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Moves a top-level type into a new file named after the type while preserving usings and namespace.
+/// </summary>
 [McpServerToolType]
 public static class MoveTypeToFileTool
 {
+    /// <summary>
+    /// Moves the specified top-level type to a new file in the same directory.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the type.</param>
+    /// <param name="typeName">Name of the type to move.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Move a top-level type to a separate file with the same name")]
     public static async Task<string> MoveToSeparateFile(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

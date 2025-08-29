@@ -9,9 +9,22 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Converts an instance method to an extension method in a static class and keeps a wrapper.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class ConvertToExtensionMethodTool
 {
+    /// <summary>
+    /// Converts an instance method to an extension method, keeping a compatibility wrapper.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Name of the instance method to convert.</param>
+    /// <param name="extensionClass">Optional name of the extension class to generate/use.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Convert an instance method to an extension method in a static class. " +
                                 "A wrapper method remains so existing call sites continue to work." +
                                 "The extension class will be automatically created if it doesn't exist.")]
@@ -128,6 +141,13 @@ public static class ConvertToExtensionMethodTool
             $"Successfully converted method '{methodName}' to extension method in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Converts an instance method to an extension method within the provided source text and leaves a wrapper.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Name of the instance method to convert.</param>
+    /// <param name="extensionClass">Optional name of the extension class to add/use.</param>
+    /// <returns>Updated source text with the extension method.</returns>
     public static string ConvertToExtensionMethodInSource(string sourceText, string methodName, string? extensionClass)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

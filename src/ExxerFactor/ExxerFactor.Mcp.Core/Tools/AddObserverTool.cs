@@ -9,9 +9,23 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Adds a simple observer event to a class and raises it from a target method.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class AddObserverTool
 {
+    /// <summary>
+    /// Introduces an event and raises it from the specified method.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="className">Class containing the method.</param>
+    /// <param name="methodName">Method from which to raise the event.</param>
+    /// <param name="eventName">Event name to create.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Introduce a simple observer event and raise it in a method")]
     public static async Task<string> AddObserver(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -53,6 +67,14 @@ public static class AddObserverTool
             $"Added observer {eventName} to {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Adds a public event to the specified class and raises it at the end of the given method.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="className">Name of the class to modify.</param>
+    /// <param name="methodName">Name of the method that will raise the event.</param>
+    /// <param name="eventName">Name of the event to create and raise.</param>
+    /// <returns>The updated source text.</returns>
     public static string AddObserverInSource(string sourceText, string className, string methodName, string eventName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

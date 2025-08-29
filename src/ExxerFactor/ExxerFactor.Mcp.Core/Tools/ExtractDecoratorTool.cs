@@ -9,9 +9,21 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Creates a decorator class that wraps a method call of an existing class.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class ExtractDecoratorTool
 {
+    /// <summary>
+    /// Generates a decorator class for the specified method.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="className">Name of the class containing the method.</param>
+    /// <param name="methodName">Name of the method to decorate.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Create a simple decorator class for a method")]
     public static async Task<string> ExtractDecorator(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -51,6 +63,13 @@ public static class ExtractDecoratorTool
             $"Created decorator for {className}.{methodName} in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Generates a decorator class for the given class and method within the source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="className">Name of the class to decorate.</param>
+    /// <param name="methodName">Name of the method to delegate to.</param>
+    /// <returns>The updated source text including the decorator.</returns>
     public static string ExtractDecoratorInSource(string sourceText, string className, string methodName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

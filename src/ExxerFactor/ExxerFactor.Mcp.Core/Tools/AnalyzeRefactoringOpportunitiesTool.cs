@@ -7,9 +7,19 @@ using ExxerFactor.Mcp.Core.SyntaxWalkers;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Analyzes a C# file for refactoring opportunities (e.g., long methods, static candidates).
+/// </summary>
 [McpServerToolType, McpServerPromptType]
 public static class AnalyzeExxerFactoringOpportunitiesTool
 {
+    /// <summary>
+    /// Analyzes a file for refactoring suggestions and returns a formatted list.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Human-readable suggestions string.</returns>
     [McpServerPrompt, Description("Analyze a C# file for ExxerFactoring opportunities like long methods or unused code")]
     public static async Task<string> AnalyzeExxerFactoringOpportunities(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

@@ -9,9 +9,22 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Generates a simple adapter class that delegates calls to an existing class method.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class CreateAdapterTool
 {
+    /// <summary>
+    /// Creates an adapter class and writes it alongside the original file.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="className">Class containing the method to adapt.</param>
+    /// <param name="methodName">Name of the method to adapt.</param>
+    /// <param name="adapterName">Name for the generated adapter class.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Generate a simple adapter class that delegates to an existing method")]
     public static async Task<string> CreateAdapter(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -52,6 +65,14 @@ public static class CreateAdapterTool
             $"Created adapter {adapterName} in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Creates an adapter class that delegates to the specified method of the target class.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="className">Existing class name to adapt.</param>
+    /// <param name="methodName">Method to delegate to.</param>
+    /// <param name="adapterName">Adapter class name to generate.</param>
+    /// <returns>The updated source text including the adapter.</returns>
     public static string CreateAdapterInSource(string sourceText, string className, string methodName, string adapterName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

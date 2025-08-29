@@ -5,6 +5,10 @@ using ExxerFactor.Mcp.Core.Tools;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that introduces constructor injection for a dependency previously passed as a method parameter.
+/// It also updates method invocations and member references accordingly.
+/// </summary>
 public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
 {
     private readonly string _methodName;
@@ -15,6 +19,15 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
     private readonly bool _useProperty;
     private bool _inTargetMethod;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ConstructorInjectionRewriter"/> class.
+    /// </summary>
+    /// <param name="methodName">The name of the method whose parameter will be injected.</param>
+    /// <param name="parameterName">The name of the parameter to convert into a member.</param>
+    /// <param name="parameterIndex">The index of the parameter in the method signature.</param>
+    /// <param name="parameterType">The type of the parameter.</param>
+    /// <param name="fieldName">The field or property name to create.</param>
+    /// <param name="useProperty">Whether to create a property (true) or a private readonly field (false).</param>
     public ConstructorInjectionRewriter(string methodName, string parameterName, int parameterIndex, TypeSyntax parameterType, string fieldName, bool useProperty)
     {
         _methodName = methodName;
@@ -25,6 +38,7 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
         _useProperty = useProperty;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         var visited = node;
@@ -44,6 +58,7 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
         return baseResult ?? node;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
     {
         if (_inTargetMethod && node.Identifier.ValueText == _parameterName)
@@ -54,6 +69,7 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
         return baseResult ?? node;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax node)
     {
         var visited = (InvocationExpressionSyntax)base.VisitInvocationExpression(node)!;
@@ -65,6 +81,7 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
         return visited;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
     {
         var baseResult = base.VisitConstructorDeclaration(node);
@@ -86,6 +103,7 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
         return visited;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node)
     {
         var visited = (ClassDeclarationSyntax)base.VisitClassDeclaration(node)!;

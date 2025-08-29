@@ -4,12 +4,21 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that renames identifiers based on symbol or name maps.
+/// </summary>
 public class IdentifierRenameRewriter : CSharpSyntaxRewriter
 {
     private readonly SemanticModel? _semanticModel;
     private readonly Dictionary<ISymbol, string>? _symbolMap;
     private readonly Dictionary<string, string>? _nameMap;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="IdentifierRenameRewriter"/> class.
+    /// </summary>
+    /// <param name="semanticModel">Optional semantic model to resolve symbols.</param>
+    /// <param name="symbolMap">Optional map from symbols to replacement names.</param>
+    /// <param name="nameMap">Optional map from raw identifier text to replacement names.</param>
     public IdentifierRenameRewriter(
         SemanticModel? semanticModel = null,
         Dictionary<ISymbol, string>? symbolMap = null,
@@ -20,6 +29,7 @@ public class IdentifierRenameRewriter : CSharpSyntaxRewriter
         _nameMap = nameMap;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         if (_semanticModel != null && _symbolMap != null)

@@ -5,9 +5,18 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Exposes code metrics as a server resource, addressable via the metrics:// URI scheme.
+/// </summary>
 [McpServerResourceType]
 public static class MetricsResource
 {
+    /// <summary>
+    /// Returns metrics for a directory, file, class, or method based on the provided path.
+    /// </summary>
+    /// <param name="path">Target path (file, directory, or file with class/method suffix).</param>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <returns>Text resource containing metrics JSON.</returns>
     [McpServerResource(UriTemplate = "metrics://{+path}")]
     [Description("Return code metrics for directories, files, classes or methods")]
     public static async Task<TextResourceContents> ReadMetrics(

@@ -4,12 +4,21 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
 
+/// <summary>
+/// Identifies member names that are implicitly referenced as instance members
+/// (i.e., without an explicit <c>this.</c> qualifier) within method bodies.
+/// </summary>
 public class ImplicitInstanceMemberWalker : CSharpSyntaxWalker
 {
     private readonly HashSet<string> _parameters = new();
     private readonly HashSet<string> _locals = new();
+    /// <summary>Collected member names inferred to be instance members.</summary>
     public HashSet<string> Members { get; } = new();
 
+    /// <summary>
+    /// Records parameter names so they are not treated as instance members.
+    /// </summary>
+    /// <param name="node">The method declaration node.</param>
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         foreach (var p in node.ParameterList.Parameters)
@@ -17,12 +26,20 @@ public class ImplicitInstanceMemberWalker : CSharpSyntaxWalker
         base.VisitMethodDeclaration(node);
     }
 
+    /// <summary>
+    /// Records local variable names so they are not treated as instance members.
+    /// </summary>
+    /// <param name="node">The variable declarator node.</param>
     public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
     {
         _locals.Add(node.Identifier.ValueText);
         base.VisitVariableDeclarator(node);
     }
 
+    /// <summary>
+    /// Adds identifiers that are likely instance members to <see cref="Members"/>.
+    /// </summary>
+    /// <param name="node">The identifier node.</param>
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
         var name = node.Identifier.ValueText;

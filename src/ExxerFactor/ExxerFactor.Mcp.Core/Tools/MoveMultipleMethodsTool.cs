@@ -9,6 +9,9 @@ using ExxerFactor.Mcp.Core.SyntaxWalkers;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Moves multiple methods to a target class, either as static with injected 'this' or as instance methods.
+/// </summary>
 [McpServerToolType]
 public static partial class MoveMultipleMethodsTool
 {

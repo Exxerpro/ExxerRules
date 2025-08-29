@@ -4,6 +4,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that extracts a selection of statements into a new private method and updates the original method to call it.
+/// </summary>
 public class ExtractMethodRewriter : CSharpSyntaxRewriter
 {
     private readonly MethodDeclarationSyntax _containingMethod;
@@ -13,6 +16,13 @@ public class ExtractMethodRewriter : CSharpSyntaxRewriter
     private readonly MethodDeclarationSyntax _newMethod;
     private readonly MethodDeclarationSyntax _updatedMethod;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExtractMethodRewriter"/> class.
+    /// </summary>
+    /// <param name="containingMethod">The method containing the statements to extract.</param>
+    /// <param name="containingClass">Optional containing class where the new method should be inserted.</param>
+    /// <param name="statements">The sequence of statements to extract.</param>
+    /// <param name="methodName">The name of the newly created method.</param>
     public ExtractMethodRewriter(
         MethodDeclarationSyntax containingMethod,
         ClassDeclarationSyntax? containingClass,
@@ -42,6 +52,7 @@ public class ExtractMethodRewriter : CSharpSyntaxRewriter
         _updatedMethod = containingMethod.WithBody(updated);
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         if (node == _containingMethod)
@@ -49,6 +60,7 @@ public class ExtractMethodRewriter : CSharpSyntaxRewriter
         return base.VisitMethodDeclaration(node)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node)
     {
         var visited = (ClassDeclarationSyntax)base.VisitClassDeclaration(node)!;

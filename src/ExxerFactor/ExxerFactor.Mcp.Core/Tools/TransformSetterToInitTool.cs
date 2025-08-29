@@ -9,9 +9,19 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Converts property setters to init-only setters where possible.
+/// </summary>
 [McpServerToolType]
 public static class TransformSetterToInitTool
 {
+    /// <summary>
+    /// Converts a property's setter to an init accessor.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="propertyName">Name of the property to transform.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Convert property setter to init-only setter (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> TransformSetterToInit(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -66,6 +76,12 @@ public static class TransformSetterToInitTool
             $"Successfully converted setter to init for '{propertyName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Converts a property's setter to an init accessor within the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="propertyName">Name of the property to transform.</param>
+    /// <returns>Updated source text.</returns>
     public static string TransformSetterToInitInSource(string sourceText, string propertyName)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

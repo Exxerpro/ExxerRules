@@ -7,9 +7,23 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Renames a symbol across a solution using Roslyn's rename engine and updates affected files.
+/// </summary>
 [McpServerToolType]
 public static class RenameSymbolTool
 {
+    /// <summary>
+    /// Renames a symbol across the solution and writes updated files to disk.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the symbol.</param>
+    /// <param name="oldName">Current symbol name.</param>
+    /// <param name="newName">New symbol name.</param>
+    /// <param name="line">Optional line number of the symbol (1-based).</param>
+    /// <param name="column">Optional column number of the symbol (1-based).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Rename a symbol across the solution using Roslyn")]
     public static async Task<string> RenameSymbol(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

@@ -9,9 +9,19 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Refactors feature flag conditionals into a strategy pattern implementation.
+/// </summary>
 [McpServerToolType]
 public static class FeatureFlagExxerFactorTool
 {
+    /// <summary>
+    /// Converts feature flag conditionals into strategy classes and registers them.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="flagName">Feature flag name.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Convert feature flag condition to strategy pattern")]
     public static async Task<string> FeatureFlagExxerFactor(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

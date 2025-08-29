@@ -9,6 +9,10 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Converts an instance method to a static method by turning instance member usages into parameters.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class ConvertToStaticWithParametersTool
 {
@@ -108,6 +112,14 @@ public static class ConvertToStaticWithParametersTool
         var updatedMethod = rewriter.Rewrite(method);
         return root.ReplaceNode(method, updatedMethod);
     }
+    /// <summary>
+    /// Converts an instance method to static by introducing parameters for instance member usages.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Name of the method to convert.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Transform instance method to static by converting dependencies to parameters (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> ConvertToStaticWithParameters(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -161,6 +173,12 @@ public static class ConvertToStaticWithParametersTool
             $"Successfully converted method '{methodName}' to static with parameters in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Converts an instance method to static by introducing parameters for instance member usages within the source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Name of the method to convert.</param>
+    /// <returns>Updated source text with the static method.</returns>
     public static string ConvertToStaticWithParametersInSource(string sourceText, string methodName)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

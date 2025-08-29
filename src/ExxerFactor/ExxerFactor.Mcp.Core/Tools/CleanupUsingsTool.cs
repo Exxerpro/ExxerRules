@@ -8,9 +8,20 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Removes unused using directives from C# files.
+/// Supports solution-aware and single-file operation modes.
+/// </summary>
 [McpServerToolType]
 public static class CleanupUsingsTool
 {
+    /// <summary>
+    /// Removes unused using directives from a file.
+    /// </summary>
+    /// <param name="solutionPath">Optional absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message describing the result.</returns>
     [McpServerTool, Description("Remove unused using directives from a C# file (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> CleanupUsings(
         [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
@@ -72,6 +83,11 @@ public static class CleanupUsingsTool
             $"Removed unused usings in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Removes unused using directives from the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <returns>Formatted source text without unused usings.</returns>
     public static string CleanupUsingsInSource(string sourceText)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

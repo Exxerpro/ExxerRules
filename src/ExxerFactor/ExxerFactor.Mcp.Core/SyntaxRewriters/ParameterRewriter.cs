@@ -4,14 +4,23 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that substitutes parameter and member references based on a provided mapping.
+/// </summary>
 public class ParameterRewriter : CSharpSyntaxRewriter
 {
     private readonly Dictionary<string, ExpressionSyntax> _map;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ParameterRewriter"/> class.
+    /// </summary>
+    /// <param name="map">Mapping from parameter/member names to replacement expressions.</param>
     public ParameterRewriter(Dictionary<string, ExpressionSyntax> map)
     {
         _map = map;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         if (node.Expression is ThisExpressionSyntax && node.Name is IdentifierNameSyntax id &&
@@ -23,6 +32,7 @@ public class ParameterRewriter : CSharpSyntaxRewriter
         return base.VisitMemberAccessExpression(node)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         if (_map.TryGetValue(node.Identifier.ValueText, out var expr))

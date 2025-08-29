@@ -74,7 +74,7 @@ public class McpControllerTests
 
         var response = okResult.Value as McpListToolsResponse;
         response!.Tools.ShouldNotBeNull();
-        response.Tools.Should().BeOfType<List<McpTool>>();
+        response!.Tools.ShouldBeOfType<List<McpTool>>();
     }
 
     [Fact]

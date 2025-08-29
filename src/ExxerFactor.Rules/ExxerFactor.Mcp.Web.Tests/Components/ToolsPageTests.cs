@@ -1,3 +1,5 @@
+using TestContext = Bunit.TestContext;
+
 namespace ExxerFactor.Mcp.Web.Tests.Components;
 
 public class ToolsPageTests : TestContext

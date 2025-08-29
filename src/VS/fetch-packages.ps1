@@ -1,7 +1,9 @@
 #requires -Version 7.0
 param(
     [string]$Source = 'https://api.nuget.org/v3/index.json',
-    [string]$OutputSubPath = 'artifacts/nuget/offline'
+    [string]$OutputSubPath = 'artifacts/nuget/offline',
+    [switch]$DryRun,
+    [switch]$SkipDownloadIfExists
 )
 
 Set-StrictMode -Version Latest
@@ -45,6 +47,11 @@ function Get-PackagesFromCsproj([string]$root) {
     return $results
 }
 
+function Test-PackageExists([string]$outDir, [string]$id, [string]$version) {
+    $pkgDir = Join-Path $outDir ("{0}.{1}" -f $id, $version)
+    return (Test-Path $pkgDir)
+}
+
 function Install-PackageAndDependencies([string]$nugetExe, [string]$id, [string]$version, [string]$outDir, [string]$source) {
     $args = @(
         'install', $id,
@@ -76,13 +83,34 @@ $packages += Get-PackagesFromCsproj -root $srcDir
 # De-duplicate by Id+Version
 $packages = $packages | Group-Object Id, Version | ForEach-Object { $_.Group[0] }
 
-Write-Host "Found $($packages.Count) package(s) to download."
-$nugetExe = Ensure-NuGetExe
-
-foreach ($pkg in $packages) {
-    Write-Host "Downloading $($pkg.Id) $($pkg.Version) ..."
-    Install-PackageAndDependencies -nugetExe $nugetExe -id $pkg.Id -version $pkg.Version -outDir $outputDir -source $Source
+Write-Host "Found $($packages.Count) package(s) referenced."
+if ($packages.Count -eq 0) {
+    Write-Warning "No packages discovered. Check path: $propsPath and project files under $srcDir"
 }
 
-Write-Host "Done. Packages downloaded to: $outputDir"
+foreach ($pkg in $packages) {
+    Write-Host ("- {0} {1}" -f $pkg.Id, $pkg.Version)
+}
+
+if ($DryRun) {
+    Write-Host "Dry run: skipping downloads."
+    return
+}
+
+$nugetExe = Ensure-NuGetExe
+
+$downloaded = 0
+$skipped = 0
+foreach ($pkg in $packages) {
+    if ($SkipDownloadIfExists -and (Test-PackageExists -outDir $outputDir -id $pkg.Id -version $pkg.Version)) {
+        Write-Host "Exists, skip: $($pkg.Id) $($pkg.Version)"
+        $skipped++
+        continue
+    }
+    Write-Host "Downloading $($pkg.Id) $($pkg.Version) ..."
+    Install-PackageAndDependencies -nugetExe $nugetExe -id $pkg.Id -version $pkg.Version -outDir $outputDir -source $Source
+    $downloaded++
+}
+
+Write-Host "Done. Downloaded: $downloaded, Skipped: $skipped, Output: $outputDir"
 

@@ -21,6 +21,7 @@
   <ItemGroup>
     <!-- Microsoft Extensions & Configuration -->
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
     
     <!-- Testing Framework & Tools -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

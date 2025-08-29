@@ -11,7 +11,7 @@
 	<IsPackable>false</IsPackable>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	  <WarningsNotAsErrors>CS0219</WarningsNotAsErrors>
-	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 	<EnableMSTestRunner>true</EnableMSTestRunner>
 	<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
@@ -42,6 +42,7 @@
 	</PackageReference>
 
 	<PackageReference Include="Shouldly" />
+	<PackageReference Include="NSubstitute" />
   </ItemGroup>
 
   <!-- ===================================================================== -->

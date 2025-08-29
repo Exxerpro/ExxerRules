@@ -17,7 +17,7 @@ function Read-Map([string]$path) {
 }
 
 function Get-Csproj([string]$dir) {
-  $files = Get-ChildItem -Path $dir -Filter *.csproj
+  $files = @(Get-ChildItem -Path $dir -Filter *.csproj)
   if ($files.Count -ne 1) { throw "Expected one .csproj in '$dir', found $($files.Count)" }
   return $files[0].FullName
 }

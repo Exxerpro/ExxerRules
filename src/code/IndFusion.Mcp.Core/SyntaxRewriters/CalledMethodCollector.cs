@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ExxerFactor.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Collects method names that are invoked within a visited syntax tree, filtered by a target set.

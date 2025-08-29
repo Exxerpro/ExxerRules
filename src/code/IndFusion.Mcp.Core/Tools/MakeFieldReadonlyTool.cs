@@ -5,9 +5,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Refactoring operations for converting fields to readonly when safe to do so.

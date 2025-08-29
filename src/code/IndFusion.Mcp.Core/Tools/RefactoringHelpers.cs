@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis.Text;
 using Microsoft.Extensions.Caching.Memory;
 using ModelContextProtocol;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Helper utilities for solution/file handling, Roslyn workspace access, caching,

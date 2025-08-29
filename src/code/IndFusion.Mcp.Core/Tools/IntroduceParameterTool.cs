@@ -7,9 +7,9 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Provides operations to introduce a new parameter from a selected expression within a method.

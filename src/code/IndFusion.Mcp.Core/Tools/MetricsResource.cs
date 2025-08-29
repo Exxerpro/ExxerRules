@@ -3,7 +3,7 @@ using System.Text.Json;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Exposes code metrics as a server resource, addressable via the metrics:// URI scheme.

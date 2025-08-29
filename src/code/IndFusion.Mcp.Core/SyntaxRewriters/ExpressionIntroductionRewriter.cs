@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Base rewriter that replaces a target expression with a provided

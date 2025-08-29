@@ -35,12 +35,12 @@ function Move-ProjectDir([string]$oldDir, [string]$newDir) {
 function Update-CsprojMetadata([string]$csprojPath, [string]$newRootNs) {
   if ($WhatIf) { Write-Host "Would update csproj: $csprojPath (RootNamespace=$newRootNs)"; return }
   [xml]$xml = Get-Content -Raw -Path $csprojPath
-  $pgs = $xml.Project.PropertyGroup
-  if (-not $pgs) { $pgs = $xml.Project.AppendChild($xml.CreateElement('PropertyGroup')) }
-  $rn = $pgs.RootNamespace
-  if (-not $rn) { $rn = $xml.CreateElement('RootNamespace'); $pgs.AppendChild($rn) | Out-Null }
+  $pg = $xml.Project.SelectSingleNode('//PropertyGroup[RootNamespace]')
+  if (-not $pg) { $pg = $xml.Project.SelectSingleNode('//PropertyGroup[1]') }
+  if (-not $pg) { $pg = $xml.Project.AppendChild($xml.CreateElement('PropertyGroup')) }
+  $rn = $pg.SelectSingleNode('RootNamespace')
+  if (-not $rn) { $rn = $pg.AppendChild($xml.CreateElement('RootNamespace')) }
   $rn.InnerText = $newRootNs
-  # AssemblyName defaults to project file name; keep it unless explicitly needed
   $xml.Save($csprojPath)
 }
 
@@ -53,15 +53,13 @@ function Update-ProjectReferences([string]$repoRoot) {
     foreach ($m in $script:Map) {
       $old = [IO.Path]::GetFullPath((Join-Path $repoRoot $m.OldDir))
       $new = [IO.Path]::GetFullPath((Join-Path $repoRoot $m.NewDir))
+      if (-not (Test-Path $old)) { continue }
+      if (-not (Test-Path $new)) { continue }
       $oldProj = Get-Csproj $old
       $newProj = Get-Csproj $new
-      $oldRel = Resolve-Path $oldProj | Select-Object -ExpandProperty Path
-      $newRel = Resolve-Path $newProj | Select-Object -ExpandProperty Path
-      $oldRel = (Resolve-Path -Relative $oldRel) 2>$null
-      $newRel = (Resolve-Path -Relative $newRel) 2>$null
-      if (-not $oldRel) { $oldRel = $oldProj }
-      if (-not $newRel) { $newRel = $newProj }
-      $content = $content -replace [Regex]::Escape($oldRel), $newRel
+      $oldAbs = (Resolve-Path $oldProj | Select-Object -ExpandProperty Path)
+      $newAbs = (Resolve-Path $newProj | Select-Object -ExpandProperty Path)
+      $content = $content -replace [Regex]::Escape($oldAbs), $newAbs
     }
     if ($content -ne $orig) {
       if ($WhatIf) { Write-Host "Would update ProjectReferences in: $($f.FullName)" }
@@ -95,12 +93,24 @@ if ($WhatIf) { Write-Host "WhatIf enabled: no changes will be made." }
 # Move directories and update csproj RootNamespace
 foreach ($m in $Map) {
   $oldAbs = Join-Path $repoRoot $m.OldDir
-  if (-not (Test-Path $oldAbs)) { Write-Warning "Missing: $($m.OldDir). Skipping."; continue }
   $newAbs = Join-Path $repoRoot $m.NewDir
-  Move-ProjectDir -oldDir $oldAbs -newDir $newAbs
-  if ($WhatIf) { continue }
-  $csproj = Get-Csproj $newAbs
-  Update-CsprojMetadata -csprojPath $csproj -newRootNs $m.NewRootNamespace
+  $hadOld = Test-Path $oldAbs
+  $hasNew = Test-Path $newAbs
+  if ($hadOld) {
+    Move-ProjectDir -oldDir $oldAbs -newDir $newAbs
+    if (-not $WhatIf) {
+      $csproj = Get-Csproj $newAbs
+      Update-CsprojMetadata -csprojPath $csproj -newRootNs $m.NewRootNamespace
+    }
+  } elseif ($hasNew) {
+    if ($WhatIf) { Write-Host "Would update csproj (existing new dir): $newAbs" }
+    else {
+      $csproj = Get-Csproj $newAbs
+      Update-CsprojMetadata -csprojPath $csproj -newRootNs $m.NewRootNamespace
+    }
+  } else {
+    Write-Warning "Missing both old and new dirs for map entry: $($m.OldDir) -> $($m.NewDir)"
+  }
 }
 
 if ($UpdateSolution) {
@@ -112,8 +122,8 @@ if ($UpdateSolution) {
     $oldProj = (Get-Csproj $newAbs) -replace [Regex]::Escape($m.NewDir), $m.OldDir
     $newProj = Get-Csproj $newAbs
     if (-not $WhatIf) {
-      try { dotnet sln $Solution remove $oldProj | Out-Null } catch {}
-      try { dotnet sln $Solution add $newProj   | Out-Null } catch {}
+      try { dotnet sln $Solution remove $oldProj 2>$null | Out-Null } catch {}
+      try { dotnet sln $Solution add $newProj   2>$null | Out-Null } catch {}
     } else {
       Write-Host "Would update solution: remove $oldProj, add $newProj"
     }

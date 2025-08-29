@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Removes unused using directives from C# files.

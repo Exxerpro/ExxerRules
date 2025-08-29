@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Rewriter that qualifies method calls with a provided parameter when the call targets a known instance method.

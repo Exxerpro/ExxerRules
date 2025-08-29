@@ -1,9 +1,9 @@
 using System.Reflection;
 using System.Text.Json;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.Tools;
+using IndFusion.Mcp.Mcp.Core.Tools;
 
-namespace ExxerFactor.Mcp.Core.Services;
+namespace IndFusion.Mcp.Mcp.Core.Services;
 
 /// <summary>
 /// Utility for logging and replaying MCP server tool invocations to a JSON lines file for diagnostics.

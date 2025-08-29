@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Removes a field declaration (or a single variable within a multi-variable declaration) by name.
@@ -29,4 +29,5 @@ public class FieldRemovalRewriter : DeclarationRemovalRewriter<FieldDeclarationS
     protected override FieldDeclarationSyntax WithDeclarators(FieldDeclarationSyntax node, SeparatedSyntaxList<VariableDeclaratorSyntax> declarators)
         => node.WithDeclaration(node.Declaration.WithVariables(declarators));
 }
+
 

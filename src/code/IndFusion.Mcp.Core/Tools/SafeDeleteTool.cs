@@ -8,9 +8,9 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Safe delete operations for fields, methods, parameters and variables with reference checks.

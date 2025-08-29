@@ -1,9 +1,9 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ExxerFactor.Mcp.Core.Tools;
+using IndFusion.Mcp.Mcp.Core.Tools;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Rewriter that introduces constructor injection for a dependency previously passed as a method parameter.

@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.Move;
+using IndFusion.Mcp.Mcp.Core.Move;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Converts an instance method to static (injecting instance if needed) and moves it to a target class.

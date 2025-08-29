@@ -3,10 +3,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
-using ExxerFactor.Mcp.Core.SyntaxRewriters;
-using ExxerFactor.Mcp.Core.Tools;
+using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Mcp.Core.Tools;
 
-namespace ExxerFactor.Mcp.Core.Move;
+namespace IndFusion.Mcp.Mcp.Core.Move;
 
 /// <summary>
 /// File-system oriented helpers for moving methods across files and classes.
@@ -296,3 +296,4 @@ public static class MoveMethodFileService
 
 
 }
+

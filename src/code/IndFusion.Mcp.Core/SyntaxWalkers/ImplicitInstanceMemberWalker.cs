@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// Identifies member names that are implicitly referenced as instance members

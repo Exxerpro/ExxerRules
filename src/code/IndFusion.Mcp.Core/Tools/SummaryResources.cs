@@ -3,9 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Provides a lightweight summary view of C# files by omitting method bodies.

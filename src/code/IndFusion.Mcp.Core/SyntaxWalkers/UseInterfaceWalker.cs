@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// An analysis walker that suggests replacing concrete parameter types with

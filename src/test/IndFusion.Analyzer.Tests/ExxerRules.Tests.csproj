@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Inherit TargetFramework from Directory.Build.props (net10.0) -->
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <IsPackable>false</IsPackable>
+    <RootNamespace>IndFusion.Analyzer.Tests</RootNamespace>
+    <AssemblyName>ExxerRules.Tests</AssemblyName>
+    <IsTestProject>true</IsTestProject>
+    <WarningsNotAsErrors>IDE0022;IDE1006;IDE0007</WarningsNotAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Central package management: versions come from Directory.Packages.props -->
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.v3.runner.msbuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExxerRules.Analyzers\ExxerRules.Analyzers.csproj" />
+    <ProjectReference Include="..\ExxerRules.CodeFixes\ExxerRules.CodeFixes.csproj" />
+  </ItemGroup>
+</Project>

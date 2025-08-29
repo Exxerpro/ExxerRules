@@ -1,9 +1,9 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using ExxerFactor.Mcp.Core.Tools;
+using IndFusion.Mcp.Mcp.Core.Tools;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Rewriter that introduces a new parameter to a method and updates invocations to pass a target expression.

@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// Walks an invocation tree to collect dependencies on a set of candidate method names.

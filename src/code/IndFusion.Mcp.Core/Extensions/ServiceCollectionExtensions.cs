@@ -1,8 +1,8 @@
 using Microsoft.Extensions.DependencyInjection;
-using ExxerFactor.Mcp.Core.Abstractions;
-using ExxerFactor.Mcp.Core.Services;
+using IndFusion.Mcp.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Mcp.Core.Services;
 
-namespace ExxerFactor.Mcp.Core.Extensions;
+namespace IndFusion.Mcp.Mcp.Core.Extensions;
 
 /// <summary>
 /// Dependency injection extensions for registering ExxerFactor MCP core services.

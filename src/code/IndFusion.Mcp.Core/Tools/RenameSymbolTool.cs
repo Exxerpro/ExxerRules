@@ -5,7 +5,7 @@ using Microsoft.CodeAnalysis.Rename;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Renames a symbol across a solution using Roslyn's rename engine and updates affected files.

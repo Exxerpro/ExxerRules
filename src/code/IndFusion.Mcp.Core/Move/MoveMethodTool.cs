@@ -7,10 +7,10 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.SyntaxWalkers;
-using ExxerFactor.Mcp.Core.Tools;
+using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Mcp.Core.Tools;
 
-namespace ExxerFactor.Mcp.Core.Move;
+namespace IndFusion.Mcp.Mcp.Core.Move;
 
 /// <summary>
 /// Server-exposed tools for moving static and instance methods between classes and files while preserving public APIs.

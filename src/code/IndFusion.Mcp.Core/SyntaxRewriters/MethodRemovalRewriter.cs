@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Removes a method declaration by name.
@@ -20,4 +20,5 @@ public class MethodRemovalRewriter : DeclarationRemovalRewriter<MethodDeclaratio
     protected override bool IsTarget(MethodDeclarationSyntax node)
         => node.Identifier.ValueText == Name;
 }
+
 

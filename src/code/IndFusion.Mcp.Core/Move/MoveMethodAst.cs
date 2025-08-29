@@ -2,12 +2,12 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using ModelContextProtocol;
-using ExxerFactor.Mcp.Core.SyntaxRewriters;
-using ExxerFactor.Mcp.Core.SyntaxWalkers;
-using ExxerFactor.Mcp.Core.Tools;
+using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Mcp.Core.Tools;
 using Microsoft.CodeAnalysis.Formatting;
 
-namespace ExxerFactor.Mcp.Core.Move;
+namespace IndFusion.Mcp.Mcp.Core.Move;
 
 /// <summary>
 /// Provides AST-level refactoring operations to move methods between classes and generate wrappers.

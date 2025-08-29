@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis;
 
-namespace ExxerFactor.Mcp.Core.Abstractions;
+namespace IndFusion.Mcp.Mcp.Core.Abstractions;
 
 /// <summary>
 /// Defines the contract for high-level refactoring operations provided by the core service.

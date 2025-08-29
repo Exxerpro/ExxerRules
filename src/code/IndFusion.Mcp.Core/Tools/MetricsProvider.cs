@@ -4,9 +4,9 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.Extensions.Caching.Memory;
 using ModelContextProtocol;
-using ExxerFactor.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Computes and caches file/class/method metrics for C# sources, with optional persistence to disk.

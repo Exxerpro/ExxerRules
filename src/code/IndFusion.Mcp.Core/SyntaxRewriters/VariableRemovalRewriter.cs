@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Removes a local variable declaration (or a single variable within it) by name within a specified span.
@@ -34,3 +34,4 @@ public class VariableRemovalRewriter : DeclarationRemovalRewriter<LocalDeclarati
     protected override LocalDeclarationStatementSyntax WithDeclarators(LocalDeclarationStatementSyntax node, SeparatedSyntaxList<VariableDeclaratorSyntax> declarators)
         => node.WithDeclaration(node.Declaration.WithVariables(declarators));
 }
+

@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace ExxerFactor.Mcp.Server.Services;
+namespace IndFusion.Mcp.Mcp.Server.Services;
 
 public class McpServerBuilder
 {

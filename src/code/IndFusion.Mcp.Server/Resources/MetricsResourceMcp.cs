@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
-using ExxerFactor.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Mcp.Core.Abstractions;
 
-namespace ExxerFactor.Mcp.Server.Resources;
+namespace IndFusion.Mcp.Mcp.Server.Resources;
 
 [McpServerResourceType]
 public class MetricsResourceMcp

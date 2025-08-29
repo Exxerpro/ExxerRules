@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ExxerFactor.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
 
-namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Walker that checks whether any of the specified method names are invoked within the visited subtree.

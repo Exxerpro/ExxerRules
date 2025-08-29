@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Text;
 using ModelContextProtocol.Server;
 
-namespace ExxerFactor.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Mcp.Core.Tools;
 
 /// <summary>
 /// Lists available ExxerFactoring tools discovered via reflection.

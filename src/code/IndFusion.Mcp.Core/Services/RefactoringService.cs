@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
-using ExxerFactor.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Mcp.Core.Abstractions;
 using System.Reflection;
 using System.Text.Json;
 
-namespace ExxerFactor.Mcp.Core.Services;
+namespace IndFusion.Mcp.Mcp.Core.Services;
 
 /// <summary>
 /// Default implementation of <see cref="IExxerFactoringService"/> that coordinates refactoring

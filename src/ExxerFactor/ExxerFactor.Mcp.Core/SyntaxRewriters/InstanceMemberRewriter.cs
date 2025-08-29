@@ -4,17 +4,27 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that qualifies references to instance members with a provided parameter name.
+/// Handles member access, conditional access, and common cases that should not be rewritten.
+/// </summary>
 public class InstanceMemberRewriter : CSharpSyntaxRewriter
 {
     private readonly string _parameterName;
     private readonly HashSet<string> _knownInstanceMembers;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InstanceMemberRewriter"/> class.
+    /// </summary>
+    /// <param name="parameterName">The parameter name to qualify accesses with.</param>
+    /// <param name="knownInstanceMembers">Set of instance member names to be qualified.</param>
     public InstanceMemberRewriter(string parameterName, HashSet<string> knownInstanceMembers)
     {
         _parameterName = parameterName;
         _knownInstanceMembers = knownInstanceMembers;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         if (node.Expression is ThisExpressionSyntax or BaseExpressionSyntax &&
@@ -28,6 +38,7 @@ public class InstanceMemberRewriter : CSharpSyntaxRewriter
         return base.VisitMemberAccessExpression(node)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitConditionalAccessExpression(ConditionalAccessExpressionSyntax node)
     {
         // Handle cases like this.member?.Property or member?.Property
@@ -40,6 +51,7 @@ public class InstanceMemberRewriter : CSharpSyntaxRewriter
         return base.VisitConditionalAccessExpression(node);
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitNameColon(NameColonSyntax node)
     {
         // Override to handle named arguments manually and avoid casting issues
@@ -48,6 +60,7 @@ public class InstanceMemberRewriter : CSharpSyntaxRewriter
         return node;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         var parent = node.Parent;

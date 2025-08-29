@@ -11,6 +11,10 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Provides operations to introduce a new parameter from a selected expression within a method.
+/// Supports both solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class IntroduceParameterTool
 {
@@ -113,6 +117,15 @@ public static class IntroduceParameterTool
         var formattedRoot = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
         return formattedRoot.ToFullString();
     }
+    /// <summary>
+    /// Creates a new parameter from the selected code in the specified method. Works with or without a loaded solution.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Name of the method to add the parameter to.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="parameterName">Name for the new parameter.</param>
+    /// <returns>A status message describing the outcome.</returns>
     [McpServerTool, Description("Create a new parameter from selected code (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> IntroduceParameter(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

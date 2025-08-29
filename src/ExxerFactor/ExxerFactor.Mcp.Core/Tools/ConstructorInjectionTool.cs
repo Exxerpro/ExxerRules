@@ -10,11 +10,23 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Converts method parameters to constructor-injected dependencies.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class ConstructorInjectionTool
 {
     public readonly record struct MethodParameterPair(string MethodName, string ParameterName);
 
+    /// <summary>
+    /// Converts specified method parameters into constructor-injected dependencies.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodParameters">Pairs of method and parameter names to inject.</param>
+    /// <param name="useProperty">Whether to use public properties instead of private fields.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Convert method parameters to constructor injection (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> ConvertToConstructorInjection(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -64,6 +76,13 @@ public static class ConstructorInjectionTool
         return $"Successfully injected parameters via constructor in {filePath} (single file mode)";
     }
 
+    /// <summary>
+    /// Converts multiple method parameters to constructor-injected dependencies in the source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodParameters">Pairs of method and parameter names to inject.</param>
+    /// <param name="useProperty">Whether to use public properties instead of private fields.</param>
+    /// <returns>The updated source text.</returns>
     public static string ConvertInSource(string sourceText, MethodParameterPair[] methodParameters, bool useProperty)
     {
         var text = sourceText;
@@ -76,6 +95,15 @@ public static class ConstructorInjectionTool
         return text;
     }
 
+    /// <summary>
+    /// Converts a single method parameter to a constructor-injected dependency in the source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Target method name.</param>
+    /// <param name="parameterName">Parameter name to inject.</param>
+    /// <param name="useProperty">Whether to use a public property instead of a private field.</param>
+    /// <param name="model">Optional semantic model.</param>
+    /// <returns>The updated source text.</returns>
     public static string ConvertInSource(string sourceText, string methodName, string parameterName, bool useProperty, SemanticModel? model = null)
     {
         var tree = model?.SyntaxTree ?? CSharpSyntaxTree.ParseText(sourceText);

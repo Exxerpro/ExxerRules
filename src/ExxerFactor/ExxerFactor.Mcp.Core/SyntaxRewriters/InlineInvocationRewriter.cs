@@ -4,17 +4,26 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that inlines calls to a specific method by replacing an invocation with the method body (void return only).
+/// </summary>
 public class InlineInvocationRewriter : CSharpSyntaxRewriter
 {
     private readonly MethodDeclarationSyntax _method;
     private readonly IMethodSymbol? _methodSymbol;
     private readonly SemanticModel? _semanticModel;
 
+    /// <summary>
+    /// Initializes a new instance with only the target method.
+    /// </summary>
     public InlineInvocationRewriter(MethodDeclarationSyntax method)
     {
         _method = method;
     }
 
+    /// <summary>
+    /// Initializes a new instance with semantic information for precise matching.
+    /// </summary>
     public InlineInvocationRewriter(MethodDeclarationSyntax method, SemanticModel semanticModel, IMethodSymbol methodSymbol)
     {
         _method = method;
@@ -37,6 +46,7 @@ public class InlineInvocationRewriter : CSharpSyntaxRewriter
         return false;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitBlock(BlockSyntax node)
     {
         var newStatements = new List<StatementSyntax>();

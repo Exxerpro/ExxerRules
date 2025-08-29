@@ -11,9 +11,21 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Provides operations to introduce a local variable from a selected expression.
+/// Supports solution-aware and single-file operation modes.
+/// </summary>
 [McpServerToolType]
 public static class IntroduceVariableTool
 {
+    /// <summary>
+    /// Introduces a new local variable from a selected expression.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="variableName">Name for the new variable.</param>
+    /// <returns>A status message describing the outcome.</returns>
     [McpServerTool, Description("Introduce a new variable from selected expression (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> IntroduceVariable(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

@@ -9,30 +9,58 @@ using Microsoft.CodeAnalysis.Formatting;
 
 namespace ExxerFactor.Mcp.Core.Move;
 
+/// <summary>
+/// Provides AST-level refactoring operations to move methods between classes and generate wrappers.
+/// </summary>
 public static class MoveMethodAst
 {
     // ===== AST TRANSFORMATION LAYER =====
     // Pure syntax tree operations with no file I/O
 
+    /// <summary>
+    /// Result of transforming a static method for moving to a target class.
+    /// </summary>
     public class MoveStaticMethodResult
     {
+        /// <summary>The updated source root with stubs and accessibility adjustments.</summary>
         public SyntaxNode NewSourceRoot { get; set; } = null!;
+        /// <summary>The transformed method prepared for the target class.</summary>
         public MethodDeclarationSyntax MovedMethod { get; set; } = null!;
+        /// <summary>The stub method left in the origin class delegating to the new location.</summary>
         public MethodDeclarationSyntax StubMethod { get; set; } = null!;
+        /// <summary>Namespace of the origin class, if available.</summary>
         public string? Namespace { get; set; }
     }
 
+    /// <summary>
+    /// Result of transforming an instance method for moving to a target class.
+    /// </summary>
     public class MoveInstanceMethodResult
     {
+        /// <summary>The updated source root after inserting stubs and access members.</summary>
         public SyntaxNode NewSourceRoot { get; set; } = null!;
+        /// <summary>The transformed method prepared for the target class.</summary>
         public MethodDeclarationSyntax MovedMethod { get; set; } = null!;
+        /// <summary>The stub method left in the origin class.</summary>
         public MethodDeclarationSyntax StubMethod { get; set; } = null!;
+        /// <summary>Optional generated field or property that provides access to the target.</summary>
         public MemberDeclarationSyntax? AccessMember { get; set; }
+        /// <summary>Optional wrapper to call base implementation when needed.</summary>
         public MethodDeclarationSyntax? BaseWrapper { get; set; }
+        /// <summary>Indicates whether an explicit 'this' parameter was needed.</summary>
         public bool NeedsThisParameter { get; set; }
+        /// <summary>Namespace of the origin class, if available.</summary>
         public string? Namespace { get; set; }
     }
 
+    /// <summary>
+    /// Transforms a static method within the given source root for moving to a target class.
+    /// Produces the updated source root containing a delegating stub and the transformed method for insertion.
+    /// </summary>
+    /// <param name="sourceRoot">The syntax root that contains the static method to move.</param>
+    /// <param name="methodName">The name of the static method to move.</param>
+    /// <param name="targetClass">The name of the target class that will receive the method.</param>
+    /// <returns>A result containing the updated source root, the transformed method, and related metadata.</returns>
     public static MoveStaticMethodResult MoveStaticMethodAst(
         SyntaxNode sourceRoot,
         string methodName,
@@ -258,6 +286,17 @@ public static class MoveMethodAst
         return newRoot;
     }
 
+    /// <summary>
+    /// Transforms an instance method for moving to a target class, generating a delegating stub and optional access member.
+    /// </summary>
+    /// <param name="sourceRoot">The syntax root that contains the source class.</param>
+    /// <param name="sourceClass">The name of the class that currently contains the method.</param>
+    /// <param name="methodName">The name of the instance method to move.</param>
+    /// <param name="targetClass">The name of the target class that will receive the method.</param>
+    /// <param name="accessMemberName">The name of the generated access member in the source class, when required.</param>
+    /// <param name="accessMemberType">The type of access member to generate (e.g., field or property).</param>
+    /// <param name="parameterInjections">Optional names of private fields to expose as parameters in the moved method.</param>
+    /// <returns>A result describing the updated source, transformed method, and additional metadata.</returns>
     public static MoveInstanceMethodResult MoveInstanceMethodAst(
         SyntaxNode sourceRoot,
         string sourceClass,
@@ -758,6 +797,14 @@ public static class MoveMethodAst
         return fieldIndex >= 0 ? fieldIndex + 1 : 0;
     }
 
+    /// <summary>
+    /// Adds the specified method to the target class within the provided syntax root, creating the class if necessary.
+    /// </summary>
+    /// <param name="targetRoot">The target syntax root where the method should be inserted.</param>
+    /// <param name="targetClass">The name of the class that will receive the method.</param>
+    /// <param name="method">The method declaration to insert.</param>
+    /// <param name="namespaceName">Optional namespace to create when the target compilation unit lacks a namespace.</param>
+    /// <returns>The updated syntax root containing the method in the target class.</returns>
     public static SyntaxNode AddMethodToTargetClass(
         SyntaxNode targetRoot,
         string targetClass,
@@ -815,6 +862,14 @@ public static class MoveMethodAst
         }
     }
 
+    /// <summary>
+    /// Propagates missing using directives from the source compilation unit to the target compilation unit,
+    /// skipping the namespace that will be created for the target when provided.
+    /// </summary>
+    /// <param name="sourceRoot">The source syntax root to copy using directives from.</param>
+    /// <param name="targetRoot">The target syntax root to receive missing using directives.</param>
+    /// <param name="namespaceName">An optional namespace name to exclude when propagating usings.</param>
+    /// <returns>The target root with required using directives ensured.</returns>
     public static SyntaxNode PropagateUsings(
         SyntaxNode sourceRoot,
         SyntaxNode targetRoot,
@@ -866,6 +921,13 @@ public static class MoveMethodAst
 
     // ===== LEGACY STRING-BASED METHODS (for backward compatibility) =====
 
+    /// <summary>
+    /// Convenience API that moves a static method using raw source text and returns the updated source.
+    /// </summary>
+    /// <param name="sourceText">The original C# source text.</param>
+    /// <param name="methodName">The name of the static method to move.</param>
+    /// <param name="targetClass">The name of the target class that will receive the method.</param>
+    /// <returns>The updated source text after the move.</returns>
     public static string MoveStaticMethodInSource(string sourceText, string methodName, string targetClass)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -878,6 +940,16 @@ public static class MoveMethodAst
         return formatted.ToFullString();
     }
 
+    /// <summary>
+    /// Convenience API that moves an instance method using raw source text and returns the updated source.
+    /// </summary>
+    /// <param name="sourceText">The original C# source text.</param>
+    /// <param name="sourceClass">The name of the class that currently contains the method.</param>
+    /// <param name="methodName">The name of the instance method to move.</param>
+    /// <param name="targetClass">The name of the target class that will receive the method.</param>
+    /// <param name="accessMemberName">The name of the access member used by the delegating stub.</param>
+    /// <param name="accessMemberType">The type of access member to create (e.g., field or property).</param>
+    /// <returns>The updated source text after the move.</returns>
     public static string MoveInstanceMethodInSource(string sourceText, string sourceClass, string methodName, string targetClass, string accessMemberName, string accessMemberType)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -897,6 +969,16 @@ public static class MoveMethodAst
         return formatted.ToFullString();
     }
 
+    /// <summary>
+    /// Moves multiple instance methods using raw source text and returns the updated source.
+    /// </summary>
+    /// <param name="sourceText">The original C# source text.</param>
+    /// <param name="sourceClass">The name of the class that currently contains the methods.</param>
+    /// <param name="methodNames">The names of the instance methods to move.</param>
+    /// <param name="targetClass">The name of the target class that will receive the methods.</param>
+    /// <param name="accessMemberName">The name of the access member used by the delegating stubs.</param>
+    /// <param name="accessMemberType">The type of access member to create (e.g., field or property).</param>
+    /// <returns>The updated source text after the moves.</returns>
     public static string MoveMultipleInstanceMethodsInSource(string sourceText, string sourceClass, string[] methodNames, string targetClass, string accessMemberName, string accessMemberType)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -1082,6 +1164,12 @@ public static class MoveMethodAst
         return walker.Names.Contains(memberName);
     }
 
+    /// <summary>
+    /// Generates a unique access member name based on the target class name and existing member names.
+    /// </summary>
+    /// <param name="existingNames">A collection of member names that already exist.</param>
+    /// <param name="targetClass">The name of the target class used as the base for the access member.</param>
+    /// <returns>A unique access member name that does not collide with existing names.</returns>
     public static string GenerateAccessMemberName(IEnumerable<string> existingNames, string targetClass)
     {
         var baseName = "_" + char.ToLower(targetClass[0]) + targetClass.Substring(1);

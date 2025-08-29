@@ -10,9 +10,21 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Extracts a selected block of statements into a new method within the same class.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class ExtractMethodTool
 {
+    /// <summary>
+    /// Extracts a code block into a new method.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="methodName">Name for the new method.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Extract a code block into a new method (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> ExtractMethod(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -91,6 +103,13 @@ public static class ExtractMethodTool
             $"Successfully extracted method '{methodName}' from {selectionRange} in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Extracts selected statements into a new method in the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="methodName">Name for the extracted method.</param>
+    /// <returns>Updated source text with the new method.</returns>
     public static string ExtractMethodInSource(string sourceText, string selectionRange, string methodName)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

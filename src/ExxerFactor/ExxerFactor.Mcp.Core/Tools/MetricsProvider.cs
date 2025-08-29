@@ -8,6 +8,9 @@ using ExxerFactor.Mcp.Core.SyntaxWalkers;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Computes and caches file/class/method metrics for C# sources, with optional persistence to disk.
+/// </summary>
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1052:Static holder types should be Static or NotInheritable", Justification = "Utility class")]
 public static class MetricsProvider
 {
@@ -21,6 +24,12 @@ public static class MetricsProvider
         return Path.ChangeExtension(metricsPath, ".json");
     }
 
+    /// <summary>
+    /// Computes or retrieves cached metrics for a given file in a solution.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution (.sln).</param>
+    /// <param name="filePath">Absolute path to the C# file.</param>
+    /// <returns>JSON string containing metrics.</returns>
     public static async Task<string> GetFileMetrics(
         string solutionPath,
         string filePath)
@@ -67,6 +76,9 @@ public static class MetricsProvider
         }
     }
 
+    /// <summary>
+    /// Recomputes metrics for the given file and updates caches and on-disk copy.
+    /// </summary>
     public static Task RefreshFileMetrics(string solutionPath, string filePath)
     {
         // recompute metrics and update cache/disk

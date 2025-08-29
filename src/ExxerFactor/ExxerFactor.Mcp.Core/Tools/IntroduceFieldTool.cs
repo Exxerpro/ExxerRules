@@ -11,9 +11,22 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Introduces a new field from a selected expression within a class.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class IntroduceFieldTool
 {
+    /// <summary>
+    /// Introduces a new field initialized with the selected expression.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="fieldName">Name for the new field.</param>
+    /// <param name="accessModifier">Access modifier (private, public, protected, internal).</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Introduce a new field from selected expression (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> IntroduceField(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

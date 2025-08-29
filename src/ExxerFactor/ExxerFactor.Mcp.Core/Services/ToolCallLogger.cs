@@ -5,13 +5,23 @@ using ExxerFactor.Mcp.Core.Tools;
 
 namespace ExxerFactor.Mcp.Core.Services;
 
+/// <summary>
+/// Utility for logging and replaying MCP server tool invocations to a JSON lines file for diagnostics.
+/// </summary>
 public static class ToolCallLogger
 {
     private const string LogFileEnvVar = "ExxerFactor_Mcp_LOG_FILE";
     private static string _logFile = "tool-call-log.jsonl";
 
+    /// <summary>
+    /// Gets the default log file path used for tool call logging.
+    /// </summary>
     public static string DefaultLogFile => _logFile;
 
+    /// <summary>
+    /// Sets the directory used for tool call logs and updates the environment variable to point to the new file.
+    /// </summary>
+    /// <param name="directory">The directory where the log file should be created.</param>
     public static void SetLogDirectory(string directory)
     {
         Directory.CreateDirectory(directory);
@@ -20,6 +30,9 @@ public static class ToolCallLogger
         Environment.SetEnvironmentVariable(LogFileEnvVar, _logFile);
     }
 
+    /// <summary>
+    /// Restores the log file path from the environment variable when present.
+    /// </summary>
     public static void RestoreFromEnvironment()
     {
         var file = Environment.GetEnvironmentVariable(LogFileEnvVar);
@@ -27,6 +40,12 @@ public static class ToolCallLogger
             _logFile = file;
     }
 
+    /// <summary>
+    /// Appends a tool invocation record to the log file.
+    /// </summary>
+    /// <param name="toolName">The name of the tool being invoked.</param>
+    /// <param name="parameters">Parameters passed to the tool.</param>
+    /// <param name="logFile">Optional explicit log file path to use.</param>
     public static void Log(string toolName, Dictionary<string, string?> parameters, string? logFile = null)
     {
         var file = logFile ?? DefaultLogFile;
@@ -44,6 +63,10 @@ public static class ToolCallLogger
         File.AppendAllText(file, json + Environment.NewLine);
     }
 
+    /// <summary>
+    /// Replays the tool invocations from a JSON lines log file, writing tool outputs to the console.
+    /// </summary>
+    /// <param name="logFilePath">Path to the JSONL log file.</param>
     public static async Task Playback(string logFilePath)
     {
         if (!File.Exists(logFilePath))
@@ -75,6 +98,9 @@ public static class ToolCallLogger
         }
     }
 
+    /// <summary>
+    /// Finds the tool implementation and invokes it with the provided parameters.
+    /// </summary>
     private static async Task InvokeTool(string toolName, Dictionary<string, string?> parameters)
     {
         var method = GetToolMethod(toolName);
@@ -120,6 +146,9 @@ public static class ToolCallLogger
         }
     }
 
+    /// <summary>
+    /// Locates a tool method by name among all types marked with the server tool attribute.
+    /// </summary>
     private static MethodInfo? GetToolMethod(string toolName)
     {
         return typeof(LoadSolutionTool).Assembly
@@ -130,6 +159,9 @@ public static class ToolCallLogger
                                  m.Name.Equals(toolName, StringComparison.OrdinalIgnoreCase));
     }
 
+    /// <summary>
+    /// Converts a string input to the requested target type for reflective invocation.
+    /// </summary>
     private static object? ConvertInput(string value, Type targetType)
     {
         if (targetType == typeof(string))
@@ -143,6 +175,9 @@ public static class ToolCallLogger
         return Convert.ChangeType(value, targetType);
     }
 
+    /// <summary>
+    /// Serializable record representing a single tool call entry.
+    /// </summary>
     private class ToolCallRecord
     {
         public string Tool { get; set; } = string.Empty;

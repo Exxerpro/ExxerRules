@@ -9,6 +9,10 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Converts an instance method to static by adding an explicit instance parameter.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class ConvertToStaticWithInstanceTool
 {
@@ -55,6 +59,15 @@ public static class ConvertToStaticWithInstanceTool
         var updatedMethod = rewriter.Rewrite(method);
         return root.ReplaceNode(method, updatedMethod);
     }
+    /// <summary>
+    /// Converts an instance method to static by adding an instance parameter.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Name of the method to convert.</param>
+    /// <param name="instanceParameterName">Name for the instance parameter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Transform instance method to static by adding instance parameter (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> ConvertToStaticWithInstance(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -109,6 +122,13 @@ public static class ConvertToStaticWithInstanceTool
             $"Successfully converted method '{methodName}' to static with instance parameter in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Converts an instance method to static by adding an instance parameter within the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Name of the method to convert.</param>
+    /// <param name="instanceParameterName">Name to use for the injected instance parameter.</param>
+    /// <returns>Updated source text with the static method.</returns>
     public static string ConvertToStaticWithInstanceInSource(string sourceText, string methodName, string instanceParameterName)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

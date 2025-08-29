@@ -4,6 +4,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that qualifies instance member accesses with a provided parameter name.
+/// Useful when converting instance methods into static/extension methods.
+/// </summary>
 public class InstanceMemberQualifierRewriter : CSharpSyntaxRewriter
 {
     private readonly string _parameterName;
@@ -11,6 +15,13 @@ public class InstanceMemberQualifierRewriter : CSharpSyntaxRewriter
     private readonly INamedTypeSymbol? _typeSymbol;
     private readonly HashSet<string>? _knownMembers;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="InstanceMemberQualifierRewriter"/> class.
+    /// </summary>
+    /// <param name="parameterName">The parameter name to use for qualification.</param>
+    /// <param name="semanticModel">Optional semantic model for precise symbol checks.</param>
+    /// <param name="typeSymbol">Optional containing type used for hierarchy checks.</param>
+    /// <param name="knownMembers">Optional set of known instance member names.</param>
     public InstanceMemberQualifierRewriter(
         string parameterName,
         SemanticModel? semanticModel = null,
@@ -23,9 +34,11 @@ public class InstanceMemberQualifierRewriter : CSharpSyntaxRewriter
         _knownMembers = knownMembers;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitThisExpression(ThisExpressionSyntax node)
         => SyntaxFactory.IdentifierName(_parameterName).WithTriviaFrom(node);
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         var parent = node.Parent;

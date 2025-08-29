@@ -4,6 +4,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that replaces feature-flag checks with strategy application and introduces supporting members and types.
+/// </summary>
 public class FeatureFlagRewriter : CSharpSyntaxRewriter
 {
     private readonly string _flagName;
@@ -11,8 +14,16 @@ public class FeatureFlagRewriter : CSharpSyntaxRewriter
     private readonly string _strategyField;
     private bool _done;
     private IfStatementSyntax? _targetIf;
+
+    /// <summary>
+    /// Gets the members generated during the rewrite (strategy interface and implementations).
+    /// </summary>
     public SyntaxList<MemberDeclarationSyntax> GeneratedMembers { get; private set; }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="FeatureFlagRewriter"/> class.
+    /// </summary>
+    /// <param name="flagName">The name of the feature flag to rewrite.</param>
     public FeatureFlagRewriter(string flagName)
     {
         _flagName = flagName;
@@ -35,6 +46,7 @@ public class FeatureFlagRewriter : CSharpSyntaxRewriter
         return false;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitIfStatement(IfStatementSyntax node)
     {
         if (!_done && IsFlagCheck(node.Condition, _flagName))
@@ -52,6 +64,7 @@ public class FeatureFlagRewriter : CSharpSyntaxRewriter
         return base.VisitIfStatement(node)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node)
     {
         var visited = (ClassDeclarationSyntax)base.VisitClassDeclaration(node)!;
@@ -68,6 +81,7 @@ public class FeatureFlagRewriter : CSharpSyntaxRewriter
         return visited;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
     {
         var visited = (ConstructorDeclarationSyntax)base.VisitConstructorDeclaration(node)!;

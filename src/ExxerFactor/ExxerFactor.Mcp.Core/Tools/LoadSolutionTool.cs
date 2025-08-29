@@ -8,9 +8,19 @@ using ExxerFactor.Mcp.Core.Services;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Loads a solution into the shared workspace and prepares caches/metrics directories.
+/// </summary>
 [McpServerToolType]
 public static class LoadSolutionTool
 {
+    /// <summary>
+    /// Clears caches, sets working directory and loads the specified solution.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Token to cancel the operation.</param>
+    /// <returns>A message describing the loaded solution and projects.</returns>
     [McpServerTool, Description("Start a new session by clearing caches then load a solution file and set the current directory")]
     public static async Task<string> LoadSolution(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

@@ -11,15 +11,25 @@ using ModelContextProtocol;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Helper utilities for solution/file handling, Roslyn workspace access, caching,
+/// and common transformations used by refactoring tools.
+/// </summary>
 public static class ExxerFactoringHelpers
 {
     // MemoryCache is thread-safe and Solution objects from Roslyn are immutable.
     // This allows us to store and access Solution instances across threads
     // without additional locking or synchronization.
+    /// <summary>Cache of loaded solutions keyed by solution path.</summary>
     public static MemoryCache SolutionCache = new(new MemoryCacheOptions());
+    /// <summary>Cache of parsed syntax trees keyed by file path.</summary>
     public static MemoryCache SyntaxTreeCache = new(new MemoryCacheOptions());
+    /// <summary>Cache of semantic models keyed by file path.</summary>
     public static MemoryCache ModelCache = new(new MemoryCacheOptions());
 
+    /// <summary>
+    /// Clears and recreates all in-memory caches for solutions, syntax trees and semantic models.
+    /// </summary>
     public static void ClearAllCaches()
     {
         SolutionCache.Dispose();
@@ -36,6 +46,9 @@ public static class ExxerFactoringHelpers
     private static bool _msbuildRegistered;
     private static readonly object _msbuildLock = new();
 
+    /// <summary>
+    /// A shared <see cref="AdhocWorkspace"/> instance for formatting and analysis.
+    /// </summary>
     public static AdhocWorkspace SharedWorkspace => _workspace.Value;
 
     private static void EnsureMsBuildRegistered()
@@ -49,6 +62,10 @@ public static class ExxerFactoringHelpers
         }
     }
 
+    /// <summary>
+    /// Creates a new <see cref="MSBuildWorkspace"/> configured to load solutions and projects.
+    /// </summary>
+    /// <returns>A configured workspace instance.</returns>
     public static MSBuildWorkspace CreateWorkspace()
     {
         EnsureMsBuildRegistered();
@@ -59,6 +76,12 @@ public static class ExxerFactoringHelpers
         return workspace;
     }
 
+    /// <summary>
+    /// Gets a cached solution or loads it from disk if not present.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the .sln file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The loaded solution instance.</returns>
     public static async Task<Solution> GetOrLoadSolution(
         string solutionPath,
         CancellationToken cancellationToken = default)
@@ -78,6 +101,10 @@ public static class ExxerFactoringHelpers
 
     // Solutions are immutable, so replacing the cached instance is safe even
     // when accessed concurrently by multiple threads.
+    /// <summary>
+    /// Updates the cached solution instance for the document's solution and triggers metrics refresh.
+    /// </summary>
+    /// <param name="updatedDocument">The updated Roslyn document.</param>
     public static void UpdateSolutionCache(Document updatedDocument)
     {
         var solutionPath = updatedDocument.Project.Solution.FilePath;
@@ -91,6 +118,12 @@ public static class ExxerFactoringHelpers
         }
     }
 
+    /// <summary>
+    /// Finds a document in a solution by its absolute file path.
+    /// </summary>
+    /// <param name="solution">The solution to search.</param>
+    /// <param name="filePath">The absolute file path.</param>
+    /// <returns>The matching document, or null if not found.</returns>
     public static Document? GetDocumentByPath(Solution solution, string filePath)
     {
         var normalizedPath = Path.GetFullPath(filePath);
@@ -99,6 +132,15 @@ public static class ExxerFactoringHelpers
             .FirstOrDefault(d => Path.GetFullPath(d.FilePath ?? "") == normalizedPath);
     }
 
+    /// <summary>
+    /// Parses a text range string in the format 'startLine:startColumn-endLine:endColumn'.
+    /// </summary>
+    /// <param name="range">The range string.</param>
+    /// <param name="startLine">Parsed start line (1-based).</param>
+    /// <param name="startColumn">Parsed start column (1-based).</param>
+    /// <param name="endLine">Parsed end line (1-based).</param>
+    /// <param name="endColumn">Parsed end column (1-based).</param>
+    /// <returns>True if parsing succeeded; otherwise false.</returns>
     public static bool TryParseRange(string range, out int startLine, out int startColumn, out int endLine, out int endColumn)
     {
         startLine = startColumn = endLine = endColumn = 0;
@@ -113,6 +155,16 @@ public static class ExxerFactoringHelpers
                int.TryParse(endParts[1], out endColumn);
     }
 
+    /// <summary>
+    /// Validates that a range is well-formed and within the bounds of the provided text.
+    /// </summary>
+    /// <param name="text">The source text.</param>
+    /// <param name="startLine">Start line (1-based).</param>
+    /// <param name="startColumn">Start column (1-based).</param>
+    /// <param name="endLine">End line (1-based).</param>
+    /// <param name="endColumn">End column (1-based).</param>
+    /// <param name="error">Output error message when invalid.</param>
+    /// <returns>True if the range is valid; otherwise false.</returns>
     public static bool ValidateRange(
         SourceText text,
         int startLine,
@@ -141,6 +193,13 @@ public static class ExxerFactoringHelpers
     }
 
 
+    /// <summary>
+    /// Applies a transformation to a single file on disk, preserving encoding and caches.
+    /// </summary>
+    /// <param name="filePath">Absolute file path to modify.</param>
+    /// <param name="transform">Transformation that returns the new file text.</param>
+    /// <param name="successMessage">Message to return upon success.</param>
+    /// <returns>Success message or error message starting with "Error:".</returns>
     public static async Task<string> ApplySingleFileEdit(
         string filePath,
         Func<string, string> transform,
@@ -160,6 +219,13 @@ public static class ExxerFactoringHelpers
         return successMessage;
     }
 
+    /// <summary>
+    /// Finds a class declaration by name across all documents in the solution.
+    /// </summary>
+    /// <param name="solution">The solution to search.</param>
+    /// <param name="className">The class identifier.</param>
+    /// <param name="excludingFilePaths">Optional absolute paths to exclude.</param>
+    /// <returns>The document containing the class, or null.</returns>
     public static async Task<Document?> FindClassInSolution(
         Solution solution,
         string className,
@@ -182,6 +248,13 @@ public static class ExxerFactoringHelpers
         return null;
     }
 
+    /// <summary>
+    /// Finds a type declaration (class, enum, delegate, etc.) by name across the solution.
+    /// </summary>
+    /// <param name="solution">The solution to search.</param>
+    /// <param name="typeName">The type identifier.</param>
+    /// <param name="excludingFilePaths">Optional absolute paths to exclude.</param>
+    /// <returns>The document containing the type, or null.</returns>
     public static async Task<Document?> FindTypeInSolution(
         Solution solution,
         string typeName,
@@ -206,6 +279,11 @@ public static class ExxerFactoringHelpers
         return null;
     }
 
+    /// <summary>
+    /// Adds an existing source file as a document to the given project if not present.
+    /// </summary>
+    /// <param name="project">The target project.</param>
+    /// <param name="filePath">Absolute path to the source file.</param>
     public static void AddDocumentToProject(Project project, string filePath)
     {
         if (project.Documents.Any(d =>
@@ -234,6 +312,11 @@ public static class ExxerFactoringHelpers
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
 
+    /// <summary>
+    /// Retrieves a cached syntax tree for a file or parses it from disk if absent.
+    /// </summary>
+    /// <param name="filePath">Absolute path to the source file.</param>
+    /// <returns>The syntax tree.</returns>
     public static async Task<SyntaxTree> GetOrParseSyntaxTreeAsync(string filePath)
     {
         if (SyntaxTreeCache.TryGetValue(filePath, out SyntaxTree? cached))
@@ -244,6 +327,11 @@ public static class ExxerFactoringHelpers
         return tree;
     }
 
+    /// <summary>
+    /// Retrieves or creates a semantic model for the specified file.
+    /// </summary>
+    /// <param name="filePath">Absolute path to the source file.</param>
+    /// <returns>The semantic model.</returns>
     public static async Task<SemanticModel> GetOrCreateSemanticModelAsync(string filePath)
     {
         if (ModelCache.TryGetValue(filePath, out SemanticModel? cached))
@@ -255,6 +343,11 @@ public static class ExxerFactoringHelpers
         return model;
     }
 
+    /// <summary>
+    /// Updates in-memory caches after a file's contents have changed.
+    /// </summary>
+    /// <param name="filePath">Absolute path to the source file.</param>
+    /// <param name="newText">New file contents.</param>
     public static void UpdateFileCaches(string filePath, string newText)
     {
         var tree = CSharpSyntaxTree.ParseText(newText);
@@ -264,6 +357,12 @@ public static class ExxerFactoringHelpers
         ModelCache.Set(filePath, model);
     }
 
+    /// <summary>
+    /// Reads a file and returns its text along with the detected encoding.
+    /// </summary>
+    /// <param name="filePath">Absolute path to the file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A tuple containing the text and encoding.</returns>
     public static async Task<(string Text, Encoding Encoding)> ReadFileWithEncodingAsync(
         string filePath,
         CancellationToken cancellationToken = default)
@@ -274,6 +373,12 @@ public static class ExxerFactoringHelpers
         return (text, encoding);
     }
 
+    /// <summary>
+    /// Detects and returns the encoding of a file without loading it as text.
+    /// </summary>
+    /// <param name="filePath">Absolute path to the file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>The detected encoding.</returns>
     public static async Task<Encoding> GetFileEncodingAsync(
         string filePath,
         CancellationToken cancellationToken = default)
@@ -303,6 +408,13 @@ public static class ExxerFactoringHelpers
         return Encoding.UTF8;
     }
 
+    /// <summary>
+    /// Writes text to a file with a specific encoding and updates caches.
+    /// </summary>
+    /// <param name="filePath">Absolute path to the file.</param>
+    /// <param name="text">Text to write.</param>
+    /// <param name="encoding">Encoding to use.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     public static async Task WriteFileWithEncodingAsync(
         string filePath,
         string text,
@@ -313,6 +425,14 @@ public static class ExxerFactoringHelpers
         UpdateFileCaches(filePath, text);
     }
 
+    /// <summary>
+    /// Executes a function using a Roslyn document when available or falls back to a single-file path.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file.</param>
+    /// <param name="filePath">Absolute path to the C# file.</param>
+    /// <param name="withSolution">Function to run when the document is found in the solution.</param>
+    /// <param name="singleFile">Function to run when only a file path is available.</param>
+    /// <returns>A message returned by the executed function.</returns>
     public static async Task<string> RunWithSolutionOrFile(
         string solutionPath,
         string filePath,

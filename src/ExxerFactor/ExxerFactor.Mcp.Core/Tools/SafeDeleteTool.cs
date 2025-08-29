@@ -12,9 +12,19 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Safe delete operations for fields, methods, parameters and variables with reference checks.
+/// </summary>
 [McpServerToolType]
 public static class SafeDeleteTool
 {
+    /// <summary>
+    /// Deletes an unused field after verifying there are no references.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="fieldName">Name of the field to delete.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Safely delete an unused field (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> SafeDeleteField(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -35,6 +45,13 @@ public static class SafeDeleteTool
         }
     }
 
+    /// <summary>
+    /// Deletes an unused method after verifying there are no references.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Name of the method to delete.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Safely delete an unused method (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> SafeDeleteMethod(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -55,6 +72,14 @@ public static class SafeDeleteTool
         }
     }
 
+    /// <summary>
+    /// Deletes an unused parameter from a method and updates all call sites.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Name of the method containing the parameter.</param>
+    /// <param name="parameterName">Name of the parameter to delete.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Safely delete an unused parameter from a method")]
     public static async Task<string> SafeDeleteParameter(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -76,6 +101,13 @@ public static class SafeDeleteTool
         }
     }
 
+    /// <summary>
+    /// Deletes a local variable within a specified range if it is not referenced elsewhere.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="selectionRange">Range of the variable declaration in format 'startLine:startCol-endLine:endCol'.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Safely delete a local variable using a line range")]
     public static async Task<string> SafeDeleteVariable(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -133,6 +165,12 @@ public static class SafeDeleteTool
             $"Successfully deleted field '{fieldName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Removes an unused field from the provided source text after simple checks.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="fieldName">Field name to delete.</param>
+    /// <returns>Updated source text.</returns>
     public static string SafeDeleteFieldInSource(string sourceText, string fieldName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -193,6 +231,12 @@ public static class SafeDeleteTool
             $"Successfully deleted method '{methodName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Removes an unused method from the provided source text after simple checks.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Method name to delete.</param>
+    /// <returns>Updated source text.</returns>
     public static string SafeDeleteMethodInSource(string sourceText, string methodName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -263,6 +307,13 @@ public static class SafeDeleteTool
             $"Successfully deleted parameter '{parameterName}' from method '{methodName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Removes a parameter from a method and updates usages within the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Method name containing the parameter.</param>
+    /// <param name="parameterName">Parameter name to delete.</param>
+    /// <returns>Updated source text.</returns>
     public static string SafeDeleteParameterInSource(string sourceText, string methodName, string parameterName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -327,6 +378,12 @@ public static class SafeDeleteTool
             $"Successfully deleted variable in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Removes a local variable within the specified range from the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startCol-endLine:endCol'.</param>
+    /// <returns>Updated source text.</returns>
     public static string SafeDeleteVariableInSource(string sourceText, string selectionRange)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

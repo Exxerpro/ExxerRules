@@ -6,8 +6,15 @@ using Serilog.Events;
 
 namespace ExxerFactor.Mcp.Core.Logging;
 
+/// <summary>
+/// Centralized Serilog configuration and registration helpers.
+/// </summary>
 public static class LoggingConfiguration
 {
+    /// <summary>
+    /// Configures Serilog using the provided configuration (console, file, optional Seq).
+    /// </summary>
+    /// <param name="configuration">Application configuration.</param>
     public static void ConfigureSerilog(IConfiguration configuration)
     {
         var logConfig = new LoggerConfiguration()
@@ -41,6 +48,11 @@ public static class LoggingConfiguration
         Log.Logger = logConfig.CreateLogger();
     }
 
+    /// <summary>
+    /// Adds Serilog as the logging provider to the service collection.
+    /// </summary>
+    /// <param name="services">Service collection.</param>
+    /// <param name="configuration">Application configuration.</param>
     public static void AddSerilogToServices(this IServiceCollection services, IConfiguration configuration)
     {
         ConfigureSerilog(configuration);

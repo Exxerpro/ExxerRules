@@ -9,9 +9,20 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Refactoring operations for converting fields to readonly when safe to do so.
+/// </summary>
 [McpServerToolType]
 public static class MakeFieldReadonlyTool
 {
+    /// <summary>
+    /// Makes a field readonly if it is only assigned during initialization.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="fieldName">Name of the field to make readonly.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Make a field readonly if assigned only during initialization (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> MakeFieldReadonly(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

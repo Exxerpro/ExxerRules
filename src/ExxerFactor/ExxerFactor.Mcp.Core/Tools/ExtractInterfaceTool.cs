@@ -7,9 +7,22 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Generates an interface from selected members of an existing class and updates the class to implement it.
+/// </summary>
 [McpServerToolType]
 public static class ExtractInterfaceTool
 {
+    /// <summary>
+    /// Extracts an interface file from a class and updates the class base list.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the class.</param>
+    /// <param name="className">Name of the class to extract from.</param>
+    /// <param name="memberList">Comma separated list of member names to include.</param>
+    /// <param name="interfaceFilePath">Path to write the generated interface file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Extract a simple interface from a class")]
     public static async Task<string> ExtractInterface(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

@@ -10,6 +10,10 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Inlines a method by updating call sites and removing the method declaration.
+/// Supports solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class InlineMethodTool
 {
@@ -77,6 +81,12 @@ public static class InlineMethodTool
             $"Successfully inlined method '{methodName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Inlines a parameterless method by replacing its call sites and removing the method.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Name of the parameterless method to inline.</param>
+    /// <returns>The updated source text.</returns>
     public static string InlineMethodInSource(string sourceText, string methodName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -96,6 +106,13 @@ public static class InlineMethodTool
         return formatted.ToFullString();
     }
 
+    /// <summary>
+    /// Inlines a method and removes its declaration.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the method.</param>
+    /// <param name="methodName">Name of the method to inline.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Inline a method and remove its declaration (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> InlineMethod(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

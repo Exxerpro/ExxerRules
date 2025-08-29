@@ -4,8 +4,16 @@ using ExxerFactor.Mcp.Core.Services;
 
 namespace ExxerFactor.Mcp.Core.Extensions;
 
+/// <summary>
+/// Dependency injection extensions for registering ExxerFactor MCP core services.
+/// </summary>
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Registers core services required by ExxerFactor MCP.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The same service collection for chaining.</returns>
     public static IServiceCollection AddExxerFactorMcpCore(this IServiceCollection services)
     {
         services.AddSingleton<IExxerFactoringService, ExxerFactoringService>();

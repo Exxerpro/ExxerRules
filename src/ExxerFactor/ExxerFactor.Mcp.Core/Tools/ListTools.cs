@@ -5,9 +5,16 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Lists available ExxerFactoring tools discovered via reflection.
+/// </summary>
 [McpServerToolType]
 public static class ListTools
 {
+    /// <summary>
+    /// Enumerates and returns the set of public static tool methods as kebab-case names.
+    /// </summary>
+    /// <returns>A newline-delimited list of tool names.</returns>
     [McpServerTool, Description("List all available ExxerFactoring tools")]
     public static string ListToolsCommand()
     {

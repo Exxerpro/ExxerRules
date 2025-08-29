@@ -8,8 +8,21 @@ using ExxerFactor.Mcp.Core.Tools;
 
 namespace ExxerFactor.Mcp.Core.Move;
 
+/// <summary>
+/// File-system oriented helpers for moving methods across files and classes.
+/// </summary>
 public static class MoveMethodFileService
 {
+    /// <summary>
+    /// Moves a static method to a target class in the specified file.
+    /// </summary>
+    /// <param name="filePath">Path to the file containing the method.</param>
+    /// <param name="methodName">Name of the static method to move.</param>
+    /// <param name="targetClass">Target class name.</param>
+    /// <param name="targetFilePath">Optional target file path.</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message.</returns>
     // ===== FILE OPERATION LAYER =====
     // File I/O operations that use the AST layer
 
@@ -68,12 +81,22 @@ public static class MoveMethodFileService
 
 
 
+    /// <summary>
+    /// Validates that the specified file exists on disk.
+    /// </summary>
+    /// <param name="filePath">Absolute or relative path to the file to validate.</param>
     public static void ValidateFileExists(string filePath)
     {
         if (!File.Exists(filePath))
             throw new McpException($"Error: File {filePath} not found (current dir: {Directory.GetCurrentDirectory()})");
     }
 
+    /// <summary>
+    /// Loads the syntax root from an existing target file or creates an empty compilation unit if it does not exist.
+    /// </summary>
+    /// <param name="targetPath">Path to the target C# file.</param>
+    /// <param name="cancellationToken">Token to observe while waiting for the operation to complete.</param>
+    /// <returns>The syntax root for the target file.</returns>
     public static async Task<SyntaxNode> LoadOrCreateTargetRoot(
         string targetPath,
         CancellationToken cancellationToken)
@@ -90,6 +113,22 @@ public static class MoveMethodFileService
     }
 
 
+    /// <summary>
+    /// Moves an instance method from a source class to a target class within the same file or across files.
+    /// Leaves a delegating method in the original class to preserve the public API and optionally injects dependencies.
+    /// </summary>
+    /// <param name="filePath">Path to the C# file that contains the source class and method.</param>
+    /// <param name="sourceClass">The name of the class that currently contains the method.</param>
+    /// <param name="methodName">The name of the instance method to move.</param>
+    /// <param name="constructorInjections">Names of dependencies to inject via the target class constructor.</param>
+    /// <param name="parameterInjections">Names of dependencies to expose as parameters on the moved method.</param>
+    /// <param name="targetClass">The name of the target class that will receive the method.</param>
+    /// <param name="accessMemberName">The name of the access member generated in the source class when needed.</param>
+    /// <param name="accessMemberType">The type of access member to generate (e.g., field or property).</param>
+    /// <param name="targetFilePath">Optional path to a different target file; defaults to the source file when null.</param>
+    /// <param name="progress">Optional progress reporter to receive updated file paths.</param>
+    /// <param name="cancellationToken">Token to observe while waiting for the operation to complete.</param>
+    /// <returns>A status message describing the performed move.</returns>
     public static async Task<string> MoveInstanceMethodInFile(
         string filePath,
         string sourceClass,
@@ -226,6 +265,12 @@ public static class MoveMethodFileService
         return "_" + baseName;
     }
 
+    /// <summary>
+    /// Generates a parameter name for the specified dependency or special token based on the source class name.
+    /// </summary>
+    /// <param name="inj">The dependency identifier (e.g., field name) or the special value "this".</param>
+    /// <param name="sourceClass">The name of the source class used to derive names when <paramref name="inj"/> equals "this".</param>
+    /// <returns>A normalized parameter name suitable for use in a method signature.</returns>
     public static string GetParameterName(string inj, string sourceClass)
     {
         string baseName;

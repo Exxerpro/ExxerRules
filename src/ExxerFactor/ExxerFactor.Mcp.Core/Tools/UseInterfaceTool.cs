@@ -8,6 +8,10 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Refactoring tool to change a parameter's concrete type to an interface.
+/// Supports both solution-aware and single-file modes.
+/// </summary>
 [McpServerToolType]
 public static class UseInterfaceTool
 {
@@ -44,6 +48,14 @@ public static class UseInterfaceTool
             $"Successfully changed parameter '{parameterName}' to interface '{interfaceName}' in method '{methodName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Changes a method parameter type to the specified interface within the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">Name of the method containing the parameter.</param>
+    /// <param name="parameterName">Name of the parameter to change.</param>
+    /// <param name="interfaceName">Fully qualified interface type name.</param>
+    /// <returns>The updated source text.</returns>
     public static string UseInterfaceInSource(string sourceText, string methodName, string parameterName, string interfaceName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -65,6 +77,15 @@ public static class UseInterfaceTool
         return formatted.ToFullString();
     }
 
+    /// <summary>
+    /// Changes a method parameter type to the specified interface.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Name of the method containing the parameter.</param>
+    /// <param name="parameterName">Name of the parameter to change.</param>
+    /// <param name="interfaceName">Fully qualified interface type name.</param>
+    /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Change a method parameter type to an interface (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> UseInterface(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

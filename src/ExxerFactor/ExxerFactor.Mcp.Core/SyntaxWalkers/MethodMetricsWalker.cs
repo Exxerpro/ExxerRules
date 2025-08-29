@@ -4,16 +4,28 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
 
+/// <summary>
+/// Computes simple method-level metrics and emits actionable refactoring suggestions.
+/// </summary>
 public class MethodMetricsWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel? _model;
+    /// <summary>Collected suggestions derived from method metrics.</summary>
     public List<string> Suggestions { get; } = new();
 
+    /// <summary>
+    /// Initializes a new instance using an optional semantic model for symbol analysis.
+    /// </summary>
+    /// <param name="model">The semantic model used to resolve symbol information.</param>
     public MethodMetricsWalker(SemanticModel? model)
     {
         _model = model;
     }
 
+    /// <summary>
+    /// Visits method declarations and computes basic metrics such as length and parameter count.
+    /// </summary>
+    /// <param name="node">The method declaration node.</param>
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         base.VisitMethodDeclaration(node);

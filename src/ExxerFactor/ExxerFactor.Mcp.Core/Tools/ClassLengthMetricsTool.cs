@@ -5,9 +5,18 @@ using ModelContextProtocol.Server;
 
 namespace ExxerFactor.Mcp.Core.Tools;
 
+/// <summary>
+/// Reports classes across the solution and their line counts.
+/// </summary>
 [McpServerToolType, McpServerPromptType]
 public static class ClassLengthMetricsTool
 {
+    /// <summary>
+    /// Lists all classes in the solution with their line counts.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Formatted list of class names and their line counts.</returns>
     [McpServerPrompt, Description("List all classes in the solution with their line counts")]
     public static async Task<string> ListClassLengths(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

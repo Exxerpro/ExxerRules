@@ -12,8 +12,15 @@ namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 /// </summary>
 public abstract class DeclarationRemovalRewriter<T> : CSharpSyntaxRewriter where T : SyntaxNode
 {
+    /// <summary>
+    /// The name of the declaration (or variable within a declaration) to remove.
+    /// </summary>
     protected readonly string Name;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="DeclarationRemovalRewriter{T}"/> class.
+    /// </summary>
+    /// <param name="name">The name of the declaration or variable to remove.</param>
     protected DeclarationRemovalRewriter(string name)
     {
         Name = name;
@@ -37,6 +44,7 @@ public abstract class DeclarationRemovalRewriter<T> : CSharpSyntaxRewriter where
     /// </summary>
     protected virtual T WithDeclarators(T node, SeparatedSyntaxList<VariableDeclaratorSyntax> declarators) => node;
 
+    /// <inheritdoc />
     public override SyntaxNode? Visit(SyntaxNode? node)
     {
         if (node is T typed && IsTarget(typed))

@@ -4,17 +4,26 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that qualifies references to method names (not calls) with a provided parameter name.
+/// </summary>
 public class MethodReferenceRewriter : CSharpSyntaxRewriter
 {
     private readonly HashSet<string> _methodNames;
     private readonly string _parameterName;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MethodReferenceRewriter"/> class.
+    /// </summary>
+    /// <param name="methodNames">Set of method names to qualify.</param>
+    /// <param name="parameterName">The parameter name to qualify with.</param>
     public MethodReferenceRewriter(HashSet<string> methodNames, string parameterName)
     {
         _methodNames = methodNames;
         _parameterName = parameterName;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
     {
         if (_methodNames.Contains(node.Identifier.ValueText))
@@ -36,6 +45,7 @@ public class MethodReferenceRewriter : CSharpSyntaxRewriter
         return base.VisitIdentifierName(node)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitMemberAccessExpression(MemberAccessExpressionSyntax node)
     {
         if (node.Expression is ThisExpressionSyntax &&
@@ -49,6 +59,7 @@ public class MethodReferenceRewriter : CSharpSyntaxRewriter
         return base.VisitMemberAccessExpression(node)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitConditionalAccessExpression(ConditionalAccessExpressionSyntax node)
     {
         // Handle cases like this.method?.Something
@@ -61,6 +72,7 @@ public class MethodReferenceRewriter : CSharpSyntaxRewriter
         return base.VisitConditionalAccessExpression(node);
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitNameColon(NameColonSyntax node)
     {
         // Override to handle named arguments manually and avoid casting issues

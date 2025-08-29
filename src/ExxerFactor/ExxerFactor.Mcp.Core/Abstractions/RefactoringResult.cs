@@ -4,15 +4,15 @@ namespace ExxerFactor.Mcp.Core.Abstractions;
 /// Represents the outcome of a refactoring operation, including success state,
 /// human-readable messages, updated code snippets and any affected files.
 /// </summary>
+/// <param name="Success">Indicates whether the operation completed successfully.</param>
+/// <param name="Message">Message describing the result or error.</param>
+/// <param name="UpdatedCode">Optional updated code returned by the tool, if applicable.</param>
+/// <param name="ModifiedFiles">Optional list of files that were modified by the operation.</param>
+/// <param name="ErrorDetails">Raw error details, including stack traces, when failures occur.</param>
 public record ExxerFactoringResult(
-    /// <summary>Indicates whether the operation completed successfully.</summary>
     bool Success,
-    /// <summary>Message describing the result or error.</summary>
     string Message,
-    /// <summary>Optional updated code returned by the tool, if applicable.</summary>
     string? UpdatedCode = null,
-    /// <summary>Optional list of files that were modified by the operation.</summary>
     IEnumerable<string>? ModifiedFiles = null,
-    /// <summary>Raw error details, including stack traces, when failures occur.</summary>
     string? ErrorDetails = null
 );

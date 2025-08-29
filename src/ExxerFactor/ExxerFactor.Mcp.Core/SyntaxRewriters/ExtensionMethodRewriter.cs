@@ -5,6 +5,9 @@ using ExxerFactor.Mcp.Core.Tools;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewrites a method into an extension method by introducing a 'this' parameter and qualifying member accesses.
+/// </summary>
 public class ExtensionMethodRewriter : CSharpSyntaxRewriter
 {
     private readonly string _parameterName;
@@ -13,6 +16,9 @@ public class ExtensionMethodRewriter : CSharpSyntaxRewriter
     private readonly INamedTypeSymbol? _typeSymbol;
     private readonly HashSet<string>? _knownMembers;
 
+    /// <summary>
+    /// Initializes a new instance using semantic model metadata for qualification.
+    /// </summary>
     public ExtensionMethodRewriter(string parameterName, string parameterType, SemanticModel semanticModel, INamedTypeSymbol typeSymbol)
     {
         _parameterName = parameterName;
@@ -21,6 +27,9 @@ public class ExtensionMethodRewriter : CSharpSyntaxRewriter
         _typeSymbol = typeSymbol;
     }
 
+    /// <summary>
+    /// Initializes a new instance using a predefined set of known instance member names for qualification.
+    /// </summary>
     public ExtensionMethodRewriter(string parameterName, string parameterType, HashSet<string> knownMembers)
     {
         _parameterName = parameterName;
@@ -28,11 +37,15 @@ public class ExtensionMethodRewriter : CSharpSyntaxRewriter
         _knownMembers = knownMembers;
     }
 
+    /// <summary>
+    /// Rewrites the specified method declaration as an extension method.
+    /// </summary>
     public MethodDeclarationSyntax Rewrite(MethodDeclarationSyntax method)
     {
         return (MethodDeclarationSyntax)Visit(method)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         var thisParam = SyntaxFactory.Parameter(SyntaxFactory.Identifier(_parameterName))
@@ -54,11 +67,13 @@ public class ExtensionMethodRewriter : CSharpSyntaxRewriter
         return base.VisitMethodDeclaration(updated)!;
     }
 
+    /// <inheritdoc />
     public override SyntaxNode VisitThisExpression(ThisExpressionSyntax node)
     {
         return SyntaxFactory.IdentifierName(_parameterName).WithTriviaFrom(node);
     }
 
+    /// <inheritdoc />
     public override SyntaxNode? VisitIdentifierName(IdentifierNameSyntax node)
     {
         bool qualify = false;

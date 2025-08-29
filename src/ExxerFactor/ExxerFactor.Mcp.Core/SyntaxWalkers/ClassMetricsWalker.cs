@@ -3,10 +3,18 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
 
+/// <summary>
+/// Computes simple class-level metrics and emits suggestions for oversized types.
+/// </summary>
 public class ClassMetricsWalker : CSharpSyntaxWalker
 {
+    /// <summary>Collected suggestions derived from class metrics.</summary>
     public List<string> Suggestions { get; } = new();
 
+    /// <summary>
+    /// Visits class declarations and records metrics such as member count and line span.
+    /// </summary>
+    /// <param name="node">The class declaration node.</param>
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
     {
         base.VisitClassDeclaration(node);

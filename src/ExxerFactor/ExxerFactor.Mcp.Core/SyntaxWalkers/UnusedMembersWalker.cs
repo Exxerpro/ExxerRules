@@ -5,6 +5,9 @@ using Microsoft.CodeAnalysis.FindSymbols;
 
 namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
 
+/// <summary>
+/// Analyzes a syntax tree (and optionally solution/semantic model) to detect unused members.
+/// </summary>
 public class UnusedMembersWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel? _model;
@@ -15,8 +18,16 @@ public class UnusedMembersWalker : CSharpSyntaxWalker
     private readonly Dictionary<string, int> _invocations = new();
     private readonly Dictionary<string, int> _fieldRefs = new();
 
+    /// <summary>
+    /// Gets the list of textual suggestions produced by the analysis.
+    /// </summary>
     public List<string> Suggestions { get; } = new();
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="UnusedMembersWalker"/> class.
+    /// </summary>
+    /// <param name="model">Optional semantic model for cross-file analysis.</param>
+    /// <param name="solution">Optional solution for symbol reference searches.</param>
     public UnusedMembersWalker(SemanticModel? model = null, Solution? solution = null)
         : base(SyntaxWalkerDepth.Token)
     {
@@ -24,12 +35,14 @@ public class UnusedMembersWalker : CSharpSyntaxWalker
         _solution = solution;
     }
 
+    /// <inheritdoc />
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         base.VisitMethodDeclaration(node);
         _methods.TryAdd(node.Identifier.ValueText, node);
     }
 
+    /// <inheritdoc />
     public override void VisitInvocationExpression(InvocationExpressionSyntax node)
     {
         base.VisitInvocationExpression(node);
@@ -40,6 +53,7 @@ public class UnusedMembersWalker : CSharpSyntaxWalker
         }
     }
 
+    /// <inheritdoc />
     public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
     {
         base.VisitFieldDeclaration(node);
@@ -49,6 +63,7 @@ public class UnusedMembersWalker : CSharpSyntaxWalker
         }
     }
 
+    /// <inheritdoc />
     public override void VisitIdentifierName(IdentifierNameSyntax node)
     {
         base.VisitIdentifierName(node);
@@ -57,6 +72,9 @@ public class UnusedMembersWalker : CSharpSyntaxWalker
         _fieldRefs[name] = count + 1;
     }
 
+    /// <summary>
+    /// Performs post-processing after traversal to compute suggestions.
+    /// </summary>
     public async Task PostProcessAsync()
     {
         if (_model != null && _solution != null)

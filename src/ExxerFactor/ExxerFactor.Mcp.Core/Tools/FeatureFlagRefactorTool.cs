@@ -10,7 +10,7 @@ using ExxerFactor.Mcp.Core.SyntaxRewriters;
 namespace ExxerFactor.Mcp.Core.Tools;
 
 /// <summary>
-/// Refactors feature flag conditionals into a strategy pattern implementation.
+/// Provides refactorings that transform feature flag conditionals into strategy-based implementations.
 /// </summary>
 [McpServerToolType]
 public static class FeatureFlagExxerFactorTool
@@ -69,6 +69,12 @@ public static class FeatureFlagExxerFactorTool
             $"ExxerFactored feature flag '{flagName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Transforms feature flag conditionals into strategy classes in the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="flagName">The feature flag name to target.</param>
+    /// <returns>The updated source text.</returns>
     public static string ExxerFactorInSource(string sourceText, string flagName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

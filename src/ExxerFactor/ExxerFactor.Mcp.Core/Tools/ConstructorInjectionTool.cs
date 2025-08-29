@@ -17,6 +17,11 @@ namespace ExxerFactor.Mcp.Core.Tools;
 [McpServerToolType]
 public static class ConstructorInjectionTool
 {
+    /// <summary>
+    /// Represents a pair of method and parameter names for constructor injection.
+    /// </summary>
+    /// <param name="MethodName">The target method name.</param>
+    /// <param name="ParameterName">The parameter name to inject.</param>
     public readonly record struct MethodParameterPair(string MethodName, string ParameterName);
 
     /// <summary>

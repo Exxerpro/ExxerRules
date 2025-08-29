@@ -182,6 +182,17 @@ public static partial class MoveMultipleMethodsTool
 
     // Solution/Document operations that use the AST layer
 
+    /// <summary>
+    /// Moves methods and converts them to static by injecting the source instance as a parameter.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the methods.</param>
+    /// <param name="sourceClass">Name of the source class containing the methods.</param>
+    /// <param name="methodNames">Names of the methods to move.</param>
+    /// <param name="targetClass">Name of the target class.</param>
+    /// <param name="targetFilePath">Optional path to the target file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message.</returns>
     [McpServerTool, Description("Move multiple methods to a target class and transform them to static with an injected 'this' parameter.")]
     public static Task<string> MoveMultipleMethodsStatic(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -193,6 +204,17 @@ public static partial class MoveMultipleMethodsTool
         CancellationToken cancellationToken = default)
         => MoveMultipleMethodsInternal(solutionPath, filePath, sourceClass, methodNames, targetClass, targetFilePath, false, cancellationToken);
 
+    /// <summary>
+    /// Moves methods and keeps them as instance methods in the target class. Injects the source instance if needed.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the methods.</param>
+    /// <param name="sourceClass">Name of the source class containing the methods.</param>
+    /// <param name="methodNames">Names of the methods to move.</param>
+    /// <param name="targetClass">Name of the target class.</param>
+    /// <param name="targetFilePath">Optional path to the target file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>Status message.</returns>
     [McpServerTool, Description("Move multiple methods and keep them as instance methods in the target class. The source instance is injected via the constructor if needed.")]
     public static Task<string> MoveMultipleMethodsInstance(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -206,6 +228,13 @@ public static partial class MoveMultipleMethodsTool
 
     // ===== HELPER METHODS =====
 
+    /// <summary>
+    /// Builds a dependency map of methods based on invocations within the source root.
+    /// </summary>
+    /// <param name="sourceRoot">The source syntax root.</param>
+    /// <param name="sourceClasses">Source class names corresponding to each method.</param>
+    /// <param name="methodNames">Method names to analyze.</param>
+    /// <returns>A map from Class.Method to the set of dependent Class.Method keys.</returns>
     public static Dictionary<string, HashSet<string>> BuildDependencies(
         SyntaxNode sourceRoot,
         string[] sourceClasses,
@@ -243,6 +272,13 @@ public static partial class MoveMultipleMethodsTool
         return deps;
     }
 
+    /// <summary>
+    /// Orders operation indices such that methods with fewer dependencies are processed first.
+    /// </summary>
+    /// <param name="sourceRoot">The source syntax root.</param>
+    /// <param name="sourceClasses">Source class names corresponding to each method.</param>
+    /// <param name="methodNames">Method names to order.</param>
+    /// <returns>A list of indices indicating processing order.</returns>
     public static List<int> OrderOperations(
         SyntaxNode sourceRoot,
         string[] sourceClasses,

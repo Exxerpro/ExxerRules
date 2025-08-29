@@ -132,6 +132,15 @@ public static class IntroduceFieldTool
         return $"Successfully introduced {accessModifier} field '{fieldName}' from {selectionRange} in {filePath} (single file mode)";
     }
 
+    /// <summary>
+    /// Introduces a new field into the provided source text from a selected range.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="fieldName">Name for the new field.</param>
+    /// <param name="accessModifier">Access modifier for the generated field.</param>
+    /// <param name="model">Optional semantic model to resolve types.</param>
+    /// <returns>The updated source text.</returns>
     public static string IntroduceFieldInSource(string sourceText, string selectionRange, string fieldName, string accessModifier, SemanticModel? model = null)
     {
         var syntaxTree = model?.SyntaxTree ?? CSharpSyntaxTree.ParseText(sourceText);

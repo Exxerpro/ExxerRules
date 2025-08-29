@@ -1,4 +1,5 @@
 using ExxerFactor.Mcp.Core.Exceptions;
+using McpProtocolException = ModelContextProtocol.McpException;
 
 namespace ExxerFactor.Mcp.Core.Tests.Tools;
 
@@ -295,7 +296,7 @@ public class TestClass
         var nonExistentPath = Path.Combine(_testDirectory, "NonExistent.cs");
 
         // Act & Assert
-        await Assert.ThrowsAsync<McpException>(() =>
+        await Assert.ThrowsAsync<ExxerFactor.Mcp.Core.Exceptions.McpException>(() =>
             CleanupUsingsTool.CleanupUsings(null, nonExistentPath));
     }
 

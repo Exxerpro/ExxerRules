@@ -38,8 +38,10 @@ public class DashboardServiceTests
     [Fact]
     public async Task GetDashboardStatsAsync_ShouldHandleException_AndReturnDefaultStats()
     {
-        // Arrange
-        _mockExxerFactoringService.ListAvailableToolsAsync().Throws(new InvalidOperationException("Service unavailable"));
+        // Arrange: force exception on dependency
+        _mockExxerFactoringService
+            .ListAvailableToolsAsync()
+            .Returns<Task<IEnumerable<string>>>(_ => throw new InvalidOperationException("Service unavailable"));
 
         // Act
         var stats = await _service.GetDashboardStatsAsync();
@@ -72,14 +74,14 @@ public class DashboardServiceTests
         activities.ShouldNotBeEmpty();
 
         var activityList = activities.ToList();
-        activityList.Count().ShouldBeGreaterThan(0);
+        activityList.Count.ShouldBeGreaterThan(0);
 
         // Check the structure of returned activities
         var firstActivity = activityList.First();
         firstActivity.ToolName.ShouldNotBeNullOrEmpty();
         firstActivity.ProjectName.ShouldNotBeNullOrEmpty();
         firstActivity.Timestamp.ShouldBe(DateTime.Now, tolerance: TimeSpan.FromMinutes(15));
-        firstActivity.Duration.ShouldBeGreaterThan(0);
+        firstActivity.Duration.ShouldBeGreaterThan(TimeSpan.Zero);
     }
 
     [Fact]

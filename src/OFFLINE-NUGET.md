@@ -6,9 +6,10 @@
 
 ## 2) Download all referenced packages to the local cache
 ```powershell
-pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File src/VS/fetch-packages.ps1 -Source https://api.nuget.org/v3/index.json -OutputSubPath artifacts/nuget/offline
+pwsh -NoLogo -NoProfile -ExecutionPolicy Bypass -File src/VS/fetch-packages.ps1 -Source https://api.nuget.org/v3/index.json -OutputSubPath artifacts/nuget/offline -SkipDownloadIfExists
 ```
-- This pulls every package (and its dependencies) found in `Directory.Packages.props` and `.csproj` files into `artifacts/nuget/offline`.
+- Adds all packages (and dependencies) from `Directory.Packages.props` and any `.csproj` with explicit versions into `artifacts/nuget/offline`.
+- Use `-DryRun` to list packages without downloading.
 
 ## 3) Download a single package/version on demand
 - Using nuget.exe (gets full dependency closure; add -Prerelease for prerelease versions):
@@ -25,7 +26,7 @@ dotnet nuget download <PackageId> --version <Version> --source https://api.nuget
 ## 4) Restore and build using ONLY the local feed
 ```powershell
 cd src
-# Uses src/NuGet.config (offline source only)
+# Uses src/NuGet.config (offline source only). For fallback to nuget.org use `NuGet.online.config`.
 dotnet restore IndFusion.sln --configfile NuGet.config
 dotnet build   IndFusion.sln --configfile NuGet.config -c Release
 ```
@@ -34,3 +35,4 @@ dotnet build   IndFusion.sln --configfile NuGet.config -c Release
 - If restore fails with "package not found", fetch that package (step 3) and rerun restore.
 - The offline source is `..\artifacts\nuget\offline` as configured in `src/NuGet.config`.
 - For prerelease versions, include `-Prerelease` in the nuget.exe install command when the version contains a suffix (e.g., `-preview`).
+- If downloads seem too fast or nothing appears in `artifacts/nuget/offline`, run the script with `-DryRun` to confirm discovered packages, and verify you are using PowerShell 7+ (`#requires -Version 7.0`).

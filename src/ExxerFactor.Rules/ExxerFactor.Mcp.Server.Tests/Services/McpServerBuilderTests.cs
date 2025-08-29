@@ -1,4 +1,5 @@
 using ExxerFactor.Mcp.Server.Services;
+using Microsoft.Extensions.Hosting;
 
 namespace ExxerFactor.Mcp.Server.Tests.Services;
 

@@ -1,38 +1,34 @@
 # Repository Guidelines
 
 ## Project Structure & Module Organization
-- Source: `ExxerRules/` (Roslyn analyzers), `ExxerFactor/` (Console/Web/Core), `ExxerFactor.Rules/` (rule implementations & tests).
-- Tests: `ExxerRules.Tests/`, `ExxerFactor.Rules/*Tests/` (xUnit v3).
-- Solution: `IndFusion.sln`. Central package versions in `Directory.Packages.props`; shared build settings in `Directory.Build.props`.
-- NuGet: `NuGet.config` (supports offline flow; see `OFFLINE-NUGET.md`).
+- Source: `code/IndFusion.*` (e.g., `IndFusion.Analyzer`, `IndFusion.Fixer`, `IndFusion.Mcp.*`, `IndFusion.Tools.Cli`).
+- Tests: `test/IndFusion.*.Tests` mirroring the product projects (xUnit v3).
+- Solutions: `IndFusion.sln` (runtime + tests) and `IndFusion.Fixer.Vsix.sln` (VSIX, analyzer, fixer).
+- Central versions in `Directory.Packages.props`; common build in `Directory.Build.props`; SDK pinned via `global.json` (net10 preview).
 
 ## Build, Test, and Development Commands
-- Restore: `dotnet restore --configfile NuGet.config`
-- Build (Debug): `dotnet build IndFusion.sln -c Debug`
-- Build (Release): `dotnet build IndFusion.sln -c Release`
-- Test all: `dotnet test IndFusion.sln -c Debug`
-- Run console app: `dotnet run --project ExxerFactor/ExxerFactor.Mcp.ConsoleApp`
-- Run web app: `dotnet run --project ExxerFactor/ExxerFactor.Mcp.Web`
-- Format (optional): `dotnet format` (keep diffs small and consistent).
+- Restore (fallback online): `dotnet restore IndFusion.sln --configfile NuGet.online.config`
+- Build (Debug): `dotnet build IndFusion.sln -c Debug --configfile NuGet.online.config`
+- Test: `dotnet test IndFusion.sln -c Debug --configfile NuGet.online.config`
+- Strict offline: populate with `pwsh VS/fetch-packages.ps1 -SkipDownloadIfExists`, then use `NuGet.config`.
+- Run web app: `dotnet run --project code/IndFusion.Mcp.Web`
+- Run CLI: `dotnet run --project code/IndFusion.Tools.Cli`
 
 ## Coding Style & Naming Conventions
-- Language: C# `latest`; `Nullable` enabled; `ImplicitUsings` enabled; warnings treated as errors.
-- Indentation: tabs; braces on new lines (Allman style).
-- Naming: PascalCase for public types/members; camelCase for locals/parameters; private fields `_camelCase`.
-- Documentation: XML docs are generated; add `<summary>` where public API is exposed.
+- Language: C# `latest`; `Nullable` and `ImplicitUsings` enabled; warnings as errors where applicable.
+- Indentation: tabs; braces on new lines (Allman).
+- Naming: PascalCase for public API; camelCase for locals/parameters; private fields `_camelCase`.
+- Docs: XML docs generated; add `<summary>` for public APIs.
 
 ## Testing Guidelines
-- Framework: xUnit v3 with `Microsoft.Testing.Platform`; coverage via `coverlet.collector`.
-- Run project tests: `dotnet test ExxerRules.Tests/ExxerRules.Tests.csproj`
-- Filter by trait/name example: `dotnet test -t` then `dotnet test --filter "FullyQualifiedName~AnalyzerTests"`.
-- Keep tests fast, deterministic, and isolated; prefer data builders in existing test helpers.
+- Framework: xUnit v3 (via central management) + `Microsoft.NET.Test.Sdk`; coverage with `coverlet.collector`.
+- Run all: `dotnet test IndFusion.sln`
+- Useful filters: `dotnet test -t` then `dotnet test --filter "FullyQualifiedName~AnalyzerTests"`.
 
 ## Commit & Pull Request Guidelines
-- Commits: concise, imperative subject (≤72 chars) describing what/why (e.g., "Fix analyzer null checks").
-- History shows short, action‑oriented messages; keep that style and group related changes.
-- PRs: clear description, scope of change, linked issues, and before/after notes or screenshots for UI. Include test coverage for new behavior and analyzers.
+- Commits: imperative, concise (≤72 chars), describe what/why (e.g., "Align namespaces to IndFusion.*").
+- PRs: clear description, linked issues, and tests for new behavior; include screenshots for UI.
 
 ## Security & Configuration Tips
-- Use the provided `NuGet.config`; for offline development follow `OFFLINE-NUGET.md`.
-- Embed SourceLink is enabled; avoid committing secrets or local paths. Environment settings should live in user‑secrets or dev profiles, not source.
-
+- NuGet: `NuGet.online.config` (fallback to nuget.org) or strict `NuGet.config` (offline only). See `OFFLINE-NUGET.md`.
+- SourceLink is enabled; do not commit secrets or machine‑specific paths.

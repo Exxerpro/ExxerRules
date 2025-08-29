@@ -55,7 +55,7 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-	<ProjectReference Include="..\..\src\ExxerFactor.Mcp.Core\ExxerFactor.Mcp.Core.csproj" />
+	<ProjectReference Include="..\..\ExxerFactor\ExxerFactor.Mcp.Core\ExxerFactor.Mcp.Core.csproj" />
   </ItemGroup>
 
   <!-- ===================================================================== -->

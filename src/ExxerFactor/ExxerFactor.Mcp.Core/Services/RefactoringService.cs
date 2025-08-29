@@ -5,15 +5,24 @@ using System.Text.Json;
 
 namespace ExxerFactor.Mcp.Core.Services;
 
+/// <summary>
+/// Default implementation of <see cref="IExxerFactoringService"/> that coordinates refactoring
+/// operations, logs execution details and returns structured results.
+/// </summary>
 public class ExxerFactoringService : IExxerFactoringService
 {
     private readonly ILogger<ExxerFactoringService> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ExxerFactoringService"/> class.
+    /// </summary>
+    /// <param name="logger">The logger used to record operational information and errors.</param>
     public ExxerFactoringService(ILogger<ExxerFactoringService> logger)
     {
         _logger = logger;
     }
 
+    /// <inheritdoc />
     public async Task<ExxerFactoringResult> ExecuteExxerFactoringAsync(ExxerFactoringRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Executing ExxerFactoring: {ToolName} on solution: {SolutionPath}",
@@ -41,6 +50,7 @@ public class ExxerFactoringService : IExxerFactoringService
         }
     }
 
+    /// <inheritdoc />
     public async Task<ExxerFactoringResult> ExtractMethodAsync(string solutionPath, string filePath, int startLine, int endLine, string newMethodName, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Extracting method {MethodName} from {FilePath} lines {StartLine}-{EndLine}",
@@ -67,6 +77,7 @@ public class ExxerFactoringService : IExxerFactoringService
         }
     }
 
+    /// <inheritdoc />
     public async Task<ExxerFactoringResult> MoveMethodAsync(string solutionPath, string sourceFilePath, string methodName, string targetClassName, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Moving method {MethodName} from {SourceFile} to {TargetClass}",
@@ -93,6 +104,7 @@ public class ExxerFactoringService : IExxerFactoringService
         }
     }
 
+    /// <inheritdoc />
     public async Task<ExxerFactoringResult> IntroduceVariableAsync(string solutionPath, string filePath, int line, int column, string variableName, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Introducing variable {VariableName} at {FilePath}:{Line}:{Column}",
@@ -119,6 +131,7 @@ public class ExxerFactoringService : IExxerFactoringService
         }
     }
 
+    /// <inheritdoc />
     public async Task<string> GetMetricsAsync(string solutionPath, string path, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Getting metrics for path: {Path} in solution: {SolutionPath}", path, solutionPath);
@@ -136,6 +149,7 @@ public class ExxerFactoringService : IExxerFactoringService
         }
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<string>> ListAvailableToolsAsync()
     {
         await Task.Delay(10);

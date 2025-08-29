@@ -4,16 +4,30 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace ExxerFactor.Mcp.Core.SyntaxWalkers;
 
+/// <summary>
+/// An analysis walker that suggests replacing concrete parameter types with
+/// interfaces when only interface members are used within a method body.
+/// </summary>
 public class UseInterfaceWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel? _model;
+    /// <summary>Collected suggestions in human-readable form.</summary>
     public List<string> Suggestions { get; } = new();
 
+    /// <summary>
+    /// Creates a new instance bound to an optional <see cref="SemanticModel"/>.
+    /// </summary>
+    /// <param name="model">The semantic model used to resolve symbols, if available.</param>
     public UseInterfaceWalker(SemanticModel? model)
     {
         _model = model;
     }
 
+    /// <summary>
+    /// Visits method declarations and records suggestions for parameters that can
+    /// be typed to an interface instead of a concrete class.
+    /// </summary>
+    /// <param name="node">The method syntax node.</param>
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         base.VisitMethodDeclaration(node);

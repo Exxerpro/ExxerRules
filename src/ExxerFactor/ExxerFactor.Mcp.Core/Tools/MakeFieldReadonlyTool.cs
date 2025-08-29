@@ -82,6 +82,12 @@ public static class MakeFieldReadonlyTool
             $"Successfully made field '{fieldName}' readonly in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Makes the specified field readonly in the provided source text.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="fieldName">The field name to modify.</param>
+    /// <returns>The updated source text.</returns>
     public static string MakeFieldReadonlyInSource(string sourceText, string fieldName)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

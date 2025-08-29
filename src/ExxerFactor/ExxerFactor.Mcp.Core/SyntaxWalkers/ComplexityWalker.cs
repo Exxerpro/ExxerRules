@@ -24,6 +24,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
 
     private void Exit() => _depth--;
 
+    /// <inheritdoc />
     public override void VisitIfStatement(IfStatementSyntax node)
     {
         Complexity++;
@@ -32,6 +33,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         Exit();
     }
 
+    /// <inheritdoc />
     public override void VisitForStatement(ForStatementSyntax node)
     {
         Complexity++;
@@ -40,6 +42,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         Exit();
     }
 
+    /// <inheritdoc />
     public override void VisitForEachStatement(ForEachStatementSyntax node)
     {
         Complexity++;
@@ -48,6 +51,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         Exit();
     }
 
+    /// <inheritdoc />
     public override void VisitWhileStatement(WhileStatementSyntax node)
     {
         Complexity++;
@@ -56,6 +60,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         Exit();
     }
 
+    /// <inheritdoc />
     public override void VisitDoStatement(DoStatementSyntax node)
     {
         Complexity++;
@@ -64,6 +69,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         Exit();
     }
 
+    /// <inheritdoc />
     public override void VisitSwitchStatement(SwitchStatementSyntax node)
     {
         var count = node.Sections.Count; // each case adds complexity
@@ -73,6 +79,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         Exit();
     }
 
+    /// <inheritdoc />
     public override void VisitCatchClause(CatchClauseSyntax node)
     {
         Complexity++;
@@ -81,6 +88,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         Exit();
     }
 
+    /// <inheritdoc />
     public override void VisitBinaryExpression(BinaryExpressionSyntax node)
     {
         if (node.IsKind(SyntaxKind.LogicalAndExpression) || node.IsKind(SyntaxKind.LogicalOrExpression))
@@ -88,6 +96,7 @@ public class ComplexityWalker : CSharpSyntaxWalker
         base.VisitBinaryExpression(node);
     }
 
+    /// <inheritdoc />
     public override void VisitConditionalExpression(ConditionalExpressionSyntax node)
     {
         Complexity++;

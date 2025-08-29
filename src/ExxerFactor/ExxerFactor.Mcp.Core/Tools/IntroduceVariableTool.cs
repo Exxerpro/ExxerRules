@@ -124,6 +124,14 @@ public static class IntroduceVariableTool
         return $"Successfully introduced variable '{variableName}' from {selectionRange} in {filePath} (single file mode)";
     }
 
+    /// <summary>
+    /// Introduces a new local variable into the provided source text from a selected range.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="variableName">Name for the new variable.</param>
+    /// <param name="model">Optional semantic model used to resolve types.</param>
+    /// <returns>The updated source text.</returns>
     public static string IntroduceVariableInSource(string sourceText, string selectionRange, string variableName, SemanticModel? model = null)
     {
         var syntaxTree = model?.SyntaxTree ?? CSharpSyntaxTree.ParseText(sourceText);

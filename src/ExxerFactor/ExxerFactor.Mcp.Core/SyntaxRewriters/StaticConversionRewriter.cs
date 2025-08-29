@@ -5,6 +5,10 @@ using ExxerFactor.Mcp.Core.Tools;
 
 namespace ExxerFactor.Mcp.Core.SyntaxRewriters;
 
+/// <summary>
+/// Rewriter that converts an instance method into a static method by introducing parameters,
+/// qualifying instance member accesses, and optionally renaming identifiers.
+/// </summary>
 public class StaticConversionRewriter
 {
     private readonly List<ParameterSyntax> _parameters;
@@ -15,6 +19,16 @@ public class StaticConversionRewriter
     private readonly Dictionary<ISymbol, string>? _symbolRenameMap;
     private readonly Dictionary<string, string>? _nameRenameMap;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StaticConversionRewriter"/> class.
+    /// </summary>
+    /// <param name="parameters">Parameters to prepend to the target method.</param>
+    /// <param name="instanceParameterName">Optional parameter name that represents the original instance.</param>
+    /// <param name="knownInstanceMembers">Optional set of known instance member names for qualification.</param>
+    /// <param name="semanticModel">Optional semantic model to aid in symbol-based rewrites.</param>
+    /// <param name="typeSymbol">Optional type symbol of the original containing type.</param>
+    /// <param name="symbolRenameMap">Optional symbol-to-name rename map.</param>
+    /// <param name="nameRenameMap">Optional name-to-name rename map.</param>
     public StaticConversionRewriter(
         IEnumerable<(string Name, string Type)> parameters,
         string? instanceParameterName = null,
@@ -36,6 +50,11 @@ public class StaticConversionRewriter
         _nameRenameMap = nameRenameMap;
     }
 
+    /// <summary>
+    /// Rewrites the provided method declaration as a static method according to the configured options.
+    /// </summary>
+    /// <param name="method">The method declaration to convert.</param>
+    /// <returns>The converted method declaration.</returns>
     public MethodDeclarationSyntax Rewrite(MethodDeclarationSyntax method)
     {
         SyntaxNode node = method;

@@ -74,6 +74,14 @@ public static class IntroduceParameterTool
             $"Successfully introduced parameter '{parameterName}' from {selectionRange} in method '{methodName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Introduces a new parameter into the provided source text for a target method.
+    /// </summary>
+    /// <param name="sourceText">The C# source text.</param>
+    /// <param name="methodName">The method to receive the new parameter.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="parameterName">The name of the parameter to introduce.</param>
+    /// <returns>The updated source text.</returns>
     public static string IntroduceParameterInSource(string sourceText, string methodName, string selectionRange, string parameterName)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

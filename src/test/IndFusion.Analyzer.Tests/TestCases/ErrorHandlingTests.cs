@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzer.Analyzers;
-using IndFusion.Analyzer.Analyzers.ErrorHandling;
+using IndFusion.Analyzers;
+using IndFusion.Analyzers.ErrorHandling;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;
@@ -21,7 +21,7 @@ public class ErrorHandlingTests
 	public void Should_NotReportDiagnostic_When_UsingResultPattern()
 	{
 		const string testCode = @"
-using IndFusion.Analyzer.Analyzers.Operations;
+using IndFusion.Analyzers.Operations;
 
 namespace TestProject
 {
@@ -80,7 +80,7 @@ namespace TestProject
 	public void Should_NotReportDiagnostic_When_AvoidingThrowStatements()
 	{
 		const string testCode = @"
-using IndFusion.Analyzer.Analyzers.Operations;
+using IndFusion.Analyzers.Operations;
 
 namespace TestProject
 {
@@ -191,7 +191,7 @@ namespace TestProject
 	{
 		const string testCode = @"
 using System;
-using IndFusion.Analyzer.Analyzers.Operations;
+using IndFusion.Analyzers.Operations;
 
 namespace TestProject
 {

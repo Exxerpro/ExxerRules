@@ -1,7 +1,7 @@
-using IndFusion.Mcp.Web.Mcp.Web.Models;
-using IndFusion.Mcp.Web.Mcp.Web.Services;
+using IndFusion.Mcp.Web.Models;
+using IndFusion.Mcp.Web.Services;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests.Integration;
+namespace IndFusion.Mcp.Web.Tests.Integration;
 
 public class TestDashboardService : IDashboardService
 {

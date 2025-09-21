@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Web.Controllers;
+namespace IndFusion.Mcp.Web.Controllers;
 
 public class McpResourcesCapability
 {

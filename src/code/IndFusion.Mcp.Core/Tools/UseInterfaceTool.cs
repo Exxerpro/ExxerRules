@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Refactoring tool to change a parameter's concrete type to an interface.

@@ -1,10 +1,10 @@
 using System.Text;
-using IndFusion.Mcp.Web.Mcp.Core.Abstractions;
-using IndFusion.Mcp.Web.Mcp.Web;
-using IndFusion.Mcp.Web.Mcp.Web.Controllers;
-using IndFusion.Mcp.Web.Mcp.Web.Services;
+using IndFusion.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Web;
+using IndFusion.Mcp.Web.Controllers;
+using IndFusion.Mcp.Web.Services;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests.Integration;
+namespace IndFusion.Mcp.Web.Tests.Integration;
 
 public class WebApplicationTests : IClassFixture<WebApplicationFactory<Program>>
 {

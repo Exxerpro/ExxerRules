@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Core.SyntaxWalkers;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Walker that detects references to static fields among a provided set of names.

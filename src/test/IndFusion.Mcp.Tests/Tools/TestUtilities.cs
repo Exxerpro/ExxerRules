@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.Tools;
+namespace IndFusion.Mcp.Tests.Tools;
 
 public static class TestUtilities
 {
@@ -8,12 +8,12 @@ public static class TestUtilities
         var dir = new DirectoryInfo(currentDir);
         while (dir != null)
         {
-            var solutionFile = Path.Combine(dir.FullName, "ExxerFactor.Mcp.sln");
+            var solutionFile = Path.Combine(dir.FullName, "IndFusion.Mcp.sln");
             if (File.Exists(solutionFile))
                 return solutionFile;
             dir = dir.Parent;
         }
-        return "./ExxerFactor.Mcp.sln";
+        return "./IndFusion.Mcp.sln";
     }
 
     public static async Task CreateTestFile(string filePath, string content)
@@ -40,13 +40,13 @@ public class TestClass
 """;
 
     public static string GetSampleCodeForIntroduceField() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForIntroduceVariable() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForMakeFieldReadonly() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForMakeFieldReadonlyNoInit() => """
 using System;
@@ -57,13 +57,13 @@ public class TestClass
 """;
 
     public static string GetSampleCodeForTransformSetter() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForConvertToStaticInstance() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForMoveStaticMethod() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForMoveStaticMethodWithUsings() => """
 using System;
@@ -81,13 +81,13 @@ public class UtilClass { }
 """;
 
     public static string GetSampleCodeForMoveInstanceMethod() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForConvertToExtension() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForSafeDelete() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForMoveInstanceMethodWithDependencies() => """
 using System;
@@ -167,10 +167,10 @@ public class CleanupSample
 """;
 
     public static string GetSampleCodeForMoveTypeToFile() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForRenameSymbol() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs"));
+        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
 
     public static string GetSampleCodeForExtractInterface() => """
 public class Person

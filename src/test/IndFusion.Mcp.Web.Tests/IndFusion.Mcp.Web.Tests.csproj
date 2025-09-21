@@ -1,39 +1,42 @@
-<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Web">
   <!-- ===================================================================== -->
   <!-- Project Properties & Configuration                                      -->
   <!-- ===================================================================== -->
   <PropertyGroup>
     <!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
     <OutputType>Exe</OutputType>
-    <EnableMSTestRunner>true</EnableMSTestRunner>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <RootNamespace>IndFusion.Mcp.Core.Tests</RootNamespace>
+    <RootNamespace>IndFusion.Mcp.Web.Tests</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\TestingPlatform.props" />
   <!-- ===================================================================== -->
   <!-- Package Dependencies                                                   -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <!-- Microsoft Extensions & Configuration -->
+    <!-- Microsoft ASP.NET Core & Extensions -->
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" />
+    <!-- UI Framework & Components -->
+    <PackageReference Include="MudBlazor" />
+    <PackageReference Include="Extensions.MudBlazor.StaticInput" />
+    <PackageReference Include="AngleSharp" />
     <!-- Testing Framework & Tools -->
-    <PackageReference Include="Microsoft.Testing.Platform" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.v3" />
+    <PackageReference Update="xunit.v3.runner.console">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="xunit.v3.runner.msbuild">
+    <PackageReference Update="xunit.v3.runner.msbuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
@@ -44,11 +47,15 @@
     </PackageReference>
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Shouldly" />
+    <!-- Component Testing -->
+    <PackageReference Include="bunit" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <ProjectReference Include="..\..\ExxerFactor\ExxerFactor.Mcp.Core\ExxerFactor.Mcp.Core.csproj" />
+    <ProjectReference Include="..\..\code\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\..\code\IndFusion.Mcp.Web\IndFusion.Mcp.Web.csproj" />
+    <ProjectReference Include="..\..\code\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
   </ItemGroup>
 </Project>

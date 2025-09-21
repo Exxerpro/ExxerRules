@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Rewriter that replaces feature-flag checks with strategy application and introduces supporting members and types.

@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests.SyntaxRewriters;
+namespace IndFusion.Mcp.Core.Tests.SyntaxRewriters;
 
 public class ConstructorInjectionRewriterTests
 {

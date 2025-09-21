@@ -6,7 +6,7 @@ using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace IndFusion.Mcp.Mcp.Web.Controllers;
+namespace IndFusion.Mcp.Web.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

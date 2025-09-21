@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Removes a local variable declaration (or a single variable within it) by name within a specified span.

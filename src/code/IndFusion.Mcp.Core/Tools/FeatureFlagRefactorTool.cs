@@ -5,9 +5,9 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Core.SyntaxRewriters;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Provides refactorings that transform feature flag conditionals into strategy-based implementations.

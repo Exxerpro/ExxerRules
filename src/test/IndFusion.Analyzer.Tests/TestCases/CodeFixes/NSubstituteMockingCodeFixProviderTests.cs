@@ -1,6 +1,6 @@
-using IndFusion.Analyzer.Analyzers;
-using IndFusion.Analyzer.CodeFixes;
-using IndFusion.Analyzer.CodeFixes.Testing;
+using IndFusion.Analyzers;
+using IndFusion.CodeFixes;
+using IndFusion.CodeFixes.Testing;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;

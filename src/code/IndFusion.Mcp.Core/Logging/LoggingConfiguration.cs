@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
 
-namespace IndFusion.Mcp.Mcp.Core.Logging;
+namespace IndFusion.Mcp.Core.Logging;
 
 /// <summary>
 /// Centralized Serilog configuration and registration helpers.

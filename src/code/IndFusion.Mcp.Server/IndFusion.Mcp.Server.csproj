@@ -9,10 +9,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <!-- Package Information -->
-    <PackageId>ExxerFactor.Mcp.Server</PackageId>
+    <PackageId>IndFusion.Mcp.Server</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
-    <Authors>ExxerFactor.Mcp</Authors>
-    <Description>Mcp Server library for ExxerFactor.Mcp - Model Context Protocol integration</Description>
+    <Authors>IndFusion</Authors>
+    <Description>MCP server library for IndFusion - Model Context Protocol integration</Description>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>IndFusion.Mcp.Server</RootNamespace>
   </PropertyGroup>
@@ -35,14 +35,14 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <ProjectReference Include="..\ExxerFactor.Mcp.Core\ExxerFactor.Mcp.Core.csproj" />
+    <ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- InternalsVisibleTo Configuration                                       -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <InternalsVisibleTo Include="ExxerFactor.Mcp.Tests" />
-    <InternalsVisibleTo Include="ExxerFactor.Mcp.Web" />
+    <InternalsVisibleTo Include="IndFusion.Mcp.Tests" />
+    <InternalsVisibleTo Include="IndFusion.Mcp.Web" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Package Version Overrides                                              -->

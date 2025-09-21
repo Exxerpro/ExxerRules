@@ -3,9 +3,9 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Core.SyntaxWalkers;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Analyzes a C# file for refactoring opportunities (e.g., long methods, static candidates).

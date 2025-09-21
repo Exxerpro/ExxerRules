@@ -1,7 +1,7 @@
-using IndFusion.Mcp.Core.Mcp.Core.Abstractions;
-using IndFusion.Mcp.Core.Mcp.Core.Extensions;
+using IndFusion.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Core.Extensions;
 
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests.Extensions;
+namespace IndFusion.Mcp.Core.Tests.Extensions;
 
 public class ServiceCollectionExtensionsTests
 {

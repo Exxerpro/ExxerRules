@@ -2,7 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// Collects type declarations of the specified kind into a name-to-declaration map.

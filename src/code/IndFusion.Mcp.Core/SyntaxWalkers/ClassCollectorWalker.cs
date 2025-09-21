@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// Collects class declarations found during a syntax tree walk.

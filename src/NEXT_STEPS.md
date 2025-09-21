@@ -5,7 +5,7 @@ This repo is stabilized for .NET 10 with centralized names, SDK pinning, and dua
 ## Where We Stopped
 - Centralized projects under `code/IndFusion.*` and `test/IndFusion.*.Tests`.
 - Added `global.json` (10.0 preview), `NuGet.online.config`, and improved offline scripts.
-- Split VSIX into its own solution: `IndFusion.Fixer.Vsix.sln` (Analyzer + Fixer already added; VSIX project is wired in the .sln and ready once VS is repaired).
+- Split VSIX into its own solution: `IndFusion.Fixer.Vsix.sln` (IndFusion Analyzer + Fixer already added; VSIX project is wired in the .sln and ready once VS is repaired).
 
 ## Resume (Online Restore)
 - SDK check: `dotnet --version` (adjust `global.json` if needed).
@@ -22,6 +22,5 @@ This repo is stabilized for .NET 10 with centralized names, SDK pinning, and dua
 - Open `IndFusion.Fixer.Vsix.sln` and build the VSIX.
 
 ## Optional Next
-- Namespace sweep for any lingering `ExxerFactor.*` / `ExxerRules.*`.
+- Namespace sweep for any lingering old names.
 - CI pipeline using `NuGet.online.config`.
-

@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests.TestUtilities;
+namespace IndFusion.Mcp.Core.Tests.TestUtilities;
 
 /// <summary>
 /// Utility class for creating test files and solutions for ExxerFactoring tests.

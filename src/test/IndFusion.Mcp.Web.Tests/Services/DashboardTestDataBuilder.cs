@@ -1,6 +1,6 @@
-using IndFusion.Mcp.Web.Mcp.Web.Models;
+using IndFusion.Mcp.Web.Models;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests.Services;
+namespace IndFusion.Mcp.Web.Tests.Services;
 
 public static class DashboardTestDataBuilder
 {

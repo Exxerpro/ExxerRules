@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Reflection;
 using ModelContextProtocol.Server;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Displays the current assembly version and build timestamp.

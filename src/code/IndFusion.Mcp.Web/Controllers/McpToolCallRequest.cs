@@ -1,6 +1,6 @@
 using System.Text.Json;
 
-namespace IndFusion.Mcp.Mcp.Web.Controllers;
+namespace IndFusion.Mcp.Web.Controllers;
 
 public class McpToolCallRequest
 {

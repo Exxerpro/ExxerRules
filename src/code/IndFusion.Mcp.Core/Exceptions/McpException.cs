@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace IndFusion.Mcp.Mcp.Core.Exceptions;
+namespace IndFusion.Mcp.Core.Exceptions;
 
 /// <summary>
 /// Represents errors that occur within the MCP core components.

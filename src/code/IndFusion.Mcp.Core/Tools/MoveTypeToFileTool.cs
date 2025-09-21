@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Moves a top-level type into a new file named after the type while preserving usings and namespace.

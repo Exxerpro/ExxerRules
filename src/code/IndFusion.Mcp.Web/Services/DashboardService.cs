@@ -1,9 +1,9 @@
 using Microsoft.Extensions.Logging;
-using IndFusion.Mcp.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Core.Abstractions;
 
-using IndFusion.Mcp.Mcp.Web.Models;
+using IndFusion.Mcp.Web.Models;
 
-namespace IndFusion.Mcp.Mcp.Web.Services;
+namespace IndFusion.Mcp.Web.Services;
 
 public class DashboardService : IDashboardService
 {

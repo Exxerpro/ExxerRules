@@ -1,7 +1,7 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+namespace IndFusion.Mcp.Core.SyntaxRewriters;
 
 /// <summary>
 /// Introduces a field declaration into a class and replaces a target expression with a reference to that field.

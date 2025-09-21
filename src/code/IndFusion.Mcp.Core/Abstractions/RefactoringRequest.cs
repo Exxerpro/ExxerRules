@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Core.Abstractions;
+namespace IndFusion.Mcp.Core.Abstractions;
 
 /// <summary>
 /// Describes a request to execute a specific refactoring tool against a solution.

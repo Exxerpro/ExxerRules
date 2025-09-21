@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Core.Abstractions;
+namespace IndFusion.Mcp.Core.Abstractions;
 
 /// <summary>
 /// Represents the outcome of a refactoring operation, including success state,

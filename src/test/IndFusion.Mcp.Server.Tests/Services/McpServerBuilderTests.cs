@@ -1,7 +1,7 @@
-using IndFusion.Mcp.Server.Mcp.Server.Services;
+using IndFusion.Mcp.Server.Services;
 using Microsoft.Extensions.Hosting;
 
-namespace IndFusion.Mcp.Server.Mcp.Server.Tests.Services;
+namespace IndFusion.Mcp.Server.Tests.Services;
 
 public class McpServerBuilderTests
 {

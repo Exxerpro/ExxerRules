@@ -7,9 +7,9 @@ using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Text;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Core.SyntaxRewriters;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Introduces a new field from a selected expression within a class.

@@ -1,6 +1,6 @@
 using TestContext = Bunit.TestContext;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests.Components;
+namespace IndFusion.Mcp.Web.Tests.Components;
 
 public class ToolsPageTests : TestContext
 {

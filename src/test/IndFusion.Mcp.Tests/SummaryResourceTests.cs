@@ -1,6 +1,6 @@
-using IndFusion.Mcp.Mcp.Tests.Tools;
+using IndFusion.Mcp.Tests.Tools;
 
-namespace IndFusion.Mcp.Mcp.Tests;
+namespace IndFusion.Mcp.Tests;
 
 public class SummaryResourceTests : TestBase
 {

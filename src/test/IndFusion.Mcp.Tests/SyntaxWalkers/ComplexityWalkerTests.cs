@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.SyntaxWalkers;
+namespace IndFusion.Mcp.Tests.SyntaxWalkers;
 
 public class ComplexityWalkerTests
 {

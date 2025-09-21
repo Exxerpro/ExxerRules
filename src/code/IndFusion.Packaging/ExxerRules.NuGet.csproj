@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <PackageId>ExxerRules</PackageId>
+    <PackageId>IndFusion.Analyzers</PackageId>
     <PackageVersion>1.0.3</PackageVersion>
-    <Title>ExxerRules - Modern Development Conventions</Title>
-    <Description>Comprehensive Roslyn analyzer suite with 20+ production-ready analyzers enforcing Modern Development Conventions (MDC). Includes Result pattern enforcement, Clean Architecture validation, modern testing standards, async best practices, and performance optimization. Updated for latest Roslyn and .NET standards.</Description>
-    <Authors>ExxerAI</Authors>
-    <Company>ExxerAI</Company>
+    <Title>IndFusion Analyzers + Code Fixes</Title>
+    <Description>IndFusion Roslyn analyzers and code fixes for modern C# development: Clean Architecture, Result pattern, async best practices, testing standards, and performance tuning. Updated for latest Roslyn and .NET.</Description>
+    <Authors>IndFusion</Authors>
+    <Company>IndFusion</Company>
     <PackageTags>csharp;roslyn;analyzer;code-quality;clean-architecture;result-pattern;testing;performance;async;modern-csharp;tdd;free;open-source;dotnet;mdc</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/exxerai/exxer-rules</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/exxerai/exxer-rules</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/indfusion/indfusion</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/indfusion/indfusion</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Copyright>Copyright ExxerAI 2025</Copyright>
+    <Copyright>Copyright IndFusion 2025</Copyright>
     <!-- Analyzer Package Configuration -->
     <IncludeBuildOutput>false</IncludeBuildOutput>
     <DevelopmentDependency>true</DevelopmentDependency>
@@ -34,8 +34,8 @@
     <RootNamespace>IndFusion.Packaging</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ExxerRules.Analyzers\ExxerRules.Analyzers.csproj" PrivateAssets="all" />
-    <ProjectReference Include="..\ExxerRules.CodeFixes\ExxerRules.CodeFixes.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\IndFusion.Analyzer\IndFusion.Analyzer.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\IndFusion.Fixer\IndFusion.Fixer.csproj" PrivateAssets="all" />
   </ItemGroup>
   <!-- Add a minimal dependency to satisfy NuGet validation -->
   <ItemGroup>
@@ -51,8 +51,8 @@
   </ItemGroup>
   <!-- Analyzer DLLs - using None with proper PackagePath for analyzers -->
   <ItemGroup>
-    <None Include="..\ExxerRules.Analyzers\bin\Release\netstandard2.0\ExxerRules.Analyzers.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
-    <None Include="..\ExxerRules.CodeFixes\bin\Release\netstandard2.0\ExxerRules.CodeFixes.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\IndFusion.Analyzer\bin\Release\netstandard2.0\IndFusion.Analyzer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\IndFusion.Fixer\bin\Release\netstandard2.0\IndFusion.Fixer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build\ExxerRules.props" Pack="true" PackagePath="build\" />

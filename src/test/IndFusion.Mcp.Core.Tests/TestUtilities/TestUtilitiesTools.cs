@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests.TestUtilities;
+namespace IndFusion.Mcp.Core.Tests.TestUtilities;
 
 /// <summary>
 /// Test utilities for creating test data and common assertions
@@ -7,7 +7,7 @@ public static class TestUtilitiesTools
 {
     public static string CreateTempDirectory()
     {
-        var tempPath = Path.Combine(Path.GetTempPath(), "ExxerFactor.Mcp.Tests", Guid.NewGuid().ToString());
+        var tempPath = Path.Combine(Path.GetTempPath(), "IndFusion.Mcp.Tests", Guid.NewGuid().ToString());
         Directory.CreateDirectory(tempPath);
         return tempPath;
     }

@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzer.Analyzers;
-using IndFusion.Analyzer.Analyzers.FunctionalPatterns;
+using IndFusion.Analyzers;
+using IndFusion.Analyzers.FunctionalPatterns;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;
@@ -46,7 +46,7 @@ namespace TestProject
 	public void Should_NotReportDiagnostic_When_ReturningResult()
 	{
 		const string testCode = @"
-using IndFusion.Analyzer.Analyzers.Operations;
+using IndFusion.Analyzers.Operations;
 
 namespace TestProject
 {
@@ -98,7 +98,7 @@ namespace TestProject
 	public void Should_NotReportDiagnostic_When_UsingResultPattern()
 	{
 		const string testCode = @"
-using IndFusion.Analyzer.Analyzers.Operations;
+using IndFusion.Analyzers.Operations;
 
 namespace TestProject
 {

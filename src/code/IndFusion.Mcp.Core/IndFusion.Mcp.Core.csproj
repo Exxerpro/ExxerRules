@@ -9,10 +9,10 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <!-- Package Information -->
-    <PackageId>ExxerFactor.Mcp.Core</PackageId>
+    <PackageId>IndFusion.Mcp.Core</PackageId>
     <PackageVersion>1.0.0</PackageVersion>
-    <Authors>ExxerFactor.Mcp</Authors>
-    <Description>Core library for ExxerFactor.Mcp - Roslyn-based C# ExxerFactoring tools</Description>
+    <Authors>IndFusion</Authors>
+    <Description>Core library for IndFusion MCP components</Description>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>IndFusion.Mcp.Core</RootNamespace>
   </PropertyGroup>
@@ -46,10 +46,10 @@
   <!-- InternalsVisibleTo Configuration                                       -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <InternalsVisibleTo Include="ExxerFactor.Mcp.Tests" />
-    <InternalsVisibleTo Include="ExxerFactor.Mcp.Core.Tests" />
-    <InternalsVisibleTo Include="ExxerFactor.Mcp.Server" />
-    <InternalsVisibleTo Include="ExxerFactor.Mcp.Web" />
+    <InternalsVisibleTo Include="IndFusion.Mcp.Tests" />
+    <InternalsVisibleTo Include="IndFusion.Mcp.Core.Tests" />
+    <InternalsVisibleTo Include="IndFusion.Mcp.Server" />
+    <InternalsVisibleTo Include="IndFusion.Mcp.Web" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Package Version Overrides                                              -->

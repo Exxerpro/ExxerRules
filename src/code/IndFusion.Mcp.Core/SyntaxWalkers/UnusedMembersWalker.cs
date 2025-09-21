@@ -3,7 +3,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.FindSymbols;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// Analyzes a syntax tree (and optionally solution/semantic model) to detect unused members.

@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using IndFusion.Mcp.Web.Mcp.Web.Controllers;
+using IndFusion.Mcp.Web.Controllers;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests.Controllers;
+namespace IndFusion.Mcp.Web.Tests.Controllers;
 
 public class McpControllerTests
 {

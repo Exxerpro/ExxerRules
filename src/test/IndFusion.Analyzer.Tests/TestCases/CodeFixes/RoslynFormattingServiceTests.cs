@@ -1,6 +1,6 @@
 #pragma warning disable CS1998, CS0452, CS1022, IDE0053
 #pragma warning disable CS8602, IDE0031
-using IndFusion.Analyzer.CodeFixes.Common;
+using IndFusion.CodeFixes.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;

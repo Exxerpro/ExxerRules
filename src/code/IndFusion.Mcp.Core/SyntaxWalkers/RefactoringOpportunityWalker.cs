@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// Aggregates several analysis walkers to identify refactoring opportunities and produce suggestions.

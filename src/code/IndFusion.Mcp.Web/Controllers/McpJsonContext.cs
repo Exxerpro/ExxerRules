@@ -1,7 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace IndFusion.Mcp.Mcp.Web.Controllers;
+namespace IndFusion.Mcp.Web.Controllers;
 
 [JsonSerializable(typeof(McpToolCallRequest))]
 [JsonSerializable(typeof(McpToolCallResponse))]

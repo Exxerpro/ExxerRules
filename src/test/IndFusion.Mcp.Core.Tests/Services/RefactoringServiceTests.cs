@@ -1,7 +1,7 @@
-using IndFusion.Mcp.Core.Mcp.Core.Abstractions;
-using IndFusion.Mcp.Core.Mcp.Core.Services;
+using IndFusion.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Core.Services;
 
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests.Services;
+namespace IndFusion.Mcp.Core.Tests.Services;
 
 public class ExxerFactoringServiceTests
 {

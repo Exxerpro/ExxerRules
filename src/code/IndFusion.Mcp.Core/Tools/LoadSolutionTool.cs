@@ -3,10 +3,10 @@ using Microsoft.CodeAnalysis;
 using Microsoft.Extensions.Caching.Memory;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using IndFusion.Mcp.Mcp.Core.Move;
-using IndFusion.Mcp.Mcp.Core.Services;
+using IndFusion.Mcp.Core.Move;
+using IndFusion.Mcp.Core.Services;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Loads a solution into the shared workspace and prepares caches/metrics directories.

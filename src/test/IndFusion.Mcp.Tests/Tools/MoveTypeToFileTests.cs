@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.Tools;
+namespace IndFusion.Mcp.Tests.Tools;
 
 public class MoveTypeToFileTests : TestBase
 {
@@ -34,7 +34,7 @@ public class MoveTypeToFileTests : TestBase
     public async Task MoveTypeToFile_FailsWhenTypeExistsInAnotherFile()
     {
         UnloadSolutionTool.ClearSolutionCache();
-        var duplicatePath = Path.Combine(Path.GetDirectoryName(SolutionPath)!, "ExxerFactor.Mcp.Tests", "DuplicateTempType.cs");
+        var duplicatePath = Path.Combine(Path.GetDirectoryName(SolutionPath)!, "IndFusion.Mcp.Tests", "DuplicateTempType.cs");
         await File.WriteAllTextAsync(duplicatePath, "public interface ITemp { }");
 
         try

@@ -1,9 +1,9 @@
-using IndFusion.Mcp.Web.Mcp.Web.Models;
-using IndFusion.Mcp.Web.Mcp.Web.Services;
-using IndexPage = ExxerFactor.Mcp.Web.Pages.Index;
+using IndFusion.Mcp.Web.Models;
+using IndFusion.Mcp.Web.Services;
+using IndexPage = IndFusion.Mcp.Web.Pages.Index;
 using TestContext = Bunit.TestContext;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests.Components;
+namespace IndFusion.Mcp.Web.Tests.Components;
 
 public class IndexPageTests : TestContext
 {

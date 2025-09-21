@@ -1,6 +1,6 @@
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+namespace IndFusion.Mcp.Core.SyntaxWalkers;
 
 /// <summary>
 /// Base syntax walker that collects discovered names into a set.

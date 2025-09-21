@@ -1,11 +1,11 @@
 using System.Text.Json;
-using IndFusion.Mcp.Mcp.Core.Logging;
-using IndFusion.Mcp.Mcp.Web.Services;
+using IndFusion.Mcp.Core.Logging;
+using IndFusion.Mcp.Web.Services;
 using MudBlazor.Services;
 using OpenTelemetry;
 using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
-using IndFusion.Mcp.Mcp.Server.Extensions;
+using IndFusion.Mcp.Server.Extensions;
 using Serilog;
 
 internal class Program
@@ -36,7 +36,7 @@ internal class Program
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
 
                 // Add the JSON context for trimming support
-                options.JsonSerializerOptions.TypeInfoResolverChain.Add(ExxerFactor.Mcp.Web.Controllers.McpJsonContext.Default);
+                options.JsonSerializerOptions.TypeInfoResolverChain.Add(IndFusion.Mcp.Web.Controllers.McpJsonContext.Default);
             });
 
         // Add MudBlazor
@@ -54,7 +54,7 @@ internal class Program
 
         // Configure OpenTelemetry Metrics
 
-        var serviceName = "ExxerFactor.Mcp.Web";
+        var serviceName = "IndFusion.Mcp.Web";
 
         builder.Logging.AddOpenTelemetry(options =>
         {
@@ -107,7 +107,7 @@ internal class Program
     }
 }
 
-namespace IndFusion.Mcp.Mcp.Web
+namespace IndFusion.Mcp.Web
 {
     public partial class Program
     { }

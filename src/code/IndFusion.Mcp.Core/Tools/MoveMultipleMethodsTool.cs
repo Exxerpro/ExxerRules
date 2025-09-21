@@ -4,10 +4,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Text;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using IndFusion.Mcp.Mcp.Core.Move;
-using IndFusion.Mcp.Mcp.Core.SyntaxWalkers;
+using IndFusion.Mcp.Core.Move;
+using IndFusion.Mcp.Core.SyntaxWalkers;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Moves multiple methods to a target class, either as static with injected 'this' or as instance methods.

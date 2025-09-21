@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IndFusion.Analyzer.Analyzers.Operations;
+using IndFusion.Analyzers.Operations;
 using Shouldly;
 using Xunit;
 

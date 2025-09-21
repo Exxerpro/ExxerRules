@@ -29,6 +29,6 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <ProjectReference Include="..\ExxerFactor.Mcp.Core\ExxerFactor.Mcp.Core.csproj" />
+    <ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>
 </Project>

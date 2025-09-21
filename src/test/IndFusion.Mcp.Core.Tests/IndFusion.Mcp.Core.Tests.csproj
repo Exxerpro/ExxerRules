@@ -5,59 +5,54 @@
   <PropertyGroup>
     <!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
     <OutputType>Exe</OutputType>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <WarningsNotAsErrors>CS0219</WarningsNotAsErrors>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <EnableMSTestRunner>true</EnableMSTestRunner>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <RootNamespace>IndFusion.Mcp.Tests</RootNamespace>
+    <RootNamespace>IndFusion.Mcp.Core.Tests</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\TestingPlatform.props" />
   <!-- ===================================================================== -->
   <!-- Package Dependencies                                                   -->
   <!-- ===================================================================== -->
   <ItemGroup>
+    <!-- Microsoft Extensions & Configuration -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <!-- Testing Framework & Tools -->
+    <!-- Removed Microsoft.Testing.Platform due to instability in prerelease -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.v3" />
+    <PackageReference Update="xunit.v3.runner.console">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="xunit.v3.runner.msbuild">
+    <PackageReference Update="xunit.v3.runner.msbuild">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <!-- Test Coverage -->
+    <!-- Test Coverage & Mocking -->
     <PackageReference Include="coverlet.collector">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Shouldly" />
     <PackageReference Include="NSubstitute" />
-  </ItemGroup>
-  <!-- ===================================================================== -->
-  <!-- Global Using Statements                                                -->
-  <!-- ===================================================================== -->
-  <ItemGroup>
-    <Using Include="Xunit" />
+    <PackageReference Include="Shouldly" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <ProjectReference Include="..\..\ExxerFactor\ExxerFactor.Mcp.Core\ExxerFactor.Mcp.Core.csproj" />
-  </ItemGroup>
-  <!-- ===================================================================== -->
-  <!-- Build Configuration                                                    -->
-  <!-- ===================================================================== -->
-  <!-- Exclude generated test files from compilation -->
-  <ItemGroup>
-    <Compile Remove="TestOutput\**\*.cs" />
-    <None Include="TestOutput\**\*.cs" />
+    <ProjectReference Include="..\..\code\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>
 </Project>

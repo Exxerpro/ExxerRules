@@ -1,6 +1,6 @@
-using IndFusion.Mcp.Mcp.Web.Models;
+using IndFusion.Mcp.Web.Models;
 
-namespace IndFusion.Mcp.Mcp.Web.Services;
+namespace IndFusion.Mcp.Web.Services;
 
 public interface IMetricsService
 {

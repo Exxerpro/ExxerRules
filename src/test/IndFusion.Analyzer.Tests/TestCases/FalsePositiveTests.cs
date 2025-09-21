@@ -1,8 +1,8 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzer.Analyzers;
-using IndFusion.Analyzer.Analyzers.CodeQuality;
-using IndFusion.Analyzer.Analyzers.ErrorHandling;
-using IndFusion.Analyzer.Analyzers.Testing;
+using IndFusion.Analyzers;
+using IndFusion.Analyzers.CodeQuality;
+using IndFusion.Analyzers.ErrorHandling;
+using IndFusion.Analyzers.Testing;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;
@@ -89,7 +89,7 @@ namespace TestProject
 		const string testCode = @"
 using System;
 using System.Threading.Tasks;
-using IndFusion.Analyzer.Analyzers.Operations;
+using IndFusion.Analyzers.Operations;
 
 namespace TestProject
 {

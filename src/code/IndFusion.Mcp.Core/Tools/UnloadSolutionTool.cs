@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
 
-namespace IndFusion.Mcp.Mcp.Core.Tools;
+namespace IndFusion.Mcp.Core.Tools;
 
 /// <summary>
 /// Tools to unload a solution from cache and clear all caches.

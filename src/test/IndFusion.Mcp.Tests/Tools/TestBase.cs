@@ -1,12 +1,12 @@
-namespace IndFusion.Mcp.Mcp.Tests.Tools;
+namespace IndFusion.Mcp.Tests.Tools;
 
 public abstract class TestBase : IDisposable
 {
     protected static readonly string SolutionPath = TestUtilities.GetSolutionPath();
-    protected static readonly string ExampleFilePath = Path.Combine(Path.GetDirectoryName(SolutionPath)!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs");
+    protected static readonly string ExampleFilePath = Path.Combine(Path.GetDirectoryName(SolutionPath)!, "IndFusion.Mcp.Tests", "ExampleCode.cs");
 
     private static readonly string TestOutputRoot =
-        Path.Combine(Path.GetDirectoryName(SolutionPath)!, "ExxerFactor.Mcp.Tests", "TestOutput");
+        Path.Combine(Path.GetDirectoryName(SolutionPath)!, "IndFusion.Mcp.Tests", "TestOutput");
 
     protected string TestOutputPath { get; }
 

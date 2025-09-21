@@ -1,7 +1,7 @@
-using IndFusion.Mcp.Web.Mcp.Core.Abstractions;
-using IndFusion.Mcp.Web.Mcp.Web.Services;
+using IndFusion.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Web.Services;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests.Services;
+namespace IndFusion.Mcp.Web.Tests.Services;
 
 public class DashboardServiceTests
 {

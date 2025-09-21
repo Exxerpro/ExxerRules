@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Hosting;
 
-namespace IndFusion.Mcp.Mcp.Server.Services;
+namespace IndFusion.Mcp.Server.Services;
 
 public static class McpServerBuilderExtensions
 {

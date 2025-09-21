@@ -1,9 +1,9 @@
-namespace IndFusion.Mcp.Mcp.Tests;
+namespace IndFusion.Mcp.Tests;
 
 public class AnalyzeExxerFactoringOpportunitiesTests : IDisposable
 {
     private static readonly string SolutionPath = TestHelpers.GetSolutionPath();
-    private static readonly string ExampleFilePath = Path.Combine(Path.GetDirectoryName(SolutionPath)!, "ExxerFactor.Mcp.Tests", "ExampleCode.cs");
+    private static readonly string ExampleFilePath = Path.Combine(Path.GetDirectoryName(SolutionPath)!, "IndFusion.Mcp.Tests", "ExampleCode.cs");
     private readonly string _originalDir = Directory.GetCurrentDirectory();
 
     public void Dispose()

@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
-using IndFusion.Mcp.Mcp.Server.Resources;
-using IndFusion.Mcp.Mcp.Server.Tools;
-using IndFusion.Mcp.Mcp.Core.Extensions;
+using IndFusion.Mcp.Server.Resources;
+using IndFusion.Mcp.Server.Tools;
+using IndFusion.Mcp.Core.Extensions;
 
-namespace IndFusion.Mcp.Mcp.Server.Extensions;
+namespace IndFusion.Mcp.Server.Extensions;
 
 public static class ServiceCollectionExtensions
 {

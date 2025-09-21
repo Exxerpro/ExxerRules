@@ -1,5 +1,5 @@
 // =====================================================================
-// Global Using Statements for ExxerFactor.Mcp.Web
+// Global Using Statements for IndFusion.Mcp.Web
 // =====================================================================
 
 // =====================================================================
@@ -21,7 +21,7 @@ global using Microsoft.Extensions.Configuration;
 // =====================================================================
 // ExxerFactor.Mcp Core Libraries
 // =====================================================================
-global using ExxerFactor.Mcp.Core.Move;
-global using ExxerFactor.Mcp.Core.SyntaxRewriters;
-global using ExxerFactor.Mcp.Core.SyntaxWalkers;
-global using ExxerFactor.Mcp.Core.Tools;
+global using IndFusion.Mcp.Core.Move;
+global using IndFusion.Mcp.Core.SyntaxRewriters;
+global using IndFusion.Mcp.Core.SyntaxWalkers;
+global using IndFusion.Mcp.Core.Tools;

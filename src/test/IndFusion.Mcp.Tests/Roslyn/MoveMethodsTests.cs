@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.Roslyn;
+namespace IndFusion.Mcp.Tests.Roslyn;
 
 public partial class MoveMethodsTests
 {

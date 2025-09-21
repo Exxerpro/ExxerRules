@@ -1,6 +1,6 @@
-using IndFusion.Mcp.Mcp.Tests.Tools;
+using IndFusion.Mcp.Tests.Tools;
 
-namespace IndFusion.Mcp.Mcp.Tests.ToolsNew;
+namespace IndFusion.Mcp.Tests.ToolsNew;
 
 public class MakeStaticThenMoveToolTests : TestBase
 {

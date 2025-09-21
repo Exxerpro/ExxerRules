@@ -1,10 +1,10 @@
-using IndFusion.Mcp.Web.Mcp.Web;
-using IndFusion.Mcp.Web.Mcp.Web.Services;
+using IndFusion.Mcp.Web;
+using IndFusion.Mcp.Web.Services;
 
-namespace IndFusion.Mcp.Web.Mcp.Web.Tests;
+namespace IndFusion.Mcp.Web.Tests;
 
 /// <summary>
-/// Base class for ExxerFactor.Mcp.Web tests providing common web testing utilities
+/// Base class for IndFusion.Mcp.Web tests providing common web testing utilities
 /// </summary>
 public abstract class WebTestBase : IDisposable
 {

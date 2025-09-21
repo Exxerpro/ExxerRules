@@ -1,8 +1,8 @@
 using Microsoft.Extensions.Logging;
-using IndFusion.Mcp.Mcp.Web.Models;
+using IndFusion.Mcp.Web.Models;
 using System.Diagnostics;
 
-namespace IndFusion.Mcp.Mcp.Web.Services;
+namespace IndFusion.Mcp.Web.Services;
 
 public class MetricsService : IMetricsService
 {

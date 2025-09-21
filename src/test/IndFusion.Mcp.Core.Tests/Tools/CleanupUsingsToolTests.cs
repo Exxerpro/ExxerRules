@@ -1,7 +1,7 @@
-using IndFusion.Mcp.Core.Mcp.Core.Exceptions;
+using IndFusion.Mcp.Core.Exceptions;
 using McpProtocolException = ModelContextProtocol.McpException;
 
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests.Tools;
+namespace IndFusion.Mcp.Core.Tests.Tools;
 
 public class CleanupUsingsToolTests : IDisposable
 {
@@ -296,7 +296,7 @@ public class TestClass
         var nonExistentPath = Path.Combine(_testDirectory, "NonExistent.cs");
 
         // Act & Assert
-        await Assert.ThrowsAsync<ExxerFactor.Mcp.Core.Exceptions.McpException>(() =>
+        await Assert.ThrowsAsync<IndFusion.Mcp.Core.Exceptions.McpException>(() =>
             CleanupUsingsTool.CleanupUsings(null, nonExistentPath));
     }
 

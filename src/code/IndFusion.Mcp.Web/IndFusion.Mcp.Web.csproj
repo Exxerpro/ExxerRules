@@ -43,7 +43,7 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <ProjectReference Include="..\ExxerFactor.Mcp.Core\ExxerFactor.Mcp.Core.csproj" />
-    <ProjectReference Include="..\ExxerFactor.Mcp.Server\ExxerFactor.Mcp.Server.csproj" />
+    <ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
   </ItemGroup>
 </Project>

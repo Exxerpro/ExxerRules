@@ -142,10 +142,10 @@ docker stats ExxerFactor-Mcp-seq
             <MudExpansionPanel Text="Performance Monitoring">
                 <MudPaper Class="pa-3 mb-3" Style="background-color: var(--mud-palette-surface); font-family: monospace;">
 # Process monitoring
-top -p $(pgrep ExxerFactor.Mcp.Web)
+top -p $(pgrep IndFusion.Mcp.Web)
 
 # Memory usage
-ps aux | grep ExxerFactor.Mcp.Web
+ps aux | grep IndFusion.Mcp.Web
 
 # Network connections
 netstat -tlnp | grep -E "(7042|7043|5341)"

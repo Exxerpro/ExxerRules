@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzer.Analyzers;
-using IndFusion.Analyzer.Analyzers.Async;
-using IndFusion.Analyzer.Analyzers.NullSafety;
-using IndFusion.Analyzer.Analyzers.Logging;
-using IndFusion.Analyzer.Analyzers.ModernCSharp;
-using IndFusion.Analyzer.Analyzers.ErrorHandling;
+using IndFusion.Analyzers;
+using IndFusion.Analyzers.Async;
+using IndFusion.Analyzers.NullSafety;
+using IndFusion.Analyzers.Logging;
+using IndFusion.Analyzers.ModernCSharp;
+using IndFusion.Analyzers.ErrorHandling;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;

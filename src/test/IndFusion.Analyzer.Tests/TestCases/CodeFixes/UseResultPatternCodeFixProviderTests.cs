@@ -1,5 +1,5 @@
-using IndFusion.Analyzer.Analyzers;
-using IndFusion.Analyzer.CodeFixes.ErrorHandling;
+using IndFusion.Analyzers;
+using IndFusion.CodeFixes.ErrorHandling;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;

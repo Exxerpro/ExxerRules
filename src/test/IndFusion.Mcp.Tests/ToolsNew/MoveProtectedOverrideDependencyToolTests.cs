@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.ToolsNew;
+namespace IndFusion.Mcp.Tests.ToolsNew;
 
 public class MoveProtectedOverrideDependencyToolTests
 {

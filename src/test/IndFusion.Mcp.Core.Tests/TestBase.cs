@@ -1,9 +1,9 @@
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests;
+namespace IndFusion.Mcp.Core.Tests;
 
-using IndFusion.Mcp.Core.Mcp.Core.Extensions;
+using IndFusion.Mcp.Core.Extensions;
 
 /// <summary>
-/// Base class for ExxerFactor.Mcp.Core tests providing common setup and utilities
+/// Base class for IndFusion.Mcp.Core tests providing common setup and utilities
 /// </summary>
 public abstract class TestBase : IDisposable
 {

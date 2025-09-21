@@ -1,8 +1,8 @@
 using System.ComponentModel;
 using ModelContextProtocol.Server;
-using IndFusion.Mcp.Mcp.Core.Abstractions;
+using IndFusion.Mcp.Core.Abstractions;
 
-namespace IndFusion.Mcp.Mcp.Server.Tools;
+namespace IndFusion.Mcp.Server.Tools;
 
 [McpServerToolType]
 public class ListToolsMcp

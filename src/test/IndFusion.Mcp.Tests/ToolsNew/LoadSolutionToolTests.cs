@@ -1,6 +1,6 @@
-using IndFusion.Mcp.Mcp.Tests.Tools;
+using IndFusion.Mcp.Tests.Tools;
 
-namespace IndFusion.Mcp.Mcp.Tests.ToolsNew;
+namespace IndFusion.Mcp.Tests.ToolsNew;
 
 public class LoadSolutionToolTests : TestBase
 {
@@ -9,8 +9,8 @@ public class LoadSolutionToolTests : TestBase
     {
         var result = await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
         Assert.Contains("Successfully loaded solution", result);
-        Assert.Contains("ExxerFactor.Mcp.Core", result);
-        Assert.Contains("ExxerFactor.Mcp.Tests", result);
+        Assert.Contains("IndFusion.Mcp.Core", result);
+        Assert.Contains("IndFusion.Mcp.Tests", result);
     }
 
     [Fact]

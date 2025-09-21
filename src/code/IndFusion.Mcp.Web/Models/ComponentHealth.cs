@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Web.Models;
+namespace IndFusion.Mcp.Web.Models;
 
 public record ComponentHealth(
     bool IsHealthy,

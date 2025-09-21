@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.Roslyn.Rewriters;
+namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
 public partial class RoslynTransformationTests
 {

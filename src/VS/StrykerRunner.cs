@@ -11,7 +11,7 @@ namespace StrykerRunner
             Console.WriteLine("Stryker Runner with Timeout");
             Console.WriteLine("===========================");
             
-            string command = "dotnet stryker --reporters Progress,Html,Json --project ExxerRules.Analyzers --test-project ExxerRules.Tests";
+            string command = "dotnet stryker --reporters Progress,Html,Json --project IndFusion.Analyzer --test-project IndFusion.Analyzer.Tests";
             int timeoutSeconds = 900; // 15 minutes
             
             if (args.Length > 0)

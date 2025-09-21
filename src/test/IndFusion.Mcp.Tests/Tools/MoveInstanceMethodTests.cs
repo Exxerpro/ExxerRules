@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.Tools;
+namespace IndFusion.Mcp.Tests.Tools;
 
 public class MoveInstanceMethodTests : TestBase
 {

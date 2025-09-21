@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests.Roslyn.Walkers;
+namespace IndFusion.Mcp.Tests.Roslyn.Walkers;
 
 public partial class RoslynTransformationTests
 {

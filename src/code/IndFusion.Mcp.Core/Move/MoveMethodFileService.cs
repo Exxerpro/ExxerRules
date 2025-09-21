@@ -3,10 +3,10 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
-using IndFusion.Mcp.Mcp.Core.SyntaxRewriters;
-using IndFusion.Mcp.Mcp.Core.Tools;
+using IndFusion.Mcp.Core.SyntaxRewriters;
+using IndFusion.Mcp.Core.Tools;
 
-namespace IndFusion.Mcp.Mcp.Core.Move;
+namespace IndFusion.Mcp.Core.Move;
 
 /// <summary>
 /// File-system oriented helpers for moving methods across files and classes.

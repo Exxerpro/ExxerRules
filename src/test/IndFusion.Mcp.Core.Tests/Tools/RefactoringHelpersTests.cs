@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace IndFusion.Mcp.Core.Mcp.Core.Tests.Tools;
+namespace IndFusion.Mcp.Core.Tests.Tools;
 
 public class ExxerFactoringHelpersTests : IDisposable
 {
@@ -153,7 +153,7 @@ public class ExxerFactoringHelpersTests : IDisposable
         var transform = (string content) => content;
 
         // Act & Assert
-        await Assert.ThrowsAsync<ExxerFactor.Mcp.Core.Exceptions.McpException>(() =>
+        await Assert.ThrowsAsync<IndFusion.Mcp.Core.Exceptions.McpException>(() =>
             ExxerFactoringHelpers.ApplySingleFileEdit(nonExistentPath, transform, "Success"));
     }
 

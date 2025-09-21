@@ -1,4 +1,4 @@
-namespace IndFusion.Mcp.Mcp.Tests;
+namespace IndFusion.Mcp.Tests;
 
 public class Logger
 {

@@ -8,6 +8,9 @@ using System.Reflection;
 
 namespace IndFusion.Mcp.Web.Controllers;
 
+/// <summary>
+/// Minimal HTTP API exposing MCP server features (tools, server-info).
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class McpController : ControllerBase
@@ -15,12 +18,19 @@ public class McpController : ControllerBase
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<McpController> _logger;
 
+    /// <summary>
+    /// Creates a new controller instance.
+    /// </summary>
     public McpController(IServiceProvider serviceProvider, ILogger<McpController> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Invokes a registered MCP tool by name with optional parameters.
+    /// </summary>
+    /// <param name="request">Tool call request.</param>
     [HttpPost]
     [Route("tools")]
     public async Task<IActionResult> HandleToolCall([FromBody] McpToolCallRequest request)
@@ -85,6 +95,9 @@ public class McpController : ControllerBase
         }
     }
 
+    /// <summary>
+    /// Lists all available MCP tools with description and input schema.
+    /// </summary>
     [HttpGet]
     [Route("tools")]
     public IActionResult ListTools()
@@ -96,6 +109,9 @@ public class McpController : ControllerBase
         });
     }
 
+    /// <summary>
+    /// Returns server info and advertised capabilities.
+    /// </summary>
     [HttpGet]
     [Route("server-info")]
     public IActionResult GetServerInfo()

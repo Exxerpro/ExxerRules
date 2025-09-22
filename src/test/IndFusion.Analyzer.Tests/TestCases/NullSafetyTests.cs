@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class NullSafetyTests
 {
-	/// <summary>
-	/// Tests that validating null parameters does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_ValidatingNullParameters()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that validating null parameters does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_ValidatingNullParameters()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -44,17 +44,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that not validating null parameters reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_NotValidatingNullParameters()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that not validating null parameters reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_NotValidatingNullParameters()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -75,18 +75,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different null parameter patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DifferentNullParameterPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different null parameter patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DifferentNullParameterPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -109,18 +109,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
-		diagnostics.Any(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
+        diagnostics.Any(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Null parameter validation in different contexts.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_NullParameterValidationInDifferentContexts()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Null parameter validation in different contexts.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_NullParameterValidationInDifferentContexts()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -148,9 +148,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		// Should not report diagnostic when null checks are present
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        // Should not report diagnostic when null checks are present
+        diagnostics.Length.ShouldBe(0);
+    }
 }
 

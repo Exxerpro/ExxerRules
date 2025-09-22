@@ -3,8 +3,14 @@ using Microsoft.Extensions.Hosting;
 
 namespace IndFusion.Mcp.Server.Tests.Services;
 
+/// <summary>
+/// Tests for McpServerBuilder fluent configuration and host construction.
+/// </summary>
 public class McpServerBuilderTests
 {
+    /// <summary>
+    /// Ensures the builder can be constructed with a HostBuilder.
+    /// </summary>
     [Fact]
     public void Constructor_ShouldReturnNonNull_McpServerBuilder()
     {
@@ -19,6 +25,9 @@ public class McpServerBuilderTests
         builder.ShouldBeOfType<McpServerBuilder>();
     }
 
+    /// <summary>
+    /// Verifies the extension method returns a builder instance.
+    /// </summary>
     [Fact]
     public void CreateMcpServerBuilder_Extension_ShouldReturnBuilder()
     {
@@ -33,6 +42,9 @@ public class McpServerBuilderTests
         builder.ShouldBeOfType<McpServerBuilder>();
     }
 
+    /// <summary>
+    /// Ensures WithStdioTransport can be invoked without errors.
+    /// </summary>
     [Fact]
     public void WithStdioTransport_ShouldConfigureStdioTransport()
     {
@@ -47,6 +59,9 @@ public class McpServerBuilderTests
         result.ShouldBeSameAs(builder); // Should return same instance for fluent interface
     }
 
+    /// <summary>
+    /// Ensures WithWebSocketTransport can be invoked without errors.
+    /// </summary>
     [Fact]
     public void WithWebSocketTransport_ShouldConfigureWebSocketTransport()
     {
@@ -61,6 +76,9 @@ public class McpServerBuilderTests
         result.ShouldBeSameAs(builder); // Should return same instance for fluent interface
     }
 
+    /// <summary>
+    /// Confirms fluent chaining returns the same builder instance.
+    /// </summary>
     [Fact]
     public void FluentInterface_ShouldAllowChaining()
     {
@@ -76,6 +94,9 @@ public class McpServerBuilderTests
         Should.NotThrow(action);
     }
 
+    /// <summary>
+    /// Ensures Build returns an IHost instance.
+    /// </summary>
     [Fact]
     public void Build_ShouldReturnIHost()
     {
@@ -91,6 +112,9 @@ public class McpServerBuilderTests
         host.ShouldBeAssignableTo<IHost>();
     }
 
+    /// <summary>
+    /// Verifies the constructor throws when given a null host builder.
+    /// </summary>
     [Fact]
     public void Constructor_WithNullHostBuilder_ShouldThrowArgumentNullException()
     {

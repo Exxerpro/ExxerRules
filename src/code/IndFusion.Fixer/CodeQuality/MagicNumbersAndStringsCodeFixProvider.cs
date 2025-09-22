@@ -17,351 +17,351 @@ namespace IndFusion.CodeFixes.CodeQuality;
 [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(MagicNumbersAndStringsCodeFixProvider)), Shared]
 public class MagicNumbersAndStringsCodeFixProvider : CodeFixProvider
 {
-	/// <inheritdoc/>
-	public override sealed ImmutableArray<string> FixableDiagnosticIds => 
-		ImmutableArray.Create(DiagnosticIds.AvoidMagicNumbersAndStrings);
+    /// <inheritdoc/>
+    public override sealed ImmutableArray<string> FixableDiagnosticIds =>
+        ImmutableArray.Create(DiagnosticIds.AvoidMagicNumbersAndStrings);
 
-	/// <inheritdoc/>
-	public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
+    /// <inheritdoc/>
+    public override sealed FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
-	/// <inheritdoc/>
-	public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
-	{
-		var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
-		if (root == null)
-		{
-			return;
-		}
+    /// <inheritdoc/>
+    public override sealed async Task RegisterCodeFixesAsync(CodeFixContext context)
+    {
+        var root = await context.Document.GetSyntaxRootAsync(context.CancellationToken).ConfigureAwait(false);
+        if (root == null)
+        {
+            return;
+        }
 
-		foreach (var diagnostic in context.Diagnostics)
-		{
-			var diagnosticSpan = diagnostic.Location.SourceSpan;
-			var node = root.FindNode(diagnosticSpan);
+        foreach (var diagnostic in context.Diagnostics)
+        {
+            var diagnosticSpan = diagnostic.Location.SourceSpan;
+            var node = root.FindNode(diagnosticSpan);
 
-			if (node == null)
-			{
-				continue;
-			}
+            if (node == null)
+            {
+                continue;
+            }
 
-			// Register fixes based on the node type
-			RegisterMagicNumberAndStringFixes(context, diagnostic, node);
-		}
-	}
+            // Register fixes based on the node type
+            RegisterMagicNumberAndStringFixes(context, diagnostic, node);
+        }
+    }
 
-	/// <summary>
-	/// Registers code fix options based on the type of magic number/string that can be extracted.
-	/// </summary>
-	/// <param name="context">The code fix context.</param>
-	/// <param name="diagnostic">The diagnostic to fix.</param>
-	/// <param name="node">The syntax node that can be converted.</param>
-	private static void RegisterMagicNumberAndStringFixes(CodeFixContext context, Diagnostic diagnostic, SyntaxNode node)
-	{
-		switch (node)
-		{
-			case LiteralExpressionSyntax literalExpression:
-				RegisterLiteralFixes(context, diagnostic, literalExpression);
-				break;
-			case InvocationExpressionSyntax invocationExpression:
-				RegisterInvocationFixes(context, diagnostic, invocationExpression);
-				break;
-			case BinaryExpressionSyntax binaryExpression:
-				RegisterBinaryExpressionFixes(context, diagnostic, binaryExpression);
-				break;
-		}
-	}
+    /// <summary>
+    /// Registers code fix options based on the type of magic number/string that can be extracted.
+    /// </summary>
+    /// <param name="context">The code fix context.</param>
+    /// <param name="diagnostic">The diagnostic to fix.</param>
+    /// <param name="node">The syntax node that can be converted.</param>
+    private static void RegisterMagicNumberAndStringFixes(CodeFixContext context, Diagnostic diagnostic, SyntaxNode node)
+    {
+        switch (node)
+        {
+            case LiteralExpressionSyntax literalExpression:
+                RegisterLiteralFixes(context, diagnostic, literalExpression);
+                break;
+            case InvocationExpressionSyntax invocationExpression:
+                RegisterInvocationFixes(context, diagnostic, invocationExpression);
+                break;
+            case BinaryExpressionSyntax binaryExpression:
+                RegisterBinaryExpressionFixes(context, diagnostic, binaryExpression);
+                break;
+        }
+    }
 
-	/// <summary>
-	/// Registers code fix options for literal conversion.
-	/// </summary>
-	private static void RegisterLiteralFixes(CodeFixContext context, Diagnostic diagnostic, LiteralExpressionSyntax literalExpression)
-	{
-		var value = literalExpression.Token.ValueText;
-		var constantName = GenerateConstantName(value, literalExpression.Kind());
+    /// <summary>
+    /// Registers code fix options for literal conversion.
+    /// </summary>
+    private static void RegisterLiteralFixes(CodeFixContext context, Diagnostic diagnostic, LiteralExpressionSyntax literalExpression)
+    {
+        var value = literalExpression.Token.ValueText;
+        var constantName = GenerateConstantName(value, literalExpression.Kind());
 
-		context.RegisterCodeFix(
-			CodeAction.Create(
-				title: $"📝 Extract '{value}' to constant '{constantName}'",
-				createChangedDocument: c => ExtractLiteralToConstantAsync(context.Document, literalExpression, constantName, c),
-				equivalenceKey: $"ExtractLiteralToConstant_{constantName}"),
-			diagnostic);
+        context.RegisterCodeFix(
+            CodeAction.Create(
+                title: $"📝 Extract '{value}' to constant '{constantName}'",
+                createChangedDocument: c => ExtractLiteralToConstantAsync(context.Document, literalExpression, constantName, c),
+                equivalenceKey: $"ExtractLiteralToConstant_{constantName}"),
+            diagnostic);
 
-		context.RegisterCodeFix(
-			CodeAction.Create(
-				title: $"📝 Extract '{value}' to local constant",
-				createChangedDocument: c => ExtractLiteralToLocalConstantAsync(context.Document, literalExpression, constantName, c),
-				equivalenceKey: $"ExtractLiteralToLocalConstant_{constantName}"),
-			diagnostic);
-	}
+        context.RegisterCodeFix(
+            CodeAction.Create(
+                title: $"📝 Extract '{value}' to local constant",
+                createChangedDocument: c => ExtractLiteralToLocalConstantAsync(context.Document, literalExpression, constantName, c),
+                equivalenceKey: $"ExtractLiteralToLocalConstant_{constantName}"),
+            diagnostic);
+    }
 
-	/// <summary>
-	/// Registers code fix options for invocation conversion.
-	/// </summary>
-	private static void RegisterInvocationFixes(CodeFixContext context, Diagnostic diagnostic, InvocationExpressionSyntax invocationExpression)
-	{
-		if (invocationExpression.Expression is MemberAccessExpressionSyntax memberAccess)
-		{
-			var methodName = memberAccess.Name.Identifier.ValueText;
-			var arguments = invocationExpression.ArgumentList?.Arguments;
+    /// <summary>
+    /// Registers code fix options for invocation conversion.
+    /// </summary>
+    private static void RegisterInvocationFixes(CodeFixContext context, Diagnostic diagnostic, InvocationExpressionSyntax invocationExpression)
+    {
+        if (invocationExpression.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            var methodName = memberAccess.Name.Identifier.ValueText;
+            var arguments = invocationExpression.ArgumentList?.Arguments;
 
-			if (arguments != null && arguments.Value.Count > 0)
-			{
-				var firstArgument = arguments.Value[0].Expression;
-				if (firstArgument is LiteralExpressionSyntax literal)
-				{
-					var value = literal.Token.ValueText;
-					var constantName = GenerateConstantName(value, literal.Kind());
+            if (arguments != null && arguments.Value.Count > 0)
+            {
+                var firstArgument = arguments.Value[0].Expression;
+                if (firstArgument is LiteralExpressionSyntax literal)
+                {
+                    var value = literal.Token.ValueText;
+                    var constantName = GenerateConstantName(value, literal.Kind());
 
-					context.RegisterCodeFix(
-						CodeAction.Create(
-							title: $"📝 Extract '{value}' to constant '{constantName}'",
-							createChangedDocument: c => ExtractInvocationLiteralToConstantAsync(context.Document, invocationExpression, literal, constantName, c),
-							equivalenceKey: $"ExtractInvocationLiteralToConstant_{constantName}"),
-						diagnostic);
-				}
-			}
-		}
-	}
+                    context.RegisterCodeFix(
+                        CodeAction.Create(
+                            title: $"📝 Extract '{value}' to constant '{constantName}'",
+                            createChangedDocument: c => ExtractInvocationLiteralToConstantAsync(context.Document, invocationExpression, literal, constantName, c),
+                            equivalenceKey: $"ExtractInvocationLiteralToConstant_{constantName}"),
+                        diagnostic);
+                }
+            }
+        }
+    }
 
-	/// <summary>
-	/// Registers code fix options for binary expression conversion.
-	/// </summary>
-	private static void RegisterBinaryExpressionFixes(CodeFixContext context, Diagnostic diagnostic, BinaryExpressionSyntax binaryExpression)
-	{
-		context.RegisterCodeFix(
-			CodeAction.Create(
-				title: "📝 Extract magic numbers to constants",
-				createChangedDocument: c => ExtractBinaryExpressionToConstantsAsync(context.Document, binaryExpression, c),
-				equivalenceKey: "ExtractBinaryExpressionToConstants"),
-			diagnostic);
-	}
+    /// <summary>
+    /// Registers code fix options for binary expression conversion.
+    /// </summary>
+    private static void RegisterBinaryExpressionFixes(CodeFixContext context, Diagnostic diagnostic, BinaryExpressionSyntax binaryExpression)
+    {
+        context.RegisterCodeFix(
+            CodeAction.Create(
+                title: "📝 Extract magic numbers to constants",
+                createChangedDocument: c => ExtractBinaryExpressionToConstantsAsync(context.Document, binaryExpression, c),
+                equivalenceKey: "ExtractBinaryExpressionToConstants"),
+            diagnostic);
+    }
 
-	/// <summary>
-	/// Extracts a literal to a constant.
-	/// </summary>
-	private static async Task<Document> ExtractLiteralToConstantAsync(Document document, LiteralExpressionSyntax literalExpression, string constantName, CancellationToken cancellationToken)
-	{
-		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+    /// <summary>
+    /// Extracts a literal to a constant.
+    /// </summary>
+    private static async Task<Document> ExtractLiteralToConstantAsync(Document document, LiteralExpressionSyntax literalExpression, string constantName, CancellationToken cancellationToken)
+    {
+        var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
-		// Find the containing class
-		var classDeclaration = literalExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-		if (classDeclaration != null)
-		{
-			// Create constant declaration
-			var constantDeclaration = CreateConstantDeclaration(constantName, literalExpression);
-			
-			// Insert constant at the beginning of the class
-			var newClass = classDeclaration.AddMembers(constantDeclaration);
-			editor.ReplaceNode(classDeclaration, newClass);
+        // Find the containing class
+        var classDeclaration = literalExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (classDeclaration != null)
+        {
+            // Create constant declaration
+            var constantDeclaration = CreateConstantDeclaration(constantName, literalExpression);
 
-			// Replace literal with constant reference
-			var constantReference = SyntaxFactory.IdentifierName(constantName);
-			editor.ReplaceNode(literalExpression, constantReference);
-		}
+            // Insert constant at the beginning of the class
+            var newClass = classDeclaration.AddMembers(constantDeclaration);
+            editor.ReplaceNode(classDeclaration, newClass);
 
-		return editor.GetChangedDocument();
-	}
+            // Replace literal with constant reference
+            var constantReference = SyntaxFactory.IdentifierName(constantName);
+            editor.ReplaceNode(literalExpression, constantReference);
+        }
 
-	/// <summary>
-	/// Extracts a literal to a local constant.
-	/// </summary>
-	private static async Task<Document> ExtractLiteralToLocalConstantAsync(Document document, LiteralExpressionSyntax literalExpression, string constantName, CancellationToken cancellationToken)
-	{
-		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+        return editor.GetChangedDocument();
+    }
 
-		// Find the containing method
-		var methodDeclaration = literalExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (methodDeclaration != null)
-		{
-			// Create local constant declaration
-			var localConstantDeclaration = CreateLocalConstantDeclaration(constantName, literalExpression);
-			
-			// Insert local constant at the beginning of the method
-			var newMethod = methodDeclaration.AddBodyStatements(localConstantDeclaration);
-			editor.ReplaceNode(methodDeclaration, newMethod);
+    /// <summary>
+    /// Extracts a literal to a local constant.
+    /// </summary>
+    private static async Task<Document> ExtractLiteralToLocalConstantAsync(Document document, LiteralExpressionSyntax literalExpression, string constantName, CancellationToken cancellationToken)
+    {
+        var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
-			// Replace literal with constant reference
-			var constantReference = SyntaxFactory.IdentifierName(constantName);
-			editor.ReplaceNode(literalExpression, constantReference);
-		}
+        // Find the containing method
+        var methodDeclaration = literalExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+        if (methodDeclaration != null)
+        {
+            // Create local constant declaration
+            var localConstantDeclaration = CreateLocalConstantDeclaration(constantName, literalExpression);
 
-		return editor.GetChangedDocument();
-	}
+            // Insert local constant at the beginning of the method
+            var newMethod = methodDeclaration.AddBodyStatements(localConstantDeclaration);
+            editor.ReplaceNode(methodDeclaration, newMethod);
 
-	/// <summary>
-	/// Extracts a literal from an invocation to a constant.
-	/// </summary>
-	private static async Task<Document> ExtractInvocationLiteralToConstantAsync(Document document, InvocationExpressionSyntax invocationExpression, LiteralExpressionSyntax literal, string constantName, CancellationToken cancellationToken)
-	{
-		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+            // Replace literal with constant reference
+            var constantReference = SyntaxFactory.IdentifierName(constantName);
+            editor.ReplaceNode(literalExpression, constantReference);
+        }
 
-		// Find the containing class
-		var classDeclaration = invocationExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-		if (classDeclaration != null)
-		{
-			// Create constant declaration
-			var constantDeclaration = CreateConstantDeclaration(constantName, literal);
-			
-			// Insert constant at the beginning of the class
-			var newClass = classDeclaration.AddMembers(constantDeclaration);
-			editor.ReplaceNode(classDeclaration, newClass);
+        return editor.GetChangedDocument();
+    }
 
-			// Replace literal with constant reference
-			var constantReference = SyntaxFactory.IdentifierName(constantName);
-			editor.ReplaceNode(literal, constantReference);
-		}
+    /// <summary>
+    /// Extracts a literal from an invocation to a constant.
+    /// </summary>
+    private static async Task<Document> ExtractInvocationLiteralToConstantAsync(Document document, InvocationExpressionSyntax invocationExpression, LiteralExpressionSyntax literal, string constantName, CancellationToken cancellationToken)
+    {
+        var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
-		return editor.GetChangedDocument();
-	}
+        // Find the containing class
+        var classDeclaration = invocationExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (classDeclaration != null)
+        {
+            // Create constant declaration
+            var constantDeclaration = CreateConstantDeclaration(constantName, literal);
 
-	/// <summary>
-	/// Extracts magic numbers from a binary expression to constants.
-	/// </summary>
-	private static async Task<Document> ExtractBinaryExpressionToConstantsAsync(Document document, BinaryExpressionSyntax binaryExpression, CancellationToken cancellationToken)
-	{
-		var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
+            // Insert constant at the beginning of the class
+            var newClass = classDeclaration.AddMembers(constantDeclaration);
+            editor.ReplaceNode(classDeclaration, newClass);
 
-		var rewriter = new MagicNumberExtractorRewriter();
-		var newExpression = (ExpressionSyntax)rewriter.Visit(binaryExpression);
-		editor.ReplaceNode(binaryExpression, newExpression);
+            // Replace literal with constant reference
+            var constantReference = SyntaxFactory.IdentifierName(constantName);
+            editor.ReplaceNode(literal, constantReference);
+        }
 
-		// Add constants to the containing class
-		var classDeclaration = binaryExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-		if (classDeclaration != null && rewriter.ExtractedConstants.Any())
-		{
-			var newClass = classDeclaration.AddMembers(rewriter.ExtractedConstants.ToArray());
-			editor.ReplaceNode(classDeclaration, newClass);
-		}
+        return editor.GetChangedDocument();
+    }
 
-		return editor.GetChangedDocument();
-	}
+    /// <summary>
+    /// Extracts magic numbers from a binary expression to constants.
+    /// </summary>
+    private static async Task<Document> ExtractBinaryExpressionToConstantsAsync(Document document, BinaryExpressionSyntax binaryExpression, CancellationToken cancellationToken)
+    {
+        var editor = await DocumentEditor.CreateAsync(document, cancellationToken).ConfigureAwait(false);
 
-	/// <summary>
-	/// Creates a constant declaration.
-	/// </summary>
-	private static FieldDeclarationSyntax CreateConstantDeclaration(string constantName, LiteralExpressionSyntax literal)
-	{
-		var type = GetTypeFromLiteral(literal);
-		var value = literal.Token.ValueText;
+        var rewriter = new MagicNumberExtractorRewriter();
+        var newExpression = (ExpressionSyntax)rewriter.Visit(binaryExpression);
+        editor.ReplaceNode(binaryExpression, newExpression);
 
-		return SyntaxFactory.FieldDeclaration(
-			SyntaxFactory.List<AttributeListSyntax>(),
-			SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword)),
-			SyntaxFactory.VariableDeclaration(
-				SyntaxFactory.ParseTypeName(type),
-				SyntaxFactory.SeparatedList(new[]
-				{
-					SyntaxFactory.VariableDeclarator(
-						SyntaxFactory.Identifier(constantName),
-						null,
-						SyntaxFactory.EqualsValueClause(literal))
-				})));
-	}
+        // Add constants to the containing class
+        var classDeclaration = binaryExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (classDeclaration != null && rewriter.ExtractedConstants.Any())
+        {
+            var newClass = classDeclaration.AddMembers(rewriter.ExtractedConstants.ToArray());
+            editor.ReplaceNode(classDeclaration, newClass);
+        }
 
-	/// <summary>
-	/// Creates a local constant declaration.
-	/// </summary>
-	private static LocalDeclarationStatementSyntax CreateLocalConstantDeclaration(string constantName, LiteralExpressionSyntax literal)
-	{
-		var type = GetTypeFromLiteral(literal);
+        return editor.GetChangedDocument();
+    }
 
-		return SyntaxFactory.LocalDeclarationStatement(
-			SyntaxFactory.VariableDeclaration(
-				SyntaxFactory.ParseTypeName(type),
-				SyntaxFactory.SeparatedList(new[]
-				{
-					SyntaxFactory.VariableDeclarator(
-						SyntaxFactory.Identifier(constantName),
-						null,
-						SyntaxFactory.EqualsValueClause(literal))
-				})));
-	}
+    /// <summary>
+    /// Creates a constant declaration.
+    /// </summary>
+    private static FieldDeclarationSyntax CreateConstantDeclaration(string constantName, LiteralExpressionSyntax literal)
+    {
+        var type = GetTypeFromLiteral(literal);
+        var value = literal.Token.ValueText;
 
-	/// <summary>
-	/// Gets the type from a literal expression.
-	/// </summary>
-	private static string GetTypeFromLiteral(LiteralExpressionSyntax literal)
-	{
-		return literal.Kind() switch
-		{
-			SyntaxKind.StringLiteralExpression => "string",
-			SyntaxKind.NumericLiteralExpression => "int",
-			SyntaxKind.CharacterLiteralExpression => "char",
-			SyntaxKind.TrueLiteralExpression or SyntaxKind.FalseLiteralExpression => "bool",
-			_ => "object"
-		};
-	}
+        return SyntaxFactory.FieldDeclaration(
+            SyntaxFactory.List<AttributeListSyntax>(),
+            SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword)),
+            SyntaxFactory.VariableDeclaration(
+                SyntaxFactory.ParseTypeName(type),
+                SyntaxFactory.SeparatedList(new[]
+                {
+                    SyntaxFactory.VariableDeclarator(
+                        SyntaxFactory.Identifier(constantName),
+                        null,
+                        SyntaxFactory.EqualsValueClause(literal))
+                })));
+    }
 
-	/// <summary>
-	/// Generates a constant name from a value.
-	/// </summary>
-	private static string GenerateConstantName(string value, SyntaxKind kind)
-	{
-		var prefix = kind switch
-		{
-			SyntaxKind.StringLiteralExpression => "DEFAULT_",
-			SyntaxKind.NumericLiteralExpression => "MAX_",
-			SyntaxKind.CharacterLiteralExpression => "CHAR_",
-			SyntaxKind.TrueLiteralExpression or SyntaxKind.FalseLiteralExpression => "IS_",
-			_ => "VALUE_"
-		};
+    /// <summary>
+    /// Creates a local constant declaration.
+    /// </summary>
+    private static LocalDeclarationStatementSyntax CreateLocalConstantDeclaration(string constantName, LiteralExpressionSyntax literal)
+    {
+        var type = GetTypeFromLiteral(literal);
 
-		// Convert value to uppercase and replace non-alphanumeric characters
-		var cleanValue = value.Replace(" ", "_").Replace("-", "_").Replace(".", "_");
-		return prefix + cleanValue.ToUpperInvariant();
-	}
+        return SyntaxFactory.LocalDeclarationStatement(
+            SyntaxFactory.VariableDeclaration(
+                SyntaxFactory.ParseTypeName(type),
+                SyntaxFactory.SeparatedList(new[]
+                {
+                    SyntaxFactory.VariableDeclarator(
+                        SyntaxFactory.Identifier(constantName),
+                        null,
+                        SyntaxFactory.EqualsValueClause(literal))
+                })));
+    }
 
-	/// <summary>
-	/// Rewriter that extracts magic numbers to constants.
-	/// </summary>
-	private class MagicNumberExtractorRewriter : CSharpSyntaxRewriter
-	{
-		public List<FieldDeclarationSyntax> ExtractedConstants { get; } = new();
+    /// <summary>
+    /// Gets the type from a literal expression.
+    /// </summary>
+    private static string GetTypeFromLiteral(LiteralExpressionSyntax literal)
+    {
+        return literal.Kind() switch
+        {
+            SyntaxKind.StringLiteralExpression => "string",
+            SyntaxKind.NumericLiteralExpression => "int",
+            SyntaxKind.CharacterLiteralExpression => "char",
+            SyntaxKind.TrueLiteralExpression or SyntaxKind.FalseLiteralExpression => "bool",
+            _ => "object"
+        };
+    }
 
-		public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
-		{
-			if (node.Kind() == SyntaxKind.NumericLiteralExpression)
-			{
-				var value = node.Token.ValueText;
-				var constantName = GenerateConstantName(value, node.Kind());
-				var constantDeclaration = CreateConstantDeclaration(constantName, node);
-				ExtractedConstants.Add(constantDeclaration);
+    /// <summary>
+    /// Generates a constant name from a value.
+    /// </summary>
+    private static string GenerateConstantName(string value, SyntaxKind kind)
+    {
+        var prefix = kind switch
+        {
+            SyntaxKind.StringLiteralExpression => "DEFAULT_",
+            SyntaxKind.NumericLiteralExpression => "MAX_",
+            SyntaxKind.CharacterLiteralExpression => "CHAR_",
+            SyntaxKind.TrueLiteralExpression or SyntaxKind.FalseLiteralExpression => "IS_",
+            _ => "VALUE_"
+        };
 
-				return SyntaxFactory.IdentifierName(constantName);
-			}
+        // Convert value to uppercase and replace non-alphanumeric characters
+        var cleanValue = value.Replace(" ", "_").Replace("-", "_").Replace(".", "_");
+        return prefix + cleanValue.ToUpperInvariant();
+    }
 
-			return base.VisitLiteralExpression(node);
-		}
+    /// <summary>
+    /// Rewriter that extracts magic numbers to constants.
+    /// </summary>
+    private class MagicNumberExtractorRewriter : CSharpSyntaxRewriter
+    {
+        public List<FieldDeclarationSyntax> ExtractedConstants { get; } = new();
 
-		private static FieldDeclarationSyntax CreateConstantDeclaration(string constantName, LiteralExpressionSyntax literal)
-		{
-			return SyntaxFactory.FieldDeclaration(
-				SyntaxFactory.List<AttributeListSyntax>(),
-				SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword)),
-				SyntaxFactory.VariableDeclaration(
-					SyntaxFactory.ParseTypeName("int"),
-					SyntaxFactory.SeparatedList(new[]
-					{
-						SyntaxFactory.VariableDeclarator(
-							SyntaxFactory.Identifier(constantName),
-							null,
-							SyntaxFactory.EqualsValueClause(literal))
-					})));
-		}
+        public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
+        {
+            if (node.Kind() == SyntaxKind.NumericLiteralExpression)
+            {
+                var value = node.Token.ValueText;
+                var constantName = GenerateConstantName(value, node.Kind());
+                var constantDeclaration = CreateConstantDeclaration(constantName, node);
+                ExtractedConstants.Add(constantDeclaration);
 
-		private static string GenerateConstantName(string value, SyntaxKind kind)
-		{
-			var prefix = kind switch
-			{
-				SyntaxKind.StringLiteralExpression => "DEFAULT_",
-				SyntaxKind.NumericLiteralExpression => "MAX_",
-				SyntaxKind.CharacterLiteralExpression => "CHAR_",
-				SyntaxKind.TrueLiteralExpression or SyntaxKind.FalseLiteralExpression => "IS_",
-				_ => "VALUE_"
-			};
+                return SyntaxFactory.IdentifierName(constantName);
+            }
 
-			var cleanValue = value.Replace(" ", "_").Replace("-", "_").Replace(".", "_");
-			return prefix + cleanValue.ToUpperInvariant();
-		}
-	}
+            return base.VisitLiteralExpression(node);
+        }
+
+        private static FieldDeclarationSyntax CreateConstantDeclaration(string constantName, LiteralExpressionSyntax literal)
+        {
+            return SyntaxFactory.FieldDeclaration(
+                SyntaxFactory.List<AttributeListSyntax>(),
+                SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.PublicKeyword), SyntaxFactory.Token(SyntaxKind.ConstKeyword)),
+                SyntaxFactory.VariableDeclaration(
+                    SyntaxFactory.ParseTypeName("int"),
+                    SyntaxFactory.SeparatedList(new[]
+                    {
+                        SyntaxFactory.VariableDeclarator(
+                            SyntaxFactory.Identifier(constantName),
+                            null,
+                            SyntaxFactory.EqualsValueClause(literal))
+                    })));
+        }
+
+        private static string GenerateConstantName(string value, SyntaxKind kind)
+        {
+            var prefix = kind switch
+            {
+                SyntaxKind.StringLiteralExpression => "DEFAULT_",
+                SyntaxKind.NumericLiteralExpression => "MAX_",
+                SyntaxKind.CharacterLiteralExpression => "CHAR_",
+                SyntaxKind.TrueLiteralExpression or SyntaxKind.FalseLiteralExpression => "IS_",
+                _ => "VALUE_"
+            };
+
+            var cleanValue = value.Replace(" ", "_").Replace("-", "_").Replace(".", "_");
+            return prefix + cleanValue.ToUpperInvariant();
+        }
+    }
 }
 

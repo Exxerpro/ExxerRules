@@ -1,8 +1,14 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
+/// <summary>
+/// Tool that renames a symbol across a solution and persists changes to disk.
+/// </summary>
 [McpServerToolType]
 public static class RenameSymbolTool
 {
+    /// <summary>
+    /// Renames a symbol at the given file location (or by name) and writes updated files.
+    /// </summary>
     [McpServerTool, Description("Rename a symbol across the solution using Roslyn")]
     public static async Task<string> RenameSymbol(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

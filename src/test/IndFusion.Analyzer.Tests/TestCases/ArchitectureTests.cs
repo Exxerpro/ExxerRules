@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class ArchitectureTests
 {
-	/// <summary>
-	/// Tests that using repository pattern does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingRepositoryPattern()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using repository pattern does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingRepositoryPattern()
+    {
+        const string testCode = @"
 using System;
 using System.Collections.Generic;
 
@@ -58,17 +58,17 @@ namespace TestProject
 	public class User { }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that direct DbContext usage reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingDbContextDirectly()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that direct DbContext usage reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingDbContextDirectly()
+    {
+        const string testCode = @"
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
@@ -97,18 +97,18 @@ namespace TestProject
 	public class User { public int Id { get; set; } }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseRepositoryPattern).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseRepositoryPattern).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that domain referencing infrastructure reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DomainReferencesInfrastructure()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that domain referencing infrastructure reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DomainReferencesInfrastructure()
+    {
+        const string testCode = @"
 using Microsoft.EntityFrameworkCore;
 
 namespace TestProject.Domain
@@ -131,18 +131,18 @@ namespace TestProject.Domain
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that domain not referencing infrastructure does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_DomainDoesNotReferenceInfrastructure()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that domain not referencing infrastructure does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_DomainDoesNotReferenceInfrastructure()
+    {
+        const string testCode = @"
 namespace TestProject.Domain
 {
 	public class User
@@ -158,17 +158,17 @@ namespace TestProject.Domain
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests edge case: Domain namespace with different patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DomainNamespaceWithDifferentPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Domain namespace with different patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DomainNamespaceWithDifferentPatterns()
+    {
+        const string testCode = @"
 using Microsoft.EntityFrameworkCore;
 
 namespace MyApp.Domain.Services
@@ -182,18 +182,18 @@ namespace MyApp.Domain.Services
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Infrastructure namespace with different patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_InfrastructureNamespaceWithDifferentPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Infrastructure namespace with different patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_InfrastructureNamespaceWithDifferentPatterns()
+    {
+        const string testCode = @"
 using System.Data.SqlClient;
 
 namespace MyApp.Domain.Core
@@ -207,18 +207,18 @@ namespace MyApp.Domain.Core
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Repository class without interface.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_RepositoryClassWithoutInterface()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Repository class without interface.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_RepositoryClassWithoutInterface()
+    {
+        const string testCode = @"
 using Microsoft.EntityFrameworkCore;
 
 namespace TestProject
@@ -234,18 +234,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseRepositoryPattern).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseRepositoryPattern).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Repository class with interface.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_RepositoryClassWithInterface()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Repository class with interface.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_RepositoryClassWithInterface()
+    {
+        const string testCode = @"
 using Microsoft.EntityFrameworkCore;
 
 namespace TestProject
@@ -271,9 +271,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
-		// Should not report diagnostic for repository with interface
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer());
+        // Should not report diagnostic for repository with interface
+        diagnostics.Length.ShouldBe(0);
+    }
 }
 

@@ -3,12 +3,18 @@ using IndFusion.Mcp.Web.Services;
 
 namespace IndFusion.Mcp.Web.Tests.Services;
 
+/// <summary>
+/// Tests for DashboardService covering stats, activities, and health endpoints.
+/// </summary>
 public class DashboardServiceTests
 {
     private readonly IExxerFactoringService _mockExxerFactoringService;
     private readonly ILogger<DashboardService> _mockLogger;
     private readonly DashboardService _service;
 
+    /// <summary>
+    /// Sets up a DashboardService using substitutes for its dependencies.
+    /// </summary>
     public DashboardServiceTests()
     {
         _mockExxerFactoringService = Substitute.For<IExxerFactoringService>();
@@ -16,6 +22,9 @@ public class DashboardServiceTests
         _service = new DashboardService(_mockExxerFactoringService, _mockLogger);
     }
 
+    /// <summary>
+    /// Ensures GetDashboardStatsAsync returns consistent values based on ListAvailableToolsAsync.
+    /// </summary>
     [Fact]
     public async Task GetDashboardStatsAsync_ShouldReturnValidStats()
     {
@@ -35,6 +44,9 @@ public class DashboardServiceTests
         stats.SuccessRate.ShouldBe(95); // Current implementation returns 95
     }
 
+    /// <summary>
+    /// Validates that exceptions from dependencies result in default stats and are logged.
+    /// </summary>
     [Fact]
     public async Task GetDashboardStatsAsync_ShouldHandleException_AndReturnDefaultStats()
     {
@@ -63,6 +75,9 @@ public class DashboardServiceTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
+    /// <summary>
+    /// Verifies mock recent activities are returned with expected structure and ranges.
+    /// </summary>
     [Fact]
     public async Task GetRecentActivitiesAsync_ShouldReturnMockActivities()
     {
@@ -84,6 +99,9 @@ public class DashboardServiceTests
         firstActivity.Duration.ShouldBeGreaterThan(TimeSpan.Zero);
     }
 
+    /// <summary>
+    /// Confirms count parameter is accepted (current impl returns fixed data).
+    /// </summary>
     [Fact]
     public async Task GetRecentActivitiesAsync_ShouldRespectCountParameter()
     {
@@ -96,6 +114,9 @@ public class DashboardServiceTests
         activities.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Ensures health snapshot is healthy and includes expected components.
+    /// </summary>
     [Fact]
     public async Task GetSystemHealthAsync_ShouldReturnHealthyStatus()
     {
@@ -119,6 +140,9 @@ public class DashboardServiceTests
         health.Components.Values.ShouldAllBe(c => c.Status == "Healthy");
     }
 
+    /// <summary>
+    /// Ensures health snapshot component timestamps are recent.
+    /// </summary>
     [Fact]
     public async Task GetSystemHealthAsync_ShouldSetRecentLastCheckedTimes()
     {

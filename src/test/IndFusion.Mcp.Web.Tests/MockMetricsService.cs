@@ -4,10 +4,13 @@ using IndFusion.Mcp.Web.Services;
 namespace IndFusion.Mcp.Web.Tests;
 
 /// <summary>
-/// Mock metrics service for testing
+/// Mock implementation of IMetricsService returning predictable metrics for tests.
 /// </summary>
 public class MockMetricsService : IMetricsService
 {
+    /// <summary>
+    /// Returns a fixed MetricsData snapshot for assertions.
+    /// </summary>
     public Task<MetricsData> GetMetricsDataAsync()
     {
         return Task.FromResult(new MetricsData(
@@ -19,6 +22,9 @@ public class MockMetricsService : IMetricsService
         ));
     }
 
+    /// <summary>
+    /// Returns a small series of performance metrics independent of <paramref name="period"/>.
+    /// </summary>
     public Task<IEnumerable<PerformanceMetric>> GetPerformanceMetricsAsync(TimeSpan period)
     {
         var now = DateTime.Now;

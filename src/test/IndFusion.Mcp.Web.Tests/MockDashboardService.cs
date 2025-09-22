@@ -4,10 +4,13 @@ using IndFusion.Mcp.Web.Services;
 namespace IndFusion.Mcp.Web.Tests;
 
 /// <summary>
-/// Mock dashboard service for testing
+/// Mock implementation of IDashboardService returning deterministic data for tests.
 /// </summary>
 public class MockDashboardService : IDashboardService
 {
+    /// <summary>
+    /// Returns a fixed dashboard stats snapshot suitable for assertions.
+    /// </summary>
     public Task<DashboardStats> GetDashboardStatsAsync()
     {
         return Task.FromResult(new DashboardStats(
@@ -19,6 +22,9 @@ public class MockDashboardService : IDashboardService
         ));
     }
 
+    /// <summary>
+    /// Returns a bounded list of mock activities (latest first) honoring <paramref name="count"/>.
+    /// </summary>
     public Task<IEnumerable<ExxerFactoringActivity>> GetRecentActivitiesAsync(int count = 20)
     {
         var activities = new[]
@@ -50,6 +56,9 @@ public class MockDashboardService : IDashboardService
         return Task.FromResult<IEnumerable<ExxerFactoringActivity>>(activities.Take(count));
     }
 
+    /// <summary>
+    /// Returns a healthy system status with recent LastChecked timestamps.
+    /// </summary>
     public Task<SystemHealthStatus> GetSystemHealthAsync()
     {
         var components = new Dictionary<string, ComponentHealth>

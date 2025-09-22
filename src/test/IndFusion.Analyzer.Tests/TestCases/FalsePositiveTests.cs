@@ -16,13 +16,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class FalsePositiveTests
 {
-	/// <summary>
-	/// Tests that rethrow statements in catch blocks do not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_RethrowingInCatchBlock()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that rethrow statements in catch blocks do not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_RethrowingInCatchBlock()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -44,17 +44,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that exception filters do not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingExceptionFilters()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that exception filters do not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingExceptionFilters()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -76,17 +76,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that methods returning Task of Result do not report diagnostic for throws.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_MethodReturnsTaskResult()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that methods returning Task of Result do not report diagnostic for throws.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_MethodReturnsTaskResult()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 using IndFusion.Analyzers.Operations;
@@ -109,18 +109,18 @@ namespace TestProject
 	public class User { public int Id { get; set; } }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
-		// This might currently fail - we need to fix the analyzer
-		// diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
+        // This might currently fail - we need to fix the analyzer
+        // diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that test methods that intentionally throw exceptions do not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_InTestMethod()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that test methods that intentionally throw exceptions do not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_InTestMethod()
+    {
+        const string testCode = @"
 using System;
 using Xunit;
 
@@ -140,17 +140,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that exception helper methods do not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingExceptionHelperMethods()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that exception helper methods do not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingExceptionHelperMethods()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -179,17 +179,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that XUnit v3 analyzer does not report diagnostic for valid XUnit usage.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingValidXUnit()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that XUnit v3 analyzer does not report diagnostic for valid XUnit usage.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingValidXUnit()
+    {
+        const string testCode = @"
 using Xunit;
 
 namespace TestProject
@@ -204,17 +204,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseXUnitV3Analyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseXUnitV3Analyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that magic numbers analyzer does not report diagnostic for const field assignments.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_AssigningToConstFields()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that magic numbers analyzer does not report diagnostic for const field assignments.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_AssigningToConstFields()
+    {
+        const string testCode = @"
 namespace TestProject
 {
 	public class Constants
@@ -225,17 +225,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that magic numbers analyzer does not report diagnostic for array initializers.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingArrayInitializers()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that magic numbers analyzer does not report diagnostic for array initializers.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingArrayInitializers()
+    {
+        const string testCode = @"
 namespace TestProject
 {
 	public class ArrayTests
@@ -248,7 +248,7 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 }

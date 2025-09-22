@@ -26,9 +26,9 @@ dotnet nuget download <PackageId> --version <Version> --source https://api.nuget
 ## 4) Restore and build using ONLY the local feed
 ```powershell
 cd src
-# Uses src/NuGet.config (offline source only). For fallback to nuget.org use `NuGet.online.config`.
-dotnet restore IndFusion.sln --configfile NuGet.config
-dotnet build   IndFusion.sln --configfile NuGet.config -c Release
+# Uses src/NuGet.config (offline source only). For normal builds, use default sources with standard commands.
+dotnet restore IndFusion.sln
+dotnet build   IndFusion.sln -c Release
 ```
 
 ## Notes

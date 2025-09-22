@@ -4,21 +4,29 @@ using System.Diagnostics;
 
 namespace IndFusion.Mcp.Web.Services;
 
+/// <summary>
+/// Provides metrics and performance data for display in the web UI.
+/// </summary>
 public class MetricsService : IMetricsService
 {
     private readonly ILogger<MetricsService> _logger;
 
+    /// <summary>
+    /// Creates a new <see cref="MetricsService"/>.
+    /// </summary>
+    /// <param name="logger">Logger instance.</param>
     public MetricsService(ILogger<MetricsService> logger)
     {
         _logger = logger;
     }
 
+    /// <inheritdoc />
     public async Task<MetricsData> GetMetricsDataAsync()
     {
         await Task.Delay(10);
-        
+
         var process = Process.GetCurrentProcess();
-        
+
         return new MetricsData(
             RequestsPerMinute: Random.Shared.Next(10, 100),
             AverageResponseTime: Random.Shared.NextDouble() * 500 + 100,
@@ -28,13 +36,14 @@ public class MetricsService : IMetricsService
         );
     }
 
+    /// <inheritdoc />
     public async Task<IEnumerable<PerformanceMetric>> GetPerformanceMetricsAsync(TimeSpan period)
     {
         await Task.Delay(10);
-        
+
         var now = DateTime.UtcNow;
         var metrics = new List<PerformanceMetric>();
-        
+
         for (int i = 0; i < 20; i++)
         {
             var timestamp = now.AddMinutes(-i * 5);
@@ -42,7 +51,7 @@ public class MetricsService : IMetricsService
             metrics.Add(new PerformanceMetric(timestamp, "RequestCount", Random.Shared.Next(5, 50), "req/min"));
             metrics.Add(new PerformanceMetric(timestamp, "MemoryUsage", Random.Shared.NextDouble() * 100, "MB"));
         }
-        
+
         return metrics.OrderBy(m => m.Timestamp);
     }
 }

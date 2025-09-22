@@ -25,7 +25,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for null using directive
         var analyzer = new DomainShouldNotReferenceInfrastructureAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -35,7 +35,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for empty namespace
         var analyzer = new DomainShouldNotReferenceInfrastructureAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -45,7 +45,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for single character namespace
         var analyzer = new DomainShouldNotReferenceInfrastructureAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -55,7 +55,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for very long namespace
         var analyzer = new DomainShouldNotReferenceInfrastructureAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -65,7 +65,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for unicode namespace
         var analyzer = new DomainShouldNotReferenceInfrastructureAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -75,7 +75,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for special characters in namespace
         var analyzer = new DomainShouldNotReferenceInfrastructureAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -85,7 +85,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for empty class name
         var analyzer = new UseRepositoryPatternAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -95,7 +95,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for single character class name
         var analyzer = new UseRepositoryPatternAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -105,7 +105,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for very long class name
         var analyzer = new UseRepositoryPatternAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -115,7 +115,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for unicode class name
         var analyzer = new UseRepositoryPatternAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -125,7 +125,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for empty method name
         var analyzer = new AsyncMethodsShouldAcceptCancellationTokenAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -135,7 +135,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for single character method name
         var analyzer = new AsyncMethodsShouldAcceptCancellationTokenAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -145,7 +145,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for very long method name
         var analyzer = new AsyncMethodsShouldAcceptCancellationTokenAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -155,7 +155,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for empty parameter name
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -165,7 +165,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for single character parameter name
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -175,7 +175,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for very long parameter name
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -185,7 +185,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for unicode parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -195,7 +195,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for special characters in parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -205,7 +205,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for generic parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -215,7 +215,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for nested generic parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -225,7 +225,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for complex generic parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -235,7 +235,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for nullable parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -245,7 +245,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for array parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -255,7 +255,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for multi-dimensional array parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -265,7 +265,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for jagged array parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -275,7 +275,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for complex array parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -285,7 +285,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for ref parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -295,7 +295,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for out parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -305,7 +305,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for in parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -315,7 +315,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for params parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -325,7 +325,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for optional parameter type
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -335,7 +335,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for multiple parameters
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -345,7 +345,7 @@ public class AnalyzerEdgeCaseTests
     {
         // Test edge case for many parameters (performance test)
         var analyzer = new ValidateNullParametersAnalyzer();
-        
+
         // Should not throw exception during initialization
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
@@ -366,7 +366,7 @@ public class AnalyzerEdgeCaseTests
         {
             analyzer.ShouldNotBeNull();
             analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0);
-            
+
             foreach (var diagnostic in analyzer.SupportedDiagnostics)
             {
                 diagnostic.ShouldNotBeNull();
@@ -393,7 +393,7 @@ public class AnalyzerEdgeCaseTests
         foreach (var analyzer in analyzers)
         {
             // Should not throw exception when accessing properties
-            Should.NotThrow(() => 
+            Should.NotThrow(() =>
             {
                 var diagnostics = analyzer.SupportedDiagnostics;
                 diagnostics.Length.ShouldBeGreaterThan(0);
@@ -423,7 +423,7 @@ public class AnalyzerEdgeCaseTests
                 diagnostic.Id.ShouldNotContain(" ");
                 diagnostic.Id.ShouldNotContain("\t");
                 diagnostic.Id.ShouldNotContain("\n");
-                
+
                 // Check for unique IDs
                 diagnosticIds.ShouldNotContain(diagnostic.Id);
                 diagnosticIds.Add(diagnostic.Id);

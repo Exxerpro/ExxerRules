@@ -2,8 +2,14 @@ using IndFusion.Mcp.Web.Models;
 
 namespace IndFusion.Mcp.Web.Tests.Services;
 
+/// <summary>
+/// Helper for building sample dashboard data with sensible defaults for tests.
+/// </summary>
 public static class DashboardTestDataBuilder
 {
+    /// <summary>
+    /// Creates a DashboardStats record populated with provided or default values.
+    /// </summary>
     public static DashboardStats CreateDashboardStats(
         int totalExxerFactorings = 100,
         int activeSolutions = 5,
@@ -20,6 +26,9 @@ public static class DashboardTestDataBuilder
         );
     }
 
+    /// <summary>
+    /// Creates a sample refactoring activity for assertions.
+    /// </summary>
     public static ExxerFactoringActivity CreateActivity(
         string toolName = "test-tool",
         string projectName = "TestProject",
@@ -38,6 +47,9 @@ public static class DashboardTestDataBuilder
         );
     }
 
+    /// <summary>
+    /// Creates a SystemHealthStatus snapshot for tests; includes a default component.
+    /// </summary>
     public static SystemHealthStatus CreateHealthStatus(
         bool isHealthy = true,
         string status = "All systems operational",

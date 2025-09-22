@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class CodeFormattingTests
 {
-	/// <summary>
-	/// Tests that project formatting analyzer provides hidden diagnostic for triggering format action.
-	/// </summary>
-	[Fact]
-	public void Should_ReportHiddenDiagnostic_When_ProjectFormattingAnalyzer()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that project formatting analyzer provides hidden diagnostic for triggering format action.
+    /// </summary>
+    [Fact]
+    public void Should_ReportHiddenDiagnostic_When_ProjectFormattingAnalyzer()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -34,20 +34,20 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ProjectFormattingAnalyzer(), includeHidden: true);
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ProjectFormattingAnalyzer(), includeHidden: true);
 
-		diagnostics.Length.ShouldBe(1);
-		diagnostics[0].Id.ShouldBe(DiagnosticIds.ProjectFormatting);
-		diagnostics[0].Severity.ShouldBe(DiagnosticSeverity.Hidden);
-	}
+        diagnostics.Length.ShouldBe(1);
+        diagnostics[0].Id.ShouldBe(DiagnosticIds.ProjectFormatting);
+        diagnostics[0].Severity.ShouldBe(DiagnosticSeverity.Hidden);
+    }
 
-	/// <summary>
-	/// Tests that code formatting analyzer detects formatting issues.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_FormattingIssuesDetected()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that code formatting analyzer detects formatting issues.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_FormattingIssuesDetected()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -62,19 +62,19 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new CodeFormattingAnalyzer());
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new CodeFormattingAnalyzer());
 
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.CodeFormattingIssue).ShouldBeTrue();
-	}
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.CodeFormattingIssue).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that well-formatted code does not report formatting issues.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_CodeIsWellFormatted()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that well-formatted code does not report formatting issues.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_CodeIsWellFormatted()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -98,11 +98,11 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new CodeFormattingAnalyzer());
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new CodeFormattingAnalyzer());
 
-		// Should have fewer formatting issues (well-formatted code)
-		var formattingIssues = diagnostics.Where(d => d.Id == DiagnosticIds.CodeFormattingIssue).ToArray();
-		formattingIssues.Length.ShouldBeLessThanOrEqualTo(5); // Allow more tolerance for detection differences
-	}
+        // Should have fewer formatting issues (well-formatted code)
+        var formattingIssues = diagnostics.Where(d => d.Id == DiagnosticIds.CodeFormattingIssue).ToArray();
+        formattingIssues.Length.ShouldBeLessThanOrEqualTo(5); // Allow more tolerance for detection differences
+    }
 }
 

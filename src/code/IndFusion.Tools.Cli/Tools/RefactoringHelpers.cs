@@ -2,16 +2,26 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace IndFusion.Tools.Mcp.App.Tools;
 
+/// <summary>
+/// Shared helpers for file/solution operations, Roslyn workspace access, and simple caches
+/// used by refactoring tools. Public members are documented to support warnings-as-errors.
+/// </summary>
 public static class ExxerFactoringHelpers
 {
     // MemoryCache is thread-safe and Solution objects from Roslyn are immutable.
     // This allows us to store and access Solution instances across threads
     // without additional locking or synchronization.
+    /// <summary>Cache of Roslyn Solution instances keyed by solution path.</summary>
     public static MemoryCache SolutionCache = new(new MemoryCacheOptions());
 
+    /// <summary>Cache of parsed C# syntax trees keyed by file path.</summary>
     public static MemoryCache SyntaxTreeCache = new(new MemoryCacheOptions());
+    /// <summary>Cache of semantic models keyed by file path.</summary>
     public static MemoryCache ModelCache = new(new MemoryCacheOptions());
 
+    /// <summary>
+    /// Clears all internal caches (solution, syntax tree, and semantic model).
+    /// </summary>
     public static void ClearAllCaches()
     {
         SolutionCache.Dispose();
@@ -28,6 +38,9 @@ public static class ExxerFactoringHelpers
     private static bool _msbuildRegistered;
     private static readonly object _msbuildLock = new();
 
+    /// <summary>
+    /// Shared AdhocWorkspace instance for formatting and transformations.
+    /// </summary>
     public static AdhocWorkspace SharedWorkspace => _workspace.Value;
 
     private static void EnsureMsBuildRegistered()
@@ -41,6 +54,9 @@ public static class ExxerFactoringHelpers
         }
     }
 
+    /// <summary>
+    /// Creates an MSBuildWorkspace and wires diagnostics to stderr.
+    /// </summary>
     public static MSBuildWorkspace CreateWorkspace()
     {
         EnsureMsBuildRegistered();
@@ -51,6 +67,10 @@ public static class ExxerFactoringHelpers
         return workspace;
     }
 
+    /// <summary>
+    /// Returns a cached solution if available; otherwise opens, caches, and returns it.
+    /// Also normalizes current directory to the solution folder.
+    /// </summary>
     public static async Task<Solution> GetOrLoadSolution(
         string solutionPath,
         CancellationToken cancellationToken = default)
@@ -90,6 +110,9 @@ public static class ExxerFactoringHelpers
             .FirstOrDefault(d => Path.GetFullPath(d.FilePath ?? "") == normalizedPath);
     }
 
+    /// <summary>
+    /// Parses a range in the form "startLine:startColumn-endLine:endColumn".
+    /// </summary>
     public static bool TryParseRange(string range, out int startLine, out int startColumn, out int endLine, out int endColumn)
     {
         startLine = startColumn = endLine = endColumn = 0;
@@ -104,6 +127,9 @@ public static class ExxerFactoringHelpers
                int.TryParse(endParts[1], out endColumn);
     }
 
+    /// <summary>
+    /// Validates that a parsed range is positive, ordered, and within file bounds.
+    /// </summary>
     public static bool ValidateRange(
         SourceText text,
         int startLine,
@@ -196,6 +222,10 @@ public static class ExxerFactoringHelpers
         return null;
     }
 
+    /// <summary>
+    /// Adds a document to a project if a document for the file path is not already present.
+    /// Updates the solution cache when applicable.
+    /// </summary>
     public static void AddDocumentToProject(Project project, string filePath)
     {
         if (project.Documents.Any(d =>

@@ -1,5 +1,8 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
+/// <summary>
+/// Tool to change a method parameter's type to a specified interface, either via solution context or single-file edit.
+/// </summary>
 [McpServerToolType]
 public static class UseInterfaceTool
 {
@@ -36,6 +39,14 @@ public static class UseInterfaceTool
             $"Successfully changed parameter '{parameterName}' to interface '{interfaceName}' in method '{methodName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Applies the interface change in a single source text buffer.
+    /// </summary>
+    /// <param name="sourceText">C# source text.</param>
+    /// <param name="methodName">Target method name.</param>
+    /// <param name="parameterName">Parameter to change.</param>
+    /// <param name="interfaceName">Interface type name to use.</param>
+    /// <returns>Updated source text.</returns>
     public static string UseInterfaceInSource(string sourceText, string methodName, string parameterName, string interfaceName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -57,6 +68,15 @@ public static class UseInterfaceTool
         return formatted.ToFullString();
     }
 
+    /// <summary>
+    /// Executes the interface change for the provided solution/file context.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the .sln; if empty, operates in single-file mode.</param>
+    /// <param name="filePath">Path to the C# file.</param>
+    /// <param name="methodName">Target method name.</param>
+    /// <param name="parameterName">Parameter to change.</param>
+    /// <param name="interfaceName">Interface type name.</param>
+    /// <returns>Status message.</returns>
     [McpServerTool, Description("Change a method parameter type to an interface (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> UseInterface(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

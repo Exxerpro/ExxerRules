@@ -43,10 +43,10 @@ public class TestClass
         var document = CreateDocument(sourceCode);
 
         // Act
-        var formattedDocument = await RoslynFormattingService.FormatDocumentAsync(document);
+        var formattedDocument = await RoslynFormattingService.FormatDocumentAsync(document, TestContext.Current.CancellationToken);
 
         // Assert
-        var formattedSource = await formattedDocument.GetTextAsync();
+        var formattedSource = await formattedDocument.GetTextAsync(TestContext.Current.CancellationToken);
         formattedSource.ToString().ShouldBe(expectedFormattedCode);
     }
 
@@ -68,10 +68,10 @@ public class TestClass
         var document = CreateDocument(sourceCode);
 
         // Act
-        var formattedDocument = await RoslynFormattingService.FormatDocumentAsync(document);
+        var formattedDocument = await RoslynFormattingService.FormatDocumentAsync(document, TestContext.Current.CancellationToken);
 
         // Assert
-        var formattedSource = await formattedDocument.GetTextAsync();
+        var formattedSource = await formattedDocument.GetTextAsync(TestContext.Current.CancellationToken);
         formattedSource.ToString().ShouldBe(sourceCode);
     }
 
@@ -93,10 +93,10 @@ public class TestClass
         var document = CreateDocument(sourceCode);
 
         // Act
-        var formattedDocument = await RoslynFormattingService.FormatWhitespaceAsync(document);
+        var formattedDocument = await RoslynFormattingService.FormatWhitespaceAsync(document, TestContext.Current.CancellationToken);
 
         // Assert
-        var formattedSource = await formattedDocument.GetTextAsync();
+        var formattedSource = await formattedDocument.GetTextAsync(TestContext.Current.CancellationToken);
         // Should add spaces around operators
         formattedSource.ToString().ShouldContain("x = 1");
         formattedSource.ToString().ShouldContain("y = 2");
@@ -123,10 +123,10 @@ public class TestClass
         var dotNetOptions = RoslynFormattingService.CreateDotNetFormattingOptions();
 
         // Act
-        var formattedDocument = await RoslynFormattingService.FormatDocumentAsync(document, dotNetOptions);
+        var formattedDocument = await RoslynFormattingService.FormatDocumentAsync(document, dotNetOptions, TestContext.Current.CancellationToken);
 
         // Assert
-        var formattedSource = await formattedDocument.GetTextAsync();
+        var formattedSource = await formattedDocument.GetTextAsync(TestContext.Current.CancellationToken);
         // Should add space after if keyword
         formattedSource.ToString().ShouldContain("if (true)");
     }
@@ -151,14 +151,14 @@ public class TestClass
         var document = solution.GetDocument(document1Id)!;
 
         // Act
-        var formattedSolution = await RoslynFormattingService.FormatProjectAsync(solution, projectId);
+        var formattedSolution = await RoslynFormattingService.FormatProjectAsync(solution, projectId, TestContext.Current.CancellationToken);
 
         // Assert
         var formattedDoc1 = formattedSolution.GetDocument(document1Id);
         var formattedDoc2 = formattedSolution.GetDocument(document2Id);
 
-        var formattedSource1 = await formattedDoc1.GetTextAsync();
-        var formattedSource2 = await formattedDoc2.GetTextAsync();
+        var formattedSource1 = await formattedDoc1.GetTextAsync(TestContext.Current.CancellationToken);
+        var formattedSource2 = await formattedDoc2.GetTextAsync(TestContext.Current.CancellationToken);
 
         // Should format both documents
         formattedSource1?.ToString().ShouldContain("var x = 1");
@@ -185,14 +185,14 @@ public class TestClass
             .AddDocument(document2Id, "Test2.cs", SourceText.From(sourceCode2));
 
         // Act
-        var formattedSolution = await RoslynFormattingService.FormatSolutionAsync(solution);
+        var formattedSolution = await RoslynFormattingService.FormatSolutionAsync(solution, TestContext.Current.CancellationToken);
 
         // Assert
         var formattedDoc1 = formattedSolution.GetDocument(document1Id);
         var formattedDoc2 = formattedSolution.GetDocument(document2Id);
 
-        var formattedSource1 = formattedDoc1 is not null ? await formattedDoc1.GetTextAsync() : null;
-        var formattedSource2 = formattedDoc2 is not null ? await formattedDoc2.GetTextAsync() : null;
+        var formattedSource1 = formattedDoc1 is not null ? await formattedDoc1.GetTextAsync(TestContext.Current.CancellationToken) : null;
+        var formattedSource2 = formattedDoc2 is not null ? await formattedDoc2.GetTextAsync(TestContext.Current.CancellationToken) : null;
         if (formattedSource1 is not null)
         {
             formattedSource1.ToString().ShouldContain("var x = 1");
@@ -246,12 +246,14 @@ public class TestClass
         cancellationTokenSource.Cancel();
 
         // Act
+        #pragma warning disable xUnit1051 // Intentionally using a custom CancellationToken to validate cancellation behavior
         var formattedDocument = await RoslynFormattingService.FormatDocumentAsync(document, cancellationTokenSource.Token);
+        #pragma warning restore xUnit1051
 
         // Assert
         formattedDocument.ShouldNotBeNull();
         // Should return original document when cancelled
-        var formattedSource = await formattedDocument.GetTextAsync();
+        var formattedSource = await formattedDocument.GetTextAsync(TestContext.Current.CancellationToken);
         formattedSource.ToString().ShouldBe(sourceCode);
     }
 

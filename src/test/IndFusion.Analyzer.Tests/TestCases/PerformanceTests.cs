@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class PerformanceTests
 {
-	/// <summary>
-	/// Tests that using efficient LINQ does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingEfficientLinq()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using efficient LINQ does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingEfficientLinq()
+    {
+        const string testCode = @"
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -44,17 +44,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseEfficientLinqAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseEfficientLinqAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using inefficient LINQ reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingInefficientLinq()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using inefficient LINQ reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingInefficientLinq()
+    {
+        const string testCode = @"
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -79,9 +79,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseEfficientLinqAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseEfficientLinq).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseEfficientLinqAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseEfficientLinq).ShouldBeTrue();
+    }
 }
 

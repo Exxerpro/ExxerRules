@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class DocumentationTests
 {
-	/// <summary>
-	/// Tests that public members with XML documentation do not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_PublicMembersHaveXmlDocumentation()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that public members with XML documentation do not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_PublicMembersHaveXmlDocumentation()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -56,17 +56,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that public members without XML documentation report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_PublicMembersDoNotHaveXmlDocumentation()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that public members without XML documentation report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_PublicMembersDoNotHaveXmlDocumentation()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -87,18 +87,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.PublicMembersShouldHaveXmlDocumentation).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.PublicMembersShouldHaveXmlDocumentation).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different public member patterns without documentation.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DifferentPublicMemberPatternsWithoutDocumentation()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different public member patterns without documentation.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DifferentPublicMemberPatternsWithoutDocumentation()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -133,18 +133,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(10);
-		diagnostics.Any(d => d.Id == DiagnosticIds.PublicMembersShouldHaveXmlDocumentation).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(10);
+        diagnostics.Any(d => d.Id == DiagnosticIds.PublicMembersShouldHaveXmlDocumentation).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Public members with different documentation patterns.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_PublicMembersWithDifferentDocumentationPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Public members with different documentation patterns.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_PublicMembersWithDifferentDocumentationPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -215,9 +215,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
-		// Should not report diagnostic when documentation is present
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new PublicMembersShouldHaveXmlDocumentationAnalyzer());
+        // Should not report diagnostic when documentation is present
+        diagnostics.Length.ShouldBe(0);
+    }
 }
 

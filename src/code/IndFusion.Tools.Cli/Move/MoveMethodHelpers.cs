@@ -27,6 +27,12 @@ public static partial class MoveMethodAst
 
     // ===== LEGACY STRING-BASED METHODS (for backward compatibility) =====
 
+    /// <summary>
+    /// Moves a static method within a single source text buffer and returns updated source.
+    /// </summary>
+    /// <param name="sourceText">C# source text containing the method.</param>
+    /// <param name="methodName">Name of the static method to move.</param>
+    /// <param name="targetClass">Target class name to receive the method.</param>
     public static string MoveStaticMethodInSource(string sourceText, string methodName, string targetClass)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -39,6 +45,15 @@ public static partial class MoveMethodAst
         return formatted.ToFullString();
     }
 
+    /// <summary>
+    /// Moves an instance method within a single source text buffer and returns updated source.
+    /// </summary>
+    /// <param name="sourceText">C# source text containing the method.</param>
+    /// <param name="sourceClass">Declaring class of the method.</param>
+    /// <param name="methodName">Name of the instance method to move.</param>
+    /// <param name="targetClass">Target class name to receive the method.</param>
+    /// <param name="accessMemberName">Name of the generated accessor member.</param>
+    /// <param name="accessMemberType">Type of the generated accessor member.</param>
     public static string MoveInstanceMethodInSource(string sourceText, string sourceClass, string methodName, string targetClass, string accessMemberName, string accessMemberType)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
@@ -58,6 +73,15 @@ public static partial class MoveMethodAst
         return formatted.ToFullString();
     }
 
+    /// <summary>
+    /// Moves multiple instance methods within a single source, returning the final updated text.
+    /// </summary>
+    /// <param name="sourceText">C# source text containing the methods.</param>
+    /// <param name="sourceClass">Declaring class.</param>
+    /// <param name="methodNames">Array of method names to move.</param>
+    /// <param name="targetClass">Destination class.</param>
+    /// <param name="accessMemberName">Accessor member name.</param>
+    /// <param name="accessMemberType">Accessor member type.</param>
     public static string MoveMultipleInstanceMethodsInSource(string sourceText, string sourceClass, string[] methodNames, string targetClass, string accessMemberName, string accessMemberType)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

@@ -10,7 +10,7 @@
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <!-- Package Information -->
     <PackageId>IndFusion.Mcp.Core</PackageId>
-    <PackageVersion>1.0.0</PackageVersion>
+    <PackageVersion>1.0.0-rc.1</PackageVersion>
     <Authors>IndFusion</Authors>
     <Description>Core library for IndFusion MCP components</Description>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

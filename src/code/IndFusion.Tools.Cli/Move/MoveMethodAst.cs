@@ -1,29 +1,58 @@
 namespace IndFusion.Tools.Mcp.App.Move;
 
+/// <summary>
+/// Roslyn-based AST transformations to support moving methods between classes.
+/// This layer is pure (no I/O) and operates on syntax trees only.
+/// </summary>
 public static partial class MoveMethodAst
 {
     // ===== AST TRANSFORMATION LAYER =====
     // Pure syntax tree operations with no file I/O
 
+    /// <summary>
+    /// Result of transforming a static method move.
+    /// </summary>
     public class MoveStaticMethodResult
     {
+        /// <summary>Updated source root with a delegating stub left behind.</summary>
         public SyntaxNode NewSourceRoot { get; set; } = null!;
+        /// <summary>The transformed, moved method declaration.</summary>
         public MethodDeclarationSyntax MovedMethod { get; set; } = null!;
+        /// <summary>The delegating stub method that remains in the original class.</summary>
         public MethodDeclarationSyntax StubMethod { get; set; } = null!;
+        /// <summary>Namespace of the source class, if available.</summary>
         public string? Namespace { get; set; }
     }
 
+    /// <summary>
+    /// Result of transforming an instance method move.
+    /// </summary>
     public class MoveInstanceMethodResult
     {
+        /// <summary>Updated source root with stub and any adjusted members.</summary>
         public SyntaxNode NewSourceRoot { get; set; } = null!;
+        /// <summary>The transformed, moved method declaration.</summary>
         public MethodDeclarationSyntax MovedMethod { get; set; } = null!;
+        /// <summary>The delegating stub method that remains in the original class.</summary>
         public MethodDeclarationSyntax StubMethod { get; set; } = null!;
+        /// <summary>Member used to access original state (e.g., generated property), if any.</summary>
         public MemberDeclarationSyntax? AccessMember { get; set; }
+        /// <summary>Wrapper method in base when needed to preserve behavior.</summary>
         public MethodDeclarationSyntax? BaseWrapper { get; set; }
+        /// <summary>True when a 'this' parameter is required in the moved method.</summary>
         public bool NeedsThisParameter { get; set; }
+        /// <summary>Namespace of the source class, if available.</summary>
         public string? Namespace { get; set; }
     }
 
+    /// <summary>
+    /// Transforms a static method so it can be moved to <paramref name="targetClass"/>,
+    /// producing a delegating stub in the original class and returning both declarations.
+    /// </summary>
+    /// <param name="sourceRoot">Source syntax root containing the method.</param>
+    /// <param name="methodName">Name of the static method to move.</param>
+    /// <param name="targetClass">Target class name where the method will be moved.</param>
+    /// <returns>Result containing updated roots and method declarations.</returns>
     public static MoveStaticMethodResult MoveStaticMethodAst(
         SyntaxNode sourceRoot,
         string methodName,
@@ -249,6 +278,19 @@ public static partial class MoveMethodAst
         return newRoot;
     }
 
+    /// <summary>
+    /// Transforms an instance method so it can be moved from <paramref name="sourceClass"/>
+    /// to <paramref name="targetClass"/>, generating a delegating stub and access member
+    /// when necessary to preserve behavior.
+    /// </summary>
+    /// <param name="sourceRoot">Source syntax root containing the class.</param>
+    /// <param name="sourceClass">Fully qualified name of the source class.</param>
+    /// <param name="methodName">Method name to move.</param>
+    /// <param name="targetClass">Target class name.</param>
+    /// <param name="accessMemberName">Generated member name to access original instance state.</param>
+    /// <param name="accessMemberType">Type of the generated access member.</param>
+    /// <param name="parameterInjections">Optional parameter names to inject into the moved method.</param>
+    /// <returns>Result containing the transformed method, stub, and updated source root.</returns>
     public static MoveInstanceMethodResult MoveInstanceMethodAst(
         SyntaxNode sourceRoot,
         string sourceClass,
@@ -746,6 +788,16 @@ public static partial class MoveMethodAst
         return fieldIndex >= 0 ? fieldIndex + 1 : 0;
     }
 
+    /// <summary>
+    /// Adds the provided <paramref name="method"/> to the <paramref name="targetClass"/> within
+    /// the <paramref name="targetRoot"/>, creating the class and/or namespace if necessary.
+    /// Handles removal of 'override' when materializing a moved method as a standalone member.
+    /// </summary>
+    /// <param name="targetRoot">Target syntax root (compilation unit for the destination file).</param>
+    /// <param name="targetClass">Name of the target class to receive the method.</param>
+    /// <param name="method">Method declaration to insert.</param>
+    /// <param name="namespaceName">Optional namespace to create if the file has no namespace.</param>
+    /// <returns>Updated target syntax root with the method added.</returns>
     public static SyntaxNode AddMethodToTargetClass(
         SyntaxNode targetRoot,
         string targetClass,
@@ -803,6 +855,14 @@ public static partial class MoveMethodAst
         }
     }
 
+    /// <summary>
+    /// Copies missing using directives from the source compilation unit to the target,
+    /// avoiding duplicates and skipping the file-scoped namespace when specified.
+    /// </summary>
+    /// <param name="sourceRoot">Source compilation unit.</param>
+    /// <param name="targetRoot">Target compilation unit to augment.</param>
+    /// <param name="namespaceName">Optional namespace to exclude from usings.</param>
+    /// <returns>Updated target syntax root with required using directives.</returns>
     public static SyntaxNode PropagateUsings(
         SyntaxNode sourceRoot,
         SyntaxNode targetRoot,

@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class LoggingTests
 {
-	/// <summary>
-	/// Tests that using structured logging does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingStructuredLogging()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using structured logging does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingStructuredLogging()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -41,17 +41,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using string concatenation reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingStringConcatenation()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using string concatenation reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingStringConcatenation()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -72,18 +72,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that not using Console.WriteLine does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_NotUsingConsoleWriteLine()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that not using Console.WriteLine does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_NotUsingConsoleWriteLine()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -104,17 +104,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using Console.WriteLine reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingConsoleWriteLine()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using Console.WriteLine reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingConsoleWriteLine()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -128,18 +128,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseConsoleWriteLine).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseConsoleWriteLine).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Debug test to understand syntax structure.
-	/// </summary>
-	[Fact]
-	public void Debug_StringConcatenationSyntax()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Debug test to understand syntax structure.
+    /// </summary>
+    [Fact]
+    public void Debug_StringConcatenationSyntax()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -160,42 +160,42 @@ namespace TestProject
 	}
 }";
 
-		// Let's analyze the syntax tree manually
-		var tree = Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree.ParseText(testCode);
-		var root = tree.GetRoot();
+        // Let's analyze the syntax tree manually
+        var tree = Microsoft.CodeAnalysis.CSharp.CSharpSyntaxTree.ParseText(testCode, cancellationToken: TestContext.Current.CancellationToken);
+        var root = tree.GetRoot(TestContext.Current.CancellationToken);
 
-		// Find all invocation expressions
-		var invocations = root.DescendantNodes().OfType<Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax>();
+        // Find all invocation expressions
+        var invocations = root.DescendantNodes().OfType<Microsoft.CodeAnalysis.CSharp.Syntax.InvocationExpressionSyntax>();
 
-		foreach (var invocation in invocations)
-		{
-			if (invocation.Expression is Microsoft.CodeAnalysis.CSharp.Syntax.MemberAccessExpressionSyntax memberAccess)
-			{
-				if (memberAccess.Name.Identifier.ValueText == "LogInformation")
-				{
-					var arguments = invocation.ArgumentList.Arguments;
-					if (arguments.Count > 0)
-					{
-						var firstArg = arguments[0].Expression;
-						// This will help us understand the exact structure
-						System.Diagnostics.Debug.WriteLine($"First argument type: {firstArg.GetType().Name}");
-						System.Diagnostics.Debug.WriteLine($"First argument: {firstArg}");
-					}
-				}
-			}
-		}
+        foreach (var invocation in invocations)
+        {
+            if (invocation.Expression is Microsoft.CodeAnalysis.CSharp.Syntax.MemberAccessExpressionSyntax memberAccess)
+            {
+                if (memberAccess.Name.Identifier.ValueText == "LogInformation")
+                {
+                    var arguments = invocation.ArgumentList.Arguments;
+                    if (arguments.Count > 0)
+                    {
+                        var firstArg = arguments[0].Expression;
+                        // This will help us understand the exact structure
+                        System.Diagnostics.Debug.WriteLine($"First argument type: {firstArg.GetType().Name}");
+                        System.Diagnostics.Debug.WriteLine($"First argument: {firstArg}");
+                    }
+                }
+            }
+        }
 
-		// This test should always pass, it's just for debugging
-		true.ShouldBeTrue();
-	}
+        // This test should always pass, it's just for debugging
+        true.ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different string concatenation patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DifferentStringConcatenationPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different string concatenation patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DifferentStringConcatenationPatterns()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -218,18 +218,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Console.WriteLine with different patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_ConsoleWriteLineWithDifferentPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Console.WriteLine with different patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_ConsoleWriteLineWithDifferentPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -245,9 +245,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
-		diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseConsoleWriteLine).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
+        diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseConsoleWriteLine).ShouldBeTrue();
+    }
 }
 

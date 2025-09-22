@@ -33,7 +33,7 @@ public static class RoslynFormattingService
 
             // Apply formatting with default options
             var formattedRoot = Formatter.Format(root, document.Project.Solution.Workspace, cancellationToken: cancellationToken);
-            
+
             // Return the document with formatted syntax
             return document.WithSyntaxRoot(formattedRoot);
         }
@@ -64,7 +64,7 @@ public static class RoslynFormattingService
 
             // Apply formatting with custom options
             var formattedRoot = Formatter.Format(root, document.Project.Solution.Workspace, formattingOptions, cancellationToken: cancellationToken);
-            
+
             // Return the document with formatted syntax
             return document.WithSyntaxRoot(formattedRoot);
         }
@@ -95,10 +95,10 @@ public static class RoslynFormattingService
             // Create formatting options that only affect whitespace
             var workspace = document.Project.Solution.Workspace;
             var options = document.Project.Solution.Workspace.Options;
-            
+
             // Apply whitespace-only formatting
             var formattedRoot = Formatter.Format(root, workspace, options, cancellationToken: cancellationToken);
-            
+
             return document.WithSyntaxRoot(formattedRoot);
         }
         catch (Exception ex)

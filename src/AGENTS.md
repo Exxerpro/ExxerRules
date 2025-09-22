@@ -7,10 +7,10 @@
 - Central versions in `Directory.Packages.props`; common build in `Directory.Build.props`; SDK pinned via `global.json` (net10 preview).
 
 ## Build, Test, and Development Commands
-- Restore (fallback online): `dotnet restore IndFusion.sln --configfile NuGet.online.config`
-- Build (Debug): `dotnet build IndFusion.sln -c Debug --configfile NuGet.online.config`
-- Test: `dotnet test IndFusion.sln -c Debug --configfile NuGet.online.config`
-- Strict offline: populate with `pwsh VS/fetch-packages.ps1 -SkipDownloadIfExists`, then use `NuGet.config`.
+- Restore: `dotnet restore IndFusion.sln`
+- Build (Debug): `dotnet build IndFusion.sln -c Debug`
+- Test: `dotnet test IndFusion.sln -c Debug`
+- Strict offline (optional): populate with `pwsh VS/fetch-packages.ps1 -SkipDownloadIfExists`, then use repo-local `NuGet.config` if needed.
 - Run web app: `dotnet run --project code/IndFusion.Mcp.Web`
 - Run CLI: `dotnet run --project code/IndFusion.Tools.Cli`
 
@@ -29,6 +29,6 @@
 - Commits: imperative, concise (≤72 chars), describe what/why (e.g., "Align namespaces to IndFusion.*").
 - PRs: clear description, linked issues, and tests for new behavior; include screenshots for UI.
 
-## Security & Configuration Tips
-- NuGet: `NuGet.online.config` (fallback to nuget.org) or strict `NuGet.config` (offline only). See `OFFLINE-NUGET.md`.
+- ## Security & Configuration Tips
+- NuGet: use default global sources. For strict offline, see `OFFLINE-NUGET.md`.
 - SourceLink is enabled; do not commit secrets or machine‑specific paths.

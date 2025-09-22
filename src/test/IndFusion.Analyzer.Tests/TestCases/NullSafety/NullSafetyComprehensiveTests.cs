@@ -14,15 +14,15 @@ namespace IndFusion.Analyzer.Tests.TestCases.NullSafety;
 /// </summary>
 public class NullSafetyComprehensiveTests
 {
-	#region ArgumentNullException.ThrowIfNull Tests
+    #region ArgumentNullException.ThrowIfNull Tests
 
-	/// <summary>
-	/// Tests ArgumentNullException.ThrowIfNull with different parameter names.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateArgumentNullExceptionThrowIfNull_DifferentParameterNames()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests ArgumentNullException.ThrowIfNull with different parameter names.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateArgumentNullExceptionThrowIfNull_DifferentParameterNames()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -42,17 +42,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests ArgumentNullException.ThrowIfNull with complex expressions.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateArgumentNullExceptionThrowIfNull_ComplexExpressions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests ArgumentNullException.ThrowIfNull with complex expressions.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateArgumentNullExceptionThrowIfNull_ComplexExpressions()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -71,21 +71,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region If Statement Validation Tests
+    #region If Statement Validation Tests
 
-	/// <summary>
-	/// Tests if statement validation with different null check patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateIfStatementNullChecks_DifferentPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests if statement validation with different null check patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateIfStatementNullChecks_DifferentPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -110,17 +110,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests if statement validation with block statements.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateIfStatementNullChecks_BlockStatements()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests if statement validation with block statements.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateIfStatementNullChecks_BlockStatements()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -145,17 +145,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests if statement validation with different exception types.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateIfStatementNullChecks_DifferentExceptionTypes()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests if statement validation with different exception types.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateIfStatementNullChecks_DifferentExceptionTypes()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -176,21 +176,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Result Pattern Validation Tests
+    #region Result Pattern Validation Tests
 
-	/// <summary>
-	/// Tests Result.WithFailure validation pattern.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateResultWithFailurePattern()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests Result.WithFailure validation pattern.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateResultWithFailurePattern()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -213,17 +213,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests Result&lt;T&gt;.WithFailure validation pattern.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateResultTWithFailurePattern()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests Result&lt;T&gt;.WithFailure validation pattern.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateResultTWithFailurePattern()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -246,22 +246,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both parameters
-		diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both parameters
+        diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Complex Type Validation Tests
+    #region Complex Type Validation Tests
 
-	/// <summary>
-	/// Tests validation with complex generic types.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateComplexGenericTypes()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests validation with complex generic types.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateComplexGenericTypes()
+    {
+        const string testCode = @"
 using System;
 using System.Collections.Generic;
 
@@ -284,17 +284,17 @@ namespace TestProject
 }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0); // Should not report since validation is present
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0); // Should not report since validation is present
+    }
 
-	/// <summary>
-	/// Tests validation with nullable value types.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateNullableValueTypes()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests validation with nullable value types.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateNullableValueTypes()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -319,21 +319,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Edge Case Validation Tests
+    #region Edge Case Validation Tests
 
-	/// <summary>
-	/// Tests validation with dynamic types.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateDynamicTypes()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests validation with dynamic types.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateDynamicTypes()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -352,18 +352,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(1); // Should report for dynamic type
-		diagnostics[0].Id.ShouldBe(DiagnosticIds.ValidateNullParameters);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(1); // Should report for dynamic type
+        diagnostics[0].Id.ShouldBe(DiagnosticIds.ValidateNullParameters);
+    }
 
-	/// <summary>
-	/// Tests validation with expression-bodied members.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateExpressionBodiedMembers()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests validation with expression-bodied members.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateExpressionBodiedMembers()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -378,22 +378,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three methods
-		diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three methods
+        diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Skippable Method Tests
+    #region Skippable Method Tests
 
-	/// <summary>
-	/// Tests that skippable methods are not reported.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportSkippableMethods()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that skippable methods are not reported.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportSkippableMethods()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -420,21 +420,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Complex Validation Pattern Tests
+    #region Complex Validation Pattern Tests
 
-	/// <summary>
-	/// Tests complex validation patterns with multiple conditions.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateComplexValidationPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests complex validation patterns with multiple conditions.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateComplexValidationPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -460,18 +460,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both parameters
-		diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both parameters
+        diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests validation patterns with early returns.
-	/// </summary>
-	[Fact]
-	public void Should_ValidateEarlyReturnPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests validation patterns with early returns.
+    /// </summary>
+    [Fact]
+    public void Should_ValidateEarlyReturnPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -494,22 +494,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both parameters since early returns are not proper validation
-		diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both parameters since early returns are not proper validation
+        diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Negative Test Cases
+    #region Negative Test Cases
 
-	/// <summary>
-	/// Tests that methods without validation are reported.
-	/// </summary>
-	[Fact]
-	public void Should_ReportMethodsWithoutValidation()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that methods without validation are reported.
+    /// </summary>
+    [Fact]
+    public void Should_ReportMethodsWithoutValidation()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -526,18 +526,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three parameters
-		diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three parameters
+        diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that incomplete validation is reported.
-	/// </summary>
-	[Fact]
-	public void Should_ReportIncompleteValidation()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that incomplete validation is reported.
+    /// </summary>
+    [Fact]
+    public void Should_ReportIncompleteValidation()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -558,11 +558,11 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for config and value
-		diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for config and value
+        diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 }
 

@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class TestingStandardsTests
 {
-	/// <summary>
-	/// Tests that valid test naming convention does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_TestMethodFollowsNamingConvention()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that valid test naming convention does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_TestMethodFollowsNamingConvention()
+    {
+        const string testCode = @"
 using Xunit;
 
 namespace TestProject
@@ -41,17 +41,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new TestNamingConventionAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new TestNamingConventionAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that invalid test naming convention reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_TestMethodDoesNotFollowNamingConvention()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that invalid test naming convention reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_TestMethodDoesNotFollowNamingConvention()
+    {
+        const string testCode = @"
 using Xunit;
 
 namespace TestProject
@@ -72,18 +72,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new TestNamingConventionAnalyzer());
-		diagnostics.Length.ShouldBe(2);
-		diagnostics.All(d => d.Id == DiagnosticIds.TestNamingConvention).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new TestNamingConventionAnalyzer());
+        diagnostics.Length.ShouldBe(2);
+        diagnostics.All(d => d.Id == DiagnosticIds.TestNamingConvention).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that using Moq reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingMoq()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using Moq reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingMoq()
+    {
+        const string testCode = @"
 using Moq;
 using System;
 
@@ -98,18 +98,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseMoqAnalyzer());
-		diagnostics.Length.ShouldBe(1);
-		diagnostics[0].Id.ShouldBe(DiagnosticIds.UseNSubstitute);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseMoqAnalyzer());
+        diagnostics.Length.ShouldBe(1);
+        diagnostics[0].Id.ShouldBe(DiagnosticIds.UseNSubstitute);
+    }
 
-	/// <summary>
-	/// Tests that using NSubstitute does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingNSubstitute()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using NSubstitute does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingNSubstitute()
+    {
+        const string testCode = @"
 using NSubstitute;
 using System;
 
@@ -124,17 +124,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseMoqAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseMoqAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using FluentAssertions reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingFluentAssertions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using FluentAssertions reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingFluentAssertions()
+    {
+        const string testCode = @"
 using FluentAssertions;
 using System;
 
@@ -149,18 +149,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-		diagnostics.Length.ShouldBe(1);
-		diagnostics[0].Id.ShouldBe(DiagnosticIds.UseShouldly);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
+        diagnostics.Length.ShouldBe(1);
+        diagnostics[0].Id.ShouldBe(DiagnosticIds.UseShouldly);
+    }
 
-	/// <summary>
-	/// Tests that using Shouldly does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingShouldly()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using Shouldly does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingShouldly()
+    {
+        const string testCode = @"
 using Shouldly;
 using System;
 
@@ -175,8 +175,8 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 }
 

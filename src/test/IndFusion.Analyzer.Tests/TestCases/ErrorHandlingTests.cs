@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class ErrorHandlingTests
 {
-	/// <summary>
-	/// Tests that using Result pattern does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingResultPattern()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using Result pattern does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingResultPattern()
+    {
+        const string testCode = @"
 using IndFusion.Analyzers.Operations;
 
 namespace TestProject
@@ -39,17 +39,17 @@ namespace TestProject
 	public class User { public int Id { get; set; } }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that throwing exceptions reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_ThrowingExceptions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that throwing exceptions reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_ThrowingExceptions()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -68,18 +68,18 @@ namespace TestProject
 	public class User { public int Id { get; set; } }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseResultPattern).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseResultPattern).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that avoiding throw statements does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_AvoidingThrowStatements()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that avoiding throw statements does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_AvoidingThrowStatements()
+    {
+        const string testCode = @"
 using IndFusion.Analyzers.Operations;
 
 namespace TestProject
@@ -98,17 +98,17 @@ namespace TestProject
 	public class User { public int Id { get; set; } }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using throw statements reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingThrowStatements()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using throw statements reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingThrowStatements()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -127,18 +127,18 @@ namespace TestProject
 	public class User { public int Id { get; set; } }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.AvoidThrowingExceptions).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.AvoidThrowingExceptions).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different exception throwing patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DifferentExceptionThrowingPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different exception throwing patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DifferentExceptionThrowingPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -178,18 +178,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
-		diagnostics.Any(d => d.Id == DiagnosticIds.AvoidThrowingExceptions).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
+        diagnostics.Any(d => d.Id == DiagnosticIds.AvoidThrowingExceptions).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different Result pattern usage.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_DifferentResultPatternUsage()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different Result pattern usage.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_DifferentResultPatternUsage()
+    {
+        const string testCode = @"
 using System;
 using IndFusion.Analyzers.Operations;
 
@@ -234,9 +234,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
-		// Should not report diagnostic when using Result pattern
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer());
+        // Should not report diagnostic when using Result pattern
+        diagnostics.Length.ShouldBe(0);
+    }
 }
 

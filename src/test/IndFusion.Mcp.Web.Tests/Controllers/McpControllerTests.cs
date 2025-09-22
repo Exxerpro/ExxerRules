@@ -3,12 +3,18 @@ using IndFusion.Mcp.Web.Controllers;
 
 namespace IndFusion.Mcp.Web.Tests.Controllers;
 
+/// <summary>
+/// Unit tests for McpController actions and helper behavior.
+/// </summary>
 public class McpControllerTests
 {
     private readonly IServiceProvider _mockServiceProvider;
     private readonly ILogger<McpController> _mockLogger;
     private readonly McpController _controller;
 
+    /// <summary>
+    /// Initializes the controller under test with mocked dependencies.
+    /// </summary>
     public McpControllerTests()
     {
         _mockServiceProvider = Substitute.For<IServiceProvider>();
@@ -16,6 +22,9 @@ public class McpControllerTests
         _controller = new McpController(_mockServiceProvider, _mockLogger);
     }
 
+    /// <summary>
+    /// Returns BadRequest when the requested tool is not found.
+    /// </summary>
     [Fact]
     public async Task HandleToolCall_ShouldReturnBadRequest_WhenToolNotFound()
     {
@@ -39,6 +48,9 @@ public class McpControllerTests
         errorResponse.Code.ShouldBe(-32601);
     }
 
+    /// <summary>
+    /// Logs the tool name when HandleToolCall is invoked.
+    /// </summary>
     [Fact]
     public async Task HandleToolCall_ShouldLogToolCall()
     {
@@ -61,6 +73,9 @@ public class McpControllerTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
+    /// <summary>
+    /// Returns Ok with a McpListToolsResponse when listing tools.
+    /// </summary>
     [Fact]
     public void ListTools_ShouldReturnOkResult_WithToolsList()
     {
@@ -77,6 +92,9 @@ public class McpControllerTests
         response!.Tools.ShouldBeOfType<List<McpTool>>();
     }
 
+    /// <summary>
+    /// Returns Ok with expected server information.
+    /// </summary>
     [Fact]
     public void GetServerInfo_ShouldReturnCorrectServerInfo()
     {
@@ -97,6 +115,9 @@ public class McpControllerTests
         serverInfo.Capabilities.Resources.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Ensures tool names are reported in kebab-case.
+    /// </summary>
     [Theory]
     [InlineData("extract-method")]
     [InlineData("move-method")]
@@ -109,9 +130,14 @@ public class McpControllerTests
         var response = okResult!.Value as McpListToolsResponse;
 
         // The tools list should contain kebab-case names
-        response!.Tools.Select(t => t.Name).ShouldContain(name => name.Contains("-"));
+        var names = response!.Tools.Select(t => t.Name).ToList();
+        names.ShouldContain(name => name.Contains("-"));
+        names.ShouldContain(expected);
     }
 
+    /// <summary>
+    /// Returns BadRequest and logs an error when exceptions occur.
+    /// </summary>
     [Fact]
     public async Task HandleToolCall_ShouldReturnBadRequest_WhenExceptionOccurs()
     {
@@ -141,3 +167,4 @@ public class McpControllerTests
 }
 
 // Test data builders for better test organization
+

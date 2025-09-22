@@ -13,171 +13,171 @@ namespace IndFusion.Analyzers.ErrorHandling;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 {
-	private static readonly LocalizableString Title = "Avoid throwing exceptions";
-	private static readonly LocalizableString MessageFormat = "Throwing '{0}' detected. Use Result<T> pattern instead.";
-	private static readonly LocalizableString Description = "Exceptions should be avoided in favor of the Result<T> pattern for better functional programming and error handling.";
+    private static readonly LocalizableString Title = "Avoid throwing exceptions";
+    private static readonly LocalizableString MessageFormat = "Throwing '{0}' detected. Use Result<T> pattern instead.";
+    private static readonly LocalizableString Description = "Exceptions should be avoided in favor of the Result<T> pattern for better functional programming and error handling.";
 
-	private static readonly DiagnosticDescriptor Rule = new(
-		DiagnosticIds.AvoidThrowingExceptions,
-		Title,
-		MessageFormat,
-		DiagnosticCategories.ErrorHandling,
-		DiagnosticSeverity.Error,
-		isEnabledByDefault: true,
-		description: Description);
+    private static readonly DiagnosticDescriptor Rule = new(
+        DiagnosticIds.AvoidThrowingExceptions,
+        Title,
+        MessageFormat,
+        DiagnosticCategories.ErrorHandling,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: Description);
 
-	/// <inheritdoc/>
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+    /// <inheritdoc/>
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	/// <inheritdoc/>
-	public override void Initialize(AnalysisContext context)
-	{
-		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-		context.EnableConcurrentExecution();
+    /// <inheritdoc/>
+    public override void Initialize(AnalysisContext context)
+    {
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+        context.EnableConcurrentExecution();
 
-		context.RegisterSyntaxNodeAction(AnalyzeThrowStatement, SyntaxKind.ThrowStatement);
-		context.RegisterSyntaxNodeAction(AnalyzeThrowExpression, SyntaxKind.ThrowExpression);
-	}
+        context.RegisterSyntaxNodeAction(AnalyzeThrowStatement, SyntaxKind.ThrowStatement);
+        context.RegisterSyntaxNodeAction(AnalyzeThrowExpression, SyntaxKind.ThrowExpression);
+    }
 
-	private static void AnalyzeThrowStatement(SyntaxNodeAnalysisContext context)
-	{
-		var throwStatement = (ThrowStatementSyntax)context.Node;
+    private static void AnalyzeThrowStatement(SyntaxNodeAnalysisContext context)
+    {
+        var throwStatement = (ThrowStatementSyntax)context.Node;
 
-		// Skip if in catch block and just rethrowing
-		if (throwStatement.Expression == null && throwStatement.Parent is BlockSyntax block &&
-			block.Parent is CatchClauseSyntax)
-		{
-			return;
-		}
+        // Skip if in catch block and just rethrowing
+        if (throwStatement.Expression == null && throwStatement.Parent is BlockSyntax block &&
+            block.Parent is CatchClauseSyntax)
+        {
+            return;
+        }
 
-		// Skip if in test methods
-		if (IsInTestMethod(throwStatement))
-		{
-			return;
-		}
+        // Skip if in test methods
+        if (IsInTestMethod(throwStatement))
+        {
+            return;
+        }
 
-		// Skip if in a method that's specifically for exception handling (e.g., ThrowHelper methods)
-		var containingMethod = throwStatement.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (containingMethod != null &&
-			(containingMethod.Identifier.Text.Contains("Throw") ||
-			 containingMethod.Identifier.Text.Contains("Exception")))
-		{
-			return;
-		}
+        // Skip if in a method that's specifically for exception handling (e.g., ThrowHelper methods)
+        var containingMethod = throwStatement.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+        if (containingMethod != null &&
+            (containingMethod.Identifier.Text.Contains("Throw") ||
+             containingMethod.Identifier.Text.Contains("Exception")))
+        {
+            return;
+        }
 
-		// Skip if in exception filter
-		if (throwStatement.Ancestors().OfType<CatchFilterClauseSyntax>().Any())
-		{
-			return;
-		}
+        // Skip if in exception filter
+        if (throwStatement.Ancestors().OfType<CatchFilterClauseSyntax>().Any())
+        {
+            return;
+        }
 
-		var exceptionType = GetExceptionType(throwStatement.Expression, context.SemanticModel);
-		var diagnostic = Diagnostic.Create(
-			Rule,
-			throwStatement.GetLocation(),
-			exceptionType);
+        var exceptionType = GetExceptionType(throwStatement.Expression, context.SemanticModel);
+        var diagnostic = Diagnostic.Create(
+            Rule,
+            throwStatement.GetLocation(),
+            exceptionType);
 
-		context.ReportDiagnostic(diagnostic);
-	}
+        context.ReportDiagnostic(diagnostic);
+    }
 
-	private static void AnalyzeThrowExpression(SyntaxNodeAnalysisContext context)
-	{
-		var throwExpression = (ThrowExpressionSyntax)context.Node;
+    private static void AnalyzeThrowExpression(SyntaxNodeAnalysisContext context)
+    {
+        var throwExpression = (ThrowExpressionSyntax)context.Node;
 
-		// Skip if in test methods
-		if (IsInTestMethod(throwExpression))
-		{
-			return;
-		}
+        // Skip if in test methods
+        if (IsInTestMethod(throwExpression))
+        {
+            return;
+        }
 
-		// Skip if in a method that's specifically for exception handling
-		var containingMethod = throwExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (containingMethod != null &&
-			(containingMethod.Identifier.Text.Contains("Throw") ||
-			 containingMethod.Identifier.Text.Contains("Exception")))
-		{
-			return;
-		}
+        // Skip if in a method that's specifically for exception handling
+        var containingMethod = throwExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+        if (containingMethod != null &&
+            (containingMethod.Identifier.Text.Contains("Throw") ||
+             containingMethod.Identifier.Text.Contains("Exception")))
+        {
+            return;
+        }
 
-		// Skip if in exception filter
-		if (throwExpression.Ancestors().OfType<CatchFilterClauseSyntax>().Any())
-		{
-			return;
-		}
+        // Skip if in exception filter
+        if (throwExpression.Ancestors().OfType<CatchFilterClauseSyntax>().Any())
+        {
+            return;
+        }
 
-		var exceptionType = GetExceptionType(throwExpression.Expression, context.SemanticModel);
-		var diagnostic = Diagnostic.Create(
-			Rule,
-			throwExpression.GetLocation(),
-			exceptionType);
+        var exceptionType = GetExceptionType(throwExpression.Expression, context.SemanticModel);
+        var diagnostic = Diagnostic.Create(
+            Rule,
+            throwExpression.GetLocation(),
+            exceptionType);
 
-		context.ReportDiagnostic(diagnostic);
-	}
+        context.ReportDiagnostic(diagnostic);
+    }
 
-	private static bool IsInTestMethod(SyntaxNode node)
-	{
-		// Check if we're in a method with test attributes
-		var containingMethod = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-		if (containingMethod == null)
-		{
-			return false;
-		}
+    private static bool IsInTestMethod(SyntaxNode node)
+    {
+        // Check if we're in a method with test attributes
+        var containingMethod = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+        if (containingMethod == null)
+        {
+            return false;
+        }
 
-		// Check for common test attributes
-		var attributes = containingMethod.AttributeLists.SelectMany(al => al.Attributes);
-		var testAttributeNames = new[] { "Fact", "Theory", "Test", "TestMethod", "TestCase" };
-		
-		if (attributes.Any(attr => 
-			testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
-		{
-			return true;
-		}
+        // Check for common test attributes
+        var attributes = containingMethod.AttributeLists.SelectMany(al => al.Attributes);
+        var testAttributeNames = new[] { "Fact", "Theory", "Test", "TestMethod", "TestCase" };
 
-		// Also check if we're in a method that is being called from a test method
-		// by looking at the class name for common test suffixes
-		var containingClass = containingMethod.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-		if (containingClass != null)
-		{
-			var className = containingClass.Identifier.Text;
-			if (className.EndsWith("Tests") || className.EndsWith("Test"))
-			{
-				// Additional check: look for test methods in the same class
-				var testMethodsInClass = containingClass.DescendantNodes()
-					.OfType<MethodDeclarationSyntax>()
-					.Where(m => m.AttributeLists.SelectMany(al => al.Attributes)
-						.Any(attr => testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
-					.Count();
-				
-				if (testMethodsInClass > 0)
-				{
-					return true;
-				}
-			}
-		}
+        if (attributes.Any(attr =>
+            testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
+        {
+            return true;
+        }
 
-		return false;
-	}
+        // Also check if we're in a method that is being called from a test method
+        // by looking at the class name for common test suffixes
+        var containingClass = containingMethod.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass != null)
+        {
+            var className = containingClass.Identifier.Text;
+            if (className.EndsWith("Tests") || className.EndsWith("Test"))
+            {
+                // Additional check: look for test methods in the same class
+                var testMethodsInClass = containingClass.DescendantNodes()
+                    .OfType<MethodDeclarationSyntax>()
+                    .Where(m => m.AttributeLists.SelectMany(al => al.Attributes)
+                        .Any(attr => testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
+                    .Count();
 
-	private static string GetExceptionType(ExpressionSyntax? expression, SemanticModel semanticModel)
-	{
-		if (expression == null)
-		{
-			return "exception";
-		}
+                if (testMethodsInClass > 0)
+                {
+                    return true;
+                }
+            }
+        }
 
-		var typeInfo = semanticModel.GetTypeInfo(expression);
-		if (typeInfo.Type != null)
-		{
-			return typeInfo.Type.Name;
-		}
+        return false;
+    }
 
-		// Try to get type from object creation
-		if (expression is ObjectCreationExpressionSyntax objectCreation)
-		{
-			return objectCreation.Type.ToString();
-		}
+    private static string GetExceptionType(ExpressionSyntax? expression, SemanticModel semanticModel)
+    {
+        if (expression == null)
+        {
+            return "exception";
+        }
 
-		return "exception";
-	}
+        var typeInfo = semanticModel.GetTypeInfo(expression);
+        if (typeInfo.Type != null)
+        {
+            return typeInfo.Type.Name;
+        }
+
+        // Try to get type from object creation
+        if (expression is ObjectCreationExpressionSyntax objectCreation)
+        {
+            return objectCreation.Type.ToString();
+        }
+
+        return "exception";
+    }
 }
 

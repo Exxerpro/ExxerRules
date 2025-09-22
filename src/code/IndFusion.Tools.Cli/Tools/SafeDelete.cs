@@ -1,8 +1,14 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
+/// <summary>
+/// Tool that safely deletes symbols (field/method/parameter/variable) after checking usages.
+/// </summary>
 [McpServerToolType]
 public static class SafeDeleteTool
 {
+    /// <summary>
+    /// Deletes a field if there are no usages; supports solution or single-file mode.
+    /// </summary>
     [McpServerTool, Description("Safely delete an unused field (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> SafeDeleteField(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
@@ -181,6 +187,9 @@ public static class SafeDeleteTool
             $"Successfully deleted method '{methodName}' in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Deletes a method from source text after verifying it has no references.
+    /// </summary>
     public static string SafeDeleteMethodInSource(string sourceText, string methodName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

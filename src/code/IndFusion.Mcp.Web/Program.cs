@@ -109,6 +109,9 @@ internal class Program
 
 namespace IndFusion.Mcp.Web
 {
+    /// <summary>
+    /// Partial type used by ASP.NET hosting and tests to reference the web application entry point.
+    /// </summary>
     public partial class Program
     { }
 }

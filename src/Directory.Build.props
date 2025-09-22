@@ -3,9 +3,16 @@
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<NoWarn>NU1510;NU1603</NoWarn>
+		<!--
+		  NoWarn rationale:
+		  - NU1510/NU1603: transient/restore edge cases during CI matrix (documented in SUPPRESSIONS.md).
+		  - NU1903: security advisory for Microsoft.Build.Tasks.Core may surface transitively. We try to upgrade first;
+		    if cannot, we keep this suppression temporarily and track in SUPPRESSIONS.md with remediation plan.
+		  Note: CS1591 is intentionally NOT suppressed; we enforce XML docs across all projects, incl. tests.
+		-->
+		<NoWarn>NU1510;NU1603;NU1903</NoWarn>
 		
 	</PropertyGroup>
 

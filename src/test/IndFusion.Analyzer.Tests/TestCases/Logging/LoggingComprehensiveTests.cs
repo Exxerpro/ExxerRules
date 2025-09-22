@@ -14,15 +14,15 @@ namespace IndFusion.Analyzer.Tests.TestCases.Logging;
 /// </summary>
 public class LoggingComprehensiveTests
 {
-	#region Structured Logging Tests
+    #region Structured Logging Tests
 
-	/// <summary>
-	/// Tests structured logging with different patterns.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportStructuredLoggingPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests structured logging with different patterns.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportStructuredLoggingPatterns()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -45,17 +45,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests structured logging with complex expressions.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportStructuredLoggingWithComplexExpressions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests structured logging with complex expressions.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportStructuredLoggingWithComplexExpressions()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -80,21 +80,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region String Concatenation Tests
+    #region String Concatenation Tests
 
-	/// <summary>
-	/// Tests string concatenation logging patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportStringConcatenationPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests string concatenation logging patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportStringConcatenationPatterns()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -117,18 +117,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three concatenation patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three concatenation patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests string concatenation with complex expressions.
-	/// </summary>
-	[Fact]
-	public void Should_ReportStringConcatenationWithComplexExpressions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests string concatenation with complex expressions.
+    /// </summary>
+    [Fact]
+    public void Should_ReportStringConcatenationWithComplexExpressions()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -151,22 +151,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three concatenation patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three concatenation patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region String Interpolation Tests
+    #region String Interpolation Tests
 
-	/// <summary>
-	/// Tests string interpolation logging patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportStringInterpolationPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests string interpolation logging patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportStringInterpolationPatterns()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -189,18 +189,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three interpolation patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three interpolation patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests string interpolation with complex expressions.
-	/// </summary>
-	[Fact]
-	public void Should_ReportStringInterpolationWithComplexExpressions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests string interpolation with complex expressions.
+    /// </summary>
+    [Fact]
+    public void Should_ReportStringInterpolationWithComplexExpressions()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -223,22 +223,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three interpolation patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three interpolation patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Mixed Logging Pattern Tests
+    #region Mixed Logging Pattern Tests
 
-	/// <summary>
-	/// Tests mixed logging patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportMixedLoggingPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests mixed logging patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportMixedLoggingPatterns()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -266,22 +266,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for concatenation and interpolation
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for concatenation and interpolation
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Different Logger Types Tests
+    #region Different Logger Types Tests
 
-	/// <summary>
-	/// Tests different logger types.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDifferentLoggerTypes()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests different logger types.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDifferentLoggerTypes()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -308,22 +308,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Log Level Tests
+    #region Log Level Tests
 
-	/// <summary>
-	/// Tests different log levels.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDifferentLogLevels()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests different log levels.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDifferentLogLevels()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -349,22 +349,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(6); // Should report for all log levels
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(6); // Should report for all log levels
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Complex Expression Tests
+    #region Complex Expression Tests
 
-	/// <summary>
-	/// Tests complex expressions in logging.
-	/// </summary>
-	[Fact]
-	public void Should_ReportComplexExpressionsInLogging()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests complex expressions in logging.
+    /// </summary>
+    [Fact]
+    public void Should_ReportComplexExpressionsInLogging()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -392,22 +392,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Method Chain Tests
+    #region Method Chain Tests
 
-	/// <summary>
-	/// Tests method chains in logging.
-	/// </summary>
-	[Fact]
-	public void Should_ReportMethodChainsInLogging()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests method chains in logging.
+    /// </summary>
+    [Fact]
+    public void Should_ReportMethodChainsInLogging()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -432,22 +432,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Conditional Logging Tests
+    #region Conditional Logging Tests
 
-	/// <summary>
-	/// Tests conditional logging patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportConditionalLoggingPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests conditional logging patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportConditionalLoggingPatterns()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -475,22 +475,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Exception Logging Tests
+    #region Exception Logging Tests
 
-	/// <summary>
-	/// Tests exception logging patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportExceptionLoggingPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests exception logging patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportExceptionLoggingPatterns()
+    {
+        const string testCode = @"
 using System;
 using Microsoft.Extensions.Logging;
 
@@ -520,21 +520,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(0); // Exception logging with exception parameter is not reported
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(0); // Exception logging with exception parameter is not reported
+    }
 
-	#endregion
+    #endregion
 
-	#region Scope Logging Tests
+    #region Scope Logging Tests
 
-	/// <summary>
-	/// Tests scope logging patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportScopeLoggingPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests scope logging patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportScopeLoggingPatterns()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -563,21 +563,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(0); // Scope logging is not reported
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(0); // Scope logging is not reported
+    }
 
-	#endregion
+    #endregion
 
-	#region Negative Test Cases
+    #region Negative Test Cases
 
-	/// <summary>
-	/// Tests that structured logging is not reported.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportStructuredLogging()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that structured logging is not reported.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportStructuredLogging()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -600,21 +600,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Edge Case Tests
+    #region Edge Case Tests
 
-	/// <summary>
-	/// Tests edge cases in logging patterns.
-	/// </summary>
-	[Fact]
-	public void Should_HandleEdgeCasesInLogging()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge cases in logging patterns.
+    /// </summary>
+    [Fact]
+    public void Should_HandleEdgeCasesInLogging()
+    {
+        const string testCode = @"
 using Microsoft.Extensions.Logging;
 
 namespace TestProject
@@ -642,11 +642,11 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three patterns
-		diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three patterns
+        diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 }
 

@@ -14,15 +14,15 @@ namespace IndFusion.Analyzer.Tests.TestCases.Async;
 /// </summary>
 public class AsyncComprehensiveTests
 {
-	#region CancellationToken Parameter Tests
+    #region CancellationToken Parameter Tests
 
-	/// <summary>
-	/// Tests async methods with CancellationToken parameters.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportAsyncMethodsWithCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests async methods with CancellationToken parameters.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportAsyncMethodsWithCancellationToken()
+    {
+        const string testCode = @"
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -51,17 +51,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests async methods with different CancellationToken parameter positions.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportAsyncMethodsWithCancellationTokenInDifferentPositions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests async methods with different CancellationToken parameter positions.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportAsyncMethodsWithCancellationTokenInDifferentPositions()
+    {
+        const string testCode = @"
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -90,21 +90,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region ConfigureAwait Tests
+    #region ConfigureAwait Tests
 
-	/// <summary>
-	/// Tests ConfigureAwait with different patterns.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportConfigureAwaitPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests ConfigureAwait with different patterns.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportConfigureAwaitPatterns()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -132,17 +132,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests ConfigureAwait with complex method chains.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportConfigureAwaitWithComplexChains()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests ConfigureAwait with complex method chains.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportConfigureAwaitWithComplexChains()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -169,21 +169,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Skippable Method Tests
+    #region Skippable Method Tests
 
-	/// <summary>
-	/// Tests that skippable async methods are not reported.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportSkippableAsyncMethods()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that skippable async methods are not reported.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportSkippableAsyncMethods()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -211,17 +211,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that async void methods are not reported.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportAsyncVoidMethods()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that async void methods are not reported.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportAsyncVoidMethods()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -241,21 +241,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Application Code Tests
+    #region Application Code Tests
 
-	/// <summary>
-	/// Tests that application code is not reported.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportApplicationCode()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that application code is not reported.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportApplicationCode()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace Program
@@ -294,21 +294,21 @@ namespace ConsoleApp
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Complex Async Pattern Tests
+    #region Complex Async Pattern Tests
 
-	/// <summary>
-	/// Tests complex async patterns with multiple awaits.
-	/// </summary>
-	[Fact]
-	public void Should_ReportComplexAsyncPatternsWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests complex async patterns with multiple awaits.
+    /// </summary>
+    [Fact]
+    public void Should_ReportComplexAsyncPatternsWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -333,18 +333,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both methods
-		diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both methods
+        diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests complex async patterns with ConfigureAwait missing.
-	/// </summary>
-	[Fact]
-	public void Should_ReportComplexAsyncPatternsWithoutConfigureAwait()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests complex async patterns with ConfigureAwait missing.
+    /// </summary>
+    [Fact]
+    public void Should_ReportComplexAsyncPatternsWithoutConfigureAwait()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -369,22 +369,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(6); // Should report for all await expressions
-		diagnostics.All(d => d.Id == DiagnosticIds.UseConfigureAwaitFalse).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(6); // Should report for all await expressions
+        diagnostics.All(d => d.Id == DiagnosticIds.UseConfigureAwaitFalse).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Generic Async Method Tests
+    #region Generic Async Method Tests
 
-	/// <summary>
-	/// Tests generic async methods.
-	/// </summary>
-	[Fact]
-	public void Should_ReportGenericAsyncMethodsWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests generic async methods.
+    /// </summary>
+    [Fact]
+    public void Should_ReportGenericAsyncMethodsWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -405,18 +405,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both methods
-		diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both methods
+        diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests generic async methods with CancellationToken.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportGenericAsyncMethodsWithCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests generic async methods with CancellationToken.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportGenericAsyncMethodsWithCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -438,21 +438,21 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	#endregion
+    #endregion
 
-	#region Exception Handling Tests
+    #region Exception Handling Tests
 
-	/// <summary>
-	/// Tests async methods with exception handling.
-	/// </summary>
-	[Fact]
-	public void Should_ReportAsyncMethodsWithExceptionHandlingWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests async methods with exception handling.
+    /// </summary>
+    [Fact]
+    public void Should_ReportAsyncMethodsWithExceptionHandlingWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -493,22 +493,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both methods
-		diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both methods
+        diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Nested Async Method Tests
+    #region Nested Async Method Tests
 
-	/// <summary>
-	/// Tests nested async methods.
-	/// </summary>
-	[Fact]
-	public void Should_ReportNestedAsyncMethodsWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests nested async methods.
+    /// </summary>
+    [Fact]
+    public void Should_ReportNestedAsyncMethodsWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -532,22 +532,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both methods
-		diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both methods
+        diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Record Type Tests
+    #region Record Type Tests
 
-	/// <summary>
-	/// Tests async methods in record types.
-	/// </summary>
-	[Fact]
-	public void Should_ReportAsyncMethodsInRecordTypesWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests async methods in record types.
+    /// </summary>
+    [Fact]
+    public void Should_ReportAsyncMethodsInRecordTypesWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -571,22 +571,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(1); // Should report only for the first record
-		diagnostics[0].Id.ShouldBe(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(1); // Should report only for the first record
+        diagnostics[0].Id.ShouldBe(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken);
+    }
 
-	#endregion
+    #endregion
 
-	#region Partial Class Tests
+    #region Partial Class Tests
 
-	/// <summary>
-	/// Tests async methods in partial classes.
-	/// </summary>
-	[Fact]
-	public void Should_ReportAsyncMethodsInPartialClassesWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests async methods in partial classes.
+    /// </summary>
+    [Fact]
+    public void Should_ReportAsyncMethodsInPartialClassesWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -610,22 +610,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both methods
-		diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both methods
+        diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Interface Implementation Tests
+    #region Interface Implementation Tests
 
-	/// <summary>
-	/// Tests async methods in interface implementations.
-	/// </summary>
-	[Fact]
-	public void Should_ReportAsyncMethodsInInterfaceImplementationsWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests async methods in interface implementations.
+    /// </summary>
+    [Fact]
+    public void Should_ReportAsyncMethodsInInterfaceImplementationsWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -654,22 +654,22 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(2); // Should report for both implementations
-		diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(2); // Should report for both implementations
+        diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 
-	#region Negative Test Cases
+    #region Negative Test Cases
 
-	/// <summary>
-	/// Tests that methods without CancellationToken are reported.
-	/// </summary>
-	[Fact]
-	public void Should_ReportMethodsWithoutCancellationToken()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that methods without CancellationToken are reported.
+    /// </summary>
+    [Fact]
+    public void Should_ReportMethodsWithoutCancellationToken()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -696,18 +696,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three methods
-		diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three methods
+        diagnostics.All(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that methods without ConfigureAwait are reported.
-	/// </summary>
-	[Fact]
-	public void Should_ReportMethodsWithoutConfigureAwait()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that methods without ConfigureAwait are reported.
+    /// </summary>
+    [Fact]
+    public void Should_ReportMethodsWithoutConfigureAwait()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -735,11 +735,11 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		diagnostics.Length.ShouldBe(3); // Should report for all three await expressions
-		diagnostics.All(d => d.Id == DiagnosticIds.UseConfigureAwaitFalse).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        diagnostics.Length.ShouldBe(3); // Should report for all three await expressions
+        diagnostics.All(d => d.Id == DiagnosticIds.UseConfigureAwaitFalse).ShouldBeTrue();
+    }
 
-	#endregion
+    #endregion
 }
 

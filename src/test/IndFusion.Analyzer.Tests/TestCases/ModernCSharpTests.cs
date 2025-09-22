@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class ModernCSharpTests
 {
-	/// <summary>
-	/// Tests that using modern pattern matching does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingModernPatternMatching()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using modern pattern matching does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingModernPatternMatching()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -41,17 +41,17 @@ namespace TestProject
 	public class User { public string Name { get; set; } = """"; }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using old pattern matching reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingOldPatternMatching()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using old pattern matching reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingOldPatternMatching()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -80,18 +80,18 @@ namespace TestProject
 	public class User { public string Name { get; set; } = """"; }
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseModernPatternMatching).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseModernPatternMatching).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that using expression-bodied members does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_UsingExpressionBodiedMembers()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using expression-bodied members does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_UsingExpressionBodiedMembers()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -110,17 +110,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that not using expression-bodied members reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_NotUsingExpressionBodiedMembers()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that not using expression-bodied members reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_NotUsingExpressionBodiedMembers()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -154,18 +154,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseExpressionBodiedMembers).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseExpressionBodiedMembers).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different pattern matching scenarios.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DifferentPatternMatchingScenarios()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different pattern matching scenarios.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DifferentPatternMatchingScenarios()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -199,18 +199,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseModernPatternMatching).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseModernPatternMatching).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Expression-bodied members in different contexts.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_ExpressionBodiedMembersInDifferentContexts()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Expression-bodied members in different contexts.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_ExpressionBodiedMembersInDifferentContexts()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -241,9 +241,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
-		diagnostics.Any(d => d.Id == DiagnosticIds.UseExpressionBodiedMembers).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseExpressionBodiedMembersAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
+        diagnostics.Any(d => d.Id == DiagnosticIds.UseExpressionBodiedMembers).ShouldBeTrue();
+    }
 }
 

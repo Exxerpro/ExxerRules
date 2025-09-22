@@ -1,10 +1,23 @@
 namespace IndFusion.Tools.Mcp.App.Move;
 
+/// <summary>
+/// File-based orchestration for moving methods between classes/files, built on the AST layer.
+/// Handles reading/writing files, formatting, and progress reporting.
+/// </summary>
 public static class MoveMethodFileService
 {
     // ===== FILE OPERATION LAYER =====
     // File I/O operations that use the AST layer
 
+    /// <summary>
+    /// Moves a static method to the target class, possibly across files, and writes changes to disk.
+    /// </summary>
+    /// <param name="filePath">Source file path for the method.</param>
+    /// <param name="methodName">Static method name.</param>
+    /// <param name="targetClass">Destination class name.</param>
+    /// <param name="targetFilePath">Optional destination file; defaults to same directory.</param>
+    /// <param name="progress">Optional progress sink receiving updated paths.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     public static async Task<string> MoveStaticMethodInFile(
         string filePath,
         string methodName,
@@ -58,12 +71,18 @@ public static class MoveMethodFileService
         return $"Successfully moved static method '{methodName}' to {targetClass} in {targetPath}. A delegate method remains in the original class to preserve the interface.";
     }
 
+    /// <summary>
+    /// Throws if the specified file does not exist.
+    /// </summary>
     internal static void ValidateFileExists(string filePath)
     {
         if (!File.Exists(filePath))
             throw new McpException($"Error: File {filePath} not found (current dir: {Directory.GetCurrentDirectory()})");
     }
 
+    /// <summary>
+    /// Loads an existing target compilation unit or returns a new one if the file does not exist.
+    /// </summary>
     internal static async Task<SyntaxNode> LoadOrCreateTargetRoot(
         string targetPath,
         CancellationToken cancellationToken)
@@ -79,6 +98,20 @@ public static class MoveMethodFileService
         }
     }
 
+    /// <summary>
+    /// Moves an instance method to the target class/file, applying constructor and parameter injections.
+    /// </summary>
+    /// <param name="filePath">Source file path.</param>
+    /// <param name="sourceClass">Declaring class name.</param>
+    /// <param name="methodName">Method name to move.</param>
+    /// <param name="constructorInjections">Fields or 'this' to wire via constructor.</param>
+    /// <param name="parameterInjections">Parameter names to forward/inject.</param>
+    /// <param name="targetClass">Destination class name.</param>
+    /// <param name="accessMemberName">Generated accessor member name.</param>
+    /// <param name="accessMemberType">Generated accessor member type.</param>
+    /// <param name="targetFilePath">Optional destination file path.</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     public static async Task<string> MoveInstanceMethodInFile(
         string filePath,
         string sourceClass,
@@ -155,6 +188,9 @@ public static class MoveMethodFileService
         return $"Successfully moved instance method {sourceClass}.{methodName} to {targetClass}{locationInfo}. A delegate method remains in the original class to preserve the interface.{staticHint}";
     }
 
+    /// <summary>
+    /// Applies constructor injection to the target class for specified injections.
+    /// </summary>
     private static SyntaxNode ApplyConstructorInjection(
         SyntaxNode root,
         string methodName,
@@ -191,6 +227,9 @@ public static class MoveMethodFileService
         return root;
     }
 
+    /// <summary>
+    /// Computes a field name for the given injection and source class.
+    /// </summary>
     private static string GetFieldName(string inj, string sourceClass)
     {
         string baseName;
@@ -214,6 +253,9 @@ public static class MoveMethodFileService
         return "_" + baseName;
     }
 
+    /// <summary>
+    /// Computes a parameter name for the given injection and source class.
+    /// </summary>
     internal static string GetParameterName(string inj, string sourceClass)
     {
         string baseName;

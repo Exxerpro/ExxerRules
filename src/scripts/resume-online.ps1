@@ -4,14 +4,14 @@ param([string]$Configuration = 'Debug')
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-Write-Host "Restoring with online fallback..."
-dotnet restore IndFusion.sln --configfile NuGet.online.config
+Write-Host "Restoring with default NuGet sources..."
+dotnet restore IndFusion.sln
 
 Write-Host "Building ($Configuration)..."
-dotnet build IndFusion.sln -c $Configuration --configfile NuGet.online.config
+dotnet build IndFusion.sln -c $Configuration
 
 Write-Host "Running tests ($Configuration)..."
-dotnet test IndFusion.sln -c $Configuration --configfile NuGet.online.config
+dotnet test IndFusion.sln -c $Configuration
 
 Write-Host "Done."
 

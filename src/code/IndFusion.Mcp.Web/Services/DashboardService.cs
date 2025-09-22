@@ -5,17 +5,28 @@ using IndFusion.Mcp.Web.Models;
 
 namespace IndFusion.Mcp.Web.Services;
 
+/// <summary>
+/// Provides dashboard data for the web UI (aggregate stats, recent activity, health).
+/// </summary>
 public class DashboardService : IDashboardService
 {
     private readonly IExxerFactoringService _ExxerFactoringService;
     private readonly ILogger<DashboardService> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of <see cref="DashboardService"/>.
+    /// </summary>
+    /// <param name="ExxerFactoringService">Service for querying MCP tools and metrics.</param>
+    /// <param name="logger">Logger instance.</param>
     public DashboardService(IExxerFactoringService ExxerFactoringService, ILogger<DashboardService> logger)
     {
         _ExxerFactoringService = ExxerFactoringService;
         _logger = logger;
     }
 
+    /// <summary>
+    /// Returns current dashboard statistics.
+    /// </summary>
     public async Task<DashboardStats> GetDashboardStatsAsync()
     {
         try
@@ -37,6 +48,10 @@ public class DashboardService : IDashboardService
         }
     }
 
+    /// <summary>
+    /// Returns the most recent ExxerFactoring activities.
+    /// </summary>
+    /// <param name="count">Maximum number of activities.</param>
     public async Task<IEnumerable<ExxerFactoringActivity>> GetRecentActivitiesAsync(int count = 20)
     {
         // TODO: Implement activity tracking
@@ -62,6 +77,9 @@ public class DashboardService : IDashboardService
         };
     }
 
+    /// <summary>
+    /// Returns the current system health snapshot.
+    /// </summary>
     public async Task<SystemHealthStatus> GetSystemHealthAsync()
     {
         await Task.Delay(10);

@@ -4,11 +4,11 @@ param([string]$Configuration = 'Release')
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 
-Write-Host "Restoring strictly from offline feed..."
-dotnet restore IndFusion.sln --configfile NuGet.config
+Write-Host "Restoring with default NuGet sources..."
+dotnet restore IndFusion.sln
 
-Write-Host "Building ($Configuration) strictly offline..."
-dotnet build IndFusion.sln -c $Configuration --configfile NuGet.config
+Write-Host "Building ($Configuration)..."
+dotnet build IndFusion.sln -c $Configuration
 
 Write-Host "Done."
 

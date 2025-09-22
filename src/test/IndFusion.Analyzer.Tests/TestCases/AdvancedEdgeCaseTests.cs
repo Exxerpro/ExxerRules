@@ -20,15 +20,15 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class AdvancedEdgeCaseTests
 {
-	#region Null Handling Edge Cases
+    #region Null Handling Edge Cases
 
-	/// <summary>
-	/// Tests edge case: Null semantic model handling.
-	/// </summary>
-	[Fact]
-	public void Should_HandleNullSemanticModel_AllAnalyzers()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Null semantic model handling.
+    /// </summary>
+    [Fact]
+    public void Should_HandleNullSemanticModel_AllAnalyzers()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -43,20 +43,20 @@ namespace TestProject
 	}
 }";
 
-		// Test with analyzers that use semantic model
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        // Test with analyzers that use semantic model
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	/// <summary>
-	/// Tests edge case: Null type symbols in analyzers.
-	/// </summary>
-	[Fact]
-	public void Should_HandleNullTypeSymbols_TypeCheckingAnalyzers()
-	{
-		const string testCode = @"
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
+
+    /// <summary>
+    /// Tests edge case: Null type symbols in analyzers.
+    /// </summary>
+    [Fact]
+    public void Should_HandleNullTypeSymbols_TypeCheckingAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -78,23 +78,23 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	#endregion
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
 
-	#region Boundary Condition Tests
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Empty string identifiers.
-	/// </summary>
-	[Fact]
-	public void Should_HandleEmptyStringIdentifiers_AllAnalyzers()
-	{
-		const string testCode = @"
+    #region Boundary Condition Tests
+
+    /// <summary>
+    /// Tests edge case: Empty string identifiers.
+    /// </summary>
+    [Fact]
+    public void Should_HandleEmptyStringIdentifiers_AllAnalyzers()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -109,20 +109,20 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
 
-	/// <summary>
-	/// Tests edge case: Unicode characters in identifiers.
-	/// </summary>
-	[Fact]
-	public void Should_HandleUnicodeIdentifiers_AllAnalyzers()
-	{
-		const string testCode = @"
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
+
+    /// <summary>
+    /// Tests edge case: Unicode characters in identifiers.
+    /// </summary>
+    [Fact]
+    public void Should_HandleUnicodeIdentifiers_AllAnalyzers()
+    {
+        const string testCode = @"
 using System.Threading.Tasks;
 
 namespace TestProject
@@ -143,24 +143,24 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
-		configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
 
-	#endregion
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
+        configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
+    }
 
-	#region Complex Type System Tests
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Complex generic type scenarios.
-	/// </summary>
-	[Fact]
-	public void Should_HandleComplexGenericTypes_TypeCheckingAnalyzers()
-	{
-		const string testCode = @"
+    #region Complex Type System Tests
+
+    /// <summary>
+    /// Tests edge case: Complex generic type scenarios.
+    /// </summary>
+    [Fact]
+    public void Should_HandleComplexGenericTypes_TypeCheckingAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -184,20 +184,20 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	/// <summary>
-	/// Tests edge case: Nested generic types.
-	/// </summary>
-	[Fact]
-	public void Should_HandleNestedGenericTypes_TypeCheckingAnalyzers()
-	{
-		const string testCode = @"
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
+
+    /// <summary>
+    /// Tests edge case: Nested generic types.
+    /// </summary>
+    [Fact]
+    public void Should_HandleNestedGenericTypes_TypeCheckingAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -220,24 +220,24 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	#endregion
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
 
-	#region Expression Tree Complexity Tests
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Deeply nested expressions.
-	/// </summary>
-	[Fact]
-	public void Should_HandleDeeplyNestedExpressions_AllAnalyzers()
-	{
-		const string testCode = @"
+    #region Expression Tree Complexity Tests
+
+    /// <summary>
+    /// Tests edge case: Deeply nested expressions.
+    /// </summary>
+    [Fact]
+    public void Should_HandleDeeplyNestedExpressions_AllAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -262,22 +262,22 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	/// <summary>
-	/// Tests edge case: Complex conditional expressions.
-	/// </summary>
-	[Fact]
-	public void Should_HandleComplexConditionals_AllAnalyzers()
-	{
-		const string testCode = @"
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
+
+    /// <summary>
+    /// Tests edge case: Complex conditional expressions.
+    /// </summary>
+    [Fact]
+    public void Should_HandleComplexConditionals_AllAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -308,26 +308,26 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
-		nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	#endregion
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
+        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
 
-	#region Method Chain Complexity Tests
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Complex method chains.
-	/// </summary>
-	[Fact]
-	public void Should_HandleComplexMethodChains_AllAnalyzers()
-	{
-		const string testCode = @"
+    #region Method Chain Complexity Tests
+
+    /// <summary>
+    /// Tests edge case: Complex method chains.
+    /// </summary>
+    [Fact]
+    public void Should_HandleComplexMethodChains_AllAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -360,26 +360,26 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		configureAwaitDiagnostics.Length.ShouldBe(0); // Should not report since ConfigureAwait is used
-		nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	#endregion
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        configureAwaitDiagnostics.Length.ShouldBe(0); // Should not report since ConfigureAwait is used
+        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
 
-	#region Exception Handling Edge Cases
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Exception handling in async methods.
-	/// </summary>
-	[Fact]
-	public void Should_HandleExceptionHandling_AsyncAnalyzers()
-	{
-		const string testCode = @"
+    #region Exception Handling Edge Cases
+
+    /// <summary>
+    /// Tests edge case: Exception handling in async methods.
+    /// </summary>
+    [Fact]
+    public void Should_HandleExceptionHandling_AsyncAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -420,24 +420,24 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
-		configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
 
-	#endregion
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
+        configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
+    }
 
-	#region Logging Edge Cases
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Complex logging scenarios.
-	/// </summary>
-	[Fact]
-	public void Should_HandleComplexLogging_LoggingAnalyzers()
-	{
-		const string testCode = @"
+    #region Logging Edge Cases
+
+    /// <summary>
+    /// Tests edge case: Complex logging scenarios.
+    /// </summary>
+    [Fact]
+    public void Should_HandleComplexLogging_LoggingAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using Microsoft.Extensions.Logging;
 
@@ -466,23 +466,23 @@ namespace TestProject
 	}
 }";
 
-		var loggingDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
-		
-		loggingDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
-		loggingDiagnostics.Any(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
-	}
+        var loggingDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
 
-	#endregion
+        loggingDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
+        loggingDiagnostics.Any(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
+    }
 
-	#region Performance Edge Cases
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Performance-critical code patterns.
-	/// </summary>
-	[Fact]
-	public void Should_HandlePerformancePatterns_PerformanceAnalyzers()
-	{
-		const string testCode = @"
+    #region Performance Edge Cases
+
+    /// <summary>
+    /// Tests edge case: Performance-critical code patterns.
+    /// </summary>
+    [Fact]
+    public void Should_HandlePerformancePatterns_PerformanceAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -519,22 +519,22 @@ namespace TestProject
 	}
 }";
 
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	#endregion
+        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
 
-	#region Code Quality Edge Cases
+    #endregion
 
-	/// <summary>
-	/// Tests edge case: Code quality patterns.
-	/// </summary>
-	[Fact]
-	public void Should_HandleCodeQualityPatterns_CodeQualityAnalyzers()
-	{
-		const string testCode = @"
+    #region Code Quality Edge Cases
+
+    /// <summary>
+    /// Tests edge case: Code quality patterns.
+    /// </summary>
+    [Fact]
+    public void Should_HandleCodeQualityPatterns_CodeQualityAnalyzers()
+    {
+        const string testCode = @"
 using System;
 using System.Threading.Tasks;
 
@@ -588,15 +588,15 @@ namespace TestProject
 	}
 }";
 
-		var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-		var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-		var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-		
-		asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-	}
+        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
 
-	#endregion
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+    }
+
+    #endregion
 }
 

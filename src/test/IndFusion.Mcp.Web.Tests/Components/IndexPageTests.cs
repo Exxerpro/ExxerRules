@@ -5,8 +5,14 @@ using TestContext = Bunit.TestContext;
 
 namespace IndFusion.Mcp.Web.Tests.Components;
 
+/// <summary>
+/// Component tests for the Index page verifying key sections and interactions.
+/// </summary>
 public class IndexPageTests : TestContext
 {
+    /// <summary>
+    /// Configures test services and mocks used by the Index page.
+    /// </summary>
     public IndexPageTests()
     {
         // Register MudBlazor services for testing
@@ -39,6 +45,9 @@ public class IndexPageTests : TestContext
         Services.AddSingleton(mockMetricsService);
     }
 
+    /// <summary>
+    /// Renders the page and verifies the title is present.
+    /// </summary>
     [Fact]
     public void Index_ShouldRender_WithCorrectTitle()
     {
@@ -49,6 +58,9 @@ public class IndexPageTests : TestContext
         component.Find("h3").TextContent.ShouldContain("Welcome to ExxerFactor.Mcp");
     }
 
+    /// <summary>
+    /// Verifies that the stats cards render and include expected labels.
+    /// </summary>
     [Fact]
     public void Index_ShouldDisplay_StatsCards()
     {
@@ -67,6 +79,9 @@ public class IndexPageTests : TestContext
         component.Markup.ShouldContain("Success Rate");
     }
 
+    /// <summary>
+    /// Verifies that the System Health section renders with expected content.
+    /// </summary>
     [Fact]
     public void Index_ShouldDisplay_SystemHealthSection()
     {
@@ -80,6 +95,9 @@ public class IndexPageTests : TestContext
         component.Markup.ShouldContain("McpServer");
     }
 
+    /// <summary>
+    /// Verifies that the Recent Activity timeline renders expected entries.
+    /// </summary>
     [Fact]
     public void Index_ShouldDisplay_RecentActivityTimeline()
     {
@@ -94,6 +112,9 @@ public class IndexPageTests : TestContext
         component.Markup.ShouldContain("AnotherProject");
     }
 
+    /// <summary>
+    /// Verifies quick action buttons and their links are present.
+    /// </summary>
     [Fact]
     public void Index_ShouldDisplay_QuickActionButtons()
     {
@@ -114,6 +135,9 @@ public class IndexPageTests : TestContext
         component.FindAll("a[href='/logs']").ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Ensures the refresh icon is rendered.
+    /// </summary>
     [Fact]
     public void Index_ShouldHave_RefreshButton()
     {
@@ -125,6 +149,9 @@ public class IndexPageTests : TestContext
         refreshButton.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Clicking refresh should not break rendering; content remains valid.
+    /// </summary>
     [Fact]
     public async Task Index_RefreshButton_ShouldTriggerDataRefresh()
     {
@@ -141,6 +168,9 @@ public class IndexPageTests : TestContext
         component.Markup.ShouldContain("System Health");
     }
 
+    /// <summary>
+    /// Mocked stats should be displayed in the page.
+    /// </summary>
     [Fact]
     public void Index_ShouldDisplay_StatsWithCorrectValues()
     {
@@ -155,6 +185,9 @@ public class IndexPageTests : TestContext
         component.Markup.ShouldContain("94"); // Success Rate
     }
 
+    /// <summary>
+    /// Activity duration values should be displayed.
+    /// </summary>
     [Fact]
     public void Index_ShouldShowActivityDuration()
     {
@@ -167,6 +200,9 @@ public class IndexPageTests : TestContext
         component.Markup.ShouldContain("1.8s");
     }
 
+    /// <summary>
+    /// Healthy status should be displayed with success style.
+    /// </summary>
     [Fact]
     public void Index_ShouldDisplayHealthStatusCorrectly()
     {

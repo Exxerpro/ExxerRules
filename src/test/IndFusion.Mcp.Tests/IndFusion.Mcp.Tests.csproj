@@ -9,6 +9,7 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <WarningsNotAsErrors>CS0219</WarningsNotAsErrors>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <EnableMSTestRunner>true</EnableMSTestRunner>

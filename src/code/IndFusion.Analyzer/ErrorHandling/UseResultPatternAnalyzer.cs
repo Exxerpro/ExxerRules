@@ -15,215 +15,215 @@ namespace IndFusion.Analyzers.ErrorHandling;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 {
-	private static readonly LocalizableString Title = "Use Result<T> pattern instead of throwing exceptions";
-	private static readonly LocalizableString MessageFormat = "Method '{0}' throws exceptions but should return Result<T>";
-	private static readonly LocalizableString Description = "Methods should return Result<T> for error handling instead of throwing exceptions, following functional programming principles.";
+    private static readonly LocalizableString Title = "Use Result<T> pattern instead of throwing exceptions";
+    private static readonly LocalizableString MessageFormat = "Method '{0}' throws exceptions but should return Result<T>";
+    private static readonly LocalizableString Description = "Methods should return Result<T> for error handling instead of throwing exceptions, following functional programming principles.";
 
-	private static readonly DiagnosticDescriptor Rule = new(
-		DiagnosticIds.UseResultPattern,
-		Title,
-		MessageFormat,
-		DiagnosticCategories.ErrorHandling,
-		DiagnosticSeverity.Error,
-		isEnabledByDefault: true,
-		description: Description);
+    private static readonly DiagnosticDescriptor Rule = new(
+        DiagnosticIds.UseResultPattern,
+        Title,
+        MessageFormat,
+        DiagnosticCategories.ErrorHandling,
+        DiagnosticSeverity.Error,
+        isEnabledByDefault: true,
+        description: Description);
 
-	/// <inheritdoc/>
-	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
+    /// <inheritdoc/>
+    public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	/// <inheritdoc/>
-	public override void Initialize(AnalysisContext context)
-	{
-		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-		context.EnableConcurrentExecution();
+    /// <inheritdoc/>
+    public override void Initialize(AnalysisContext context)
+    {
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+        context.EnableConcurrentExecution();
 
-		context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
-		context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
-		context.RegisterSyntaxNodeAction(AnalyzeLocalFunction, SyntaxKind.LocalFunctionStatement);
-		context.RegisterSyntaxNodeAction(AnalyzeLambda, SyntaxKind.SimpleLambdaExpression, SyntaxKind.ParenthesizedLambdaExpression);
-	}
+        context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
+        context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
+        context.RegisterSyntaxNodeAction(AnalyzeLocalFunction, SyntaxKind.LocalFunctionStatement);
+        context.RegisterSyntaxNodeAction(AnalyzeLambda, SyntaxKind.SimpleLambdaExpression, SyntaxKind.ParenthesizedLambdaExpression);
+    }
 
-	private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
-	{
-		var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+    private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
+    {
+        var methodDeclaration = (MethodDeclarationSyntax)context.Node;
 
-		// Skip if method already returns Result<T>
-		if (IsResultReturnType(methodDeclaration.ReturnType))
-		{
-			return;
-		}
+        // Skip if method already returns Result<T>
+        if (IsResultReturnType(methodDeclaration.ReturnType))
+        {
+            return;
+        }
 
-		// Skip if this is a method that should be exempted
-		if (IsSkippableMethod(methodDeclaration))
-		{
-			return;
-		}
+        // Skip if this is a method that should be exempted
+        if (IsSkippableMethod(methodDeclaration))
+        {
+            return;
+        }
 
-		// Check for throw statements and expressions using functional approach
-		var throwStatements = methodDeclaration.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
-		var throwExpressions = methodDeclaration.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
+        // Check for throw statements and expressions using functional approach
+        var throwStatements = methodDeclaration.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
+        var throwExpressions = methodDeclaration.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
 
-		if (throwStatements.Any() || throwExpressions.Any())
-		{
-			var diagnostic = Diagnostic.Create(
-				Rule,
-				methodDeclaration.Identifier.GetLocation(),
-				methodDeclaration.Identifier.Text);
-			context.ReportDiagnostic(diagnostic);
-		}
-	}
+        if (throwStatements.Any() || throwExpressions.Any())
+        {
+            var diagnostic = Diagnostic.Create(
+                Rule,
+                methodDeclaration.Identifier.GetLocation(),
+                methodDeclaration.Identifier.Text);
+            context.ReportDiagnostic(diagnostic);
+        }
+    }
 
-	private static bool IsSkippableMethod(MethodDeclarationSyntax method)
-	{
-		// Skip constructors, destructors, and event handlers
-		if (method.Identifier.Text.StartsWith("On") && method.Modifiers.Any(SyntaxKind.ProtectedKeyword))
-		{
-			return true;
-		}
+    private static bool IsSkippableMethod(MethodDeclarationSyntax method)
+    {
+        // Skip constructors, destructors, and event handlers
+        if (method.Identifier.Text.StartsWith("On") && method.Modifiers.Any(SyntaxKind.ProtectedKeyword))
+        {
+            return true;
+        }
 
-		// Skip Main method
-		if (method.Identifier.Text == "Main")
-		{
-			return true;
-		}
+        // Skip Main method
+        if (method.Identifier.Text == "Main")
+        {
+            return true;
+        }
 
-		// Skip methods with exception-related names
-		if (method.Identifier.Text.Contains("Throw") || method.Identifier.Text.Contains("Exception"))
-		{
-			return true;
-		}
+        // Skip methods with exception-related names
+        if (method.Identifier.Text.Contains("Throw") || method.Identifier.Text.Contains("Exception"))
+        {
+            return true;
+        }
 
-		// Skip test methods
-		var attributes = method.AttributeLists.SelectMany(al => al.Attributes);
-		var testAttributeNames = new[] { "Fact", "Theory", "Test", "TestMethod", "TestCase" };
-		
-		if (attributes.Any(attr => 
-			testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
-		{
-			return true;
-		}
+        // Skip test methods
+        var attributes = method.AttributeLists.SelectMany(al => al.Attributes);
+        var testAttributeNames = new[] { "Fact", "Theory", "Test", "TestMethod", "TestCase" };
 
-		return false;
-	}
+        if (attributes.Any(attr =>
+            testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
+        {
+            return true;
+        }
 
-	private static void AnalyzeProperty(SyntaxNodeAnalysisContext context)
-	{
-		var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
+        return false;
+    }
 
-		// Skip if property already returns Result<T>
-		if (IsResultReturnType(propertyDeclaration.Type))
-		{
-			return;
-		}
+    private static void AnalyzeProperty(SyntaxNodeAnalysisContext context)
+    {
+        var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
 
-		// Check accessors for throw statements using functional approach
-		var accessorThrows = CheckAccessorsForThrows(propertyDeclaration);
-		var expressionThrows = CheckExpressionBodyForThrows(propertyDeclaration);
+        // Skip if property already returns Result<T>
+        if (IsResultReturnType(propertyDeclaration.Type))
+        {
+            return;
+        }
 
-		if (accessorThrows || expressionThrows)
-		{
-			var diagnostic = Diagnostic.Create(
-				Rule,
-				propertyDeclaration.Identifier.GetLocation(),
-				propertyDeclaration.Identifier.Text);
-			context.ReportDiagnostic(diagnostic);
-		}
-	}
+        // Check accessors for throw statements using functional approach
+        var accessorThrows = CheckAccessorsForThrows(propertyDeclaration);
+        var expressionThrows = CheckExpressionBodyForThrows(propertyDeclaration);
 
-	private static bool CheckAccessorsForThrows(PropertyDeclarationSyntax property)
-	{
-		if (property.AccessorList == null)
-		{
-			return false;
-		}
+        if (accessorThrows || expressionThrows)
+        {
+            var diagnostic = Diagnostic.Create(
+                Rule,
+                propertyDeclaration.Identifier.GetLocation(),
+                propertyDeclaration.Identifier.Text);
+            context.ReportDiagnostic(diagnostic);
+        }
+    }
 
-		return property.AccessorList.Accessors.Any(accessor =>
-			accessor.DescendantNodes().OfType<ThrowStatementSyntax>().Any() ||
-			accessor.DescendantNodes().OfType<ThrowExpressionSyntax>().Any());
-	}
+    private static bool CheckAccessorsForThrows(PropertyDeclarationSyntax property)
+    {
+        if (property.AccessorList == null)
+        {
+            return false;
+        }
 
-	private static bool CheckExpressionBodyForThrows(PropertyDeclarationSyntax property) => property.ExpressionBody?.DescendantNodes().OfType<ThrowExpressionSyntax>().Any() == true;
+        return property.AccessorList.Accessors.Any(accessor =>
+            accessor.DescendantNodes().OfType<ThrowStatementSyntax>().Any() ||
+            accessor.DescendantNodes().OfType<ThrowExpressionSyntax>().Any());
+    }
 
-	private static void AnalyzeLocalFunction(SyntaxNodeAnalysisContext context)
-	{
-		var localFunction = (LocalFunctionStatementSyntax)context.Node;
+    private static bool CheckExpressionBodyForThrows(PropertyDeclarationSyntax property) => property.ExpressionBody?.DescendantNodes().OfType<ThrowExpressionSyntax>().Any() == true;
 
-		// Skip if function already returns Result<T>
-		if (IsResultReturnType(localFunction.ReturnType))
-		{
-			return;
-		}
+    private static void AnalyzeLocalFunction(SyntaxNodeAnalysisContext context)
+    {
+        var localFunction = (LocalFunctionStatementSyntax)context.Node;
 
-		// Check for throw statements and expressions
-		var throwStatements = localFunction.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
-		var throwExpressions = localFunction.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
+        // Skip if function already returns Result<T>
+        if (IsResultReturnType(localFunction.ReturnType))
+        {
+            return;
+        }
 
-		if (throwStatements.Any() || throwExpressions.Any())
-		{
-			var diagnostic = Diagnostic.Create(
-				Rule,
-				localFunction.Identifier.GetLocation(),
-				localFunction.Identifier.Text);
-			context.ReportDiagnostic(diagnostic);
-		}
-	}
+        // Check for throw statements and expressions
+        var throwStatements = localFunction.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
+        var throwExpressions = localFunction.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
 
-	private static void AnalyzeLambda(SyntaxNodeAnalysisContext context)
-	{
-		LambdaExpressionSyntax? lambda = context.Node switch
-		{
-			SimpleLambdaExpressionSyntax simple => simple,
-			ParenthesizedLambdaExpressionSyntax parenthesized => parenthesized,
-			_ => null
-		};
+        if (throwStatements.Any() || throwExpressions.Any())
+        {
+            var diagnostic = Diagnostic.Create(
+                Rule,
+                localFunction.Identifier.GetLocation(),
+                localFunction.Identifier.Text);
+            context.ReportDiagnostic(diagnostic);
+        }
+    }
 
-		if (lambda == null)
-		{
-			return;
-		}
+    private static void AnalyzeLambda(SyntaxNodeAnalysisContext context)
+    {
+        LambdaExpressionSyntax? lambda = context.Node switch
+        {
+            SimpleLambdaExpressionSyntax simple => simple,
+            ParenthesizedLambdaExpressionSyntax parenthesized => parenthesized,
+            _ => null
+        };
 
-		// Check for throw statements and expressions
-		var throwStatements = lambda.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
-		var throwExpressions = lambda.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
+        if (lambda == null)
+        {
+            return;
+        }
 
-		if (throwStatements.Any() || throwExpressions.Any())
-		{
-			var diagnostic = Diagnostic.Create(
-				Rule,
-				lambda.GetLocation(),
-				"Lambda expression");
-			context.ReportDiagnostic(diagnostic);
-		}
-	}
+        // Check for throw statements and expressions
+        var throwStatements = lambda.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
+        var throwExpressions = lambda.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
 
-	private static bool IsResultReturnType(TypeSyntax? typeSyntax)
-	{
-		if (typeSyntax == null)
-		{
-			return false;
-		}
+        if (throwStatements.Any() || throwExpressions.Any())
+        {
+            var diagnostic = Diagnostic.Create(
+                Rule,
+                lambda.GetLocation(),
+                "Lambda expression");
+            context.ReportDiagnostic(diagnostic);
+        }
+    }
 
-		// Check for Result<T>, Task<Result<T>>, ValueTask<Result<T>>, etc.
-		var typeText = typeSyntax.ToString();
-		
-		// Direct Result patterns
-		if (typeText.Contains("Result<") || typeText.Contains("Result "))
-		{
-			return true;
-		}
-		
-		// Task/ValueTask wrapping Result patterns
-		if (typeText.Contains("Task<") && typeText.Contains("Result<"))
-		{
-			return true;
-		}
-		
-		if (typeText.Contains("ValueTask<") && typeText.Contains("Result<"))
-		{
-			return true;
-		}
+    private static bool IsResultReturnType(TypeSyntax? typeSyntax)
+    {
+        if (typeSyntax == null)
+        {
+            return false;
+        }
 
-		return false;
-	}
+        // Check for Result<T>, Task<Result<T>>, ValueTask<Result<T>>, etc.
+        var typeText = typeSyntax.ToString();
+
+        // Direct Result patterns
+        if (typeText.Contains("Result<") || typeText.Contains("Result "))
+        {
+            return true;
+        }
+
+        // Task/ValueTask wrapping Result patterns
+        if (typeText.Contains("Task<") && typeText.Contains("Result<"))
+        {
+            return true;
+        }
+
+        if (typeText.Contains("ValueTask<") && typeText.Contains("Result<"))
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
 

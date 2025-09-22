@@ -2,6 +2,10 @@ namespace IndFusion.Tools.Mcp.App.Move;
 
 using Microsoft.CodeAnalysis.Formatting;
 
+/// <summary>
+/// MCP tool for moving methods between classes at the file/solution level,
+/// leaving stubs to preserve public interfaces.
+/// </summary>
 [McpServerToolType]
 public static class MoveMethodTool
 {
@@ -23,6 +27,9 @@ public static class MoveMethodTool
     internal static void MarkMoved(string filePath, string methodName)
         => _movedMethods.Add(GetKey(filePath, methodName));
 
+    /// <summary>
+    /// Clears the in-process move history, allowing repeated moves of the same method in one session.
+    /// </summary>
     [McpServerTool, Description("Clear the record of moved methods so they can be moved again. Do not use unless explicitly asked to.")]
     public static string ResetMoveHistory()
     {
@@ -30,6 +37,16 @@ public static class MoveMethodTool
         return "Cleared move history";
     }
 
+    /// <summary>
+    /// Moves a static method to another class, creating a delegating stub in the original class.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the .sln file.</param>
+    /// <param name="filePath">Path to the C# file containing the method.</param>
+    /// <param name="methodName">Name of the static method to move.</param>
+    /// <param name="targetClass">Name of the target class (will be created if missing).</param>
+    /// <param name="targetFilePath">Optional target file path; defaults to alongside the source.</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
     [McpServerTool, Description("Move a static method to another class (preferred for large C# file ExxerFactoring). " +
         "Leaves a delegating method in the original class to preserve the interface." +
         "The target class will be automatically created if it doesn't exist.")]
@@ -212,6 +229,10 @@ public static class MoveMethodTool
         progress?.Report(context.TargetPath);
     }
 
+    /// <summary>
+    /// Moves one or more instance methods to another class, optionally across files, wiring constructor
+    /// and parameter injections as specified and preserving public API via wrappers.
+    /// </summary>
     [McpServerTool, Description("Move one or more instance methods to another class (preferred for large C# file ExxerFactoring). " +
         "Each original method is replaced with a wrapper that calls the moved version to maintain the public API." +
         "The target class will be automatically created if it doesn't exist.")]

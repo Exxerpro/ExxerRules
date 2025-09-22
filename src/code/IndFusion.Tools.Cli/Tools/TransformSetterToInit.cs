@@ -1,8 +1,14 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
+/// <summary>
+/// Tool that converts property setters to init-only setters using Roslyn transformations.
+/// </summary>
 [McpServerToolType]
 public static class TransformSetterToInitTool
 {
+    /// <summary>
+    /// Converts a property's setter to an init-only setter, either in solution mode or single-file mode.
+    /// </summary>
     [McpServerTool, Description("Convert property setter to init-only setter (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> TransformSetterToInit(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,

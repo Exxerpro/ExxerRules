@@ -14,13 +14,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class CodeQualityTests
 {
-	/// <summary>
-	/// Tests that not using regions does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_NotUsingRegions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that not using regions does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_NotUsingRegions()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -41,17 +41,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseRegionsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseRegionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using regions reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingRegions()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using regions reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingRegions()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -78,18 +78,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseRegionsAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseRegions).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseRegionsAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseRegions).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests that avoiding magic numbers and strings does not report diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_NotReportDiagnostic_When_AvoidingMagicNumbersAndStrings()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that avoiding magic numbers and strings does not report diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_AvoidingMagicNumbersAndStrings()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -118,17 +118,17 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
-		diagnostics.Length.ShouldBe(0);
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 
-	/// <summary>
-	/// Tests that using magic numbers and strings reports diagnostic.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_UsingMagicNumbersAndStrings()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests that using magic numbers and strings reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_UsingMagicNumbersAndStrings()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -154,18 +154,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-		diagnostics.Any(d => d.Id == DiagnosticIds.AvoidMagicNumbersAndStrings).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
+        diagnostics.Any(d => d.Id == DiagnosticIds.AvoidMagicNumbersAndStrings).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different region patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DifferentRegionPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different region patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DifferentRegionPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -198,18 +198,18 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseRegionsAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
-		diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseRegions).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseRegionsAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
+        diagnostics.Any(d => d.Id == DiagnosticIds.DoNotUseRegions).ShouldBeTrue();
+    }
 
-	/// <summary>
-	/// Tests edge case: Different magic number and string patterns.
-	/// </summary>
-	[Fact]
-	public void Should_ReportDiagnostic_When_DifferentMagicNumberAndStringPatterns()
-	{
-		const string testCode = @"
+    /// <summary>
+    /// Tests edge case: Different magic number and string patterns.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_DifferentMagicNumberAndStringPatterns()
+    {
+        const string testCode = @"
 using System;
 
 namespace TestProject
@@ -252,9 +252,9 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
-		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
-		diagnostics.Any(d => d.Id == DiagnosticIds.AvoidMagicNumbersAndStrings).ShouldBeTrue();
-	}
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
+        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
+        diagnostics.Any(d => d.Id == DiagnosticIds.AvoidMagicNumbersAndStrings).ShouldBeTrue();
+    }
 }
 

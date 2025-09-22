@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// StaticConversionRewriter ConvertsInstanceMethod.
+    /// </summary>
     [Fact]
     public void StaticConversionRewriter_ConvertsInstanceMethod()
     {
@@ -12,4 +18,3 @@ public partial class RoslynTransformationTests
         Assert.Contains("inst.x", result);
     }
 }
-

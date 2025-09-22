@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// StaticFieldRewriter QualifiesStaticField.
+    /// </summary>
     [Fact]
     public void StaticFieldRewriter_QualifiesStaticField()
     {
@@ -11,4 +17,3 @@ public partial class RoslynTransformationTests
         Assert.Contains("C.x", result);
     }
 }
-

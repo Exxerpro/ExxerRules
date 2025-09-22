@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// SetterToInitRewriter ReplacesSetterWithInit.
+    /// </summary>
     [Fact]
     public void SetterToInitRewriter_ReplacesSetterWithInit()
     {
@@ -11,4 +17,3 @@ public partial class RoslynTransformationTests
         Assert.Contains("init", result);
     }
 }
-

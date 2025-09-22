@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Walkers;
 
+/// <summary>
+/// Tests for Walkers.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// AccessMemberTypeWalker DetectsFieldAndProperty.
+    /// </summary>
     [Fact]
     public void AccessMemberTypeWalker_DetectsFieldAndProperty()
     {
@@ -18,4 +24,3 @@ public partial class RoslynTransformationTests
         Assert.Equal("property", propWalker.MemberType);
     }
 }
-

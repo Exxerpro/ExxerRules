@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// ParameterRewriter ReplacesIdentifiers.
+    /// </summary>
     [Fact]
     public void ParameterRewriter_ReplacesIdentifiers()
     {
@@ -16,6 +22,9 @@ public partial class RoslynTransformationTests
         Assert.Equal("1 + 2", result);
     }
 
+    /// <summary>
+    /// ParameterRewriter ReplacesMemberAccess.
+    /// </summary>
     [Fact]
     public void ParameterRewriter_ReplacesMemberAccess()
     {
@@ -29,4 +38,3 @@ public partial class RoslynTransformationTests
         Assert.Equal("p + p", result);
     }
 }
-

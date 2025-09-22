@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Walkers;
 
+/// <summary>
+/// Tests for Walkers.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// ComplexityWalker ComputesComplexityAndDepth.
+    /// </summary>
     [Fact]
     public void ComplexityWalker_ComputesComplexityAndDepth()
     {
@@ -14,4 +20,3 @@ public partial class RoslynTransformationTests
         Assert.Equal(2, walker.MaxDepth);
     }
 }
-

@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// VariableRemovalRewriter RemovesVariable.
+    /// </summary>
     [Fact]
     public void VariableRemovalRewriter_RemovesVariable()
     {
@@ -13,4 +19,3 @@ public partial class RoslynTransformationTests
         Assert.Equal("void M() { }", newRoot.ToFullString().Trim());
     }
 }
-

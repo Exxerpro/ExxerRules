@@ -192,6 +192,11 @@ public class WebApplicationTests : IClassFixture<WebApplicationFactory<Program>>
     /// <summary>
     /// Public pages should return 200 for various routes.
     /// </summary>
+    /// <summary>
+    /// Get PublicPages ReturnsSuccess.
+    /// </summary>
+    /// <param name="url"></param>
+    /// <returns></returns>
     [Theory]
     [InlineData("/")]
     [InlineData("/tools")]
@@ -229,5 +234,4 @@ public class WebApplicationTests : IClassFixture<WebApplicationFactory<Program>>
 }
 
 // Test service implementations
-
 

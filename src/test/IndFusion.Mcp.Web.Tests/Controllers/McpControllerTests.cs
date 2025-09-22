@@ -118,6 +118,10 @@ public class McpControllerTests
     /// <summary>
     /// Ensures tool names are reported in kebab-case.
     /// </summary>
+    /// <summary>
+    /// ToKebabCase ShouldConvertCamelCaseCorrectly.
+    /// </summary>
+    /// <param name="expected"></param>
     [Theory]
     [InlineData("extract-method")]
     [InlineData("move-method")]
@@ -167,5 +171,4 @@ public class McpControllerTests
 }
 
 // Test data builders for better test organization
-
 

@@ -427,4 +427,13 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# Backup files - typically large and not needed in repo
+backup-*.zip
+backup-*.tar.gz
+*-backup-*.zip
+*-backup-*.tar.gz
+*.backup
+worktree-*.zip
+migration-*.zip
+
 /FileConentIndex/

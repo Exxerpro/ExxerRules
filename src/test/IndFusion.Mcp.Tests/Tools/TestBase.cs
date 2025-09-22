@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Common test base providing solution paths and per-test temp directories.
+/// </summary>
 public abstract class TestBase : IDisposable
 {
     protected static readonly string SolutionPath = TestUtilities.GetSolutionPath();
@@ -10,6 +13,9 @@ public abstract class TestBase : IDisposable
 
     protected string TestOutputPath { get; }
 
+    /// <summary>
+    /// Initializes a new temp output directory for the test instance.
+    /// </summary>
     protected TestBase()
     {
         Directory.CreateDirectory(TestOutputRoot);
@@ -17,10 +23,12 @@ public abstract class TestBase : IDisposable
         Directory.CreateDirectory(TestOutputPath);
     }
 
+    /// <summary>
+    /// Cleans up the temp output directory after the test.
+    /// </summary>
     public void Dispose()
     {
         if (Directory.Exists(TestOutputPath))
             Directory.Delete(TestOutputPath, true);
     }
 }
-

@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.Roslyn;
 
+/// <summary>
+/// Tests for moving methods between classes, focusing on dependency resolution and correct ordering.
+/// </summary>
 public partial class MoveMethodsTests
 {
     private static string MoveMultipleMethodsInSource(
@@ -35,6 +38,9 @@ public partial class MoveMethodsTests
         return formattedRoot.ToFullString();
     }
 
+    /// <summary>
+    /// Test moving multiple methods with dependencies, ensuring they are moved in the correct order.
+    /// </summary>
     [Fact]
     public void MoveMultipleMethods_WithDependencies_ShouldMoveInCorrectOrder()
     {
@@ -80,6 +86,9 @@ public class TargetClass
         Assert.Contains("return TargetClass.Method3()", sourceClassCode);
     }
 
+    /// <summary>
+    /// Test moving multiple methods with cross-file dependencies, ensuring they are moved in the correct order.
+    /// </summary>
     [Fact]
     public void MoveMultipleMethods_WithCrossFileDependencies_ShouldMoveInCorrectOrder()
     {
@@ -125,6 +134,9 @@ public class TargetClass
         Assert.Contains("return TargetClass.Method3()", sourceClassCode);
     }
 
+    /// <summary>
+    /// Test moving multiple instance methods with dependencies on instance fields and methods, ensuring they are moved in the correct order.
+    /// </summary>
     [Fact]
     public void MoveMultipleMethods_WithInstanceDependencies_ShouldMoveInCorrectOrder()
     {
@@ -172,6 +184,9 @@ public class TargetClass
         Assert.Contains("return TargetClass.Method3(this)", sourceClassCode);
     }
 
+    /// <summary>
+    /// Test moving an instance method that uses a private field, ensuring the field is injected as a parameter.
+    /// </summary>
     [Fact]
     public void MoveInstanceMethod_PrivateFieldInjectedAsParameter()
     {
@@ -204,6 +219,9 @@ public class TargetClass
         Assert.Contains("return TargetClass.GetValue(_value)", formatted);
     }
 
+    /// <summary>
+    /// Test moving an instance method with an optional parameter, ensuring dependencies are inserted before the optional parameter.
+    /// </summary>
     [Fact]
     public void MoveInstanceMethod_InsertsDependenciesBeforeOptionalParam()
     {
@@ -627,4 +645,3 @@ class Target { }";
         Assert.Contains("GroupId = @this.ConnectedGroupID", formatted);
     }
 }
-

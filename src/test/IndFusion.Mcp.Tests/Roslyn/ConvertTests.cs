@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.Roslyn;
 
+/// <summary>
+/// Tests for Roslyn.
+/// </summary>
 public partial class RoslynTransformationTests
 {
     [Fact]
@@ -165,4 +168,3 @@ public interface IRoomPick
         Assert.DoesNotContain("IRoomPick.", output);
     }
 }
-

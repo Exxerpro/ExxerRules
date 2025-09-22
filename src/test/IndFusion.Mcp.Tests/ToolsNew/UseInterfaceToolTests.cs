@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for replacing concrete parameter types with interface types.
+/// </summary>
 public class UseInterfaceToolTests : TestBase
 {
+    /// <summary>
+    /// Changes a method parameter from a class to an interface type.
+    /// </summary>
     [Fact]
     public async Task UseInterface_ChangesParameterType()
     {
@@ -43,5 +49,3 @@ public interface ILogger { }
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 }
-
-

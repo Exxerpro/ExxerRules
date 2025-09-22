@@ -2,6 +2,9 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for introducing local variables from inline expressions.
+/// </summary>
 public class IntroduceVariableToolTests : TestBase
 {
     [Fact]
@@ -43,4 +46,3 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 }
-

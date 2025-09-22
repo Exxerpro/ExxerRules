@@ -646,6 +646,11 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// Creates a Roslyn <see cref="Document"/> containing the provided source code.
+    /// </summary>
+    /// <param name="sourceCode">The C# source code to include in the document.</param>
+    /// <returns>The created <see cref="Document"/>.</returns>
     private static Document CreateDocument(string sourceCode)
     {
         var workspace = new AdhocWorkspace();
@@ -659,6 +664,12 @@ public class TestEntity
         return solution.GetDocument(documentId)!;
     }
 
+    /// <summary>
+    /// Creates a <see cref="Diagnostic"/> with the specified identifier at the given location.
+    /// </summary>
+    /// <param name="id">The diagnostic identifier.</param>
+    /// <param name="location">The source location for the diagnostic.</param>
+    /// <returns>The created <see cref="Diagnostic"/>.</returns>
     private static Diagnostic CreateDiagnostic(string id, Location location)
     {
         var descriptor = new DiagnosticDescriptor(id, "Test", "Test", "Test", DiagnosticSeverity.Warning, true);
@@ -666,4 +677,3 @@ public class TestEntity
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-

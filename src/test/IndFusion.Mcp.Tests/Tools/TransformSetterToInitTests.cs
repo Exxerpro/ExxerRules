@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for converting property setters to init-only.
+/// </summary>
 public class TransformSetterToInitTests : TestBase
 {
+    /// <summary>
+    /// Converts a property setter to init in the source file.
+    /// </summary>
     [Fact]
     public async Task TransformSetterToInit_PropertyWithSetter_ReturnsSuccess()
     {
@@ -19,6 +25,9 @@ public class TransformSetterToInitTests : TestBase
         Assert.Contains("init;", fileContent);
     }
 
+    /// <summary>
+    /// Throws when the specified property cannot be found.
+    /// </summary>
     [Fact]
     public async Task TransformSetterToInit_InvalidProperty_ReturnsError()
     {
@@ -30,4 +39,3 @@ public class TransformSetterToInitTests : TestBase
                 "Nonexistent"));
     }
 }
-

@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Walkers;
 
+/// <summary>
+/// Tests for Walkers.
+/// </summary>
 public partial class RoslynTransformationTests
 {
     [Fact]
@@ -31,4 +34,3 @@ public partial class RoslynTransformationTests
         Assert.True(walker.IsRecursive);
     }
 }
-

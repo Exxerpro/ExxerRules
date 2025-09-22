@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn;
 
+/// <summary>
+/// Roslyn transformation tests for inlining a method into its call site.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// Replaces an invocation with the body of the inlined method.
+    /// </summary>
     [Fact]
     public void InlineMethodInSource_ReplacesInvocationWithBody()
     {
@@ -23,4 +29,3 @@ public partial class RoslynTransformationTests
         Assert.Equal(expected, output.Trim());
     }
 }
-

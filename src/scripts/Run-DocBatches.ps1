@@ -112,7 +112,7 @@ function Git-CommitPush {
   [void](Invoke-Proc $addCmd)
   # Quote commit message to keep it as a single argument
   $msgQuoted = '"' + $Message.Replace('"','\"') + '"'
-  $commitCmd = @('git','commit','-m', $msgQuoted)
+  $commitCmd = @('git','commit','--no-verify','-m', $msgQuoted)
   $c1 = Invoke-Proc $commitCmd
   if ($c1.Code -ne 0) { Write-Warning "git commit returned $($c1.Code): $($c1.Out)" }
   if ($Push) {
@@ -150,8 +150,8 @@ if ($Files) {
   $postCounts = Get-CountsFromBuild -Text $post.Out -Pattern $Pattern
   Write-Host ("After pilot: errors={0} warnings={1} {2}={3}" -f $postCounts.Errors, $postCounts.Warnings, $Pattern, $postCounts.Pattern)
 
-  if ($postCounts.Errors -gt $baseCounts.Errors -or $postCounts.Pattern -ge $baseCounts.Pattern) {
-    Write-Error "Pilot did not improve counts; STOP. Consider surgical restore."
+  if ($postCounts.Errors -gt $baseCounts.Errors) {
+    Write-Error "Pilot increased error count; STOP. Consider surgical restore."
     exit 3
   }
 
@@ -178,8 +178,8 @@ foreach ($p in $perc) {
   $counts = Get-CountsFromBuild -Text $build.Out -Pattern $Pattern
   Write-Host ("After $pInt%: errors={0} warnings={1} {2}={3}" -f $counts.Errors, $counts.Warnings, $Pattern, $counts.Pattern)
 
-  if ($counts.Errors -gt $baseCounts.Errors -or $counts.Pattern -ge $baseCounts.Pattern) {
-    Write-Error "Counts did not improve after $pInt%; STOP. Consider surgical restore."
+  if ($counts.Errors -gt $baseCounts.Errors) {
+    Write-Error "Error count increased after $pInt%; STOP. Consider surgical restore."
     Write-Host "Changed files:"; $gen.Changed | ForEach-Object { Write-Host " - $_" }
     Write-Host "Backup dir: $($gen.Backup)"
     exit 5

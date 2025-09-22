@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.SyntaxWalkers;
 
+/// <summary>
+/// Tests for SyntaxWalkers.
+/// </summary>
 public class MethodCollectorWalkerTests
 {
     [Fact]
@@ -14,4 +17,3 @@ public class MethodCollectorWalkerTests
         Assert.DoesNotContain("A.Y", walker.Methods.Keys);
     }
 }
-

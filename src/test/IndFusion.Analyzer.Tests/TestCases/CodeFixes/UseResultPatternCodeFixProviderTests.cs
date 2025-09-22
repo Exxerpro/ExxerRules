@@ -59,7 +59,7 @@ public class TestClass
     {
         if (parameter == null)
             throw new ArgumentNullException(nameof(parameter));
-        
+
         return await Task.FromResult(parameter.ToUpper());
     }
 }";
@@ -92,7 +92,7 @@ public class TestClass
     {
         if (parameter == null)
             throw new ArgumentNullException(nameof(parameter));
-        
+
         return parameter.ToUpper();
     }
 }";
@@ -125,7 +125,7 @@ public class TestClass
     {
         if (parameter == null)
             throw new ArgumentNullException(nameof(parameter));
-        
+
         return Task.FromResult(parameter.ToUpper());
     }
 }";
@@ -158,7 +158,7 @@ public class TestClass
     {
         if (parameter == null)
             throw new ArgumentNullException(nameof(parameter));
-        
+
         return ValueTask.FromResult(parameter.ToUpper());
     }
 }";
@@ -191,7 +191,7 @@ public class TestClass
     {
         if (parameter == null)
             throw new ArgumentNullException(nameof(parameter));
-        
+
         // Do something
     }
 }";
@@ -224,10 +224,10 @@ public class TestClass
     {
         if (parameter == null)
             throw new ArgumentNullException(nameof(parameter));
-        
+
         if (parameter.Length == 0)
             throw new ArgumentException(""Parameter cannot be empty"", nameof(parameter));
-        
+
         if (parameter.Length > 100)
             throw new InvalidOperationException(""Parameter too long"");
     }
@@ -323,7 +323,7 @@ public class TestClass
     {
         if (parameter == null)
             return Result.WithFailure(""Parameter cannot be null"");
-        
+
         return Result.Success(parameter.ToUpper());
     }
 }";
@@ -380,6 +380,11 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// Creates a Roslyn <see cref="Document"/> containing the provided source code.
+    /// </summary>
+    /// <param name="sourceCode">The C# source code to include in the document.</param>
+    /// <returns>The created <see cref="Document"/>.</returns>
     private static Document CreateDocument(string sourceCode)
     {
         var workspace = new AdhocWorkspace();
@@ -393,10 +398,15 @@ public class TestClass
         return solution.GetDocument(documentId)!;
     }
 
+    /// <summary>
+    /// Creates a <see cref="Diagnostic"/> with the specified identifier at the given location.
+    /// </summary>
+    /// <param name="id">The diagnostic identifier.</param>
+    /// <param name="location">The source location for the diagnostic.</param>
+    /// <returns>The created <see cref="Diagnostic"/>.</returns>
     private static Diagnostic CreateDiagnostic(string id, Location location)
     {
         var descriptor = new DiagnosticDescriptor(id, "Test", "Test", "Test", DiagnosticSeverity.Warning, true);
         return Diagnostic.Create(descriptor, location);
     }
 }
-

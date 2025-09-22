@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for removing unused using directives from files.
+/// </summary>
 public class CleanupUsingsTests : TestBase
 {
+    /// <summary>
+    /// Removes unused using directives and updates the source file.
+    /// </summary>
     [Fact]
     public async Task CleanupUsings_RemovesUnusedUsings()
     {
@@ -16,4 +22,3 @@ public class CleanupUsingsTests : TestBase
         Assert.DoesNotContain("System.Text", fileContent);
     }
 }
-

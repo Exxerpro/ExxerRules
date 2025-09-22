@@ -93,5 +93,3 @@ public class Sample
         Assert.Equal("Error: Error: No field named 'nonexistent' found", ex.Message);
     }
 }
-
-

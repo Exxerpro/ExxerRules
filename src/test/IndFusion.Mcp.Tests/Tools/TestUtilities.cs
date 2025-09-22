@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Helper functions for test inputs: locating the solution, creating files,
+/// and providing canned sample source code for tool tests.
+/// </summary>
 public static class TestUtilities
 {
+    /// <summary>
+    /// Finds the solution path by walking up from the current directory.
+    /// </summary>
     public static string GetSolutionPath()
     {
         var currentDir = Directory.GetCurrentDirectory();
@@ -16,6 +23,9 @@ public static class TestUtilities
         return "./IndFusion.Mcp.sln";
     }
 
+    /// <summary>
+    /// Creates a file at the given path with the specified content.
+    /// </summary>
     public static async Task CreateTestFile(string filePath, string content)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
@@ -254,4 +264,3 @@ public class C
 }
 """;
 }
-

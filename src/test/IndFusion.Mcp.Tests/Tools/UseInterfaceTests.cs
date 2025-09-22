@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for replacing concrete types with interface types in method signatures.
+/// </summary>
 public class UseInterfaceTests : TestBase
 {
+    /// <summary>
+    /// Changes a method parameter from a concrete type to an interface.
+    /// </summary>
     [Fact]
     public async Task UseInterface_ChangesParameterType()
     {
@@ -21,4 +27,3 @@ public class UseInterfaceTests : TestBase
         Assert.Contains("DoWork(IWriter writer)", fileContent);
     }
 }
-

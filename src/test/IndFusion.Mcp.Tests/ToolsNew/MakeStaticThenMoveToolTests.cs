@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for converting methods to static and moving them to target types.
+/// </summary>
 public class MakeStaticThenMoveToolTests : TestBase
 {
+    /// <summary>
+    /// Converts an instance method to static and moves it to a target type.
+    /// </summary>
     [Fact]
     public async Task MakeStaticThenMove_ReturnsSuccess()
     {
@@ -28,5 +34,3 @@ public class MakeStaticThenMoveToolTests : TestBase
         Assert.True(File.Exists(newFile));
     }
 }
-
-

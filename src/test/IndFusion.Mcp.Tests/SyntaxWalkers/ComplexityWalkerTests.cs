@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.SyntaxWalkers;
 
+/// <summary>
+/// Tests for SyntaxWalkers.
+/// </summary>
 public class ComplexityWalkerTests
 {
     [Fact]
@@ -25,4 +28,3 @@ public class ComplexityWalkerTests
         Assert.Equal(3, walker.MaxDepth);
     }
 }
-

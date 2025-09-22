@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for removing unused using directives from source files.
+/// </summary>
 public class CleanupUsingsToolTests : TestBase
 {
+    /// <summary>
+    /// Removes unused using directives and preserves required ones.
+    /// </summary>
     [Fact]
     public async Task CleanupUsings_RemovesUnusedUsings()
     {
@@ -37,4 +43,3 @@ public class CleanupSample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 }
-

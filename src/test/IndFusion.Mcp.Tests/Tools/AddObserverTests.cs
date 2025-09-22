@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for adding observer events and invocations to classes.
+/// </summary>
 public class AddObserverTests : TestBase
 {
+    /// <summary>
+    /// Adds an event and invocation to the specified class and method.
+    /// </summary>
     [Fact]
     public async Task AddObserver_AddsEvent()
     {
@@ -22,6 +28,9 @@ public class AddObserverTests : TestBase
         Assert.Contains("Updated?.Invoke", text);
     }
 
+    /// <summary>
+    /// Throws when the specified class cannot be found.
+    /// </summary>
     [Fact]
     public async Task AddObserver_InvalidClassName_ThrowsMcpException()
     {
@@ -39,6 +48,9 @@ public class AddObserverTests : TestBase
         Assert.Equal("Error adding observer: Error: Class 'WrongClass' not found", ex.Message);
     }
 
+    /// <summary>
+    /// Throws when the specified method cannot be found.
+    /// </summary>
     [Fact]
     public async Task AddObserver_InvalidMethodName_ThrowsMcpException()
     {
@@ -56,4 +68,3 @@ public class AddObserverTests : TestBase
         Assert.Equal("Error adding observer: Error: Method 'WrongMethod' not found", ex.Message);
     }
 }
-

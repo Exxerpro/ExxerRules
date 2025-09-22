@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.SyntaxWalkers;
 
+/// <summary>
+/// Tests for SyntaxWalkers.
+/// </summary>
 public class AccessMemberTypeWalkerTests
 {
     [Fact]
@@ -22,4 +25,3 @@ public class AccessMemberTypeWalkerTests
         Assert.Equal("property", walker.MemberType);
     }
 }
-

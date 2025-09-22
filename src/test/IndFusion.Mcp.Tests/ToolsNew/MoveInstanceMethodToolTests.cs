@@ -2,6 +2,9 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for moving instance methods between types while fixing call sites.
+/// </summary>
 public class MoveInstanceMethodToolTests : TestBase
 {
     [Fact]
@@ -228,5 +231,3 @@ public class Target
         Assert.Contains("_offset + 1", targetContent);
     }
 }
-
-

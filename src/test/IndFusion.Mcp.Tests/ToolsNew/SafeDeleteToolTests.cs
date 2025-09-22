@@ -2,10 +2,16 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
-public class SafeDeleteToolTests : TestBase
-{
-    [Fact]
-    public async Task SafeDeleteField_RemovesUnusedField()
+/// <summary>
+/// Tests for safely deleting unused fields, methods, and types.
+/// </summary>
+    public class SafeDeleteToolTests : TestBase
+    {
+        /// <summary>
+        /// Removes an unused field from a class.
+        /// </summary>
+        [Fact]
+        public async Task SafeDeleteField_RemovesUnusedField()
     {
         const string initialCode = """
 public class Sample
@@ -34,8 +40,11 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 
-    [Fact]
-    public async Task SafeDeleteMethod_RemovesUnusedMethod()
+        /// <summary>
+        /// Removes an unused private method from a class.
+        /// </summary>
+        [Fact]
+        public async Task SafeDeleteMethod_RemovesUnusedMethod()
     {
         const string initialCode = """
 public class Sample
@@ -67,8 +76,11 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 
-    [Fact]
-    public async Task SafeDeleteVariable_RemovesUnusedLocal()
+        /// <summary>
+        /// Removes an unused local variable within a method.
+        /// </summary>
+        [Fact]
+        public async Task SafeDeleteVariable_RemovesUnusedLocal()
     {
         const string initialCode = """
 public class Sample
@@ -103,5 +115,3 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 }
-
-

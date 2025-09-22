@@ -116,6 +116,13 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// Verifies the code formatting code fix registers without throwing.
+    /// </summary>
+    /// <param name="sourceCode">The input source code to analyze.</param>
+    /// <param name="expectedCode">The expected code after applying the fix.</param>
+    /// <param name="diagnosticId">The diagnostic identifier to trigger.</param>
+    /// <returns>A task representing the asynchronous verification operation.</returns>
     private async Task VerifyCodeFixAsync(string sourceCode, string expectedCode, string diagnosticId)
     {
         // Arrange
@@ -132,6 +139,11 @@ public class TestClass
         // and then execute them to verify the formatting. For now, we just verify the provider doesn't throw.
     }
 
+    /// <summary>
+    /// Creates a Roslyn <see cref="Document"/> containing the provided source code.
+    /// </summary>
+    /// <param name="sourceCode">The C# source code to include in the document.</param>
+    /// <returns>The created <see cref="Document"/>.</returns>
     private static Document CreateDocument(string sourceCode)
     {
         var workspace = new AdhocWorkspace();
@@ -145,6 +157,12 @@ public class TestClass
         return solution.GetDocument(documentId)!;
     }
 
+    /// <summary>
+    /// Creates a <see cref="Diagnostic"/> with the specified identifier at the given location.
+    /// </summary>
+    /// <param name="id">The diagnostic identifier.</param>
+    /// <param name="location">The source location for the diagnostic.</param>
+    /// <returns>The created <see cref="Diagnostic"/>.</returns>
     private static Diagnostic CreateDiagnostic(string id, Location location)
     {
         var descriptor = new DiagnosticDescriptor(id, "Test", "Test", "Test", DiagnosticSeverity.Warning, true);

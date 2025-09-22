@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for moving static methods to target types/files.
+/// </summary>
 public class MoveStaticMethodToolTests : TestBase
 {
+    /// <summary>
+    /// Creates a new file for the target class and moves the static method there.
+    /// </summary>
     [Fact]
     public async Task MoveStaticMethod_CreatesTargetFile()
     {
@@ -34,6 +40,9 @@ public class SourceClass
         Assert.Contains("static int Foo", targetContent);
     }
 
+    /// <summary>
+    /// Preserves required usings for the moved method so the file compiles.
+    /// </summary>
     [Fact]
     public async Task MoveStaticMethod_AddsUsingsAndCompiles()
     {
@@ -67,5 +76,3 @@ public class SourceClass
         Assert.DoesNotContain(diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 }
-
-

@@ -2,8 +2,24 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests;
 
+/// <summary>
+/// Type MetricsResourceTests : TestBase
+/// </summary>
+/// <summary>
+/// Type MetricsResourceTests : TestBase.
+/// </summary>
+/// <summary>
+/// Type MetricsResourceTests : TestBase.
+/// </summary>
+/// <summary>
+/// Type MetricsResourceTests : TestBase.
+/// </summary>
 public class MetricsResourceTests : TestBase
 {
+    /// <summary>
+    /// ReadMetrics File ReturnsJson.
+    /// </summary>
+    /// <returns></returns>
     [Fact(Skip = "Flaky in CI")]
     public async Task ReadMetrics_File_ReturnsJson()
     {
@@ -13,6 +29,10 @@ public class MetricsResourceTests : TestBase
         Assert.True(doc.RootElement.TryGetProperty("linesOfCode", out _));
     }
 
+    /// <summary>
+    /// ReadMetrics Directory ReturnsAggregatedJson.
+    /// </summary>
+    /// <returns></returns>
     [Fact(Skip = "Flaky in CI")]
     public async Task ReadMetrics_Directory_ReturnsAggregatedJson()
     {
@@ -25,6 +45,10 @@ public class MetricsResourceTests : TestBase
             e.TryGetProperty("name", out var n) && n.GetString() == "Calculator");
     }
 
+    /// <summary>
+    /// ReadMetrics Class ReturnsClassMetrics.
+    /// </summary>
+    /// <returns></returns>
     [Fact(Skip = "Flaky in CI")]
     public async Task ReadMetrics_Class_ReturnsClassMetrics()
     {
@@ -36,6 +60,10 @@ public class MetricsResourceTests : TestBase
         Assert.True(doc.RootElement.TryGetProperty("methods", out _));
     }
 
+    /// <summary>
+    /// ReadMetrics Method ReturnsMethodMetrics.
+    /// </summary>
+    /// <returns></returns>
     [Fact(Skip = "Flaky in CI")]
     public async Task ReadMetrics_Method_ReturnsMethodMetrics()
     {
@@ -47,6 +75,10 @@ public class MetricsResourceTests : TestBase
         Assert.True(doc.RootElement.TryGetProperty("cyclomaticComplexity", out _));
     }
 
+    /// <summary>
+    /// ReadMetrics InvalidPath ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact(Skip = "Flaky in CI")]
     public async Task ReadMetrics_InvalidPath_ReturnsError()
     {
@@ -58,4 +90,3 @@ public class MetricsResourceTests : TestBase
         Assert.Contains("not found", err.GetString());
     }
 }
-

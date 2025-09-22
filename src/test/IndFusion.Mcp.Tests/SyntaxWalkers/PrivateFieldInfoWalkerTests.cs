@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.SyntaxWalkers;
 
+/// <summary>
+/// Tests for SyntaxWalkers.
+/// </summary>
 public class PrivateFieldInfoWalkerTests
 {
     [Fact]
@@ -14,4 +17,3 @@ public class PrivateFieldInfoWalkerTests
         Assert.Contains("c", walker.Infos.Keys);
     }
 }
-

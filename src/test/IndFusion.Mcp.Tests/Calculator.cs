@@ -1,6 +1,9 @@
 namespace IndFusion.Mcp.Tests;
 
 // Example class for demonstrating ExxerFactoring tools
+/// <summary>
+/// Type Calculator.
+/// </summary>
 public class Calculator
 {
     private List<int> numbers = new List<int>();
@@ -12,6 +15,12 @@ public class Calculator
     }
 
     // Example for Extract Method ExxerFactoring
+    /// <summary>
+    /// Calculate.
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <returns></returns>
     public int Calculate(int a, int b)
     {
         // This code block can be extracted into a method
@@ -27,18 +36,32 @@ public class Calculator
     }
 
     // Example for Introduce Field ExxerFactoring
+    /// <summary>
+    /// Get Average.
+    /// </summary>
+    /// <returns></returns>
     public double GetAverage()
     {
         return numbers.Sum() / (double)numbers.Count; // This expression can become a field
     }
 
     // Example for Introduce Variable ExxerFactoring
+    /// <summary>
+    /// Format Result.
+    /// </summary>
+    /// <param name="value"></param>
+    /// <returns></returns>
     public string FormatResult(int value)
     {
         return $"The calculation result is: {value * 2 + 10}"; // Complex expression can become a variable
     }
 
     // Example for Convert to Static ExxerFactoring
+    /// <summary>
+    /// Get Formatted Number.
+    /// </summary>
+    /// <param name="number"></param>
+    /// <returns></returns>
     public string GetFormattedNumber(int number)
     {
         return $"{operatorSymbol}: {number}"; // Uses instance field, can be converted to static
@@ -47,6 +70,10 @@ public class Calculator
     // Example for Make Field Readonly ExxerFactoring
     private string format = "Currency"; // This field can be made readonly
 
+    /// <summary>
+    /// Set Format.
+    /// </summary>
+    /// <param name="newFormat"></param>
     public void SetFormat(string newFormat)
     {
         format = newFormat; // This assignment would move to constructor
@@ -56,18 +83,34 @@ public class Calculator
     public string Name { get; set; } = "Default Calculator";
 
     // Example for Move Method ExxerFactoring
+    /// <summary>
+    /// Format Currency.
+    /// </summary>
+    /// <param name="amount"></param>
+    /// <returns></returns>
     public static string FormatCurrency(decimal amount)
     {
         return $"${amount:F2}"; // This static method could be moved to a utility class
     }
 
     // Example instance method that could be moved
+    /// <summary>
+    /// Log Operation.
+    /// </summary>
+    /// <param name="operation"></param>
     public void LogOperation(string operation)
     {
         Console.WriteLine($"[{DateTime.Now}] {operation}");
     }
 
     // Example for Safe Delete - unused parameter
+    /// <summary>
+    /// Multiply.
+    /// </summary>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="unusedParam"></param>
+    /// <returns></returns>
     public int Multiply(int x, int y, int unusedParam)
     {
         // This parameter is unused and can be safely deleted
@@ -92,4 +135,3 @@ public class Calculator
 // Example class for Move Method target
 
 // Example class for Move Instance Method
-

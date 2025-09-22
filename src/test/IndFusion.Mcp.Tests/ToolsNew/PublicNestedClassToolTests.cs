@@ -2,6 +2,9 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for creating public nested classes as refactoring outputs.
+/// </summary>
 public class PublicNestedClassToolTests : TestBase
 {
     [Fact]
@@ -40,5 +43,3 @@ public class B { }";
         Assert.Contains("A.Nested GetNested()", fileContent.Replace("\r", "").Replace("\n", " "));
     }
 }
-
-

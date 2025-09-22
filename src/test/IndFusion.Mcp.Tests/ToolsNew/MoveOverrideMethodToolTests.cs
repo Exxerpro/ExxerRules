@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for moving override methods and generating appropriate stubs.
+/// </summary>
 public class MoveOverrideMethodToolTests
 {
+    /// <summary>
+    /// Ensures 'override' is removed on the moved method and a stub remains in the derived class.
+    /// </summary>
     [Fact]
     public void MoveOverrideMethod_RemovesOverrideInNewClass()
     {
@@ -24,4 +30,3 @@ public class MoveOverrideMethodToolTests
         Assert.Contains("override", stub.Modifiers.ToFullString());
     }
 }
-

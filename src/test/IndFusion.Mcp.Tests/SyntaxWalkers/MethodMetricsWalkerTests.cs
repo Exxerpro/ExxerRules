@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.SyntaxWalkers;
 
+/// <summary>
+/// Tests for SyntaxWalkers.
+/// </summary>
 public class MethodMetricsWalkerTests
 {
     [Fact]
@@ -31,4 +34,3 @@ public class MethodMetricsWalkerTests
         Assert.Contains("Method 'Foo' does not access instance state", walker.Suggestions.First());
     }
 }
-

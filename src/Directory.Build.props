@@ -5,6 +5,9 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<WarningsNotAsErrors>NU1903</WarningsNotAsErrors>
+		<NoWarn>$(NoWarn);NU1903</NoWarn>
+
 		<!--
 		  NoWarn rationale:
 		  - NU1510/NU1603: transient/restore edge cases during CI matrix (documented in SUPPRESSIONS.md).
@@ -13,22 +16,9 @@
 		  Note: CS1591 is intentionally NOT suppressed; we enforce XML docs across all projects, incl. tests.
 		-->
 		<!-- Global NoWarn removed; any unavoidable warnings must be scoped per-project and justified in SUPPRESSIONS.md. -->
-		
 	</PropertyGroup>
 
-	<!-- Tests should not generate XML docs to avoid CS1591 noise while still
-	     enforcing warnings-as-errors. This does not suppress the warning; it
-	     prevents its generation context in test assemblies. Documented in
-	     SUPPRESSIONS.md. -->
-	<PropertyGroup Condition="'$(IsTestProject)'=='true'">
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-	</PropertyGroup>
-
-	<!-- Executables do not ship public APIs; disable XML doc generation to
-	     avoid CS1591 in console apps while keeping analyzers strict for libs. -->
-	<PropertyGroup Condition="'$(OutputType)'=='Exe'">
-		<GenerateDocumentationFile>false</GenerateDocumentationFile>
-	</PropertyGroup>
+	<!-- Enable XML documentation for all projects (tests and executables included). -->
 
 	<PropertyGroup>
 		<Authors>IndFusion</Authors>

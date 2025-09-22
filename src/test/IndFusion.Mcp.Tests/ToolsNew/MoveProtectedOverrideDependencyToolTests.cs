@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for moving methods that interact with protected override members and verifying modifiers.
+/// </summary>
 public class MoveProtectedOverrideDependencyToolTests
 {
+    /// <summary>
+    /// Ensures protected override methods retain appropriate modifiers after move operations.
+    /// </summary>
     [Fact]
     public void MoveMethod_UpdatesProtectedOverrideDependency()
     {
@@ -22,4 +28,3 @@ public class MoveProtectedOverrideDependencyToolTests
         Assert.Contains("override", mods);
     }
 }
-

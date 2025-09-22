@@ -2,6 +2,9 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for detecting and handling duplicate method moves.
+/// </summary>
 public class MoveMultipleMethodsDuplicateToolTests : TestBase
 {
     [Fact]
@@ -26,5 +29,3 @@ public class MoveMultipleMethodsDuplicateToolTests : TestBase
         Assert.Contains("Duplicate method names", result);
     }
 }
-
-

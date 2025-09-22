@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
     [Fact]
@@ -16,4 +19,3 @@ public partial class RoslynTransformationTests
         Assert.Contains("Console.WriteLine(\"Hi\");", text);
     }
 }
-

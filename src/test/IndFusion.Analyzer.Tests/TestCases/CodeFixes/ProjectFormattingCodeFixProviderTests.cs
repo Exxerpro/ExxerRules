@@ -190,6 +190,11 @@ public class TestClass
         formattedDocument.ShouldNotBe(document); // Should be a new document instance
     }
 
+    /// <summary>
+    /// Creates a Roslyn <see cref="Document"/> containing the provided source code.
+    /// </summary>
+    /// <param name="sourceCode">The C# source code to include in the document.</param>
+    /// <returns>The created <see cref="Document"/>.</returns>
     private static Document CreateDocument(string sourceCode)
     {
         var workspace = new AdhocWorkspace();
@@ -203,6 +208,12 @@ public class TestClass
         return solution.GetDocument(documentId)!;
     }
 
+    /// <summary>
+    /// Creates a <see cref="Diagnostic"/> with the specified identifier at the given location.
+    /// </summary>
+    /// <param name="id">The diagnostic identifier.</param>
+    /// <param name="location">The source location for the diagnostic.</param>
+    /// <returns>The created <see cref="Diagnostic"/>.</returns>
     private static Diagnostic CreateDiagnostic(string id, Location location)
     {
         var descriptor = new DiagnosticDescriptor(id, "Test", "Test", "Test", DiagnosticSeverity.Warning, true);
@@ -210,6 +221,12 @@ public class TestClass
     }
 
     // Helper methods to access private methods for testing
+    /// <summary>
+    /// Formats the project represented by the provided document using default formatting options.
+    /// </summary>
+    /// <param name="document">The document associated with the project to format.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectAsync(Document document, CancellationToken cancellationToken)
     {
         // This would require reflection to access private methods
@@ -217,6 +234,12 @@ public class TestClass
         return document;
     }
 
+    /// <summary>
+    /// Formats whitespace in the project represented by the provided document.
+    /// </summary>
+    /// <param name="document">The document associated with the project to format.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectWhitespaceAsync(Document document, CancellationToken cancellationToken)
     {
         // This would require reflection to access private methods
@@ -224,6 +247,12 @@ public class TestClass
         return document;
     }
 
+    /// <summary>
+    /// Formats the project using .NET standard formatting options.
+    /// </summary>
+    /// <param name="document">The document associated with the project to format.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectWithDotNetStandardsAsync(Document document, CancellationToken cancellationToken)
     {
         // This would require reflection to access private methods
@@ -231,6 +260,12 @@ public class TestClass
         return document;
     }
 
+    /// <summary>
+    /// Formats the entire solution that contains the provided document.
+    /// </summary>
+    /// <param name="document">A document within the solution to format.</param>
+    /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
+    /// <returns>A task that produces a document from the formatted solution.</returns>
     private static async Task<Document> FormatSolutionAsync(Document document, CancellationToken cancellationToken)
     {
         // This would require reflection to access private methods
@@ -239,4 +274,3 @@ public class TestClass
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-

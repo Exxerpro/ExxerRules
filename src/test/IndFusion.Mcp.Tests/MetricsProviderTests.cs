@@ -2,8 +2,24 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests;
 
+/// <summary>
+/// Type MetricsProviderTests : TestBase
+/// </summary>
+///<summary>
+///Type MetricsProviderTests : TestBase.
+///</summary>
+///<summary>
+///Type MetricsProviderTests : TestBase.
+///</summary>
+///<summary>
+///Type MetricsProviderTests : TestBase.
+///</summary>
 public class MetricsProviderTests : TestBase
 {
+    /// <summary>
+    /// GetFileMetrics CachesToDiskAndMemory.
+    /// </summary>
+    /// <returns></returns>
     [Fact(Skip = "Flaky in CI")]
     public async Task GetFileMetrics_CachesToDiskAndMemory()
     {
@@ -35,4 +51,3 @@ public class MetricsProviderTests : TestBase
         Assert.Equal(modified, diskSecond);
     }
 }
-

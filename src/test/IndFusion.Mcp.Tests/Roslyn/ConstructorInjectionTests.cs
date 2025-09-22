@@ -1,5 +1,8 @@
 namespace IndFusion.Mcp.Tests.Roslyn;
 
+/// <summary>
+/// Type RoslynTransformationTests
+/// </summary>
 public partial class RoslynTransformationTests
 {
     [Fact]
@@ -30,4 +33,3 @@ public partial class RoslynTransformationTests
         Assert.DoesNotContain("B(2)", output);
     }
 }
-

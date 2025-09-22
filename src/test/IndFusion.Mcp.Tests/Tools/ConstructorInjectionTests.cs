@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for converting parameter usage into constructor-injected members.
+/// </summary>
 public class ConstructorInjectionTests : TestBase
 {
+    /// <summary>
+    /// Converts a method parameter to a constructor-injected field.
+    /// </summary>
     [Fact]
     public async Task ConstructorInjection_Valid_ReturnsSuccess()
     {
@@ -20,4 +26,3 @@ public class ConstructorInjectionTests : TestBase
         Assert.Contains("_x", content);
     }
 }
-

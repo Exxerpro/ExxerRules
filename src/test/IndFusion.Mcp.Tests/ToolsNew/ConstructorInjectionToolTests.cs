@@ -2,10 +2,16 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
-public class ConstructorInjectionToolTests : TestBase
-{
-    [Fact]
-    public async Task ConstructorInjection_AddsField()
+/// <summary>
+/// Tests for converting parameter usage into constructor-injected fields/properties.
+/// </summary>
+    public class ConstructorInjectionToolTests : TestBase
+    {
+        /// <summary>
+        /// Converts a method parameter to a constructor-injected field and updates call sites.
+        /// </summary>
+        [Fact]
+        public async Task ConstructorInjection_AddsField()
     {
         const string initialCode = "class C{ int M(int x){ return x+1; } void Call(){ M(1); } }";
 
@@ -24,4 +30,3 @@ public class ConstructorInjectionToolTests : TestBase
         Assert.Contains("_x", fileContent);
     }
 }
-

@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for generating adapters to bridge incompatible interfaces or classes.
+/// </summary>
 public class CreateAdapterToolTests : TestBase
 {
+    /// <summary>
+    /// CreateAdapter AddsClass.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task CreateAdapter_AddsClass()
     {
@@ -25,4 +32,3 @@ public class CreateAdapterToolTests : TestBase
         Assert.Contains("LoggerAdapter", text);
     }
 }
-

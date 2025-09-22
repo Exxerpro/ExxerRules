@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for IntroduceParameterToolTests.
+/// </summary>
 public class IntroduceParameterToolTests : TestBase
 {
+    /// <summary>
+    /// IntroduceParameter ValidExpression ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceParameter_ValidExpression_ReturnsSuccess()
     {
@@ -23,6 +30,10 @@ public class IntroduceParameterToolTests : TestBase
         Assert.Contains("processedValue", fileContent);
     }
 
+    /// <summary>
+    /// IntroduceParameter InvalidMethod ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceParameter_InvalidMethod_ReturnsError()
     {
@@ -36,4 +47,3 @@ public class IntroduceParameterToolTests : TestBase
         Assert.Equal("Error: No method named 'Nonexistent' found", result);
     }
 }
-

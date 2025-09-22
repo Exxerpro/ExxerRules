@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for FeatureFlagExxerFactorToolTests.
+/// </summary>
 public class FeatureFlagExxerFactorToolTests : TestBase
 {
+    /// <summary>
+    /// FeatureFlagExxerFactor RewritesFile.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FeatureFlagExxerFactor_RewritesFile()
     {
@@ -22,6 +29,10 @@ public class FeatureFlagExxerFactorToolTests : TestBase
         Assert.Contains("_coolFeatureStrategy", content);
     }
 
+    /// <summary>
+    /// FeatureFlagExxerFactor NoFlagFound Throws.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FeatureFlagExxerFactor_NoFlagFound_Throws()
     {
@@ -36,4 +47,3 @@ public class FeatureFlagExxerFactorToolTests : TestBase
                 "Other"));
     }
 }
-

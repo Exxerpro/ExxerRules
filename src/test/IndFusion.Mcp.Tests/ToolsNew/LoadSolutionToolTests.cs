@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for loading and unloading Roslyn solutions used by tools.
+/// </summary>
 public class LoadSolutionToolTests : TestBase
 {
+    /// <summary>
+    /// LoadSolution ValidPath ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task LoadSolution_ValidPath_ReturnsSuccess()
     {
@@ -13,6 +20,10 @@ public class LoadSolutionToolTests : TestBase
         Assert.Contains("IndFusion.Mcp.Tests", result);
     }
 
+    /// <summary>
+    /// UnloadSolution RemovesCachedSolution.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task UnloadSolution_RemovesCachedSolution()
     {
@@ -21,6 +32,10 @@ public class LoadSolutionToolTests : TestBase
         Assert.Contains("Unloaded solution", result);
     }
 
+    /// <summary>
+    /// LoadSolution InvalidPath ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task LoadSolution_InvalidPath_ReturnsError()
     {
@@ -28,6 +43,9 @@ public class LoadSolutionToolTests : TestBase
             await LoadSolutionTool.LoadSolution("./NonExistent.sln", null, Xunit.TestContext.Current.CancellationToken));
     }
 
+    /// <summary>
+    /// Version ReturnsInfo.
+    /// </summary>
     [Fact]
     public void Version_ReturnsInfo()
     {
@@ -36,6 +54,10 @@ public class LoadSolutionToolTests : TestBase
         Assert.Contains("Build", result);
     }
 
+    /// <summary>
+    /// ClearSolutionCache RemovesAllCachedSolutions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ClearSolutionCache_RemovesAllCachedSolutions()
     {
@@ -47,4 +69,3 @@ public class LoadSolutionToolTests : TestBase
         Assert.Contains("was not loaded", unloadResult);
     }
 }
-

@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for converting methods to static while preserving instance access via fields.
+/// </summary>
 public class ConvertToStaticWithInstanceToolTests : TestBase
 {
+    /// <summary>
+    /// ConvertToStaticWithInstance ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ConvertToStaticWithInstance_ReturnsSuccess()
     {
@@ -25,4 +32,3 @@ public class ConvertToStaticWithInstanceToolTests : TestBase
         Assert.Contains("Calculator instance", fileContent);
     }
 }
-

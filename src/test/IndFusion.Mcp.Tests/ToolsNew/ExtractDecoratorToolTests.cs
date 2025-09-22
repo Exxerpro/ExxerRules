@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for extracting the decorator pattern from existing classes.
+/// </summary>
 public class ExtractDecoratorToolTests : TestBase
 {
+    /// <summary>
+    /// ExtractDecorator AddsClass.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ExtractDecorator_AddsClass()
     {
@@ -24,4 +31,3 @@ public class ExtractDecoratorToolTests : TestBase
         Assert.Contains("GreeterDecorator", text);
     }
 }
-

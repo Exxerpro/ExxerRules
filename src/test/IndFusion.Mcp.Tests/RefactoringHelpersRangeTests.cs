@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests;
 
+/// <summary>
+/// Tests for parsing and validating line/column range strings.
+/// </summary>
 public class ExxerFactoringHelpersRangeTests
 {
+    /// <summary>
+    /// Parses a valid range string into expected numeric components.
+    /// </summary>
     [Fact]
     public void TryParseRange_ValidFormat_ReturnsParsedValues()
     {
@@ -14,6 +20,9 @@ public class ExxerFactoringHelpersRangeTests
         Assert.Equal(5, ec);
     }
 
+    /// <summary>
+    /// Returns false when the range string is malformed.
+    /// </summary>
     [Theory]
     [InlineData("invalid")]
     [InlineData("1:2:3-4:5")]
@@ -24,6 +33,9 @@ public class ExxerFactoringHelpersRangeTests
         Assert.False(result);
     }
 
+    /// <summary>
+    /// Fails validation when any component is negative.
+    /// </summary>
     [Fact]
     public void ValidateRange_NegativeValues_ReturnsError()
     {
@@ -34,6 +46,9 @@ public class ExxerFactoringHelpersRangeTests
         Assert.Equal("Error: Range values must be positive", error);
     }
 
+    /// <summary>
+    /// Fails validation when end precedes start.
+    /// </summary>
     [Fact]
     public void ValidateRange_ReversedRange_ReturnsError()
     {
@@ -44,6 +59,9 @@ public class ExxerFactoringHelpersRangeTests
         Assert.Equal("Error: Range start must precede end", error);
     }
 
+    /// <summary>
+    /// Fails validation when the range exceeds file length.
+    /// </summary>
     [Fact]
     public void ValidateRange_ExceedsFileLength_ReturnsError()
     {
@@ -54,4 +72,3 @@ public class ExxerFactoringHelpersRangeTests
         Assert.Equal("Error: Range exceeds file length", error);
     }
 }
-

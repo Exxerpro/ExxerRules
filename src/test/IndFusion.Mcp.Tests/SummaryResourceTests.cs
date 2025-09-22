@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests;
 
+/// <summary>
+/// Tests for code summarization utilities that omit method bodies.
+/// </summary>
 public class SummaryResourceTests : TestBase
 {
+    /// <summary>
+    /// Verifies method bodies are omitted in the summary output.
+    /// </summary>
     [Fact]
     public async Task GetSummary_OmitsMethodBodies()
     {
@@ -12,6 +18,9 @@ public class SummaryResourceTests : TestBase
         Assert.DoesNotContain("throw new ArgumentException", result);
     }
 
+    /// <summary>
+    /// Returns a friendly message when the file does not exist.
+    /// </summary>
     [Fact]
     public async Task GetSummary_FileNotFound_ReturnsMessage()
     {
@@ -19,4 +28,3 @@ public class SummaryResourceTests : TestBase
         Assert.StartsWith("// File not found:", result);
     }
 }
-

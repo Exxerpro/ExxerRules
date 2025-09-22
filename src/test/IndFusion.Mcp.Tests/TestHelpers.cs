@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests;
 
+/// <summary>
+/// Shared test utilities for locating the solution and managing test output paths.
+/// </summary>
 public static class TestHelpers
 {
+    /// <summary>
+    /// Walks up from the current directory to find the repository solution path.
+    /// </summary>
     public static string GetSolutionPath()
     {
         var currentDir = Directory.GetCurrentDirectory();
@@ -15,6 +21,9 @@ public static class TestHelpers
         return "./IndFusion.Mcp.sln";
     }
 
+    /// <summary>
+    /// Creates (or ensures) a test output directory under the test project.
+    /// </summary>
     public static string CreateTestOutputDir(string subfolder)
     {
         var path = Path.Combine(Path.GetDirectoryName(GetSolutionPath())!,

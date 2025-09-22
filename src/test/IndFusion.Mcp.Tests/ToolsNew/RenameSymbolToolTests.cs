@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for renaming symbols and updating references across code.
+/// </summary>
 public class RenameSymbolToolTests : TestBase
 {
+    /// <summary>
+    /// Renames a field and updates all references in the file.
+    /// </summary>
     [Fact]
     public async Task RenameSymbol_Field_RenamesReferences()
     {
@@ -47,6 +53,9 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 
+    /// <summary>
+    /// Throws when the symbol to rename cannot be found.
+    /// </summary>
     [Fact]
     public async Task RenameSymbol_InvalidName_ThrowsMcpException()
     {
@@ -76,5 +85,3 @@ public class Sample
                 "newName"));
     }
 }
-
-

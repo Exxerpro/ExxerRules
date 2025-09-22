@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for converting mutable fields to readonly fields.
+/// </summary>
 public class MakeFieldReadonlyToolTests : TestBase
 {
+    /// <summary>
+    /// Adds the readonly modifier to a field with an initializer.
+    /// </summary>
     [Fact]
     public async Task MakeFieldReadonly_AddsReadonly()
     {
@@ -37,6 +43,9 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 
+    /// <summary>
+    /// Adds the readonly modifier when the field has no initializer.
+    /// </summary>
     [Fact]
     public async Task MakeFieldReadonly_FieldWithoutInitializer_AddsReadonly()
     {
@@ -68,6 +77,9 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 
+    /// <summary>
+    /// Throws when the field name cannot be found.
+    /// </summary>
     [Fact]
     public async Task MakeFieldReadonly_InvalidIdentifier_ReturnsError()
     {

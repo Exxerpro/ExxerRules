@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for transforming auto-properties from setter to init-only.
+/// </summary>
 public class TransformSetterToInitToolTests : TestBase
 {
+    /// <summary>
+    /// Converts a property setter to init and updates source accordingly.
+    /// </summary>
     [Fact]
     public async Task TransformSetter_ConvertsToInit()
     {
@@ -35,6 +41,9 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 
+    /// <summary>
+    /// Throws when the specified property cannot be found.
+    /// </summary>
     [Fact]
     public async Task TransformSetter_InvalidProperty_ReturnsError()
     {

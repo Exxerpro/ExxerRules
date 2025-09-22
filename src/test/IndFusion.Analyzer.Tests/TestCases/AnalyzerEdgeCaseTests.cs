@@ -20,6 +20,9 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class AnalyzerEdgeCaseTests
 {
+    /// <summary>
+    /// Handles a null using directive without throwing during analyzer setup.
+    /// </summary>
     [Fact]
     public void DomainShouldNotReferenceInfrastructureAnalyzer_WithNullUsingDirective_ShouldHandleGracefully()
     {
@@ -30,6 +33,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles an empty namespace value gracefully during analyzer initialization.
+    /// </summary>
     [Fact]
     public void DomainShouldNotReferenceInfrastructureAnalyzer_WithEmptyNamespace_ShouldHandleGracefully()
     {
@@ -40,6 +46,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles single-character namespaces without throwing.
+    /// </summary>
     [Fact]
     public void DomainShouldNotReferenceInfrastructureAnalyzer_WithSingleCharacterNamespace_ShouldHandleGracefully()
     {
@@ -50,6 +59,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles very long namespace names without exceptions.
+    /// </summary>
     [Fact]
     public void DomainShouldNotReferenceInfrastructureAnalyzer_WithVeryLongNamespace_ShouldHandleGracefully()
     {
@@ -60,6 +72,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles unicode characters in namespaces without errors.
+    /// </summary>
     [Fact]
     public void DomainShouldNotReferenceInfrastructureAnalyzer_WithUnicodeNamespace_ShouldHandleGracefully()
     {
@@ -70,6 +85,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles special characters in namespaces without errors.
+    /// </summary>
     [Fact]
     public void DomainShouldNotReferenceInfrastructureAnalyzer_WithSpecialCharactersNamespace_ShouldHandleGracefully()
     {
@@ -80,6 +98,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles an empty class name scenario.
+    /// </summary>
     [Fact]
     public void UseRepositoryPatternAnalyzer_WithEmptyClassName_ShouldHandleGracefully()
     {
@@ -90,6 +111,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles a single-character class name scenario.
+    /// </summary>
     [Fact]
     public void UseRepositoryPatternAnalyzer_WithSingleCharacterClassName_ShouldHandleGracefully()
     {
@@ -100,6 +124,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles a very long class name scenario.
+    /// </summary>
     [Fact]
     public void UseRepositoryPatternAnalyzer_WithVeryLongClassName_ShouldHandleGracefully()
     {
@@ -110,6 +137,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// UseRepositoryPatternAnalyzer WithUnicodeClassName ShouldHandleGracefully.
+    /// </summary>
     [Fact]
     public void UseRepositoryPatternAnalyzer_WithUnicodeClassName_ShouldHandleGracefully()
     {
@@ -120,6 +150,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// AsyncMethodsShouldAcceptCancellationTokenAnalyzer WithEmptyMethodName ShouldHandleGracefully.
+    /// </summary>
     [Fact]
     public void AsyncMethodsShouldAcceptCancellationTokenAnalyzer_WithEmptyMethodName_ShouldHandleGracefully()
     {
@@ -130,6 +163,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// AsyncMethodsShouldAcceptCancellationTokenAnalyzer WithSingleCharacterMethodName ShouldHandleGracefully.
+    /// </summary>
     [Fact]
     public void AsyncMethodsShouldAcceptCancellationTokenAnalyzer_WithSingleCharacterMethodName_ShouldHandleGracefully()
     {
@@ -140,6 +176,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// AsyncMethodsShouldAcceptCancellationTokenAnalyzer WithVeryLongMethodName ShouldHandleGracefully.
+    /// </summary>
     [Fact]
     public void AsyncMethodsShouldAcceptCancellationTokenAnalyzer_WithVeryLongMethodName_ShouldHandleGracefully()
     {
@@ -150,6 +189,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles empty parameter names without analyzer initialization failures.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithEmptyParameterName_ShouldHandleGracefully()
     {
@@ -160,6 +202,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles single-character parameter names gracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithSingleCharacterParameterName_ShouldHandleGracefully()
     {
@@ -170,6 +215,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles very long parameter names gracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithVeryLongParameterName_ShouldHandleGracefully()
     {
@@ -180,6 +228,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles unicode parameter types without throwing.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithUnicodeParameterType_ShouldHandleGracefully()
     {
@@ -190,6 +241,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles parameter types with special characters without exceptions.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithSpecialCharactersParameterType_ShouldHandleGracefully()
     {
@@ -200,6 +254,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles generic parameter types without errors.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithGenericParameterType_ShouldHandleGracefully()
     {
@@ -210,6 +267,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles nested generic parameter types without errors.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithNestedGenericParameterType_ShouldHandleGracefully()
     {
@@ -220,6 +280,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles complex generic parameter types without errors.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithComplexGenericParameterType_ShouldHandleGracefully()
     {
@@ -230,6 +293,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles nullable parameter types gracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithNullableParameterType_ShouldHandleGracefully()
     {
@@ -240,6 +306,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles array parameter types gracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithArrayParameterType_ShouldHandleGracefully()
     {
@@ -250,6 +319,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles multi-dimensional array parameter types gracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithMultiDimensionalArrayParameterType_ShouldHandleGracefully()
     {
@@ -260,6 +332,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles jagged array parameter types gracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithJaggedArrayParameterType_ShouldHandleGracefully()
     {
@@ -270,6 +345,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles complex array parameter types gracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithComplexArrayParameterType_ShouldHandleGracefully()
     {
@@ -280,6 +358,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles ref parameter types without errors.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithRefParameterType_ShouldHandleGracefully()
     {
@@ -290,6 +371,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles out parameter types without errors.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithOutParameterType_ShouldHandleGracefully()
     {
@@ -300,6 +384,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles in parameter types without errors.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithInParameterType_ShouldHandleGracefully()
     {
@@ -310,6 +397,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// Handles params parameter types without errors.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithParamsParameterType_ShouldHandleGracefully()
     {
@@ -320,6 +410,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// ValidateNullParametersAnalyzer WithOptionalParameterType ShouldHandleGracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithOptionalParameterType_ShouldHandleGracefully()
     {
@@ -330,6 +423,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// ValidateNullParametersAnalyzer WithMultipleParameters ShouldHandleGracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithMultipleParameters_ShouldHandleGracefully()
     {
@@ -340,6 +436,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// ValidateNullParametersAnalyzer WithManyParameters ShouldHandleGracefully.
+    /// </summary>
     [Fact]
     public void ValidateNullParametersAnalyzer_WithManyParameters_ShouldHandleGracefully()
     {
@@ -350,6 +449,9 @@ public class AnalyzerEdgeCaseTests
         Should.NotThrow(() => analyzer.SupportedDiagnostics.Length.ShouldBeGreaterThan(0));
     }
 
+    /// <summary>
+    /// AllAnalyzers ShouldHaveValidDiagnostics.
+    /// </summary>
     [Fact]
     public void AllAnalyzers_ShouldHaveValidDiagnostics()
     {
@@ -378,6 +480,9 @@ public class AnalyzerEdgeCaseTests
         }
     }
 
+    /// <summary>
+    /// Verifies analyzers tolerate null contexts and property evaluation.
+    /// </summary>
     [Fact]
     public void AllAnalyzers_ShouldHandleNullContextGracefully()
     {
@@ -401,6 +506,9 @@ public class AnalyzerEdgeCaseTests
         }
     }
 
+    /// <summary>
+    /// Ensures diagnostic identifiers are unique and contain no whitespace.
+    /// </summary>
     [Fact]
     public void AllAnalyzers_ShouldHaveConsistentDiagnosticIds()
     {
@@ -431,6 +539,9 @@ public class AnalyzerEdgeCaseTests
         }
     }
 
+    /// <summary>
+    /// Ensures diagnostic descriptors declare a valid default severity.
+    /// </summary>
     [Fact]
     public void AllAnalyzers_ShouldHaveValidSeverityLevels()
     {
@@ -457,6 +568,9 @@ public class AnalyzerEdgeCaseTests
         }
     }
 
+    /// <summary>
+    /// Ensures diagnostic categories are present and well-formed.
+    /// </summary>
     [Fact]
     public void AllAnalyzers_ShouldHaveValidCategories()
     {
@@ -481,5 +595,3 @@ public class AnalyzerEdgeCaseTests
         }
     }
 }
-
-

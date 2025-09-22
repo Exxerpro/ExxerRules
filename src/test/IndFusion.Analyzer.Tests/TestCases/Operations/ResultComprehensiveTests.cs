@@ -1267,6 +1267,10 @@ public class ResultComprehensiveTests
             this.items = items;
         }
 
+        /// <summary>
+        /// Get Enumerator.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
             return ((IEnumerable<T>)items).GetEnumerator();
@@ -1278,7 +1282,6 @@ public class ResultComprehensiveTests
         }
     }
 }
-
 
 
 

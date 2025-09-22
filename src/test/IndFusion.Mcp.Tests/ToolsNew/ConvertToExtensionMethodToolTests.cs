@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for converting instance methods to extension methods.
+/// </summary>
 public class ConvertToExtensionMethodToolTests : TestBase
 {
+    /// <summary>
+    /// Converts a target method to an extension method and reports success.
+    /// </summary>
     [Fact]
     public async Task ConvertToExtensionMethod_ReturnsSuccess()
     {
@@ -22,4 +28,3 @@ public class ConvertToExtensionMethodToolTests : TestBase
         Assert.Contains("Successfully converted method 'GetFormattedNumber' to extension method", result);
     }
 }
-

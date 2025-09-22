@@ -2,8 +2,14 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for extracting interfaces from concrete classes.
+/// </summary>
 public class ExtractInterfaceToolTests : TestBase
 {
+    /// <summary>
+    /// Generates an interface file and updates the source class to implement it.
+    /// </summary>
     [Fact]
     public async Task ExtractInterface_CreatesInterfaceFile()
     {
@@ -35,4 +41,3 @@ public class ExtractInterfaceToolTests : TestBase
         Assert.Contains("class Person : IPerson", source);
     }
 }
-

@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn;
 
+/// <summary>
+/// Type RoslynTransformationTests
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// AddParameter AddsParameterToMethod.
+    /// </summary>
     [Fact]
     public void AddParameter_AddsParameterToMethod()
     {
@@ -13,6 +19,9 @@ public partial class RoslynTransformationTests
         Assert.Equal("int", updated.ParameterList.Parameters[0].Type!.ToString());
     }
 
+    /// <summary>
+    /// ReplaceThisReferences ReplacesWithParameter.
+    /// </summary>
     [Fact]
     public void ReplaceThisReferences_ReplacesWithParameter()
     {
@@ -25,6 +34,9 @@ public partial class RoslynTransformationTests
         Assert.DoesNotContain("this.Value", output);
     }
 
+    /// <summary>
+    /// QualifyInstanceMembers AddsParameterQualification.
+    /// </summary>
     [Fact]
     public void QualifyInstanceMembers_AddsParameterQualification()
     {
@@ -39,6 +51,9 @@ public partial class RoslynTransformationTests
         Assert.Contains("instance.Value", output);
     }
 
+    /// <summary>
+    /// EnsureStaticModifier AddsStaticIfMissing.
+    /// </summary>
     [Fact]
     public void EnsureStaticModifier_AddsStaticIfMissing()
     {
@@ -48,6 +63,9 @@ public partial class RoslynTransformationTests
         Assert.Contains("static", updated.Modifiers.ToFullString());
     }
 
+    /// <summary>
+    /// AddArgument AddsArgumentToInvocation.
+    /// </summary>
     [Fact]
     public void AddArgument_AddsArgumentToInvocation()
     {
@@ -59,6 +77,9 @@ public partial class RoslynTransformationTests
         Assert.Equal("M(x)", updated.NormalizeWhitespace().ToFullString());
     }
 
+    /// <summary>
+    /// RemoveArgument RemovesArgumentFromInvocation.
+    /// </summary>
     [Fact]
     public void RemoveArgument_RemovesArgumentFromInvocation()
     {
@@ -68,4 +89,3 @@ public partial class RoslynTransformationTests
         Assert.Equal("M(b)", updated.NormalizeWhitespace().ToFullString());
     }
 }
-

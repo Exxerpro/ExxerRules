@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// ExtensionMethodRewriter AddsThisParameterAndQualifiesMembers.
+    /// </summary>
     [Fact]
     public void ExtensionMethodRewriter_AddsThisParameterAndQualifiesMembers()
     {
@@ -13,4 +19,3 @@ public partial class RoslynTransformationTests
         Assert.Contains("inst.Value", result);
     }
 }
-

@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// FieldIntroductionRewriter AddsFieldAndReplacesExpression.
+    /// </summary>
     [Fact]
     public void FieldIntroductionRewriter_AddsFieldAndReplacesExpression()
     {
@@ -22,4 +28,3 @@ public partial class RoslynTransformationTests
         Assert.Contains("return value", text);
     }
 }
-

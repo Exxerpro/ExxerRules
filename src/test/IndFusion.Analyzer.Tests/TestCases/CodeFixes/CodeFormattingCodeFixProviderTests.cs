@@ -158,7 +158,9 @@ public class TestClass
 /// <typeparam name="T">The code fix provider type.</typeparam>
 public abstract class CodeFixProviderTest<T> where T : CodeFixProvider, new()
 {
+    /// <summary>
+    /// Gets the code fix provider under test.
+    /// </summary>
     protected T CodeFixProvider { get; } = new T();
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-

@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// MethodRemovalRewriter RemovesMethod.
+    /// </summary>
     [Fact]
     public void MethodRemovalRewriter_RemovesMethod()
     {
@@ -12,4 +18,3 @@ public partial class RoslynTransformationTests
         Assert.Equal("class A { }", newRoot.ToFullString().Trim());
     }
 }
-

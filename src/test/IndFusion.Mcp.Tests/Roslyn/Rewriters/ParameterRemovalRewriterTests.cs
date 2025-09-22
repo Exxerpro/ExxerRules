@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// ParameterRemovalRewriter RemovesParameter.
+    /// </summary>
     [Fact]
     public void ParameterRemovalRewriter_RemovesParameter()
     {
@@ -16,4 +22,3 @@ public partial class RoslynTransformationTests
         Assert.DoesNotContain("2)", text);
     }
 }
-

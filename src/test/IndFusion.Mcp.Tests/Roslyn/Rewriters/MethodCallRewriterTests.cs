@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// MethodCallRewriter QualifiesMethodCalls.
+    /// </summary>
     [Fact]
     public void MethodCallRewriter_QualifiesMethodCalls()
     {
@@ -11,6 +17,9 @@ public partial class RoslynTransformationTests
         Assert.Contains("inst.Do()", result);
     }
 
+    /// <summary>
+    /// MethodCallRewriter QualifiesThisMethodCalls.
+    /// </summary>
     [Fact]
     public void MethodCallRewriter_QualifiesThisMethodCalls()
     {
@@ -21,4 +30,3 @@ public partial class RoslynTransformationTests
         Assert.DoesNotContain("this.Do()", result);
     }
 }
-

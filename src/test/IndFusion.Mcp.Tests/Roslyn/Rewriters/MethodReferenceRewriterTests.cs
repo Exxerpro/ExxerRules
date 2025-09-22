@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// MethodReferenceRewriter QualifiesUnqualifiedReference.
+    /// </summary>
     [Fact]
     public void MethodReferenceRewriter_QualifiesUnqualifiedReference()
     {
@@ -11,6 +17,9 @@ public partial class RoslynTransformationTests
         Assert.Contains("obj.Evt += inst.OnEvt", result);
     }
 
+    /// <summary>
+    /// MethodReferenceRewriter QualifiesThisReference.
+    /// </summary>
     [Fact]
     public void MethodReferenceRewriter_QualifiesThisReference()
     {
@@ -21,4 +30,3 @@ public partial class RoslynTransformationTests
         Assert.DoesNotContain("this.OnEvt", result);
     }
 }
-

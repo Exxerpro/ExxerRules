@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
 
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
 public partial class RoslynTransformationTests
 {
+    /// <summary>
+    /// IdentifierRenameRewriter RenamesField.
+    /// </summary>
     [Fact]
     public void IdentifierRenameRewriter_RenamesField()
     {
@@ -21,4 +27,3 @@ public partial class RoslynTransformationTests
         Assert.Contains("p", newRoot.ToFullString());
     }
 }
-

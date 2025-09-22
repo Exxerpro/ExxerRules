@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class CodeFormattingCodeFixProviderTests : CodeFixProviderTest<CodeFormattingCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithCodeFormattingIssue ShouldRegisterFormatActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithCodeFormattingIssue_ShouldRegisterFormatActions()
     {
@@ -44,6 +48,10 @@ public class TestClass
         await VerifyCodeFixAsync(sourceCode, expectedFormattedCode, DiagnosticIds.CodeFormattingIssue);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -74,6 +82,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnCodeFormattingIssue.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnCodeFormattingIssue()
     {
@@ -88,6 +99,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -147,5 +161,4 @@ public abstract class CodeFixProviderTest<T> where T : CodeFixProvider, new()
     protected T CodeFixProvider { get; } = new T();
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-
 

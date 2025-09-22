@@ -15,6 +15,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class ConfigureAwaitFalseCodeFixProviderTests : CodeFixProviderTest<ConfigureAwaitFalseCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionWithoutConfigureAwait ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionWithoutConfigureAwait_ShouldRegisterFixes()
     {
@@ -42,6 +46,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionAlreadyHavingConfigureAwait ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionAlreadyHavingConfigureAwait_ShouldNotRegisterFixes()
     {
@@ -69,6 +77,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMultipleAwaitExpressions ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMultipleAwaitExpressions_ShouldRegisterFixes()
     {
@@ -97,6 +109,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionInLambda ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionInLambda_ShouldRegisterFixes()
     {
@@ -125,6 +141,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionInUsingStatement ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionInUsingStatement_ShouldRegisterFixes()
     {
@@ -153,6 +173,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionInTryCatch ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionInTryCatch_ShouldRegisterFixes()
     {
@@ -186,6 +210,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionInSwitchExpression ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionInSwitchExpression_ShouldRegisterFixes()
     {
@@ -217,6 +245,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionInTernaryOperator ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionInTernaryOperator_ShouldRegisterFixes()
     {
@@ -245,6 +277,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseConfigureAwaitFalse.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseConfigureAwaitFalse()
     {
@@ -259,6 +294,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -273,6 +311,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -299,6 +341,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionInProperty ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionInProperty_ShouldRegisterFixes()
     {
@@ -322,6 +368,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAwaitExpressionInLocalFunction ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAwaitExpressionInLocalFunction_ShouldRegisterFixes()
     {
@@ -374,5 +424,4 @@ public class TestClass
 }
 
 #pragma warning restore CS0103, CS8602, IDE0053, IDE0031
-
 

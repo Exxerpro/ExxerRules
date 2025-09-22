@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class DbContextTestingCodeFixProviderTests : CodeFixProviderTest<DbContextTestingCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMockedDbContextObjectCreation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMockedDbContextObjectCreation_ShouldRegisterFixes()
     {
@@ -56,6 +60,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMockedDbContextWithGenericType ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMockedDbContextWithGenericType_ShouldRegisterFixes()
     {
@@ -87,6 +95,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMockedDbContextWithNSubstitute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMockedDbContextWithNSubstitute_ShouldRegisterFixes()
     {
@@ -129,6 +141,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithDbContextMockSetup ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithDbContextMockSetup_ShouldRegisterFixes()
     {
@@ -172,6 +188,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqUsingDirective ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqUsingDirective_ShouldRegisterFixes()
     {
@@ -214,6 +234,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNSubstituteUsingDirective ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNSubstituteUsingDirective_ShouldRegisterFixes()
     {
@@ -256,6 +280,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMockedDbContextVariable ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMockedDbContextVariable_ShouldRegisterFixes()
     {
@@ -299,6 +327,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNonDbContextMock ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNonDbContextMock_ShouldNotRegisterFixes()
     {
@@ -334,6 +366,10 @@ public interface ITestService
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithInMemoryDbContext ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithInMemoryDbContext_ShouldNotRegisterFixes()
     {
@@ -380,6 +416,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithSqliteDbContext ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithSqliteDbContext_ShouldNotRegisterFixes()
     {
@@ -426,6 +466,9 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnDoNotMockDbContext.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnDoNotMockDbContext()
     {
@@ -440,6 +483,9 @@ public class TestEntity
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -454,6 +500,10 @@ public class TestEntity
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -502,6 +552,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMockedDbContextWithConstructorArgs ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMockedDbContextWithConstructorArgs_ShouldRegisterFixes()
     {
@@ -544,6 +598,10 @@ public class TestEntity
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMockedDbContextWithComplexSetup ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMockedDbContextWithComplexSetup_ShouldRegisterFixes()
     {
@@ -608,5 +666,4 @@ public class TestEntity
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-
 

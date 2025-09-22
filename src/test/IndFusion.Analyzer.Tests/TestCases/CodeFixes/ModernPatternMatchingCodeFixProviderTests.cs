@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class ModernPatternMatchingCodeFixProviderTests : CodeFixProviderTest<ModernPatternMatchingCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTraditionalIsExpression ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTraditionalIsExpression_ShouldRegisterFixes()
     {
@@ -44,6 +48,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTraditionalSwitchStatement ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTraditionalSwitchStatement_ShouldRegisterFixes()
     {
@@ -78,6 +86,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithIsPatternExpression ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithIsPatternExpression_ShouldRegisterFixes()
     {
@@ -104,6 +116,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithSwitchExpression ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithSwitchExpression_ShouldRegisterFixes()
     {
@@ -135,6 +151,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTraditionalIsExpressionInTernary ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTraditionalIsExpressionInTernary_ShouldRegisterFixes()
     {
@@ -161,6 +181,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTraditionalIsExpressionInLambda ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTraditionalIsExpressionInLambda_ShouldRegisterFixes()
     {
@@ -188,6 +212,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTraditionalSwitchStatementWithFallThrough ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTraditionalSwitchStatementWithFallThrough_ShouldRegisterFixes()
     {
@@ -221,6 +249,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTraditionalSwitchStatementWithWhenClause ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTraditionalSwitchStatementWithWhenClause_ShouldRegisterFixes()
     {
@@ -255,6 +287,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAlreadyModernPatternMatching ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAlreadyModernPatternMatching_ShouldNotRegisterFixes()
     {
@@ -286,6 +322,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithComplexPatternMatching ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithComplexPatternMatching_ShouldRegisterFixes()
     {
@@ -320,6 +360,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseModernPatternMatching.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseModernPatternMatching()
     {
@@ -334,6 +377,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -348,6 +394,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -382,6 +432,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithPropertyPatternMatching ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithPropertyPatternMatching_ShouldRegisterFixes()
     {
@@ -412,6 +466,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTuplePatternMatching ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTuplePatternMatching_ShouldRegisterFixes()
     {
@@ -461,5 +519,4 @@ public class TestClass
         return Diagnostic.Create(descriptor, location);
     }
 }
-
 

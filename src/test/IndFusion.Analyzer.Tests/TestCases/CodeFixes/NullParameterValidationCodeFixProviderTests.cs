@@ -15,6 +15,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class NullParameterValidationCodeFixProviderTests : CodeFixProviderTest<NullParameterValidationCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodWithoutNullValidation ShouldRegisterMethodFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodWithoutNullValidation_ShouldRegisterMethodFixes()
     {
@@ -41,6 +45,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithConstructorWithoutNullValidation ShouldRegisterConstructorFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithConstructorWithoutNullValidation_ShouldRegisterConstructorFixes()
     {
@@ -67,6 +75,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithValueTypeParameters ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithValueTypeParameters_ShouldNotRegisterFixes()
     {
@@ -93,6 +105,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMultipleParameters ShouldRegisterFixesForReferenceTypes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMultipleParameters_ShouldRegisterFixesForReferenceTypes()
     {
@@ -119,6 +135,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethod ShouldRegisterAsyncFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethod_ShouldRegisterAsyncFixes()
     {
@@ -146,6 +166,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithExpressionBodyMethod ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithExpressionBodyMethod_ShouldRegisterFixes()
     {
@@ -169,6 +193,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnValidateNullParameters.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnValidateNullParameters()
     {
@@ -183,6 +210,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -197,6 +227,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -226,6 +260,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithGenericParameters ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithGenericParameters_ShouldRegisterFixes()
     {
@@ -273,5 +311,4 @@ public class TestClass
 }
 
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-
 

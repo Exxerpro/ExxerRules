@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class ExpressionBodiedMembersCodeFixProviderTests : CodeFixProviderTest<ExpressionBodiedMembersCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodReturningSingleExpression ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodReturningSingleExpression_ShouldRegisterFix()
     {
@@ -40,6 +44,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithPropertyWithSingleGetter ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithPropertyWithSingleGetter_ShouldRegisterFix()
     {
@@ -68,6 +76,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithConstructorWithSingleStatement ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithConstructorWithSingleStatement_ShouldRegisterFix()
     {
@@ -96,6 +108,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithOperatorWithSingleReturn ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithOperatorWithSingleReturn_ShouldRegisterFix()
     {
@@ -124,6 +140,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithConversionOperatorWithSingleReturn ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithConversionOperatorWithSingleReturn_ShouldRegisterFix()
     {
@@ -152,6 +172,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithIndexerWithSingleGetter ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithIndexerWithSingleGetter_ShouldRegisterFix()
     {
@@ -180,6 +204,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodWithMultipleStatements ShouldNotRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodWithMultipleStatements_ShouldNotRegisterFix()
     {
@@ -207,6 +235,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithPropertyWithSetter ShouldNotRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithPropertyWithSetter_ShouldNotRegisterFix()
     {
@@ -236,6 +268,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodWithNoReturn ShouldNotRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodWithNoReturn_ShouldNotRegisterFix()
     {
@@ -262,6 +298,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAlreadyExpressionBodiedMethod ShouldNotRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAlreadyExpressionBodiedMethod_ShouldNotRegisterFix()
     {
@@ -285,6 +325,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAlreadyExpressionBodiedProperty ShouldNotRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAlreadyExpressionBodiedProperty_ShouldNotRegisterFix()
     {
@@ -310,6 +354,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseExpressionBodiedMembers.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseExpressionBodiedMembers()
     {
@@ -324,6 +371,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -338,6 +388,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -364,6 +418,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodWithComplexReturn ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodWithComplexReturn_ShouldRegisterFix()
     {
@@ -390,6 +448,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodWithTernaryOperator ShouldRegisterFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodWithTernaryOperator_ShouldRegisterFix()
     {
@@ -435,5 +497,4 @@ public class TestClass
         return Diagnostic.Create(descriptor, location);
     }
 }
-
 

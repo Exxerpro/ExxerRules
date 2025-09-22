@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class RoslynFormattingServiceTests
 {
+    /// <summary>
+    /// FormatDocumentAsync WithUnformattedCode ShouldFormatCorrectly.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatDocumentAsync_WithUnformattedCode_ShouldFormatCorrectly()
     {
@@ -50,6 +54,10 @@ public class TestClass
         formattedSource.ToString().ShouldBe(expectedFormattedCode);
     }
 
+    /// <summary>
+    /// FormatDocumentAsync WithAlreadyFormattedCode ShouldNotChange.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatDocumentAsync_WithAlreadyFormattedCode_ShouldNotChange()
     {
@@ -75,6 +83,10 @@ public class TestClass
         formattedSource.ToString().ShouldBe(sourceCode);
     }
 
+    /// <summary>
+    /// FormatWhitespaceAsync ShouldOnlyFormatWhitespace.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatWhitespaceAsync_ShouldOnlyFormatWhitespace()
     {
@@ -103,6 +115,10 @@ public class TestClass
         formattedSource.ToString().ShouldContain("x + y");
     }
 
+    /// <summary>
+    /// FormatDocumentAsync WithDotNetOptions ShouldApplyDotNetStandards.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatDocumentAsync_WithDotNetOptions_ShouldApplyDotNetStandards()
     {
@@ -131,6 +147,10 @@ public class TestClass
         formattedSource.ToString().ShouldContain("if (true)");
     }
 
+    /// <summary>
+    /// FormatProjectAsync ShouldFormatAllDocumentsInProject.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatProjectAsync_ShouldFormatAllDocumentsInProject()
     {
@@ -165,6 +185,10 @@ public class TestClass
         formattedSource2?.ToString().ShouldContain("var y = 2");
     }
 
+    /// <summary>
+    /// FormatSolutionAsync ShouldFormatAllDocumentsInSolution.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatSolutionAsync_ShouldFormatAllDocumentsInSolution()
     {
@@ -203,6 +227,9 @@ public class TestClass
         }
     }
 
+    /// <summary>
+    /// CreateDefaultFormattingOptions ShouldReturnValidOptions.
+    /// </summary>
     [Fact]
     public void CreateDefaultFormattingOptions_ShouldReturnValidOptions()
     {
@@ -213,6 +240,9 @@ public class TestClass
         options.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// CreateDotNetFormattingOptions ShouldReturnValidOptions.
+    /// </summary>
     [Fact]
     public void CreateDotNetFormattingOptions_ShouldReturnValidOptions()
     {
@@ -223,6 +253,10 @@ public class TestClass
         options.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// FormatDocumentAsync WithNullDocument ShouldReturnOriginalDocument.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatDocumentAsync_WithNullDocument_ShouldReturnOriginalDocument()
     {
@@ -236,6 +270,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FormatDocumentAsync WithCancellation ShouldRespectCancellation.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatDocumentAsync_WithCancellation_ShouldRespectCancellation()
     {
@@ -272,5 +310,4 @@ public class TestClass
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
 #pragma warning restore CS8602, IDE0031
-
 

@@ -15,6 +15,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class ShouldlyAssertionCodeFixProviderTests : CodeFixProviderTest<ShouldlyAssertionCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsShouldInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsShouldInvocation_ShouldRegisterFixes()
     {
@@ -46,6 +50,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeInvocation_ShouldRegisterFixes()
     {
@@ -77,6 +85,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsNotBeInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsNotBeInvocation_ShouldRegisterFixes()
     {
@@ -108,6 +120,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeNullInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeNullInvocation_ShouldRegisterFixes()
     {
@@ -139,6 +155,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsNotBeNullInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsNotBeNullInvocation_ShouldRegisterFixes()
     {
@@ -170,6 +190,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeEmptyInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeEmptyInvocation_ShouldRegisterFixes()
     {
@@ -201,6 +225,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsNotBeEmptyInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsNotBeEmptyInvocation_ShouldRegisterFixes()
     {
@@ -232,6 +260,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsContainInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsContainInvocation_ShouldRegisterFixes()
     {
@@ -263,6 +295,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsNotContainInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsNotContainInvocation_ShouldRegisterFixes()
     {
@@ -294,6 +330,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsHaveCountInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsHaveCountInvocation_ShouldRegisterFixes()
     {
@@ -325,6 +365,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeGreaterThanInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeGreaterThanInvocation_ShouldRegisterFixes()
     {
@@ -356,6 +400,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeLessThanInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeLessThanInvocation_ShouldRegisterFixes()
     {
@@ -387,6 +435,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeGreaterOrEqualToInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeGreaterOrEqualToInvocation_ShouldRegisterFixes()
     {
@@ -418,6 +470,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeLessOrEqualToInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeLessOrEqualToInvocation_ShouldRegisterFixes()
     {
@@ -449,6 +505,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeTrueInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeTrueInvocation_ShouldRegisterFixes()
     {
@@ -480,6 +540,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsBeFalseInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsBeFalseInvocation_ShouldRegisterFixes()
     {
@@ -511,6 +575,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsThrowInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsThrowInvocation_ShouldRegisterFixes()
     {
@@ -542,6 +610,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsNotThrowInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsNotThrowInvocation_ShouldRegisterFixes()
     {
@@ -573,6 +645,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFluentAssertionsUsingDirective ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFluentAssertionsUsingDirective_ShouldRegisterFixes()
     {
@@ -604,6 +680,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNonFluentAssertionsInvocation ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNonFluentAssertionsInvocation_ShouldNotRegisterFixes()
     {
@@ -634,6 +714,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseShouldly.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseShouldly()
     {
@@ -648,6 +731,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -661,6 +747,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -711,5 +801,4 @@ public class TestClass
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-
 

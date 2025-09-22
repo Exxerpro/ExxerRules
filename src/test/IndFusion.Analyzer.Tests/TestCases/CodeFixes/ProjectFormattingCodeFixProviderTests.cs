@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class ProjectFormattingCodeFixProviderTests : CodeFixProviderTest<ProjectFormattingCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithProjectFormattingIssue ShouldRegisterFormatActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithProjectFormattingIssue_ShouldRegisterFormatActions()
     {
@@ -42,6 +46,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -72,6 +80,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnProjectFormatting.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnProjectFormatting()
     {
@@ -86,6 +97,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -100,6 +114,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// FormatProjectAsync ShouldReturnFormattedDocument.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatProjectAsync_ShouldReturnFormattedDocument()
     {
@@ -115,6 +133,10 @@ public class TestClass
         formattedDocument.ShouldNotBe(document); // Should be a new document instance
     }
 
+    /// <summary>
+    /// FormatProjectWhitespaceAsync ShouldReturnFormattedDocument.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatProjectWhitespaceAsync_ShouldReturnFormattedDocument()
     {
@@ -130,6 +152,10 @@ public class TestClass
         formattedDocument.ShouldNotBe(document); // Should be a new document instance
     }
 
+    /// <summary>
+    /// FormatProjectWithDotNetStandardsAsync ShouldReturnFormattedDocument.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatProjectWithDotNetStandardsAsync_ShouldReturnFormattedDocument()
     {
@@ -145,6 +171,10 @@ public class TestClass
         formattedDocument.ShouldNotBe(document); // Should be a new document instance
     }
 
+    /// <summary>
+    /// FormatSolutionAsync ShouldReturnFormattedDocument.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FormatSolutionAsync_ShouldReturnFormattedDocument()
     {
@@ -209,5 +239,4 @@ public class TestClass
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-
 

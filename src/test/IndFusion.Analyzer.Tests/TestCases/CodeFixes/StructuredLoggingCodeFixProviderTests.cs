@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class StructuredLoggingCodeFixProviderTests : CodeFixProviderTest<StructuredLoggingCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithLogInformationInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithLogInformationInvocation_ShouldRegisterFixes()
     {
@@ -49,6 +53,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithLogWarningInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithLogWarningInvocation_ShouldRegisterFixes()
     {
@@ -84,6 +92,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithLogErrorInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithLogErrorInvocation_ShouldRegisterFixes()
     {
@@ -119,6 +131,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithLogDebugInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithLogDebugInvocation_ShouldRegisterFixes()
     {
@@ -154,6 +170,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithLogTraceInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithLogTraceInvocation_ShouldRegisterFixes()
     {
@@ -189,6 +209,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithLogCriticalInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithLogCriticalInvocation_ShouldRegisterFixes()
     {
@@ -224,6 +248,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithInterpolatedString ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithInterpolatedString_ShouldRegisterFixes()
     {
@@ -261,6 +289,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithBinaryExpression ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithBinaryExpression_ShouldRegisterFixes()
     {
@@ -297,6 +329,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNonLoggingInvocation ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNonLoggingInvocation_ShouldNotRegisterFixes()
     {
@@ -326,6 +362,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseStructuredLogging.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseStructuredLogging()
     {
@@ -340,6 +379,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -354,6 +396,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -391,6 +437,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithComplexStructuredLogging ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithComplexStructuredLogging_ShouldRegisterFixes()
     {
@@ -448,5 +498,4 @@ public class TestClass
         return Diagnostic.Create(descriptor, location);
     }
 }
-
 

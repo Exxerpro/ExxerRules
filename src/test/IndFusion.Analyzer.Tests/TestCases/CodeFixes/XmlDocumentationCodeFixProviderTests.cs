@@ -15,6 +15,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class XmlDocumentationCodeFixProviderTests : CodeFixProviderTest<XmlDocumentationCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithClassWithoutDocumentation ShouldRegisterClassFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithClassWithoutDocumentation_ShouldRegisterClassFix()
     {
@@ -44,6 +48,10 @@ public class TestClass
         await VerifyCodeFixAsync(sourceCode, expectedCode, DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodWithoutDocumentation ShouldRegisterMethodFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodWithoutDocumentation_ShouldRegisterMethodFix()
     {
@@ -74,6 +82,10 @@ public class TestClass
         await VerifyCodeFixAsync(sourceCode, expectedCode, DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithPropertyWithoutDocumentation ShouldRegisterPropertyFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithPropertyWithoutDocumentation_ShouldRegisterPropertyFix()
     {
@@ -97,6 +109,10 @@ public class TestClass
         await VerifyCodeFixAsync(sourceCode, expectedCode, DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithConstructorWithoutDocumentation ShouldRegisterConstructorFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithConstructorWithoutDocumentation_ShouldRegisterConstructorFix()
     {
@@ -127,6 +143,10 @@ public class TestClass
         await VerifyCodeFixAsync(sourceCode, expectedCode, DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithInterfaceWithoutDocumentation ShouldRegisterInterfaceFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithInterfaceWithoutDocumentation_ShouldRegisterInterfaceFix()
     {
@@ -150,6 +170,10 @@ public interface ITestInterface
         await VerifyCodeFixAsync(sourceCode, expectedCode, DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithEnumWithoutDocumentation ShouldRegisterEnumFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithEnumWithoutDocumentation_ShouldRegisterEnumFix()
     {
@@ -175,6 +199,10 @@ public enum TestEnum
         await VerifyCodeFixAsync(sourceCode, expectedCode, DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodReturningValue ShouldIncludeReturnsTag.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodReturningValue_ShouldIncludeReturnsTag()
     {
@@ -205,6 +233,9 @@ public class TestClass
         await VerifyCodeFixAsync(sourceCode, expectedCode, DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnPublicMembersShouldHaveXmlDocumentation.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnPublicMembersShouldHaveXmlDocumentation()
     {
@@ -219,6 +250,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -233,6 +267,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -303,5 +341,4 @@ public class TestClass
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-
 

@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class NSubstituteMockingCodeFixProviderTests : CodeFixProviderTest<NSubstituteMockingCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqSetupInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqSetupInvocation_ShouldRegisterFixes()
     {
@@ -50,6 +54,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqReturnsInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqReturnsInvocation_ShouldRegisterFixes()
     {
@@ -86,6 +94,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqThrowsInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqThrowsInvocation_ShouldRegisterFixes()
     {
@@ -122,6 +134,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqVerifyInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqVerifyInvocation_ShouldRegisterFixes()
     {
@@ -158,6 +174,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqMockObjectCreation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqMockObjectCreation_ShouldRegisterFixes()
     {
@@ -193,6 +213,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqUsingDirective ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqUsingDirective_ShouldRegisterFixes()
     {
@@ -228,6 +252,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNSubstituteUsingDirective ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNSubstituteUsingDirective_ShouldRegisterFixes()
     {
@@ -263,6 +291,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNonMoqInvocation ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNonMoqInvocation_ShouldNotRegisterFixes()
     {
@@ -293,6 +325,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqGenericMock ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqGenericMock_ShouldRegisterFixes()
     {
@@ -328,6 +364,10 @@ public interface IServiceProvider
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqMockWithConstructorArgs ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqMockWithConstructorArgs_ShouldRegisterFixes()
     {
@@ -363,6 +403,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqSetupWithComplexLambda ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqSetupWithComplexLambda_ShouldRegisterFixes()
     {
@@ -399,6 +443,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqVerifyWithTimes ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqVerifyWithTimes_ShouldRegisterFixes()
     {
@@ -435,6 +483,9 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseNSubstitute.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseNSubstitute()
     {
@@ -449,6 +500,9 @@ public interface IInterface
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -463,6 +517,10 @@ public interface IInterface
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -503,6 +561,10 @@ public interface IInterface
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMoqSetupWithReturnsAsync ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMoqSetupWithReturnsAsync_ShouldRegisterFixes()
     {
@@ -558,5 +620,4 @@ public interface IInterface
         return Diagnostic.Create(descriptor, location);
     }
 }
-
 

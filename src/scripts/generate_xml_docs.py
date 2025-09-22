@@ -72,6 +72,52 @@ def has_raw_or_verbatim_strings(text: str) -> bool:
     return ('@"' in text) or ('"""' in text)
 
 
+def in_string_or_comment_at(text: str, pos: int) -> bool:
+    """Best-effort C# lexer to decide if position 'pos' is inside a string or comment.
+    Handles //, /* */, normal strings, verbatim strings (@""), char literals.
+    """
+    state = 'code'
+    i = 0
+    n = len(text)
+    while i < n and i < pos:
+        c = text[i]
+        c2 = text[i+1] if i+1 < n else ''
+        if state == 'code':
+            if c == '/' and c2 == '/':
+                state = 'line_comment'; i += 2; continue
+            if c == '/' and c2 == '*':
+                state = 'block_comment'; i += 2; continue
+            if c == '"':
+                # detect verbatim: preceding char is @ (possibly after $)
+                prev = text[i-1] if i-1 >= 0 else ''
+                prev2 = text[i-2] if i-2 >= 0 else ''
+                if prev == '@' or (prev == '"' and prev2 == '@') or prev2 == '@' or prev == '$' and (i-2 >= 0 and text[i-2] == '@'):
+                    state = 'vstring'; i += 1; continue
+                state = 'string'; i += 1; continue
+            if c == '\'':
+                state = 'char'; i += 1; continue
+            i += 1; continue
+        if state == 'line_comment':
+            if c == '\n': state = 'code'
+            i += 1; continue
+        if state == 'block_comment':
+            if c == '*' and c2 == '/': state = 'code'; i += 2; continue
+            i += 1; continue
+        if state == 'string':
+            if c == '\\': i += 2; continue
+            if c == '"': state = 'code'; i += 1; continue
+            i += 1; continue
+        if state == 'vstring':
+            if c == '"' and c2 == '"': i += 2; continue
+            if c == '"': state = 'code'; i += 1; continue
+            i += 1; continue
+        if state == 'char':
+            if c == '\\': i += 2; continue
+            if c == '\'': state = 'code'; i += 1; continue
+            i += 1; continue
+    return state != 'code'
+
+
 def has_xml_doc_above(lines: List[str], idx: int) -> bool:
     # Check up to two lines above for an XML doc marker
     i = max(0, idx - 1)
@@ -157,8 +203,8 @@ def method_doc(method_name: str, indent: str, return_type: str, params_str: str)
     return lines
 
 
-def plan_edits(path: str, text: str, allow_strings: bool) -> List[Edit]:
-    if (not allow_strings) and has_raw_or_verbatim_strings(text):
+def plan_edits(path: str, text: str, allow_strings: bool, xunit_only: bool=False) -> List[Edit]:
+    if (not allow_strings) and (not xunit_only) and has_raw_or_verbatim_strings(text):
         return []
     lines = text.splitlines()
     edits: List[Edit] = []
@@ -166,18 +212,45 @@ def plan_edits(path: str, text: str, allow_strings: bool) -> List[Edit]:
     while i < len(lines):
         line = lines[i]
         # Classes
-        m = CLASS_RE.match(line)
-        if m and not has_xml_doc_above(lines, i):
-            insert_at = previous_attribute_block_start(lines, i)
-            indent = m.group(1)
-            name = m.group('name')
-            edits.append(Edit(insert_at, class_doc(name, indent)))
-            i += 1
-            continue
+        if not xunit_only:
+            m = CLASS_RE.match(line)
+            if m and not has_xml_doc_above(lines, i):
+                insert_at = previous_attribute_block_start(lines, i)
+                indent = m.group(1)
+                name = m.group('name')
+                edits.append(Edit(insert_at, class_doc(name, indent)))
+                i += 1
+                continue
 
         # Methods (support multi-line parameters)
         mm = METHOD_START_RE.match(line)
         if mm and not has_xml_doc_above(lines, i):
+            # Skip if this location appears to be inside a string/comment
+            # Compute char position of start of this line
+            char_pos = sum(len(l) + 1 for l in lines[:i])
+            if in_string_or_comment_at(text, char_pos):
+                i += 1
+                continue
+            if xunit_only:
+                # Require xUnit attribute(s) above (e.g., [Fact], [Theory])
+                k = i - 1
+                saw_attr = False
+                is_xunit = False
+                while k >= 0:
+                    t = lines[k].strip()
+                    if t == '':
+                        k -= 1
+                        continue
+                    if ATTRIBUTE_RE.match(lines[k]):
+                        saw_attr = True
+                        if 'Fact' in t or 'Theory' in t:
+                            is_xunit = True
+                        k -= 1
+                        continue
+                    break
+                if not (saw_attr and is_xunit):
+                    i += 1
+                    continue
             signature, end_idx = build_method_signature(lines, i)
             # Extract return type and method name from signature
             mm2 = re.match(r"^\s*public\s+(?:async\s+)?(?P<ret>[A-Za-z0-9_<>,\[\]\.\?\s]+?)\s+(?P<name>[A-Za-z_][A-Za-z0-9_]*)\s*\((?P<params>[^)]*)\)", signature)
@@ -213,6 +286,7 @@ def main() -> int:
     ap.add_argument('--git', action='store_true')
     ap.add_argument('--push', action='store_true')
     ap.add_argument('--allow-strings', action='store_true', help='Do not skip files with raw/verbatim strings')
+    ap.add_argument('--xunit-only', action='store_true', help='Only add docs for xUnit test methods ([Fact]/[Theory]); skip class docs and ignore string-safety skip')
     ap.add_argument('--stepwise', action='store_true', help='Apply one insertion at a time per file, re-reading after each to avoid drift')
     ap.add_argument('--max-inserts-per-file', type=int, default=10, help='When --stepwise is set, limit inserts per file (default 10). Use 1 to test a single method insert.')
     args = ap.parse_args()
@@ -230,7 +304,7 @@ def main() -> int:
                 tx = fh.read()
         except Exception:
             continue
-        edits = plan_edits(p, tx, allow_strings=args.allow_strings)
+        edits = plan_edits(p, tx, allow_strings=args.allow_strings, xunit_only=args.xunit_only)
         if edits:
             plan_list.append((p, edits))
             total_inserts += sum(len(e.lines) for e in edits)
@@ -275,7 +349,7 @@ def main() -> int:
                     iters += 1
                     with open(p, 'r', encoding='utf-8', errors='replace') as fh:
                         current = fh.read()
-                    step_edits = plan_edits(p, current, allow_strings=args.allow_strings)
+                    step_edits = plan_edits(p, current, allow_strings=args.allow_strings, xunit_only=args.xunit_only)
                     if not step_edits:
                         break
                     # Choose the earliest insertion to minimize interaction

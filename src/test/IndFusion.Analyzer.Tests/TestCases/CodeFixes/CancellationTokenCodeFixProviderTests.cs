@@ -15,6 +15,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class CancellationTokenCodeFixProviderTests //: CodeFixProviderTest<CancellationTokenCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithoutCancellationToken ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithoutCancellationToken_ShouldRegisterFixes()
     {
@@ -42,6 +46,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncVoidMethod ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncVoidMethod_ShouldRegisterFixes()
     {
@@ -68,6 +76,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithParameters ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithParameters_ShouldRegisterFixes()
     {
@@ -95,6 +107,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodAlreadyHavingCancellationToken ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodAlreadyHavingCancellationToken_ShouldNotRegisterFixes()
     {
@@ -122,6 +138,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNonAsyncMethod ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNonAsyncMethod_ShouldNotRegisterFixes()
     {
@@ -148,6 +168,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithDefaultCancellationToken ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithDefaultCancellationToken_ShouldNotRegisterFixes()
     {
@@ -175,6 +199,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithCancellationTokenNone ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithCancellationTokenNone_ShouldNotRegisterFixes()
     {
@@ -202,6 +230,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithMultipleCancellationTokenParameters ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithMultipleCancellationTokenParameters_ShouldNotRegisterFixes()
     {
@@ -229,6 +261,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithRefParameters ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithRefParameters_ShouldRegisterFixes()
     {
@@ -256,6 +292,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithOutParameters ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithOutParameters_ShouldRegisterFixes()
     {
@@ -284,6 +324,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithGenericParameters ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithGenericParameters_ShouldRegisterFixes()
     {
@@ -311,6 +355,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithExpressionBody ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithExpressionBody_ShouldRegisterFixes()
     {
@@ -334,6 +382,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodWithNoParameters ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodWithNoParameters_ShouldRegisterFixes()
     {
@@ -361,6 +413,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnAsyncMethodsShouldAcceptCancellationToken.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnAsyncMethodsShouldAcceptCancellationToken()
     {
@@ -375,6 +430,9 @@ public class TestClass
         // fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -389,6 +447,10 @@ public class TestClass
         // fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -401,6 +463,10 @@ public class TestClass
         await Should.NotThrowAsync(() => Task.CompletedTask);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMultipleAsyncMethods ShouldRegisterFixesForAll.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMultipleAsyncMethods_ShouldRegisterFixesForAll()
     {
@@ -439,6 +505,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodInInterface ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodInInterface_ShouldRegisterFixes()
     {
@@ -455,6 +525,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodInStruct ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodInStruct_ShouldRegisterFixes()
     {
@@ -492,6 +566,5 @@ public class TestClass
 }
 
 #pragma warning restore CS1998, CS8031, CS0117, IDE0053
-
 
 

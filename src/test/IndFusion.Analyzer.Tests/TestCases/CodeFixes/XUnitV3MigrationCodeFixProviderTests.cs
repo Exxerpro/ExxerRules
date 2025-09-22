@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class XUnitV3MigrationCodeFixProviderTests : CodeFixProviderTest<XUnitV3MigrationCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithFactAttribute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithFactAttribute_ShouldRegisterFixes()
     {
@@ -43,6 +47,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTheoryAttribute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTheoryAttribute_ShouldRegisterFixes()
     {
@@ -73,6 +81,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithInlineDataAttribute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithInlineDataAttribute_ShouldRegisterFixes()
     {
@@ -103,6 +115,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMemberDataAttribute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMemberDataAttribute_ShouldRegisterFixes()
     {
@@ -138,6 +154,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithClassDataAttribute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithClassDataAttribute_ShouldRegisterFixes()
     {
@@ -178,6 +198,10 @@ public class TestDataClass : IEnumerable<object[]>
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAssertThrowsInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAssertThrowsInvocation_ShouldRegisterFixes()
     {
@@ -207,6 +231,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAssertThrowsAsyncInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAssertThrowsAsyncInvocation_ShouldRegisterFixes()
     {
@@ -236,6 +264,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAssertRecordInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAssertRecordInvocation_ShouldRegisterFixes()
     {
@@ -265,6 +297,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAssertRecordAsyncInvocation ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAssertRecordAsyncInvocation_ShouldRegisterFixes()
     {
@@ -294,6 +330,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithXUnitUsingDirective ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithXUnitUsingDirective_ShouldRegisterFixes()
     {
@@ -323,6 +363,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNonXUnitAttribute ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNonXUnitAttribute_ShouldNotRegisterFixes()
     {
@@ -350,6 +394,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseXUnitV3.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseXUnitV3()
     {
@@ -364,6 +411,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -378,6 +428,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -409,6 +463,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMultipleXUnitAttributes ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMultipleXUnitAttributes_ShouldRegisterFixes()
     {
@@ -445,6 +503,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithXUnitFullyQualifiedAttribute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithXUnitFullyQualifiedAttribute_ShouldRegisterFixes()
     {
@@ -492,5 +554,4 @@ public class TestClass
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
-
 

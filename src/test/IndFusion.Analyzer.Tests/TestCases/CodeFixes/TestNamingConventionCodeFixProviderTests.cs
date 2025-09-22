@@ -14,6 +14,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class TestNamingConventionCodeFixProviderTests : CodeFixProviderTest<TestNamingConventionCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithTestPrefix ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithTestPrefix_ShouldRegisterFixes()
     {
@@ -43,6 +47,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithShouldPrefix ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithShouldPrefix_ShouldRegisterFixes()
     {
@@ -72,6 +80,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithWhenPrefix ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithWhenPrefix_ShouldRegisterFixes()
     {
@@ -101,6 +113,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithVerifyPrefix ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithVerifyPrefix_ShouldRegisterFixes()
     {
@@ -130,6 +146,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithAssertPrefix ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithAssertPrefix_ShouldRegisterFixes()
     {
@@ -159,6 +179,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithTheoryAttribute ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithTheoryAttribute_ShouldRegisterFixes()
     {
@@ -189,6 +213,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithNullInName ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithNullInName_ShouldRegisterFixes()
     {
@@ -218,6 +246,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithEmptyInName ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithEmptyInName_ShouldRegisterFixes()
     {
@@ -247,6 +279,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithInvalidInName ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithInvalidInName_ShouldRegisterFixes()
     {
@@ -276,6 +312,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithExceptionInName ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithExceptionInName_ShouldRegisterFixes()
     {
@@ -305,6 +345,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNonTestMethod ShouldNotRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNonTestMethod_ShouldNotRegisterFixes()
     {
@@ -331,6 +375,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnTestNamingConvention.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnTestNamingConvention()
     {
@@ -345,6 +392,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -359,6 +409,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -391,6 +445,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithReturnsInName ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithReturnsInName_ShouldRegisterFixes()
     {
@@ -420,6 +478,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTestMethodWithThrowsInName ShouldRegisterFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTestMethodWithThrowsInName_ShouldRegisterFixes()
     {
@@ -468,5 +530,4 @@ public class TestClass
         return Diagnostic.Create(descriptor, location);
     }
 }
-
 

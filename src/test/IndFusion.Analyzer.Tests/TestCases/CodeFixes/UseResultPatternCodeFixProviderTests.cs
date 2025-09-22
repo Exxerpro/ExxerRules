@@ -13,6 +13,10 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFixes;
 /// </summary>
 public class UseResultPatternCodeFixProviderTests : CodeFixProviderTest<UseResultPatternCodeFixProvider>
 {
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodThrowingException ShouldRegisterMultipleFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodThrowingException_ShouldRegisterMultipleFixes()
     {
@@ -40,6 +44,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithAsyncMethodThrowingException ShouldRegisterAsyncFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithAsyncMethodThrowingException_ShouldRegisterAsyncFix()
     {
@@ -69,6 +77,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithMethodReturningValue ShouldRegisterValueReturnFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithMethodReturningValue_ShouldRegisterValueReturnFix()
     {
@@ -98,6 +110,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithTaskReturningMethod ShouldRegisterTaskFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithTaskReturningMethod_ShouldRegisterTaskFix()
     {
@@ -127,6 +143,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithValueTaskReturningMethod ShouldRegisterValueTaskFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithValueTaskReturningMethod_ShouldRegisterValueTaskFix()
     {
@@ -156,6 +176,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithVoidMethod ShouldRegisterVoidFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithVoidMethod_ShouldRegisterVoidFix()
     {
@@ -185,6 +209,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithDifferentExceptionTypes ShouldRegisterSpecificFixes.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithDifferentExceptionTypes_ShouldRegisterSpecificFixes()
     {
@@ -218,6 +246,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithThrowExpression ShouldRegisterExpressionFix.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithThrowExpression_ShouldRegisterExpressionFix()
     {
@@ -242,6 +274,9 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// FixableDiagnosticIds ShouldReturnUseResultPattern.
+    /// </summary>
     [Fact]
     public void FixableDiagnosticIds_ShouldReturnUseResultPattern()
     {
@@ -256,6 +291,9 @@ public class TestClass
         fixableIds.Length.ShouldBe(1);
     }
 
+    /// <summary>
+    /// GetFixAllProvider ShouldReturnBatchFixer.
+    /// </summary>
     [Fact]
     public void GetFixAllProvider_ShouldReturnBatchFixer()
     {
@@ -270,6 +308,10 @@ public class TestClass
         fixAllProvider.ShouldBe(WellKnownFixAllProviders.BatchFixer);
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithNoDiagnostic ShouldNotRegisterActions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithNoDiagnostic_ShouldNotRegisterActions()
     {
@@ -301,6 +343,10 @@ public class TestClass
         });
     }
 
+    /// <summary>
+    /// RegisterCodeFixesAsync WithRethrowStatement ShouldNotModifyRethrow.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RegisterCodeFixesAsync_WithRethrowStatement_ShouldNotModifyRethrow()
     {
@@ -353,5 +399,4 @@ public class TestClass
         return Diagnostic.Create(descriptor, location);
     }
 }
-
 

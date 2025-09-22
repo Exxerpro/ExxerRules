@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for RenameSymbolTests.
+/// </summary>
 public class RenameSymbolTests : TestBase
 {
+    /// <summary>
+    /// RenameSymbol Field RenamesAllReferences.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RenameSymbol_Field_RenamesAllReferences()
     {
@@ -27,6 +34,10 @@ public class RenameSymbolTests : TestBase
         Assert.Contains("values.Add", content);
     }
 
+    /// <summary>
+    /// RenameSymbol InvalidName ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task RenameSymbol_InvalidName_ReturnsError()
     {
@@ -46,4 +57,3 @@ public class RenameSymbolTests : TestBase
                 "newName"));
     }
 }
-

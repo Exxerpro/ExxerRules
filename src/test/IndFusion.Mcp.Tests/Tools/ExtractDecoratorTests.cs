@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+ ///<summary>
+ ///Type ExtractDecoratorTests : TestBase.
+ ///</summary>
 public class ExtractDecoratorTests : TestBase
 {
+    /// <summary>
+    /// ExtractDecorator AddsClass.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ExtractDecorator_AddsClass()
     {
@@ -20,4 +27,3 @@ public class ExtractDecoratorTests : TestBase
         Assert.Contains("GreeterDecorator", text);
     }
 }
-

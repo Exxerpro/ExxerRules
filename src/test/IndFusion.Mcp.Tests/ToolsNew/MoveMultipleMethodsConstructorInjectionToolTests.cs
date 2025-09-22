@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for moving multiple methods and injecting dependencies via constructor.
+/// </summary>
 public class MoveMultipleMethodsConstructorInjectionToolTests : TestBase
 {
+    /// <summary>
+    /// MoveMultipleMethods ConstructorInjection UsesThis.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveMultipleMethods_ConstructorInjection_UsesThis()
     {
@@ -29,6 +36,10 @@ public class MoveMultipleMethodsConstructorInjectionToolTests : TestBase
         Assert.DoesNotContain("_a", content);
     }
 
+    /// <summary>
+    /// MoveMultipleMethods ParameterInjection AddsParameter.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveMultipleMethods_ParameterInjection_AddsParameter()
     {
@@ -55,5 +66,4 @@ public class MoveMultipleMethodsConstructorInjectionToolTests : TestBase
         Assert.Contains("Add(cA", content);
     }
 }
-
 

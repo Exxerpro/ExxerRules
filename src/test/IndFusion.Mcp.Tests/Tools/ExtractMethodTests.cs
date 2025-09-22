@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+ ///<summary>
+ ///Type ExtractMethodTests : TestBase.
+ ///</summary>
 public class ExtractMethodTests : TestBase
 {
+    /// <summary>
+    /// ExtractMethod ValidSelection ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ExtractMethod_ValidSelection_ReturnsSuccess()
     {
@@ -20,6 +27,10 @@ public class ExtractMethodTests : TestBase
         Assert.Contains("ValidateInputs();", fileContent);
     }
 
+    /// <summary>
+    /// ExtractMethod CreatesPrivateMethod.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ExtractMethod_CreatesPrivateMethod()
     {
@@ -37,6 +48,10 @@ public class ExtractMethodTests : TestBase
         Assert.Contains("private void ValidateInputs()", fileContent);
     }
 
+    /// <summary>
+    /// ExtractMethod InvalidRange ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ExtractMethod_InvalidRange_ReturnsError()
     {
@@ -49,6 +64,10 @@ public class ExtractMethodTests : TestBase
                 "TestMethod"));
     }
 
+    /// <summary>
+    /// ExxerFactoringTools FileNotInSolution ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ExxerFactoringTools_FileNotInSolution_ReturnsError()
     {
@@ -61,6 +80,12 @@ public class ExtractMethodTests : TestBase
                 "TestMethod"));
     }
 
+    /// <summary>
+    /// ExtractMethod InvalidRangeFormats ReturnsError.
+    /// </summary>
+    /// <param name="range"></param>
+    /// <param name="methodName"></param>
+    /// <returns></returns>
     [Theory]
     [InlineData("1:1-", "TestMethod")]
     [InlineData("1-2:2", "TestMethod")]
@@ -77,6 +102,12 @@ public class ExtractMethodTests : TestBase
                 methodName));
     }
 
+    /// <summary>
+    /// ExtractMethod InvalidRangeValues ReturnsError.
+    /// </summary>
+    /// <param name="range"></param>
+    /// <param name="methodName"></param>
+    /// <returns></returns>
     [Theory]
     [InlineData("0:1-1:1", "TestMethod")]
     [InlineData("5:5-3:1", "TestMethod")]
@@ -91,4 +122,3 @@ public class ExtractMethodTests : TestBase
                 methodName));
     }
 }
-

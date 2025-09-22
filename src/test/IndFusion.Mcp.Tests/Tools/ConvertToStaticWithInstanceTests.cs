@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+ ///<summary>
+ ///Type ConvertToStaticWithInstanceTests : TestBase.
+ ///</summary>
 public class ConvertToStaticWithInstanceTests : TestBase
 {
+    /// <summary>
+    /// ConvertToStaticWithInstance ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ConvertToStaticWithInstance_ReturnsSuccess()
     {
@@ -21,4 +28,3 @@ public class ConvertToStaticWithInstanceTests : TestBase
         Assert.Contains("Calculator instance", fileContent);
     }
 }
-

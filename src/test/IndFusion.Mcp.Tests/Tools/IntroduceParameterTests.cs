@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+///<summary>
+///Type IntroduceParameterTests : TestBase.
+///</summary>
 public class IntroduceParameterTests : TestBase
 {
+    /// <summary>
+    /// IntroduceParameter ValidExpression ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceParameter_ValidExpression_ReturnsSuccess()
     {
@@ -21,6 +28,10 @@ public class IntroduceParameterTests : TestBase
         Assert.Contains("processedValue", fileContent);
     }
 
+    /// <summary>
+    /// IntroduceParameter InvalidMethod ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceParameter_InvalidMethod_ReturnsError()
     {
@@ -34,4 +45,3 @@ public class IntroduceParameterTests : TestBase
         Assert.Equal("Error: No method named 'Nonexistent' found", result);
     }
 }
-

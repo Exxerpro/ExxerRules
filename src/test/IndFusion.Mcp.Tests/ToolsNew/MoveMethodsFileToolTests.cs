@@ -2,8 +2,15 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for moving multiple methods into a separate file/type.
+/// </summary>
 public class MoveMethodsFileToolTests : TestBase
 {
+    /// <summary>
+    /// MoveStaticMethodInFile CreatesNewFileAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveStaticMethodInFile_CreatesNewFileAndStub()
     {
@@ -26,6 +33,10 @@ public class MoveMethodsFileToolTests : TestBase
         Assert.Contains("static int Foo", targetContent);
     }
 
+    /// <summary>
+    /// MoveStaticMethodInFile SameFileAddsMethodAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveStaticMethodInFile_SameFileAddsMethodAndStub()
     {
@@ -45,6 +56,10 @@ public class MoveMethodsFileToolTests : TestBase
         Assert.Contains("return B.Foo()", fileContent);
     }
 
+    /// <summary>
+    /// MoveInstanceMethodInFile CreatesNewFileAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveInstanceMethodInFile_CreatesNewFileAndStub()
     {
@@ -76,6 +91,10 @@ public class MoveMethodsFileToolTests : TestBase
         Assert.Contains("static int Bar", targetContent);
     }
 
+    /// <summary>
+    /// MoveInstanceMethodInFile SameFileAddsMethodAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveInstanceMethodInFile_SameFileAddsMethodAndStub()
     {
@@ -102,5 +121,4 @@ public class MoveMethodsFileToolTests : TestBase
         Assert.Contains("return B.Bar()", fileContent);
     }
 }
-
 

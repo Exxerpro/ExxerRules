@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for MoveStaticMethodTests.
+/// </summary>
 public class MoveStaticMethodTests : TestBase
 {
+    /// <summary>
+    /// MoveStaticMethod ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveStaticMethod_ReturnsSuccess()
     {
@@ -24,6 +31,10 @@ public class MoveStaticMethodTests : TestBase
         Assert.Contains("class TargetClass", fileContent);
     }
 
+    /// <summary>
+    /// MoveStaticMethod AddsUsingsAndCompiles.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveStaticMethod_AddsUsingsAndCompiles()
     {
@@ -60,4 +71,3 @@ public class MoveStaticMethodTests : TestBase
         Assert.DoesNotContain(diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 }
-

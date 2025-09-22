@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+ ///<summary>
+ ///Type CreateAdapterTests : TestBase.
+ ///</summary>
 public class CreateAdapterTests : TestBase
 {
+    /// <summary>
+    /// CreateAdapter AddsClass.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task CreateAdapter_AddsClass()
     {
@@ -21,4 +28,3 @@ public class CreateAdapterTests : TestBase
         Assert.Contains("LoggerAdapter", text);
     }
 }
-

@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+ ///<summary>
+ ///Type FeatureFlagExxerFactorTests : TestBase.
+ ///</summary>
 public class FeatureFlagExxerFactorTests : TestBase
 {
+    /// <summary>
+    /// FeatureFlagExxerFactor RewritesFile.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FeatureFlagExxerFactor_RewritesFile()
     {
@@ -20,6 +27,10 @@ public class FeatureFlagExxerFactorTests : TestBase
         Assert.Contains("_coolFeatureStrategy", content);
     }
 
+    /// <summary>
+    /// FeatureFlagExxerFactor NoFlagFound Throws.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task FeatureFlagExxerFactor_NoFlagFound_Throws()
     {
@@ -34,4 +45,3 @@ public class FeatureFlagExxerFactorTests : TestBase
                 "Other"));
     }
 }
-

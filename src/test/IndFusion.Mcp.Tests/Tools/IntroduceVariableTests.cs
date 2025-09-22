@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+///<summary>
+///Type IntroduceVariableTests : TestBase.
+///</summary>
 public class IntroduceVariableTests : TestBase
 {
+    /// <summary>
+    /// IntroduceVariable ValidExpression ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceVariable_ValidExpression_ReturnsSuccess()
     {
@@ -20,4 +27,3 @@ public class IntroduceVariableTests : TestBase
         Assert.Contains("processedValue", fileContent);
     }
 }
-

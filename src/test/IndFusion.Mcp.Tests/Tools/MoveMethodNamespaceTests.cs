@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for MoveMethodNamespaceTests.
+/// </summary>
 public class MoveMethodNamespaceTests : TestBase
 {
+    /// <summary>
+    /// MoveInstanceMethod PreservesNamespaceInNewFile.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveInstanceMethod_PreservesNamespaceInNewFile()
     {
@@ -28,6 +35,10 @@ public class MoveMethodNamespaceTests : TestBase
         Assert.Contains("namespace Sample.Namespace", newContent);
     }
 
+    /// <summary>
+    /// MoveInstanceMethod DoesNotAddNamespaceUsing.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveInstanceMethod_DoesNotAddNamespaceUsing()
     {
@@ -54,4 +65,3 @@ public class MoveMethodNamespaceTests : TestBase
         Assert.DoesNotContain("using Sample.Namespace;", newContent);
     }
 }
-

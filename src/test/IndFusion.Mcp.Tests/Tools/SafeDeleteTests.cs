@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for SafeDeleteTests.
+/// </summary>
 public class SafeDeleteTests : TestBase
 {
+    /// <summary>
+    /// SafeDeleteField UnusedField ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task SafeDeleteField_UnusedField_ReturnsSuccess()
     {
@@ -19,6 +26,10 @@ public class SafeDeleteTests : TestBase
         Assert.DoesNotContain("deprecatedCounter", fileContent);
     }
 
+    /// <summary>
+    /// SafeDeleteMethod UnusedMethod ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task SafeDeleteMethod_UnusedMethod_ReturnsSuccess()
     {
@@ -36,6 +47,10 @@ public class SafeDeleteTests : TestBase
         Assert.DoesNotContain("UnusedHelper", fileContent);
     }
 
+    /// <summary>
+    /// SafeDeleteVariable UnusedLocal ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task SafeDeleteVariable_UnusedLocal_ReturnsSuccess()
     {
@@ -53,4 +68,3 @@ public class SafeDeleteTests : TestBase
         Assert.DoesNotContain("tempValue", fileContent);
     }
 }
-

@@ -1,7 +1,13 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for MoveVirtualMethodTests.
+/// </summary>
 public class MoveVirtualMethodTests
 {
+    /// <summary>
+    /// MoveOverrideMethod WithBaseCall AddsWrapper.
+    /// </summary>
     [Fact]
     public void MoveOverrideMethod_WithBaseCall_AddsWrapper()
     {
@@ -22,4 +28,3 @@ public class MoveVirtualMethodTests
         Assert.Contains("BaseMethod1", moved.ToFullString());
     }
 }
-

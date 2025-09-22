@@ -1,7 +1,16 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for MoveTypeToFileTests.
+/// </summary>
 public class MoveTypeToFileTests : TestBase
 {
+    /// <summary>
+    /// MoveTypeToFile MovesTypeAndCreatesFile.
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="typeName"></param>
+    /// <returns></returns>
     [Theory]
     [InlineData("public class TempClass { }", "TempClass")]
     [InlineData("public interface ITemp { }", "ITemp")]
@@ -30,6 +39,10 @@ public class MoveTypeToFileTests : TestBase
         Assert.Contains(typeName, newFileContent);
     }
 
+    /// <summary>
+    /// MoveTypeToFile FailsWhenTypeExistsInAnotherFile.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveTypeToFile_FailsWhenTypeExistsInAnotherFile()
     {
@@ -56,4 +69,3 @@ public class MoveTypeToFileTests : TestBase
         }
     }
 }
-

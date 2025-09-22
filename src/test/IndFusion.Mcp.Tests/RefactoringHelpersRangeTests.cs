@@ -43,6 +43,10 @@ public class ExxerFactoringHelpersRangeTests
     /// TryParseRange InvalidFormat ReturnsFalse.
     /// </summary>
     /// <param name="range"></param>
+    /// <summary>
+    /// TryParseRange InvalidFormat ReturnsFalse.
+    /// </summary>
+    /// <param name="range"></param>
     [Theory]
     [InlineData("invalid")]
     [InlineData("1:2:3-4:5")]

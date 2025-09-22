@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+///<summary>
+///Type IntroduceFieldTests : TestBase.
+///</summary>
 public class IntroduceFieldTests : TestBase
 {
+    /// <summary>
+    /// IntroduceField ValidExpression ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceField_ValidExpression_ReturnsSuccess()
     {
@@ -21,6 +28,10 @@ public class IntroduceFieldTests : TestBase
         Assert.Contains("_averageValue", fileContent);
     }
 
+    /// <summary>
+    /// IntroduceField WithPublicModifier ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceField_WithPublicModifier_ReturnsSuccess()
     {
@@ -40,6 +51,10 @@ public class IntroduceFieldTests : TestBase
         Assert.Contains("_publicField", fileContent);
     }
 
+    /// <summary>
+    /// IntroduceField DifferentAccessModifiers ReturnsCorrectModifier.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceField_DifferentAccessModifiers_ReturnsCorrectModifier()
     {
@@ -65,6 +80,10 @@ public class IntroduceFieldTests : TestBase
         }
     }
 
+    /// <summary>
+    /// IntroduceField FieldNameAlreadyExists ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task IntroduceField_FieldNameAlreadyExists_ReturnsError()
     {
@@ -81,4 +100,3 @@ public class IntroduceFieldTests : TestBase
         Assert.Equal("Error: Field 'numbers' already exists", result);
     }
 }
-

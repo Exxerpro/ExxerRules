@@ -2,8 +2,17 @@ using IndFusion.Mcp.Tests.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
+/// <summary>
+/// Tests for moving types into matching file names.
+/// </summary>
 public class MoveTypeToFileToolTests : TestBase
 {
+    /// <summary>
+    /// MoveTypeToFile CreatesNewFile.
+    /// </summary>
+    /// <param name="code"></param>
+    /// <param name="typeName"></param>
+    /// <returns></returns>
     [Theory]
     [InlineData("public class TempClass { }", "TempClass")]
     [InlineData("public interface ITemp { }", "ITemp")]
@@ -34,6 +43,10 @@ public class MoveTypeToFileToolTests : TestBase
             targetContent.Replace("\r\n", "\n").TrimEnd());
     }
 
+    /// <summary>
+    /// MoveTypeToFile FailsWhenTypeExistsInAnotherFile.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveTypeToFile_FailsWhenTypeExistsInAnotherFile()
     {
@@ -59,5 +72,4 @@ public class MoveTypeToFileToolTests : TestBase
         }
     }
 }
-
 

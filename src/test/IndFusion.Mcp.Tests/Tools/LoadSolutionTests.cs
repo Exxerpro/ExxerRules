@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+///<summary>
+///Type LoadSolutionTests : TestBase.
+///</summary>
 public class LoadSolutionTests : TestBase
 {
+    /// <summary>
+    /// LoadSolution ValidPath ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task LoadSolution_ValidPath_ReturnsSuccess()
     {
@@ -11,6 +18,10 @@ public class LoadSolutionTests : TestBase
         Assert.Contains("IndFusion.Mcp.Tests", result);
     }
 
+    /// <summary>
+    /// UnloadSolution RemovesCachedSolution.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task UnloadSolution_RemovesCachedSolution()
     {
@@ -19,6 +30,10 @@ public class LoadSolutionTests : TestBase
         Assert.Contains("Unloaded solution", result);
     }
 
+    /// <summary>
+    /// LoadSolution InvalidPath ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task LoadSolution_InvalidPath_ReturnsError()
     {
@@ -26,6 +41,9 @@ public class LoadSolutionTests : TestBase
             await LoadSolutionTool.LoadSolution("./NonExistent.sln", null, Xunit.TestContext.Current.CancellationToken));
     }
 
+    /// <summary>
+    /// Version ReturnsInfo.
+    /// </summary>
     [Fact]
     public void Version_ReturnsInfo()
     {
@@ -34,6 +52,10 @@ public class LoadSolutionTests : TestBase
         Assert.Contains("Build", result);
     }
 
+    /// <summary>
+    /// ClearSolutionCache RemovesAllCachedSolutions.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ClearSolutionCache_RemovesAllCachedSolutions()
     {
@@ -45,4 +67,3 @@ public class LoadSolutionTests : TestBase
         Assert.Contains("was not loaded", unloadResult);
     }
 }
-

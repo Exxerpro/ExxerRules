@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+///<summary>
+///Type ExtractInterfaceTests : TestBase.
+///</summary>
 public class ExtractInterfaceTests : TestBase
 {
+    /// <summary>
+    /// ExtractInterface CreatesInterfaceFile.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task ExtractInterface_CreatesInterfaceFile()
     {
@@ -31,4 +38,3 @@ public class ExtractInterfaceTests : TestBase
         Assert.Contains("class Person : IPerson", source);
     }
 }
-

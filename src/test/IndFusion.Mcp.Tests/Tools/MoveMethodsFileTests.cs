@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for MoveMethodsFileTests.
+/// </summary>
 public class MoveMethodsFileTests : TestBase
 {
+    /// <summary>
+    /// MoveStaticMethodInFile CreatesNewFileAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveStaticMethodInFile_CreatesNewFileAndStub()
     {
@@ -24,6 +31,10 @@ public class MoveMethodsFileTests : TestBase
         Assert.Contains("static int Foo", targetContent);
     }
 
+    /// <summary>
+    /// MoveStaticMethodInFile SameFileAddsMethodAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveStaticMethodInFile_SameFileAddsMethodAndStub()
     {
@@ -43,6 +54,10 @@ public class MoveMethodsFileTests : TestBase
         Assert.Contains("return B.Foo()", fileContent);
     }
 
+    /// <summary>
+    /// MoveInstanceMethodInFile CreatesNewFileAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveInstanceMethodInFile_CreatesNewFileAndStub()
     {
@@ -74,6 +89,10 @@ public class MoveMethodsFileTests : TestBase
         Assert.Contains("static int Bar", targetContent);
     }
 
+    /// <summary>
+    /// MoveInstanceMethodInFile SameFileAddsMethodAndStub.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MoveInstanceMethodInFile_SameFileAddsMethodAndStub()
     {
@@ -100,4 +119,3 @@ public class MoveMethodsFileTests : TestBase
         Assert.Contains("return B.Bar()", fileContent);
     }
 }
-

@@ -1,7 +1,14 @@
 namespace IndFusion.Mcp.Tests.Tools;
 
+/// <summary>
+/// Tests for MakeFieldReadonlyTests.
+/// </summary>
 public class MakeFieldReadonlyTests : TestBase
 {
+    /// <summary>
+    /// MakeFieldReadonly FieldWithInitializer ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MakeFieldReadonly_FieldWithInitializer_ReturnsSuccess()
     {
@@ -19,6 +26,10 @@ public class MakeFieldReadonlyTests : TestBase
         Assert.Contains("readonly string format", fileContent);
     }
 
+    /// <summary>
+    /// MakeFieldReadonly FieldWithoutInitializer ReturnsSuccess.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MakeFieldReadonly_FieldWithoutInitializer_ReturnsSuccess()
     {
@@ -36,6 +47,10 @@ public class MakeFieldReadonlyTests : TestBase
         Assert.Contains("readonly string description", fileContent);
     }
 
+    /// <summary>
+    /// MakeFieldReadonly InvalidLine ReturnsError.
+    /// </summary>
+    /// <returns></returns>
     [Fact]
     public async Task MakeFieldReadonly_InvalidLine_ReturnsError()
     {
@@ -47,4 +62,3 @@ public class MakeFieldReadonlyTests : TestBase
                 "nonexistent"));
     }
 }
-

@@ -43,3 +43,4 @@ public partial class RoslynTransformationTests
         Assert.Contains("return calculationResult;", output);
     }
 }
+

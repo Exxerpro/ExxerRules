@@ -28,7 +28,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceVariable.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -43,3 +43,4 @@ public class Sample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 }
+

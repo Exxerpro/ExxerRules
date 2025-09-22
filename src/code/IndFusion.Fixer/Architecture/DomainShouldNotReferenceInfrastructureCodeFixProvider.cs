@@ -229,14 +229,17 @@ public class DomainShouldNotReferenceInfrastructureCodeFixProvider : CodeFixProv
         if (string.IsNullOrEmpty(usingName))
             return false;
 
-        return usingName.Contains("Microsoft.EntityFrameworkCore") ||
-               usingName.Contains("System.Data.SqlClient") ||
-               usingName.Contains("System.Data.OleDb") ||
-               usingName.Contains("System.Data.Odbc") ||
-               usingName.Contains("System.Data.Entity") ||
-               usingName.Contains("Infrastructure") ||
-               usingName.Contains("DataAccess") ||
-               usingName.Contains("Persistence");
+        // In netstandard2.0, nullable annotations on string helpers are not
+        // available to flow analysis; assert non-null after guard above.
+        var name = usingName!;
+        return name.Contains("Microsoft.EntityFrameworkCore") ||
+               name.Contains("System.Data.SqlClient") ||
+               name.Contains("System.Data.OleDb") ||
+               name.Contains("System.Data.Odbc") ||
+               name.Contains("System.Data.Entity") ||
+               name.Contains("Infrastructure") ||
+               name.Contains("DataAccess") ||
+               name.Contains("Persistence");
     }
 
     /// <summary>

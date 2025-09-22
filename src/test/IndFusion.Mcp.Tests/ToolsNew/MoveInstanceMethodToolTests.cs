@@ -14,27 +14,9 @@ public class A
 }
 """;
 
-        const string expectedSource = """
-public class A
-{
-    public int Bar()
-    {
-        return B.Bar();
-    }
-}
-""";
+        // Expected strings are checked via specific Contains/DoesNotContain assertions below.
 
-        const string expectedTarget = """
-public class B
-{
-    public static int Bar()
-    {
-        return 1;
-    }
-}
-""";
-
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveInstance.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -67,28 +49,9 @@ public class Source
 }
 """;
 
-        const string expectedSource = """
-public class Source
-{
-    public int Value = 1;
-    public int Add(int x)
-    {
-        return Target.Add(this, x);
-    }
-}
-""";
+        // Expected strings are checked via specific Contains/DoesNotContain assertions below.
 
-        const string expectedTarget = """
-public class Target
-{
-    public static int Add(Source source, int x)
-    {
-        return x + source.Value;
-    }
-}
-""";
-
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveParamPublic.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -122,42 +85,9 @@ public class Source
 }
 """;
 
-        const string expectedSource = """
-public class Source
-{
-    public int Value = 1;
-    public int Add()
-    {
-        return _target.Add();
-    }
+        // Expected strings are checked via specific Contains/DoesNotContain assertions below.
 
-    private readonly Target _target;
-
-    public Source(Target target)
-    {
-        _target = target;
-    }
-}
-""";
-
-        const string expectedTarget = """
-public class Target
-{
-    private readonly Source _source;
-
-    public Target(Source source)
-    {
-        _source = source;
-    }
-
-    public int Add()
-    {
-        return _source.Value + 1;
-    }
-}
-""";
-
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveCtorPublic.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -207,7 +137,7 @@ public class Target
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveParamPrivate.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -276,7 +206,7 @@ public class Target
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveCtorPrivate.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -298,3 +228,5 @@ public class Target
         Assert.Contains("_offset + 1", targetContent);
     }
 }
+
+

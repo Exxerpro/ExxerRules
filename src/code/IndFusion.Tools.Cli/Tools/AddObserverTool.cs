@@ -1,9 +1,23 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
 [McpServerToolType]
+/// <summary>
+/// Provides a refactoring that introduces a simple observer event on a class and
+/// raises it from a specified method.
+/// </summary>
 public static class AddObserverTool
 {
     [McpServerTool, Description("Introduce a simple observer event and raise it in a method")]
+    /// <summary>
+    /// Adds an event to a class and invokes it from the specified method, updating files accordingly.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file to modify.</param>
+    /// <param name="className">Name of the class containing the method.</param>
+    /// <param name="methodName">Name of the method that should raise the event.</param>
+    /// <param name="eventName">Name of the event to create.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A status message describing the observer addition.</returns>
     public static async Task<string> AddObserver(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
         [Description("Path to the C# file")] string filePath,
@@ -26,6 +40,14 @@ public static class AddObserverTool
         }
     }
 
+    /// <summary>
+    /// Applies the observer transformation within a solution-aware context.
+    /// </summary>
+    /// <param name="document">Document to update.</param>
+    /// <param name="className">Target class name.</param>
+    /// <param name="methodName">Method to raise the event.</param>
+    /// <param name="eventName">Event name to introduce.</param>
+    /// <returns>Status message.</returns>
     private static async Task<string> AddObserverWithSolution(Document document, string className, string methodName, string eventName)
     {
         var text = await document.GetTextAsync();
@@ -36,6 +58,14 @@ public static class AddObserverTool
         return $"Added observer {eventName} to {document.FilePath} (solution mode)";
     }
 
+    /// <summary>
+    /// Applies the observer transformation to a single file path.
+    /// </summary>
+    /// <param name="filePath">File to update.</param>
+    /// <param name="className">Target class name.</param>
+    /// <param name="methodName">Method to raise the event.</param>
+    /// <param name="eventName">Event name to introduce.</param>
+    /// <returns>A task that resolves to a status message.</returns>
     private static Task<string> AddObserverSingleFile(string filePath, string className, string methodName, string eventName)
     {
         return ExxerFactoringHelpers.ApplySingleFileEdit(
@@ -44,6 +74,14 @@ public static class AddObserverTool
             $"Added observer {eventName} to {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Performs the observer introduction directly against source text and returns the updated source.
+    /// </summary>
+    /// <param name="sourceText">Original source code.</param>
+    /// <param name="className">Target class name.</param>
+    /// <param name="methodName">Method to raise the event.</param>
+    /// <param name="eventName">Event name to introduce.</param>
+    /// <returns>Updated source code.</returns>
     public static string AddObserverInSource(string sourceText, string className, string methodName, string eventName)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);

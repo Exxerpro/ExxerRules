@@ -29,7 +29,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Rename.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
@@ -61,7 +61,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "RenameInvalid.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
@@ -76,3 +76,5 @@ public class Sample
                 "newName"));
     }
 }
+
+

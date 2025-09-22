@@ -26,8 +26,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" />
     <!-- UI Framework & Components -->
     <PackageReference Include="MudBlazor" />
-    <!-- System & JSON -->
-    <PackageReference Include="System.Text.Json" />
+    <!-- System & JSON (included in shared framework) -->
     <!-- Protocol & Communication -->
     <PackageReference Include="ModelContextProtocol" />
   </ItemGroup>

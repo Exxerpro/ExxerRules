@@ -92,3 +92,4 @@ public class Calculator
 // Example class for Move Method target
 
 // Example class for Move Instance Method
+

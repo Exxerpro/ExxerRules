@@ -35,3 +35,4 @@ public class MetricsProviderTests : TestBase
         Assert.Equal(modified, diskSecond);
     }
 }
+

@@ -123,3 +123,4 @@ public class McpServerBuilderTests
         Should.Throw<ArgumentNullException>(action);
     }
 }
+

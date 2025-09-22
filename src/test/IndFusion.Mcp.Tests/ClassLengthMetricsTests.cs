@@ -19,3 +19,4 @@ public class ClassLengthMetricsTests : IDisposable
         Assert.Contains("MathUtilities", result);
     }
 }
+

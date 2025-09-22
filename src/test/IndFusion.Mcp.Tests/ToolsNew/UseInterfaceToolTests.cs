@@ -27,7 +27,7 @@ public class Logger { }
 public interface ILogger { }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "UseInterface.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -43,3 +43,5 @@ public interface ILogger { }
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 }
+
+

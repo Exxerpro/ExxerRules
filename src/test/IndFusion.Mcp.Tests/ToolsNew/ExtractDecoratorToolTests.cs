@@ -9,7 +9,7 @@ public class ExtractDecoratorToolTests : TestBase
     {
         const string initialCode = "public class Greeter { public void Greet(string name){ System.Console.WriteLine(\"Hello {name}\"); } }";
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Decorator.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -24,3 +24,4 @@ public class ExtractDecoratorToolTests : TestBase
         Assert.Contains("GreeterDecorator", text);
     }
 }
+

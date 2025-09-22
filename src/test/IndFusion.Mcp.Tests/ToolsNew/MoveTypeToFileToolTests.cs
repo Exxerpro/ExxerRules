@@ -17,7 +17,7 @@ public class MoveTypeToFileToolTests : TestBase
         var testFile = Path.Combine(TestOutputPath, $"MoveType_{typeName}.cs");
         await TestUtilities.CreateTestFile(testFile, code);
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         var result = await MoveTypeToFileTool.MoveToSeparateFile(
             SolutionPath,
@@ -42,7 +42,7 @@ public class MoveTypeToFileToolTests : TestBase
 
         try
         {
-            await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+            await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
             var testFile = Path.Combine(TestOutputPath, "MoveType_Duplicate.cs");
             await TestUtilities.CreateTestFile(testFile, "public interface ITemp { }");
 
@@ -59,3 +59,5 @@ public class MoveTypeToFileToolTests : TestBase
         }
     }
 }
+
+

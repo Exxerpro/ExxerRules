@@ -52,3 +52,4 @@ public static class WebTestDataBuilder
         return new SystemHealthStatus(isHealthy, isHealthy ? "All systems operational" : "System issues detected", components);
     }
 }
+

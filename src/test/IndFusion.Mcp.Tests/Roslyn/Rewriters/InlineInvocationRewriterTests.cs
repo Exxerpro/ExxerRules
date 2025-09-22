@@ -16,3 +16,4 @@ public partial class RoslynTransformationTests
         Assert.Contains("Console.WriteLine(\"Hi\");", text);
     }
 }
+

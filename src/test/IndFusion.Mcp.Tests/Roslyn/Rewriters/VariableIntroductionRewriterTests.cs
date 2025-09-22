@@ -23,3 +23,4 @@ public partial class RoslynTransformationTests
         Assert.Contains("Console.WriteLine(sum);", text);
     }
 }
+

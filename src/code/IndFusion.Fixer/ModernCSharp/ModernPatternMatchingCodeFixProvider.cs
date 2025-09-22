@@ -261,12 +261,13 @@ public class ModernPatternMatchingCodeFixProvider : CodeFixProvider
         {
             foreach (var label in section.Labels)
             {
-                if (section.Statements.Count == 1 && section.Statements[0] is ReturnStatementSyntax returnStatement)
+                if (section.Statements.Count == 1 && section.Statements[0] is ReturnStatementSyntax returnStatement && returnStatement.Expression != null)
                 {
                     var pattern = ConvertSwitchLabelToPattern(label);
                     if (pattern != null)
                     {
-                        arms.Add(SyntaxFactory.SwitchExpressionArm(pattern, returnStatement.Expression));
+                        // returnStatement.Expression null-checked above; '!' ensures flow in netstandard2.0
+                        arms.Add(SyntaxFactory.SwitchExpressionArm(pattern, returnStatement.Expression!));
                     }
                 }
             }

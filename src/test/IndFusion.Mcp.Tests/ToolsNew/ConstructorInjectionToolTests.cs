@@ -9,7 +9,7 @@ public class ConstructorInjectionToolTests : TestBase
     {
         const string initialCode = "class C{ int M(int x){ return x+1; } void Call(){ M(1); } }";
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ConstructorInjection.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -24,3 +24,4 @@ public class ConstructorInjectionToolTests : TestBase
         Assert.Contains("_x", fileContent);
     }
 }
+

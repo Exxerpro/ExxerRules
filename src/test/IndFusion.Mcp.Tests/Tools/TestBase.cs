@@ -23,3 +23,4 @@ public abstract class TestBase : IDisposable
             Directory.Delete(TestOutputPath, true);
     }
 }
+

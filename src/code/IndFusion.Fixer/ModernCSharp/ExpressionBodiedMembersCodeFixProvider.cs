@@ -317,12 +317,22 @@ public class ExpressionBodiedMembersCodeFixProvider : CodeFixProvider
     /// </summary>
     private static bool CanConvertPropertyToExpressionBodied(PropertyDeclarationSyntax propertyDeclaration)
     {
-        return propertyDeclaration.AccessorList != null &&
-               propertyDeclaration.AccessorList.Accessors.Count == 1 &&
-               propertyDeclaration.AccessorList.Accessors[0].Kind() == SyntaxKind.GetAccessorDeclaration &&
-               propertyDeclaration.AccessorList.Accessors[0].Body != null &&
-               propertyDeclaration.AccessorList.Accessors[0].Body.Statements.Count == 1 &&
-               propertyDeclaration.AccessorList.Accessors[0].Body.Statements[0] is ReturnStatementSyntax returnStatement &&
+        var accessorList = propertyDeclaration.AccessorList;
+        if (accessorList is null)
+            return false;
+
+        if (accessorList.Accessors.Count != 1)
+            return false;
+
+        var accessor = accessorList.Accessors[0];
+        if (accessor.Kind() != SyntaxKind.GetAccessorDeclaration)
+            return false;
+
+        var body = accessor.Body;
+        if (body is null || body.Statements.Count != 1)
+            return false;
+
+        return body.Statements[0] is ReturnStatementSyntax returnStatement &&
                returnStatement.Expression != null;
     }
 
@@ -366,12 +376,22 @@ public class ExpressionBodiedMembersCodeFixProvider : CodeFixProvider
     /// </summary>
     private static bool CanConvertIndexerToExpressionBodied(IndexerDeclarationSyntax indexerDeclaration)
     {
-        return indexerDeclaration.AccessorList != null &&
-               indexerDeclaration.AccessorList.Accessors.Count == 1 &&
-               indexerDeclaration.AccessorList.Accessors[0].Kind() == SyntaxKind.GetAccessorDeclaration &&
-               indexerDeclaration.AccessorList.Accessors[0].Body != null &&
-               indexerDeclaration.AccessorList.Accessors[0].Body.Statements.Count == 1 &&
-               indexerDeclaration.AccessorList.Accessors[0].Body.Statements[0] is ReturnStatementSyntax returnStatement &&
+        var accessorList = indexerDeclaration.AccessorList;
+        if (accessorList is null)
+            return false;
+
+        if (accessorList.Accessors.Count != 1)
+            return false;
+
+        var accessor = accessorList.Accessors[0];
+        if (accessor.Kind() != SyntaxKind.GetAccessorDeclaration)
+            return false;
+
+        var body = accessor.Body;
+        if (body is null || body.Statements.Count != 1)
+            return false;
+
+        return body.Statements[0] is ReturnStatementSyntax returnStatement &&
                returnStatement.Expression != null;
     }
 

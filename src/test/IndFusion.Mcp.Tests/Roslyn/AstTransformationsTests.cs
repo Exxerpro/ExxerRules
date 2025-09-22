@@ -68,3 +68,4 @@ public partial class RoslynTransformationTests
         Assert.Equal("M(b)", updated.NormalizeWhitespace().ToFullString());
     }
 }
+

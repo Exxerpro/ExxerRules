@@ -9,7 +9,7 @@ public class CreateAdapterToolTests : TestBase
     {
         const string initialCode = "public class LegacyLogger { public void Write(string message){ System.Console.WriteLine(message); } }";
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Adapter.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -25,3 +25,4 @@ public class CreateAdapterToolTests : TestBase
         Assert.Contains("LoggerAdapter", text);
     }
 }
+

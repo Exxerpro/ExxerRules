@@ -9,7 +9,7 @@ public class MoveMultipleMethodsDuplicateTests : TestBase
         var testFile = Path.Combine(TestOutputPath, "DupMethods.cs");
         var code = @"public class Source { public void A() { } } public class Target { }";
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -24,3 +24,4 @@ public class MoveMultipleMethodsDuplicateTests : TestBase
         Assert.Contains("Duplicate method names", result);
     }
 }
+

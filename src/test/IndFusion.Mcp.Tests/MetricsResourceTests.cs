@@ -58,3 +58,4 @@ public class MetricsResourceTests : TestBase
         Assert.Contains("not found", err.GetString());
     }
 }
+

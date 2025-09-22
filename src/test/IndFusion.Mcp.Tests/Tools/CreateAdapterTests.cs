@@ -5,7 +5,7 @@ public class CreateAdapterTests : TestBase
     [Fact]
     public async Task CreateAdapter_AddsClass()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Adapter.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForAdapter());
 
@@ -21,3 +21,4 @@ public class CreateAdapterTests : TestBase
         Assert.Contains("LoggerAdapter", text);
     }
 }
+

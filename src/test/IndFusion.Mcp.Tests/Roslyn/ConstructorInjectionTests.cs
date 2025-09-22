@@ -30,3 +30,4 @@ public partial class RoslynTransformationTests
         Assert.DoesNotContain("B(2)", output);
     }
 }
+

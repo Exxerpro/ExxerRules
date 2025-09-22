@@ -7,7 +7,6 @@
     <IsPackable>true</IsPackable>
     <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
     <RootNamespace>IndFusion.Analyzer</RootNamespace>
-    <WarningsNotAsErrors>IDE1006</WarningsNotAsErrors>
     <AssemblyName>IndFusion.Analyzer</AssemblyName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <IncludeBuildOutput>false</IncludeBuildOutput>

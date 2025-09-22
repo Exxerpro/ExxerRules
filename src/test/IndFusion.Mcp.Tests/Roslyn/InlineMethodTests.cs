@@ -23,3 +23,4 @@ public partial class RoslynTransformationTests
         Assert.Equal(expected, output.Trim());
     }
 }
+

@@ -9,7 +9,7 @@ public class MoveMultipleMethodsConstructorInjectionTests : TestBase
         var testFile = Path.Combine(TestOutputPath, "MultiCtor.cs");
         var code = "public class cA{ public int Value=>1; public int Get(){ return Value; } public int Add(int x){ return x + Value; } } public class B{ }";
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -34,7 +34,7 @@ public class MoveMultipleMethodsConstructorInjectionTests : TestBase
         var testFile = Path.Combine(TestOutputPath, "MultiParam.cs");
         var code = "public class cA{ public int Value=>1; public int Get(){ return Value; } public int Add(int x){ return x + Value; } } public class B{ }";
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -53,3 +53,4 @@ public class MoveMultipleMethodsConstructorInjectionTests : TestBase
         Assert.Contains("Add(cA", content);
     }
 }
+

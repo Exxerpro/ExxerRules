@@ -482,3 +482,4 @@ public class AnalyzerEdgeCaseTests
     }
 }
 
+

@@ -11,3 +11,4 @@ public partial class RoslynTransformationTests
         Assert.Contains("C.x", result);
     }
 }
+

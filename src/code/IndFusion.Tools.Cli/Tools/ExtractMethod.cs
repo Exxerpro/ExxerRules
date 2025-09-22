@@ -1,9 +1,21 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
 [McpServerToolType]
+/// <summary>
+/// Provides operations to extract a selected block of code into a new method
+/// either in a Roslyn solution context or in a single file.
+/// </summary>
 public static class ExtractMethodTool
 {
     [McpServerTool, Description("Extract a code block into a new method (preferred for large C# file ExxerFactoring)")]
+    /// <summary>
+    /// Extracts a selected code range into a new method and writes the updated file(s).
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file to modify.</param>
+    /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
+    /// <param name="methodName">Name for the new method.</param>
+    /// <returns>A status message describing the performed extraction.</returns>
     public static async Task<string> ExtractMethod(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
         [Description("Path to the C# file")] string filePath,
@@ -24,6 +36,13 @@ public static class ExtractMethodTool
         }
     }
 
+    /// <summary>
+    /// Performs the extract method operation within a solution context.
+    /// </summary>
+    /// <param name="document">The Roslyn document to update.</param>
+    /// <param name="selectionRange">The selected range to extract.</param>
+    /// <param name="methodName">The name for the new method.</param>
+    /// <returns>A status message describing the changes.</returns>
     private static async Task<string> ExtractMethodWithSolution(Document document, string selectionRange, string methodName)
     {
         var sourceText = await document.GetTextAsync();
@@ -73,6 +92,13 @@ public static class ExtractMethodTool
         return $"Successfully extracted method '{methodName}' from {selectionRange} in {document.FilePath} (solution mode)";
     }
 
+    /// <summary>
+    /// Performs the extract method operation against a single file path.
+    /// </summary>
+    /// <param name="filePath">File to update.</param>
+    /// <param name="selectionRange">The selected range to extract.</param>
+    /// <param name="methodName">The name for the new method.</param>
+    /// <returns>A task that resolves to a status message.</returns>
     private static Task<string> ExtractMethodSingleFile(string filePath, string selectionRange, string methodName)
     {
         return ExxerFactoringHelpers.ApplySingleFileEdit(
@@ -81,6 +107,13 @@ public static class ExtractMethodTool
             $"Successfully extracted method '{methodName}' from {selectionRange} in {filePath} (single file mode)");
     }
 
+    /// <summary>
+    /// Applies extract method transformation to the provided source text and returns the new source.
+    /// </summary>
+    /// <param name="sourceText">Original C# source code.</param>
+    /// <param name="selectionRange">Selected range to extract.</param>
+    /// <param name="methodName">Name for the new method.</param>
+    /// <returns>The updated source code with the new method extracted.</returns>
     public static string ExtractMethodInSource(string sourceText, string selectionRange, string methodName)
     {
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceText);

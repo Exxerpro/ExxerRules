@@ -18,3 +18,4 @@ public partial class RoslynTransformationTests
         Assert.Equal("property", propWalker.MemberType);
     }
 }
+

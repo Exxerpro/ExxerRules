@@ -26,7 +26,7 @@ public class CleanupSample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "CleanupSample.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -37,3 +37,4 @@ public class CleanupSample
         Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
     }
 }
+

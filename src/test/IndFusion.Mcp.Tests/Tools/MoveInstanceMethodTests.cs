@@ -8,7 +8,7 @@ public class MoveInstanceMethodTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.GetFullPath(Path.Combine(TestOutputPath, "MoveInstanceMethod.cs"));
         await TestUtilities.CreateTestFile(testFile, "public class A { public void Do(){} } public class B { }");
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         var result = await MoveMethodTool.MoveInstanceMethod(
             SolutionPath,
@@ -20,7 +20,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result);
         Assert.Contains("A.Do", result);
@@ -43,7 +43,7 @@ public class MoveInstanceMethodTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.GetFullPath(Path.Combine(TestOutputPath, "MoveInstanceMethodStatic.cs"));
         await TestUtilities.CreateTestFile(testFile, "public class A { public void Do(){} } public static class B { }");
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         var result = await MoveMethodTool.MoveInstanceMethod(
             SolutionPath,
@@ -55,7 +55,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result);
     }
@@ -66,7 +66,7 @@ public class MoveInstanceMethodTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.GetFullPath(Path.Combine(TestOutputPath, "MoveInstanceProtectedOverride.cs"));
         await TestUtilities.CreateTestFile(testFile, @"public class Base { protected virtual void Do(){} } public class A : Base { protected override void Do(){} } public class B { }");
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         await Assert.ThrowsAsync<McpException>(() =>
             MoveMethodTool.MoveInstanceMethod(
@@ -79,7 +79,7 @@ public class MoveInstanceMethodTests : TestBase
                 Array.Empty<string>(),
                 Array.Empty<string>(),
                 null,
-                CancellationToken.None));
+                Xunit.TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class MoveInstanceMethodTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.GetFullPath(Path.Combine(TestOutputPath, "MoveInstanceMethodTwice.cs"));
         await TestUtilities.CreateTestFile(testFile, "public class A { public void Do(){} } public class B { }");
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         var result = await MoveMethodTool.MoveInstanceMethod(
             SolutionPath,
@@ -100,7 +100,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
         Assert.Contains("Successfully moved", result);
 
         await Assert.ThrowsAsync<McpException>(() =>
@@ -114,7 +114,7 @@ public class MoveInstanceMethodTests : TestBase
                 Array.Empty<string>(),
                 Array.Empty<string>(),
                 null,
-                CancellationToken.None));
+                Xunit.TestContext.Current.CancellationToken));
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
         Assert.Contains("Successfully moved", result1);
 
         // Clear move tracking and try again
@@ -151,7 +151,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result2);
     }
@@ -174,7 +174,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
         Assert.Contains("Successfully moved", result1);
 
         await LoadSolutionTool.LoadSolution(SolutionPath);
@@ -189,7 +189,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result2);
     }
@@ -200,7 +200,7 @@ public class MoveInstanceMethodTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.GetFullPath(Path.Combine(TestOutputPath, "MoveFailHistory.cs"));
         await TestUtilities.CreateTestFile(testFile, "public class A { public void Do(){} } public class B { }");
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         await Assert.ThrowsAsync<McpException>(() =>
             MoveMethodTool.MoveInstanceMethod(
@@ -213,7 +213,7 @@ public class MoveInstanceMethodTests : TestBase
                 Array.Empty<string>(),
                 Array.Empty<string>(),
                 null,
-                CancellationToken.None));
+                Xunit.TestContext.Current.CancellationToken));
 
         var result = await MoveMethodTool.MoveInstanceMethod(
             SolutionPath,
@@ -225,7 +225,7 @@ public class MoveInstanceMethodTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result);
     }
@@ -257,7 +257,7 @@ public class PoliziaMunicipaleModel
 public class TargetClass { }";
 
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -272,7 +272,7 @@ public class TargetClass { }";
             new[] { "objCharges" },
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result);
         Assert.Contains("ExecuteCopyChargeSettings", result);
@@ -292,7 +292,7 @@ public class Outer
 }
 public class Target { }";
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -370,7 +370,7 @@ public class DepositManager
 }";
 
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -429,7 +429,7 @@ public class SourceClass
 public class Target { }";
 
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -492,7 +492,7 @@ public class SourceClass
 public class Target { }";
 
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -560,7 +560,7 @@ public class SourceClass
 public class Target { }";
 
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -575,3 +575,4 @@ public class Target { }";
         Assert.Contains("Successfully moved", result);
     }
 }
+

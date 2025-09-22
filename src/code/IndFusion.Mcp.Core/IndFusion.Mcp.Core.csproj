@@ -7,7 +7,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <!-- Package Information -->
     <PackageId>IndFusion.Mcp.Core</PackageId>
     <PackageVersion>1.0.0-rc.1</PackageVersion>
@@ -37,8 +36,7 @@
     <PackageReference Include="Serilog.Sinks.Console" />
     <PackageReference Include="Serilog.Sinks.File" />
     <PackageReference Include="Serilog.Sinks.Seq" />
-    <!-- System & JSON -->
-    <PackageReference Include="System.Text.Json" />
+    <!-- System & JSON (part of framework for net10) -->
     <!-- Protocol & Communication -->
     <PackageReference Include="ModelContextProtocol" />
   </ItemGroup>

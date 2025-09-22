@@ -22,3 +22,4 @@ public class MoveProtectedOverrideDependencyToolTests
         Assert.Contains("override", mods);
     }
 }
+

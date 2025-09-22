@@ -627,3 +627,4 @@ class Target { }";
         Assert.Contains("GroupId = @this.ConnectedGroupID", formatted);
     }
 }
+

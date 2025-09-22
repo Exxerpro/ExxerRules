@@ -5,7 +5,7 @@ public class AddObserverTests : TestBase
     [Fact]
     public async Task AddObserver_AddsEvent()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Observer.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForObserver());
 
@@ -25,7 +25,7 @@ public class AddObserverTests : TestBase
     [Fact]
     public async Task AddObserver_InvalidClassName_ThrowsMcpException()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Observer.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForObserver());
 
@@ -42,7 +42,7 @@ public class AddObserverTests : TestBase
     [Fact]
     public async Task AddObserver_InvalidMethodName_ThrowsMcpException()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Observer.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForObserver());
 
@@ -56,3 +56,4 @@ public class AddObserverTests : TestBase
         Assert.Equal("Error adding observer: Error: Method 'WrongMethod' not found", ex.Message);
     }
 }
+

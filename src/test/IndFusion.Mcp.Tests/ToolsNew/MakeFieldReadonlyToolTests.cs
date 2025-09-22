@@ -23,7 +23,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Readonly.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -54,7 +54,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ReadonlyNoInit.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -71,7 +71,7 @@ public class Sample
     [Fact]
     public async Task MakeFieldReadonly_InvalidIdentifier_ReturnsError()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         McpException ex = await Assert.ThrowsAsync<McpException>(() => MakeFieldReadonlyTool.MakeFieldReadonly(
             SolutionPath,
@@ -81,3 +81,5 @@ public class Sample
         Assert.Equal("Error: Error: No field named 'nonexistent' found", ex.Message);
     }
 }
+
+

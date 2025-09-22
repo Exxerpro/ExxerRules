@@ -8,3 +8,4 @@ public class Logger
         Console.WriteLine($"[LOG] {message}");
     }
 }
+

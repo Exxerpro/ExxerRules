@@ -23,7 +23,7 @@ public class Counter
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Observer.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -49,7 +49,7 @@ public class Counter
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Observer.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -73,7 +73,7 @@ public class Counter
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Observer.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -87,3 +87,4 @@ public class Counter
         Assert.Equal("Error adding observer: Error: Method 'WrongMethod' not found", ex.Message);
     }
 }
+

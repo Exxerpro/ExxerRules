@@ -24,3 +24,4 @@ public class MoveMethodsHelpersTests
         Assert.DoesNotContain(result, existing);
     }
 }
+

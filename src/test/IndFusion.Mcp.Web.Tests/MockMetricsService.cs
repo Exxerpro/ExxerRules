@@ -39,3 +39,4 @@ public class MockMetricsService : IMetricsService
         return Task.FromResult<IEnumerable<PerformanceMetric>>(metrics);
     }
 }
+

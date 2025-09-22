@@ -473,3 +473,4 @@ public class TestClass
         methodDecl.ShouldNotBeNull();
     }
 }
+

@@ -25,3 +25,4 @@ public class TestMetricsService : IMetricsService
         return Task.FromResult<IEnumerable<PerformanceMetric>>(metrics);
     }
 }
+

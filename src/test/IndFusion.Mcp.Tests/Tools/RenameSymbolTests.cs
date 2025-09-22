@@ -6,7 +6,7 @@ public class RenameSymbolTests : TestBase
     public async Task RenameSymbol_Field_RenamesAllReferences()
     {
         UnloadSolutionTool.ClearSolutionCache();
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "RenameSymbol.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForRenameSymbol());
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
@@ -31,7 +31,7 @@ public class RenameSymbolTests : TestBase
     public async Task RenameSymbol_InvalidName_ReturnsError()
     {
         UnloadSolutionTool.ClearSolutionCache();
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "RenameInvalid.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForRenameSymbol());
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
@@ -46,3 +46,4 @@ public class RenameSymbolTests : TestBase
                 "newName"));
     }
 }
+

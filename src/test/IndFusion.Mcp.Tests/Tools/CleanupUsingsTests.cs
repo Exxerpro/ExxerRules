@@ -5,7 +5,7 @@ public class CleanupUsingsTests : TestBase
     [Fact]
     public async Task CleanupUsings_RemovesUnusedUsings()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "CleanupSample.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForCleanupUsings());
 
@@ -16,3 +16,4 @@ public class CleanupUsingsTests : TestBase
         Assert.DoesNotContain("System.Text", fileContent);
     }
 }
+

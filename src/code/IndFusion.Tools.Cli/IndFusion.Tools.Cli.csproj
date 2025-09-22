@@ -8,6 +8,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <RootNamespace>IndFusion.Tools.Cli</RootNamespace>
+    <!-- Executable: do not generate XML docs to avoid CS1591 in CLI surface.
+         This is project-scoped, aligns with Directory.Build.props guidance. -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
   <!-- ===================================================================== -->
   <!-- Package Dependencies                                                   -->

@@ -22,7 +22,6 @@
   <ItemGroup>
     <!-- Microsoft ASP.NET Core & Extensions -->
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
     <!-- UI Framework & Components -->
     <PackageReference Include="MudBlazor" />
     <PackageReference Include="Extensions.MudBlazor.StaticInput" />

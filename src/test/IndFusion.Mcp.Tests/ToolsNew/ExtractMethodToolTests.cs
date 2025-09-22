@@ -46,7 +46,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ExtractMethod.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -76,7 +76,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "InvalidRange.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -91,7 +91,7 @@ public class Sample
     [Fact]
     public async Task ExtractMethod_FileNotInSolution_ReturnsError()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         await Assert.ThrowsAsync<McpException>(async () =>
             await ExtractMethodTool.ExtractMethod(
@@ -112,7 +112,7 @@ public class Sample
 public class A { public void M() { } }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "InvalidFormat.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -133,7 +133,7 @@ public class A { public void M() { } }
 public class A { public void M() { } }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "InvalidValues.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -145,3 +145,4 @@ public class A { public void M() { } }
                 methodName));
     }
 }
+

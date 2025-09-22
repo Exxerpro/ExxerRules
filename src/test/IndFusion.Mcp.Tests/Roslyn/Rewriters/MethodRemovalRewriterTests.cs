@@ -12,3 +12,4 @@ public partial class RoslynTransformationTests
         Assert.Equal("class A { }", newRoot.ToFullString().Trim());
     }
 }
+

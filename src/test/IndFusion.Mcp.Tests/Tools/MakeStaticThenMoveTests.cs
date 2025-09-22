@@ -26,10 +26,11 @@ public class NewMathUtils { }");
             "source",
             null,
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved static method", result);
         var newFile = Path.Combine(Path.GetDirectoryName(testFile)!, "NewMathUtils.cs");
         Assert.True(File.Exists(newFile));
     }
 }
+

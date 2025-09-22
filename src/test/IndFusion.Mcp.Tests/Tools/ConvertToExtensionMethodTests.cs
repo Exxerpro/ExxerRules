@@ -5,7 +5,7 @@ public class ConvertToExtensionMethodTests : TestBase
     [Fact]
     public async Task ConvertToExtensionMethod_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ConvertToExtension.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForConvertToExtension());
 
@@ -18,3 +18,4 @@ public class ConvertToExtensionMethodTests : TestBase
         Assert.Contains("Successfully converted method 'GetFormattedNumber' to extension method", result);
     }
 }
+

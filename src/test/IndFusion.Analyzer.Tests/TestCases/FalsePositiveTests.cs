@@ -252,3 +252,4 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0);
     }
 }
+

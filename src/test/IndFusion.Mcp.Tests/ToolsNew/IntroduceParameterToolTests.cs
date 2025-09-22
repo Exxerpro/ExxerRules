@@ -7,7 +7,7 @@ public class IntroduceParameterToolTests : TestBase
     [Fact]
     public async Task IntroduceParameter_ValidExpression_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceParameter.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceVariable());
 
@@ -26,7 +26,7 @@ public class IntroduceParameterToolTests : TestBase
     [Fact]
     public async Task IntroduceParameter_InvalidMethod_ReturnsError()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var result = await IntroduceParameterTool.IntroduceParameter(
             SolutionPath,
             ExampleFilePath,
@@ -36,3 +36,4 @@ public class IntroduceParameterToolTests : TestBase
         Assert.Equal("Error: No method named 'Nonexistent' found", result);
     }
 }
+

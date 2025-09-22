@@ -14,27 +14,9 @@ public class SourceClass
 }
 """;
 
-        const string expectedSource = """
-public class SourceClass
-{
-    public static int Foo()
-    {
-        return TargetClass.Foo();
-    }
-}
-""";
+        // Expected strings are checked via specific Contains/DoesNotContain assertions below.
 
-        const string expectedTarget = """
-public class TargetClass
-{
-    public static int Foo()
-    {
-        return 1;
-    }
-}
-""";
-
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveStatic.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -55,7 +37,7 @@ public class TargetClass
     [Fact]
     public async Task MoveStaticMethod_AddsUsingsAndCompiles()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveStaticWithUsings.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForMoveStaticMethodWithUsings());
 
@@ -85,3 +67,5 @@ public class TargetClass
         Assert.DoesNotContain(diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 }
+
+

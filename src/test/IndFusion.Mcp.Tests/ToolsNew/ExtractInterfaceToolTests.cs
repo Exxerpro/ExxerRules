@@ -10,7 +10,7 @@ public class ExtractInterfaceToolTests : TestBase
         const string initialCode = "public class Person { public string Name { get; set; } public void Greet() { } }";
 
         UnloadSolutionTool.ClearSolutionCache();
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ExtractInterface.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
@@ -35,3 +35,4 @@ public class ExtractInterfaceToolTests : TestBase
         Assert.Contains("class Person : IPerson", source);
     }
 }
+

@@ -24,3 +24,4 @@ public class MoveOverrideMethodTests
         Assert.Contains("override", stub.Modifiers.ToFullString());
     }
 }
+

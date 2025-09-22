@@ -40,3 +40,4 @@ public class TestDashboardService : IDashboardService
         return Task.FromResult(new SystemHealthStatus(true, "Healthy", components));
     }
 }
+

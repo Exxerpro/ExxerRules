@@ -31,3 +31,4 @@ public partial class RoslynTransformationTests
         Assert.True(walker.IsRecursive);
     }
 }
+

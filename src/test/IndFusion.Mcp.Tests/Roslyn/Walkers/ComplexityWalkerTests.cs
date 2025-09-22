@@ -14,3 +14,4 @@ public partial class RoslynTransformationTests
         Assert.Equal(2, walker.MaxDepth);
     }
 }
+

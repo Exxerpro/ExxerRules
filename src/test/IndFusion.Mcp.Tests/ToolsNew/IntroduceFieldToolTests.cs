@@ -32,7 +32,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceField.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -62,7 +62,7 @@ public class Sample
 }
 """;
         var modifiers = new[] { "public", "protected", "internal" };
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         foreach (var modifier in modifiers)
         {
             var file = Path.Combine(TestOutputPath, $"Access_{modifier}.cs");
@@ -84,7 +84,7 @@ public class Sample
     [Fact]
     public async Task IntroduceField_FieldNameAlreadyExists_ReturnsError()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "DuplicateField.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
 
@@ -98,3 +98,4 @@ public class Sample
         Assert.Equal("Error: Field 'numbers' already exists", result);
     }
 }
+

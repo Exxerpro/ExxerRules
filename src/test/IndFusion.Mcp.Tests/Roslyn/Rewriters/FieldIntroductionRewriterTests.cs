@@ -22,3 +22,4 @@ public partial class RoslynTransformationTests
         Assert.Contains("return value", text);
     }
 }
+

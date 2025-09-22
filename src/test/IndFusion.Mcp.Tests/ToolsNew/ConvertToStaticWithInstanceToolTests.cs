@@ -9,7 +9,7 @@ public class ConvertToStaticWithInstanceToolTests : TestBase
     {
         const string initialCode = "public class Calculator { public string GetFormattedNumber(int n){ return $\"{n}\"; } }";
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ConvertToStaticInstance.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -25,3 +25,4 @@ public class ConvertToStaticWithInstanceToolTests : TestBase
         Assert.Contains("Calculator instance", fileContent);
     }
 }
+

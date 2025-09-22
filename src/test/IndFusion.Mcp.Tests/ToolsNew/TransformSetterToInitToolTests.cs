@@ -21,7 +21,7 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "SetterToInit.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -38,7 +38,7 @@ public class Sample
     [Fact]
     public async Task TransformSetter_InvalidProperty_ReturnsError()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         await Assert.ThrowsAsync<McpException>(async () =>
             await TransformSetterToInitTool.TransformSetterToInit(
                 SolutionPath,
@@ -46,3 +46,5 @@ public class Sample
                 "Nonexistent"));
     }
 }
+
+

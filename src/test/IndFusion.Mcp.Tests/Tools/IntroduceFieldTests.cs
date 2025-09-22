@@ -5,7 +5,7 @@ public class IntroduceFieldTests : TestBase
     [Fact]
     public async Task IntroduceField_ValidExpression_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceFieldTest.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
 
@@ -24,7 +24,7 @@ public class IntroduceFieldTests : TestBase
     [Fact]
     public async Task IntroduceField_WithPublicModifier_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceFieldPublicTest.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
 
@@ -43,7 +43,7 @@ public class IntroduceFieldTests : TestBase
     [Fact]
     public async Task IntroduceField_DifferentAccessModifiers_ReturnsCorrectModifier()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "AccessModifierTest.cs");
 
         var accessModifiers = new[] { "private", "public", "protected", "internal" };
@@ -68,7 +68,7 @@ public class IntroduceFieldTests : TestBase
     [Fact]
     public async Task IntroduceField_FieldNameAlreadyExists_ReturnsError()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceFieldDuplicate.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
 
@@ -81,3 +81,4 @@ public class IntroduceFieldTests : TestBase
         Assert.Equal("Error: Field 'numbers' already exists", result);
     }
 }
+

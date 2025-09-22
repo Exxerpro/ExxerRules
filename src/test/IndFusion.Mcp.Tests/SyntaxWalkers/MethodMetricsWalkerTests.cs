@@ -31,3 +31,4 @@ public class MethodMetricsWalkerTests
         Assert.Contains("Method 'Foo' does not access instance state", walker.Suggestions.First());
     }
 }
+

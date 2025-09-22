@@ -5,7 +5,7 @@ public class UseInterfaceTests : TestBase
     [Fact]
     public async Task UseInterface_ChangesParameterType()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "UseInterface.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForUseInterface());
 
@@ -21,3 +21,4 @@ public class UseInterfaceTests : TestBase
         Assert.Contains("DoWork(IWriter writer)", fileContent);
     }
 }
+

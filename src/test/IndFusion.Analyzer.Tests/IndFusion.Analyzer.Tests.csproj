@@ -9,7 +9,6 @@
     <AssemblyName>IndFusion.Analyzer.Tests</AssemblyName>
     <IsTestProject>true</IsTestProject>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <WarningsNotAsErrors>IDE0022;IDE1006;IDE0007</WarningsNotAsErrors>
   </PropertyGroup>
   <Import Project="..\TestingPlatform.props" />
   <ItemGroup>

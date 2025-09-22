@@ -1,9 +1,20 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
 [McpServerToolType]
+/// <summary>
+/// Provides operations to initialize a refactoring session by clearing caches and
+/// loading a solution into the shared workspace, setting the working directory.
+/// </summary>
 public static class LoadSolutionTool
 {
     [McpServerTool, Description("Start a new session by clearing caches then load a solution file and set the current directory")]
+    /// <summary>
+    /// Loads a solution, initializes cache and logging, and sets the current directory.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A status message describing the load result.</returns>
     public static async Task<string> LoadSolution(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
         IProgress<string>? progress = null,

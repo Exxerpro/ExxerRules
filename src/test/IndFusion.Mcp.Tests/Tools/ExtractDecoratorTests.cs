@@ -5,7 +5,7 @@ public class ExtractDecoratorTests : TestBase
     [Fact]
     public async Task ExtractDecorator_AddsClass()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "Decorator.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForDecorator());
 
@@ -20,3 +20,4 @@ public class ExtractDecoratorTests : TestBase
         Assert.Contains("GreeterDecorator", text);
     }
 }
+

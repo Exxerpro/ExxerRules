@@ -22,3 +22,4 @@ public class AccessMemberTypeWalkerTests
         Assert.Equal("property", walker.MemberType);
     }
 }
+

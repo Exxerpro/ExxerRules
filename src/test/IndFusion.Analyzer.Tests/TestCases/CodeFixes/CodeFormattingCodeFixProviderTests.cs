@@ -69,7 +69,7 @@ public class TestClass
         {
             if (diagnostics.Length > 0)
             {
-                await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics[0], (a, d) => { }, CancellationToken.None));
+                await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics[0], (a, d) => { }, Xunit.TestContext.Current.CancellationToken));
             }
         });
     }
@@ -110,7 +110,7 @@ public class TestClass
         var diagnostic = CreateDiagnostic(diagnosticId, Location.Create(document.FilePath!, TextSpan.FromBounds(0, sourceCode.Length), new LinePositionSpan()));
 
         // Act
-        var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, CancellationToken.None);
+        var codeFixContext = new CodeFixContext(document, diagnostic, (a, d) => { }, Xunit.TestContext.Current.CancellationToken);
         await codeFixProvider.RegisterCodeFixesAsync(codeFixContext);
 
         // Assert
@@ -147,4 +147,5 @@ public abstract class CodeFixProviderTest<T> where T : CodeFixProvider, new()
     protected T CodeFixProvider { get; } = new T();
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053
+
 

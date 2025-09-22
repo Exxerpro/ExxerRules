@@ -22,3 +22,4 @@ public class MoveVirtualMethodTests
         Assert.Contains("BaseMethod1", moved.ToFullString());
     }
 }
+

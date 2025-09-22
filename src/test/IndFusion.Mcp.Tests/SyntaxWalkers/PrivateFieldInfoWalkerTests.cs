@@ -14,3 +14,4 @@ public class PrivateFieldInfoWalkerTests
         Assert.Contains("c", walker.Infos.Keys);
     }
 }
+

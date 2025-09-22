@@ -1,0 +1,8 @@
+<Project>
+  <!-- Override project-local settings after evaluation -->
+  <PropertyGroup Condition="'$(IsTestProject)'=='true'">
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+</Project>
+

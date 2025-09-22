@@ -136,3 +136,4 @@ namespace MyLibrary
         diagnostics[0].Id.ShouldBe(DiagnosticIds.UseConfigureAwaitFalse);
     }
 }
+

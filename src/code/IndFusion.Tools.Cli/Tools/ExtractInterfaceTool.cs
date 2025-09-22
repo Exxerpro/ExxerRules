@@ -1,9 +1,23 @@
 namespace IndFusion.Tools.Mcp.App.Tools;
 
 [McpServerToolType]
+/// <summary>
+/// Provides a tool that generates a new interface from selected members of a class
+/// and updates the class to implement the generated interface.
+/// </summary>
 public static class ExtractInterfaceTool
 {
     [McpServerTool, Description("Extract a simple interface from a class")]
+    /// <summary>
+    /// Extracts an interface file from the specified class and updates the class to implement it.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="filePath">Path to the C# file containing the class.</param>
+    /// <param name="className">Name of the class to extract from.</param>
+    /// <param name="memberList">Comma separated list of member names to include.</param>
+    /// <param name="interfaceFilePath">Path to write the generated interface file.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A status message describing the generated interface and updates.</returns>
     public static async Task<string> ExtractInterface(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
         [Description("Path to the C# file containing the class")] string filePath,

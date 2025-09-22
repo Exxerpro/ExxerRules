@@ -21,7 +21,7 @@ public class PublicNestedClassToolTests : TestBase
 
 public class B { }";
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         var result = await MoveMethodTool.MoveInstanceMethod(
             SolutionPath,
@@ -33,10 +33,12 @@ public class B { }";
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result);
         var fileContent = await File.ReadAllTextAsync(testFile);
         Assert.Contains("A.Nested GetNested()", fileContent.Replace("\r", "").Replace("\n", " "));
     }
 }
+
+

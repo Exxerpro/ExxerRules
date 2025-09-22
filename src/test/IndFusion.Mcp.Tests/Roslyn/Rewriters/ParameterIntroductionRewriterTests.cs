@@ -20,3 +20,4 @@ public partial class RoslynTransformationTests
         Assert.Contains("M(1);", text);
     }
 }
+

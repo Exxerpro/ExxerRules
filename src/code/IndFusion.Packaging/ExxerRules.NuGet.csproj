@@ -20,7 +20,6 @@
     <DevelopmentDependency>true</DevelopmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
-    <NoWarn>$(NoWarn);NU5017</NoWarn>
     <!-- Suppress false positive "no dependencies nor content" warning -->
     <PackageValidationBaselineVersion>
     </PackageValidationBaselineVersion>

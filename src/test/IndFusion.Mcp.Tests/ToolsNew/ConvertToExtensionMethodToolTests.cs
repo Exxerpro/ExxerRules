@@ -9,7 +9,7 @@ public class ConvertToExtensionMethodToolTests : TestBase
     {
         const string initialCode = "public class Calculator { public string GetFormattedNumber(int n){ return $\"{n}\"; } }";
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ConvertToExtension.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
@@ -22,3 +22,4 @@ public class ConvertToExtensionMethodToolTests : TestBase
         Assert.Contains("Successfully converted method 'GetFormattedNumber' to extension method", result);
     }
 }
+

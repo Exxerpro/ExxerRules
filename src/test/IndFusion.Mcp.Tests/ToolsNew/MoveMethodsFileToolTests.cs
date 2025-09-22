@@ -63,7 +63,7 @@ public class MoveMethodsFileToolTests : TestBase
             "",
             targetFile,
             progress: null,
-            cancellationToken: CancellationToken.None);
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved instance method", result);
         Assert.Contains("made static", result);
@@ -93,7 +93,7 @@ public class MoveMethodsFileToolTests : TestBase
             "",
             testFile,
             progress: null,
-            cancellationToken: CancellationToken.None);
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved instance method", result);
         var fileContent = await File.ReadAllTextAsync(testFile);
@@ -102,3 +102,5 @@ public class MoveMethodsFileToolTests : TestBase
         Assert.Contains("return B.Bar()", fileContent);
     }
 }
+
+

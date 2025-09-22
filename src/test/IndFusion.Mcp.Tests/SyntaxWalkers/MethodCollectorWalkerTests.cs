@@ -14,3 +14,4 @@ public class MethodCollectorWalkerTests
         Assert.DoesNotContain("A.Y", walker.Methods.Keys);
     }
 }
+

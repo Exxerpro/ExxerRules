@@ -17,3 +17,4 @@ public partial class RoslynTransformationTests
         Assert.Contains("NewMethod();", text);
     }
 }
+

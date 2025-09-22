@@ -5,7 +5,7 @@ public class ConvertToStaticWithInstanceTests : TestBase
     [Fact]
     public async Task ConvertToStaticWithInstance_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ConvertToStaticInstance.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForConvertToStaticInstance());
 
@@ -21,3 +21,4 @@ public class ConvertToStaticWithInstanceTests : TestBase
         Assert.Contains("Calculator instance", fileContent);
     }
 }
+

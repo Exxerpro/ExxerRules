@@ -6,7 +6,7 @@ public class ExtractInterfaceTests : TestBase
     public async Task ExtractInterface_CreatesInterfaceFile()
     {
         UnloadSolutionTool.ClearSolutionCache();
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ExtractInterface.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForExtractInterface());
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
@@ -31,3 +31,4 @@ public class ExtractInterfaceTests : TestBase
         Assert.Contains("class Person : IPerson", source);
     }
 }
+

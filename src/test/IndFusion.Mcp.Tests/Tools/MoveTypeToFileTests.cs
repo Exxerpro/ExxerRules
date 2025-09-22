@@ -39,7 +39,7 @@ public class MoveTypeToFileTests : TestBase
 
         try
         {
-            await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+            await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
             var testFile = Path.GetFullPath(Path.Combine(TestOutputPath, "MoveTypeToFile_Duplicate.cs"));
             await TestUtilities.CreateTestFile(testFile, "public interface ITemp { }");
 
@@ -56,3 +56,4 @@ public class MoveTypeToFileTests : TestBase
         }
     }
 }
+

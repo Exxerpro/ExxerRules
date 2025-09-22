@@ -16,7 +16,7 @@ public class MoveStaticMethodTests : TestBase
             "TargetClass",
             null,
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved static method", result);
         var fileContent = await File.ReadAllTextAsync(testFile);
@@ -27,7 +27,7 @@ public class MoveStaticMethodTests : TestBase
     [Fact]
     public async Task MoveStaticMethod_AddsUsingsAndCompiles()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MoveStaticWithUsings.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForMoveStaticMethodWithUsings());
 
@@ -38,7 +38,7 @@ public class MoveStaticMethodTests : TestBase
             "UtilClass",
             null,
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved static method", result);
         var targetFile = Path.Combine(Path.GetDirectoryName(testFile)!, "UtilClass.cs");
@@ -60,3 +60,4 @@ public class MoveStaticMethodTests : TestBase
         Assert.DoesNotContain(diagnostics, d => d.Severity == DiagnosticSeverity.Error);
     }
 }
+

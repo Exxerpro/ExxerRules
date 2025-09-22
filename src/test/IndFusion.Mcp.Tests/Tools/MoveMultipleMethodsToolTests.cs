@@ -8,7 +8,7 @@ public class MoveMultipleMethodsToolTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.Combine(TestOutputPath, "MoveMultiFailHistory.cs");
         await TestUtilities.CreateTestFile(testFile, File.ReadAllText(ExampleFilePath));
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -45,7 +45,7 @@ public class Outer
 }
 public class Target { }";
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath);
         var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
@@ -60,3 +60,4 @@ public class Target { }";
         Assert.Contains("Successfully moved", result);
     }
 }
+

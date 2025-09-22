@@ -21,3 +21,4 @@ public class AnalyzeExxerFactoringOpportunitiesTests : IDisposable
         Assert.Contains("make-static", result, StringComparison.OrdinalIgnoreCase);
     }
 }
+

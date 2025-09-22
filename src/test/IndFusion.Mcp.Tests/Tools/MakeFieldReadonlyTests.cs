@@ -5,7 +5,7 @@ public class MakeFieldReadonlyTests : TestBase
     [Fact]
     public async Task MakeFieldReadonly_FieldWithInitializer_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MakeFieldReadonlyTest.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForMakeFieldReadonly());
 
@@ -22,7 +22,7 @@ public class MakeFieldReadonlyTests : TestBase
     [Fact]
     public async Task MakeFieldReadonly_FieldWithoutInitializer_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "MakeFieldReadonlyNoInitTest.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForMakeFieldReadonlyNoInit());
 
@@ -39,7 +39,7 @@ public class MakeFieldReadonlyTests : TestBase
     [Fact]
     public async Task MakeFieldReadonly_InvalidLine_ReturnsError()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         await Assert.ThrowsAsync<McpException>(async () =>
             await MakeFieldReadonlyTool.MakeFieldReadonly(
                 SolutionPath,
@@ -47,3 +47,4 @@ public class MakeFieldReadonlyTests : TestBase
                 "nonexistent"));
     }
 }
+

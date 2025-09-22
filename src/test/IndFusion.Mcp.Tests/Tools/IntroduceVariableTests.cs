@@ -5,7 +5,7 @@ public class IntroduceVariableTests : TestBase
     [Fact]
     public async Task IntroduceVariable_ValidExpression_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceVariableTest.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceVariable());
 
@@ -20,3 +20,4 @@ public class IntroduceVariableTests : TestBase
         Assert.Contains("processedValue", fileContent);
     }
 }
+

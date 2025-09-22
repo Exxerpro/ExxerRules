@@ -5,7 +5,7 @@ public class ConstructorInjectionTests : TestBase
     [Fact]
     public async Task ConstructorInjection_Valid_ReturnsSuccess()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ConstructorInjection.cs");
         await TestUtilities.CreateTestFile(testFile, "class C{ int M(int x){ return x+1; } void Call(){ M(1); } }");
 
@@ -20,3 +20,4 @@ public class ConstructorInjectionTests : TestBase
         Assert.Contains("_x", content);
     }
 }
+

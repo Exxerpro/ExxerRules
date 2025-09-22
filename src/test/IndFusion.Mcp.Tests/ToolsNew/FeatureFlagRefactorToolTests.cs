@@ -7,7 +7,7 @@ public class FeatureFlagExxerFactorToolTests : TestBase
     [Fact]
     public async Task FeatureFlagExxerFactor_RewritesFile()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "FeatureFlag.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForFeatureFlag());
 
@@ -25,7 +25,7 @@ public class FeatureFlagExxerFactorToolTests : TestBase
     [Fact]
     public async Task FeatureFlagExxerFactor_NoFlagFound_Throws()
     {
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "FeatureFlagMissing.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForFeatureFlag());
 
@@ -36,3 +36,4 @@ public class FeatureFlagExxerFactorToolTests : TestBase
                 "Other"));
     }
 }
+

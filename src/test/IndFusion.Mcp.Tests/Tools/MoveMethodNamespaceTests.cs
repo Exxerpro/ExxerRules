@@ -8,7 +8,7 @@ public class MoveMethodNamespaceTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.Combine(TestOutputPath, "NamespaceSample.cs");
         await TestUtilities.CreateTestFile(testFile, "namespace Sample.Namespace { public class A { public void Foo() {} } }");
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         var targetFile = Path.Combine(Path.GetDirectoryName(testFile)!, "B.cs");
         var result = await MoveMethodTool.MoveInstanceMethod(
@@ -21,7 +21,7 @@ public class MoveMethodNamespaceTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result);
         var newContent = await File.ReadAllTextAsync(targetFile);
@@ -34,7 +34,7 @@ public class MoveMethodNamespaceTests : TestBase
         UnloadSolutionTool.ClearSolutionCache();
         var testFile = Path.Combine(TestOutputPath, "NamespaceUsingSample.cs");
         await TestUtilities.CreateTestFile(testFile, "namespace Sample.Namespace { public class A { public void Foo() {} } }");
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, CancellationToken.None);
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         var targetFile = Path.Combine(Path.GetDirectoryName(testFile)!, "C.cs");
         var result = await MoveMethodTool.MoveInstanceMethod(
@@ -47,10 +47,11 @@ public class MoveMethodNamespaceTests : TestBase
             Array.Empty<string>(),
             Array.Empty<string>(),
             null,
-            CancellationToken.None);
+            Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved", result);
         var newContent = await File.ReadAllTextAsync(targetFile);
         Assert.DoesNotContain("using Sample.Namespace;", newContent);
     }
 }
+

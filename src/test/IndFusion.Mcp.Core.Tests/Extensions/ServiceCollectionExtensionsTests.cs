@@ -3,8 +3,14 @@ using IndFusion.Mcp.Core.Extensions;
 
 namespace IndFusion.Mcp.Core.Tests.Extensions;
 
+/// <summary>
+/// Tests for ServiceCollectionExtensionsTests.
+/// </summary>
 public class ServiceCollectionExtensionsTests
 {
+    /// <summary>
+    /// AddExxerFactorMcpCore ShouldRegisterRequiredServices.
+    /// </summary>
     [Fact]
     public void AddExxerFactorMcpCore_ShouldRegisterRequiredServices()
     {
@@ -35,6 +41,9 @@ public class ServiceCollectionExtensionsTests
         scopedService1.ShouldNotBeSameAs(scopedService2);
     }
 
+    /// <summary>
+    /// AddExxerFactorMcpCore ShouldNotThrow WhenCalledMultipleTimes.
+    /// </summary>
     [Fact]
     public void AddExxerFactorMcpCore_ShouldNotThrow_WhenCalledMultipleTimes()
     {
@@ -49,6 +58,9 @@ public class ServiceCollectionExtensionsTests
         Should.NotThrow(act2);
     }
 
+    /// <summary>
+    /// AddExxerFactorMcpCore ShouldRegisterLoggingServices.
+    /// </summary>
     [Fact]
     public void AddExxerFactorMcpCore_ShouldRegisterLoggingServices()
     {
@@ -66,4 +78,3 @@ public class ServiceCollectionExtensionsTests
         ExxerFactoringService.ShouldNotBeNull();
     }
 }
-

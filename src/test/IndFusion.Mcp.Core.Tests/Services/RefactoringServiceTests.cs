@@ -3,6 +3,10 @@ using IndFusion.Mcp.Core.Services;
 
 namespace IndFusion.Mcp.Core.Tests.Services;
 
+/// <summary>
+/// Tests for <see cref="IndFusion.Mcp.Core.Services.ExxerFactoringService"/> ensuring
+/// methods return expected placeholder results and accept cancellation tokens.
+/// </summary>
 public class ExxerFactoringServiceTests
 {
     private readonly ILogger<ExxerFactoringService> _mockLogger;
@@ -14,6 +18,9 @@ public class ExxerFactoringServiceTests
         _service = new ExxerFactoringService(_mockLogger);
     }
 
+    /// <summary>
+    /// Verifies ExecuteExxerFactoringAsync returns a failure result for unimplemented tools.
+    /// </summary>
     [Fact]
     public async Task ExecuteExxerFactoringAsync_ShouldReturnFailureResult_WhenToolNotImplemented()
     {
@@ -25,13 +32,16 @@ public class ExxerFactoringServiceTests
         );
 
         // Act
-        var result = await _service.ExecuteExxerFactoringAsync(request);
+        var result = await _service.ExecuteExxerFactoringAsync(request, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
         result.Success.ShouldBeFalse();
         result.Message.ShouldContain("not yet implemented");
     }
 
+    /// <summary>
+    /// Verifies ExtractMethodAsync returns a failure result when not implemented.
+    /// </summary>
     [Fact]
     public async Task ExtractMethodAsync_ShouldReturnFailureResult_WhenNotImplemented()
     {
@@ -43,7 +53,7 @@ public class ExxerFactoringServiceTests
         var methodName = "ExtractedMethod";
 
         // Act
-        var result = await _service.ExtractMethodAsync(solutionPath, filePath, startLine, endLine, methodName);
+        var result = await _service.ExtractMethodAsync(solutionPath, filePath, startLine, endLine, methodName, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
         result.Success.ShouldBeFalse();
@@ -58,6 +68,9 @@ public class ExxerFactoringServiceTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
+    /// <summary>
+    /// Verifies MoveMethodAsync returns a failure result when not implemented.
+    /// </summary>
     [Fact]
     public async Task MoveMethodAsync_ShouldReturnFailureResult_WhenNotImplemented()
     {
@@ -68,7 +81,7 @@ public class ExxerFactoringServiceTests
         var targetClassName = "TargetClass";
 
         // Act
-        var result = await _service.MoveMethodAsync(solutionPath, sourceFilePath, methodName, targetClassName);
+        var result = await _service.MoveMethodAsync(solutionPath, sourceFilePath, methodName, targetClassName, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
         result.Success.ShouldBeFalse();
@@ -83,6 +96,9 @@ public class ExxerFactoringServiceTests
             Arg.Any<Func<object, Exception?, string>>());
     }
 
+    /// <summary>
+    /// Verifies IntroduceVariableAsync returns a failure result when not implemented.
+    /// </summary>
     [Fact]
     public async Task IntroduceVariableAsync_ShouldReturnFailureResult_WhenNotImplemented()
     {
@@ -94,13 +110,16 @@ public class ExxerFactoringServiceTests
         var variableName = "newVariable";
 
         // Act
-        var result = await _service.IntroduceVariableAsync(solutionPath, filePath, line, column, variableName);
+        var result = await _service.IntroduceVariableAsync(solutionPath, filePath, line, column, variableName, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
         result.Success.ShouldBeFalse();
         result.Message.ShouldContain("not yet implemented");
     }
 
+    /// <summary>
+    /// Verifies GetMetricsAsync returns an error json payload when not implemented.
+    /// </summary>
     [Fact]
     public async Task GetMetricsAsync_ShouldReturnErrorJson_WhenNotImplemented()
     {
@@ -109,13 +128,16 @@ public class ExxerFactoringServiceTests
         var path = "/path/to/file.cs";
 
         // Act
-        var result = await _service.GetMetricsAsync(solutionPath, path);
+        var result = await _service.GetMetricsAsync(solutionPath, path, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldContain("error");
         result.ShouldContain("not yet implemented");
     }
 
+    /// <summary>
+    /// Verifies ListAvailableToolsAsync returns known placeholder tool names.
+    /// </summary>
     [Fact]
     public async Task ListAvailableToolsAsync_ShouldReturnExpectedTools()
     {
@@ -130,6 +152,14 @@ public class ExxerFactoringServiceTests
         tools.ShouldContain("safe-delete");
     }
 
+    /// <summary>
+    /// Verifies ExecuteExxerFactoringAsync handles invalid tool names.
+    /// </summary>
+    /// <summary>
+    /// ExecuteExxerFactoringAsync ShouldHandleInvalidToolName.
+    /// </summary>
+    /// <param name="toolName"></param>
+    /// <returns></returns>
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
@@ -144,12 +174,15 @@ public class ExxerFactoringServiceTests
         );
 
         // Act
-        var result = await _service.ExecuteExxerFactoringAsync(request);
+        var result = await _service.ExecuteExxerFactoringAsync(request, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
         result.Success.ShouldBeFalse();
     }
 
+    /// <summary>
+    /// Verifies ExecuteExxerFactoringAsync error path returns a failure result with message.
+    /// </summary>
     [Fact]
     public async Task ExecuteExxerFactoringAsync_ShouldHandleException_AndReturnErrorResult()
     {
@@ -161,11 +194,10 @@ public class ExxerFactoringServiceTests
             new Dictionary<string, object>()
         );
 
-        var result = await _service.ExecuteExxerFactoringAsync(request);
+        var result = await _service.ExecuteExxerFactoringAsync(request, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         result.ShouldNotBeNull();
         result.Success.ShouldBeFalse();
         result.Message.ShouldNotBeNullOrEmpty();
     }
 }
-

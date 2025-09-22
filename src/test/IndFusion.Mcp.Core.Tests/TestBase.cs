@@ -62,6 +62,10 @@ public abstract class TestBase : IDisposable
         return GetService<ILogger<T>>();
     }
 
+    /// <summary>
+    /// Dispose.
+    /// </summary>
+    /// <returns></returns>
     public virtual void Dispose()
     {
         Scope?.Dispose();
@@ -69,4 +73,3 @@ public abstract class TestBase : IDisposable
         GC.SuppressFinalize(this);
     }
 }
-

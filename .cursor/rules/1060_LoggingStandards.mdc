@@ -27,7 +27,7 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent with name: {AgentName}", name);
-        
+
         if (cancellationToken.IsCancellationRequested)
         {
             _logger.LogWarning("Agent creation cancelled for name: {AgentName}", name);
@@ -41,17 +41,17 @@ public class AgentService
         }
 
         var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
-            _logger.LogInformation("Agent created successfully: {AgentId}, {AgentName}, {Capabilities}", 
+            _logger.LogInformation("Agent created successfully: {AgentId}, {AgentName}, {Capabilities}",
                 result.Value.Id, result.Value.Name, capabilities);
         }
         else
         {
-            _logger.LogError("Failed to create agent: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Failed to create agent: {AgentName}, Errors: {Errors}",
                 name, string.Join(", ", result.Errors));
         }
 
@@ -77,7 +77,7 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: " + name); // String concatenation
-        
+
         if (cancellationToken.IsCancellationRequested)
         {
             _logger.LogWarning("Cancelled"); // No context
@@ -92,7 +92,7 @@ public class AgentService
 
         var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Success: " + result.Value.Id); // String concatenation
@@ -118,7 +118,7 @@ public class AgentService
 public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken cancellationToken = default)
 {
     _logger.LogDebug("Retrieving agent with ID: {AgentId}", agentId); // Debug for detailed flow
-    
+
     if (agentId == Guid.Empty)
     {
         _logger.LogWarning("Attempted to retrieve agent with empty ID"); // Warning for recoverable issues
@@ -126,15 +126,15 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
     }
 
     var result = await _repository.GetByIdAsync(agentId, cancellationToken);
-    
+
     if (result.IsSuccess)
     {
-        _logger.LogInformation("Agent retrieved successfully: {AgentId}, {AgentName}", 
+        _logger.LogInformation("Agent retrieved successfully: {AgentId}, {AgentName}",
             result.Value.Id, result.Value.Name); // Info for normal operations
     }
     else
     {
-        _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}", 
+        _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}",
             agentId, string.Join(", ", result.Errors)); // Error for failures
     }
 
@@ -148,7 +148,7 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
 public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken cancellationToken = default)
 {
     _logger.LogInformation("Retrieving agent with ID: {AgentId}", agentId); // Too verbose for normal flow
-    
+
     if (agentId == Guid.Empty)
     {
         _logger.LogError("Attempted to retrieve agent with empty ID"); // Should be warning
@@ -156,7 +156,7 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
     }
 
     var result = await _repository.GetByIdAsync(agentId, cancellationToken);
-    
+
     if (result.IsSuccess)
     {
         _logger.LogDebug("Agent retrieved successfully: {AgentId}", result.Value.Id); // Should be info
@@ -183,7 +183,7 @@ public class AgentService
     private readonly ILogger<AgentService> _logger;
     private readonly IAgentRepository _repository;
 
-    public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, 
+    public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities,
         string correlationId, CancellationToken cancellationToken = default)
     {
         using var scope = _logger.BeginScope(new Dictionary<string, object>
@@ -194,9 +194,9 @@ public class AgentService
         });
 
         _logger.LogInformation("Starting agent creation process");
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent creation completed successfully");
@@ -222,9 +222,9 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent"); // No context or correlation
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Success"); // No context
@@ -250,23 +250,23 @@ public class AgentService
 public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken cancellationToken = default)
 {
     var stopwatch = Stopwatch.StartNew();
-    
+
     try
     {
         _logger.LogDebug("Starting agent retrieval: {AgentId}", agentId);
-        
+
         var result = await _repository.GetByIdAsync(agentId, cancellationToken);
-        
+
         stopwatch.Stop();
-        
+
         if (result.IsSuccess)
         {
-            _logger.LogInformation("Agent retrieved successfully in {ElapsedMs}ms: {AgentId}", 
+            _logger.LogInformation("Agent retrieved successfully in {ElapsedMs}ms: {AgentId}",
                 stopwatch.ElapsedMilliseconds, agentId);
         }
         else
         {
-            _logger.LogError("Agent retrieval failed in {ElapsedMs}ms: {AgentId}, Errors: {Errors}", 
+            _logger.LogError("Agent retrieval failed in {ElapsedMs}ms: {AgentId}, Errors: {Errors}",
                 stopwatch.ElapsedMilliseconds, agentId, string.Join(", ", result.Errors));
         }
 
@@ -275,7 +275,7 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
     catch (Exception ex)
     {
         stopwatch.Stop();
-        _logger.LogError(ex, "Agent retrieval threw exception in {ElapsedMs}ms: {AgentId}", 
+        _logger.LogError(ex, "Agent retrieval threw exception in {ElapsedMs}ms: {AgentId}",
             stopwatch.ElapsedMilliseconds, agentId);
         throw;
     }
@@ -288,7 +288,7 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
 public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken cancellationToken = default)
 {
     var result = await _repository.GetByIdAsync(agentId, cancellationToken);
-    
+
     if (result.IsSuccess)
     {
         _logger.LogInformation("Agent retrieved: {AgentId}", agentId); // No timing info
@@ -327,11 +327,11 @@ public class AgentService
         };
 
         using var scope = _logger.BeginScope(metadata);
-        
+
         _logger.LogInformation("Creating agent: {AgentName}, {Capabilities}", name, capabilities);
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
@@ -357,9 +357,9 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name); // No user context or metadata
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -375,4 +375,3 @@ public class AgentService
 ```
 </incorrect-example>
 </requirement>
-

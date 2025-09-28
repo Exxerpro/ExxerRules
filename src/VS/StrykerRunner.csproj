@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <!-- Inherit TargetFramework from Directory.Build.props (net10.0) -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <StartupObject>StrykerRunner.Program</StartupObject>
+  </PropertyGroup>
+
+
+  <ItemGroup>
+    <!-- Prevent accidental inclusion of the other runner's Program -->
+    <Compile Remove="TestRunner.cs" />
+  </ItemGroup>
+</Project>

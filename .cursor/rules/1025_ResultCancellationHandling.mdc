@@ -1,6 +1,6 @@
 ---
 description: Handling Cancellation in Functional .NET Applications
-globs: 
+globs:
 alwaysApply: always
 ---
 
@@ -87,7 +87,7 @@ Abstract pattern via reusable method:
 
 ```csharp
 public static async Task<Result<T>> WrapCancellationAware<T>(
-    Func<CancellationToken, Task<T>> operation, 
+    Func<CancellationToken, Task<T>> operation,
     CancellationToken ct)
 {
     try

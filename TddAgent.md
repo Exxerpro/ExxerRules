@@ -31,7 +31,7 @@ public void Should_ReportDiagnostic_When_ThrowStatementIsUsed()
         {
             throw new Exception(); // Should be flagged
         }";
-    
+
     var result = AnalyzeCode(code);
     result.ShouldHaveCount(1); // FAILS initially
 }
@@ -55,7 +55,7 @@ public class ManualTestRunner
     {
         var tests = new (string Name, Func<bool> Test)[]
         {
-            ("Should_ReportDiagnostic_When_ThrowStatementIsUsed", 
+            ("Should_ReportDiagnostic_When_ThrowStatementIsUsed",
              Should_ReportDiagnostic_When_ThrowStatementIsUsed),
             // Add more tests...
         };
@@ -123,7 +123,7 @@ private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
 {
     var usingDirective = (UsingDirectiveSyntax)context.Node;
     var namespaceName = usingDirective.Name?.ToString();
-    
+
     // Debug: Report ALL using directives to understand pattern
     var diagnostic = Diagnostic.Create(Rule, usingDirective.GetLocation(), namespaceName);
     context.ReportDiagnostic(diagnostic);
@@ -179,12 +179,12 @@ private static bool Should_ReportDiagnostic_When_Condition()
 {
     // Arrange: Create test code
     var code = @"/* test case code */";
-    
+
     // Act: Analyze with our analyzer
     var diagnostics = GetDiagnostics(code, new MyAnalyzer());
-    
+
     // Assert: Verify expected behavior
-    return diagnostics.Count == 1 && 
+    return diagnostics.Count == 1 &&
            diagnostics[0].Id == DiagnosticIds.MyRule;
 }
 ```

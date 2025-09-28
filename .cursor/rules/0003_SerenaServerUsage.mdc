@@ -175,4 +175,3 @@ search_replace("file.cs", old, new); // Wrong
 ```
 </incorrect-example>
 </requirement>
-

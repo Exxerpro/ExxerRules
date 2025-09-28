@@ -34,7 +34,7 @@ ExxerRules now includes powerful **code formatting actions** that integrate `dot
 3. Select from available formatting actions:
    ```
    🔧 Format Project 'MyProject' (dotnet format)
-   📝 Format Whitespace Only 'MyProject' 
+   📝 Format Whitespace Only 'MyProject'
    🎨 Format Style 'MyProject'
    🔍 Format with Analyzers 'MyProject'
    ```
@@ -90,10 +90,10 @@ Customize formatting behavior in your project file:
 <PropertyGroup>
   <!-- Enable ExxerRules formatting -->
   <EnableExxerFormattingActions>true</EnableExxerFormattingActions>
-  
+
   <!-- Configure formatting scope -->
   <ExxerFormattingDefaultScope>project</ExxerFormattingDefaultScope>
-  
+
   <!-- Set default verbosity -->
   <ExxerFormattingVerbosity>diagnostic</ExxerFormattingVerbosity>
 </PropertyGroup>
@@ -138,7 +138,7 @@ namespace MyProject
 		{
 			var x = 5;
 			var y = 10;
-			
+
 			if (x > y)
 			{
 				Console.WriteLine("Bad formatting");

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	<!-- Inherit TargetFramework from Directory.Build.props (net10.0) -->
+	<LangVersion>latest</LangVersion>
+	<Nullable>enable</Nullable>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<IsPackable>false</IsPackable>
+	<RootNamespace>IndFusion.Analyzer.Tests</RootNamespace>
+	<AssemblyName>IndFusion.Analyzer.Tests</AssemblyName>
+	<IsTestProject>true</IsTestProject>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+  </PropertyGroup>
+  <Import Project="..\TestingPlatform.props" />
+  <ItemGroup>
+	<!-- Central package management: versions come from Directory.Packages.props -->
+	<PackageReference Include="Shouldly" />
+	<PackageReference Include="NSubstitute" />
+	<PackageReference Include="Microsoft.NET.Test.Sdk" />
+	<PackageReference Include="xunit.v3" />
+	<PackageReference Update="xunit.v3.runner.console">
+	  <PrivateAssets>all</PrivateAssets>
+	</PackageReference>
+	<PackageReference Include="xunit.runner.visualstudio">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Update="xunit.v3.runner.msbuild">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+	<ProjectReference Include="..\..\code\IndFusion.Analyzer\IndFusion.Analyzer.csproj" />
+	<ProjectReference Include="..\..\code\IndFusion.Fixer\IndFusion.Fixer.csproj" />
+  </ItemGroup>
+</Project>

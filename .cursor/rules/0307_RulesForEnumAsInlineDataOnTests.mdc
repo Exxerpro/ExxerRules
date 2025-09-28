@@ -1,10 +1,10 @@
 ---
 description: Patter For EnumModel InlineData
-globs: 
+globs:
 alwaysApply: false
 ---
 
-*** Scope: This is the patter needed to when needed to inline data from a class derived from EnumModel, because Xunit Dont Support 
+*** Scope: This is the patter needed to when needed to inline data from a class derived from EnumModel, because Xunit Dont Support
 
 
 // This is a test that uses an enum as inline data.

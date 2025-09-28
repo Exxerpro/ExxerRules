@@ -1,7 +1,7 @@
 ---
 attachmentType: auto
 globs: *.cs
-description: 
+description:
 notes: Use to filter tests
 alwaysApply: false
 ---

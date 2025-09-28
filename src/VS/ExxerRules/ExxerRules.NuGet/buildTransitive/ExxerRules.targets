@@ -1,6 +1,0 @@
-<Project>
-  
-  <!-- Import the main targets file for transitive dependencies -->
-  <Import Project="../build/ExxerRules.targets" />
-  
-</Project>

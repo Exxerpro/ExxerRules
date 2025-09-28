@@ -1,0 +1,66 @@
+# Build and IDE artifacts (rooted at ExxerRules/src)
+bin/
+obj/
+out/
+logs/
+*.log
+**/*.log
+*.log.*
+*.log-*
+*.log.gz
+*.out
+*.err
+*.trace
+*.trace.json
+*.etl
+*.har
+
+# Package manager logs
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Logs directories
+**/logs/**
+**/Logs/**
+
+# Tool outputs
+**/StrykerOutput/**
+*.binlog
+TestResults/
+.vs/
+
+# .NET artifacts
+**/bin/
+**/obj/
+artifacts/
+MSBuild_Logs/
+
+# Python cache and virtualenvs
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+env/
+
+# Node/npm
+node_modules/
+
+# VS Code
+.vscode/
+
+# Large/verbose logs and build outputs
+src/full_build_verbose.txt
+*.coverage
+coverage*/
+
+# Backup/temporary files
+*.bak
+*.backup
+*.tmp

@@ -102,12 +102,12 @@ $job = Start-Job -ScriptBlock { dotnet test --verbosity normal }; Wait-Job $job 
 $job = Start-Job -ScriptBlock { cd "path/to/project" && dotnet build }; Wait-Job $job -Timeout 30; Receive-Job $job; Remove-Job $job
 
 # Command with error handling
-$job = Start-Job -ScriptBlock { 
-    try { 
-        dotnet build 
-    } 
-    catch { 
-        Write-Error $_.Exception.Message 
+$job = Start-Job -ScriptBlock {
+    try {
+        dotnet build
+    }
+    catch {
+        Write-Error $_.Exception.Message
     }
 }; Wait-Job $job -Timeout 30; Receive-Job $job; Remove-Job $job
 
@@ -115,7 +115,7 @@ $job = Start-Job -ScriptBlock {
 $job = Start-Job -ScriptBlock { dotnet build 2>&1 }; Wait-Job $job -Timeout 30; Receive-Job $job; Remove-Job $job
 
 # Command with exit code checking
-$job = Start-Job -ScriptBlock { 
+$job = Start-Job -ScriptBlock {
     $result = dotnet build 2>&1
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Build failed with exit code: $LASTEXITCODE"
@@ -443,7 +443,7 @@ while [ $retry_count -lt $max_retries ]; do
     echo "Attempt $((retry_count + 1)) of $max_retries"
     output=$(timeout 60s dotnet restore 2>&1)
     exit_code=$?
-    
+
     if [ $exit_code -eq 0 ]; then
         echo "Restore completed successfully"
         echo "$output"
@@ -499,4 +499,3 @@ dotnet remove package PackageName
 ```
 </incorrect-example>
 </requirement>
-

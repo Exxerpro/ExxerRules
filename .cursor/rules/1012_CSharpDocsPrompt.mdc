@@ -1,6 +1,6 @@
 ---
 description: Get best practices for Entity Framework Core
-globs: 
+globs:
 alwaysApply: false
 ---
 **mode**: 'agent'

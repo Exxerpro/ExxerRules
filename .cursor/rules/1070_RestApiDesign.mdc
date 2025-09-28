@@ -51,7 +51,7 @@ public class AgentsController : ControllerBase
             return CreatedAtAction(nameof(GetAgent), new { id = result.Value.Id }, agentDto);
         }
 
-        _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+        _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
             request.Name, string.Join(", ", result.Errors));
 
         if (result.Errors.Any(e => e.Contains("validation")))
@@ -102,7 +102,7 @@ public class AgentsController : ControllerBase
             });
         }
 
-        _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}", 
+        _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}",
             id, string.Join(", ", result.Errors));
 
         return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
@@ -154,7 +154,7 @@ public class AgentsController : ControllerBase
             });
         }
 
-        _logger.LogError("Failed to update agent: {AgentId}, Errors: {Errors}", 
+        _logger.LogError("Failed to update agent: {AgentId}, Errors: {Errors}",
             id, string.Join(", ", result.Errors));
 
         return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
@@ -188,7 +188,7 @@ public class AgentsController : ControllerBase
             });
         }
 
-        _logger.LogError("Failed to delete agent: {AgentId}, Errors: {Errors}", 
+        _logger.LogError("Failed to delete agent: {AgentId}, Errors: {Errors}",
             id, string.Join(", ", result.Errors));
 
         return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
@@ -340,7 +340,7 @@ public class AgentsController : ControllerBase
         [FromQuery] int pageSize = 20,
         CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Retrieving agents (v2): {NameFilter}, Page: {Page}, PageSize: {PageSize}", 
+        _logger.LogInformation("Retrieving agents (v2): {NameFilter}, Page: {Page}, PageSize: {PageSize}",
             name, page, pageSize);
 
         var result = await _agentService.GetAgentsPaginatedAsync(name, page, pageSize, cancellationToken);
@@ -568,7 +568,7 @@ public class AgentsController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Agent creation validation failed: {Errors}", 
+                _logger.LogWarning("Agent creation validation failed: {Errors}",
                     string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
@@ -592,7 +592,7 @@ public class AgentsController : ControllerBase
                 return CreatedAtAction(nameof(GetAgent), new { id = result.Value.Id }, agentDto);
             }
 
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 request.Name, string.Join(", ", result.Errors));
 
             if (result.Errors.Any(e => e.Contains("validation")))
@@ -660,7 +660,7 @@ public class AgentsController : ControllerBase
                 });
             }
 
-            _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}", 
+            _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}",
                 id, string.Join(", ", result.Errors));
 
             return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
@@ -770,7 +770,7 @@ public class AgentsController : ControllerBase
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Agent creation validation failed: {Errors}", 
+                _logger.LogWarning("Agent creation validation failed: {Errors}",
                     string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
                 return BadRequest(new ValidationProblemDetails(ModelState));
             }
@@ -794,7 +794,7 @@ public class AgentsController : ControllerBase
                 return CreatedAtAction(nameof(GetAgent), new { id = result.Value.Id }, agentDto);
             }
 
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 request.Name, string.Join(", ", result.Errors));
 
             if (result.Errors.Any(e => e.Contains("validation")))
@@ -862,7 +862,7 @@ public class AgentsController : ControllerBase
                 });
             }
 
-            _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}", 
+            _logger.LogError("Failed to retrieve agent: {AgentId}, Errors: {Errors}",
                 id, string.Join(", ", result.Errors));
 
             return StatusCode(StatusCodes.Status500InternalServerError, new ProblemDetails
@@ -935,4 +935,3 @@ public class AgentsController : ControllerBase
 ```
 </incorrect-example>
 </requirement>
-

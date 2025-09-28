@@ -1,6 +1,6 @@
 ---
 description: Core architecture and code conventions for CQRS, validation, and test layering
-globs: 
+globs:
 alwaysApply: true
 ---
 
@@ -41,7 +41,7 @@ alwaysApply: true
 - Log key steps (input received, success, exception).
 - Log any non normal Flow
 
-## 5. Modern C# Sharp 
+## 5. Modern C# Sharp
 
 - Use Modern C# Features to write short, readable, and maintainable code while adhering to best practices:
     - Prefer expression-bodied members for one-liners.
@@ -76,7 +76,7 @@ alwaysApply: true
   - Support pure methods as much as possible
   - SOLID, Clean and pragmatic concepts must be applied
   - Use modern pather designs principles
-  - Use algorithm and optimization when needed and documented 
+  - Use algorithm and optimization when needed and documented
   - Support async and cancellation tokens
   - Avoid mixing domain logic with data access
 
@@ -89,7 +89,7 @@ alwaysApply: true
     - Never use async void except for event handlers.
     - Don't use lock in async code—prefer SemaphoreSlim.
     - Don't use lock(this) or lock(typeof(...)).
-    - Always support and dispose CancellationTokenSource.    
+    - Always support and dispose CancellationTokenSource.
     - Avoid foreach mutation on ConcurrentDictionary.
 
   - Memory & Resource Management

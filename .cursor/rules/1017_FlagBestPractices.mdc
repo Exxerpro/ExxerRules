@@ -1,6 +1,6 @@
 ---
 description: Flag Best Practices while revieweng code
-globs: 
+globs:
 alwaysApply: false
 ---
 
@@ -12,7 +12,7 @@ Task:
 
 //TODO [TAG] [CURSOR] [DD/MMMM/YYYY] - Short, precise, expressive explanation.
 // - [TAG] can be: [URGENT], [IMPORTANT], [BEST PRACTICE], [DRY], [PERFORMANCE], [SOLID], [RESOURCE LEAK], [LINQ]
-//   [UNREACHABLE]  
+//   [UNREACHABLE]
 // - [CURSOR] is always included to indicate it was flagged by the AI/code review process.
 // - [DD/MMMM/YYYY] is the date in day/month/year format (e.g., 20/JUN/2025).
 // - The explanation should be concise but clear: what is the problem, what is the proposal, how can it help?

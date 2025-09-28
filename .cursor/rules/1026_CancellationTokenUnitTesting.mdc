@@ -61,7 +61,7 @@ public async Task Should_RetrieveData_When_ValidIdProvided()
     var repository = Substitute.For<IRepository>();
     var id = Guid.NewGuid();
     var expectedData = new TestEntity { Id = id, Name = "Test" };
-    
+
     repository.GetByIdAsync(id, TestContext.Current.CancellationToken)
         .Returns(Result<TestEntity>.Success(expectedData));
 
@@ -103,7 +103,7 @@ public async Task Should_HandleTimeout_When_OperationExceedsLimit()
 
     // Act
     var result = await service.ExecuteWithTimeoutAsync(
-        TimeSpan.FromSeconds(5), 
+        TimeSpan.FromSeconds(5),
         TestContext.Current.CancellationToken);
 
     // Assert
@@ -122,11 +122,11 @@ public async Task Should_CancelOperation_When_CancellationRequested()
     // Arrange
     var service = new TestService();
     var cts = new CancellationTokenSource();
-    
+
     // Act
     var task = service.LongRunningOperationAsync(cts.Token);
     cts.CancelAfter(TimeSpan.FromMilliseconds(100));
-    
+
     // Assert
     await Should.ThrowAsync<OperationCanceledException>(() => task);
 }
@@ -143,7 +143,7 @@ public async Task Should_Timeout_When_OperationExceedsLimit()
     var timeoutToken = new CancellationTokenSource(TimeSpan.FromMilliseconds(100)).Token;
 
     // Act & Assert
-    await Should.ThrowAsync<OperationCanceledException>(() => 
+    await Should.ThrowAsync<OperationCanceledException>(() =>
         service.LongRunningOperationAsync(timeoutToken));
 }
 ```
@@ -311,7 +311,7 @@ public async Task Should_ProcessData_When_ValidInputProvided()
 {
     var service = new TestService();
     var result = await service.ProcessAsync("test", TestContext.Current.CancellationToken);
-    
+
     // Missing cancellation token in nested operation
     await Task.Delay(1000); // Should include TestContext.Current.CancellationToken
 }

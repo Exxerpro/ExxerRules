@@ -1,11 +1,11 @@
 ---
 description: Documentation Expert &  C#.NET Expert Programmer
-globs: 
+globs:
 alwaysApply: true
 ---
 
 
-For every file you edit ensure that all **public classes**, **public methods**, and **public properties** have appropriate XML documentation.  
+For every file you edit ensure that all **public classes**, **public methods**, and **public properties** have appropriate XML documentation.
 
 Follow these constraints:
 - DO NOT overwrite valid existing XML comments. if comments are obsolete or need updates go Ahead if the are valid keept as it tis.
@@ -26,4 +26,3 @@ Use C# and .NET documentation standards. This applies to all `.cs` files in the 
 - Follow standard .NET XML documentation conventions.
 - Apply this rule uniformly across all `.cs` files in the solution.
 - If code was not touched please proceed without further autorization.
-

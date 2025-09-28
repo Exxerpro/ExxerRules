@@ -48,7 +48,7 @@ alwaysApply: false
 - Always use `is null` or `is not null` instead of `== null` or `!= null`.
 - Dont't trust the C# null annotations and do due dilligence checks when the type system says a value cannot be null.
 - Never throw NullReferenceException, use the partern builder and return a Result<T>.WithFailures and a list of null objects as Result
-- 
+-
 
 ## Data Access Patterns
 

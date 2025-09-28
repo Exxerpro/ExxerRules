@@ -2,17 +2,17 @@
 
 ## Meta
 
-**Title**: Rule for Writing Rules  
-**Description**: Establishes standards for creating effective AI agent rules that are clear, enforceable, and optimized for AI consumption  
-**Created-at**: 2025-01-05T22:45:00Z  
-**Last-updated-at**: 2025-01-05T22:45:00Z  
-**Applies-to**: Rule creation, rule refactoring, AI agent instruction design  
-**File-matcher**: *.mdc files in .cursor/rules/ directory  
+**Title**: Rule for Writing Rules
+**Description**: Establishes standards for creating effective AI agent rules that are clear, enforceable, and optimized for AI consumption
+**Created-at**: 2025-01-05T22:45:00Z
+**Last-updated-at**: 2025-01-05T22:45:00Z
+**Applies-to**: Rule creation, rule refactoring, AI agent instruction design
+**File-matcher**: *.mdc files in .cursor/rules/ directory
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Every rule must have proper YAML frontmatter with required fields  
+**Description**: Every rule must have proper YAML frontmatter with required fields
 **Examples**:
 <correct-example>
 ```yaml
@@ -35,7 +35,7 @@ description: Some coding rules
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use semantic naming convention with numbered prefixes and underscores for rule organization  
+**Description**: Use semantic naming convention with numbered prefixes and underscores for rule organization
 **Examples**:
 <correct-example>
 - 0000_RuleToWriteRules.mdc (Core standards)
@@ -52,7 +52,7 @@ description: Some coding rules
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Structure rule content with clear sections: Meta, Requirements, References, Grammar/Schema, Context  
+**Description**: Structure rule content with clear sections: Meta, Requirements, References, Grammar/Schema, Context
 **Examples**:
 <correct-example>
 ```markdown
@@ -82,7 +82,7 @@ description: Some coding rules
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Include both positive and negative examples for each requirement  
+**Description**: Include both positive and negative examples for each requirement
 **Examples**:
 <correct-example>
 <requirement priority="high">
@@ -112,7 +112,7 @@ var y = ValidateOrder(x);
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Keep frontmatter description under 120 characters while maintaining clear intent  
+**Description**: Keep frontmatter description under 120 characters while maintaining clear intent
 **Examples**:
 <correct-example>
 ```yaml
@@ -127,7 +127,7 @@ description: This rule defines how to properly use async and await keywords in C
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use imperative language designed for AI agent consumption  
+**Description**: Use imperative language designed for AI agent consumption
 **Examples**:
 <correct-example>
 - "Always use ConfigureAwait(false) in library code"
@@ -142,7 +142,7 @@ description: This rule defines how to properly use async and await keywords in C
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Include references to related rules when applicable  
+**Description**: Include references to related rules when applicable
 **Examples**:
 <correct-example>
 ```markdown
@@ -157,6 +157,29 @@ description: This rule defines how to properly use async and await keywords in C
 - Some other rule
 - Another rule
 ```
+</incorrect-example>
+</requirement>
+
+### <requirement priority="critical">
+**Description**: Every new or modified rule in `.cursor/rules/` MUST update the central index `.cursor/rules/rules.json` before merge. Include the rule ID in the appropriate pack(s) and keep packs minimal and relevant.
+**Examples**:
+<correct-example>
+```json
+{
+  "version": "1.0",
+  "packs": [
+    {
+      "id": "pack.refactoring",
+      "title": "Refactoring Standards",
+      "rules": [1034, 1033, 1032, 1030, 1028, 1040] // <- new rule ID appended intentionally
+    }
+  ]
+}
+```
+</correct-example>
+<incorrect-example>
+- New file `1040_PerformanceOptimizationStandards.mdc` created without adding `1040` to any pack in `rules.json`.
+- `rules.json` left with stale references to removed/renamed rule files.
 </incorrect-example>
 </requirement>
 

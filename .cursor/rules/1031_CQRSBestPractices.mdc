@@ -31,12 +31,12 @@ public class CreateUserCommand : ICommand<Result<UserId>>
     public string LastName { get; init; }
     public string Email { get; init; }
     public string Password { get; init; }
-    
+
     // Validation attributes
     [Required]
     [StringLength(50)]
     public string FirstName { get; init; }
-    
+
     [Required]
     [EmailAddress]
     public string Email { get; init; }
@@ -49,7 +49,7 @@ public class UpdateUserCommand : ICommand<Result<UserId>>
     public string FirstName { get; init; }
     public string LastName { get; init; }
     public string Email { get; init; }
-    
+
     // Business validation
     public bool IsValid()
     {
@@ -83,7 +83,7 @@ public class CreateUserCommandHandler : ICommandHandler<CreateUserCommand, Resul
     }
 
     public async Task<Result<UserId>> HandleAsync(
-        CreateUserCommand command, 
+        CreateUserCommand command,
         CancellationToken cancellationToken = default)
     {
         try
@@ -175,13 +175,13 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery, Result<Us
     }
 
     public async Task<Result<UserDto>> HandleAsync(
-        GetUserByIdQuery query, 
+        GetUserByIdQuery query,
         CancellationToken cancellationToken = default)
     {
         try
         {
             var user = await _userReadRepository.GetByIdAsync(query.UserId, cancellationToken);
-            
+
             if (user == null)
             {
                 return Result<UserDto>.WithFailure($"User not found: {query.UserId}");
@@ -222,7 +222,7 @@ public class GetUsersQueryHandler : IQueryHandler<GetUsersQuery, Result<PagedRes
     }
 
     public async Task<Result<PagedResult<UserDto>>> HandleAsync(
-        GetUsersQuery query, 
+        GetUsersQuery query,
         CancellationToken cancellationToken = default)
     {
         try
@@ -274,7 +274,7 @@ public interface ICommand<TResult>
 {
 }
 
-public interface ICommandHandler<TCommand, TResult> 
+public interface ICommandHandler<TCommand, TResult>
     where TCommand : ICommand<TResult>
 {
     Task<Result<TResult>> HandleAsync(TCommand command, CancellationToken cancellationToken = default);
@@ -285,7 +285,7 @@ public interface IQuery<TResult>
 {
 }
 
-public interface IQueryHandler<TQuery, TResult> 
+public interface IQueryHandler<TQuery, TResult>
     where TQuery : IQuery<TResult>
 {
     Task<Result<TResult>> HandleAsync(TQuery query, CancellationToken cancellationToken = default);
@@ -391,9 +391,9 @@ public class UserReadRepository : IUserReadRepository
         // Apply search filter
         if (!string.IsNullOrWhiteSpace(searchTerm))
         {
-            query = query.Where(u => 
-                u.FirstName.Contains(searchTerm) || 
-                u.LastName.Contains(searchTerm) || 
+            query = query.Where(u =>
+                u.FirstName.Contains(searchTerm) ||
+                u.LastName.Contains(searchTerm) ||
                 u.Email.Contains(searchTerm));
         }
 
@@ -477,7 +477,7 @@ public class UsersController : ControllerBase
         };
 
         var result = await _createUserHandler.HandleAsync(command);
-        
+
         if (result.IsSuccess)
         {
             return CreatedAtAction(nameof(GetUser), new { id = result.Value }, result.Value);
@@ -491,7 +491,7 @@ public class UsersController : ControllerBase
     {
         var query = new GetUserByIdQuery { UserId = new UserId(id) };
         var result = await _getUserHandler.HandleAsync(query);
-        
+
         if (result.IsSuccess)
         {
             return Ok(result.Value);
@@ -513,7 +513,7 @@ public class UsersController : ControllerBase
         };
 
         var result = await _getUsersHandler.HandleAsync(query);
-        
+
         if (result.IsSuccess)
         {
             return Ok(result.Value);
@@ -599,7 +599,7 @@ public class CreateOrderCommandHandler
             .Include(u => u.Addresses)
             .Where(u => u.Id == command.UserId)
             .FirstOrDefaultAsync();
-        
+
         // Command logic...
     }
 }

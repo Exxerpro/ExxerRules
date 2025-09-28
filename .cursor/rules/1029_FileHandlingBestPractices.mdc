@@ -172,7 +172,7 @@ public class SecureFileHandler
     public Result<string> ValidateAndSanitizePath(string filePath)
     {
         var fullPath = Path.GetFullPath(filePath);
-        
+
         // Prevent directory traversal attacks
         if (!fullPath.StartsWith(_allowedDirectory, StringComparison.OrdinalIgnoreCase))
             return Result<string>.WithFailure("Access denied: Path outside allowed directory");
@@ -245,30 +245,30 @@ public class FileOperationLogger
     }
 
     public async Task<Result<T>> ExecuteWithLoggingAsync<T>(
-        string operation, 
-        string filePath, 
+        string operation,
+        string filePath,
         Func<Task<T>> operationFunc)
     {
         var startTime = DateTime.UtcNow;
-        
+
         try
         {
             _logger.LogInformation("Starting {Operation} on file: {FilePath}", operation, filePath);
-            
+
             var result = await operationFunc();
-            
+
             var duration = DateTime.UtcNow - startTime;
-            _logger.LogInformation("Completed {Operation} on file: {FilePath} in {Duration}ms", 
+            _logger.LogInformation("Completed {Operation} on file: {FilePath} in {Duration}ms",
                 operation, filePath, duration.TotalMilliseconds);
-            
+
             return Result<T>.Success(result);
         }
         catch (Exception ex)
         {
             var duration = DateTime.UtcNow - startTime;
-            _logger.LogError(ex, "Failed {Operation} on file: {FilePath} after {Duration}ms", 
+            _logger.LogError(ex, "Failed {Operation} on file: {FilePath} after {Duration}ms",
                 operation, filePath, duration.TotalMilliseconds);
-            
+
             return Result<T>.WithFailure($"File operation failed: {ex.Message}");
         }
     }
@@ -292,7 +292,7 @@ public class BatchFileProcessor
     }
 
     public async Task<Result<BatchResult>> ProcessFilesAsync(
-        IEnumerable<string> filePaths, 
+        IEnumerable<string> filePaths,
         Func<string, Task<Result>> processor,
         IProgress<int>? progress = null)
     {
@@ -322,7 +322,7 @@ public class BatchFileProcessor
         var successfulCount = results.Count(r => r.Result.IsSuccess);
         var failedCount = results.Count(r => r.Result.IsFailure);
 
-        _logger.LogInformation("Batch processing completed: {Successful} successful, {Failed} failed", 
+        _logger.LogInformation("Batch processing completed: {Successful} successful, {Failed} failed",
             successfulCount, failedCount);
 
         return Result<BatchResult>.Success(new BatchResult(results));

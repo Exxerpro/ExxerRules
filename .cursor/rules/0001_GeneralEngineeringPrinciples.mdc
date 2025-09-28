@@ -3,17 +3,17 @@
 
 ## Meta
 
-**Title**: General Engineering Principles  
-**Description**: Establishes comprehensive domain-driven design and testing standards for enterprise .NET development  
-**Created-at**: 2025-01-05T22:55:00Z  
-**Last-updated-at**: 2025-01-05T22:55:00Z  
-**Applies-to**: All .NET development, architecture design, testing, project structure  
-**File-matcher**: *.cs, *.csproj, *.sln, *.props files  
+**Title**: General Engineering Principles
+**Description**: Establishes comprehensive domain-driven design and testing standards for enterprise .NET development
+**Created-at**: 2025-01-05T22:55:00Z
+**Last-updated-at**: 2025-01-05T22:55:00Z
+**Applies-to**: All .NET development, architecture design, testing, project structure
+**File-matcher**: *.cs, *.csproj, *.sln, *.props files
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Use proper naming conventions - camelCase for internal values, avoid _camelCase for private fields  
+**Description**: Use proper naming conventions - camelCase for internal values, avoid _camelCase for private fields
 **Examples**:
 <correct-example>
 ```csharp
@@ -21,13 +21,13 @@ public class OrderProcessor
 {
     private readonly IOrderValidator validator;
     private readonly ILogger<OrderProcessor> logger;
-    
+
     public OrderProcessor(IOrderValidator validator, ILogger<OrderProcessor> logger)
     {
         this.validator = validator;
         this.logger = logger;
     }
-    
+
     public async Task<Result<Order>> ProcessOrderAsync(OrderRequest request)
     {
         // Implementation
@@ -41,7 +41,7 @@ public class OrderProcessor
 {
     private readonly IOrderValidator _validator;
     private readonly ILogger<OrderProcessor> _logger;
-    
+
     public OrderProcessor(IOrderValidator validator, ILogger<OrderProcessor> logger)
     {
         _validator = validator;
@@ -53,7 +53,7 @@ public class OrderProcessor
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Never throw exceptions - always return Result<T> for error handling  
+**Description**: Never throw exceptions - always return Result<T> for error handling
 **Examples**:
 <correct-example>
 ```csharp
@@ -61,10 +61,10 @@ public Result<Order> CreateOrder(OrderRequest request)
 {
     if (request == null)
         return Result<Order>.WithFailure("Request cannot be null");
-    
+
     if (string.IsNullOrEmpty(request.CustomerName))
         return Result<Order>.WithFailure("Customer name is required");
-    
+
     // Processing logic
     return Result<Order>.Success(order);
 }
@@ -76,10 +76,10 @@ public Order CreateOrder(OrderRequest request)
 {
     if (request == null)
         throw new ArgumentNullException(nameof(request));
-    
+
     if (string.IsNullOrEmpty(request.CustomerName))
         throw new ArgumentException("Customer name is required");
-    
+
     // Processing logic
     return order;
 }
@@ -88,7 +88,7 @@ public Order CreateOrder(OrderRequest request)
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use async/await patterns consistently - avoid .Result and .Wait()  
+**Description**: Use async/await patterns consistently - avoid .Result and .Wait()
 **Examples**:
 <correct-example>
 ```csharp
@@ -99,7 +99,7 @@ public async Task<Result<Order>> ProcessOrderAsync(OrderRequest request, Cancell
         var validationResult = await ValidateOrderAsync(request, cancellationToken);
         if (validationResult.IsFailure)
             return Result<Order>.WithFailure(validationResult.Error!);
-        
+
         var order = await CreateOrderAsync(request, cancellationToken);
         return Result<Order>.Success(order);
     }
@@ -117,7 +117,7 @@ public Order ProcessOrder(OrderRequest request)
     var validationResult = ValidateOrderAsync(request).Result; // Blocking!
     if (validationResult.IsFailure)
         throw new Exception(validationResult.Error);
-    
+
     var order = CreateOrderAsync(request).Result; // Blocking!
     return order;
 }
@@ -126,7 +126,7 @@ public Order ProcessOrder(OrderRequest request)
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use immutable data structures by default - prefer readonly, init, and record types  
+**Description**: Use immutable data structures by default - prefer readonly, init, and record types
 **Examples**:
 <correct-example>
 ```csharp
@@ -139,7 +139,7 @@ public record OrderRequest(
 public class OrderValidator
 {
     private readonly IReadOnlyList<IValidationRule> validationRules;
-    
+
     public OrderValidator(IEnumerable<IValidationRule> rules)
     {
         validationRules = rules.ToList().AsReadOnly();
@@ -159,7 +159,7 @@ public class OrderRequest
 public class OrderValidator
 {
     private readonly List<IValidationRule> validationRules;
-    
+
     public OrderValidator(IEnumerable<IValidationRule> rules)
     {
         validationRules = rules.ToList(); // Mutable!
@@ -170,7 +170,7 @@ public class OrderValidator
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Implement proper resource management with using statements  
+**Description**: Implement proper resource management with using statements
 **Examples**:
 <correct-example>
 ```csharp
@@ -205,22 +205,22 @@ public async Task<string> ReadFileAsync(string path)
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Use structured logging for all external and domain calls  
+**Description**: Use structured logging for all external and domain calls
 **Examples**:
 <correct-example>
 ```csharp
 public async Task<Result<Order>> ProcessOrderAsync(OrderRequest request, CancellationToken cancellationToken = default)
 {
     logger.LogInformation("Processing order for customer {CustomerName}", request.CustomerName);
-    
+
     var validationResult = await ValidateOrderAsync(request, cancellationToken);
     if (validationResult.IsFailure)
     {
-        logger.LogWarning("Order validation failed for customer {CustomerName}: {Error}", 
+        logger.LogWarning("Order validation failed for customer {CustomerName}: {Error}",
             request.CustomerName, validationResult.Error);
         return Result<Order>.WithFailure(validationResult.Error!);
     }
-    
+
     logger.LogInformation("Order processed successfully for customer {CustomerName}", request.CustomerName);
     return Result<Order>.Success(order);
 }
@@ -231,14 +231,14 @@ public async Task<Result<Order>> ProcessOrderAsync(OrderRequest request, Cancell
 public async Task<Result<Order>> ProcessOrderAsync(OrderRequest request, CancellationToken cancellationToken = default)
 {
     Console.WriteLine("Processing order..."); // Unstructured logging
-    
+
     var validationResult = await ValidateOrderAsync(request, cancellationToken);
     if (validationResult.IsFailure)
     {
         Console.WriteLine($"Validation failed: {validationResult.Error}"); // Unstructured
         return Result<Order>.WithFailure(validationResult.Error!);
     }
-    
+
     Console.WriteLine("Order processed successfully"); // Unstructured
     return Result<Order>.Success(order);
 }
@@ -247,7 +247,7 @@ public async Task<Result<Order>> ProcessOrderAsync(OrderRequest request, Cancell
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Organize code by domain, not by technical type  
+**Description**: Organize code by domain, not by technical type
 **Examples**:
 <correct-example>
 ```
@@ -279,7 +279,7 @@ src/
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Avoid magic strings and magic numbers - use named constants  
+**Description**: Avoid magic strings and magic numbers - use named constants
 **Examples**:
 <correct-example>
 ```csharp
@@ -298,10 +298,10 @@ public class OrderValidator
     {
         if (order.Items.Count > OrderConstants.MaxOrderItems)
             return Result.WithFailure($"Order cannot exceed {OrderConstants.MaxOrderItems} items");
-        
+
         if (order.TotalAmount < OrderConstants.MinimumOrderAmount)
             return Result.WithFailure($"Order amount must be at least {OrderConstants.MinimumOrderAmount:C}");
-        
+
         return Result.Success();
     }
 }
@@ -315,10 +315,10 @@ public class OrderValidator
     {
         if (order.Items.Count > 100) // Magic number
             return Result.WithFailure("Order cannot exceed 100 items");
-        
+
         if (order.TotalAmount < 10.00m) // Magic number
             return Result.WithFailure("Order amount must be at least $10.00");
-        
+
         return Result.Success();
     }
 }
@@ -327,7 +327,7 @@ public class OrderValidator
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use dependency injection with primary constructors for all dependencies  
+**Description**: Use dependency injection with primary constructors for all dependencies
 **Examples**:
 <correct-example>
 ```csharp
@@ -350,7 +350,7 @@ public class OrderProcessor
     private readonly IOrderValidator validator;
     private readonly IOrderRepository repository;
     private readonly ILogger<OrderProcessor> logger;
-    
+
     public OrderProcessor(IOrderValidator validator, IOrderRepository repository, ILogger<OrderProcessor> logger)
     {
         this.validator = validator;
@@ -405,4 +405,3 @@ The rule prioritizes industrial-grade development practices that scale to enterp
 30. **Toolchain Enforcement**
    - Use Roslyn analyzers, EditorConfig, and build rules to enforce these standards.
    - Automate validation to reduce manual policing.
-

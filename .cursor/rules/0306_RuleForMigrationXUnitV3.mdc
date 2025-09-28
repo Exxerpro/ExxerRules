@@ -1,6 +1,6 @@
 ---
 description: Domain-Driven Design & Testing Expert on XUnit V3
-globs: 
+globs:
 alwaysApply: falso
 ---
 
@@ -344,77 +344,77 @@ If you’re looking for a type that has disappeared and it’s a discoverer, cha
 Many of the namespace changes here have been done in the name of consistency. Generally speaking, when you see a type that now lives in the `Xunit.Sdk` namespace, it comes from `xunit.v3.common`, and when you see it in the `Xunit.v3` namespace, it comes from `xunit.v3.extensibility.core`.
 
 *   The concrete test messages in the `Xunit.Sdk` namespace (for example, `DiagnosticMessage`) have moved to the `Xunit.v3` namespace. In the case where messages had non-empty constructors (for example, `ErrorMessage`) they have been converted to a single parameterless constructor (for serialization/deserialization purposes), and helper static creation methods like `FromException` have been added to replace the previous constructor usage.
-    
+
 *   The runner classes (i.e., `TestAssemblyRunner`, `TestCollectionRunner`, etc.) have moved from `Xunit.Sdk` to `Xunit.v3`. The non-abstract classes (i.e., `XunitTestAssemblyRunner`, `XunitTestCollectionRunner`, etc.) have been converted to singletons. As such, their constructors have been replaced by `RunAsync` methods which accept the information previously passed to the constructor. Their state is now stored in context classes that are constructed and passed between layers. The base runner classes now also have expanded generic types required to match the new context requirements.
-    
+
 *   `CollectionPerAssemblyTestCollectionFactory` and `CollectionPerTestClassTestCollectionFactory` have moved from the `Xunit.Sdk` to the `Xunit.v3` namespace.
-    
+
 *   The abstract `DataAttribute` class has moved from the `Xunit.Sdk` to the `Xunit.v3` namespace.
-    
+
 *   `DiscoveryCompleteMessage` has been renamed to `DiscoveryComplete`, and moved from `Xunit.Sdk` to `Xunit.v3`.
-    
+
 *   `DisplayNameFormatter` has moved from `Xunit.Sdk` to `Xunit.v3`.
-    
+
 *   `ExceptionAggregator` has moved from `Xunit.Sdk` to `Xunit.v3`, and been converted to a `struct` rather than a `class`. The `RunAsync` methods have been converted from `Task` to `ValueTask` to align with the framework moving to `ValueTask` internally.
-    
+
 *   `ExecutionErrorTestCase` has moved from `Xunit.Sdk` to `Xunit.v3`, and its primary constructor has been updated.
-    
+
 *   `ExecutionTimer` has moved from `Xunit.Sdk` to `Xunit.v3`, made static, and its `Aggregate` methods have been renamed to `Measure`. The async versions have converted from accepting `Task` to accepting `ValueTask` and `ValueTask<T>`. These methods now return the measured time rather than aggregating a count inside the timer itself.
-    
+
 *   `ExtensibilityPointFactory` has moved from `Xunit.Sdk` to `Xunit.v3` and been completely overhauled, given the removal of the reflection abstractions when the source-based discovery feature was removed from v3.
-    
+
 *   `ITestCaseOrderer` has moved from `Xunit.Sdk` to `Xunit.v3`, and `OrderTestCases` now both accepts and returns `IReadOnlyCollection<TTestCase>` instead of `IEnumerable<TTestCase>`.
-    
+
 *   `ITestCollectionOrderer` has moved from `Xunit` to `Xunit.v3`, and `OrderTestCollections` now both accepts and returns `IReadOnlyCollection<TTestCollection>` instead of `IEnumerable<TTestCollection>`.
-    
+
 *   `IXunitTestCaseDiscoverer` has moved from `Xunit.Sdk` to `Xunit.v3` and the `Discover` method has been made async.
-    
+
 *   `IXunitTestCollectionFactory` has moved from `Xunit.Sdk` to `Xunit.v3`.
-    
+
 *   `MaxConcurrencySyncContext` has moved from `Xunit.Sdk` to `Xunit.v3`.
-    
+
 *   `TestCollectionComparer` has moved from `Xunit.Sdk` to `Xunit.v3` and been made generic.
-    
+
 
 ### Types removed
 
 *   The `AsyncTestSyncContext` class which made `async void` tests work has been removed.
-    
+
 *   `AssemblyTraitAttribute` has been removed and `TraitAttribute` can be used on assemblies now.
-    
+
 *   `LongLivedMarshalByRefObject` (in the `Xunit` namespace) has been removed from the core framework, since v3 does not support running in Application Domains.
-    
+
 *   `PlatformSpecificAssemblyAttribute` has been removed, as `xunit.v3.extensibility.core` is based purely on `netstandard2.0` now rather than the previous multi-targeted `xunit.execution.*` libraries.
-    
+
 *   `PropertyDataAttribute`, which had been obsoleted in favor of `MemberDataAttribute`, has been removed.
-    
+
 *   `Reflector` (and all the `ReflectionXyz` classes it returned) has been removed, since the reflection abstractions have been removed from v3.
-    
+
 *   `TestCaseBulkDeserializer` and `TestCaseDescriptorFactory` have been removed, as the cross-Application Domain performance problems they were solving are no longer present in v3.
-    
+
 *   `TestClassException` has been removed, and replaced with a more generalized `TestPipelineException`.
-    
+
 
 ### Miscellaneous changes
 
 *   In an effort to track down and eliminate cases of double enumeration, many method signatures may have changed from `IEnumerable<T>` to `IReadOnlyCollection<T>` when it’s known that the data is safe to double enumerate.
-    
+
 *   `BeforeAfterTestAttribute` is now given the instance of `IXunitTest` for the currently running test.
-    
+
 *   `DisposalTracker` has been switched from `IDisposable` to `IAsyncDisposable`, and is capable of disposing of objects which implement either interface. Note that if an object implements both interfaces, only `IAsyncDisposable` will be called.
-    
+
 *   `ExceptionUtility.ConvertExceptionToFailureInformation` has been replaced by `.ExtractMetadata`, which returns the exception metadata as a tuple rather than an interface.
-    
+
 *   `IAsyncLifetime` has been updated to inherit from `IAsyncDisposable`, and both `DisposeAsync` and `InitializeAsync` have been converted from `Task` to `ValueTask`.
-    
+
 *   `MemberDataAttributeBase.Parameters` has been renamed to `Arguments` to better align with the fact that it contains parameter argument values, not parameters. `ConvertDataItem` has been renamed to `ConvertDataRow` (and now returns the new `ITheoryDataRow` object rather than `object[]`). The `GetDataMethod` has been made async, and now returns `IReadOnlyCollection<ITheoryDataRow>` rather than `IEnumerable<object[]>`.
-    
+
 *   `Record.ExceptionAsync` has been updated to return `ValueTask` as well as accepting lambdas that return `ValueTask`.
-    
+
 *   `SerializationHelper.GetType` and `.GetTypeNameForSerialization` have been replaced with `.SerializedTypeNameToType` and `.TypeToSerializedTypeName`, respectively. A non-generic version of `.Deserialize` has been added, and the `.Serialize` method now requires a `Type` to be passed in addition to the value.
-    
+
 *   `TheoryDataBase` is the new base type for the `TheoryData<>` classes as well as the untyped `TheoryData`.
-    
+
 
 Changes to Runner Utility
 -------------------------
@@ -438,96 +438,96 @@ For more information, see the [documentation page](https://xunit.net/docs/gettin
 ### Namespace changes
 
 *   The concrete test messages in the `Xunit` namespace (for example, `DiagnosticMessage`) have moved to the `Xunit.Runner.Common` namespace. In the case where messages had non-empty constructors (for example, `ErrorMessage`) they have been converted to a single parameterless constructor (for serialization/deserialization purposes), and helper static creation methods like `FromException` have been added to replace the previous constructor usage.
-    
+
 *   The runner reporters (i.e., `AppVeyorReporter`, `DefaultRunnerReporter`, etc.) and their message handlers have moved from `Xunit.Runner.Reporters` to `Xunit.Runner.Common`.
-    
+
 *   `AggregateMessageSink` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `AppDomainSupport` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `ConfigReader`, `ConfigReader_Configuration`, and `ConfigReader_Json` have moved from `Xunit` to `Xunit.Runner.Common`. The `Load` method overloads that took `Stream` have been removed.
-    
+
 *   `ConsoleRunnerLogger` has moved from `Xunit` to `Xunit.Runner.Common`, and has been consolidated down to a single constructor that requires passing a `ConsoleHelper` object.
-    
+
 *   `DefaultTestCaseBulkDeserializer` and `ITestCaseBulkDeserializer` have moved from `Xunit` to `Xunit.Internal` and are no longer directly supported for third party usage.
-    
+
 *   `DiagnosticEventSink` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `DiscoveryCompleteMessage` has been renamed to `DiscoveryComplete`, and moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `DiscoveryEventSink` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `ExecutionEventSink` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `ExecutionSink` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `ExecutionSinkOptions` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `ExecutionSummary` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `IMessageSinkWithTypes` and `IMessageSinkMessageWithTypes` have moved from `Xunit` to `Xunit.Runner.v2`.
-    
+
 *   `IRunnerLogger` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `IRunnerReporter` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `IXunit1Executor` has moved from `Xunit` to `Xunit.Runner.v1`.
-    
+
 *   `LongRunningTestsSummary` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `MessageHandler<T>`, `MessageHandlerArgs`, and `MessageHandlerArgs<T>` have moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `NullSourceInformationProvider` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `RunnerEventSink` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `RunnerReporterUtility` has moved from `Xunit` to `Xunit.Runner.Common`, and now offers a way to directly retrieve just the embedded runner reporters.
-    
+
 *   `StackFrameInfo` and `StackFrameTransformer` have moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `TestCaseDiscoveryMessage` has been renamed to `TestCaseDiscovered`, and has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `TestFrameworkOptions` has moved from `Xunit` to `Xunit.Runner.Common` and now can be serialized.
-    
+
 *   `TransformFactory` has moved from `Xunit.ConsoleClient` to `Xunit.Runner.Common`.
-    
+
 *   `Xunit1`, `Xunit1Executor`, `Xunit1RunSummary`, and `Xunit1TestCase` have moved from `Xunit` to `Xunit.Runner.v1` and been updated for the new front controller contract.
-    
+
 *   `Xunit2` has moved from `Xunit` to `Xunit.Runner.v2` and been updated for the new front controller contract.
-    
+
 *   `XunitFilters` has moved from `Xunit` to `Xunit.Runner.Common`.
-    
+
 *   `XunitProject` and `XunitProjectAssembly` have moved from `Xunit` to `Xunit.Runner.Common` and been significantly restructured.
-    
+
 
 ### Types removed
 
 *   `DefaultTestCaseDescriptorProvider` has been removed.
-    
+
 *   `DelegatingExecutionSummarySink`, `DelegatingFailSkipSink`, `DelegatingLongRunningTestDetectionSink`, `DelegatingXmlCreationSink`, `FailSkipVisitor`, `XmlAggregateVisitor`, and `XmlTestExecutionVisitor` have been removed. They have been consolidated into a single `ExecutionSink` class that ensures correct ordering behavior. Accordingly, `IExecutionSink` and `IExecutionVisitor` have also been removed.
-    
+
 *   `ITestCaseDescriptorProvider` and `TestCaseDescriptor` have been removed.
-    
+
 *   `MessageSinkAdapter` and `MessageSinkWithTypesAdapter` have been removed.
-    
+
 *   `TestDiscoveryVisitor` has been removed.
-    
+
 *   `TestMessageVisitor` and `TestMessageVisitor<T>` have been removed.
-    
+
 
 ### Miscellaneous changes
 
 *   `AppVeyorClient` and `VstsClient` have been moved from `public` to `internal`.
-    
+
 *   `IFrontController` has had `CanUseAppDomains` removed, and has added `FindAndRun` and `Run` methods to run tests. It has also been converted from `IDisposable` to `IAsyncDisposable`.
-    
+
 *   `IFrontControllerDiscoverer` has been added, with a `Find` method for finding tests (without running them), as well as exposing the metadata about the test project (including the `CanUseAppDomains` property that was removed from `IFrontController`).
-    
+
 *   `ISourceInformationProvider.GetSourceInformation` has changed its return value from `ISourceInformation` to `(string? sourceFile, int? sourceLine)`.
-    
+
 *   `TestExecutionSummary` (for a single test assembly) has been replaced by `TestExecutionSummaries` (for multiple test assemblies).
-    
+
 *   `XunitFrontController` has been updated for the new front controller contract, and is now `IAsyncDisposable` instead of `IDisposable`. Bulk deserializer and test descriptor functionality has been removed.
-    
+
 
 ###### Copyright © .NET Foundation. Contributions welcomed at [https://github.com/xunit/xunit/tree/gh-pages](https://github.com/xunit/xunit/tree/gh-pages).

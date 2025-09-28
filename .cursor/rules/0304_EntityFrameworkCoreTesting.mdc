@@ -2,17 +2,17 @@
 
 ## Meta
 
-**Title**: EntityFrameworkCore Testing Standards  
-**Description**: Establishes comprehensive testing standards for Entity Framework Core using in-memory database and mocking patterns  
-**Created-at**: 2025-01-05T23:25:00Z  
-**Last-updated-at**: 2025-01-05T23:25:00Z  
-**Applies-to**: EF Core testing, database testing, repository testing, integration testing  
-**File-matcher**: *.cs files with EF Core DbContext usage  
+**Title**: EntityFrameworkCore Testing Standards
+**Description**: Establishes comprehensive testing standards for Entity Framework Core using in-memory database and mocking patterns
+**Created-at**: 2025-01-05T23:25:00Z
+**Last-updated-at**: 2025-01-05T23:25:00Z
+**Applies-to**: EF Core testing, database testing, repository testing, integration testing
+**File-matcher**: *.cs files with EF Core DbContext usage
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Use InMemory database provider for EF Core testing instead of mocking DbContext  
+**Description**: Use InMemory database provider for EF Core testing instead of mocking DbContext
 **Examples**:
 <correct-example>
 ```csharp
@@ -23,14 +23,14 @@ public async Task Should_SaveOrder_When_ValidOrderProvided()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     var repository = new OrderRepository(context);
     var order = new Order { CustomerName = "John Doe", TotalAmount = 100.00m };
-    
+
     // Act
     var result = await repository.SaveAsync(order);
-    
+
     // Assert
     result.IsSuccess.ShouldBeTrue();
     context.Orders.ShouldContain(o => o.CustomerName == "John Doe");
@@ -46,13 +46,13 @@ public async Task Should_SaveOrder_When_ValidOrderProvided()
     var mockContext = Substitute.For<IOrderDbContext>();
     var mockDbSet = Substitute.For<DbSet<Order>>();
     mockContext.Orders.Returns(mockDbSet);
-    
+
     var repository = new OrderRepository(mockContext);
     var order = new Order { CustomerName = "John Doe", TotalAmount = 100.00m };
-    
+
     // Act
     var result = await repository.SaveAsync(order);
-    
+
     // Assert
     result.IsSuccess.ShouldBeTrue(); // Mocked - not real database test
 }
@@ -61,7 +61,7 @@ public async Task Should_SaveOrder_When_ValidOrderProvided()
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use EntityFrameworkCore.Testing library for complex relational operations when needed  
+**Description**: Use EntityFrameworkCore.Testing library for complex relational operations when needed
 **Examples**:
 <correct-example>
 ```csharp
@@ -72,12 +72,12 @@ public async Task Should_ExecuteStoredProcedure_When_ValidParametersProvided()
     var expectedResult = new List<Order> { new Order { Id = Guid.NewGuid() } };
     var mockedDbContext = Create.MockedDbContextFor<OrderDbContext>();
     mockedDbContext.Set<Order>().AddFromSqlRawResult(expectedResult);
-    
+
     var repository = new OrderRepository(mockedDbContext);
-    
+
     // Act
     var result = await repository.GetOrdersByCustomerAsync(customerId);
-    
+
     // Assert
     result.ShouldBeEquivalentTo(expectedResult);
 }
@@ -92,12 +92,12 @@ public async Task Should_ExecuteStoredProcedure_When_ValidParametersProvided()
     var mockContext = Substitute.For<IOrderDbContext>();
     var mockDbSet = Substitute.For<DbSet<Order>>();
     mockContext.Orders.Returns(mockDbSet);
-    
+
     var repository = new OrderRepository(mockContext);
-    
+
     // Act
     var result = await repository.GetOrdersByCustomerAsync(customerId);
-    
+
     // Assert
     result.ShouldNotBeNull(); // Mocked - doesn't test real stored procedure
 }
@@ -106,7 +106,7 @@ public async Task Should_ExecuteStoredProcedure_When_ValidParametersProvided()
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Ensure DbContext has virtual properties for proper testing support  
+**Description**: Ensure DbContext has virtual properties for proper testing support
 **Examples**:
 <correct-example>
 ```csharp
@@ -115,7 +115,7 @@ public class OrderDbContext : DbContext
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
     {
     }
-    
+
     public virtual DbSet<Order> Orders { get; set; }
     public virtual DbSet<Customer> Customers { get; set; }
     public virtual DbSet<Product> Products { get; set; }
@@ -129,7 +129,7 @@ public class OrderDbContext : DbContext
     public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options)
     {
     }
-    
+
     public DbSet<Order> Orders { get; set; } // Missing virtual keyword
     public DbSet<Customer> Customers { get; set; } // Missing virtual keyword
     public DbSet<Product> Products { get; set; } // Missing virtual keyword
@@ -139,7 +139,7 @@ public class OrderDbContext : DbContext
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Use unique database names for each test to ensure isolation  
+**Description**: Use unique database names for each test to ensure isolation
 **Examples**:
 <correct-example>
 ```csharp
@@ -150,10 +150,10 @@ public async Task Should_CreateOrder_When_ValidOrderProvided()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     var repository = new OrderRepository(context);
-    
+
     // Act & Assert
     // Test implementation
 }
@@ -165,10 +165,10 @@ public async Task Should_UpdateOrder_When_OrderExists()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // Unique name
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     var repository = new OrderRepository(context);
-    
+
     // Act & Assert
     // Test implementation
 }
@@ -183,10 +183,10 @@ public async Task Should_CreateOrder_When_ValidOrderProvided()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: "TestDatabase") // Shared name
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     var repository = new OrderRepository(context);
-    
+
     // Act & Assert
     // Test implementation
 }
@@ -198,10 +198,10 @@ public async Task Should_UpdateOrder_When_OrderExists()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: "TestDatabase") // Same shared name
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     var repository = new OrderRepository(context);
-    
+
     // Act & Assert
     // Test implementation - may interfere with other test
 }
@@ -210,7 +210,7 @@ public async Task Should_UpdateOrder_When_OrderExists()
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Seed test data from SeedDataFiles for realistic testing scenarios  
+**Description**: Seed test data from SeedDataFiles for realistic testing scenarios
 **Examples**:
 <correct-example>
 ```csharp
@@ -221,16 +221,16 @@ public async Task Should_QueryOrdersByCustomer_When_CustomerHasOrders()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     await SeedTestDataAsync(context); // Load from SeedDataFiles
-    
+
     var repository = new OrderRepository(context);
     var customerId = Guid.Parse("12345678-1234-1234-1234-123456789012");
-    
+
     // Act
     var orders = await repository.GetOrdersByCustomerAsync(customerId);
-    
+
     // Assert
     orders.ShouldNotBeEmpty();
     orders.All(o => o.CustomerId == customerId).ShouldBeTrue();
@@ -242,7 +242,7 @@ private static async Task SeedTestDataAsync(OrderDbContext context)
         File.ReadAllText("Src/SeedDataFiles/customers.json"));
     var orders = JsonSerializer.Deserialize<List<Order>>(
         File.ReadAllText("Src/SeedDataFiles/orders.json"));
-    
+
     context.Customers.AddRange(customers);
     context.Orders.AddRange(orders);
     await context.SaveChangesAsync();
@@ -258,16 +258,16 @@ public async Task Should_QueryOrdersByCustomer_When_CustomerHasOrders()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     // No seed data - empty database
-    
+
     var repository = new OrderRepository(context);
     var customerId = Guid.NewGuid();
-    
+
     // Act
     var orders = await repository.GetOrdersByCustomerAsync(customerId);
-    
+
     // Assert
     orders.ShouldBeEmpty(); // Always empty due to no seed data
 }
@@ -276,7 +276,7 @@ public async Task Should_QueryOrdersByCustomer_When_CustomerHasOrders()
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Test complex queries and LINQ operations with realistic data  
+**Description**: Test complex queries and LINQ operations with realistic data
 **Examples**:
 <correct-example>
 ```csharp
@@ -287,15 +287,15 @@ public async Task Should_GetOrdersWithProducts_When_ComplexQueryExecuted()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     await SeedTestDataAsync(context);
-    
+
     var repository = new OrderRepository(context);
-    
+
     // Act
     var ordersWithProducts = await repository.GetOrdersWithProductsAsync();
-    
+
     // Assert
     ordersWithProducts.ShouldNotBeEmpty();
     ordersWithProducts.All(o => o.Items.Any()).ShouldBeTrue();
@@ -312,12 +312,12 @@ public async Task Should_GetOrdersWithProducts_When_ComplexQueryExecuted()
     var mockContext = Substitute.For<IOrderDbContext>();
     var mockDbSet = Substitute.For<DbSet<Order>>();
     mockContext.Orders.Returns(mockDbSet);
-    
+
     var repository = new OrderRepository(mockContext);
-    
+
     // Act
     var ordersWithProducts = await repository.GetOrdersWithProductsAsync();
-    
+
     // Assert
     ordersWithProducts.ShouldNotBeNull(); // Mocked - doesn't test real query
 }
@@ -326,7 +326,7 @@ public async Task Should_GetOrdersWithProducts_When_ComplexQueryExecuted()
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Never mock SaveChanges - use real database operations  
+**Description**: Never mock SaveChanges - use real database operations
 **Examples**:
 <correct-example>
 ```csharp
@@ -337,14 +337,14 @@ public async Task Should_SaveChanges_When_OrderAdded()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     using var context = new OrderDbContext(options);
     var repository = new OrderRepository(context);
     var order = new Order { CustomerName = "John Doe", TotalAmount = 100.00m };
-    
+
     // Act
     var result = await repository.SaveAsync(order);
-    
+
     // Assert
     result.IsSuccess.ShouldBeTrue();
     context.Orders.ShouldContain(o => o.CustomerName == "John Doe");
@@ -362,13 +362,13 @@ public async Task Should_SaveChanges_When_OrderAdded()
     var mockDbSet = Substitute.For<DbSet<Order>>();
     mockContext.Orders.Returns(mockDbSet);
     mockContext.SaveChangesAsync().Returns(1);
-    
+
     var repository = new OrderRepository(mockContext);
     var order = new Order { CustomerName = "John Doe", TotalAmount = 100.00m };
-    
+
     // Act
     var result = await repository.SaveAsync(order);
-    
+
     // Assert
     result.IsSuccess.ShouldBeTrue(); // Mocked - doesn't test real persistence
 }
@@ -377,7 +377,7 @@ public async Task Should_SaveChanges_When_OrderAdded()
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Use proper disposal patterns for DbContext in tests  
+**Description**: Use proper disposal patterns for DbContext in tests
 **Examples**:
 <correct-example>
 ```csharp
@@ -388,10 +388,10 @@ public async Task Should_DisposeContext_When_TestCompletes()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     using var context = new OrderDbContext(options); // Proper disposal
     var repository = new OrderRepository(context);
-    
+
     // Act & Assert
     // Test implementation
 }
@@ -406,10 +406,10 @@ public async Task Should_DisposeContext_When_TestCompletes()
     var options = new DbContextOptionsBuilder<OrderDbContext>()
         .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString())
         .Options;
-    
+
     var context = new OrderDbContext(options); // No disposal
     var repository = new OrderRepository(context);
-    
+
     // Act & Assert
     // Test implementation - context not disposed
 }

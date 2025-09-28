@@ -2,7 +2,7 @@
 
 ## 1. Executive Summary
 
-The ExxerAI system is a C#/.NET-based orchestration framework designed for managing contextual and persona-based interactions with Large Language Models (LLMs). 
+The ExxerAI system is a C#/.NET-based orchestration framework designed for managing contextual and persona-based interactions with Large Language Models (LLMs).
 Built as a modular, extensible sister project to an existing invoice-to-PDF application, ExxerAI leverages modern .NET technologies to support dynamic workflows, multi-agent reasoning, and vectorized memory.
 
 ---
@@ -128,31 +128,31 @@ The system implements intelligent document ingestion from Google Drive with vers
 flowchart TD
     GD["📁 Google Drive<br/>Watch API"] --> DW["👁️ Document Watch<br/>Service"]
     DW --> |"New/Modified"| DC["🔍 Document Change<br/>Detector"]
-    
+
     DC --> VD["🔄 Version Detection<br/>Engine"]
     VD --> |"Same Content Hash"| SKIP["⏭️ Skip Processing<br/>(Already Indexed)"]
     VD --> |"Content Changed"| UPDATE["🔄 Update Process"]
     VD --> |"New Document"| NEW["✨ New Process"]
     VD --> |"Uncertain"| NOTIFY["📧 Human Verification"]
-    
+
     UPDATE --> EXT["📄 Content Extraction"]
     NEW --> EXT
     NOTIFY --> |"User Decision"| EXT
-    
+
     EXT --> HASH["🔐 Generate Hash<br/>SHA-256 + Metadata"]
     HASH --> EMB["🧠 Generate<br/>Embeddings"]
     EMB --> STORE["💾 Store Blob +<br/>Vector + Index"]
-    
+
     subgraph "Deletion Handling"
         DEL["🗑️ Document Deleted<br/>on Drive"] --> MARK["🔒 Mark as Deleted<br/>(Keep Embeddings)"]
         MARK --> IDX["📊 Update Index<br/>(Status: Deleted)"]
     end
-    
+
     classDef processStyle fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
     classDef decisionStyle fill:#fff3e0,stroke:#ef6c00,stroke-width:2px
     classDef storageStyle fill:#e8f5e8,stroke:#2e7d32,stroke-width:2px
     classDef alertStyle fill:#ffebee,stroke:#c62828,stroke-width:2px
-    
+
     class GD,DW,EXT,HASH,EMB processStyle
     class DC,VD decisionStyle
     class STORE,IDX storageStyle
@@ -277,7 +277,7 @@ public class Agent
     public Persona PersonaProfile { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime LastActiveAt { get; private set; }
-    
+
     public Agent(string agentType, Persona persona, Dictionary<string, object> capabilities)
     {
         AgentId = Guid.NewGuid().ToString();
@@ -288,13 +288,13 @@ public class Agent
         CreatedAt = DateTime.UtcNow;
         LastActiveAt = DateTime.UtcNow;
     }
-    
+
     public void UpdateState(AgentState newState)
     {
         CurrentState = newState;
         LastActiveAt = DateTime.UtcNow;
     }
-    
+
     public bool CanHandle(string capability) => Capabilities.ContainsKey(capability);
     public T GetCapability<T>(string capability) => (T)Capabilities[capability];
 }
@@ -307,7 +307,7 @@ public class Persona
     public List<PromptTemplate> Templates { get; private set; }
     public Dictionary<string, string> Traits { get; private set; }
     public DateTime CreatedAt { get; private set; }
-    
+
     public Persona(string name, string role, Dictionary<string, string> traits)
     {
         Id = Guid.NewGuid().ToString();
@@ -317,7 +317,7 @@ public class Persona
         Templates = new List<PromptTemplate>();
         CreatedAt = DateTime.UtcNow;
     }
-    
+
     public void AddTemplate(PromptTemplate template) => Templates.Add(template);
     public PromptTemplate GetTemplate(string contextTag) => Templates.FirstOrDefault(t => t.ContextTag == contextTag);
     public string GetTrait(string key) => Traits.GetValueOrDefault(key, string.Empty);
@@ -331,7 +331,7 @@ public class PromptTemplate
     public int Version { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public Dictionary<string, string> Parameters { get; private set; }
-    
+
     public PromptTemplate(string templateText, string contextTag, Dictionary<string, string> parameters = null)
     {
         Id = Guid.NewGuid().ToString();
@@ -341,7 +341,7 @@ public class PromptTemplate
         CreatedAt = DateTime.UtcNow;
         Parameters = parameters ?? new Dictionary<string, string>();
     }
-    
+
     public string RenderTemplate(Dictionary<string, object> context)
     {
         var result = TemplateText;
@@ -351,7 +351,7 @@ public class PromptTemplate
         }
         return result;
     }
-    
+
     public PromptTemplate CreateNewVersion(string updatedText)
     {
         return new PromptTemplate(updatedText, ContextTag, Parameters) { Version = Version + 1 };
@@ -368,7 +368,7 @@ public class ExecutionPlan
     public DateTime? StartedAt { get; private set; }
     public DateTime? CompletedAt { get; private set; }
     public string CreatedBy { get; private set; }
-    
+
     public ExecutionPlan(List<string> tags, string createdBy)
     {
         Id = Guid.NewGuid().ToString();
@@ -378,7 +378,7 @@ public class ExecutionPlan
         CreatedAt = DateTime.UtcNow;
         CreatedBy = createdBy;
     }
-    
+
     public void AddStep(ExecutionStep step) => Steps.Add(step);
     public void Start() { State = ExecutionState.Running; StartedAt = DateTime.UtcNow; }
     public void Complete() { State = ExecutionState.Completed; CompletedAt = DateTime.UtcNow; }
@@ -400,7 +400,7 @@ public class DocumentAsset
     public DocumentVersion Version { get; private set; }
     public List<string> RelatedDocuments { get; private set; }
     public Dictionary<string, string> Metadata { get; private set; }
-    
+
     public DocumentAsset(string fileName, byte[] content, string sourcePath)
     {
         Id = Guid.NewGuid().ToString();
@@ -412,7 +412,7 @@ public class DocumentAsset
         RelatedDocuments = new List<string>();
         Metadata = new Dictionary<string, string>();
     }
-    
+
     public void SetHash(string hash) => ContentHash = hash;
     public void SetEmbeddings(float[] embeddings) => Embeddings = embeddings;
     public void MarkAsActive() => Status = DocumentStatus.Active;
@@ -431,7 +431,7 @@ public class MemoryEntry
     public string SessionId { get; private set; }
     public Dictionary<string, object> Context { get; private set; }
     public float[] Embeddings { get; private set; }
-    
+
     public MemoryEntry(string type, string content, string sessionId, TimeSpan? ttl = null)
     {
         Id = Guid.NewGuid().ToString();
@@ -442,7 +442,7 @@ public class MemoryEntry
         ExpiresAt = ttl.HasValue ? DateTime.UtcNow.Add(ttl.Value) : null;
         Context = new Dictionary<string, object>();
     }
-    
+
     public bool IsExpired() => ExpiresAt.HasValue && DateTime.UtcNow > ExpiresAt.Value;
     public void SetEmbeddings(float[] embeddings) => Embeddings = embeddings;
     public void AddContext(string key, object value) => Context[key] = value;
@@ -594,14 +594,14 @@ public interface IAgent
     string AgentType { get; }
     AgentState CurrentState { get; }
     Dictionary<string, object> Capabilities { get; }
-    
+
     Task<AgentResult> ExecuteAsync(AgentContext context);
     Task<bool> CanHandleAsync(AgentContext context);
     Task InitializeAsync(Dictionary<string, object> parameters);
     Task<AgentState> GetStateAsync();
     Task SetStateAsync(AgentState state);
     Task DisposeAsync();
-    
+
     event EventHandler<AgentStateChangedEventArgs> StateChanged;
 }
 
@@ -1498,7 +1498,7 @@ $folders = @{
     "src/ExxerAI.Domain/ValueObjects" = "AgentState.cs"
     "src/ExxerAI.Domain/Enums" = "ExecutionState.cs"
     "src/ExxerAI.Domain/Events" = "AgentStateChangedEvent.cs"
-    
+
     # Application Layer
     "src/ExxerAI.Application/Interfaces" = "IAgent.cs"
     "src/ExxerAI.Application/Services" = "AgentOrchestrationService.cs"
@@ -1506,7 +1506,7 @@ $folders = @{
     "src/ExxerAI.Application/DTOs" = "AgentRequest.cs"
     "src/ExxerAI.Application/DTOs/Extensions" = "AgentExtensions.cs"
     "src/ExxerAI.Application/Behaviors" = "LoggingBehavior.cs"
-    
+
     # Infrastructure Layer
     "src/ExxerAI.Infrastructure/LLM/OpenAI" = "OpenAIClient.cs"
     "src/ExxerAI.Infrastructure/LLM/Ollama" = ".gitkeep"
@@ -1526,7 +1526,7 @@ $folders = @{
     "src/ExxerAI.Infrastructure/Files/PDF" = "PdfPigProcessor.cs"
     "src/ExxerAI.Infrastructure/Files/Excel" = "ClosedXmlProcessor.cs"
     "src/ExxerAI.Infrastructure/Files/Markdown" = "MarkdigProcessor.cs"
-    
+
     # Presentation Layer
     "src/ExxerAI.WebAPI" = "Program.cs"
     "src/ExxerAI.WebAPI/Controllers" = "AgentsController.cs"
@@ -1540,7 +1540,7 @@ $folders = @{
     "src/ExxerAI.BlazorUI/wwwroot" = ".gitkeep"
     "src/ExxerAI.CLI" = "Program.cs"
     "src/ExxerAI.CLI/Commands" = "AgentCommands.cs"
-    
+
     # Test Projects
     "tests/ExxerAI.Domain.Tests" = "ExxerAI.Domain.Tests.csproj"
     "tests/ExxerAI.Domain.Tests/Entities" = "AgentTests.cs"
@@ -1559,7 +1559,7 @@ $folders = @{
     "tests/ExxerAI.IntegrationTests/Scenarios" = "DocumentIngestionScenarioTests.cs"
     "tests/ExxerAI.IntegrationTests/Fixtures" = "TestFixture.cs"
     "tests/ExxerAI.PerformanceTests" = "ExxerAI.PerformanceTests.csproj"
-    
+
     # Documentation & Tools
     "docs/architecture" = "README.md"
     "docs/api" = "openapi.yaml"
@@ -1569,7 +1569,7 @@ $folders = @{
     "tools/migrations" = ".gitkeep"
     "tools/scripts" = "setup-dev-env.ps1"
     "tools/dev-setup" = ".gitkeep"
-    
+
     # Shared Package
     "packages/ExxerAI.Shared" = "ExxerAI.Shared.csproj"
     "packages/ExxerAI.Shared/Constants" = "ApplicationConstants.cs"
@@ -1582,13 +1582,13 @@ $folders = @{
 foreach ($folder in $folders.Keys) {
     $fullPath = Join-Path $SolutionPath $folder
     $fileName = $folders[$folder]
-    
+
     # Create directory
     New-Item -ItemType Directory -Path $fullPath -Force | Out-Null
-    
+
     # Create file (either .gitkeep or actual file)
     $filePath = Join-Path $fullPath $fileName
-    
+
     if ($fileName -eq ".gitkeep") {
         "# This file keeps the directory in Git`n# Remove this file when adding actual content" | Out-File -FilePath $filePath -Encoding UTF8
         Write-Host "Created: $folder/.gitkeep" -ForegroundColor DarkYellow
@@ -1603,9 +1603,9 @@ foreach ($folder in $folders.Keys) {
 # Function to generate appropriate file stubs
 function Get-FileStub {
     param($FileName, $FolderPath)
-    
+
     $namespace = ($FolderPath -replace "src/", "" -replace "/", ".").Split("/")[0]
-    
+
     switch -Regex ($FileName) {
         "\.cs$" {
             if ($FileName.EndsWith("Tests.cs")) {
@@ -1623,10 +1623,10 @@ public class $($FileName -replace "\.cs", "")
     {
         // Arrange
         var expected = true;
-        
+
         // Act
         var actual = true;
-        
+
         // Assert
         actual.ShouldBe(expected);
     }
@@ -1725,7 +1725,7 @@ $rootFiles = @{
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <!-- Core Framework -->
     <PackageVersion Include="Microsoft.AspNetCore.App" Version="8.0.0" />
@@ -1733,12 +1733,12 @@ $rootFiles = @{
     <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Logging" Version="8.0.0" />
-    
+
     <!-- AI & LLM Integration -->
     <PackageVersion Include="Microsoft.SemanticKernel" Version="1.0.0" />
     <PackageVersion Include="Azure.AI.OpenAI" Version="1.0.0" />
     <PackageVersion Include="OllamaSharp" Version="1.0.0" />
-    
+
     <!-- Data Access & Storage -->
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
     <PackageVersion Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
@@ -1748,13 +1748,13 @@ $rootFiles = @{
     <PackageVersion Include="LiteDB" Version="5.0.21" />
     <PackageVersion Include="MongoDB.Driver" Version="2.25.0" />
     <PackageVersion Include="Qdrant.Client" Version="1.7.0" />
-    
+
     <!-- Authentication & Security -->
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
     <PackageVersion Include="Azure.Security.KeyVault.Secrets" Version="4.6.0" />
     <PackageVersion Include="BCrypt.Net-Next" Version="4.0.3" />
-    
+
     <!-- Observability & Monitoring -->
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="7.0.1" />
@@ -1763,7 +1763,7 @@ $rootFiles = @{
     <PackageVersion Include="Serilog.Sinks.Demystify" Version="1.0.2" />
     <PackageVersion Include="prometheus-net.AspNetCore" Version="8.2.1" />
     <PackageVersion Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.0" />
-    
+
     <!-- Testing & Quality -->
     <PackageVersion Include="xUnit" Version="2.8.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
@@ -1771,28 +1771,28 @@ $rootFiles = @{
     <PackageVersion Include="Shouldly" Version="4.2.1" />
     <PackageVersion Include="Meziantou.Extensions.Logging.Xunit" Version="1.0.9" />
     <PackageVersion Include="Bogus" Version="35.5.1" />
-    
+
     <!-- Resilience & Reliability -->
     <PackageVersion Include="Polly" Version="8.3.1" />
     <PackageVersion Include="HybridCache" Version="1.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="8.0.0" />
-    
+
     <!-- Document Processing -->
     <PackageVersion Include="PdfPig" Version="0.1.8" />
     <PackageVersion Include="ClosedXML" Version="0.102.2" />
     <PackageVersion Include="Markdig" Version="0.37.0" />
     <PackageVersion Include="HtmlAgilityPack" Version="1.11.59" />
-    
+
     <!-- External Integrations -->
     <PackageVersion Include="Google.Apis.Drive.v3" Version="1.68.0.3383" />
     <PackageVersion Include="Google.Apis.Auth" Version="1.68.0" />
     <PackageVersion Include="Google.Apis.Sheets.v4" Version="1.68.0.3383" />
-    
+
     <!-- Validation & Serialization -->
     <PackageVersion Include="FluentValidation" Version="11.9.0" />
     <PackageVersion Include="System.Text.Json" Version="8.0.0" />
     <PackageVersion Include="YamlDotNet" Version="15.1.2" />
-    
+
     <!-- Result Patterns -->
     <PackageVersion Include="FluentResults" Version="3.15.2" />
   </ItemGroup>
@@ -2226,7 +2226,7 @@ MIT License - see LICENSE file for details.
 foreach ($file in $rootFiles.Keys) {
     $filePath = Join-Path $SolutionPath $file
     $content = $rootFiles[$file]
-    
+
     if ($content -eq "") {
         Write-Host "Skipping: $file (will be created by dotnet CLI)" -ForegroundColor DarkGray
     } else {
@@ -2277,7 +2277,7 @@ flowchart TD
             MMS["🗄️ Memory Management<br/>Service"]
             DIS["📁 Document Ingestion<br/>Service"]
         end
-        
+
         subgraph "Agents"
             OA["🎯 Orchestrator Agent"]
             PA["📋 Planner Agent"]
@@ -2285,7 +2285,7 @@ flowchart TD
             RA["🔍 Retriever Agent"]
             RSA["💬 Responder Agent"]
         end
-        
+
         subgraph "Cross-Cutting"
             VB["✅ Validation Behavior"]
             LB["📝 Logging Behavior"]
@@ -2303,7 +2303,7 @@ flowchart TD
             PT["📝 Prompt Template"]
             DA["📄 Document Asset"]
         end
-        
+
         subgraph "Value Objects"
             AST["⚙️ Agent State"]
             ER["✅ Execution Result"]
@@ -2317,25 +2317,25 @@ flowchart TD
             OAI["🧠 OpenAI Client"]
             OL["🏠 Ollama Client"]
         end
-        
+
         subgraph "Data Storage"
             PG["🐘 PostgreSQL<br/>Vector + Relational"]
             RD["⚡ Redis Cache"]
             LDB["💾 LiteDB<br/>Embedded Storage"]
         end
-        
+
         subgraph "External APIs"
             GD["📁 Google Drive API<br/>Document Watch<br/>Version Detection<br/>Content Extraction"]
             GS["📊 Google Sheets API"]
             EMAIL["📧 Email Notification<br/>Service"]
         end
-        
+
         subgraph "Monitoring & Logging"
             SL["📊 Serilog + Seq"]
             PM["📈 Prometheus"]
             HC["❤️ Health Checks"]
         end
-        
+
         subgraph "File Processing"
             PDF["📄 PdfPig Processor"]
             XLS["📊 ClosedXML Processor"]
@@ -2385,7 +2385,7 @@ flowchart TD
     classDef applicationStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:3px,color:#000
     classDef domainStyle fill:#e1f5fe,stroke:#01579b,stroke-width:3px,color:#000
     classDef infrastructureStyle fill:#e8f5e8,stroke:#1b5e20,stroke-width:3px,color:#000
-    
+
     class UI1,UI2,UI3 presentationStyle
     class AS,WES,PMS,MMS,DIS,OA,PA,EA,RA,RSA,VB,LB,RB,MB applicationStyle
     class AG,PE,EP,ME,PT,DA,AST,ER,VR,DH domainStyle
@@ -2618,4 +2618,3 @@ ExxerAI.sln
 📊 **Observable**: Built-in monitoring, logging, and health checks  
 🔄 **Scalable**: Horizontal scaling through stateless design  
 🛡️ **Secure**: Security concerns isolated in infrastructure layer
-

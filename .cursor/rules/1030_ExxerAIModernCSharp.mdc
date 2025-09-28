@@ -18,23 +18,23 @@ public class Agent
     public string Name { get; init; } = string.Empty;
     public AgentStatus Status { get; init; }
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
-    
+
     public bool IsActive => Status == AgentStatus.Active;
     public bool HasTasks => Tasks?.Any() == true;
     public int TaskCount => Tasks?.Count ?? 0;
-    
+
     public override string ToString() => $"Agent: {Name} ({Status})";
 }
 
 public class AgentService
 {
     private readonly IAgentRepository _repository;
-    
+
     public AgentService(IAgentRepository repository) => _repository = repository;
-    
+
     public bool IsAgentValid(Agent agent) => agent != null && !string.IsNullOrEmpty(agent.Name);
-    
-    public async Task<Result<bool>> ValidateAgentAsync(Agent agent) => 
+
+    public async Task<Result<bool>> ValidateAgentAsync(Agent agent) =>
         await _repository.ExistsAsync(agent.Id);
 }
 ```
@@ -47,7 +47,7 @@ public class Agent
     public string Name { get; init; } = string.Empty;
     public AgentStatus Status { get; init; }
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
-    
+
     public bool IsActive
     {
         get
@@ -55,7 +55,7 @@ public class Agent
             return Status == AgentStatus.Active;
         }
     }
-    
+
     public override string ToString()
     {
         return $"Agent: {Name} ({Status})";
@@ -132,7 +132,7 @@ public class Agent
     public AgentConfiguration Configuration { get; init; } = new();
     public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; init; } = DateTime.UtcNow;
-    
+
     // Immutable collections
     public IReadOnlyList<Task> Tasks { get; init; } = Array.Empty<Task>();
     public IReadOnlyDictionary<string, string> Metadata { get; init; } = new Dictionary<string, string>();
@@ -183,7 +183,7 @@ public async Task<Result<IEnumerable<Agent>>> GetAllAgentsAsync(CancellationToke
     try
     {
         var result = await _repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
-        
+
         if (result.IsFailure)
         {
             return Result<IEnumerable<Agent>>.WithFailure(result.Error ?? "Failed to retrieve agents");
@@ -206,7 +206,7 @@ public async Task<Result<bool>> ProcessAgentAsync(Agent agent)
 {
     await using var connection = await _database.CreateConnectionAsync();
     await using var transaction = await connection.BeginTransactionAsync();
-    
+
     try
     {
         var result = await _repository.AddAsync(agent, cancellationToken).ConfigureAwait(false);
@@ -250,10 +250,10 @@ public async Task<Result<string>> ProcessDocumentAsync(string content)
 {
     using var scope = _serviceProvider.CreateScope();
     using var logger = scope.ServiceProvider.GetRequiredService<ILogger<DocumentProcessor>>();
-    
+
     await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(content));
     await using var reader = new StreamReader(stream);
-    
+
     var processedContent = await reader.ReadToEndAsync();
     return Result<string>.Success(processedContent);
 }
@@ -263,8 +263,8 @@ public async Task<Result<bool>> ValidateConfigurationAsync()
 {
     using var httpClient = new HttpClient();
     using var response = await httpClient.GetAsync("https://api.example.com/health");
-    
-    return response.IsSuccessStatusCode 
+
+    return response.IsSuccessStatusCode
         ? Result<bool>.Success(true)
         : Result<bool>.WithFailure("Configuration validation failed");
 }
@@ -319,7 +319,7 @@ public async Task<Result<AgentStatistics>> GetAgentStatisticsAsync(CancellationT
         return Result<AgentStatistics>.WithFailure(agents.Error ?? "Failed to retrieve agents");
 
     var agentList = agents.Value.ToList(); // Materialize once
-    
+
     var statistics = new AgentStatistics
     {
         TotalAgents = agentList.Count,

@@ -1,0 +1,13 @@
+<Project>
+
+  <!-- ExxerRules Analyzer Package Targets -->
+  <PropertyGroup>
+    <ExxerRulesVersion Condition="'$(ExxerRulesVersion)' == ''">1.0.2</ExxerRulesVersion>
+  </PropertyGroup>
+
+  <!-- Display package information -->
+  <Target Name="ExxerRulesInfo" BeforeTargets="Build" Condition="'$(ExxerRulesAnalyzersEnabled)' == 'true'">
+    <Message Text="ExxerRules analyzers v$(ExxerRulesVersion) enabled for project $(MSBuildProjectName)" Importance="normal" />
+  </Target>
+
+</Project>

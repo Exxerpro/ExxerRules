@@ -22,7 +22,7 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
         return Result<Agent>.WithFailure("Agent ID cannot be empty");
 
     var agent = await _repository.GetByIdAsync(agentId, cancellationToken);
-    return agent != null 
+    return agent != null
         ? Result<Agent>.Success(agent)
         : Result<Agent>.WithFailure($"Agent not found with ID: {agentId}");
 }

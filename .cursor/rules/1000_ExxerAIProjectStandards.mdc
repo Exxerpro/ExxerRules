@@ -27,7 +27,7 @@ public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities
 
     // Functional composition
     var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
-    
+
     return await _repository.AddAsync(agent, cancellationToken)
         .Map(createdAgent => createdAgent)
         .OnSuccess(agent => _logger.LogInformation("Created agent: {AgentId}", agent.Id))
@@ -46,7 +46,7 @@ public async Task<Agent> CreateAgentAsync(string name, AgentCapabilities capabil
 
         var agent = new Agent { Name = name, Capabilities = capabilities };
         var createdAgent = await _repository.AddAsync(agent);
-        
+
         _logger.LogInformation("Created agent: {AgentId}", createdAgent.Id);
         return createdAgent;
     }
@@ -74,7 +74,7 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
         return Result<Agent>.WithFailure("Agent ID cannot be empty");
 
     var result = await _repository.GetByIdAsync(agentId, cancellationToken);
-    
+
     // Kotlin-style null safety
     if (result.IsSuccessMayBeNull)
     {
@@ -87,7 +87,7 @@ public async Task<Result<Agent>> GetAgentAsync(Guid agentId, CancellationToken c
             return Result<Agent>.WithFailure("Agent not found");
         }
     }
-    
+
     return result; // Return failure result
 }
 
@@ -140,7 +140,7 @@ namespace ExxerAI.Domain.Entities
         public AgentCapabilities Capabilities { get; init; } = new();
         public AgentStatus Status { get; init; }
         public DateTime CreatedAt { get; init; } = DateTime.UtcNow;
-        
+
         public bool IsActive => Status == AgentStatus.Active;
         public bool HasTasks => Tasks?.Any() == true;
     }
@@ -175,7 +175,7 @@ namespace ExxerAI.Infrastructure.Repositories
     public class InMemoryAgentRepository : IAgentRepository
     {
         private readonly ConcurrentDictionary<Guid, Agent> _agents = new();
-        
+
         public async Task<Result<Agent>> AddAsync(Agent agent, CancellationToken cancellationToken = default)
         {
             if (cancellationToken.IsCancellationRequested)
@@ -200,7 +200,7 @@ namespace ExxerAI.Services
     public class AgentService
     {
         private readonly ConcurrentDictionary<Guid, Agent> _agents = new(); // Infrastructure in service
-        
+
         public async Task<Agent> CreateAgentAsync(string name)
         {
             // Direct data access in service layer
@@ -225,11 +225,11 @@ public class AgentService : IAgentService
     private readonly ILogger<AgentService> _logger;
 
     // Expression-bodied constructor
-    public AgentService(IAgentRepository repository, ILogger<AgentService> logger) => 
+    public AgentService(IAgentRepository repository, ILogger<AgentService> logger) =>
         (_repository, _logger) = (repository, logger);
 
     // Expression-bodied methods
-    public bool IsAgentValid(Agent agent) => 
+    public bool IsAgentValid(Agent agent) =>
         agent?.Name?.Value?.Length > 0 == true;
 
     // Switch expressions
@@ -336,7 +336,7 @@ public class AgentServiceTests
         var repository = Substitute.For<IAgentRepository>();
         repository.AddAsync(Arg.Any<Agent>(), Arg.Any<CancellationToken>())
             .Returns(Result<Agent>.Success(new Agent { Name = new AgentName(name) }));
-        
+
         var logger = new XunitLogger<AgentService>();
         var service = new AgentService(repository, logger);
 
@@ -400,10 +400,10 @@ public class AgentServiceTests
         var mock = new Mock<IAgentRepository>();
         mock.Setup(x => x.AddAsync(It.IsAny<Agent>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Result<Agent>.Success(new Agent()));
-        
+
         var service = new AgentService(mock.Object, null);
         var result = await service.CreateAgentAsync("test", new AgentCapabilities());
-        
+
         result.Should().NotBeNull();
         result.IsSuccess.Should().BeTrue();
     }
@@ -431,7 +431,7 @@ public class AgentService : IAgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent with name: {AgentName}", name);
-        
+
         if (cancellationToken.IsCancellationRequested)
         {
             _logger.LogWarning("Operation cancelled while creating agent: {AgentName}", name);
@@ -440,18 +440,18 @@ public class AgentService : IAgentService
 
         var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
-            _logger.LogInformation("Successfully created agent with ID: {AgentId}, Name: {AgentName}", 
+            _logger.LogInformation("Successfully created agent with ID: {AgentId}, Name: {AgentName}",
                 agent.Id, agent.Name.Value);
         }
         else
         {
-            _logger.LogError("Failed to create agent: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Failed to create agent: {AgentName}, Errors: {Errors}",
                 name, string.Join(", ", result.Errors));
         }
-        
+
         return result;
     }
 }
@@ -471,10 +471,10 @@ public class AgentService : IAgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         Console.WriteLine($"Creating agent: {name}"); // Poor logging
-        
+
         var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             Console.WriteLine("Agent created successfully"); // Poor logging
@@ -483,7 +483,7 @@ public class AgentService : IAgentService
         {
             Console.WriteLine($"Failed to create agent: {result.Error}"); // Poor logging
         }
-        
+
         return result;
     }
 }

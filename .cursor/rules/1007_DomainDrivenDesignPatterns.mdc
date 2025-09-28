@@ -2,17 +2,17 @@
 
 ## Meta
 
-**Title**: Domain-Driven Design Patterns  
-**Description**: Establishes comprehensive standards for Domain-Driven Design patterns including entities, value objects, aggregates, and domain services  
-**Created-at**: 2025-01-05T23:50:00Z  
-**Last-updated-at**: 2025-01-05T23:50:00Z  
-**Applies-to**: Domain layer, business logic, entity design  
-**File-matcher**: *.cs files in Domain layer  
+**Title**: Domain-Driven Design Patterns
+**Description**: Establishes comprehensive standards for Domain-Driven Design patterns including entities, value objects, aggregates, and domain services
+**Created-at**: 2025-01-05T23:50:00Z
+**Last-updated-at**: 2025-01-05T23:50:00Z
+**Applies-to**: Domain layer, business logic, entity design
+**File-matcher**: *.cs files in Domain layer
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Design entities with identity and lifecycle management  
+**Description**: Design entities with identity and lifecycle management
 **Examples**:
 <correct-example>
 ```csharp
@@ -30,7 +30,7 @@ public class Agent
     // Domain methods that enforce business rules
     public bool CanAcceptTask(string taskType)
     {
-        return Status == AgentStatus.Active && 
+        return Status == AgentStatus.Active &&
                Capabilities.SupportedTaskTypes.Contains(taskType) &&
                Tasks.Count < Capabilities.MaxConcurrentTasks;
     }
@@ -95,7 +95,7 @@ public class AgentService
 {
     public bool CanAgentAcceptTask(Agent agent, string taskType)
     {
-        return agent.Status == AgentStatus.Active && 
+        return agent.Status == AgentStatus.Active &&
                agent.Capabilities.SupportedTaskTypes.Contains(taskType) &&
                agent.Tasks.Count < agent.Capabilities.MaxConcurrentTasks;
     }
@@ -114,7 +114,7 @@ public class AgentService
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Use value objects for immutable concepts without identity  
+**Description**: Use value objects for immutable concepts without identity
 **Examples**:
 <correct-example>
 ```csharp
@@ -228,7 +228,7 @@ public record Email
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Design aggregates with clear boundaries and consistency rules  
+**Description**: Design aggregates with clear boundaries and consistency rules
 **Examples**:
 <correct-example>
 ```csharp
@@ -392,7 +392,7 @@ public class OrderService
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use domain services for business logic that doesn't belong to entities  
+**Description**: Use domain services for business logic that doesn't belong to entities
 **Examples**:
 <correct-example>
 ```csharp
@@ -430,7 +430,7 @@ public class PricingCalculationService
     public decimal CalculateOrderTotal(Order order, PricingRules rules)
     {
         var baseTotal = order.Items.Sum(item => item.Quantity * item.UnitPrice);
-        
+
         var discount = rules.CalculateDiscount(order);
         var tax = rules.CalculateTax(order);
         var shipping = rules.CalculateShipping(order);
@@ -492,7 +492,7 @@ public class TaskService
     {
         if (agent.Tasks.Count >= agent.MaxTasks)
             throw new Exception("Agent is busy");
-        
+
         agent.Tasks.Add(task);
     }
 }
@@ -513,7 +513,7 @@ public class OrderRepository
         // Business logic should not be in repository
         if (order.TotalAmount < 0)
             throw new Exception("Invalid order total");
-        
+
         _context.Orders.Add(order);
         _context.SaveChanges();
     }
@@ -523,7 +523,7 @@ public class OrderRepository
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Use repositories to abstract data access and maintain aggregate boundaries  
+**Description**: Use repositories to abstract data access and maintain aggregate boundaries
 **Examples**:
 <correct-example>
 ```csharp
@@ -546,9 +546,9 @@ public class InMemoryAgentRepository : IAgentRepository
     public async Task<Result<Agent>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         await Task.Delay(1, cancellationToken); // Simulate async operation
-        
+
         var agent = _agents.FirstOrDefault(a => a.Id == id);
-        return agent != null 
+        return agent != null
             ? Result<Agent>.Success(agent)
             : Result<Agent>.WithFailure($"Agent not found with ID: {id}");
     }
@@ -562,7 +562,7 @@ public class InMemoryAgentRepository : IAgentRepository
     public async Task<Result<Agent>> AddAsync(Agent agent, CancellationToken cancellationToken = default)
     {
         await Task.Delay(1, cancellationToken);
-        
+
         if (_agents.Any(a => a.Id == agent.Id))
             return Result<Agent>.WithFailure($"Agent with ID {agent.Id} already exists");
 
@@ -603,7 +603,7 @@ public class AgentRepository
         // Business logic should not be in repository
         if (agent.Tasks.Count >= agent.MaxTasks)
             throw new Exception("Agent is busy");
-        
+
         agent.Tasks.Add(task);
         _context.SaveChanges();
     }

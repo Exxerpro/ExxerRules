@@ -42,15 +42,15 @@ public class AgentService
         try
         {
             _logger.LogInformation("Creating agent: {AgentName}", name);
-            
+
             // Track operation start
             _diagnostics.TrackOperationStart(diagnosticContext);
-            
+
             var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-            
+
             // Track operation completion
             _diagnostics.TrackOperationComplete(diagnosticContext, result.IsSuccess);
-            
+
             if (result.IsSuccess)
             {
                 _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
@@ -58,7 +58,7 @@ public class AgentService
             }
             else
             {
-                _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+                _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                     name, string.Join(", ", result.Errors));
                 _diagnostics.TrackFailure(diagnosticContext, result.Errors);
             }
@@ -92,9 +92,9 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -147,7 +147,7 @@ public class AgentService
 
         _debugService.LogDebugInfo(debugInfo);
         _logger.LogDebug("Starting agent creation with debug info: {@DebugInfo}", debugInfo);
-        
+
         if (cancellationToken.IsCancellationRequested)
         {
             _debugService.LogCancellation(debugInfo);
@@ -163,21 +163,21 @@ public class AgentService
         }
 
         var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         debugInfo.Result = result.IsSuccess ? "Success" : "Failure";
         debugInfo.Errors = result.Errors.ToArray();
-        
+
         _debugService.LogOperationResult(debugInfo);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
         }
         else
         {
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 name, string.Join(", ", result.Errors));
         }
 
@@ -203,9 +203,9 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -250,7 +250,7 @@ public class AgentService
         try
         {
             _logger.LogInformation("Creating agent: {AgentName}", name);
-            
+
             // Profile validation step
             using (var validationProfile = _profiler.BeginProfile("Validation"))
             {
@@ -277,7 +277,7 @@ public class AgentService
             {
                 var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
                 var result = await _repository.AddAsync(agent, cancellationToken);
-                
+
                 repositoryProfile.SetTag("result", result.IsSuccess ? "success" : "failure");
                 if (!result.IsSuccess)
                 {
@@ -290,7 +290,7 @@ public class AgentService
                 }
                 else
                 {
-                    _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+                    _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                         name, string.Join(", ", result.Errors));
                 }
 
@@ -325,9 +325,9 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -380,7 +380,7 @@ public class AgentService
         try
         {
             _logger.LogInformation("Creating agent: {AgentName}, CorrelationId: {CorrelationId}", name, correlationId);
-            
+
             if (cancellationToken.IsCancellationRequested)
             {
                 _errorCorrelation.TrackCancellation(errorContext);
@@ -397,17 +397,17 @@ public class AgentService
 
             var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
             var result = await _repository.AddAsync(agent, cancellationToken);
-            
+
             if (result.IsSuccess)
             {
                 _errorCorrelation.TrackSuccess(errorContext, result.Value.Id);
-                _logger.LogInformation("Agent created successfully: {AgentId}, CorrelationId: {CorrelationId}", 
+                _logger.LogInformation("Agent created successfully: {AgentId}, CorrelationId: {CorrelationId}",
                     result.Value.Id, correlationId);
             }
             else
             {
                 _errorCorrelation.TrackFailure(errorContext, result.Errors);
-                _logger.LogError("Agent creation failed: {AgentName}, CorrelationId: {CorrelationId}, Errors: {Errors}", 
+                _logger.LogError("Agent creation failed: {AgentName}, CorrelationId: {CorrelationId}, Errors: {Errors}",
                     name, correlationId, string.Join(", ", result.Errors));
             }
 
@@ -416,7 +416,7 @@ public class AgentService
         catch (Exception ex)
         {
             _errorCorrelation.TrackException(errorContext, ex);
-            _logger.LogError(ex, "Agent creation threw exception: {AgentName}, CorrelationId: {CorrelationId}", 
+            _logger.LogError(ex, "Agent creation threw exception: {AgentName}, CorrelationId: {CorrelationId}",
                 name, correlationId);
             throw;
         }
@@ -441,9 +441,9 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -497,7 +497,7 @@ public class DiagnosticMiddleware
         };
 
         _diagnostics.TrackRequestStart(diagnosticContext);
-        _logger.LogDebug("Request started: {Method} {Path}, CorrelationId: {CorrelationId}", 
+        _logger.LogDebug("Request started: {Method} {Path}, CorrelationId: {CorrelationId}",
             context.Request.Method, context.Request.Path, correlationId);
 
         var stopwatch = Stopwatch.StartNew();
@@ -505,19 +505,19 @@ public class DiagnosticMiddleware
         try
         {
             await _next(context);
-            
+
             stopwatch.Stop();
             _diagnostics.TrackRequestComplete(diagnosticContext, context.Response.StatusCode, stopwatch.ElapsedMilliseconds);
-            
-            _logger.LogInformation("Request completed: {Method} {Path}, Status: {StatusCode}, Duration: {DurationMs}ms, CorrelationId: {CorrelationId}", 
+
+            _logger.LogInformation("Request completed: {Method} {Path}, Status: {StatusCode}, Duration: {DurationMs}ms, CorrelationId: {CorrelationId}",
                 context.Request.Method, context.Request.Path, context.Response.StatusCode, stopwatch.ElapsedMilliseconds, correlationId);
         }
         catch (Exception ex)
         {
             stopwatch.Stop();
             _diagnostics.TrackRequestException(diagnosticContext, ex, stopwatch.ElapsedMilliseconds);
-            
-            _logger.LogError(ex, "Request failed: {Method} {Path}, Duration: {DurationMs}ms, CorrelationId: {CorrelationId}", 
+
+            _logger.LogError(ex, "Request failed: {Method} {Path}, Duration: {DurationMs}ms, CorrelationId: {CorrelationId}",
                 context.Request.Method, context.Request.Path, stopwatch.ElapsedMilliseconds, correlationId);
             throw;
         }
@@ -540,16 +540,16 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
         }
         else
         {
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 name, string.Join(", ", result.Errors));
         }
 
@@ -575,9 +575,9 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         var result = await _repository.AddAsync(new Agent { Name = new AgentName(name), Capabilities = capabilities }, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -593,4 +593,3 @@ public class AgentService
 ```
 </incorrect-example>
 </requirement>
-

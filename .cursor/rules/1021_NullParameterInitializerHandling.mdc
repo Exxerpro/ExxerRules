@@ -1,6 +1,6 @@
 ---
 description: Constructor-Patterns-in-Functional.NET-Applications
-globs: 
+globs:
 alwaysApply: false
 ---
 
@@ -24,7 +24,7 @@ Encapsulate validation logic within the target class while preserving the existi
 ```csharp
 public class CommandRouter
 {
-     public Lock locl 
+     public Lock locl
     public static Result ValidateConstructorParameters(AgentCommands agentCommands, TaskCommands taskCommands, WorkflowCommands workflowCommands)
     {
         return ResultExtensions.ValidateNotNull(
@@ -154,4 +154,3 @@ public class SomeService
 | Static Validator Method   | Legacy preservation, quick validation     | Minimal changes, fast adoption              | Separate validation from instantiation    |
 | Static Builder Method     | Centralized creation logic                | Functional purity, encapsulation            | Requires transition to method-based usage |
 | Injectable Builder Class  | Full DI integration, complex systems      | High extensibility, clean separation        | DI setup required                         |
-

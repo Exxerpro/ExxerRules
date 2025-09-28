@@ -1,0 +1,34 @@
+namespace IndFusion.Mcp.Tests.Roslyn.Rewriters;
+
+/// <summary>
+/// Tests for Rewriters.
+/// </summary>
+public partial class RoslynTransformationTests
+{
+    /// <summary>
+    /// FieldIntroductionRewriter AddsFieldAndReplacesExpression.
+    /// </summary>
+    [Fact]
+    public void FieldIntroductionRewriter_AddsFieldAndReplacesExpression()
+    {
+        var tree = CSharpSyntaxTree.ParseText("class C{int Get(){return 1;}} ", cancellationToken: TestContext.Current.CancellationToken);
+        var root = tree.GetRoot(cancellationToken: TestContext.Current.CancellationToken);
+        var expr = SyntaxFactory.LiteralExpression(SyntaxKind.NumericLiteralExpression, SyntaxFactory.Literal(1));
+        var fieldRef = SyntaxFactory.IdentifierName("value");
+        var fieldDecl = SyntaxFactory.FieldDeclaration(
+                SyntaxFactory.VariableDeclaration(SyntaxFactory.ParseTypeName("int"))
+                    .AddVariables(SyntaxFactory.VariableDeclarator("value")
+                        .WithInitializer(SyntaxFactory.EqualsValueClause(expr))))
+            .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword));
+        var classNode = root.DescendantNodes().OfType<ClassDeclarationSyntax>().First();
+        var rewriter = new FieldIntroductionRewriter(expr, fieldRef, fieldDecl, classNode);
+        var newRoot = Formatter.Format(
+            rewriter.Visit(root)!,
+            new AdhocWorkspace(),
+            options: null,
+            cancellationToken: TestContext.Current.CancellationToken);
+        var text = newRoot.ToFullString();
+        Assert.Contains("private int value", text);
+        Assert.Contains("return value", text);
+    }
+}

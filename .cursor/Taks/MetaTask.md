@@ -2,7 +2,7 @@
 now, hep me to create a task for an agent imperative mode.
 
 The thone must be nice but asertive, direct but repetivie, add constraints
-add motivational prahses betwenn big steps, it must be a loop 
+add motivational prahses betwenn big steps, it must be a loop
 must include planing, delirables list, reporting, quality control, due diligence final and due diligence and follow the next pattenr,
 
 

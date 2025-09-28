@@ -2,17 +2,17 @@
 
 ## Meta
 
-**Title**: Clean Architecture Patterns  
-**Description**: Establishes comprehensive standards for Clean Architecture patterns including dependency inversion, layer separation, and hexagonal architecture  
-**Created-at**: 2025-01-05T23:55:00Z  
-**Last-updated-at**: 2025-01-05T23:55:00Z  
-**Applies-to**: All .NET applications, architecture design, dependency management  
-**File-matcher**: *.cs files across all layers  
+**Title**: Clean Architecture Patterns
+**Description**: Establishes comprehensive standards for Clean Architecture patterns including dependency inversion, layer separation, and hexagonal architecture
+**Created-at**: 2025-01-05T23:55:00Z
+**Last-updated-at**: 2025-01-05T23:55:00Z
+**Applies-to**: All .NET applications, architecture design, dependency management
+**File-matcher**: *.cs files across all layers
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Follow dependency inversion principle with interfaces in domain layer  
+**Description**: Follow dependency inversion principle with interfaces in domain layer
 **Examples**:
 <correct-example>
 ```csharp
@@ -129,7 +129,7 @@ namespace ExxerAI.Domain.Services
 
         public async Task<string> GenerateResponse(string prompt)
         {
-            var response = await _httpClient.PostAsync("https://api.openai.com/v1/chat/completions", 
+            var response = await _httpClient.PostAsync("https://api.openai.com/v1/chat/completions",
                 new StringContent(JsonSerializer.Serialize(new { prompt })));
             return await response.Content.ReadAsStringAsync();
         }
@@ -140,7 +140,7 @@ namespace ExxerAI.Domain.Services
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Organize code by layers with clear separation of concerns  
+**Description**: Organize code by layers with clear separation of concerns
 **Examples**:
 <correct-example>
 ```csharp
@@ -157,7 +157,7 @@ namespace ExxerAI.Domain
 
         public bool CanAcceptTask(string taskType)
         {
-            return Status == AgentStatus.Active && 
+            return Status == AgentStatus.Active &&
                    Capabilities.SupportedTaskTypes.Contains(taskType) &&
                    Tasks.Count < Capabilities.MaxConcurrentTasks;
         }
@@ -187,7 +187,7 @@ namespace ExxerAI.Application.Services
         public async Task<Result<Agent>> CreateAgentAsync(string name, string description, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
         {
             _logger.LogInformation("Creating agent: {AgentName}", name);
-            
+
             var agent = new Agent
             {
                 Name = name,
@@ -197,10 +197,10 @@ namespace ExxerAI.Application.Services
             };
 
             var result = await _agentRepository.AddAsync(agent, cancellationToken).ConfigureAwait(false);
-            
+
             if (result.IsSuccess)
                 _logger.LogInformation("Successfully created agent with ID: {AgentId}", agent.Id);
-            
+
             return result;
         }
     }
@@ -216,9 +216,9 @@ namespace ExxerAI.Infrastructure.Repositories
         public async Task<Result<Agent>> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             await Task.Delay(1, cancellationToken); // Simulate async operation
-            
+
             var agent = _agents.FirstOrDefault(a => a.Id == id);
-            return agent != null 
+            return agent != null
                 ? Result<Agent>.Success(agent)
                 : Result<Agent>.WithFailure($"Agent not found with ID: {id}");
         }
@@ -253,9 +253,9 @@ namespace ExxerAI.Api.Controllers
             CancellationToken cancellationToken = default)
         {
             var result = await _agentService.CreateAgentAsync(
-                request.Name, 
-                request.Description, 
-                request.Capabilities.ToDomain(), 
+                request.Name,
+                request.Description,
+                request.Capabilities.ToDomain(),
                 cancellationToken);
 
             if (result.IsFailure)
@@ -266,8 +266,8 @@ namespace ExxerAI.Api.Controllers
                     Errors = [result.Error ?? "Unknown error"]
                 });
 
-            return CreatedAtAction(nameof(GetAgentAsync), 
-                new { id = result.Value!.Id }, 
+            return CreatedAtAction(nameof(GetAgentAsync),
+                new { id = result.Value!.Id },
                 new ApiResponse<AgentResponse>
                 {
                     Success = true,
@@ -298,15 +298,15 @@ namespace ExxerAI.Services
             command.CommandText = "INSERT INTO Agents (Name, Description) VALUES (@name, @description)";
             command.Parameters.AddWithValue("@name", name);
             command.Parameters.AddWithValue("@description", description);
-            
+
             await command.ExecuteNonQueryAsync();
-            
+
             // External service call mixed with business logic
-            var response = await _httpClient.PostAsync("https://api.notification.com/send", 
+            var response = await _httpClient.PostAsync("https://api.notification.com/send",
                 new StringContent($"Agent {name} created"));
-            
+
             _logger.LogInformation("Agent created: {Name}", name);
-            
+
             return new Agent { Name = name, Description = description };
         }
     }
@@ -334,9 +334,9 @@ namespace ExxerAI.Api.Controllers
             command.CommandText = "INSERT INTO Agents (Name, Description) VALUES (@name, @description)";
             command.Parameters.AddWithValue("@name", request.Name);
             command.Parameters.AddWithValue("@description", request.Description);
-            
+
             await command.ExecuteNonQueryAsync();
-            
+
             return Ok(new { message = "Agent created" });
         }
     }
@@ -346,7 +346,7 @@ namespace ExxerAI.Api.Controllers
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use dependency injection with constructor injection  
+**Description**: Use dependency injection with constructor injection
 **Examples**:
 <correct-example>
 ```csharp
@@ -370,7 +370,7 @@ public class AgentService : IAgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, string description, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         var agent = new Agent
         {
             Name = name,
@@ -391,7 +391,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAgentService, AgentService>();
         services.AddScoped<ITaskService, TaskService>();
         services.AddScoped<IWorkflowService, WorkflowService>();
-        
+
         return services;
     }
 
@@ -400,7 +400,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAgentRepository, InMemoryAgentRepository>();
         services.AddScoped<ITaskRepository, InMemoryTaskRepository>();
         services.AddScoped<IWorkflowRepository, InMemoryWorkflowRepository>();
-        
+
         return services;
     }
 }
@@ -425,7 +425,7 @@ public class AgentService : IAgentService
     {
         var repository = ServiceLocator.Current.GetInstance<IAgentRepository>(); // Service locator
         var logger = ServiceLocator.Current.GetInstance<ILogger<AgentService>>();
-        
+
         // Implementation...
     }
 }
@@ -435,7 +435,7 @@ public class AgentService : IAgentService
 {
     [Inject] // Property injection
     public IAgentRepository AgentRepository { get; set; }
-    
+
     [Inject]
     public ILogger<AgentService> Logger { get; set; }
 }
@@ -447,7 +447,7 @@ public class AgentController : ControllerBase
     {
         var repository = new InMemoryAgentRepository(); // Manual instantiation
         var service = new AgentService(repository, null);
-        
+
         // Implementation...
     }
 }
@@ -456,7 +456,7 @@ public class AgentController : ControllerBase
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use ports and adapters pattern for external dependencies  
+**Description**: Use ports and adapters pattern for external dependencies
 **Examples**:
 <correct-example>
 ```csharp
@@ -511,11 +511,11 @@ namespace ExxerAI.Infrastructure.External
 
                 var json = JsonSerializer.Serialize(request);
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
-                
+
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", _apiKey);
-                
+
                 var response = await _httpClient.PostAsync("https://api.openai.com/v1/chat/completions", content, cancellationToken).ConfigureAwait(false);
-                
+
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -525,7 +525,7 @@ namespace ExxerAI.Infrastructure.External
 
                 var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
                 var openAIResponse = JsonSerializer.Deserialize<OpenAIChatCompletionResponse>(responseContent);
-                
+
                 return Result<LLMResponse>.Success(new LLMResponse
                 {
                     Content = openAIResponse?.Choices?.FirstOrDefault()?.Message?.Content ?? string.Empty,
@@ -563,11 +563,11 @@ namespace ExxerAI.Infrastructure.External
                     PlainTextContent = body,
                     HtmlContent = body
                 };
-                
+
                 message.AddTo(to);
-                
+
                 var response = await _sendGridClient.SendEmailAsync(message, cancellationToken).ConfigureAwait(false);
-                
+
                 if (response.IsSuccessStatusCode)
                 {
                     _logger.LogInformation("Email sent successfully to {To}", to);
@@ -605,7 +605,7 @@ namespace ExxerAI.Domain.Services
             var request = new { prompt };
             var json = JsonSerializer.Serialize(request);
             var content = new StringContent(json);
-            
+
             var response = await _httpClient.PostAsync("https://api.openai.com/v1/chat/completions", content);
             return await response.Content.ReadAsStringAsync();
         }
@@ -618,11 +618,11 @@ public class AgentService
     public async Task<Agent> CreateAgent(string name, string description)
     {
         var agent = new Agent { Name = name, Description = description };
-        
+
         // External service call in business logic
         var emailService = new SendGridEmailService();
         await emailService.SendEmailAsync("admin@company.com", "New Agent Created", $"Agent {name} was created");
-        
+
         return agent;
     }
 }
@@ -635,7 +635,7 @@ public class FileService
         var client = new HttpClient();
         var content = new MultipartFormDataContent();
         content.Add(new StreamContent(fileStream), "file", "document.pdf");
-        
+
         // Hard-coded URL
         var response = await client.PostAsync("https://api.cloudstorage.com/upload", content);
         return await response.Content.ReadAsStringAsync();
@@ -646,7 +646,7 @@ public class FileService
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Use configuration and options pattern for external service settings  
+**Description**: Use configuration and options pattern for external service settings
 **Examples**:
 <correct-example>
 ```csharp
@@ -656,7 +656,7 @@ namespace ExxerAI.Infrastructure.Configuration
     public class OpenAIConfiguration
     {
         public const string SectionName = "OpenAI";
-        
+
         public string ApiKey { get; set; } = string.Empty;
         public string BaseUrl { get; set; } = "https://api.openai.com/v1";
         public string DefaultModel { get; set; } = "gpt-3.5-turbo";
@@ -668,7 +668,7 @@ namespace ExxerAI.Infrastructure.Configuration
     public class SendGridConfiguration
     {
         public const string SectionName = "SendGrid";
-        
+
         public string ApiKey { get; set; } = string.Empty;
         public string FromEmail { get; set; } = "noreply@exxerai.com";
         public string FromName { get; set; } = "ExxerAI";
@@ -682,29 +682,29 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddOpenAIProvider(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<OpenAIConfiguration>(configuration.GetSection(OpenAIConfiguration.SectionName));
-        
+
         services.AddHttpClient<ILLMProvider, OpenAIProvider>((serviceProvider, client) =>
         {
             var config = serviceProvider.GetRequiredService<IOptions<OpenAIConfiguration>>().Value;
             client.BaseAddress = new Uri(config.BaseUrl);
             client.Timeout = config.Timeout;
         });
-        
+
         return services;
     }
 
     public static IServiceCollection AddSendGridEmailService(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<SendGridConfiguration>(configuration.GetSection(SendGridConfiguration.SectionName));
-        
+
         services.AddScoped<ISendGridClient>(serviceProvider =>
         {
             var config = serviceProvider.GetRequiredService<IOptions<SendGridConfiguration>>().Value;
             return new SendGridClient(config.ApiKey);
         });
-        
+
         services.AddScoped<IEmailService, SendGridEmailService>();
-        
+
         return services;
     }
 }
@@ -761,7 +761,7 @@ public class SendGridEmailService : IEmailService
     {
         var apiKey = ConfigurationManager.AppSettings["SendGridApiKey"]; // Direct access
         var fromEmail = ConfigurationManager.AppSettings["SendGridFromEmail"];
-        
+
         var client = new SendGridClient(apiKey);
         var message = new SendGridMessage
         {
@@ -769,7 +769,7 @@ public class SendGridEmailService : IEmailService
             Subject = subject,
             PlainTextContent = body
         };
-        
+
         message.AddTo(to);
         var response = await client.SendEmailAsync(message);
         return response.IsSuccessStatusCode;
@@ -783,7 +783,7 @@ public class FileStorageService : IFileStorageService
     {
         var apiKey = Environment.GetEnvironmentVariable("STORAGE_API_KEY"); // No validation
         var baseUrl = Environment.GetEnvironmentVariable("STORAGE_BASE_URL");
-        
+
         // Implementation without configuration validation...
     }
 }

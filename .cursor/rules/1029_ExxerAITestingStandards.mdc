@@ -28,7 +28,7 @@ public class AgentServiceTests
         var repository = Substitute.For<IAgentRepository>();
         repository.GetByIdAsync(agentId, Arg.Any<CancellationToken>())
             .Returns(Result<Agent>.Success(expectedAgent));
-        
+
         var service = new AgentService(repository);
 
         // Act
@@ -57,7 +57,7 @@ public class AgentServiceTests
         var mock = new Mock<IAgentRepository>();
         mock.Setup(x => x.GetByIdAsync(It.IsAny<Guid>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(Result<Agent>.Success(new Agent()));
-        
+
         var service = new AgentService(mock.Object);
 
         // Act
@@ -87,7 +87,7 @@ public async Task CreateAgentAsync_WithValidParameters_ShouldReturnSuccess()
     var repository = Substitute.For<IAgentRepository>();
     repository.AddAsync(Arg.Any<Agent>(), Arg.Any<CancellationToken>())
         .Returns(Result<Agent>.Success(new Agent { Name = name }));
-    
+
     var service = new AgentService(repository);
 
     // Act
@@ -167,7 +167,7 @@ public async Task UpdateAgentStatusAsync_WithValidStatus_ShouldSucceed(string na
         .Returns(Result<Agent>.Success(agent));
     repository.UpdateAsync(Arg.Any<Agent>(), Arg.Any<CancellationToken>())
         .Returns(Result<Agent>.Success(agent));
-    
+
     var service = new AgentService(repository);
 
     // Act
@@ -298,7 +298,7 @@ public async Task CreateAgentAsync_WithValidAgent_ShouldSucceed(Agent expectedAg
     var repository = Substitute.For<IAgentRepository>();
     repository.AddAsync(Arg.Any<Agent>(), Arg.Any<CancellationToken>())
         .Returns(Result<Agent>.Success(expectedAgent));
-    
+
     var service = new AgentService(repository);
 
     // Act
@@ -354,7 +354,7 @@ public async Task GetAgentAsync_WithValidToken_ShouldNotBeCancelled()
     var repository = Substitute.For<IAgentRepository>();
     repository.GetByIdAsync(agentId, Arg.Any<CancellationToken>())
         .Returns(Result<Agent>.Success(expectedAgent));
-    
+
     var service = new AgentService(repository);
     var cancellationToken = new CancellationToken(false);
 

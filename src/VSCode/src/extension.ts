@@ -47,7 +47,7 @@ async function setupAnalyzerIntegration(context: vscode.ExtensionContext) {
     // Get analyzer DLL paths from extension
     const extensionPath = context.extensionPath;
     const analyzerPath = path.join(extensionPath, 'analyzers');
-    
+
     if (!fs.existsSync(analyzerPath)) {
         vscode.window.showWarningMessage('ExxerRules analyzer files not found. Extension may not be properly installed.');
         return;
@@ -71,7 +71,7 @@ async function configureAnalyzersForWorkspace(analyzerPath: string) {
 async function configureAnalyzersForFolder(folderPath: string, analyzerPath: string) {
     // Find all .csproj files
     const csprojFiles = await findCsprojFiles(folderPath);
-    
+
     for (const csprojFile of csprojFiles) {
         await addAnalyzerToProject(csprojFile, analyzerPath);
     }
@@ -79,13 +79,13 @@ async function configureAnalyzersForFolder(folderPath: string, analyzerPath: str
 
 async function findCsprojFiles(folderPath: string): Promise<string[]> {
     const csprojFiles: string[] = [];
-    
+
     const findFiles = async (dir: string) => {
         const entries = await fs.promises.readdir(dir, { withFileTypes: true });
-        
+
         for (const entry of entries) {
             const fullPath = path.join(dir, entry.name);
-            
+
             if (entry.isDirectory() && entry.name !== 'node_modules' && entry.name !== '.git') {
                 await findFiles(fullPath);
             } else if (entry.isFile() && entry.name.endsWith('.csproj')) {
@@ -93,20 +93,20 @@ async function findCsprojFiles(folderPath: string): Promise<string[]> {
             }
         }
     };
-    
+
     try {
         await findFiles(folderPath);
     } catch (error) {
         console.error('Error finding csproj files:', error);
     }
-    
+
     return csprojFiles;
 }
 
 async function addAnalyzerToProject(csprojPath: string, analyzerPath: string) {
     try {
         const content = await fs.promises.readFile(csprojPath, 'utf-8');
-        
+
         // Check if ExxerRules analyzer is already referenced
         if (content.includes('ExxerRules.Analyzers')) {
             return; // Already configured
@@ -115,7 +115,7 @@ async function addAnalyzerToProject(csprojPath: string, analyzerPath: string) {
         // Add analyzer references to the project
         const analyzerDll = path.join(analyzerPath, 'ExxerRules.Analyzers.dll');
         const codeFixesDll = path.join(analyzerPath, 'ExxerRules.CodeFixes.dll');
-        
+
         const analyzerItemGroup = `
   <ItemGroup>
     <Analyzer Include="${analyzerDll}" />
@@ -128,7 +128,7 @@ async function addAnalyzerToProject(csprojPath: string, analyzerPath: string) {
 
         await fs.promises.writeFile(csprojPath, updatedContent);
         console.log(`Added ExxerRules analyzers to ${csprojPath}`);
-        
+
     } catch (error) {
         console.error(`Error adding analyzers to ${csprojPath}:`, error);
     }
@@ -142,7 +142,7 @@ async function analyzeWorkspace() {
     }
 
     vscode.window.showInformationMessage('Running ExxerRules analysis on workspace...');
-    
+
     // Trigger dotnet build to run analyzers
     for (const folder of workspaceFolders) {
         await runDotnetBuild(folder.uri.fsPath);
@@ -206,32 +206,32 @@ function getAnalyzerInfoHtml(): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ExxerRules - Modern Development Conventions</title>
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
-            padding: 20px; 
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
             line-height: 1.6;
             color: var(--vscode-editor-foreground);
             background-color: var(--vscode-editor-background);
         }
-        .category { 
-            margin: 20px 0; 
-            padding: 15px; 
-            border-left: 4px solid #007ACC; 
+        .category {
+            margin: 20px 0;
+            padding: 15px;
+            border-left: 4px solid #007ACC;
             background-color: var(--vscode-editorWidget-background);
         }
-        .category h3 { 
-            margin-top: 0; 
-            color: #007ACC; 
+        .category h3 {
+            margin-top: 0;
+            color: #007ACC;
         }
-        .rule { 
-            margin: 10px 0; 
-            padding: 10px; 
+        .rule {
+            margin: 10px 0;
+            padding: 10px;
             background-color: var(--vscode-editor-background);
             border-radius: 4px;
         }
-        .rule-id { 
-            font-weight: bold; 
-            color: #FFA500; 
+        .rule-id {
+            font-weight: bold;
+            color: #FFA500;
         }
         .header {
             text-align: center;
@@ -261,7 +261,7 @@ function getAnalyzerInfoHtml(): string {
     <div class="header">
         <h1>🎯 ExxerRules - Modern Development Conventions</h1>
         <p>Comprehensive Roslyn analyzer suite with 20 production-ready analyzers</p>
-        
+
         <div class="stats">
             <div class="stat">
                 <div class="stat-number">20</div>
@@ -384,7 +384,7 @@ function getAnalyzerInfoHtml(): string {
 function handleConfigurationChange() {
     const config = vscode.workspace.getConfiguration('exxerRules');
     const enabled = config.get<boolean>('enabled', true);
-    
+
     if (enabled) {
         vscode.window.showInformationMessage('ExxerRules analyzers enabled');
     } else {
@@ -395,7 +395,7 @@ function handleConfigurationChange() {
 function showWelcomeMessage(context: vscode.ExtensionContext) {
     const key = 'exxerRules.welcomeShown';
     const welcomeShown = context.globalState.get<boolean>(key, false);
-    
+
     if (!welcomeShown) {
         vscode.window.showInformationMessage(
             'Welcome to ExxerRules! 🎯 Your C# code will now be analyzed with 20 modern development convention rules.',
@@ -408,7 +408,7 @@ function showWelcomeMessage(context: vscode.ExtensionContext) {
                 vscode.commands.executeCommand('workbench.action.openSettings', 'exxerRules');
             }
         });
-        
+
         context.globalState.update(key, true);
     }
 }

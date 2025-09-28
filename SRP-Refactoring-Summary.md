@@ -143,7 +143,7 @@ var jsonReporter = new JsonTestReporter();
 var results = testSuite.Execute(testRunner, jsonReporter);
 
 // Easy to add new execution modes
-public static void RunParallelTests() 
+public static void RunParallelTests()
 {
     var parallelRunner = new ParallelTestRunner();
     // Use same test cases, different execution strategy

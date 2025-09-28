@@ -63,19 +63,19 @@ public class AgentService
 
         // Sanitize input
         var sanitizedName = name.Trim();
-        
+
         _logger.LogInformation("Creating agent with validated input: {AgentName}, {Capabilities}", sanitizedName, capabilities);
-        
+
         var agent = new Agent { Name = new AgentName(sanitizedName), Capabilities = capabilities };
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
         }
         else
         {
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 sanitizedName, string.Join(", ", result.Errors));
         }
 
@@ -95,11 +95,11 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         // No validation of input parameters
         var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -173,7 +173,7 @@ public class AgentService
     {
         // Validate command using FluentValidation
         var validationResult = await _validator.ValidateAsync(command, cancellationToken);
-        
+
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(e => e.ErrorMessage);
@@ -182,24 +182,24 @@ public class AgentService
         }
 
         _logger.LogInformation("Creating agent with validated command: {AgentName}", command.Name);
-        
-        var agent = new Agent 
-        { 
-            Name = new AgentName(command.Name.Trim()), 
+
+        var agent = new Agent
+        {
+            Name = new AgentName(command.Name.Trim()),
             Capabilities = command.Capabilities,
             Email = command.Email?.Trim(),
             Description = command.Description?.Trim()
         };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
         }
         else
         {
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 command.Name, string.Join(", ", result.Errors));
         }
 
@@ -219,16 +219,16 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(CreateAgentCommand command, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", command.Name);
-        
+
         // No validation of command
-        var agent = new Agent 
-        { 
-            Name = new AgentName(command.Name), 
-            Capabilities = command.Capabilities 
+        var agent = new Agent
+        {
+            Name = new AgentName(command.Name),
+            Capabilities = command.Capabilities
         };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -261,7 +261,7 @@ public class AgentService
         // Sanitize and encode input
         var sanitizedName = SanitizeAgentName(name);
         var sanitizedDescription = SanitizeDescription(description);
-        
+
         if (string.IsNullOrWhiteSpace(sanitizedName))
         {
             _logger.LogError("Agent creation failed: name is empty after sanitization");
@@ -269,22 +269,22 @@ public class AgentService
         }
 
         _logger.LogInformation("Creating agent with sanitized input: {AgentName}", sanitizedName);
-        
-        var agent = new Agent 
-        { 
-            Name = new AgentName(sanitizedName), 
-            Description = sanitizedDescription 
+
+        var agent = new Agent
+        {
+            Name = new AgentName(sanitizedName),
+            Description = sanitizedDescription
         };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
         }
         else
         {
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 sanitizedName, string.Join(", ", result.Errors));
         }
 
@@ -298,10 +298,10 @@ public class AgentService
 
         // Remove HTML tags and encode
         var sanitized = System.Web.HttpUtility.HtmlEncode(name.Trim());
-        
+
         // Remove any remaining script tags
         sanitized = Regex.Replace(sanitized, @"<script[^>]*>.*?</script>", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        
+
         // Limit length
         return sanitized.Length > 100 ? sanitized.Substring(0, 100) : sanitized;
     }
@@ -313,10 +313,10 @@ public class AgentService
 
         // Remove HTML tags and encode
         var sanitized = System.Web.HttpUtility.HtmlEncode(description.Trim());
-        
+
         // Remove any remaining script tags
         sanitized = Regex.Replace(sanitized, @"<script[^>]*>.*?</script>", "", RegexOptions.IgnoreCase | RegexOptions.Singleline);
-        
+
         // Limit length
         return sanitized.Length > 500 ? sanitized.Substring(0, 500) : sanitized;
     }
@@ -334,16 +334,16 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, string description, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         // No sanitization of input
-        var agent = new Agent 
-        { 
-            Name = new AgentName(name), 
-            Description = description 
+        var agent = new Agent
+        {
+            Name = new AgentName(name),
+            Description = description
         };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -430,7 +430,7 @@ public class AgentService
     {
         // Validate complex configuration object
         var validationResult = await _configurationValidator.ValidateAsync(configuration, cancellationToken);
-        
+
         if (!validationResult.IsValid)
         {
             var errors = validationResult.Errors.Select(e => e.ErrorMessage);
@@ -446,22 +446,22 @@ public class AgentService
         }
 
         _logger.LogInformation("Creating agent with validated configuration: {AgentName}", name);
-        
-        var agent = new Agent 
-        { 
-            Name = new AgentName(name.Trim()), 
-            Configuration = configuration 
+
+        var agent = new Agent
+        {
+            Name = new AgentName(name.Trim()),
+            Configuration = configuration
         };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
         }
         else
         {
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 name, string.Join(", ", result.Errors));
         }
 
@@ -481,16 +481,16 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentWithConfigurationAsync(string name, AgentConfiguration configuration, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         // No validation of complex configuration object
-        var agent = new Agent 
-        { 
-            Name = new AgentName(name), 
-            Configuration = configuration 
+        var agent = new Agent
+        {
+            Name = new AgentName(name),
+            Configuration = configuration
         };
-        
+
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -521,7 +521,7 @@ public class ValidAgentNameAttribute : ValidationAttribute
             return new ValidationResult("Agent name cannot be null");
 
         var name = value.ToString();
-        
+
         if (string.IsNullOrWhiteSpace(name))
             return new ValidationResult("Agent name cannot be empty or whitespace");
 
@@ -550,7 +550,7 @@ public class AgentService
         // Validate using custom attribute
         var validationContext = new ValidationContext(name);
         var validationResults = new List<ValidationResult>();
-        
+
         if (!Validator.TryValidateObject(name, validationContext, validationResults, true))
         {
             var errors = validationResults.Select(v => v.ErrorMessage);
@@ -562,23 +562,23 @@ public class AgentService
         var businessRuleResult = ValidateBusinessRules(name, capabilities);
         if (businessRuleResult.IsFailure)
         {
-            _logger.LogError("Agent creation business rule validation failed: {Errors}", 
+            _logger.LogError("Agent creation business rule validation failed: {Errors}",
                 string.Join(", ", businessRuleResult.Errors));
             return businessRuleResult.ToResult<Agent>();
         }
 
         _logger.LogInformation("Creating agent with validated input: {AgentName}", name);
-        
+
         var agent = new Agent { Name = new AgentName(name.Trim()), Capabilities = capabilities };
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created successfully: {AgentId}", result.Value.Id);
         }
         else
         {
-            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}", 
+            _logger.LogError("Agent creation failed: {AgentName}, Errors: {Errors}",
                 name, string.Join(", ", result.Errors));
         }
 
@@ -617,11 +617,11 @@ public class AgentService
     public async Task<Result<Agent>> CreateAgentAsync(string name, AgentCapabilities capabilities, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Creating agent: {AgentName}", name);
-        
+
         // No custom validation or business rules
         var agent = new Agent { Name = new AgentName(name), Capabilities = capabilities };
         var result = await _repository.AddAsync(agent, cancellationToken);
-        
+
         if (result.IsSuccess)
         {
             _logger.LogInformation("Agent created: {AgentId}", result.Value.Id);
@@ -637,4 +637,3 @@ public class AgentService
 ```
 </incorrect-example>
 </requirement>
-

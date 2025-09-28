@@ -1,6 +1,6 @@
 ---
 description: Refine Requirement or Issue Chat Mode
-globs: 
+globs:
 alwaysApply: false
 ---
 
@@ -37,4 +37,4 @@ To activate Requirement Refinement mode:
 
 ## Output
 
-The agent will modify the issue description and add structured details to it. 
+The agent will modify the issue description and add structured details to it.

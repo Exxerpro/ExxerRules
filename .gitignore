@@ -118,6 +118,29 @@ StyleCopReport.xml
 *.tmp_proj
 *_wpftmp.csproj
 *.log
+**/*.log
+*.log.*
+*.log-*
+*.log.gz
+*.out
+*.err
+*.trace
+*.trace.json
+*.etl
+*.har
+
+# Package manager logs
+npm-debug.log*
+yarn-error.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Logs directories
+**/logs/**
+**/Logs/**
+
+# Tool outputs
+**/StrykerOutput/**
 *.tlog
 *.vspscc
 *.vssscc
@@ -427,4 +450,38 @@ FodyWeavers.xsd
 *.msm
 *.msp
 
+# Backup files - typically large and not needed in repo
+backup-*.zip
+backup-*.tar.gz
+*-backup-*.zip
+*-backup-*.tar.gz
+*.backup
+worktree-*.zip
+migration-*.zip
+
+# Python caches and environments (top-level)
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+venv/
+.venv/
+env/
+
+# Large/verbose logs
+src/full_build_verbose.txt
+
 /FileConentIndex/
+
+src/MissingXMLComments.txt
+src/ParseText.txt
+src/X1050CancelationTokenNeeded.txt
+
+*X1050CancelationTokenNeeded.txt
+
+*.log
+
+**/*.log

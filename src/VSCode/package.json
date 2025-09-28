@@ -1,8 +1,7 @@
-{
-  "name": "exxer-rules-vscode",
+{  "name": "exxer-rules-vscode",
   "displayName": "ExxerRules - Modern Development Conventions",
   "description": "Comprehensive Roslyn analyzer suite with 20 production-ready analyzers enforcing Modern Development Conventions (MDC). Includes Result<T> pattern enforcement, Clean Architecture validation, modern testing standards, async best practices, and performance optimization.",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "publisher": "ExxerAI",
   "repository": {
     "type": "git",
@@ -70,7 +69,7 @@
               "description": "Enable Clean Architecture analyzers"
             },
             "async": {
-              "type": "boolean", 
+              "type": "boolean",
               "default": true,
               "description": "Enable async/await best practice analyzers"
             },

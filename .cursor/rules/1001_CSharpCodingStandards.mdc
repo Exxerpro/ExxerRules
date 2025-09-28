@@ -2,17 +2,17 @@
 
 ## Meta
 
-**Title**: Code Enhancer: C# .NET Expert Programmer  
-**Description**: Establishes professional C# .NET coding standards and best practices for industrial-grade development  
-**Created-at**: 2025-01-05T22:50:00Z  
-**Last-updated-at**: 2025-01-05T22:50:00Z  
-**Applies-to**: C# development, code review, architecture design, testing practices  
-**File-matcher**: *.cs, *.csproj, *.sln files  
+**Title**: Code Enhancer: C# .NET Expert Programmer
+**Description**: Establishes professional C# .NET coding standards and best practices for industrial-grade development
+**Created-at**: 2025-01-05T22:50:00Z
+**Last-updated-at**: 2025-01-05T22:50:00Z
+**Applies-to**: C# development, code review, architecture design, testing practices
+**File-matcher**: *.cs, *.csproj, *.sln files
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Use meaningful and descriptive names for all code elements  
+**Description**: Use meaningful and descriptive names for all code elements
 **Examples**:
 <correct-example>
 ```csharp
@@ -33,7 +33,7 @@ var gravity = 9.8m;
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Never use magic numbers or magic strings - always define constants with descriptive names  
+**Description**: Never use magic numbers or magic strings - always define constants with descriptive names
 **Examples**:
 <correct-example>
 ```csharp
@@ -55,7 +55,7 @@ var connection = "Server=localhost;Database=MyDb;";
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Follow Single Responsibility Principle - each function must have one clear purpose  
+**Description**: Follow Single Responsibility Principle - each function must have one clear purpose
 **Examples**:
 <correct-example>
 ```csharp
@@ -74,8 +74,8 @@ public class OrderProcessor
 ```csharp
 public class OrderManager
 {
-    public Result ValidateAndProcessOrder(Order order) 
-    { 
+    public Result ValidateAndProcessOrder(Order order)
+    {
         // Validation logic
         // Processing logic
         // Database operations
@@ -88,7 +88,7 @@ public class OrderManager
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Avoid using regions - prefer subclasses or separate files for organization  
+**Description**: Avoid using regions - prefer subclasses or separate files for organization
 **Examples**:
 <correct-example>
 ```csharp
@@ -117,7 +117,7 @@ public class OrderValidator
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Never throw exceptions - always return Result<T> for error handling  
+**Description**: Never throw exceptions - always return Result<T> for error handling
 **Examples**:
 <correct-example>
 ```csharp
@@ -125,7 +125,7 @@ public Result<Order> CreateOrder(OrderRequest request)
 {
     if (request == null)
         return Result<Order>.WithFailure("Request cannot be null");
-    
+
     // Processing logic
     return Result<Order>.Success(order);
 }
@@ -137,7 +137,7 @@ public Order CreateOrder(OrderRequest request)
 {
     if (request == null)
         throw new ArgumentNullException(nameof(request));
-    
+
     // Processing logic
     return order;
 }
@@ -146,7 +146,7 @@ public Order CreateOrder(OrderRequest request)
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use modern C# features and .NET 10/9 exclusively for new development  
+**Description**: Use modern C# features and .NET 10/9 exclusively for new development
 **Examples**:
 <correct-example>
 ```csharp
@@ -188,7 +188,7 @@ public string GetStatusDescription(OrderStatus status)
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use NSubstitute, Shouldly, and XUnit v3 for testing - avoid Moq and FluentAssertions  
+**Description**: Use NSubstitute, Shouldly, and XUnit v3 for testing - avoid Moq and FluentAssertions
 **Examples**:
 <correct-example>
 ```csharp
@@ -198,10 +198,10 @@ public void Should_ReturnSuccess_When_ValidOrderProvided()
     // Arrange
     var validator = Substitute.For<IOrderValidator>();
     validator.Validate(Arg.Any<Order>()).Returns(Result.Success());
-    
+
     // Act
     var result = validator.Validate(new Order());
-    
+
     // Assert
     result.IsSuccess.ShouldBeTrue();
 }
@@ -216,10 +216,10 @@ public void TestOrderValidation()
     var mockValidator = new Mock<IOrderValidator>();
     mockValidator.Setup(x => x.Validate(It.IsAny<Order>()))
                 .Returns(Result.Success());
-    
+
     // Act
     var result = mockValidator.Object.Validate(new Order());
-    
+
     // Assert
     Assert.True(result.IsSuccess);
 }
@@ -228,7 +228,7 @@ public void TestOrderValidation()
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Maintain XML documentation for all public APIs and complex algorithms  
+**Description**: Maintain XML documentation for all public APIs and complex algorithms
 **Examples**:
 <correct-example>
 ```csharp
@@ -255,7 +255,7 @@ public Result ValidateOrder(Order order)
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Use consistent formatting with tabs for indentation and proper whitespace  
+**Description**: Use consistent formatting with tabs for indentation and proper whitespace
 **Examples**:
 <correct-example>
 ```csharp

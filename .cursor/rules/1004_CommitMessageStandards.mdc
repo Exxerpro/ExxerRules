@@ -2,17 +2,17 @@
 
 ## Meta
 
-**Title**: Commit Message Standards  
-**Description**: Establishes comprehensive standards for conventional commit messages  
-**Created-at**: 2025-01-05T23:40:00Z  
-**Last-updated-at**: 2025-01-05T23:40:00Z  
-**Applies-to**: Git commits, version control, semantic versioning  
-**File-matcher**: All files in version control  
+**Title**: Commit Message Standards
+**Description**: Establishes comprehensive standards for conventional commit messages
+**Created-at**: 2025-01-05T23:40:00Z
+**Last-updated-at**: 2025-01-05T23:40:00Z
+**Applies-to**: Git commits, version control, semantic versioning
+**File-matcher**: All files in version control
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Use conventional commit message structure with type, scope, and description  
+**Description**: Use conventional commit message structure with type, scope, and description
 **Examples**:
 <correct-example>
 ```
@@ -55,7 +55,7 @@ Updated documentation
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Use appropriate commit types for different changes  
+**Description**: Use appropriate commit types for different changes
 **Examples**:
 <correct-example>
 ```
@@ -81,7 +81,7 @@ modify: update docs
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Include scope to provide additional contextual information  
+**Description**: Include scope to provide additional contextual information
 **Examples**:
 <correct-example>
 ```
@@ -105,7 +105,7 @@ docs: update installation instructions
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Write clear and descriptive commit descriptions  
+**Description**: Write clear and descriptive commit descriptions
 **Examples**:
 <correct-example>
 ```
@@ -142,7 +142,7 @@ docs: update docs
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Use breaking change indicators for API changes  
+**Description**: Use breaking change indicators for API changes
 **Examples**:
 <correct-example>
 ```
@@ -179,7 +179,7 @@ The 'profile' field has been renamed to 'userProfile'.
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Include issue references and footers when applicable  
+**Description**: Include issue references and footers when applicable
 **Examples**:
 <correct-example>
 ```
@@ -220,7 +220,7 @@ feat(auth): implement OAuth2 authentication
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Keep commit messages concise but informative  
+**Description**: Keep commit messages concise but informative
 **Examples**:
 <correct-example>
 ```

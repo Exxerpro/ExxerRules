@@ -1,6 +1,6 @@
 ---
 description: Markdown Content Rules
-globs: 
+globs:
 alwaysApply: false
 ---
 

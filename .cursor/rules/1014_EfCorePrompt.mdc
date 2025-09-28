@@ -1,6 +1,6 @@
 ---
 description: Get best practices for Persistence Framework
-globs: 
+globs:
 alwaysApply: false
 ---
 ---
@@ -24,10 +24,10 @@ These rules apply to **any persistence framework** (e.g., EF Core, Dapper, NHibe
 
 ### 🧠 The Domain Layer
 
-> ❌ **Must not know**  
-> ❌ **Must not care**  
-> ❌ **Must not reference**  
-> ❌ **Must not be coupled to**  
+> ❌ **Must not know**
+> ❌ **Must not care**
+> ❌ **Must not reference**
+> ❌ **Must not be coupled to**
 
 ...any persistence library or infrastructure concern.
 ...anything related to persistence technology (e.g., EF Core, SQL, repositories).
@@ -38,14 +38,14 @@ These rules apply to **any persistence framework** (e.g., EF Core, Dapper, NHibe
 
 ### 🚦 The Application Layer
 
-> ❌ **Must not know**  
-> ❌ **Must not care how**  
-> ❌ **Must not reference**  
-> ❌ **Must not be coupled to**  
+> ❌ **Must not know**
+> ❌ **Must not care how**
+> ❌ **Must not reference**
+> ❌ **Must not be coupled to**
 
 How the data is persisted
 
-> ✅ **But must require that**  
+> ✅ **But must require that**
 
 ...data access and persistence is:
 
@@ -67,7 +67,7 @@ Persistence is a delivery mechanism. Code against interfaces, not implementation
 
 ---
 description: Get best practices for Entity Framework Core
-globs: 
+globs:
 alwaysApply: false
 ---
 ---

@@ -2,17 +2,17 @@
 
 ## Meta
 
-**Title**: Domain Testing Standards  
-**Description**: Establishes comprehensive domain-driven design and testing standards for domain entities  
-**Created-at**: 2025-01-05T23:15:00Z  
-**Last-updated-at**: 2025-01-05T23:15:00Z  
-**Applies-to**: Domain entity testing, domain logic validation, business rule testing  
-**File-matcher**: *.cs files in domain projects  
+**Title**: Domain Testing Standards
+**Description**: Establishes comprehensive domain-driven design and testing standards for domain entities
+**Created-at**: 2025-01-05T23:15:00Z
+**Last-updated-at**: 2025-01-05T23:15:00Z
+**Applies-to**: Domain entity testing, domain logic validation, business rule testing
+**File-matcher**: *.cs files in domain projects
 
 ## Requirements
 
 ### <requirement priority="critical">
-**Description**: Test all domain entities systematically - POCOs get property round-trip tests, entities with logic get behavior tests  
+**Description**: Test all domain entities systematically - POCOs get property round-trip tests, entities with logic get behavior tests
 **Examples**:
 <correct-example>
 ```csharp
@@ -28,7 +28,7 @@ public void Should_StoreAndRetrieveProperties_When_ValidOrderCreated()
         TotalAmount = 100.00m,
         CreatedAt = DateTime.UtcNow
     };
-    
+
     // Act & Assert
     order.Id.ShouldNotBe(Guid.Empty);
     order.CustomerName.ShouldBe("John Doe");
@@ -44,11 +44,11 @@ public void Should_CalculateTotal_When_ItemsAdded()
     var order = new Order();
     var item1 = new OrderItem { Price = 50.00m, Quantity = 2 };
     var item2 = new OrderItem { Price = 25.00m, Quantity = 1 };
-    
+
     // Act
     order.AddItem(item1);
     order.AddItem(item2);
-    
+
     // Assert
     order.TotalAmount.ShouldBe(125.00m);
 }
@@ -63,7 +63,7 @@ public class Order
     public string CustomerName { get; set; }
     public decimal TotalAmount { get; set; }
     public DateTime CreatedAt { get; set; }
-    
+
     public void AddItem(OrderItem item) { /* logic */ }
     public decimal CalculateTotal() { /* logic */ }
 }
@@ -73,7 +73,7 @@ public class Order
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Test domain invariants and business rules thoroughly  
+**Description**: Test domain invariants and business rules thoroughly
 **Examples**:
 <correct-example>
 ```csharp
@@ -82,10 +82,10 @@ public void Should_RejectOrder_When_CustomerNameIsEmpty()
 {
     // Arrange
     var order = new Order { CustomerName = "" };
-    
+
     // Act
     var result = order.Validate();
-    
+
     // Assert
     result.IsFailure.ShouldBeTrue();
     result.Error.ShouldContain("Customer name is required");
@@ -96,10 +96,10 @@ public void Should_RejectOrder_When_TotalAmountIsNegative()
 {
     // Arrange
     var order = new Order { TotalAmount = -50.00m };
-    
+
     // Act
     var result = order.Validate();
-    
+
     // Assert
     result.IsFailure.ShouldBeTrue();
     result.Error.ShouldContain("Total amount must be positive");
@@ -113,10 +113,10 @@ public void Should_RejectOrder_When_InvalidQuantityProvided(int quantity)
 {
     // Arrange
     var item = new OrderItem { Quantity = quantity };
-    
+
     // Act
     var result = item.Validate();
-    
+
     // Assert
     result.IsFailure.ShouldBeTrue();
     result.Error.ShouldContain("Quantity must be greater than zero");
@@ -130,10 +130,10 @@ public void Should_ValidateOrder()
 {
     // Arrange
     var order = new Order();
-    
+
     // Act
     var result = order.Validate();
-    
+
     // Assert
     result.IsSuccess.ShouldBeTrue(); // Too generic, doesn't test specific rules
 }
@@ -142,7 +142,7 @@ public void Should_ValidateOrder()
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Test domain events and state transitions properly  
+**Description**: Test domain events and state transitions properly
 **Examples**:
 <correct-example>
 ```csharp
@@ -151,10 +151,10 @@ public void Should_RaiseOrderCreatedEvent_When_OrderIsCreated()
 {
     // Arrange
     var order = new Order { CustomerName = "John Doe" };
-    
+
     // Act
     order.Create();
-    
+
     // Assert
     order.DomainEvents.ShouldContain(e => e is OrderCreatedEvent);
     order.Status.ShouldBe(OrderStatus.Created);
@@ -166,10 +166,10 @@ public void Should_RaiseOrderShippedEvent_When_OrderIsShipped()
     // Arrange
     var order = new Order { CustomerName = "John Doe" };
     order.Create();
-    
+
     // Act
     order.Ship();
-    
+
     // Assert
     order.DomainEvents.ShouldContain(e => e is OrderShippedEvent);
     order.Status.ShouldBe(OrderStatus.Shipped);
@@ -184,10 +184,10 @@ public void Should_HandleOrderEvents()
 {
     // Arrange
     var order = new Order();
-    
+
     // Act
     order.Create();
-    
+
     // Assert
     order.DomainEvents.ShouldNotBeEmpty(); // Too generic, doesn't test specific events
 }
@@ -196,7 +196,7 @@ public void Should_HandleOrderEvents()
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Test value objects for immutability and equality  
+**Description**: Test value objects for immutability and equality
 **Examples**:
 <correct-example>
 ```csharp
@@ -206,7 +206,7 @@ public void Should_BeImmutable_When_ValueObjectCreated()
     // Arrange
     var email1 = new Email("test@example.com");
     var email2 = new Email("test@example.com");
-    
+
     // Act & Assert
     email1.ShouldBe(email2); // Value equality
     email1.GetHashCode().ShouldBe(email2.GetHashCode());
@@ -217,7 +217,7 @@ public void Should_RejectInvalidEmail_When_InvalidFormatProvided()
 {
     // Arrange & Act
     var result = Email.Create("invalid-email");
-    
+
     // Assert
     result.IsFailure.ShouldBeTrue();
     result.Error.ShouldContain("Invalid email format");
@@ -232,7 +232,7 @@ public void Should_ValidateEmailFormat_When_VariousInputsProvided(string input, 
 {
     // Arrange & Act
     var result = Email.Create(input);
-    
+
     // Assert
     result.IsSuccess.ShouldBe(expected);
 }
@@ -245,7 +245,7 @@ public void Should_CreateEmail()
 {
     // Arrange
     var email = new Email("test@example.com");
-    
+
     // Assert
     email.Value.ShouldBe("test@example.com"); // Only tests basic property, not validation
 }
@@ -254,7 +254,7 @@ public void Should_CreateEmail()
 </requirement>
 
 ### <requirement priority="medium">
-**Description**: Test domain services and business logic in isolation  
+**Description**: Test domain services and business logic in isolation
 **Examples**:
 <correct-example>
 ```csharp
@@ -265,10 +265,10 @@ public void Should_CalculateDiscount_When_EligibleCustomerProvided()
     var customer = new Customer { IsPremium = true, TotalOrders = 10 };
     var order = new Order { TotalAmount = 100.00m };
     var discountService = new DiscountService();
-    
+
     // Act
     var discount = discountService.CalculateDiscount(customer, order);
-    
+
     // Assert
     discount.ShouldBe(10.00m); // 10% discount for premium customers
 }
@@ -280,10 +280,10 @@ public void Should_NotCalculateDiscount_When_NonEligibleCustomerProvided()
     var customer = new Customer { IsPremium = false, TotalOrders = 2 };
     var order = new Order { TotalAmount = 100.00m };
     var discountService = new DiscountService();
-    
+
     // Act
     var discount = discountService.CalculateDiscount(customer, order);
-    
+
     // Assert
     discount.ShouldBe(0.00m); // No discount for non-premium customers
 }
@@ -298,10 +298,10 @@ public void Should_CalculateDiscount()
     var customer = new Customer();
     var order = new Order();
     var discountService = new DiscountService();
-    
+
     // Act
     var discount = discountService.CalculateDiscount(customer, order);
-    
+
     // Assert
     discount.ShouldBeGreaterThanOrEqualTo(0); // Too generic, doesn't test specific logic
 }
@@ -310,7 +310,7 @@ public void Should_CalculateDiscount()
 </requirement>
 
 ### <requirement priority="critical">
-**Description**: Never modify production code during test refactoring  
+**Description**: Never modify production code during test refactoring
 **Examples**:
 <correct-example>
 ```csharp
@@ -320,10 +320,10 @@ public void Should_ReturnFailure_When_InvalidOrderProvided()
 {
     // Arrange
     var order = new Order { CustomerName = "", TotalAmount = -50.00m };
-    
+
     // Act
     var result = order.Validate();
-    
+
     // Assert
     result.IsFailure.ShouldBeTrue();
     result.Error.ShouldContain("Customer name is required");
@@ -338,15 +338,15 @@ public class Order
 {
     public string CustomerName { get; set; }
     public decimal TotalAmount { get; set; }
-    
+
     public Result Validate()
     {
         if (string.IsNullOrEmpty(CustomerName))
             return Result.WithFailure("Customer name is required"); // Added for test
-        
+
         if (TotalAmount <= 0)
             return Result.WithFailure("Total amount must be positive"); // Added for test
-        
+
         return Result.Success();
     }
 }
@@ -355,7 +355,7 @@ public class Order
 </requirement>
 
 ### <requirement priority="high">
-**Description**: Use descriptive test names following Should_Action_When_Condition pattern  
+**Description**: Use descriptive test names following Should_Action_When_Condition pattern
 **Examples**:
 <correct-example>
 ```csharp

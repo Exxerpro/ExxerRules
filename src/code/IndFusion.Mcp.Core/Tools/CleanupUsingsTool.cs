@@ -58,8 +58,11 @@ public static class CleanupUsingsTool
 
         var diagnostics = compilation.GetDiagnostics();
         var unused = diagnostics
-            .Where(d => d.Id == "CS8019")
-            .Select(d => root.FindNode(d.Location.SourceSpan))
+            .Where(d => d.Id == "CS8019" && d.Location.IsInSource && d.Location.SourceTree == root.SyntaxTree)
+            .Select(d => {
+                try { return root.FindNode(d.Location.SourceSpan, getInnermostNodeForTie: true); }
+                catch { return null; }
+            })
             .OfType<UsingDirectiveSyntax>()
             .ToList();
 
@@ -68,7 +71,12 @@ public static class CleanupUsingsTool
             return $"Could not remove unused usings from {document.FilePath}";
         var formatted = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
         var encoding = await ExxerFactoringHelpers.GetFileEncodingAsync(document.FilePath!);
-        await File.WriteAllTextAsync(document.FilePath!, formatted.ToFullString(), encoding);
+        var (originalText, _) = await ExxerFactoringHelpers.ReadFileWithEncodingAsync(document.FilePath!);
+        var formattedText = formatted.ToFullString();
+        // Preserve original newline style
+        var normalized = formattedText.Replace("\r\n", "\n");
+        if (originalText.Contains("\r\n")) normalized = normalized.Replace("\n", "\r\n");
+        await File.WriteAllTextAsync(document.FilePath!, normalized, encoding);
 
         var newDocument = document.WithSyntaxRoot(formatted);
         ExxerFactoringHelpers.UpdateSolutionCache(newDocument);
@@ -91,11 +99,10 @@ public static class CleanupUsingsTool
     public static string CleanupUsingsInSource(string sourceText)
     {
         var tree = CSharpSyntaxTree.ParseText(sourceText);
-        var compilation = CSharpCompilation.Create("Cleanup")
-            .AddReferences(
-                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(Console).Assembly.Location))
-            .AddSyntaxTrees(tree);
+        // Build compilation with full trusted platform assemblies to correctly resolve usages
+        var tpa = ((string?)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES"))?.Split(Path.PathSeparator) ?? Array.Empty<string>();
+        var refs = tpa.Select(p => MetadataReference.CreateFromFile(p));
+        var compilation = CSharpCompilation.Create("Cleanup", new[] { tree }, refs);
         var diagnostics = compilation.GetDiagnostics();
         var root = tree.GetRoot();
         var unused = diagnostics
@@ -108,6 +115,7 @@ public static class CleanupUsingsTool
         if (newRoot == null)
             return sourceText; // Return original if we can't remove nodes
         var formatted = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
-        return formatted.ToFullString();
+        // Normalize to LF-only to make tests platform-independent
+        return formatted.ToFullString().Replace("\r\n", "\n");
     }
 }

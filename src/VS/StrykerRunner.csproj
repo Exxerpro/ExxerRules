@@ -11,5 +11,7 @@
 
 
   <ItemGroup>
+    <!-- Prevent accidental inclusion of the other runner's Program -->
+    <Compile Remove="TestRunner.cs" />
   </ItemGroup>
 </Project>

@@ -16,7 +16,11 @@ public static class ServiceCollectionExtensions
     /// <returns>The same service collection for chaining.</returns>
     public static IServiceCollection AddExxerFactorMcpCore(this IServiceCollection services)
     {
-        services.AddSingleton<IExxerFactoringService, ExxerFactoringService>();
+        // Logging support for services that depend on ILogger<T>
+        services.AddLogging();
+
+        // Core services
+        services.AddScoped<IExxerFactoringService, ExxerFactoringService>();
 
         // Add other core services here
         services.AddMemoryCache();

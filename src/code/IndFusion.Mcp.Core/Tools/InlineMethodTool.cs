@@ -103,7 +103,7 @@ public static class InlineMethodTool
             .First(m => m.Identifier.ValueText == methodName && m.ParameterList.Parameters.Count == 0);
         newRoot = newRoot.RemoveNode(updatedMethod, SyntaxRemoveOptions.KeepNoTrivia);
         var formatted = Formatter.Format(newRoot!, ExxerFactoringHelpers.SharedWorkspace);
-        return formatted.ToFullString();
+        return formatted.ToFullString().Replace("\r\n", "\n");
     }
 
     /// <summary>

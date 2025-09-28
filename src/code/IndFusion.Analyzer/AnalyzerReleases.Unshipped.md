@@ -11,6 +11,7 @@ EXXER800 | IndFusion.Analyzers.Logging | Warning | Use structured logging instea
 EXXER801 | IndFusion.Analyzers.Logging | Warning | Do not use Console.WriteLine in production code
 EXXER003 | IndFusion.Analyzers.FunctionalPatterns | Error | Do not throw exceptions - use Result&lt;T&gt; pattern instead
 EXXER301 | IndFusion.Analyzers.Async | Warning | Use ConfigureAwait(false) in library code
+EXXER302 | IndFusion.Analyzers.Async | Warning | Avoid async void methods except event handlers
 EXXER501 | IndFusion.Analyzers.CodeQuality | Info | Use expression-bodied members where appropriate
 EXXER600 | IndFusion.Analyzers.Architecture | Error | Domain layer should not reference Infrastructure layer
 EXXER601 | IndFusion.Analyzers.Architecture | Warning | Use Repository pattern with focused interfaces

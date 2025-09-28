@@ -229,6 +229,6 @@ public static class ConvertToExtensionMethodTool
         }
 
         var formatted = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
-        return formatted.ToFullString();
+        return formatted.ToFullString().Replace("\r\n", "\n");
     }
 }

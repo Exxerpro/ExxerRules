@@ -71,7 +71,13 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        var exceptionType = GetExceptionType(throwStatement.Expression, context.SemanticModel);
+		// Skip in known boundary layers (e.g., API controllers, web host) based on namespace/class hints
+		if (IsInBoundaryLayer(throwStatement))
+		{
+			return;
+		}
+
+		var exceptionType = GetExceptionType(throwStatement.Expression, context.SemanticModel);
         var diagnostic = Diagnostic.Create(
             Rule,
             throwStatement.GetLocation(),
@@ -105,7 +111,13 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        var exceptionType = GetExceptionType(throwExpression.Expression, context.SemanticModel);
+		// Skip in known boundary layers (e.g., API controllers, web host) based on namespace/class hints
+		if (IsInBoundaryLayer(throwExpression))
+		{
+			return;
+		}
+
+		var exceptionType = GetExceptionType(throwExpression.Expression, context.SemanticModel);
         var diagnostic = Diagnostic.Create(
             Rule,
             throwExpression.GetLocation(),
@@ -113,6 +125,31 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 
         context.ReportDiagnostic(diagnostic);
     }
+
+	private static bool IsInBoundaryLayer(SyntaxNode node)
+	{
+		// Heuristics: class names ending with Controller, or namespaces containing .Web, .Api, .Endpoints
+		var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		if (containingClass != null)
+		{
+			var name = containingClass.Identifier.Text;
+			if (name.EndsWith("Controller") || name.EndsWith("Controllers"))
+			{
+				return true;
+			}
+		}
+
+		var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
+		if (!string.IsNullOrEmpty(ns))
+		{
+			if (ns.Contains(".Web") || ns.Contains(".Api") || ns.Contains(".Endpoints") || ns.Contains(".Presentation"))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 
     private static bool IsInTestMethod(SyntaxNode node)
     {

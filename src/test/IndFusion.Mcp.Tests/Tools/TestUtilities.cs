@@ -15,12 +15,21 @@ public static class TestUtilities
         var dir = new DirectoryInfo(currentDir);
         while (dir != null)
         {
-            var solutionFile = Path.Combine(dir.FullName, "IndFusion.Mcp.sln");
-            if (File.Exists(solutionFile))
-                return solutionFile;
+            // Primary solution used in CI/local is under src/IndFusion.sln
+            var primary = Path.Combine(dir.FullName, "src", "IndFusion.sln");
+            if (File.Exists(primary))
+                return primary;
+
+            // Fallback legacy name at repo root
+            var legacy = Path.Combine(dir.FullName, "IndFusion.Mcp.sln");
+            if (File.Exists(legacy))
+                return legacy;
+
             dir = dir.Parent;
         }
-        return "./IndFusion.Mcp.sln";
+        // As a last resort, return expected src path relative to current dir
+        var defaultSrc = Path.GetFullPath(Path.Combine(currentDir, "src", "IndFusion.sln"));
+        return defaultSrc;
     }
 
     /// <summary>

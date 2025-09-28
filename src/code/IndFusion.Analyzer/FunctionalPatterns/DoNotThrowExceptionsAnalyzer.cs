@@ -57,7 +57,13 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Get exception type name for reporting
+		// Skip known boundary layers (e.g., controllers/web)
+		if (IsInBoundaryLayer(throwStatement))
+		{
+			return;
+		}
+
+		// Get exception type name for reporting
         var exceptionType = GetExceptionTypeName(throwStatement.Expression);
 
         // Report diagnostic for exception throwing
@@ -90,4 +96,28 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             obj.Type?.ToString() ?? "Exception",
         _ => "Exception"
     };
+
+	private static bool IsInBoundaryLayer(SyntaxNode node)
+	{
+		var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		if (containingClass != null)
+		{
+			var name = containingClass.Identifier.Text;
+			if (name.EndsWith("Controller") || name.EndsWith("Controllers"))
+			{
+				return true;
+			}
+		}
+
+		var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
+		if (!string.IsNullOrEmpty(ns))
+		{
+			if (ns.Contains(".Web") || ns.Contains(".Api") || ns.Contains(".Endpoints") || ns.Contains(".Presentation"))
+			{
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

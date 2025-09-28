@@ -206,7 +206,7 @@ public static class ExxerFactoringHelpers
         string successMessage)
     {
         if (!File.Exists(filePath))
-            throw new McpException($"Error: File {filePath} not found (current dir: {Directory.GetCurrentDirectory()})");
+            throw new IndFusion.Mcp.Core.Exceptions.McpException($"Error: File {filePath} not found (current dir: {Directory.GetCurrentDirectory()})");
 
         var (sourceText, encoding) = await ReadFileWithEncodingAsync(filePath);
         var newText = transform(sourceText);
@@ -214,8 +214,13 @@ public static class ExxerFactoringHelpers
         if (newText.StartsWith("Error:"))
             return newText;
 
-        await File.WriteAllTextAsync(filePath, newText, encoding);
-        UpdateFileCaches(filePath, newText);
+        // Preserve original newline style
+        var normalizedNew = newText.Replace("\r\n", "\n");
+        if (sourceText.Contains("\r\n"))
+            normalizedNew = normalizedNew.Replace("\n", "\r\n");
+
+        await File.WriteAllTextAsync(filePath, normalizedNew, encoding);
+        UpdateFileCaches(filePath, normalizedNew);
         return successMessage;
     }
 
@@ -370,6 +375,12 @@ public static class ExxerFactoringHelpers
         var bytes = await File.ReadAllBytesAsync(filePath, cancellationToken);
         var encoding = DetectEncoding(bytes);
         var text = encoding.GetString(bytes);
+        // Strip UTF-8 BOM from text when present so content comparisons match expectations
+        if (encoding.Equals(new UTF8Encoding(true)) && text.Length > 0 && text[0] == '\uFEFF')
+        {
+            text = text.Substring(1);
+            encoding = new UTF8Encoding(true);
+        }
         return (text, encoding);
     }
 
@@ -397,7 +408,7 @@ public static class ExxerFactoringHelpers
                 return new UTF32Encoding(false, true);
         }
         if (bytes.Length >= 3 && bytes[0] == 0xEF && bytes[1] == 0xBB && bytes[2] == 0xBF)
-            return Encoding.UTF8;
+            return new UTF8Encoding(true);
         if (bytes.Length >= 2)
         {
             if (bytes[0] == 0xFE && bytes[1] == 0xFF)

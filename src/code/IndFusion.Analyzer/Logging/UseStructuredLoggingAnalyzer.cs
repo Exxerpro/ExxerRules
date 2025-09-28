@@ -100,7 +100,7 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 			return false;
 		}
 
-		return IsILoggerType(receiverType);
+		return IsLoggerType(receiverType);
     }
 
     private static bool IsLoggingMethodName(string methodName)

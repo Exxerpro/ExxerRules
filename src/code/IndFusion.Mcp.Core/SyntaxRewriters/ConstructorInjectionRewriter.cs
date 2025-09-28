@@ -97,6 +97,7 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
                 SyntaxFactory.AssignmentExpression(
                     SyntaxKind.SimpleAssignmentExpression,
                     SyntaxFactory.IdentifierName(_fieldName),
+                    SyntaxFactory.Token(SyntaxKind.EqualsToken).WithLeadingTrivia(SyntaxFactory.Space).WithTrailingTrivia(SyntaxFactory.Space),
                     SyntaxFactory.IdentifierName(_parameterName)));
             visited = visited.WithBody((visited.Body ?? SyntaxFactory.Block()).AddStatements(assignment));
         }

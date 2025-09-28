@@ -107,7 +107,7 @@ public static class MakeFieldReadonlyTool
         var newRoot = rewriter.Visit(syntaxRoot);
 
         var formattedRoot = Formatter.Format(newRoot!, ExxerFactoringHelpers.SharedWorkspace);
-        return formattedRoot.ToFullString();
+        return formattedRoot.ToFullString().Replace("\r\n", "\n");
     }
 
 }

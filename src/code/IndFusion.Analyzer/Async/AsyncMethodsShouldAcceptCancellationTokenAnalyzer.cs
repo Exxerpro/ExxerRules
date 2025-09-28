@@ -47,7 +47,7 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.Node;
 
-        // Only analyze async methods
+		// Only analyze async methods
         if (!IsAsyncMethod(methodDeclaration))
         {
             return;
@@ -59,8 +59,8 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
             return;
         }
 
-        // Skip if this is a method that should be exempted
-        if (IsSkippableMethod(methodDeclaration))
+		// Skip if this is a method that should be exempted or boundary layer (controllers/web)
+		if (IsSkippableMethod(methodDeclaration) || IsInBoundaryLayer(methodDeclaration))
         {
             return;
         }
@@ -218,5 +218,29 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         }
 
         return string.Join(".", parts);
+    }
+
+    private static bool IsInBoundaryLayer(SyntaxNode node)
+    {
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass != null)
+        {
+            var name = containingClass.Identifier.Text;
+            if (name.EndsWith("Controller") || name.EndsWith("Controllers"))
+            {
+                return true;
+            }
+        }
+
+        var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
+        if (!string.IsNullOrEmpty(ns))
+        {
+            if (ns.Contains(".Web") || ns.Contains(".Api") || ns.Contains(".Endpoints") || ns.Contains(".Presentation"))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

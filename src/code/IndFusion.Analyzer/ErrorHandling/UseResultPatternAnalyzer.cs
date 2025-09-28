@@ -59,7 +59,13 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Check for throw statements and expressions using functional approach
+		// Skip boundary layers (e.g., controllers, web endpoints)
+		if (IsInBoundaryLayer(methodDeclaration))
+		{
+			return;
+		}
+
+		// Check for throw statements and expressions using functional approach
         var throwStatements = methodDeclaration.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
         var throwExpressions = methodDeclaration.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
 
@@ -116,7 +122,13 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Check accessors for throw statements using functional approach
+		// Skip boundary layers (e.g., controllers, web endpoints)
+		if (IsInBoundaryLayer(propertyDeclaration))
+		{
+			return;
+		}
+
+		// Check accessors for throw statements using functional approach
         var accessorThrows = CheckAccessorsForThrows(propertyDeclaration);
         var expressionThrows = CheckExpressionBodyForThrows(propertyDeclaration);
 
@@ -154,7 +166,13 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Check for throw statements and expressions
+		// Skip boundary layers
+		if (IsInBoundaryLayer(localFunction))
+		{
+			return;
+		}
+
+		// Check for throw statements and expressions
         var throwStatements = localFunction.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
         var throwExpressions = localFunction.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
 
@@ -182,7 +200,13 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Check for throw statements and expressions
+		// Skip boundary layers
+		if (IsInBoundaryLayer(lambda))
+		{
+			return;
+		}
+
+		// Check for throw statements and expressions
         var throwStatements = lambda.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
         var throwExpressions = lambda.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
 
@@ -221,6 +245,30 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         if (typeText.Contains("ValueTask<") && typeText.Contains("Result<"))
         {
             return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsInBoundaryLayer(SyntaxNode node)
+    {
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass != null)
+        {
+            var name = containingClass.Identifier.Text;
+            if (name.EndsWith("Controller") || name.EndsWith("Controllers"))
+            {
+                return true;
+            }
+        }
+
+        var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
+        if (!string.IsNullOrEmpty(ns))
+        {
+            if (ns.Contains(".Web") || ns.Contains(".Api") || ns.Contains(".Endpoints") || ns.Contains(".Presentation"))
+            {
+                return true;
+            }
         }
 
         return false;

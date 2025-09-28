@@ -196,6 +196,6 @@ public static class ConvertToStaticWithParametersTool
 
         var newRoot = ConvertToStaticWithParametersAst(syntaxRoot, method);
         var formattedRoot = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
-        return formattedRoot.ToFullString();
+        return formattedRoot.ToFullString().Replace("\r\n", "\n");
     }
 }

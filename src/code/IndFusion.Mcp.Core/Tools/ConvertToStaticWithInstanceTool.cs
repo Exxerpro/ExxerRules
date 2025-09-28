@@ -146,6 +146,6 @@ public static class ConvertToStaticWithInstanceTool
 
         var newRoot = ConvertToStaticWithInstanceAst(syntaxRoot, method, instanceParameterName);
         var formatted = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
-        return formatted.ToFullString();
+        return formatted.ToFullString().Replace("\r\n", "\n");
     }
 }

@@ -44,8 +44,8 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         var awaitExpression = (AwaitExpressionSyntax)context.Node;
         var expression = awaitExpression.Expression;
 
-        // Skip if this is application code (not library code)
-        if (IsApplicationCode(awaitExpression))
+		// Skip if this is application code (not library code) or boundary layers (controllers/web)
+		if (IsApplicationCode(awaitExpression) || IsInBoundaryLayer(awaitExpression))
         {
             return;
         }
@@ -117,6 +117,30 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
             }
 
             current = currentMember.Expression;
+        }
+
+        return false;
+    }
+
+    private static bool IsInBoundaryLayer(SyntaxNode node)
+    {
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass != null)
+        {
+            var name = containingClass.Identifier.Text;
+            if (name.EndsWith("Controller") || name.EndsWith("Controllers"))
+            {
+                return true;
+            }
+        }
+
+        var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
+        if (!string.IsNullOrEmpty(ns))
+        {
+            if (ns.Contains(".Web") || ns.Contains(".Api") || ns.Contains(".Endpoints") || ns.Contains(".Presentation"))
+            {
+                return true;
+            }
         }
 
         return false;

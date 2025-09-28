@@ -38,7 +38,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
+		context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
     }
 
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
@@ -51,8 +51,14 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Get reference type parameters that need validation
-        var referenceParameters = GetReferenceTypeParameters(methodDeclaration, context.SemanticModel);
+		// Skip expression-bodied methods to avoid false positives on small forwarders
+		if (methodDeclaration.ExpressionBody != null)
+		{
+			return;
+		}
+
+		// Get reference type parameters that need validation (semantic)
+		var referenceParameters = GetReferenceTypeParameters(methodDeclaration, context.SemanticModel);
         if (!referenceParameters.Any())
         {
             return;

@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ===================================================================== -->
+  <!-- Project Properties & Configuration                                      -->
+  <!-- ===================================================================== -->
+  <PropertyGroup>
+	<!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<!-- Package Information -->
+	<PackageId>IndFusion.Mcp.Core</PackageId>
+	<PackageVersion>1.0.0-rc.1</PackageVersion>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+	  <Authors>IndFusion</Authors>
+	<Description>Core library for IndFusion MCP components</Description>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<RootNamespace>IndFusion.Mcp.Core</RootNamespace>
+  </PropertyGroup>
+  <!-- ===================================================================== -->
+  <!-- Package Dependencies                                                   -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<!-- Roslyn Compiler Platform & Code Analysis -->
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
+	<PackageReference Include="Microsoft.CodeAnalysis.Features" />
+	<PackageReference Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" />
+	<PackageReference Include="Microsoft.Build.Locator" />
+	<!-- Microsoft Extensions & Configuration -->
+	<PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+	<!-- Logging Framework (Serilog) -->
+	<PackageReference Include="Serilog" />
+	<PackageReference Include="Serilog.Extensions.Logging" />
+	<PackageReference Include="Serilog.Sinks.Console" />
+	<PackageReference Include="Serilog.Sinks.File" />
+	<PackageReference Include="Serilog.Sinks.Seq" />
+	<!-- System & JSON (part of framework for net10) -->
+	<!-- Protocol & Communication -->
+	<PackageReference Include="ModelContextProtocol" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- InternalsVisibleTo Configuration                                       -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<InternalsVisibleTo Include="IndFusion.Mcp.Tests" />
+	<InternalsVisibleTo Include="IndFusion.Mcp.Core.Tests" />
+	<InternalsVisibleTo Include="IndFusion.Mcp.Server" />
+	<InternalsVisibleTo Include="IndFusion.Mcp.Web" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Package Version Overrides                                              -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<PackageVersion Update="Microsoft.Build.Locator" />
+	<PackageVersion Update="SonarAnalyzer.CSharp" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Project Structure Folders                                              -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<Folder Include="Extensions\" />
+	<Folder Include="Logging\" />
+  </ItemGroup>
+</Project>

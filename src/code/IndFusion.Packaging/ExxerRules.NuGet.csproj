@@ -1,0 +1,62 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>IndFusion.Analyzers</PackageId>
+    <PackageVersion>1.0.3</PackageVersion>
+    <Title>IndFusion Analyzers + Code Fixes</Title>
+    <Description>IndFusion Roslyn analyzers and code fixes for modern C# development: Clean Architecture, Result pattern, async best practices, testing standards, and performance tuning. Updated for latest Roslyn and .NET.</Description>
+    <Authors>IndFusion</Authors>
+    <Company>IndFusion</Company>
+    <PackageTags>csharp;roslyn;analyzer;code-quality;clean-architecture;result-pattern;testing;performance;async;modern-csharp;tdd;free;open-source;dotnet;mdc</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/indfusion/indfusion</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/indfusion/indfusion</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageIcon>icon.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright IndFusion 2025</Copyright>
+    <!-- Analyzer Package Configuration -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Suppress false positive "no dependencies nor content" warning -->
+    <PackageValidationBaselineVersion>
+    </PackageValidationBaselineVersion>
+    <!-- Disable package validation -->
+    <EnablePackageValidation>false</EnablePackageValidation>
+    <!-- Disable validation that causes false positive -->
+    <IncludeSymbols>false</IncludeSymbols>
+    <!-- Disable symbols package -->
+    <IncludeSource>false</IncludeSource>
+    <!-- Disable source package -->
+    <RootNamespace>IndFusion.Packaging</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IndFusion.Analyzer\IndFusion.Analyzer.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\IndFusion.Fixer\IndFusion.Fixer.csproj" PrivateAssets="all" />
+  </ItemGroup>
+  <!-- Add a minimal dependency to satisfy NuGet validation -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="" />
+    <None Include="icon.png" Pack="true" PackagePath="" />
+    <None Include="content.txt" Pack="true" PackagePath="content" />
+    <None Include="tools\install.ps1" Pack="true" PackagePath="tools" />
+    <None Include="tools\uninstall.ps1" Pack="true" PackagePath="tools" />
+  </ItemGroup>
+  <!-- Analyzer DLLs - using None with proper PackagePath for analyzers -->
+  <ItemGroup>
+    <None Include="..\IndFusion.Analyzer\bin\Release\netstandard2.0\IndFusion.Analyzer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\IndFusion.Fixer\bin\Release\netstandard2.0\IndFusion.Fixer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="build\ExxerRules.props" Pack="true" PackagePath="build\" />
+    <None Include="build\ExxerRules.targets" Pack="true" PackagePath="build\" />
+    <None Include="buildTransitive\ExxerRules.props" Pack="true" PackagePath="buildTransitive\" />
+    <None Include="buildTransitive\ExxerRules.targets" Pack="true" PackagePath="buildTransitive\" />
+  </ItemGroup>
+</Project>

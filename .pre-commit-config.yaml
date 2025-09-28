@@ -1,0 +1,55 @@
+repos:
+  # Built-in hooks for common issues
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      # Prevent large files from being committed
+      - id: check-added-large-files
+        args: ['--maxkb=40960']  # Prevent files larger than 40MB
+
+      # Prevent committing to main/master branches directly
+      - id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+
+      # Check for common issues
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-json
+      - id: check-xml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+
+      # Prevent secrets
+      - id: detect-private-key
+      - id: check-ast  # Check Python syntax
+
+  # .NET specific hooks
+  - repo: local
+    hooks:
+      # Prevent backup files
+      - id: prevent-backup-files
+        name: Prevent backup files
+        entry: Backup files should not be committed
+        language: fail
+        files: '.*\.(backup|bak)$|backup-.*\.zip$|.*-backup-.*\.(zip|tar\.gz)$'
+
+      # Check for common .NET build artifacts
+      - id: prevent-build-artifacts
+        name: Prevent build artifacts
+        entry: Build artifacts should not be committed
+        language: fail
+        files: '^(bin/|obj/|packages/|TestResults/|\.vs/).*'
+        exclude: '^(bin/.*\.refresh|packages/repositories\.config)$'
+
+      # Prevent large log files
+      - id: prevent-large-logs
+        name: Prevent large log files
+        entry: Large log files should not be committed
+        language: fail
+        # Only consider .log files as logs (not .txt)
+        files: '.*\\.log$'
+        # Skip any logs kept under logs/ or Logs/ folders entirely
+        exclude: '(^|.*/)(logs|Logs)/.*'
+        minimum_pre_commit_version: 2.9.0

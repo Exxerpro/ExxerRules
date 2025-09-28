@@ -1,0 +1,20 @@
+### New Rules
+
+Rule ID | Category | Severity | Notes
+--------|----------|----------|-------
+EXXER200 | IndFusion.Analyzers.NullSafety | Warning | Validate null parameters at method entry
+EXXER300 | IndFusion.Analyzers.Async | Info | Async methods should accept CancellationToken
+EXXER400 | IndFusion.Analyzers.Documentation | Info | Public members should have XML documentation
+EXXER500 | IndFusion.Analyzers.CodeQuality | Warning | Avoid magic numbers and strings
+EXXER503 | IndFusion.Analyzers.CodeQuality | Warning | Do not use regions for code organization
+EXXER800 | IndFusion.Analyzers.Logging | Warning | Use structured logging instead of string concatenation
+EXXER801 | IndFusion.Analyzers.Logging | Warning | Do not use Console.WriteLine in production code
+EXXER003 | IndFusion.Analyzers.FunctionalPatterns | Error | Do not throw exceptions - use Result&lt;T&gt; pattern instead
+EXXER301 | IndFusion.Analyzers.Async | Warning | Use ConfigureAwait(false) in library code
+EXXER501 | IndFusion.Analyzers.CodeQuality | Info | Use expression-bodied members where appropriate
+EXXER600 | IndFusion.Analyzers.Architecture | Error | Domain layer should not reference Infrastructure layer
+EXXER601 | IndFusion.Analyzers.Architecture | Warning | Use Repository pattern with focused interfaces
+EXXER700 | IndFusion.Analyzers.Performance | Warning | Use efficient LINQ operations
+EXXER702 | IndFusion.Analyzers.CodeQuality | Info | Use modern pattern matching with declaration patterns
+EXXER900 | IndFusion.Analyzers.CodeQuality | Hidden | Format project using dotnet format command
+EXXER901 | IndFusion.Analyzers.CodeQuality | Info | Code formatting inconsistency detected

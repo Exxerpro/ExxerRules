@@ -192,3 +192,76 @@ This document summarizes likely false positives and weak points for each analyze
 - Respect generated code markers and test projects.
 - Provide suppression mechanisms (attributes/pragma) and clear diagnostics with guidance.
 - Add telemetry hooks behind a flag to learn common suppressions for future tuning.
+
+
+---
+
+## TDD plan to reduce false positives and harden analyzers
+
+- **Phase 0: Test harness and config support**
+  - Add analyzer config options (AnalyzerConfigOptions) and AdditionalFiles defaults for tunables (allowlists, namespace scopes, severity).
+  - Seed a shared test base for options injection; add helpers for semantic assertions.
+
+- **Phase 1: EXXER500 AvoidMagicNumbersAndStrings**
+  - Tests (red):
+    - Allows: const fields; static readonly field initializers (including nested expr); local const; switch cases; attribute args; array/collection initializers; common units (TimeSpan.FromX/DateTime ticks); bit flags (enums); ports 80/443; powers of two.
+    - Blocks: inline literals in executable code, logging, conditions, magic strings not in allowlist.
+    - Options: numbers.allowlist, strings.allowlist, minStringLength, exempt.StaticCtors, exempt.Namespaces.
+  - Impl (green):
+    - Semantic checks: literal in variable/field/property initializer where target is const or static readonly → ignore (even when nested).
+    - Expand allowlists: common ports, powers of two, time factors; configurable via options.
+    - Optional: ignore literals in static ctor when first-assigning readonly fields (behind option).
+  - Refactor (blue): small utility for “is literal in initializer to constant-like target”.
+
+- **Phase 2: EXXER800 UseStructuredLogging**
+  - Tests:
+    - Flag: string concatenation when receiver resolves to Microsoft.Extensions.Logging.ILogger.
+    - Don’t flag: non-ILogger methods named LogX; interpolated string handler overloads on ILogger (net6+); message template strings with placeholders without concat; concat outside of first arg.
+  - Impl:
+    - Resolve receiver symbol to ILogger; restrict analysis to first message-arg.
+    - Permit interpolated handler overloads (semantic check).
+    - Avoid scanning unrelated descendant binary +.
+
+- **Phase 3: EXXER200 ValidateNullParameters**
+  - Tests:
+    - Don’t flag: parameters with nullable annotations handled by flow; guards via ArgumentNullException.ThrowIfNull, custom Guard.* methods (configurable), [NotNull] attributes, records/ctors that assign then validate upstream.
+    - Flag: public APIs with reference-type params lacking validation.
+  - Impl:
+    - Use semantic IsReferenceType + nullability.
+    - Recognize configurable guard methods/attributes.
+    - Treat expression-bodied methods conservatively only when parameter is used without guard.
+
+- **Phase 4: EXXER001/002/003 Throw vs Result pattern**
+  - Tests:
+    - Don’t flag: outer boundaries (e.g., API controllers, background host) per namespace/project config; rethrow; ThrowHelper; test methods.
+    - Flag: domain/application layers throwing.
+  - Impl:
+    - Namespace/project-scope config; better rethrow detection; allow list of exception types for guard clauses.
+
+- **Phase 5: Async analyzers (EXXER300/301)**
+  - Tests:
+    - CancellationToken: require on library-layer APIs; allow in event-handlers/minimal APIs; recognize framework-provided token at higher scope.
+    - ConfigureAwait: only enforce on library layer; don’t enforce where context capture is required.
+  - Impl:
+    - Layer detection via config; permit framework contexts; lower severity to Info by default.
+
+- **Phase 6: Architecture analyzers**
+  - DomainShouldNotReferenceInfrastructure
+    - Tests: configurable layer names; generated/test exclusions.
+    - Impl: move from string-matching to configurable namespace patterns; optionally check project reference direction (where available in tests).
+  - UseRepositoryPattern
+    - Tests: semantic detection of DbContext/IDbConnection; exclude migrations, infra; name-based repo exceptions configurable.
+    - Impl: semantic type checks; scoped exclusions.
+
+- **Phase 7: Formatting & Regions**
+  - Lower to Info; respect .editorconfig; skip generated; allow named regions via config.
+
+- **Cross-cutting**
+  - Documentation: update README/rules with new options and examples.
+  - Telemetry hooks (behind flag) for aggregate suppression insight (future).
+  - CI: run analyzer tests; ensure no new false positives in our own repo.
+
+**Acceptance criteria**
+- New tests cover all listed cases; previously failing cases pass.
+- False positive reports for readonly/static and ILogger scenarios drop to near-zero on repo scan.
+- Config allows teams to tailor behavior without code changes.

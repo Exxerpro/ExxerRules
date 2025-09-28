@@ -38,15 +38,15 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
     }
 
-    private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
+	private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
 
-        // Check if this is a logging method call
-        if (!IsLoggingMethodCall(invocation, context.SemanticModel))
+		// Check if this is a logging method call on ILogger
+		if (!IsILoggerLoggingCall(invocation, context.SemanticModel))
         {
             return;
         }
@@ -58,37 +58,31 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        var messageArgument = arguments[0].Expression;
+		var messageArgument = arguments[0].Expression;
 
-        // Check if the message uses string concatenation or interpolation
-        if (messageArgument is BinaryExpressionSyntax binaryExpr && IsStringConcatenation(binaryExpr))
+		// If the target method uses an interpolated string handler overload, allow interpolated strings
+		var methodSymbol = context.SemanticModel.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
+		var allowsInterpolatedHandler = MethodAllowsInterpolatedHandler(methodSymbol);
+
+		// Check if the message uses string concatenation or (when not allowed) interpolation
+		if (messageArgument is BinaryExpressionSyntax binaryExpr && IsStringConcatenation(binaryExpr))
         {
             ReportDiagnostic(context, messageArgument, "string concatenation");
         }
-        else if (messageArgument is InterpolatedStringExpressionSyntax)
+		else if (messageArgument is InterpolatedStringExpressionSyntax && !allowsInterpolatedHandler)
         {
             ReportDiagnostic(context, messageArgument, "string interpolation");
         }
-        // Also check for string concatenation in parent expressions
-        else if (messageArgument is ParenthesizedExpressionSyntax parenthesizedExpr &&
-                 parenthesizedExpr.Expression is BinaryExpressionSyntax parentBinaryExpr &&
-                 IsStringConcatenation(parentBinaryExpr))
-        {
-            ReportDiagnostic(context, parenthesizedExpr, "string concatenation");
-        }
-        // Check for string concatenation in any descendant nodes
-        else if (ContainsStringConcatenationInDescendants(messageArgument))
-        {
-            ReportDiagnostic(context, messageArgument, "string concatenation");
-        }
+		// Only analyze the first argument; do not scan unrelated descendants
     }
 
-    private static bool IsLoggingMethodCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
+	private static bool IsILoggerLoggingCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
     {
-        // Check if the method is called on ILogger<T> or ILogger
-        if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
+		// We expect a member access; if not, try to bind the method and check extension receiver
+		if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
         {
-            return false;
+			var method = semanticModel.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
+			return IsILoggerMethod(method);
         }
 
         var methodName = memberAccess.Name.Identifier.ValueText;
@@ -99,9 +93,14 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // For now, just check if the method name matches logging patterns
-        // This is more permissive and should catch the test case
-        return true;
+		// Ensure the receiver type is ILogger or implements ILogger
+		var receiverType = semanticModel.GetTypeInfo(memberAccess.Expression).Type;
+		if (receiverType == null)
+		{
+			return false;
+		}
+
+		return IsILoggerType(receiverType);
     }
 
     private static bool IsLoggingMethodName(string methodName)
@@ -116,16 +115,23 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         return loggingMethods.Contains(methodName);
     }
 
-    private static bool IsLoggerType(ITypeSymbol typeSymbol)
+	private static bool IsLoggerType(ITypeSymbol typeSymbol)
     {
-        // Check if it's ILogger or ILogger<T>
-        if (typeSymbol.Name == "ILogger")
-        {
-            var containingNamespace = GetFullNamespace(typeSymbol.ContainingNamespace);
-            return containingNamespace == "Microsoft.Extensions.Logging";
-        }
+		// Handles ILogger and ILogger<T>
+		if (typeSymbol.Name == "ILogger")
+		{
+			var containingNamespace = GetFullNamespace(typeSymbol.ContainingNamespace);
+			return containingNamespace == "Microsoft.Extensions.Logging";
+		}
 
-        return false;
+		// For ILogger<T>, the constructed type has OriginalDefinition named ILogger
+		if (typeSymbol is INamedTypeSymbol named && named.OriginalDefinition?.Name == "ILogger")
+		{
+			var ns = GetFullNamespace(named.OriginalDefinition.ContainingNamespace);
+			return ns == "Microsoft.Extensions.Logging";
+		}
+
+		return false;
     }
 
     private static string GetFullNamespace(INamespaceSymbol? namespaceSymbol)
@@ -178,12 +184,47 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         _ => false
     };
 
-    private static bool ContainsStringConcatenationInDescendants(ExpressionSyntax expression)
-    {
-        // Look for any binary expression with + operator in descendants
-        var binaryExpressions = expression.DescendantNodes().OfType<BinaryExpressionSyntax>();
-        return binaryExpressions.Any(binary => IsStringConcatenation(binary));
-    }
+	private static bool MethodAllowsInterpolatedHandler(IMethodSymbol? methodSymbol)
+	{
+		if (methodSymbol == null)
+		{
+			return false;
+		}
+
+		// If any parameter type name ends with "InterpolatedStringHandler", allow
+		foreach (var p in methodSymbol.Parameters)
+		{
+			var pType = p.Type;
+			if (pType is INamedTypeSymbol pNamed)
+			{
+				if (pNamed.Name.EndsWith("InterpolatedStringHandler", System.StringComparison.Ordinal))
+				{
+					return true;
+				}
+			}
+		}
+
+		return false;
+	}
+
+	private static bool IsILoggerMethod(IMethodSymbol? method)
+	{
+		if (method == null)
+		{
+			return false;
+		}
+
+		// Extension methods like LoggerExtensions.LogInformation(ILogger,...)
+		if (method.IsExtensionMethod && method.Parameters.Length > 0)
+		{
+			var first = method.Parameters[0].Type;
+			return IsLoggerType(first);
+		}
+
+		// Instance methods on ILogger (rare)
+		var containing = method.ContainingType;
+		return containing != null && IsLoggerType(containing);
+	}
 
     private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxNode node, string violationType)
     {

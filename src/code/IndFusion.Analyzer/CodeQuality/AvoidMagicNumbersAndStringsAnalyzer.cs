@@ -39,19 +39,25 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        context.RegisterSyntaxNodeAction(AnalyzeLiteralExpression, SyntaxKind.NumericLiteralExpression);
-        context.RegisterSyntaxNodeAction(AnalyzeLiteralExpression, SyntaxKind.StringLiteralExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeLiteralExpression, SyntaxKind.NumericLiteralExpression);
+		context.RegisterSyntaxNodeAction(AnalyzeLiteralExpression, SyntaxKind.StringLiteralExpression);
     }
 
     private static void AnalyzeLiteralExpression(SyntaxNodeAnalysisContext context)
     {
         var literalExpression = (LiteralExpressionSyntax)context.Node;
 
-        // Skip if this is a constant declaration
-        if (IsInConstantDeclaration(literalExpression))
+		// Skip if this is a constant-like declaration
+		if (IsInConstantDeclaration(literalExpression))
         {
             return;
         }
+
+		// Skip if assigning to static readonly field inside a static constructor
+		if (IsAssignmentToStaticReadonlyInStaticCtor(literalExpression, context))
+		{
+			return;
+		}
 
         // Skip if this is an attribute argument
         if (IsAttributeArgument(literalExpression))
@@ -126,7 +132,7 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
-    private static bool IsInConstantDeclaration(SyntaxNode node)
+	private static bool IsInConstantDeclaration(SyntaxNode node)
     {
         // Check if we're in a const field declaration
         var fieldDeclaration = node.FirstAncestorOrSelf<FieldDeclarationSyntax>();
@@ -156,8 +162,35 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
             return true;
         }
 
-        return false;
+		return false;
     }
+
+	private static bool IsAssignmentToStaticReadonlyInStaticCtor(LiteralExpressionSyntax literal, SyntaxNodeAnalysisContext context)
+	{
+		// Look for an assignment expression ancestor
+		var assignment = literal.FirstAncestorOrSelf<AssignmentExpressionSyntax>();
+		if (assignment == null)
+		{
+			return false;
+		}
+
+		// Ensure we are inside a static constructor
+		var ctor = assignment.FirstAncestorOrSelf<ConstructorDeclarationSyntax>();
+		if (ctor == null || !ctor.Modifiers.Any(SyntaxKind.StaticKeyword))
+		{
+			return false;
+		}
+
+		// Resolve the left-hand side symbol
+		var leftSymbol = context.SemanticModel.GetSymbolInfo(assignment.Left).Symbol as IFieldSymbol;
+		if (leftSymbol == null)
+		{
+			return false;
+		}
+
+		// Only skip when assigning to static readonly fields
+		return leftSymbol.IsStatic && leftSymbol.IsReadOnly;
+	}
 
     private static bool IsAttributeArgument(SyntaxNode node) => node.FirstAncestorOrSelf<AttributeArgumentSyntax>() != null ||
                node.FirstAncestorOrSelf<AttributeSyntax>() != null;
@@ -166,15 +199,21 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
                node.FirstAncestorOrSelf<CaseSwitchLabelSyntax>() != null ||
                node.FirstAncestorOrSelf<SwitchExpressionSyntax>() != null;
 
-    private static bool IsCommonNumber(string value)
+	private static bool IsCommonNumber(string value)
     {
-        // Only very basic numbers that are typically acceptable in any context
-        var commonNumbers = new[]
-        {
-            "0", "1", "-1", "2"
-        };
+		// Commonly acceptable literals (configurable in future):
+		// - Small integers often used as counters or toggles
+		// - Powers of two typically used for sizes/flags
+		// - Common network ports
+		var commonNumbers = new[]
+		{
+			"0", "1", "-1", "2", "3", "4",
+			"8", "16", "32", "64", "128", "256",
+			"512", "1024", "2048", "4096",
+			"80", "443"
+		};
 
-        return commonNumbers.Contains(value);
+		return commonNumbers.Contains(value);
     }
 
     private static bool IsFormatString(string value) =>

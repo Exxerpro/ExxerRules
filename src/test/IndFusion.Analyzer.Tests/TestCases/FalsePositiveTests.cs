@@ -251,4 +251,52 @@ namespace TestProject
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
         diagnostics.Length.ShouldBe(0);
     }
+
+	/// <summary>
+	/// Tests that assigning to static readonly fields inside a static constructor is not flagged.
+	/// </summary>
+	[Fact]
+	public void Should_NotReportDiagnostic_When_AssigningStaticReadonly_InStaticCtor()
+	{
+		const string testCode = @"
+namespace TestProject
+{
+	public class Config
+	{
+		public static readonly int Port;
+		public static readonly int BufferSize;
+
+		static Config()
+		{
+			Port = 8080;
+			BufferSize = 1024;
+		}
+	}
+}";
+
+		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
+		diagnostics.Length.ShouldBe(0);
+	}
+
+	/// <summary>
+	/// Tests that common ports and powers of two are not flagged by default allowlist.
+	/// </summary>
+	[Fact]
+	public void Should_NotReportDiagnostic_When_UsingCommonPortsAndPowersOfTwo()
+	{
+		const string testCode = @"
+namespace TestProject
+{
+	public class Network
+	{
+		private const int HttpPort = 80;
+		private const int HttpsPort = 443;
+		private const int PageSize = 4096;
+		private const int Kilo = 1024;
+	}
+}";
+
+		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer());
+		diagnostics.Length.ShouldBe(0);
+	}
 }

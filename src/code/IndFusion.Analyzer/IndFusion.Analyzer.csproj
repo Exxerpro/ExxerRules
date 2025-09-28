@@ -10,7 +10,8 @@
 	  <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
 	<RootNamespace>IndFusion.Analyzer</RootNamespace>
 	<AssemblyName>IndFusion.Analyzer</AssemblyName>
-	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+	<GeneratePackageOnBuild Condition="'$(Configuration)'=='Release'">true</GeneratePackageOnBuild>
 	<IncludeBuildOutput>false</IncludeBuildOutput>
 	<SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
 	<DevelopmentDependency>true</DevelopmentDependency>

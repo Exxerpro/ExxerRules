@@ -77,6 +77,33 @@ public static class ExxerFactoringHelpers
     }
 
     /// <summary>
+    /// Sanitizes a solution file by removing unsupported entries before loading.
+    /// </summary>
+    /// <param name="solutionPath">Absolute path to the original .sln file.</param>
+    /// <returns>The path to a loadable solution file (original or sanitized copy).</returns>
+    private static string PrepareSolutionForLoad(string solutionPath)
+    {
+        try
+        {
+            var lines = File.ReadAllLines(solutionPath);
+            if (!lines.Any(line => line.TrimStart().StartsWith("///", StringComparison.Ordinal)))
+            {
+                return solutionPath;
+            }
+
+            var sanitizedDirectory = Path.Combine(Path.GetTempPath(), ".exxer-sanitized-solutions");
+            Directory.CreateDirectory(sanitizedDirectory);
+            var sanitizedPath = Path.Combine(sanitizedDirectory, Path.GetFileName(solutionPath));
+            var sanitizedLines = lines.Where(line => !line.TrimStart().StartsWith("///", StringComparison.Ordinal)).ToArray();
+            File.WriteAllLines(sanitizedPath, sanitizedLines);
+            return sanitizedPath;
+        }
+        catch
+        {
+            return solutionPath;
+        }
+    }
+    /// <summary>
     /// Gets a cached solution or loads it from disk if not present.
     /// </summary>
     /// <param name="solutionPath">Absolute path to the .sln file.</param>
@@ -92,8 +119,10 @@ public static class ExxerFactoringHelpers
             Directory.SetCurrentDirectory(Path.GetDirectoryName(solutionPath)!);
             return cachedSolution!;
         }
+
+        var loadPath = PrepareSolutionForLoad(solutionPath);
         using var workspace = CreateWorkspace();
-        var solution = await workspace.OpenSolutionAsync(solutionPath, progress: null, cancellationToken);
+        var solution = await workspace.OpenSolutionAsync(loadPath, progress: null, cancellationToken);
         SolutionCache.Set(solutionPath, solution);
         Directory.SetCurrentDirectory(Path.GetDirectoryName(solutionPath)!);
         return solution;

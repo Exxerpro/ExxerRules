@@ -6,6 +6,168 @@ namespace IndFusion.Mcp.Tests.Tools;
 /// </summary>
 public static class TestUtilities
 {
+    private static readonly Lazy<string> ExampleCodeContent = new(() =>
+    {
+        var projectDir = GetTestProjectDirectory();
+        var calculatorPath = Path.Combine(projectDir, "Calculator.cs");
+        if (File.Exists(calculatorPath))
+        {
+            return NormalizeToLf(File.ReadAllText(calculatorPath));
+        }
+
+        const string fallback = """
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace IndFusion.Mcp.Tests.Sample;
+
+public class Calculator
+{
+    private List<int> numbers = new();
+    private readonly string operatorSymbol;
+
+    public Calculator(string op)
+    {
+        operatorSymbol = op;
+    }
+
+    public int Calculate(int a, int b)
+    {
+        if (a < 0 || b < 0)
+        {
+            throw new ArgumentException("Negative numbers not allowed");
+        }
+
+        var result = a + b;
+        numbers.Add(result);
+        Console.WriteLine($"Result: {result}");
+        return result;
+    }
+
+    public double GetAverage()
+    {
+        return numbers.Sum() / (double)numbers.Count;
+    }
+
+    public string FormatResult(int value)
+    {
+        return $"The calculation result is: {value * 2 + 10}";
+    }
+
+    public string GetFormattedNumber(int number)
+    {
+        return $"{operatorSymbol}: {number}";
+    }
+
+    private string format = "Currency";
+
+    public void SetFormat(string newFormat)
+    {
+        format = newFormat;
+    }
+}
+""";
+
+        return NormalizeToLf(fallback);
+    });
+
+    private static string ExampleCode => NormalizeToCrLf(ExampleCodeContent.Value);
+
+    private static string ExampleCodePath => Path.Combine(GetTestProjectDirectory(), "ExampleCode.cs");
+
+    internal static string GetTestProjectDirectory()
+    {
+        var solutionDir = Path.GetDirectoryName(GetSolutionPath())!;
+        var candidates = new[]
+        {
+            Path.Combine(solutionDir, "test", "IndFusion.Mcp.Tests"),
+            Path.Combine(solutionDir, "tests", "IndFusion.Mcp.Tests"),
+            Path.Combine(solutionDir, "IndFusion.Mcp.Tests")
+        };
+        foreach (var candidate in candidates)
+        {
+            if (Directory.Exists(candidate))
+            {
+                return candidate;
+            }
+        }
+        return candidates[0];
+    }
+
+    private static string NormalizeToLf(string text)
+    {
+        return text.Replace("\r\n", "\n").Replace("\r", "\n");
+    }
+
+    private static string NormalizeToCrLf(string text)
+    {
+        return NormalizeToLf(text).Replace("\n", "\r\n");
+    }
+
+
+    /// <summary>
+    /// Ensures the example code file exists with the correct content.
+    /// </summary>
+    public static void EnsureExampleCodeFile()
+    {
+        var path = ExampleCodePath;
+        Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+        var desired = ExampleCode;
+        if (!File.Exists(path) || NormalizeToLf(File.ReadAllText(path)) != NormalizeToLf(desired))
+        {
+            File.WriteAllText(path, desired);
+        }
+    }
+
+    private static string GetExampleCode()
+    {
+        EnsureExampleCodeFile();
+        return ExampleCode;
+    }
+
+    /// <summary>
+    /// Gets the selection range for a snippet within source text.
+    /// </summary>
+    /// <param name="sourceText">The source text to search in.</param>
+    /// <param name="snippet">The snippet to find.</param>
+    /// <param name="occurrence">The occurrence index to find (0-based).</param>
+    /// <returns>The selection range in format "startLine:startColumn-endLine:endColumn".</returns>
+    public static string GetSelectionRange(string sourceText, string snippet, int occurrence = 0)
+    {
+        if (snippet is null)
+        {
+            throw new ArgumentNullException(nameof(snippet));
+        }
+
+        var normalizedSource = NormalizeToLf(sourceText);
+        var normalizedSnippet = NormalizeToLf(snippet);
+
+        var searchIndex = 0;
+        var matchIndex = -1;
+        for (var i = 0; i <= occurrence; i++)
+        {
+            matchIndex = normalizedSource.IndexOf(normalizedSnippet, searchIndex, StringComparison.Ordinal);
+            if (matchIndex < 0)
+            {
+                throw new InvalidOperationException($"Snippet '{snippet}' not found in provided source.");
+            }
+
+            searchIndex = matchIndex + 1;
+        }
+
+        var startLine = normalizedSource[..matchIndex].Count(c => c == '\n') + 1;
+        var lastNewlineBeforeStart = normalizedSource.LastIndexOf('\n', matchIndex - 1);
+        var startColumn = matchIndex - (lastNewlineBeforeStart >= 0 ? lastNewlineBeforeStart : -1);
+
+        var endIndex = matchIndex + normalizedSnippet.Length - 1;
+        var endLine = normalizedSource[..(endIndex + 1)].Count(c => c == '\n') + 1;
+        var lastNewlineBeforeEnd = normalizedSource.LastIndexOf('\n', endIndex);
+        var endColumn = endIndex - (lastNewlineBeforeEnd >= 0 ? lastNewlineBeforeEnd : -1);
+
+        return $"{startLine}:{startColumn}-{endLine}:{endColumn}";
+    }
+
     /// <summary>
     /// Finds the solution path by walking up from the current directory.
     /// </summary>
@@ -38,7 +200,8 @@ public static class TestUtilities
     public static async Task CreateTestFile(string filePath, string content)
     {
         Directory.CreateDirectory(Path.GetDirectoryName(filePath)!);
-        await File.WriteAllTextAsync(filePath, content, cancellationToken: Xunit.TestContext.Current.CancellationToken);
+        var normalized = NormalizeToCrLf(content);
+        await File.WriteAllTextAsync(filePath, normalized, cancellationToken: Xunit.TestContext.Current.CancellationToken);
     }
 
     /// <summary> ///  GetSampleCodeForExtractMethod. /// </summary> /// <returns>A value of type string.</returns>
@@ -61,15 +224,15 @@ public class TestClass
 
     /// <summary> ///  GetSampleCodeForIntroduceField. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForIntroduceField() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary> ///  GetSampleCodeForIntroduceVariable. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForIntroduceVariable() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary> ///  GetSampleCodeForMakeFieldReadonly. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForMakeFieldReadonly() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary>
     /// Provides sample code for a class with a field declared but not initialized.
@@ -85,18 +248,18 @@ public class TestClass
 
     /// <summary> ///  GetSampleCodeForTransformSetter. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForTransformSetter() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary> ///  GetSampleCodeForConvertToStaticInstance. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForConvertToStaticInstance() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary>
     /// Provides sample code used by tests that move a static method between types.
     /// </summary>
     /// <returns>Sample C# code as a string.</returns>
     public static string GetSampleCodeForMoveStaticMethod() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary>
     /// Provides sample code for moving a static method where using directives are involved.
@@ -120,18 +283,18 @@ public class UtilClass { }
 
     /// <summary> ///  GetSampleCodeForMoveInstanceMethod. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForMoveInstanceMethod() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary> ///  GetSampleCodeForConvertToExtension. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForConvertToExtension() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary>
     /// Provides sample code used by tests that verify safe deletion of code elements.
     /// </summary>
     /// <returns>Sample C# code as a string.</returns>
     public static string GetSampleCodeForSafeDelete() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary>
     /// Provides sample code for moving an instance method that has dependencies.
@@ -227,11 +390,11 @@ public class CleanupSample
     /// </summary>
     /// <returns>Sample C# code as a string.</returns>
     public static string GetSampleCodeForMoveTypeToFile() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary> ///  GetSampleCodeForRenameSymbol. /// </summary> /// <returns>A value of type string.</returns>
     public static string GetSampleCodeForRenameSymbol() =>
-        File.ReadAllText(Path.Combine(Path.GetDirectoryName(GetSolutionPath())!, "IndFusion.Mcp.Tests", "ExampleCode.cs"));
+        GetExampleCode();
 
     /// <summary>
     /// Provides sample code used by tests that extract an interface from a class.

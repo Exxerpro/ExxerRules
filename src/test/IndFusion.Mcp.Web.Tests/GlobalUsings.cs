@@ -9,6 +9,7 @@ global using Xunit;
 global using Shouldly;
 global using NSubstitute;
 global using Bunit;
+global using MudBlazor.Services;
 
 // =====================================================================
 // Microsoft ASP.NET Core Testing

@@ -5,6 +5,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Formatting;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
+using CoreMcpException = IndFusion.Mcp.Core.Exceptions.McpException;
 
 namespace IndFusion.Mcp.Core.Tools;
 
@@ -39,6 +40,9 @@ public static class CleanupUsingsTool
             }
 
             return await CleanupUsingsSingleFile(filePath);
+        }        catch (CoreMcpException)
+        {
+            throw;
         }
         catch (Exception ex)
         {

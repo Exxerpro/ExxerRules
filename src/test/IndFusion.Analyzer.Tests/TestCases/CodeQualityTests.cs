@@ -256,4 +256,30 @@ namespace TestProject
         diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
         diagnostics.Any(d => d.Id == DiagnosticIds.AvoidMagicNumbersAndStrings).ShouldBeTrue();
     }
+
+	/// <summary>
+	/// Should not flag ILogger interpolated handler overload usage.
+	/// </summary>
+	[Fact]
+	public void Should_NotReportDiagnostic_When_ILoggerInterpolatedHandlerOverload()
+	{
+		const string testCode = @"
+using Microsoft.Extensions.Logging;
+
+namespace TestProject
+{
+	public class Svc
+	{
+		private readonly ILogger<Svc> _logger;
+		public Svc(ILogger<Svc> logger) { _logger = logger; }
+		public void Run(int userId)
+		{
+			_logger.LogInformation($""User {userId} logged in"");
+		}
+	}
+}";
+
+		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new IndFusion.Analyzers.Logging.UseStructuredLoggingAnalyzer());
+		diagnostics.Length.ShouldBe(0);
+	}
 }

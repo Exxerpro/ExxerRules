@@ -14,12 +14,15 @@ public class IntroduceVariableTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceVariableTest.cs");
-        await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceVariable());
+        var sample = TestUtilities.GetSampleCodeForIntroduceVariable();
+        await TestUtilities.CreateTestFile(testFile, sample);
+
+        var selection = TestUtilities.GetSelectionRange(sample, "value * 2 + 10");
 
         var result = await IntroduceVariableTool.IntroduceVariable(
             SolutionPath,
             testFile,
-            "42:50-42:63",
+            selection,
             "processedValue");
 
         Assert.Contains("Successfully introduced variable", result);

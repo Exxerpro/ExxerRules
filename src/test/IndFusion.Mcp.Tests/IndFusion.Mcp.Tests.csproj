@@ -60,9 +60,12 @@
   <!-- ===================================================================== -->
   <!-- Build Configuration                                                    -->
   <!-- ===================================================================== -->
-  <!-- Exclude generated test files from compilation -->
+  <!-- Exclude generated test files and fixtures from compilation -->
   <ItemGroup>
     <Compile Remove="TestOutput\**\*.cs" />
     <None Include="TestOutput\**\*.cs" />
+    <!-- Exclude ExampleCode.cs - it's a test fixture, not compiled code -->
+    <Compile Remove="ExampleCode.cs" />
+    <None Include="ExampleCode.cs" />
   </ItemGroup>
 </Project>

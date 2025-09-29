@@ -14,11 +14,23 @@ public static class TestHelpers
         var dir = new DirectoryInfo(currentDir);
         while (dir != null)
         {
-            var sln = Path.Combine(dir.FullName, "IndFusion.Mcp.sln");
-            if (File.Exists(sln)) return sln;
+            var primary = Path.Combine(dir.FullName, "src", "IndFusion.sln");
+            if (File.Exists(primary))
+            {
+                return primary;
+            }
+
+            var legacy = Path.Combine(dir.FullName, "IndFusion.Mcp.sln");
+            if (File.Exists(legacy))
+            {
+                return legacy;
+            }
+
             dir = dir.Parent;
         }
-        return "./IndFusion.Mcp.sln";
+
+        var fallback = Path.Combine(currentDir, "src", "IndFusion.sln");
+        return Path.GetFullPath(fallback);
     }
 
     /// <summary>

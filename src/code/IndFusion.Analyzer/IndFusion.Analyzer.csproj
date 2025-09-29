@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers\dotnet\cs\$(AssemblyName).dll" Visible="false" />
-	<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
   <!-- Removed CopyDependencies target (no Operations assembly present) -->
 </Project>

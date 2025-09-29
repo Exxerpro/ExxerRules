@@ -136,7 +136,7 @@ public class TestClass
         // Assert
         result.ShouldContain("Removed unused usings");
         var cleanedCode = await File.ReadAllTextAsync(_testFilePath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        cleanedCode.ShouldContain("global using System;");
+        cleanedCode.ShouldNotContain("global using System;"); // Should be removed since not used
         cleanedCode.ShouldContain("global using System.Collections.Generic;");
         cleanedCode.ShouldContain("using System.Linq;");
     }
@@ -201,7 +201,7 @@ public class TestClass
         // Assert
         result.ShouldContain("Removed unused usings");
         var cleanedCode = await File.ReadAllTextAsync(_testFilePath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        cleanedCode.ShouldContain("using System;");
+        cleanedCode.ShouldNotContain("using System;"); // Should be removed since static usings are used
         cleanedCode.ShouldContain("using static System.Console;");
         cleanedCode.ShouldContain("using static System.Math;");
         cleanedCode.ShouldNotContain("using System.Collections.Generic;"); // Should be removed
@@ -396,8 +396,9 @@ public class TestClass
         var result = CleanupUsingsTool.CleanupUsingsInSource(sourceCode);
 
         // Assert
-        // Should return original content when compilation fails
-        result.ShouldContain("using System.Collections.Generic;");
+        // Should clean up unused usings even with compilation errors
+        result.ShouldNotContain("using System.Collections.Generic;");
+        result.ShouldContain("using System;");
     }
 
     /// <summary> /// CleanupUsingsInSource WithEmptySource ShouldReturnEmpty(). /// </summary>

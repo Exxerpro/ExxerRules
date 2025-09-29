@@ -17,7 +17,6 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
     private readonly string _fieldName;
     private readonly TypeSyntax _parameterType;
     private readonly bool _useProperty;
-    private bool _inTargetMethod;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConstructorInjectionRewriter"/> class.
@@ -44,9 +43,7 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
         var visited = node;
         if (node.Identifier.ValueText == _methodName)
         {
-            _inTargetMethod = true;
             visited = (MethodDeclarationSyntax)base.VisitMethodDeclaration(node)!;
-            _inTargetMethod = false;
             if (_parameterIndex < visited.ParameterList.Parameters.Count)
             {
                 var newParams = visited.ParameterList.Parameters.RemoveAt(_parameterIndex);
@@ -61,12 +58,40 @@ public class ConstructorInjectionRewriter : CSharpSyntaxRewriter
     /// <inheritdoc />
     public override SyntaxNode VisitIdentifierName(IdentifierNameSyntax node)
     {
-        if (_inTargetMethod && node.Identifier.ValueText == _parameterName)
+        if (node.Identifier.ValueText == _parameterName)
         {
-            return SyntaxFactory.IdentifierName(_fieldName).WithTriviaFrom(node);
+            // Check if this identifier is within the target method body (not in parameter list)
+            var parent = node.Parent;
+            while (parent != null)
+            {
+                if (parent is MethodDeclarationSyntax method && method.Identifier.ValueText == _methodName)
+                {
+                    // Only replace if not in the parameter list
+                    if (!IsInParameterList(node))
+                    {
+                        return SyntaxFactory.IdentifierName(_fieldName).WithTriviaFrom(node);
+                    }
+                    break;
+                }
+                parent = parent.Parent;
+            }
         }
         var baseResult = base.VisitIdentifierName(node);
         return baseResult ?? node;
+    }
+
+    private bool IsInParameterList(SyntaxNode node)
+    {
+        var parent = node.Parent;
+        while (parent != null)
+        {
+            if (parent is ParameterListSyntax)
+                return true;
+            if (parent is MethodDeclarationSyntax)
+                return false;
+            parent = parent.Parent;
+        }
+        return false;
     }
 
     /// <inheritdoc />

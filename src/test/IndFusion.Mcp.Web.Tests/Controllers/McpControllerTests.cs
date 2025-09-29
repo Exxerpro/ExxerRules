@@ -124,7 +124,7 @@ public class McpControllerTests
     /// <param name="expected"></param>
     [Theory]
     [InlineData("extract-method")]
-    [InlineData("move-method")]
+    [InlineData("move-static-method")]
     [InlineData("introduce-variable")]
     public void ToKebabCase_ShouldConvertCamelCaseCorrectly(string expected)
     {
@@ -159,12 +159,16 @@ public class McpControllerTests
         result.ShouldBeOfType<BadRequestObjectResult>();
         var badRequestResult = result as BadRequestObjectResult;
         badRequestResult!.Value.ShouldBeOfType<McpErrorResponse>();
+        
+        var errorResponse = badRequestResult.Value as McpErrorResponse;
+        errorResponse!.Error.ShouldBe("Tool not found");
+        errorResponse.Code.ShouldBe(-32601);
 
-        // Verify error was logged
+        // Verify info was logged
         _mockLogger.Received(1).Log(
-            LogLevel.Error,
+            LogLevel.Information,
             Arg.Any<EventId>(),
-            Arg.Is<object>(v => v.ToString()!.Contains("Error executing Mcp tool")),
+            Arg.Is<object>(v => v.ToString()!.Contains("Mcp tool call:")),
             Arg.Any<Exception>(),
             Arg.Any<Func<object, Exception?, string>>());
     }

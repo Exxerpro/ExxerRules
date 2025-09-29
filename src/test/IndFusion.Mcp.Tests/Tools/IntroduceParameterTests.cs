@@ -14,13 +14,16 @@ public class IntroduceParameterTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceParameter.cs");
-        await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceVariable());
+        var sample = TestUtilities.GetSampleCodeForIntroduceVariable();
+        await TestUtilities.CreateTestFile(testFile, sample);
+
+        var selection = TestUtilities.GetSelectionRange(sample, "value * 2 + 10");
 
         var result = await IntroduceParameterTool.IntroduceParameter(
             SolutionPath,
             testFile,
             "FormatResult",
-            "42:50-42:63",
+            selection,
             "processedValue");
 
         Assert.Contains("Successfully introduced parameter", result);

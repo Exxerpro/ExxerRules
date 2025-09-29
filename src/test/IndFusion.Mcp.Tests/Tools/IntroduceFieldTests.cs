@@ -14,12 +14,15 @@ public class IntroduceFieldTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceFieldTest.cs");
-        await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
+        var sample = TestUtilities.GetSampleCodeForIntroduceField();
+        await TestUtilities.CreateTestFile(testFile, sample);
+
+        var selection = TestUtilities.GetSelectionRange(sample, "numbers.Sum() / (double)numbers.Count");
 
         var result = await IntroduceFieldTool.IntroduceField(
             SolutionPath,
             testFile,
-            "4:16-4:58",
+            selection,
             "_averageValue",
             "private");
 
@@ -37,12 +40,15 @@ public class IntroduceFieldTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceFieldPublicTest.cs");
-        await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
+        var sample = TestUtilities.GetSampleCodeForIntroduceField();
+        await TestUtilities.CreateTestFile(testFile, sample);
+
+        var selection = TestUtilities.GetSelectionRange(sample, "numbers.Sum() / (double)numbers.Count");
 
         var result = await IntroduceFieldTool.IntroduceField(
             SolutionPath,
             testFile,
-            "4:16-4:58",
+            selection,
             "_publicField",
             "public");
 
@@ -62,15 +68,18 @@ public class IntroduceFieldTests : TestBase
         var testFile = Path.Combine(TestOutputPath, "AccessModifierTest.cs");
 
         var accessModifiers = new[] { "private", "public", "protected", "internal" };
+        var sample = TestUtilities.GetSampleCodeForIntroduceField();
+        var selection = TestUtilities.GetSelectionRange(sample, "numbers.Sum() / (double)numbers.Count");
+
         foreach (var modifier in accessModifiers)
         {
             var modifierTestFile = testFile.Replace(".cs", $"_{modifier}.cs");
-            await TestUtilities.CreateTestFile(modifierTestFile, TestUtilities.GetSampleCodeForIntroduceField());
+            await TestUtilities.CreateTestFile(modifierTestFile, sample);
 
             var result = await IntroduceFieldTool.IntroduceField(
                 SolutionPath,
                 modifierTestFile,
-                "36:20-36:56",
+                selection,
                 $"_{modifier}Field",
                 modifier);
 
@@ -89,12 +98,15 @@ public class IntroduceFieldTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceFieldDuplicate.cs");
-        await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
+        var sample = TestUtilities.GetSampleCodeForIntroduceField();
+        await TestUtilities.CreateTestFile(testFile, sample);
+
+        var selection = TestUtilities.GetSelectionRange(sample, "numbers.Sum() / (double)numbers.Count");
 
         var result = await IntroduceFieldTool.IntroduceField(
             SolutionPath,
             testFile,
-            "36:20-36:56",
+            selection,
             "numbers",
             "private");
         Assert.Equal("Error: Field 'numbers' already exists", result);

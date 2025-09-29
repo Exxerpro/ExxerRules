@@ -47,7 +47,7 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.Node;
 
-		// Only analyze async methods
+        // Only analyze async methods
         if (!IsAsyncMethod(methodDeclaration))
         {
             return;
@@ -59,8 +59,8 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
             return;
         }
 
-		// Skip if this is a method that should be exempted or boundary layer (controllers/web)
-		if (IsSkippableMethod(methodDeclaration) || IsInBoundaryLayer(methodDeclaration))
+        // Skip if this is a method that should be exempted or boundary layer (controllers/web)
+        if (IsSkippableMethod(methodDeclaration) || IsInBoundaryLayer(methodDeclaration))
         {
             return;
         }

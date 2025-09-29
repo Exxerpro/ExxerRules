@@ -7,10 +7,10 @@
 
 ## 🎯 **The Problem**
 
-### **Test File**: 
+### **Test File**:
 `F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\src\test\IndFusion.Mcp.Core.Tests\SyntaxRewriters\ConstructorInjectionRewriterTests.cs:102`
 
-### **Implementation File**: 
+### **Implementation File**:
 `F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\src\code\IndFusion.Mcp.Core\SyntaxRewriters\ConstructorInjectionRewriter.cs`
 
 ### **Error Message**:
@@ -81,7 +81,7 @@ The logic tries to replace "param2" identifiers **only within the target method*
 
 ### **Possible Sources of "param2" IdentifierNameSyntax**:
 1. ✅ **Method parameter list** - correctly NOT replaced (removed instead)
-2. ✅ **Method body usage** - should be replaced with "_param2" 
+2. ✅ **Method body usage** - should be replaced with "_param2"
 3. ❓ **Constructor parameter** - should NOT be replaced (it's the parameter name)
 4. ❓ **Constructor assignment RHS** - should NOT be replaced (refers to parameter)
 

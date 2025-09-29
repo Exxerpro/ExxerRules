@@ -159,7 +159,7 @@ public class McpControllerTests
         result.ShouldBeOfType<BadRequestObjectResult>();
         var badRequestResult = result as BadRequestObjectResult;
         badRequestResult!.Value.ShouldBeOfType<McpErrorResponse>();
-        
+
         var errorResponse = badRequestResult.Value as McpErrorResponse;
         errorResponse!.Error.ShouldBe("Tool not found");
         errorResponse.Code.ShouldBe(-32601);

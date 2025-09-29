@@ -43,7 +43,7 @@ public class IndexPageTests : TestContext
 
         Services.AddSingleton(mockDashboardService);
         Services.AddSingleton(mockMetricsService);
-        
+
         // Setup JSInterop for MudBlazor components
         JSInterop.SetupVoid("mudKeyInterceptor.connect", _ => true);
         JSInterop.SetupVoid("mudKeyInterceptor.disconnect", _ => true);

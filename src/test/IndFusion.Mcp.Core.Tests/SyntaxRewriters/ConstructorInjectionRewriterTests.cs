@@ -99,13 +99,13 @@ public class TestClass
         // Assert
         var identifierNames = result.DescendantNodes().OfType<IdentifierNameSyntax>().ToList();
         identifierNames.ShouldContain(i => i.Identifier.Text == "_param2");
-        
+
         // The method body should not contain param2 identifiers (they should be replaced with _param2)
         var method = result.DescendantNodes().OfType<MethodDeclarationSyntax>()
             .First(m => m.Identifier.ValueText == "TestMethod");
         var methodBodyIdentifiers = method.Body!.DescendantNodes().OfType<IdentifierNameSyntax>().ToList();
         methodBodyIdentifiers.ShouldNotContain(i => i.Identifier.Text == "param2");
-        
+
         // Constructor assignment should have param2 on the right side (referring to constructor parameter)
         var constructor = result.DescendantNodes().OfType<ConstructorDeclarationSyntax>().First();
         var assignment = constructor.Body!.Statements.OfType<ExpressionStatementSyntax>()

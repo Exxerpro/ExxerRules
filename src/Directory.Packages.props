@@ -71,7 +71,7 @@
 		<PackageVersion Include="NSubstitute" Version="5.3.0" />
 		<PackageVersion Include="Shouldly" Version="4.3.0" />
 
-	
+
 		<!-- VSIX -->
 		<PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.8.3365" />
 	</ItemGroup>

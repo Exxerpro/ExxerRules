@@ -24,7 +24,8 @@ public class IntroduceParameterTests : TestBase
             testFile,
             "FormatResult",
             selection,
-            "processedValue");
+            "processedValue",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully introduced parameter", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -44,7 +45,8 @@ public class IntroduceParameterTests : TestBase
             ExampleFilePath,
             "Nonexistent",
             "1:1-1:2",
-            "param");
+            "param",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
         Assert.Equal("Error: No method named 'Nonexistent' found", result);
     }
 }

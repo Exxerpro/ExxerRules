@@ -40,10 +40,11 @@ public class Sample
             SolutionPath,
             testFile,
             "4:24-4:37",
-            "processedValue");
+            "processedValue",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully introduced variable", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
+        Assert.Equal(expectedCode.Replace("\r\n", "\n"), fileContent.Replace("\r\n", "\n"));
     }
 }

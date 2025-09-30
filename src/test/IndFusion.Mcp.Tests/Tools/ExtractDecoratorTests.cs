@@ -20,7 +20,8 @@ public class ExtractDecoratorTests : TestBase
             SolutionPath,
             testFile,
             "Greeter",
-            "Greet");
+            "Greet",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Created decorator", result);
         var text = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);

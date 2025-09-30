@@ -24,7 +24,8 @@ public class IntroduceFieldTests : TestBase
             testFile,
             selection,
             "_averageValue",
-            "private");
+            "private",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully introduced", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -50,7 +51,8 @@ public class IntroduceFieldTests : TestBase
             testFile,
             selection,
             "_publicField",
-            "public");
+            "public",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully introduced public field", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -81,7 +83,8 @@ public class IntroduceFieldTests : TestBase
                 modifierTestFile,
                 selection,
                 $"_{modifier}Field",
-                modifier);
+                modifier,
+                cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
             Assert.Contains($"Successfully introduced {modifier} field", result);
             var fileContent = await File.ReadAllTextAsync(modifierTestFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -108,7 +111,8 @@ public class IntroduceFieldTests : TestBase
             testFile,
             selection,
             "numbers",
-            "private");
+            "private",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
         Assert.Equal("Error: Field 'numbers' already exists", result);
     }
 }

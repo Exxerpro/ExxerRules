@@ -19,7 +19,8 @@ public class ConstructorInjectionTests : TestBase
             SolutionPath,
             testFile,
             new[] { new ConstructorInjectionTool.MethodParameterPair("M", "x") },
-            false);
+            false,
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully injected", result);
         var content = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);

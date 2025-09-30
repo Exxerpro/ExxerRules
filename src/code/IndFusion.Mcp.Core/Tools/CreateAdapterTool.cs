@@ -24,6 +24,7 @@ public static class CreateAdapterTool
     /// <param name="className">Class containing the method to adapt.</param>
     /// <param name="methodName">Name of the method to adapt.</param>
     /// <param name="adapterName">Name for the generated adapter class.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Generate a simple adapter class that delegates to an existing method")]
     public static async Task<string> CreateAdapter(
@@ -31,15 +32,16 @@ public static class CreateAdapterTool
         [Description("Path to the C# file")] string filePath,
         [Description("Name of the class containing the method")] string className,
         [Description("Name of the method to adapt")] string methodName,
-        [Description("Name of the adapter class to create")] string adapterName)
+        [Description("Name of the adapter class to create")] string adapterName,
+        CancellationToken cancellationToken = default)
     {
         try
         {
             return await ExxerFactoringHelpers.RunWithSolutionOrFile(
                 solutionPath,
                 filePath,
-                doc => AdaptWithSolution(doc, className, methodName, adapterName),
-                path => AdaptSingleFile(path, className, methodName, adapterName));
+                doc => AdaptWithSolution(doc, className, methodName, adapterName, cancellationToken),
+                path => AdaptSingleFile(path, className, methodName, adapterName, cancellationToken));
         }
         catch (Exception ex)
         {
@@ -47,17 +49,17 @@ public static class CreateAdapterTool
         }
     }
 
-    private static async Task<string> AdaptWithSolution(Document document, string className, string methodName, string adapterName)
+    private static async Task<string> AdaptWithSolution(Document document, string className, string methodName, string adapterName, CancellationToken cancellationToken)
     {
-        var text = await document.GetTextAsync();
+        var text = await document.GetTextAsync(cancellationToken);
         var newText = CreateAdapterInSource(text.ToString(), className, methodName, adapterName);
         var enc = await ExxerFactoringHelpers.GetFileEncodingAsync(document.FilePath!);
-        await File.WriteAllTextAsync(document.FilePath!, newText, enc);
+        await File.WriteAllTextAsync(document.FilePath!, newText, enc, cancellationToken);
         ExxerFactoringHelpers.UpdateSolutionCache(document.WithText(SourceText.From(newText, enc)));
         return $"Created adapter {adapterName} in {document.FilePath} (solution mode)";
     }
 
-    private static Task<string> AdaptSingleFile(string filePath, string className, string methodName, string adapterName)
+    private static Task<string> AdaptSingleFile(string filePath, string className, string methodName, string adapterName, CancellationToken cancellationToken)
     {
         return ExxerFactoringHelpers.ApplySingleFileEdit(
             filePath,

@@ -23,21 +23,23 @@ public static class ExtractDecoratorTool
     /// <param name="filePath">Path to the C# file.</param>
     /// <param name="className">Name of the class containing the method.</param>
     /// <param name="methodName">Name of the method to decorate.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Create a simple decorator class for a method")]
     public static async Task<string> ExtractDecorator(
         [Description("Absolute path to the solution file (.sln)")] string solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Name of the class containing the method")] string className,
-        [Description("Name of the method to decorate")] string methodName)
+        [Description("Name of the method to decorate")] string methodName,
+        CancellationToken cancellationToken = default)
     {
         try
         {
             return await ExxerFactoringHelpers.RunWithSolutionOrFile(
                 solutionPath,
                 filePath,
-                doc => DecorateWithSolution(doc, className, methodName),
-                path => DecorateSingleFile(path, className, methodName));
+                doc => DecorateWithSolution(doc, className, methodName, cancellationToken),
+                path => DecorateSingleFile(path, className, methodName, cancellationToken));
         }
         catch (Exception ex)
         {
@@ -45,17 +47,17 @@ public static class ExtractDecoratorTool
         }
     }
 
-    private static async Task<string> DecorateWithSolution(Document document, string className, string methodName)
+    private static async Task<string> DecorateWithSolution(Document document, string className, string methodName, CancellationToken cancellationToken)
     {
-        var sourceText = await document.GetTextAsync();
+        var sourceText = await document.GetTextAsync(cancellationToken);
         var newText = ExtractDecoratorInSource(sourceText.ToString(), className, methodName);
         var encoding = await ExxerFactoringHelpers.GetFileEncodingAsync(document.FilePath!);
-        await File.WriteAllTextAsync(document.FilePath!, newText, encoding);
+        await File.WriteAllTextAsync(document.FilePath!, newText, encoding, cancellationToken);
         ExxerFactoringHelpers.UpdateSolutionCache(document.WithText(SourceText.From(newText, encoding)));
         return $"Created decorator for {className}.{methodName} in {document.FilePath} (solution mode)";
     }
 
-    private static Task<string> DecorateSingleFile(string filePath, string className, string methodName)
+    private static Task<string> DecorateSingleFile(string filePath, string className, string methodName, CancellationToken cancellationToken)
     {
         return ExxerFactoringHelpers.ApplySingleFileEdit(
             filePath,

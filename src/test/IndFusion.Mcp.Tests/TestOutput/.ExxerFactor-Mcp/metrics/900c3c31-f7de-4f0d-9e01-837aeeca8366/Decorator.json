@@ -1,0 +1,34 @@
+{
+  "linesOfCode": 16,
+  "numberOfClasses": 2,
+  "numberOfPublicMethods": 2,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "Greeter",
+      "linesOfCode": 1,
+      "methods": [
+        {
+          "name": "Greet",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    },
+    {
+      "name": "GreeterDecorator",
+      "linesOfCode": 14,
+      "methods": [
+        {
+          "name": "Greet",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

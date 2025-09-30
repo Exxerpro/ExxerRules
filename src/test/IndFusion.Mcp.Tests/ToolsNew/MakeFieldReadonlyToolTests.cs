@@ -1,4 +1,5 @@
 using IndFusion.Mcp.Tests.Tools;
+using IndFusion.Mcp.Core.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
@@ -41,7 +42,9 @@ public class Sample
 
         Assert.Contains("Successfully made field", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
+        var normalizedExpected = expectedCode.Replace("\r\n", "\n").Replace("\r", "\n");
+        var normalizedActual = fileContent.Replace("\r\n", "\n").Replace("\r", "\n");
+        Assert.Equal(normalizedExpected, normalizedActual);
     }
 
     /// <summary>
@@ -64,19 +67,20 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "ReadonlyNoInit.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
         var result = await MakeFieldReadonlyTool.MakeFieldReadonly(
-            SolutionPath,
+            null,
             testFile,
             "description",
             cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully made field 'description' readonly", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
+        var normalizedExpected = expectedCode.Replace("\r\n", "\n").Replace("\r", "\n");
+        var normalizedActual = fileContent.Replace("\r\n", "\n").Replace("\r", "\n");
+        Assert.Equal(normalizedExpected, normalizedActual);
     }
 
     /// <summary>

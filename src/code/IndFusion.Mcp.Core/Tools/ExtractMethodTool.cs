@@ -27,18 +27,23 @@ public static class ExtractMethodTool
     /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Extract a code block into a new method (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> ExtractMethod(
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Range in format 'startLine:startColumn-endLine:endColumn'")] string selectionRange,
         [Description("Name for the new method")] string methodName)
     {
         try
         {
-            return await ExxerFactoringHelpers.RunWithSolutionOrFile(
-                solutionPath,
-                filePath,
-                doc => ExtractMethodWithSolution(doc, selectionRange, methodName),
-                path => ExtractMethodSingleFile(path, selectionRange, methodName));
+            if (!string.IsNullOrWhiteSpace(solutionPath))
+            {
+                return await ExxerFactoringHelpers.RunWithSolutionOrFile(
+                    solutionPath,
+                    filePath,
+                    doc => ExtractMethodWithSolution(doc, selectionRange, methodName),
+                    path => ExtractMethodSingleFile(path, selectionRange, methodName));
+            }
+
+            return await ExtractMethodSingleFile(filePath, selectionRange, methodName);
         }
         catch (Exception ex)
         {
@@ -150,7 +155,9 @@ public static class ExtractMethodTool
         var newRoot = rewriter.Visit(syntaxRoot);
 
         var formattedRoot = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
-        return formattedRoot.ToFullString();
+        var result = formattedRoot.ToFullString();
+        // Normalize line endings to Unix style for consistent test results
+        return result.Replace("\r\n", "\n").Replace("\r", "\n");
     }
 
 }

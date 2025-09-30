@@ -24,7 +24,7 @@ public class MetricsResourceTests : TestBase
     public async Task ReadMetrics_File_ReturnsJson()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        var result = await MetricsResource.ReadMetrics(ExampleFilePath, SolutionPath);
+        var result = await MetricsResource.ReadMetrics(ExampleFilePath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.True(doc.RootElement.TryGetProperty("linesOfCode", out _));
     }
@@ -38,7 +38,7 @@ public class MetricsResourceTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         var dir = Path.GetDirectoryName(ExampleFilePath)!;
-        var result = await MetricsResource.ReadMetrics(dir, SolutionPath);
+        var result = await MetricsResource.ReadMetrics(dir, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.Equal(JsonValueKind.Array, doc.RootElement.ValueKind);
         Assert.Contains(doc.RootElement.EnumerateArray(), e =>
@@ -54,7 +54,7 @@ public class MetricsResourceTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         var classPath = ExampleFilePath + Path.DirectorySeparatorChar + "Calculator";
-        var result = await MetricsResource.ReadMetrics(classPath, SolutionPath);
+        var result = await MetricsResource.ReadMetrics(classPath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.Equal("Calculator", doc.RootElement.GetProperty("name").GetString());
         Assert.True(doc.RootElement.TryGetProperty("methods", out _));
@@ -69,7 +69,7 @@ public class MetricsResourceTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         var methodPath = ExampleFilePath + Path.DirectorySeparatorChar + "Calculator.Calculate";
-        var result = await MetricsResource.ReadMetrics(methodPath, SolutionPath);
+        var result = await MetricsResource.ReadMetrics(methodPath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.Equal("Calculate", doc.RootElement.GetProperty("name").GetString());
         Assert.True(doc.RootElement.TryGetProperty("cyclomaticComplexity", out _));
@@ -84,7 +84,7 @@ public class MetricsResourceTests : TestBase
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         var invalidPath = ExampleFilePath + Path.DirectorySeparatorChar + "Unknown";
-        var result = await MetricsResource.ReadMetrics(invalidPath, SolutionPath);
+        var result = await MetricsResource.ReadMetrics(invalidPath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.True(doc.RootElement.TryGetProperty("Error", out var err));
         Assert.Contains("not found", err.GetString());

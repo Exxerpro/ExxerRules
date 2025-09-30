@@ -11,7 +11,7 @@ public class MoveOverrideMethodToolTests
 	[Fact]
 	public void MoveOverrideMethod_WithBaseCall_AddsWrapper()
 	{
-		var source = @"public class Base { public virtual void Foo() {} } public class Derived : Base { public override void Foo() {} }";
+		var source = @"public class Base { public virtual void Foo() {} } public class Derived : Base { public override void Foo() { base.Foo(); } }";
 		var tree = CSharpSyntaxTree.ParseText(source, cancellationToken: TestContext.Current.CancellationToken);
 		var root = tree.GetRoot(cancellationToken: TestContext.Current.CancellationToken);
 

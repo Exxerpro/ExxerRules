@@ -16,12 +16,14 @@ public static class MetricsResource
     /// </summary>
     /// <param name="path">Target path (file, directory, or file with class/method suffix).</param>
     /// <param name="solutionPath">Absolute path to the solution file (.sln).</param>
+    /// <param name="cancellationToken">Cancellation token to observe during the async operation.</param>
     /// <returns>Text resource containing metrics JSON.</returns>
     [McpServerResource(UriTemplate = "metrics://{+path}")]
     [Description("Return code metrics for directories, files, classes or methods")]
     public static async Task<TextResourceContents> ReadMetrics(
         [Description("Target path within the solution")] string path,
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath)
+        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        CancellationToken cancellationToken = default)
     {
         var fullPath = Path.GetFullPath(path);
         if (Directory.Exists(fullPath))
@@ -29,7 +31,7 @@ public static class MetricsResource
             var classes = new List<JsonElement>();
             foreach (var file in Directory.GetFiles(fullPath, "*.cs", SearchOption.AllDirectories))
             {
-                using var metrics = await GetFileMetricsJson(solutionPath, file);
+                using var metrics = await GetFileMetricsJson(solutionPath, file, cancellationToken);
                 if (metrics.RootElement.TryGetProperty("classes", out var clsArray))
                 {
                     classes.AddRange(clsArray.EnumerateArray().Select(c => c.Clone()));
@@ -65,7 +67,7 @@ public static class MetricsResource
             }
         }
 
-        using var metricsJson = await GetFileMetricsJson(solutionPath, fullPath);
+        using var metricsJson = await GetFileMetricsJson(solutionPath, fullPath, cancellationToken);
         object result;
         if (className == null)
         {
@@ -97,9 +99,9 @@ public static class MetricsResource
         return new TextResourceContents { Text = jsonText };
     }
 
-    private static async Task<JsonDocument> GetFileMetricsJson(string solutionPath, string filePath)
+    private static async Task<JsonDocument> GetFileMetricsJson(string solutionPath, string filePath, CancellationToken cancellationToken = default)
     {
-        var json = await MetricsProvider.GetFileMetrics(solutionPath, filePath);
+        var json = await MetricsProvider.GetFileMetrics(solutionPath, filePath, cancellationToken);
         return JsonDocument.Parse(json);
     }
 }

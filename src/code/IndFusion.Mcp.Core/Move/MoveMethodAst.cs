@@ -1207,4 +1207,5 @@ public static class MoveMethodAst
                         })))
                 .AddModifiers(SyntaxFactory.Token(SyntaxKind.PrivateKeyword), SyntaxFactory.Token(SyntaxKind.ReadOnlyKeyword));
     }
+
 }

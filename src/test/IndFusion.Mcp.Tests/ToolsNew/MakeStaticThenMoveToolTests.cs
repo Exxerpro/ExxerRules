@@ -13,24 +13,24 @@ public class MakeStaticThenMoveToolTests : TestBase
     [Fact]
     public async Task MakeStaticThenMove_ReturnsSuccess()
     {
-        const string initialCode = "public class SourceClass { public string Value = \"x\"; public string GetValueWithSuffix(string suffix){ return Value + suffix; } } public class NewMathUtils { }";
+        const string initialCode = "public class SourceClass { public string Value = \"x\"; public string GetValueWithSuffix(string suffix){ return Value + suffix; } } public class NewMathUtils2 { }";
 
         UnloadSolutionTool.ClearSolutionCache(Xunit.TestContext.Current.CancellationToken);
-        var testFile = Path.Combine(TestOutputPath, "MakeStaticThenMove.cs");
+        var testFile = Path.Combine(TestOutputPath, "MakeStaticThenMove2.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
         var result = await MakeStaticThenMoveTool.MakeStaticThenMove(
             SolutionPath,
             testFile,
             "GetValueWithSuffix",
-            "NewMathUtils",
+            "NewMathUtils2",
             "source",
             null,
             null,
             Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved static method", result);
-        var newFile = Path.Combine(Path.GetDirectoryName(testFile)!, "NewMathUtils.cs");
+        var newFile = Path.Combine(Path.GetDirectoryName(testFile)!, "NewMathUtils2.cs");
         Assert.True(File.Exists(newFile));
     }
 }

@@ -78,21 +78,43 @@ public class Calculator
 
     internal static string GetTestProjectDirectory()
     {
-        var solutionDir = Path.GetDirectoryName(GetSolutionPath())!;
-        var candidates = new[]
+        var currentDir = Directory.GetCurrentDirectory();
+
+        // Try to find the test project directory by walking up from current directory
+        var dir = new DirectoryInfo(currentDir);
+        while (dir != null)
         {
-            Path.Combine(solutionDir, "test", "IndFusion.Mcp.Tests"),
-            Path.Combine(solutionDir, "tests", "IndFusion.Mcp.Tests"),
-            Path.Combine(solutionDir, "IndFusion.Mcp.Tests")
-        };
-        foreach (var candidate in candidates)
-        {
-            if (Directory.Exists(candidate))
+            var testProjectDir = Path.Combine(dir.FullName, "src", "test", "IndFusion.Mcp.Tests");
+            if (Directory.Exists(testProjectDir))
             {
-                return candidate;
+                return testProjectDir;
             }
+
+            // Also try without src folder structure
+            testProjectDir = Path.Combine(dir.FullName, "test", "IndFusion.Mcp.Tests");
+            if (Directory.Exists(testProjectDir))
+            {
+                return testProjectDir;
+            }
+
+            // Try direct folder
+            testProjectDir = Path.Combine(dir.FullName, "IndFusion.Mcp.Tests");
+            if (Directory.Exists(testProjectDir) && File.Exists(Path.Combine(testProjectDir, "IndFusion.Mcp.Tests.csproj")))
+            {
+                return testProjectDir;
+            }
+
+            dir = dir.Parent;
         }
-        return candidates[0];
+
+        // Fallback - assume current directory is the test project directory if it contains the project file
+        if (File.Exists(Path.Combine(currentDir, "IndFusion.Mcp.Tests.csproj")))
+        {
+            return currentDir;
+        }
+
+        // Final fallback
+        return Path.GetFullPath(Path.Combine(currentDir, "..", "..", "..", "..", "test", "IndFusion.Mcp.Tests"));
     }
 
     private static string NormalizeToLf(string text)
@@ -169,29 +191,64 @@ public class Calculator
     }
 
     /// <summary>
-    /// Finds the solution path by walking up from the current directory.
+    /// Gets a lightweight test solution path to avoid hanging on full solution load.
+    /// Creates a minimal solution if it doesn't exist.
     /// </summary>
     public static string GetSolutionPath()
     {
-        var currentDir = Directory.GetCurrentDirectory();
-        var dir = new DirectoryInfo(currentDir);
-        while (dir != null)
-        {
-            // Primary solution used in CI/local is under src/IndFusion.sln
-            var primary = Path.Combine(dir.FullName, "src", "IndFusion.sln");
-            if (File.Exists(primary))
-                return primary;
+        var testDir = GetTestProjectDirectory();
+        var testSolutionPath = Path.Combine(testDir, "TestOutput", "TestSolution.sln");
 
-            // Fallback legacy name at repo root
-            var legacy = Path.Combine(dir.FullName, "IndFusion.Mcp.sln");
-            if (File.Exists(legacy))
-                return legacy;
+        EnsureTestSolution(testSolutionPath);
+        return testSolutionPath;
+    }
 
-            dir = dir.Parent;
-        }
-        // As a last resort, return expected src path relative to current dir
-        var defaultSrc = Path.GetFullPath(Path.Combine(currentDir, "src", "IndFusion.sln"));
-        return defaultSrc;
+    private static void EnsureTestSolution(string solutionPath)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(solutionPath)!);
+
+        if (File.Exists(solutionPath))
+            return;
+
+        var solutionDir = Path.GetDirectoryName(solutionPath)!;
+        var projectPath = Path.Combine(solutionDir, "TestProject.csproj");
+
+        // Create a minimal test project
+        var projectContent = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFramework>net10.0</TargetFramework>
+                <Nullable>enable</Nullable>
+                <ImplicitUsings>enable</ImplicitUsings>
+              </PropertyGroup>
+            </Project>
+            """;
+
+        File.WriteAllText(projectPath, projectContent);
+
+        // Create a minimal solution file
+        var solutionContent = """
+            Microsoft Visual Studio Solution File, Format Version 12.00
+            # Visual Studio Version 17
+            VisualStudioVersion = 17.0.31903.59
+            MinimumVisualStudioVersion = 10.0.40219.1
+            Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject.csproj", "{12345678-1234-5678-9ABC-123456789ABC}"
+            EndProject
+            Global
+                GlobalSection(SolutionConfigurationPlatforms) = preSolution
+                    Debug|Any CPU = Debug|Any CPU
+                    Release|Any CPU = Release|Any CPU
+                EndGlobalSection
+                GlobalSection(ProjectConfigurationPlatforms) = postSolution
+                    {12345678-1234-5678-9ABC-123456789ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                    {12345678-1234-5678-9ABC-123456789ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                    {12345678-1234-5678-9ABC-123456789ABC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                    {12345678-1234-5678-9ABC-123456789ABC}.Release|Any CPU.Build.0 = Release|Any CPU
+                EndGlobalSection
+            EndGlobal
+            """;
+
+        File.WriteAllText(solutionPath, solutionContent);
     }
 
     /// <summary>

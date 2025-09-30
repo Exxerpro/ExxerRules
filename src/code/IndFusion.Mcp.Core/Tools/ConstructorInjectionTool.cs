@@ -31,21 +31,28 @@ public static class ConstructorInjectionTool
     /// <param name="filePath">Path to the C# file.</param>
     /// <param name="methodParameters">Pairs of method and parameter names to inject.</param>
     /// <param name="useProperty">Whether to use public properties instead of private fields.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Convert method parameters to constructor injection (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> ConvertToConstructorInjection(
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Method and parameter pairs in the format Method:Parameter;...")] MethodParameterPair[] methodParameters,
-        [Description("Use a public property instead of a private field")] bool useProperty = false)
+        [Description("Use a public property instead of a private field")] bool useProperty = false,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            return await ExxerFactoringHelpers.RunWithSolutionOrFile(
-                solutionPath,
-                filePath,
-                doc => ConvertWithSolution(doc, methodParameters, useProperty),
-                path => ConvertSingleFile(path, methodParameters, useProperty));
+            if (!string.IsNullOrWhiteSpace(solutionPath))
+            {
+                return await ExxerFactoringHelpers.RunWithSolutionOrFile(
+                    solutionPath,
+                    filePath,
+                    doc => ConvertWithSolution(doc, methodParameters, useProperty, cancellationToken),
+                    path => ConvertSingleFile(path, methodParameters, useProperty, cancellationToken));
+            }
+
+            return await ConvertSingleFile(filePath, methodParameters, useProperty, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -54,21 +61,21 @@ public static class ConstructorInjectionTool
     }
 
 
-    private static async Task<string> ConvertWithSolution(Document document, MethodParameterPair[] methodParameters, bool useProperty)
+    private static async Task<string> ConvertWithSolution(Document document, MethodParameterPair[] methodParameters, bool useProperty, CancellationToken cancellationToken)
     {
-        var sourceText = (await document.GetTextAsync()).ToString();
+        var sourceText = (await document.GetTextAsync(cancellationToken)).ToString();
         var newText = ConvertInSource(sourceText, methodParameters, useProperty);
         if (newText.StartsWith("Error:"))
             return newText;
 
         var encoding = await ExxerFactoringHelpers.GetFileEncodingAsync(document.FilePath!);
-        await File.WriteAllTextAsync(document.FilePath!, newText, encoding);
+        await File.WriteAllTextAsync(document.FilePath!, newText, encoding, cancellationToken);
         var newDoc = document.WithText(SourceText.From(newText, encoding));
         ExxerFactoringHelpers.UpdateSolutionCache(newDoc);
         return $"Successfully injected parameters via constructor in {document.FilePath} (solution mode)";
     }
 
-    private static async Task<string> ConvertSingleFile(string filePath, MethodParameterPair[] methodParameters, bool useProperty)
+    private static async Task<string> ConvertSingleFile(string filePath, MethodParameterPair[] methodParameters, bool useProperty, CancellationToken cancellationToken)
     {
         if (!File.Exists(filePath))
             throw new McpException($"Error: File {filePath} not found");
@@ -76,7 +83,7 @@ public static class ConstructorInjectionTool
         var newText = ConvertInSource(sourceText, methodParameters, useProperty);
         if (newText.StartsWith("Error:"))
             return newText;
-        await File.WriteAllTextAsync(filePath, newText, encoding);
+        await File.WriteAllTextAsync(filePath, newText, encoding, cancellationToken);
         ExxerFactoringHelpers.UpdateFileCaches(filePath, newText);
         return $"Successfully injected parameters via constructor in {filePath} (single file mode)";
     }

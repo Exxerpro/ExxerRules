@@ -26,22 +26,29 @@ public static class IntroduceFieldTool
     /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
     /// <param name="fieldName">Name for the new field.</param>
     /// <param name="accessModifier">Access modifier (private, public, protected, internal).</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Introduce a new field from selected expression (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> IntroduceField(
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Range in format 'startLine:startColumn-endLine:endColumn'")] string selectionRange,
         [Description("Name for the new field")] string fieldName,
-        [Description("Access modifier (private, public, protected, internal)")] string accessModifier = "private")
+        [Description("Access modifier (private, public, protected, internal)")] string accessModifier = "private",
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            return await ExxerFactoringHelpers.RunWithSolutionOrFile(
-                solutionPath,
-                filePath,
-                doc => IntroduceFieldWithSolution(doc, selectionRange, fieldName, accessModifier),
-                path => IntroduceFieldSingleFile(path, selectionRange, fieldName, accessModifier));
+            if (!string.IsNullOrWhiteSpace(solutionPath))
+            {
+                return await ExxerFactoringHelpers.RunWithSolutionOrFile(
+                    solutionPath,
+                    filePath,
+                    doc => IntroduceFieldWithSolution(doc, selectionRange, fieldName, accessModifier, cancellationToken),
+                    path => IntroduceFieldSingleFile(path, selectionRange, fieldName, accessModifier, cancellationToken));
+            }
+
+            return await IntroduceFieldSingleFile(filePath, selectionRange, fieldName, accessModifier, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -49,10 +56,10 @@ public static class IntroduceFieldTool
         }
     }
 
-    private static async Task<string> IntroduceFieldWithSolution(Document document, string selectionRange, string fieldName, string accessModifier)
+    private static async Task<string> IntroduceFieldWithSolution(Document document, string selectionRange, string fieldName, string accessModifier, CancellationToken cancellationToken)
     {
-        var sourceText = await document.GetTextAsync();
-        var syntaxRoot = await document.GetSyntaxRootAsync();
+        var sourceText = await document.GetTextAsync(cancellationToken);
+        var syntaxRoot = await document.GetSyntaxRootAsync(cancellationToken);
 
         if (!ExxerFactoringHelpers.TryParseRange(selectionRange, out var startLine, out var startColumn, out var endLine, out var endColumn))
             throw new McpException("Error: Invalid selection range format");
@@ -72,7 +79,7 @@ public static class IntroduceFieldTool
             throw new McpException("Error: Selected code is not a valid expression");
 
         // Get the semantic model to determine the type
-        var semanticModel = await document.GetSemanticModelAsync();
+        var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
         var typeInfo = semanticModel!.GetTypeInfo(selectedExpression);
         var typeName = typeInfo.Type?.ToDisplayString() ?? "var";
 
@@ -105,18 +112,18 @@ public static class IntroduceFieldTool
         var newRoot = rewriter.Visit(syntaxRoot);
 
         var formattedRoot = Formatter.Format(newRoot, document.Project.Solution.Workspace);
-        var editor = await DocumentEditor.CreateAsync(document);
+        var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
         editor.ReplaceNode(syntaxRoot, formattedRoot);
         var newDocument = editor.GetChangedDocument();
-        var newText = await newDocument.GetTextAsync();
+        var newText = await newDocument.GetTextAsync(cancellationToken);
         var encoding = await ExxerFactoringHelpers.GetFileEncodingAsync(document.FilePath!);
-        await File.WriteAllTextAsync(document.FilePath!, newText.ToString(), encoding);
+        await File.WriteAllTextAsync(document.FilePath!, newText.ToString(), encoding, cancellationToken);
         ExxerFactoringHelpers.UpdateSolutionCache(newDocument);
 
         return $"Successfully introduced {accessModifier} field '{fieldName}' from {selectionRange} in {document.FilePath} (solution mode)";
     }
 
-    private static async Task<string> IntroduceFieldSingleFile(string filePath, string selectionRange, string fieldName, string accessModifier)
+    private static async Task<string> IntroduceFieldSingleFile(string filePath, string selectionRange, string fieldName, string accessModifier, CancellationToken cancellationToken)
     {
         if (!File.Exists(filePath))
             throw new McpException($"Error: File {filePath} not found");
@@ -127,7 +134,7 @@ public static class IntroduceFieldTool
         if (newText.StartsWith("Error:"))
             return newText;
 
-        await File.WriteAllTextAsync(filePath, newText, encoding);
+        await File.WriteAllTextAsync(filePath, newText, encoding, cancellationToken);
         ExxerFactoringHelpers.UpdateFileCaches(filePath, newText);
         return $"Successfully introduced {accessModifier} field '{fieldName}' from {selectionRange} in {filePath} (single file mode)";
     }

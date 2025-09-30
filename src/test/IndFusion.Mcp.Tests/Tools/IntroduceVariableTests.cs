@@ -23,7 +23,8 @@ public class IntroduceVariableTests : TestBase
             SolutionPath,
             testFile,
             selection,
-            "processedValue");
+            "processedValue",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully introduced variable", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);

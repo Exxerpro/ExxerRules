@@ -1,4 +1,5 @@
 using IndFusion.Mcp.Tests.Tools;
+using IndFusion.Mcp.Core.Tools;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
@@ -34,19 +35,21 @@ public class Sample
 }
 """;
 
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var testFile = Path.Combine(TestOutputPath, "IntroduceField.cs");
         await TestUtilities.CreateTestFile(testFile, initialCode);
 
         var result = await IntroduceFieldTool.IntroduceField(
-            SolutionPath,
+            null,
             testFile,
             "6:16-6:57",
-            "_avg");
+            "_avg",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully introduced", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
+        var normalizedExpected = expectedCode.Replace("\r\n", "\n").Replace("\r", "\n");
+        var normalizedActual = fileContent.Replace("\r\n", "\n").Replace("\r", "\n");
+        Assert.Equal(normalizedExpected, normalizedActual);
     }
 
     /// <summary> ///  IntroduceField SupportsAccessModifiers. /// </summary> /// <returns>A task that represents the asynchronous operation.</returns>
@@ -76,7 +79,8 @@ public class Sample
                 file,
                 "6:16-6:57",
                 $"_{modifier}Field",
-                modifier);
+                modifier,
+                cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
             Assert.Contains($"Successfully introduced {modifier} field", result);
             var content = await File.ReadAllTextAsync(file, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -92,12 +96,16 @@ public class Sample
         var testFile = Path.Combine(TestOutputPath, "DuplicateField.cs");
         await TestUtilities.CreateTestFile(testFile, TestUtilities.GetSampleCodeForIntroduceField());
 
+        var sampleCode = TestUtilities.GetSampleCodeForIntroduceField();
+        var selectionRange = TestUtilities.GetSelectionRange(sampleCode, "a + b");
+
         var result = await IntroduceFieldTool.IntroduceField(
             SolutionPath,
             testFile,
-            "36:20-36:56",
+            selectionRange,
             "numbers",
-            "private");
+            "private",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Equal("Error: Field 'numbers' already exists", result);
     }

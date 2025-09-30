@@ -25,21 +25,28 @@ public static class IntroduceVariableTool
     /// <param name="filePath">Path to the C# file.</param>
     /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
     /// <param name="variableName">Name for the new variable.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>A status message describing the outcome.</returns>
     [McpServerTool, Description("Introduce a new variable from selected expression (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> IntroduceVariable(
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Range in format 'startLine:startColumn-endLine:endColumn'")] string selectionRange,
-        [Description("Name for the new variable")] string variableName)
+        [Description("Name for the new variable")] string variableName,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            return await ExxerFactoringHelpers.RunWithSolutionOrFile(
-                solutionPath,
-                filePath,
-                doc => IntroduceVariableWithSolution(doc, selectionRange, variableName),
-                path => IntroduceVariableSingleFile(path, selectionRange, variableName));
+            if (!string.IsNullOrWhiteSpace(solutionPath))
+            {
+                return await ExxerFactoringHelpers.RunWithSolutionOrFile(
+                    solutionPath,
+                    filePath,
+                    doc => IntroduceVariableWithSolution(doc, selectionRange, variableName, cancellationToken),
+                    path => IntroduceVariableSingleFile(path, selectionRange, variableName, cancellationToken));
+            }
+
+            return await IntroduceVariableSingleFile(filePath, selectionRange, variableName, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -47,10 +54,10 @@ public static class IntroduceVariableTool
         }
     }
 
-    private static async Task<string> IntroduceVariableWithSolution(Document document, string selectionRange, string variableName)
+    private static async Task<string> IntroduceVariableWithSolution(Document document, string selectionRange, string variableName, CancellationToken cancellationToken)
     {
-        var sourceText = await document.GetTextAsync();
-        var syntaxRoot = await document.GetSyntaxRootAsync();
+        var sourceText = await document.GetTextAsync(cancellationToken);
+        var syntaxRoot = await document.GetSyntaxRootAsync(cancellationToken);
 
         if (!ExxerFactoringHelpers.TryParseRange(selectionRange, out var startLine, out var startColumn, out var endLine, out var endColumn))
             throw new McpException("Error: Invalid selection range format");
@@ -76,7 +83,7 @@ public static class IntroduceVariableTool
             throw new McpException("Error: Selected code is not a valid expression");
 
         // Get the semantic model to determine the type
-        var semanticModel = await document.GetSemanticModelAsync();
+        var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
         var typeInfo = semanticModel!.GetTypeInfo(selectedExpression);
         var typeName = typeInfo.Type?.ToDisplayString() ?? "var";
 
@@ -100,18 +107,18 @@ public static class IntroduceVariableTool
         var newRoot = rewriter.Visit(syntaxRoot);
 
         var formattedRoot = Formatter.Format(newRoot, document.Project.Solution.Workspace);
-        var editor = await DocumentEditor.CreateAsync(document);
+        var editor = await DocumentEditor.CreateAsync(document, cancellationToken);
         editor.ReplaceNode(syntaxRoot, formattedRoot);
         var newDocument = editor.GetChangedDocument();
-        var newText = await newDocument.GetTextAsync();
+        var newText = await newDocument.GetTextAsync(cancellationToken);
         var encoding = await ExxerFactoringHelpers.GetFileEncodingAsync(document.FilePath!);
-        await File.WriteAllTextAsync(document.FilePath!, newText.ToString(), encoding);
+        await File.WriteAllTextAsync(document.FilePath!, newText.ToString(), encoding, cancellationToken);
         ExxerFactoringHelpers.UpdateSolutionCache(newDocument);
 
         return $"Successfully introduced variable '{variableName}' from {selectionRange} in {document.FilePath} (solution mode)";
     }
 
-    private static async Task<string> IntroduceVariableSingleFile(string filePath, string selectionRange, string variableName)
+    private static async Task<string> IntroduceVariableSingleFile(string filePath, string selectionRange, string variableName, CancellationToken cancellationToken)
     {
         if (!File.Exists(filePath))
             throw new McpException($"Error: File {filePath} not found");
@@ -119,7 +126,7 @@ public static class IntroduceVariableTool
         var (sourceText, encoding) = await ExxerFactoringHelpers.ReadFileWithEncodingAsync(filePath);
         var model = await ExxerFactoringHelpers.GetOrCreateSemanticModelAsync(filePath);
         var newText = IntroduceVariableInSource(sourceText, selectionRange, variableName, model);
-        await File.WriteAllTextAsync(filePath, newText, encoding);
+        await File.WriteAllTextAsync(filePath, newText, encoding, cancellationToken);
         ExxerFactoringHelpers.UpdateFileCaches(filePath, newText);
         return $"Successfully introduced variable '{variableName}' from {selectionRange} in {filePath} (single file mode)";
     }
@@ -188,7 +195,9 @@ public static class IntroduceVariableTool
         var newRoot = rewriter.Visit(syntaxRoot);
 
         var formattedRoot = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
-        return formattedRoot.ToFullString();
+        var result = formattedRoot.ToFullString();
+        // Normalize line endings to Unix style for consistent test results
+        return result.Replace("\r\n", "\n").Replace("\r", "\n");
     }
 
 }

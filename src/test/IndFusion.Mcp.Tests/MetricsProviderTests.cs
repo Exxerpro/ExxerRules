@@ -26,7 +26,7 @@ public class MetricsProviderTests : TestBase
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // First call computes metrics and writes them to disk
-        var first = await MetricsProvider.GetFileMetrics(SolutionPath, ExampleFilePath);
+        var first = await MetricsProvider.GetFileMetrics(SolutionPath, ExampleFilePath, Xunit.TestContext.Current.CancellationToken);
         using var json = JsonDocument.Parse(first);
         Assert.True(json.RootElement.TryGetProperty("linesOfCode", out _));
 
@@ -44,7 +44,7 @@ public class MetricsProviderTests : TestBase
         await File.WriteAllTextAsync(metricsFile, modified, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Second call should return cached result, not the modified file
-        var second = await MetricsProvider.GetFileMetrics(SolutionPath, ExampleFilePath);
+        var second = await MetricsProvider.GetFileMetrics(SolutionPath, ExampleFilePath, Xunit.TestContext.Current.CancellationToken);
         Assert.Equal(first, second);
 
         var diskSecond = await File.ReadAllTextAsync(metricsFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);

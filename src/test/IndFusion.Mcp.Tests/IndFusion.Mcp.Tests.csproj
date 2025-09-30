@@ -67,5 +67,10 @@
     <!-- Exclude ExampleCode.cs - it's a test fixture, not compiled code -->
     <Compile Remove="ExampleCode.cs" />
     <None Include="ExampleCode.cs" />
+    <!-- Exclude other common test fixture patterns -->
+    <Compile Remove="**\*Sample.cs" />
+    <Compile Remove="**\*Fixture.cs" />
+    <None Include="**\*Sample.cs" />
+    <None Include="**\*Fixture.cs" />
   </ItemGroup>
 </Project>

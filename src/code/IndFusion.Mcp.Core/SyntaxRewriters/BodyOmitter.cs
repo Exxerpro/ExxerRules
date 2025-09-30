@@ -13,12 +13,12 @@ public class BodyOmitter : CSharpSyntaxRewriter
     /// <inheritdoc />
     public override SyntaxNode? VisitBlock(BlockSyntax node)
     {
-        return SyntaxFactory.Block(SyntaxFactory.ParseStatement("// ...\n"));
+        return SyntaxFactory.Block();
     }
 
     /// <inheritdoc />
     public override SyntaxNode? VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
     {
-        return SyntaxFactory.Block(SyntaxFactory.ParseStatement("// ...\n"));
+        return SyntaxFactory.Block();
     }
 }

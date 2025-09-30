@@ -8,7 +8,7 @@ public class MakeStaticThenMoveTests : TestBase
     public async Task MakeStaticThenMove_ReturnsSuccess()
     {
         UnloadSolutionTool.ClearSolutionCache(Xunit.TestContext.Current.CancellationToken);
-        var testFile = Path.Combine(TestOutputPath, "MakeStaticThenMove.cs");
+        var testFile = Path.Combine(TestOutputPath, "MakeStaticThenMove1.cs");
         await TestUtilities.CreateTestFile(testFile, @"public class SourceClass
 {
     public string Value = ""x"";
@@ -18,20 +18,20 @@ public class MakeStaticThenMoveTests : TestBase
     }
 }
 
-public class NewMathUtils { }");
+public class NewMathUtils1 { }");
 
         var result = await MakeStaticThenMoveTool.MakeStaticThenMove(
             SolutionPath,
             testFile,
             "GetValueWithSuffix",
-            "NewMathUtils",
+            "NewMathUtils1",
             "source",
             null,
             null,
             Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Successfully moved static method", result);
-        var newFile = Path.Combine(Path.GetDirectoryName(testFile)!, "NewMathUtils.cs");
+        var newFile = Path.Combine(Path.GetDirectoryName(testFile)!, "NewMathUtils1.cs");
         Assert.True(File.Exists(newFile));
     }
 }

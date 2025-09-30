@@ -29,10 +29,12 @@ public static class MetricsProvider
     /// </summary>
     /// <param name="solutionPath">Absolute path to the solution (.sln).</param>
     /// <param name="filePath">Absolute path to the C# file.</param>
+    /// <param name="cancellationToken">Cancellation token to observe during the async operation.</param>
     /// <returns>JSON string containing metrics.</returns>
     public static async Task<string> GetFileMetrics(
         string solutionPath,
-        string filePath)
+        string filePath,
+        CancellationToken cancellationToken = default)
     {
         try
         {
@@ -44,13 +46,13 @@ public static class MetricsProvider
             var metricsFile = GetMetricsFilePath(solutionPath, filePath);
             if (File.Exists(metricsFile))
             {
-                var fromDisk = await File.ReadAllTextAsync(metricsFile);
+                var fromDisk = await File.ReadAllTextAsync(metricsFile, cancellationToken);
                 _cache.Set(key, fromDisk);
                 return fromDisk;
             }
 
-            var (tree, model) = await LoadTreeAndModel(solutionPath, filePath);
-            var root = await tree.GetRootAsync();
+            var (tree, model) = await LoadTreeAndModel(solutionPath, filePath, cancellationToken);
+            var root = await tree.GetRootAsync(cancellationToken);
             var metrics = MetricsCalculator.Calculate(root, model);
             var json = JsonSerializer.Serialize(metrics, new JsonSerializerOptions
             {
@@ -62,7 +64,7 @@ public static class MetricsProvider
             try
             {
                 Directory.CreateDirectory(Path.GetDirectoryName(metricsFile)!);
-                await File.WriteAllTextAsync(metricsFile, json);
+                await File.WriteAllTextAsync(metricsFile, json, cancellationToken);
             }
             catch
             {
@@ -79,23 +81,26 @@ public static class MetricsProvider
     /// <summary>
     /// Recomputes metrics for the given file and updates caches and on-disk copy.
     /// </summary>
-    public static Task RefreshFileMetrics(string solutionPath, string filePath)
+    /// <param name="solutionPath">Absolute path to the solution (.sln).</param>
+    /// <param name="filePath">Absolute path to the C# file.</param>
+    /// <param name="cancellationToken">Cancellation token to observe during the async operation.</param>
+    public static Task RefreshFileMetrics(string solutionPath, string filePath, CancellationToken cancellationToken = default)
     {
         // recompute metrics and update cache/disk
-        return GetFileMetrics(solutionPath, filePath);
+        return GetFileMetrics(solutionPath, filePath, cancellationToken);
     }
 
-    private static async Task<(SyntaxTree tree, SemanticModel? model)> LoadTreeAndModel(string solutionPath, string filePath)
+    private static async Task<(SyntaxTree tree, SemanticModel? model)> LoadTreeAndModel(string solutionPath, string filePath, CancellationToken cancellationToken = default)
     {
-        var solution = await ExxerFactoringHelpers.GetOrLoadSolution(solutionPath);
+        var solution = await ExxerFactoringHelpers.GetOrLoadSolution(solutionPath, cancellationToken);
         var doc = ExxerFactoringHelpers.GetDocumentByPath(solution, filePath);
         if (doc != null)
         {
-            var tree = await doc.GetSyntaxTreeAsync() ?? CSharpSyntaxTree.ParseText(await File.ReadAllTextAsync(filePath));
-            var model = await doc.GetSemanticModelAsync();
+            var tree = await doc.GetSyntaxTreeAsync(cancellationToken) ?? CSharpSyntaxTree.ParseText(await File.ReadAllTextAsync(filePath, cancellationToken));
+            var model = await doc.GetSemanticModelAsync(cancellationToken);
             return (tree, model);
         }
-        var syntaxTree = CSharpSyntaxTree.ParseText(await File.ReadAllTextAsync(filePath));
+        var syntaxTree = CSharpSyntaxTree.ParseText(await File.ReadAllTextAsync(filePath, cancellationToken));
         return (syntaxTree, null);
     }
 

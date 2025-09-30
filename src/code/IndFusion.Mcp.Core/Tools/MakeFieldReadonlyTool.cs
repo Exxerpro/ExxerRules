@@ -25,18 +25,23 @@ public static class MakeFieldReadonlyTool
     /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Make a field readonly if assigned only during initialization (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> MakeFieldReadonly(
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Name of the field to make readonly")] string fieldName,
         CancellationToken cancellationToken = default)
     {
         try
         {
-            return await ExxerFactoringHelpers.RunWithSolutionOrFile(
-                solutionPath,
-                filePath,
-                doc => MakeFieldReadonlyWithSolution(doc, fieldName),
-                path => MakeFieldReadonlySingleFile(path, fieldName));
+            if (!string.IsNullOrWhiteSpace(solutionPath))
+            {
+                return await ExxerFactoringHelpers.RunWithSolutionOrFile(
+                    solutionPath,
+                    filePath,
+                    doc => MakeFieldReadonlyWithSolution(doc, fieldName),
+                    path => MakeFieldReadonlySingleFile(path, fieldName));
+            }
+
+            return await MakeFieldReadonlySingleFile(filePath, fieldName);
         }
         catch (Exception ex)
         {

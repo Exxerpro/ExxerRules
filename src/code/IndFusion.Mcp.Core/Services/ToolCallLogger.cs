@@ -25,8 +25,11 @@ public static class ToolCallLogger
     public static void SetLogDirectory(string directory)
     {
         Directory.CreateDirectory(directory);
-        var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmss");
-        _logFile = Path.Combine(directory, $"tool-call-log-{timestamp}.jsonl");
+        var timestamp = DateTime.UtcNow.ToString("yyyyMMddHHmmssffff"); // Include milliseconds
+        var processId = Environment.ProcessId;
+        var threadId = Environment.CurrentManagedThreadId;
+        var guid = Guid.NewGuid().ToString("N")[..8]; // Use first 8 chars of GUID for uniqueness
+        _logFile = Path.Combine(directory, $"tool-call-log-{timestamp}-{processId}-{threadId}-{guid}.jsonl");
         Environment.SetEnvironmentVariable(LogFileEnvVar, _logFile);
     }
 
@@ -60,7 +63,26 @@ public static class ToolCallLogger
             Timestamp = DateTime.UtcNow
         };
         var json = JsonSerializer.Serialize(record);
-        File.AppendAllText(file, json + Environment.NewLine);
+
+        // Use retry logic with proper file sharing to handle concurrent access
+        var maxRetries = 3;
+        var delay = TimeSpan.FromMilliseconds(50);
+
+        for (int attempt = 0; attempt < maxRetries; attempt++)
+        {
+            try
+            {
+                using var stream = new FileStream(file, FileMode.Append, FileAccess.Write, FileShare.Read);
+                using var writer = new StreamWriter(stream);
+                writer.WriteLine(json);
+                return;
+            }
+            catch (IOException) when (attempt < maxRetries - 1)
+            {
+                Thread.Sleep(delay);
+                delay = TimeSpan.FromMilliseconds(delay.TotalMilliseconds * 2); // Exponential backoff
+            }
+        }
     }
 
     /// <summary>

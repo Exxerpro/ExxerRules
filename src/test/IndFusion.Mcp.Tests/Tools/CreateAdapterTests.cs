@@ -21,7 +21,8 @@ public class CreateAdapterTests : TestBase
             testFile,
             "LegacyLogger",
             "Write",
-            "LoggerAdapter");
+            "LoggerAdapter",
+            cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         Assert.Contains("Created adapter", result);
         var text = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);

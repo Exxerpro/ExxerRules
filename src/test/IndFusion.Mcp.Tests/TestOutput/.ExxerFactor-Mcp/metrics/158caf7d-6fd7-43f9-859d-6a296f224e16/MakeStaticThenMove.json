@@ -1,0 +1,26 @@
+{
+  "linesOfCode": 10,
+  "numberOfClasses": 2,
+  "numberOfPublicMethods": 1,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "SourceClass",
+      "linesOfCode": 8,
+      "methods": [
+        {
+          "name": "GetValueWithSuffix",
+          "linesOfCode": 4,
+          "parameterCount": 2,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    },
+    {
+      "name": "NewMathUtils",
+      "linesOfCode": 1,
+      "methods": []
+    }
+  ]
+}

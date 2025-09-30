@@ -43,7 +43,9 @@ public class Counter
 
         Assert.Contains("Added observer", result);
         var fileContent = await File.ReadAllTextAsync(testFile, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        Assert.Equal(expectedCode, fileContent.Replace("\r\n", "\n"));
+        var normalizedExpected = expectedCode.Replace("\r\n", "\n").Replace("\r", "\n");
+        var normalizedActual = fileContent.Replace("\r\n", "\n").Replace("\r", "\n");
+        Assert.Equal(normalizedExpected, normalizedActual);
     }
 
     /// <summary>

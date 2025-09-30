@@ -1,0 +1,38 @@
+{
+  "linesOfCode": 12,
+  "numberOfClasses": 3,
+  "numberOfPublicMethods": 2,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "Outer",
+      "linesOfCode": 10,
+      "methods": [
+        {
+          "name": "MakeList",
+          "linesOfCode": 4,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    },
+    {
+      "name": "Inner",
+      "linesOfCode": 1,
+      "methods": []
+    },
+    {
+      "name": "Target",
+      "linesOfCode": 1,
+      "methods": []
+    }
+  ]
+}

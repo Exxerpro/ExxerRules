@@ -28,7 +28,7 @@ public static class AddObserverTool
     /// <returns>Status message for the operation.</returns>
     [McpServerTool, Description("Introduce a simple observer event and raise it in a method")]
     public static async Task<string> AddObserver(
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Name of the class containing the method")] string className,
         [Description("Name of the method to raise the event from")] string methodName,
@@ -37,11 +37,16 @@ public static class AddObserverTool
     {
         try
         {
-            return await ExxerFactoringHelpers.RunWithSolutionOrFile(
-                solutionPath,
-                filePath,
-                doc => AddObserverWithSolution(doc, className, methodName, eventName),
-                path => AddObserverSingleFile(path, className, methodName, eventName));
+            if (!string.IsNullOrWhiteSpace(solutionPath))
+            {
+                return await ExxerFactoringHelpers.RunWithSolutionOrFile(
+                    solutionPath,
+                    filePath,
+                    doc => AddObserverWithSolution(doc, className, methodName, eventName),
+                    path => AddObserverSingleFile(path, className, methodName, eventName));
+            }
+
+            return await AddObserverSingleFile(filePath, className, methodName, eventName);
         }
         catch (Exception ex)
         {

@@ -1,0 +1,10 @@
+public class SourceClass
+{
+    public string Value = "x";
+    public string GetValueWithSuffix(string suffix)
+    {
+        return Value + suffix;
+    }
+}
+
+public class NewMathUtils { }

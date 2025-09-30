@@ -18,10 +18,10 @@ namespace IndFusion.Mcp.Core.Tools;
 [McpServerToolType]
 public static class IntroduceParameterTool
 {
-    private static async Task<string> IntroduceParameterWithSolution(Document document, string methodName, string selectionRange, string parameterName)
+    private static async Task<string> IntroduceParameterWithSolution(Document document, string methodName, string selectionRange, string parameterName, CancellationToken cancellationToken)
     {
-        var sourceText = await document.GetTextAsync();
-        var syntaxRoot = await document.GetSyntaxRootAsync();
+        var sourceText = await document.GetTextAsync(cancellationToken);
+        var syntaxRoot = await document.GetSyntaxRootAsync(cancellationToken);
         var textLines = sourceText.Lines;
 
         var method = syntaxRoot!.DescendantNodes()
@@ -44,7 +44,7 @@ public static class IntroduceParameterTool
         if (selectedExpression == null)
             throw new McpException("Error: Selected code is not a valid expression");
 
-        var semanticModel = await document.GetSemanticModelAsync();
+        var semanticModel = await document.GetSemanticModelAsync(cancellationToken);
         var typeInfo = semanticModel!.GetTypeInfo(selectedExpression);
         var typeName = typeInfo.Type?.ToDisplayString() ?? "object";
 
@@ -58,15 +58,15 @@ public static class IntroduceParameterTool
 
         var formattedRoot = Formatter.Format(newRoot, document.Project.Solution.Workspace);
         var newDocument = document.WithSyntaxRoot(formattedRoot);
-        var newText = await newDocument.GetTextAsync();
+        var newText = await newDocument.GetTextAsync(cancellationToken);
         var encoding = await ExxerFactoringHelpers.GetFileEncodingAsync(document.FilePath!);
-        await File.WriteAllTextAsync(document.FilePath!, newText.ToString(), encoding);
+        await File.WriteAllTextAsync(document.FilePath!, newText.ToString(), encoding, cancellationToken);
         ExxerFactoringHelpers.UpdateSolutionCache(newDocument);
 
         return $"Successfully introduced parameter '{parameterName}' from {selectionRange} in method '{methodName}' in {document.FilePath} (solution mode)";
     }
 
-    private static Task<string> IntroduceParameterSingleFile(string filePath, string methodName, string selectionRange, string parameterName)
+    private static Task<string> IntroduceParameterSingleFile(string filePath, string methodName, string selectionRange, string parameterName, CancellationToken cancellationToken)
     {
         return ExxerFactoringHelpers.ApplySingleFileEdit(
             filePath,
@@ -133,22 +133,29 @@ public static class IntroduceParameterTool
     /// <param name="methodName">Name of the method to add the parameter to.</param>
     /// <param name="selectionRange">Range in format 'startLine:startColumn-endLine:endColumn'.</param>
     /// <param name="parameterName">Name for the new parameter.</param>
+    /// <param name="cancellationToken">Cancellation token to cancel the operation.</param>
     /// <returns>A status message describing the outcome.</returns>
     [McpServerTool, Description("Create a new parameter from selected code (preferred for large C# file ExxerFactoring)")]
     public static async Task<string> IntroduceParameter(
-        [Description("Absolute path to the solution file (.sln)")] string solutionPath,
+        [Description("Absolute path to the solution file (.sln)")] string? solutionPath,
         [Description("Path to the C# file")] string filePath,
         [Description("Name of the method to add parameter to")] string methodName,
         [Description("Range in format 'startLine:startColumn-endLine:endColumn'")] string selectionRange,
-        [Description("Name for the new parameter")] string parameterName)
+        [Description("Name for the new parameter")] string parameterName,
+        CancellationToken cancellationToken = default)
     {
         try
         {
-            return await ExxerFactoringHelpers.RunWithSolutionOrFile(
-                solutionPath,
-                filePath,
-                doc => IntroduceParameterWithSolution(doc, methodName, selectionRange, parameterName),
-                path => IntroduceParameterSingleFile(path, methodName, selectionRange, parameterName));
+            if (!string.IsNullOrWhiteSpace(solutionPath))
+            {
+                return await ExxerFactoringHelpers.RunWithSolutionOrFile(
+                    solutionPath,
+                    filePath,
+                    doc => IntroduceParameterWithSolution(doc, methodName, selectionRange, parameterName, cancellationToken),
+                    path => IntroduceParameterSingleFile(path, methodName, selectionRange, parameterName, cancellationToken));
+            }
+
+            return await IntroduceParameterSingleFile(filePath, methodName, selectionRange, parameterName, cancellationToken);
         }
         catch (Exception ex)
         {

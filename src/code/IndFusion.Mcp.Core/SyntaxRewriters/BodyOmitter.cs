@@ -28,8 +28,7 @@ public class BodyOmitter : CSharpSyntaxRewriter
     public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
     {
         // Ensure we preserve the signature but omit the implementation consistently as "{}"
-        var emptyBody = SyntaxFactory.Block();
-        var updated = node.WithBody(emptyBody).WithExpressionBody(null).WithSemicolonToken(default);
+        var updated = node.WithBody(SyntaxFactory.Block()).WithExpressionBody(null).WithSemicolonToken(default);
         return base.VisitMethodDeclaration(updated);
     }
 }

@@ -261,7 +261,7 @@ namespace TestProject
 	/// Should not flag ILogger interpolated handler overload usage.
 	/// </summary>
 	[Fact]
-	public void Should_NotReportDiagnostic_When_ILoggerInterpolatedHandlerOverload()
+	public void Should_ReportDiagnostic_When_ILoggerInterpolatedHandlerOverload()
 	{
 		const string testCode = @"
 using Microsoft.Extensions.Logging;
@@ -280,6 +280,6 @@ namespace TestProject
 }";
 
 		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new IndFusion.Analyzers.Logging.UseStructuredLoggingAnalyzer());
-		diagnostics.Length.ShouldBe(0);
+		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
 	}
 }

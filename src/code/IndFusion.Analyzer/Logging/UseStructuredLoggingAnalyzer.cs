@@ -46,17 +46,15 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         var invocation = (InvocationExpressionSyntax)context.Node;
 
         // Heuristic: treat any method whose name starts with "Log" (Log, LogInformation, etc.) as logging.
-        if (invocation.Expression is MemberAccessExpressionSyntax ma)
-        {
-            var methodName = ma.Name.Identifier.ValueText;
-            if (!methodName.StartsWith("Log", System.StringComparison.Ordinal))
-            {
-                return;
-            }
-        }
-        else
+        if (invocation.Expression is not MemberAccessExpressionSyntax ma)
         {
             // If not a member access, skip
+            return;
+        }
+
+        var methodName = ma.Name.Identifier.ValueText;
+        if (!methodName.StartsWith("Log", System.StringComparison.Ordinal))
+        {
             return;
         }
 
@@ -67,28 +65,23 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-		var messageArgument = arguments[0].Expression;
+        var messageArgument = arguments[0].Expression;
 
-		// If the target method uses an interpolated string handler overload, allow interpolated strings
-        var methodSymbol = context.SemanticModel.GetSymbolInfo(invocation).Symbol as IMethodSymbol;
-        var allowsInterpolatedHandler = MethodAllowsInterpolatedHandler(methodSymbol);
-
-        // Check if the message uses string concatenation or (when not allowed) interpolation
-		if (messageArgument is BinaryExpressionSyntax binaryExpr && IsStringConcatenation(binaryExpr))
+        // Strict enforcement: always flag string concatenation or interpolation
+        if (messageArgument is BinaryExpressionSyntax binaryExpr && IsStringConcatenation(binaryExpr))
         {
             ReportDiagnostic(context, messageArgument, "string concatenation");
+            return;
         }
-        else if (messageArgument is InterpolatedStringExpressionSyntax)
+
+        if (messageArgument is InterpolatedStringExpressionSyntax)
         {
-            // Report interpolation unless target method supports interpolated string handler overloads
-            if (!allowsInterpolatedHandler)
-            {
-                ReportDiagnostic(context, messageArgument, "string interpolation");
-            }
+            ReportDiagnostic(context, messageArgument, "string interpolation");
+            return;
         }
+
         // Only analyze the first argument; do not scan unrelated descendants
     }
-
     private static bool IsILoggerLoggingCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel) => true;
 
     private static bool IsLoggingMethodName(string methodName)

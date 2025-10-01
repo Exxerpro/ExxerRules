@@ -103,14 +103,17 @@ public static class IntroduceFieldTool
         var fieldReference = SyntaxFactory.IdentifierName(fieldName);
         var containingClass = selectedExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
         if (containingClass != null)
+
         {
             var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
+
             if (classSymbol?.GetMembers().OfType<IFieldSymbol>().Any(f => f.Name == fieldName) == true)
+
             {
-                // Allow idempotent success if the same field already exists (to avoid test flakiness across runs)
-                return $"Successfully introduced {accessModifier} field '{fieldName}' from {selectionRange} in {document.FilePath} (solution mode)";
+                return $"Error: Field '{fieldName}' already exists";
             }
         }
+
         var rewriter = new FieldIntroductionRewriter(selectedExpression, fieldReference, fieldDeclaration, containingClass);
         var newRoot = rewriter.Visit(syntaxRoot);
 
@@ -209,8 +212,8 @@ public static class IntroduceFieldTool
                 .SelectMany(f => f.Declaration.Variables)
                 .Any(v => v.Identifier.ValueText == fieldName);
             if (exists)
-                // Idempotent: return original source text unchanged
-                return sourceText.ToString();
+
+                return $"Error: Field '{fieldName}' already exists";
         }
         var rewriter = new FieldIntroductionRewriter(selectedExpression, fieldReference, fieldDeclaration, containingClass);
         var newRoot = rewriter.Visit(syntaxRoot);
@@ -218,5 +221,4 @@ public static class IntroduceFieldTool
         var formattedRoot = Formatter.Format(newRoot, ExxerFactoringHelpers.SharedWorkspace);
         return formattedRoot.ToFullString();
     }
-
 }

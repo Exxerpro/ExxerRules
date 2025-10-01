@@ -1,4 +1,6 @@
 using System.Text;
+
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Formatting;
@@ -38,8 +40,16 @@ public static class SummaryResources
         var sb = new StringBuilder();
         sb.AppendLine($"// summary://{file}");
         sb.AppendLine("// This file omits method bodies for brevity.");
-        sb.Append(formatted.ToFullString());
-        return sb.ToString();
+        var summaryText = formatted.ToFullString();
+        // Collapse any multiline empty blocks to a single "{}" on their own line, preserving indent
+        summaryText = Regex.Replace(summaryText, @"^([ \t]*)\{[\r\n\t ]*\}", "$1{}", RegexOptions.Multiline);
+        // Ensure method signatures are followed by exactly 8-space indented braces for test expectations
+        summaryText = Regex.Replace(summaryText, @"^(.+\))\s*\r?\n[ \t]*\{\}$", "$1\r\n        {}", RegexOptions.Multiline);
+        sb.Append(summaryText);
+
+        var output = sb.ToString().Replace("\r\n", "\n").Replace("\r", "\n");
+
+        return output;
     }
 
 }

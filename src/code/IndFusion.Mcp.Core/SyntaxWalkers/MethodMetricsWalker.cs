@@ -39,10 +39,22 @@ public class MethodMetricsWalker : CSharpSyntaxWalker
         if (parameters >= 5)
             Suggestions.Add($"Method '{node.Identifier}' has {parameters} parameters -> consider introducing parameter object");
 
-        if (_model != null && !node.Modifiers.Any(SyntaxKind.StaticKeyword))
+        if (!node.Modifiers.Any(SyntaxKind.StaticKeyword))
         {
-            var accessesInstance = node.DescendantNodes().Any(n => n is ThisExpressionSyntax ||
-                                                                   n is MemberAccessExpressionSyntax ma && _model.GetSymbolInfo(ma).Symbol is { IsStatic: false });
+            var accessesInstance = false;
+            var hasThisOrMemberAccess = node.DescendantNodes().Any(n => n is ThisExpressionSyntax || n is MemberAccessExpressionSyntax);
+
+            if (_model != null)
+            {
+                accessesInstance = node.DescendantNodes().Any(n =>
+                    n is ThisExpressionSyntax ||
+                    n is MemberAccessExpressionSyntax ma && _model.GetSymbolInfo(ma).Symbol is { IsStatic: false });
+            }
+            else
+            {
+                accessesInstance = hasThisOrMemberAccess;
+            }
+
             if (!accessesInstance)
                 Suggestions.Add($"Method '{node.Identifier}' does not access instance state -> make-static");
         }

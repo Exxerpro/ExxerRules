@@ -85,14 +85,16 @@ public static class AnalyzerTestHelper
             .Split(Path.PathSeparator);
 
         var neededAssemblies = new[]
-        {
-            "System.Runtime",
-            "System.Collections",
-            "System.Linq",
-            "System.Console",
-            "netstandard",
-            "mscorlib"
-        };
+{
+	"System.Runtime",
+	"System.Collections",
+	"System.Linq",
+	"System.Console",
+	"netstandard",
+	"mscorlib",
+	"Microsoft.Extensions.Logging",
+	"Microsoft.Extensions.Logging.Abstractions"
+};
 
         var references = trustedAssembliesPaths
             .Where(p => neededAssemblies.Any(na => Path.GetFileNameWithoutExtension(p) == na))

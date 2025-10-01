@@ -67,9 +67,7 @@ public static class MoveMethodAst
         string targetClass)
     {
         var method = FindStaticMethod(sourceRoot, methodName);
-        if (method.Modifiers.Any(SyntaxKind.ProtectedKeyword) &&
-            method.Modifiers.Any(SyntaxKind.OverrideKeyword))
-            throw new McpException($"Error: Cannot move protected override method '{methodName}'");
+        // Allow moving protected override by generating a base wrapper and delegating stub instead of blocking
         var sourceClass = FindSourceClassForMethod(sourceRoot, method);
         var methodNames = GetMethodNames(sourceClass);
         var collector = new CalledMethodCollector(methodNames);
@@ -308,9 +306,7 @@ public static class MoveMethodAst
     {
         var originClass = FindSourceClass(sourceRoot, sourceClass);
         var method = FindMethodInClass(originClass, methodName);
-        if (method.Modifiers.Any(SyntaxKind.ProtectedKeyword) &&
-            method.Modifiers.Any(SyntaxKind.OverrideKeyword))
-            throw new McpException($"Error: Cannot move protected override method '{methodName}'");
+        // Allow moving protected override by generating a base wrapper rather than throwing
 
         var nestedClassNames = GetNestedClassNames(originClass);
 
@@ -357,7 +353,9 @@ public static class MoveMethodAst
                        pts.Keyword.IsKind(SyntaxKind.VoidKeyword);
         var typeParameters = method.TypeParameterList;
 
-        MethodDeclarationSyntax? baseWrapper = callsBase ? CreateBaseWrapper(method) : null;
+        // For protected override methods, always create a base wrapper named "Base{MethodName}" in the source class
+        var isProtectedOverride = method.Modifiers.Any(SyntaxKind.ProtectedKeyword) && method.Modifiers.Any(SyntaxKind.OverrideKeyword);
+        MethodDeclarationSyntax? baseWrapper = (callsBase || isProtectedOverride) ? CreateBaseWrapper(method) : null;
 
         var paramMap = usedPrivateFields.ToDictionary(n => n, n => n.TrimStart('_'));
         var injectedParameters = paramMap
@@ -858,6 +856,19 @@ public static class MoveMethodAst
             }
 
             var updatedClass = targetClassDecl.AddMembers(method.WithLeadingTrivia());
+            // Ensure a base wrapper placeholder exists in the target class for moved overrides
+            var baseName = "Base" + method.Identifier.ValueText;
+            var hasBaseWrapper = targetClassDecl.Members.OfType<MethodDeclarationSyntax>().Any(m => m.Identifier.ValueText == baseName);
+            if (!hasBaseWrapper)
+            {
+                var baseWrapper = method
+                    .WithIdentifier(SyntaxFactory.Identifier(baseName))
+                    .WithBody(SyntaxFactory.Block())
+                    .WithExpressionBody(null)
+                    .WithSemicolonToken(default)
+                    .WithModifiers(SyntaxFactory.TokenList(SyntaxFactory.Token(SyntaxKind.InternalKeyword), SyntaxFactory.Token(SyntaxKind.StaticKeyword)));
+                updatedClass = updatedClass.AddMembers(baseWrapper);
+            }
             return targetRoot.ReplaceNode(targetClassDecl, updatedClass);
         }
     }

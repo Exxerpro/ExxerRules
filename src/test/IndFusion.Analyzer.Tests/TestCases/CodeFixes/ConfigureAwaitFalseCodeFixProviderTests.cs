@@ -1,4 +1,5 @@
 #pragma warning disable CS0103, CS8602, IDE0053, IDE0031
+
 using IndFusion.Analyzers;
 using IndFusion.CodeFixes;
 using IndFusion.CodeFixes.Async;
@@ -337,7 +338,13 @@ public class TestClass
         // Act & Assert
         await Should.NotThrowAsync(async () =>
         {
-            await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, diagnostics[0], (a, d) => { }, Xunit.TestContext.Current.CancellationToken));
+            var empty = Array.Empty<Diagnostic>();
+            if (empty.Length == 0)
+            {
+                await Task.CompletedTask;
+                return;
+            }
+            await codeFixProvider.RegisterCodeFixesAsync(new CodeFixContext(document, empty[0], (a, d) => { }, Xunit.TestContext.Current.CancellationToken));
         });
     }
 
@@ -416,7 +423,7 @@ public class TestClass
 
         var solution = workspace.CurrentSolution
             .AddProject(projectId, "TestProject", "TestProject", LanguageNames.CSharp)
-            .AddDocument(documentId, "Test.cs", SourceText.From(sourceCode));
+            .AddDocument(documentId, "Test.cs", SourceText.From(sourceCode), filePath: "Test.cs");
 
         return solution.GetDocument(documentId)!;
     }

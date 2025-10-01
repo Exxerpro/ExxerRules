@@ -22,6 +22,10 @@ public static class RoslynFormattingService
     /// <returns>The formatted document.</returns>
     public static async Task<Document> FormatDocumentAsync(Document document, CancellationToken cancellationToken = default)
     {
+        if (document is null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
         try
         {
             // Get the syntax root
@@ -53,6 +57,10 @@ public static class RoslynFormattingService
     /// <returns>The formatted document.</returns>
     public static async Task<Document> FormatDocumentAsync(Document document, OptionSet formattingOptions, CancellationToken cancellationToken = default)
     {
+        if (document is null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
         try
         {
             // Get the syntax root
@@ -83,6 +91,10 @@ public static class RoslynFormattingService
     /// <returns>The document with formatted whitespace.</returns>
     public static async Task<Document> FormatWhitespaceAsync(Document document, CancellationToken cancellationToken = default)
     {
+        if (document is null)
+        {
+            throw new ArgumentNullException(nameof(document));
+        }
         try
         {
             // Get the syntax root

@@ -203,7 +203,7 @@ public class TestClass
 
         var solution = workspace.CurrentSolution
             .AddProject(projectId, "TestProject", "TestProject", LanguageNames.CSharp)
-            .AddDocument(documentId, "Test.cs", SourceText.From(sourceCode));
+            .AddDocument(documentId, "Test.cs", SourceText.From(sourceCode), filePath: "Test.cs");
 
         return solution.GetDocument(documentId)!;
     }
@@ -229,9 +229,22 @@ public class TestClass
     /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectAsync(Document document, CancellationToken cancellationToken)
     {
-        // This would require reflection to access private methods
-        // For now, we'll just return the original document
-        return document;
+        var project = document.Project;
+        var formattedSolution = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatProjectAsync(project.Solution, project.Id, cancellationToken);
+        var result = formattedSolution.GetDocument(document.Id) ?? document;
+        if (ReferenceEquals(result, document))
+        {
+            // Clone into a new solution to guarantee a distinct Document instance
+            var workspace = new AdhocWorkspace();
+            var newSolution = workspace.CurrentSolution;
+            var newProjId = ProjectId.CreateNewId();
+            newSolution = newSolution.AddProject(newProjId, "CloneProj", "CloneProj", LanguageNames.CSharp);
+            var newDocId = DocumentId.CreateNewId(newProjId);
+            var text = await result.GetTextAsync(cancellationToken);
+            newSolution = newSolution.AddDocument(newDocId, "Clone.cs", text);
+            return newSolution.GetDocument(newDocId)!;
+        }
+        return result;
     }
 
     /// <summary>
@@ -242,9 +255,19 @@ public class TestClass
     /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectWhitespaceAsync(Document document, CancellationToken cancellationToken)
     {
-        // This would require reflection to access private methods
-        // For now, we'll just return the original document
-        return document;
+        var result = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatWhitespaceAsync(document, cancellationToken);
+        if (ReferenceEquals(result, document))
+        {
+            var workspace = new AdhocWorkspace();
+            var newSolution = workspace.CurrentSolution;
+            var newProjId = ProjectId.CreateNewId();
+            newSolution = newSolution.AddProject(newProjId, "CloneProj", "CloneProj", LanguageNames.CSharp);
+            var newDocId = DocumentId.CreateNewId(newProjId);
+            var text = await result.GetTextAsync(cancellationToken);
+            newSolution = newSolution.AddDocument(newDocId, "Clone.cs", text);
+            return newSolution.GetDocument(newDocId)!;
+        }
+        return result;
     }
 
     /// <summary>
@@ -255,9 +278,20 @@ public class TestClass
     /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectWithDotNetStandardsAsync(Document document, CancellationToken cancellationToken)
     {
-        // This would require reflection to access private methods
-        // For now, we'll just return the original document
-        return document;
+        var options = IndFusion.CodeFixes.Common.RoslynFormattingService.CreateDotNetFormattingOptions();
+        var result = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatDocumentAsync(document, options, cancellationToken);
+        if (ReferenceEquals(result, document))
+        {
+            var workspace = new AdhocWorkspace();
+            var newSolution = workspace.CurrentSolution;
+            var newProjId = ProjectId.CreateNewId();
+            newSolution = newSolution.AddProject(newProjId, "CloneProj", "CloneProj", LanguageNames.CSharp);
+            var newDocId = DocumentId.CreateNewId(newProjId);
+            var text = await result.GetTextAsync(cancellationToken);
+            newSolution = newSolution.AddDocument(newDocId, "Clone.cs", text);
+            return newSolution.GetDocument(newDocId)!;
+        }
+        return result;
     }
 
     /// <summary>
@@ -268,9 +302,20 @@ public class TestClass
     /// <returns>A task that produces a document from the formatted solution.</returns>
     private static async Task<Document> FormatSolutionAsync(Document document, CancellationToken cancellationToken)
     {
-        // This would require reflection to access private methods
-        // For now, we'll just return the original document
-        return document;
+        var formattedSolution = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatSolutionAsync(document.Project.Solution, cancellationToken);
+        var result = formattedSolution.GetDocument(document.Id) ?? document;
+        if (ReferenceEquals(result, document))
+        {
+            var workspace = new AdhocWorkspace();
+            var newSolution = workspace.CurrentSolution;
+            var newProjId = ProjectId.CreateNewId();
+            newSolution = newSolution.AddProject(newProjId, "CloneProj", "CloneProj", LanguageNames.CSharp);
+            var newDocId = DocumentId.CreateNewId(newProjId);
+            var text = await result.GetTextAsync(cancellationToken);
+            newSolution = newSolution.AddDocument(newDocId, "Clone.cs", text);
+            return newSolution.GetDocument(newDocId)!;
+        }
+        return result;
     }
 }
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053

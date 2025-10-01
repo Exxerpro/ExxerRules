@@ -171,6 +171,90 @@ namespace IndFusion.Analyzers.Operations;
 /// }
 /// </code>
 /// </example>
+internal static class ResultErrorNormalizer
+{
+    private const int MaxEnumeratedErrors = 4096;
+
+    public static string[] Normalize(IEnumerable<string>? errors)
+    {
+        var errorList = new List<string>();
+        var encounteredInvalid = false;
+
+        if (errors is null)
+        {
+            encounteredInvalid = true;
+        }
+        else if (errors is string[] errorArray)
+        {
+            // Fast path for arrays: no enumeration cap
+            foreach (var e in errorArray)
+            {
+                if (string.IsNullOrWhiteSpace(e))
+                {
+                    encounteredInvalid = true;
+                }
+                else
+                {
+                    errorList.Add(e);
+                }
+            }
+        }
+        else if (errors is ICollection<string> collection)
+        {
+            // Fast path for collections with known count: no enumeration cap
+            foreach (var e in collection)
+            {
+                if (string.IsNullOrWhiteSpace(e))
+                {
+                    encounteredInvalid = true;
+                }
+                else
+                {
+                    errorList.Add(e);
+                }
+            }
+        }
+        else
+        {
+            // Fallback for general IEnumerable: apply a reasonable cap to avoid hangs
+            var enumerated = 0;
+            foreach (var e in errors)
+            {
+                if (enumerated == MaxEnumeratedErrors)
+                {
+                    encounteredInvalid = true;
+                    break;
+                }
+
+                if (string.IsNullOrWhiteSpace(e))
+                {
+                    encounteredInvalid = true;
+                }
+                else
+                {
+                    errorList.Add(e);
+                }
+
+                enumerated++;
+            }
+        }
+
+        if (errorList.Count == 0)
+        {
+            errorList.Add(ResultConstants.DefaultErrorMessage);
+        }
+        else if (encounteredInvalid)
+        {
+            errorList.Add(ResultConstants.DefaultErrorMessage);
+        }
+
+        return errorList.ToArray();
+    }
+}
+
+/// <summary>
+/// Represents the result of an operation, including success status and error messages.
+/// </summary>
 public sealed class Result
 {
     // Note: Error messages are now centralized in ResultConstants class
@@ -333,13 +417,8 @@ public sealed class Result
     /// <returns>A failed <see cref="Result"/> instance.</returns>
     public static Result WithFailure(IEnumerable<string> errors)
     {
-        // Check for null or empty collections and provide default error message (consistent with generic version)
-        var errorArray = errors?.ToArray();
-        if (errorArray is null || errorArray.Length == 0)
-        {
-            errorArray = [ResultConstants.DefaultErrorMessage];
-        }
-        return new Result(false, errorArray);
+        var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
+        return new Result(false, normalizedErrors);
     }
 
     /// <summary>
@@ -349,12 +428,8 @@ public sealed class Result
     /// <returns>A failed <see cref="Result"/> instance.</returns>
     public static Result WithFailure(string[] errors)
     {
-        // Check for empty array and provide default error message (consistent with IEnumerable overload)
-        if (errors is null || errors.Length == 0)
-        {
-            errors = [ResultConstants.DefaultErrorMessage];
-        }
-        return new Result(false, errors);
+        var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
+        return new Result(false, normalizedErrors);
     }
 
     /// <summary>
@@ -362,7 +437,11 @@ public sealed class Result
     /// </summary>
     /// <param name="error">The error message.</param>
     /// <returns>A failed <see cref="Result"/> instance.</returns>
-    public static Result WithFailure(string error) => new(false, [error]);
+    public static Result WithFailure(string error)
+    {
+        var normalizedErrors = ResultErrorNormalizer.Normalize(new[] { error });
+        return new Result(false, normalizedErrors);
+    }
 
     /// <summary>
     /// Executes the specified action if the result is successful.
@@ -371,6 +450,10 @@ public sealed class Result
     /// <returns>The current <see cref="Result"/> instance.</returns>
     public Result OnSuccess(Action action)
     {
+        if (action is null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
         if (IsSuccess)
         {
             action();
@@ -394,6 +477,10 @@ public sealed class Result
     /// </remarks>
     public Result OnFailure(Action<IEnumerable<string>> action)
     {
+        if (action is null)
+        {
+            throw new ArgumentNullException(nameof(action));
+        }
         if (IsFailure)
         {
             if (Errors is not null)
@@ -414,7 +501,14 @@ public sealed class Result
     /// <typeparam name="T">The type of the value to return on success.</typeparam>
     /// <param name="func">The function to execute on success.</param>
     /// <returns>A <see cref="Result{T}"/> representing the outcome.</returns>
-    public Result<T> Map<T>(Func<T> func) => IsSuccess ? Result<T>.Success(func()) : Result<T>.WithFailure(Errors);
+    public Result<T> Map<T>(Func<T> func)
+    {
+        if (func is null)
+        {
+            throw new ArgumentNullException(nameof(func));
+        }
+        return IsSuccess ? Result<T>.Success(func()) : Result<T>.WithFailure(Errors);
+    }
 
     /// <summary>
     /// Binds a successful result to another <see cref="Result{T}"/> using the provided function, or propagates errors.
@@ -422,7 +516,19 @@ public sealed class Result
     /// <typeparam name="T">The type of the value to return on success.</typeparam>
     /// <param name="func">The function to execute on success.</param>
     /// <returns>A <see cref="Result{T}"/> representing the outcome.</returns>
-    public Result<T> Bind<T>(Func<Result<T>> func) => IsSuccess ? func() : Result<T>.WithFailure(Errors);
+    public Result<T> Bind<T>(Func<Result<T>> func)
+    {
+        if (func is null)
+        {
+            throw new ArgumentNullException(nameof(func));
+        }
+        if (!IsSuccess)
+        {
+            return Result<T>.WithFailure(Errors);
+        }
+        var bound = func();
+        return bound ?? Result<T>.WithFailure(ResultConstants.DefaultErrorMessage);
+    }
 
     /// <summary>
     /// Ensures a condition is met for a successful result, otherwise returns a failure with the specified error message.
@@ -432,6 +538,14 @@ public sealed class Result
     /// <returns>A <see cref="Result"/> representing the outcome.</returns>
     public Result Ensure(Func<bool> condition, string errorMessage)
     {
+        if (condition is null)
+        {
+            throw new ArgumentNullException(nameof(condition));
+        }
+        if (string.IsNullOrWhiteSpace(errorMessage))
+        {
+            errorMessage = ResultConstants.DefaultErrorMessage;
+        }
         if (IsSuccess && !condition())
         {
             return WithFailure(errorMessage);
@@ -928,13 +1042,8 @@ public sealed class Result<T>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
     public static Result<T> WithFailure(IEnumerable<string>? errors, T? value = default)
     {
-        // Use the provided errors or fall back to the default error message
-        var errorArray = errors?.ToArray();
-        if (errorArray is null || errorArray.Length == 0)
-        {
-            errorArray = [ResultConstants.DefaultErrorMessage];
-        }
-        return new Result<T>(false, errorArray, value);
+        var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
+        return new Result<T>(false, normalizedErrors, value);
     }
 
     /// <summary>
@@ -945,13 +1054,8 @@ public sealed class Result<T>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
     public static Result<T> WithFailure(T? value = default, IEnumerable<string>? errors = default)
     {
-        // Use the provided errors or fall back to the default error message
-        var errorArray = errors?.ToArray();
-        if (errorArray is null || errorArray.Length == 0)
-        {
-            errorArray = [ResultConstants.DefaultErrorMessage];
-        }
-        return new Result<T>(false, errorArray, value);
+        var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
+        return new Result<T>(false, normalizedErrors, value);
     }
 
     /// <summary>
@@ -978,12 +1082,8 @@ public sealed class Result<T>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
     public static Result<T> WithFailure(string[] errors, T? value = default)
     {
-        // Check for empty array and provide default error message (consistent with IEnumerable overload)
-        if (errors is null || errors.Length == 0)
-        {
-            errors = [ResultConstants.DefaultErrorMessage];
-        }
-        return new Result<T>(false, errors, value);
+        var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
+        return new Result<T>(false, normalizedErrors, value);
     }
 
     /// <summary>
@@ -992,7 +1092,11 @@ public sealed class Result<T>
     /// <param name="error">The error message.</param>
     /// <param name="value">The value to associate with the result (optional).</param>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
-    public static Result<T> WithFailure(string error, T? value = default) => new(false, [error], value);
+    public static Result<T> WithFailure(string error, T? value = default)
+    {
+        var normalizedErrors = ResultErrorNormalizer.Normalize(new[] { error });
+        return new Result<T>(false, normalizedErrors, value);
+    }
 
     /// <summary>
     /// Implicitly converts a value of type T to a successful <see cref="Result{T}"/>.

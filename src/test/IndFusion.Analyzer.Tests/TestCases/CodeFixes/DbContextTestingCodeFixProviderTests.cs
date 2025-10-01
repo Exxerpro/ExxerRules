@@ -659,7 +659,7 @@ public class TestEntity
 
         var solution = workspace.CurrentSolution
             .AddProject(projectId, "TestProject", "TestProject", LanguageNames.CSharp)
-            .AddDocument(documentId, "Test.cs", SourceText.From(sourceCode));
+            .AddDocument(documentId, "Test.cs", SourceText.From(sourceCode), filePath: "Test.cs");
 
         return solution.GetDocument(documentId)!;
     }

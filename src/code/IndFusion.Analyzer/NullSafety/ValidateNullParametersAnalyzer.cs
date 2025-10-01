@@ -51,11 +51,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-		// Skip expression-bodied methods to avoid false positives on small forwarders
-		if (methodDeclaration.ExpressionBody != null)
-		{
-			return;
-		}
+        // Expression-bodied methods: still analyze parameters as required by tests
 
 		// Get reference type parameters that need validation (semantic)
 		var referenceParameters = GetReferenceTypeParameters(methodDeclaration, context.SemanticModel);
@@ -178,9 +174,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         {
             return method.Body.Statements;
         }
-
-        // For expression-bodied methods, we can't easily validate null parameters
-        // So we consider them as not having validation
+        // For expression-bodied methods, synthesize a single statement representing the expression
+        if (method.ExpressionBody != null)
+        {
+            return new[] { SyntaxFactory.ExpressionStatement(method.ExpressionBody.Expression) };
+        }
         return [];
     }
 

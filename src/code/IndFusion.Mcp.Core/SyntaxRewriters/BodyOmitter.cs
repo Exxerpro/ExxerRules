@@ -13,12 +13,23 @@ public class BodyOmitter : CSharpSyntaxRewriter
     /// <inheritdoc />
     public override SyntaxNode? VisitBlock(BlockSyntax node)
     {
+        // Replace any block with an empty body
         return SyntaxFactory.Block();
     }
 
     /// <inheritdoc />
     public override SyntaxNode? VisitArrowExpressionClause(ArrowExpressionClauseSyntax node)
     {
+        // Convert expression-bodied members into empty blocks by replacing the parent appropriately
         return SyntaxFactory.Block();
+    }
+
+    /// <inheritdoc />
+    public override SyntaxNode? VisitMethodDeclaration(MethodDeclarationSyntax node)
+    {
+        // Ensure we preserve the signature but omit the implementation consistently as "{}"
+        var emptyBody = SyntaxFactory.Block();
+        var updated = node.WithBody(emptyBody).WithExpressionBody(null).WithSemicolonToken(default);
+        return base.VisitMethodDeclaration(updated);
     }
 }

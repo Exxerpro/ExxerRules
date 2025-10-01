@@ -65,14 +65,15 @@ public static class ToolCallLogger
         var json = JsonSerializer.Serialize(record);
 
         // Use retry logic with proper file sharing to handle concurrent access
-        var maxRetries = 3;
-        var delay = TimeSpan.FromMilliseconds(50);
+        var maxRetries = 5;
+        var delay = TimeSpan.FromMilliseconds(25);
 
         for (int attempt = 0; attempt < maxRetries; attempt++)
         {
             try
             {
-                using var stream = new FileStream(file, FileMode.Append, FileAccess.Write, FileShare.Read);
+                // Allow concurrent readers and writers to minimize contention across tests
+                using var stream = new FileStream(file, FileMode.Append, FileAccess.Write, FileShare.ReadWrite | FileShare.Delete);
                 using var writer = new StreamWriter(stream);
                 writer.WriteLine(json);
                 return;
@@ -80,7 +81,7 @@ public static class ToolCallLogger
             catch (IOException) when (attempt < maxRetries - 1)
             {
                 Thread.Sleep(delay);
-                delay = TimeSpan.FromMilliseconds(delay.TotalMilliseconds * 2); // Exponential backoff
+                delay = TimeSpan.FromMilliseconds(Math.Min(200, delay.TotalMilliseconds * 2)); // Exponential backoff with cap
             }
         }
     }

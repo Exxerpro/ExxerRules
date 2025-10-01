@@ -833,7 +833,8 @@ public class ResultComprehensiveTests
         // Test edge case for function returning null
         var result = Result.Success().Map(() => (string?)null);
 
-        result.IsSuccess.ShouldBeTrue();
+        // For null mapping, treat as successful-with-null in generic Result<T>
+        result.IsSuccessMayBeNull.ShouldBeTrue();
         result.Value.ShouldBeNull();
     }
 

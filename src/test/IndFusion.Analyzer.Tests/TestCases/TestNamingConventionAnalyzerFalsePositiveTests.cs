@@ -149,13 +149,12 @@ public class CommandHandlerTests\
     [Fact]
     public void Analyzer_Allows_DisplayName_Override()
     {
-        const string testCode = @"\
-using Xunit;\
-\
-public class DisplayNameTests\
-{\
-\t[Fact(DisplayName = \"Scenario: user requests data\")]\
-\tpublic void Test1() { }\
+        const string testCode = @"using Xunit;
+
+public class DisplayNameTests
+{
+    [Fact(DisplayName = ""Scenario: user requests data"")]
+    public void Test1() { }
 }";
 
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new TestNamingConventionAnalyzer());
@@ -168,16 +167,15 @@ public class DisplayNameTests\
     [Fact]
     public void Analyzer_Allows_Nested_Context_Classes()
     {
-        const string testCode = @"\
-using Xunit;\
-\
-public class Given_Data\
-{\
-\tpublic class When_No_Data\
-\t{\
-\t\t[Fact]\
-\t\tpublic void ReturnsEmptyResult() { }\
-\t}\
+        const string testCode = @"using Xunit;
+
+public class Given_Data
+{
+    public class When_No_Data
+    {
+        [Fact]
+        public void ReturnsEmptyResult() { }
+    }
 }";
 
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new TestNamingConventionAnalyzer());

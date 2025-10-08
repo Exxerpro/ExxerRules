@@ -137,6 +137,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         // Ensure typeName is always assigned
         var typeName = GetThrownTypeName(node);
 
+        // Enhanced boundary detection
+        if (IsInFrameworkBoundary(node)) return true;  // NEW
+        if (IsDomainValidation(node)) return true;     // NEW
+        if (IsConfigurationContext(node)) return true; // NEW
+
         // Boundary layers
         if (IsInBoundaryLayer(node)) return true;
 
@@ -249,5 +254,107 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// Detects if the throw is in a framework boundary (Controllers, Repositories, etc.)
+    /// </summary>
+    private static bool IsInFrameworkBoundary(SyntaxNode node)
+    {
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null) return false;
+        
+        var className = containingClass.Identifier.Text;
+        
+        // ASP.NET Core patterns
+        if (className.EndsWith("Controller") || 
+            className.EndsWith("Middleware") ||
+            className.EndsWith("Filter") ||
+            className.EndsWith("Attribute") ||
+            className.EndsWith("Hub"))
+            return true;
+        
+        // Entity Framework patterns
+        if (className.EndsWith("DbContext") ||
+            className.EndsWith("Repository") ||
+            className.EndsWith("UnitOfWork"))
+            return true;
+        
+        // Infrastructure namespaces
+        var namespaceName = GetNamespace(node);
+        if (namespaceName?.Contains("Infrastructure") == true ||
+            namespaceName?.Contains("Persistence") == true ||
+            namespaceName?.Contains("DataAccess") == true)
+            return true;
+        
+        return false;
+    }
+
+    /// <summary>
+    /// Detects if the throw is in domain validation context
+    /// </summary>
+    private static bool IsDomainValidation(SyntaxNode node)
+    {
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null) return false;
+        
+        var className = containingClass.Identifier.Text;
+        var method = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+        var namespaceName = GetNamespace(node);
+        
+        // Domain validation patterns
+        if (className.EndsWith("Validator") ||
+            className.EndsWith("Rule") ||
+            className.EndsWith("Policy") ||
+            className.EndsWith("Specification"))
+            return true;
+        
+        // Domain factory patterns
+        if (method?.Identifier.Text.StartsWith("Create") == true ||
+            method?.Identifier.Text.StartsWith("Build") == true ||
+            method?.Identifier.Text.Contains("Factory") == true)
+            return true;
+        
+        // Domain namespace patterns
+        if (namespaceName?.Contains("Domain") == true ||
+            namespaceName?.Contains("Business") == true)
+            return true;
+        
+        return false;
+    }
+
+    /// <summary>
+    /// Detects if the throw is in configuration context
+    /// </summary>
+    private static bool IsConfigurationContext(SyntaxNode node)
+    {
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null) return false;
+        
+        var className = containingClass.Identifier.Text;
+        var namespaceName = GetNamespace(node);
+        
+        // Configuration classes
+        if (className.EndsWith("Settings") ||
+            className.EndsWith("Config") ||
+            className.EndsWith("Options") ||
+            className.EndsWith("Configuration"))
+            return true;
+        
+        // Configuration namespaces
+        if (namespaceName?.Contains("Configuration") == true ||
+            namespaceName?.Contains("Settings") == true)
+            return true;
+        
+        return false;
+    }
+
+    /// <summary>
+    /// Gets the namespace name for the given node
+    /// </summary>
+    private static string? GetNamespace(SyntaxNode node)
+    {
+        var namespaceDeclaration = node.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
+        return namespaceDeclaration?.Name.ToString();
     }
 }

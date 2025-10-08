@@ -20,4 +20,4 @@ EXXER702 | IndFusion.Analyzers.CodeQuality | Info | Use modern pattern matching 
 EXXER900 | IndFusion.Analyzers.CodeQuality | Hidden | Format project using dotnet format command
 EXXER901 | IndFusion.Analyzers.CodeQuality | Info | Code formatting inconsistency detected
 EXXER100 | IndFusion.Analyzers.Testing | Warning | TestNamingConventionAnalyzer
-EXXER101 | IndFusion.Analyzers.Testing | Warning | UseXUnitV3Analyzer
+

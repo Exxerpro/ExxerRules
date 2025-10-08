@@ -302,4 +302,271 @@ public sealed class Service
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
         diagnostics.Length.ShouldBe(1);
     }
+
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for framework boundary classes like Controllers.
+    /// </summary>
+    [Fact(Timeout = 10000)]
+    public void Should_Not_Report_For_Framework_Boundary()
+    {
+        const string testCode = @"
+using System;
+using Microsoft.AspNetCore.Mvc;
+
+public class UserController : ControllerBase
+{
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateRequest request)
+    {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        return Ok();
+    }
+}";
+
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
+
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for domain validation classes.
+    /// </summary>
+    [Fact(Timeout = 10000)]
+    public void Should_Not_Report_For_Domain_Validation()
+    {
+        const string testCode = @"
+using System;
+
+public class OrderValidator
+{
+    public void Validate(Order order)
+    {
+        if (order == null) throw new ArgumentNullException(nameof(order));
+        if (order.Amount <= 0) throw new InvalidOrderException(""Amount must be positive"");
+    }
+}";
+
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
+
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for configuration classes.
+    /// </summary>
+    [Fact(Timeout = 10000)]
+    public void Should_Not_Report_For_Configuration_Context()
+    {
+        const string testCode = @"
+using System;
+
+public class AppSettings
+{
+    public string ConnectionString { get; set; } = ""DefaultConnection"";
+    
+    public void Validate()
+    {
+        if (string.IsNullOrEmpty(ConnectionString)) 
+            throw new InvalidOperationException(""Connection string not configured"");
+    }
+}";
+
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
+
+    /// <summary>
+    /// Comprehensive regression test covering all new framework boundary patterns.
+    /// </summary>
+    [Fact(Timeout = 10000)]
+    public void Should_Not_Report_For_All_Framework_Boundary_Patterns()
+    {
+        const string testCode = @"
+using System;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
+
+// ASP.NET Core Controller
+public class UserController : ControllerBase
+{
+    [HttpPost]
+    public IActionResult Create([FromBody] CreateRequest request)
+    {
+        if (request == null) throw new ArgumentNullException(nameof(request));
+        return Ok();
+    }
+}
+
+// SignalR Hub
+public class ChatHub : Hub
+{
+    public override async Task OnConnectedAsync()
+    {
+        if (Context == null) throw new InvalidOperationException(""Context is null"");
+        await base.OnConnectedAsync();
+    }
+}
+
+// Entity Framework Repository
+public class UserRepository : IUserRepository
+{
+    private readonly DbContext _context;
+    
+    public UserRepository(DbContext context)
+    {
+        _context = context ?? throw new ArgumentNullException(nameof(context));
+    }
+    
+    public async Task<User> GetByIdAsync(int id)
+    {
+        if (id <= 0) throw new ArgumentException(""Invalid ID"");
+        return await _context.Set<User>().FindAsync(id);
+    }
+}
+
+// Middleware
+public class CustomMiddleware
+{
+    public async Task InvokeAsync(HttpContext context)
+    {
+        if (context == null) throw new ArgumentNullException(nameof(context));
+        // Middleware logic
+    }
+}
+
+// Filter
+public class CustomFilter : IActionFilter
+{
+    public void OnActionExecuting(ActionExecutingContext context)
+    {
+        if (context == null) throw new ArgumentNullException(nameof(context));
+    }
+    
+    public void OnActionExecuted(ActionExecutedContext context)
+    {
+        if (context == null) throw new ArgumentNullException(nameof(context));
+    }
+}
+
+// Attribute
+public class CustomAttribute : Attribute
+{
+    public CustomAttribute(string value)
+    {
+        if (string.IsNullOrEmpty(value)) throw new ArgumentException(""Value cannot be null or empty"");
+    }
+}
+
+// Infrastructure namespace
+namespace MyApp.Infrastructure
+{
+    public class DatabaseService
+    {
+        public void Connect()
+        {
+            throw new InvalidOperationException(""Database connection failed"");
+        }
+    }
+}
+
+// Persistence namespace
+namespace MyApp.Persistence
+{
+    public class UnitOfWork
+    {
+        public void SaveChanges()
+        {
+            throw new InvalidOperationException(""Save changes failed"");
+        }
+    }
+}
+
+// DataAccess namespace
+namespace MyApp.DataAccess
+{
+    public class DataService
+    {
+        public void ProcessData()
+        {
+            throw new InvalidOperationException(""Data processing failed"");
+        }
+    }
+}
+
+// Domain namespace
+namespace MyApp.Domain
+{
+    public class OrderValidator
+    {
+        public void Validate(Order order)
+        {
+            if (order == null) throw new ArgumentNullException(nameof(order));
+            if (order.Amount <= 0) throw new InvalidOrderException(""Amount must be positive"");
+        }
+    }
+    
+    public class OrderFactory
+    {
+        public Order Create(string customerId, decimal amount)
+        {
+            if (string.IsNullOrEmpty(customerId)) 
+                throw new ArgumentException(""Customer ID required"");
+            if (amount <= 0) 
+                throw new ArgumentException(""Amount must be positive"");
+                
+            return new Order(customerId, amount);
+        }
+    }
+}
+
+// Business namespace
+namespace MyApp.Business
+{
+    public class OrderRule
+    {
+        public void Apply(Order order)
+        {
+            if (order == null) throw new ArgumentNullException(nameof(order));
+        }
+    }
+}
+
+// Configuration namespace
+namespace MyApp.Configuration
+{
+    public class AppConfig
+    {
+        public void Validate()
+        {
+            throw new InvalidOperationException(""Configuration validation failed"");
+        }
+    }
+}
+
+// Settings namespace
+namespace MyApp.Settings
+{
+    public class DatabaseSettings
+    {
+        public void Validate()
+        {
+            throw new InvalidOperationException(""Database settings validation failed"");
+        }
+    }
+}
+
+// Supporting types
+public class CreateRequest { }
+public class User { }
+public class Order { public decimal Amount { get; set; } }
+public class InvalidOrderException : Exception { public InvalidOrderException(string message) : base(message) { } }
+public interface IUserRepository { }
+public interface IActionFilter { }
+public class ActionExecutingContext { }
+public class ActionExecutedContext { }
+public class HttpContext { }
+";
+
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
+        diagnostics.Length.ShouldBe(0);
+    }
 }

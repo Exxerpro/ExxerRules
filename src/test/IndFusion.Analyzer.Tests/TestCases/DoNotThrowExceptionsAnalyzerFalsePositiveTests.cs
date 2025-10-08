@@ -10,6 +10,13 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public sealed class DoNotThrowExceptionsAnalyzerFalsePositiveTests
 {
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for methods that guard against null arguments by throwing
+    /// an ArgumentNullException.
+    /// </summary>
+    /// <remarks>This test ensures that the analyzer correctly recognizes standard argument null checks as
+    /// valid and does not produce false positives when an ArgumentNullException is thrown for null
+    /// parameters.</remarks>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_ArgumentNull_Guards()
     {
@@ -31,6 +38,9 @@ public class Guarded
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for null-coalescing throw expressions
+    /// </summary>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_NullCoalescing_Throw()
     {
@@ -51,6 +61,9 @@ public sealed class Widget
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for range guard checks that throw ArgumentOutOfRangeException.
+    /// </summary>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_Range_Guard()
     {
@@ -72,6 +85,9 @@ public static class Parser
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for switch expressions that throw ArgumentOutOfRangeException in the default case.
+    /// </summary>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_Switch_Default_Throw()
     {
@@ -94,6 +110,9 @@ public static class Resolver
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for domain-specific validation exceptions.
+    /// </summary>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_Domain_Validation_Exception()
     {
@@ -120,6 +139,12 @@ public static class WidgetParser
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for exceptions thrown in a constructor to enforce
+    /// invariants.
+    /// </summary>
+    /// <remarks>This test ensures that the analyzer correctly allows exceptions used for input validation
+    /// within constructors, which is a common and recommended practice for enforcing class invariants.</remarks>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_Constructor_Invariant()
     {
@@ -141,6 +166,13 @@ public sealed class Capacity
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for exception throwing in a factory method used for input
+    /// validation.
+    /// </summary>
+    /// <remarks>This test ensures that the DoNotThrowExceptionsAnalyzer does not flag exception usage in
+    /// factory methods where argument validation is performed, as such patterns are considered acceptable in .NET
+    /// design guidelines.</remarks>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_Validation_In_Factory()
     {
@@ -167,6 +199,13 @@ public sealed record Widget(string Name);
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for expression-bodied properties that use guard clauses
+    /// with exception throwing.
+    /// </summary>
+    /// <remarks>This test ensures that properties using expression-bodied syntax with guard clauses, such as
+    /// throwing an exception when a required value is not configured, are not incorrectly flagged by the analyzer. The
+    /// scenario reflects a common pattern for enforcing invariants in property getters.</remarks>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_Expression_Bodied_Guard()
     {
@@ -186,6 +225,13 @@ public sealed class Settings
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for defensive throws of NotSupportedException in legacy
+    /// adapter scenarios.
+    /// </summary>
+    /// <remarks>This test ensures that the DoNotThrowExceptionsAnalyzer does not flag code where
+    /// NotSupportedException is used to indicate unsupported operations in legacy or read-only adapters, which is
+    /// considered an acceptable defensive pattern.</remarks>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_NotSupported_Defensive_Throw()
     {
@@ -204,6 +250,9 @@ public sealed class LegacyAdapter
         diagnostics.Length.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that the analyzer does not report diagnostics for exception wrapping scenarios where an exception is caught
+    /// </summary>
     [Fact(Timeout = 10000)]
     public void Should_Not_Report_For_Exception_Wrapping()
     {
@@ -228,6 +277,13 @@ public static class Wrapper
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
         diagnostics.Length.ShouldBe(0);
     }
+
+    /// <summary>
+    /// Verifies that the analyzer reports a diagnostic when a generic exception is thrown in user code.
+    /// </summary>
+    /// <remarks>This test provides a code sample that throws a generic Exception and asserts that the
+    /// analyzer correctly identifies and reports the violation. Use this test to ensure the analyzer enforces best
+    /// practices regarding exception types.</remarks>
 
     [Fact(Timeout = 10000)]
     public void Positive_Control_Should_Report_When_Generic_Exception()

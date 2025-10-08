@@ -1,0 +1,92 @@
+classDiagram
+
+	class VariableContainer  {
+		-IDisposable subscriptions
+		+ VariableRecords : IReadOnlyList~VariableRecord~
+		+Dispose() void
+		+Initialize(IPlc plc, IReadOnlyList~string~ variables) VariableContainer
+		+Initialize(Dictionary~int&#44&#32PlcDataModels~ plcs) VariableContainer
+	}
+	class DataInitializer  {
+		+InitializePlcData() Dictionary~int&#44&#32PlcDataModels~
+	}
+	class TagMonitor  {
+		+ Address : string
+		+ Description : string
+	}
+	class VariableRecord  {
+		-object value
+		-int valueUpdated
+		+ Address : string
+		+ PlcId : int
+		+ Description : string
+		+ RowIdx : int
+		+ Value : object
+		-IsEquivalent(object oldValue, object newValue) bool
+		+HasUpdate(object? newValue) bool
+	}
+	class CustomStyles  {
+		+ Default : Style
+		+ Data : Style
+		+ Error : Style
+		+ Hex : Style
+		+ Note : Style
+		+ TableBorder : Style
+	}
+	class CustomHelpProvider  {
+		-ICommandAppSettings settings
+		+GetFooter(ICommandModel model, ICommandInfo? command) IEnumerable~IRenderable~
+		+GetOptions(ICommandModel model, ICommandInfo? command) IEnumerable~IRenderable~
+		-GetVariableExamples(OptionStyle? helpStyles) IRenderable
+	}
+	class PlcDataModels  {
+		+ PlcId : int
+		+ Plc : IPlc
+		+ IpAddress : string
+		+ Tags : List~TagMonitor~
+	}
+	class StringHelper  {
+		+IsValidIp4(string? ipString) bool
+	}
+	class MultiPlcCommand  {
+		+ExecuteAsync(CommandContext context, Settings settings) Task~int~
+		-RunProgram(Settings settings, CancellationToken token) Task
+		-DisplayFileName(Settings settings) void
+		-ConnectToPlc(PlcDataModels plcDataModels, CancellationToken token) Task
+		+Validate() ValidationResult
+	}
+	class Settings  {
+		+ FileName : string
+		+Validate() ValidationResult
+	}
+	class ReadPlcCommand  {
+		+ExecuteAsync(CommandContext context, Settings settings) Task~int~
+		-RunProgram(Settings settings, CancellationToken token) Task
+		+Validate() ValidationResult
+	}
+	class Settings  {
+		+ PlcIp : string
+		+ Variables : string[]
+		+ CpuMpiAddress : int
+		+ RackNumber : int
+		+Validate() ValidationResult
+	}
+	class RenderUtil  {
+		+FormatCellData(object value) IRenderable
+	}
+	class Program  {
+		-CancellationTokenSource Cts
+		+Main(string[] args) Task~int~
+		-OnCancelKeyPress(object? sender, ConsoleCancelEventArgs e) void
+		-OnProcessExit(object? sender, EventArgs e) void
+		-SetForegroundWindow(IntPtr hWnd) bool
+		-GetConsoleWindow() IntPtr
+		-VerifyIfApplicationIsNotRunning(string name) void
+	}
+
+	VariableContainer --|> IDisposable
+	CustomHelpProvider --|> HelpProvider
+	MultiPlcCommand --|> AsyncCommand
+	Settings --|> CommandSettings
+	ReadPlcCommand --|> AsyncCommand
+	Settings --|> CommandSettings

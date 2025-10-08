@@ -1,0 +1,2732 @@
+[
+  {
+    "VariableId": 31,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ResultValidation",
+    "Description": "ResultValidation",
+    "Alias": "DB256.DINT0",
+    "Address": "DB256.DINT0",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12288,
+        "CycleId": 104,
+        "RegisterValue": "5",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 34,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "CycleStatus",
+    "Description": "CycleStatus",
+    "Alias": "DB256.DINT12",
+    "Address": "DB256.DINT12",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12291,
+        "CycleId": 104,
+        "RegisterValue": "39",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 35,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "FlowStatus",
+    "Description": "FlowStatus",
+    "Alias": "DB256.DINT16",
+    "Address": "DB256.DINT16",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12292,
+        "CycleId": 104,
+        "RegisterValue": "46",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 36,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "PartStatus",
+    "Description": "PartStatus",
+    "Alias": "DB256.DINT20",
+    "Address": "DB256.DINT20",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12293,
+        "CycleId": 104,
+        "RegisterValue": "78",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 37,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "MachineType",
+    "Description": "MachineType",
+    "Alias": "DB256.DINT24",
+    "Address": "DB256.DINT24",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12294,
+        "CycleId": 104,
+        "RegisterValue": "92",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 38,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "WorkFlowType",
+    "Description": "WorkFlowType",
+    "Alias": "DB256.DINT28",
+    "Address": "DB256.DINT28",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12295,
+        "CycleId": 104,
+        "RegisterValue": "24",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 39,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ActualStation",
+    "Description": "ActualStation",
+    "Alias": "DB256.DINT32",
+    "Address": "DB256.DINT32",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12296,
+        "CycleId": 104,
+        "RegisterValue": "95",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 40,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "BarCodeId",
+    "Description": "BarCodeId",
+    "Alias": "DB256.DINT36",
+    "Address": "DB256.DINT36",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12297,
+        "CycleId": 104,
+        "RegisterValue": "68",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 32,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "LastMachineId",
+    "Description": "LastMachineId",
+    "Alias": "DB256.DINT4",
+    "Address": "DB256.DINT4",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12289,
+        "CycleId": 104,
+        "RegisterValue": "29",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 41,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "CycleId",
+    "Description": "CycleId",
+    "Alias": "DB256.DINT40",
+    "Address": "DB256.DINT40",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12298,
+        "CycleId": 104,
+        "RegisterValue": "14",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 42,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "RegistersSaved",
+    "Description": "RegistersSaved",
+    "Alias": "DB256.DINT44",
+    "Address": "DB256.DINT44",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12299,
+        "CycleId": 104,
+        "RegisterValue": "80",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 33,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "NextMachineId",
+    "Description": "NextMachineId",
+    "Alias": "DB256.DINT8",
+    "Address": "DB256.DINT8",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12290,
+        "CycleId": 104,
+        "RegisterValue": "76",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 6,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal1\r\n",
+    "Description": "ValorReal1\r\n",
+    "Alias": "DB257.D60",
+    "Address": "DB257.D60",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 46141,
+        "CycleId": 746,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-05-10T10:37:33.4850247"
+      }
+    ]
+  },
+  {
+    "VariableId": 8,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal3\r\n",
+    "Description": "ValorReal3\r\n",
+    "Alias": "DB257.D68",
+    "Address": "DB257.D68",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44480,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 10,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal5\r\n",
+    "Description": "ValorReal5\r\n",
+    "Alias": "DB257.D76",
+    "Address": "DB257.D76",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44515,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 12,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal16\r\n",
+    "Description": "ValorReal16\r\n",
+    "Alias": "DB257.D80",
+    "Address": "DB257.D80",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44513,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 13,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal7\r\n",
+    "Description": "ValorReal7\r\n",
+    "Alias": "DB257.D84",
+    "Address": "DB257.D84",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44499,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 15,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal8\r\n",
+    "Description": "ValorReal8\r\n",
+    "Alias": "DB257.D88",
+    "Address": "DB257.D88",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 12272,
+        "CycleId": 104,
+        "RegisterValue": "42",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:21:04"
+      }
+    ]
+  },
+  {
+    "VariableId": 16,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal9\r\n",
+    "Description": "ValorReal9\r\n",
+    "Alias": "DB257.D92",
+    "Address": "DB257.D92",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44500,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 17,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorReal10",
+    "Description": "ValorReal10",
+    "Alias": "DB257.D96",
+    "Address": "DB257.D96",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44495,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 19,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "Component Id BarCode\r\n",
+    "Description": "Component Id BarCode\r\n",
+    "Alias": "DB257.S100.32",
+    "Address": "DB257.S100.32",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2256810,
+        "CycleId": 123324,
+        "RegisterValue": "LB57417CA212155F2N3V425050306434",
+        "DataType": "System.String",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T07:14:26.2735448"
+      }
+    ]
+  },
+  {
+    "VariableId": 24,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorString2\r\n",
+    "Description": "ValorString2\r\n",
+    "Alias": "DB257.S150.32",
+    "Address": "DB257.S150.32",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 46142,
+        "CycleId": 746,
+        "RegisterValue": "",
+        "DataType": "System.String",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-05-10T10:37:33.4850247"
+      }
+    ]
+  },
+  {
+    "VariableId": 1,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "PartStatusPlc",
+    "Description": "PartStatusPlc",
+    "Alias": "DB257.W0",
+    "Address": "DB257.W0",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2256808,
+        "CycleId": 123324,
+        "RegisterValue": "1",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T07:14:26.2735435"
+      }
+    ]
+  },
+  {
+    "VariableId": 3,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorInt1\r\n",
+    "Description": "ValorInt1\r\n",
+    "Alias": "DB257.W12",
+    "Address": "DB257.W12",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 46547,
+        "CycleId": 821,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-05-10T14:52:44.3989347"
+      }
+    ]
+  },
+  {
+    "VariableId": 4,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorInt2",
+    "Description": "ValorInt2",
+    "Alias": "DB257.W14",
+    "Address": "DB257.W14",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44475,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 5,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "ValorInt3",
+    "Description": "ValorInt3",
+    "Alias": "DB257.W16",
+    "Address": "DB257.W16",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44493,
+        "CycleId": 394,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 2,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "CycleStatusPlc",
+    "Description": "CycleStatusPlc",
+    "Alias": "DB257.W2",
+    "Address": "DB257.W2",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2256809,
+        "CycleId": 123324,
+        "RegisterValue": "4",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T07:14:26.2735441"
+      }
+    ]
+  },
+  {
+    "VariableId": 21,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "StatusPrueba3\r\n",
+    "Description": "StatusPrueba3\r\n",
+    "Alias": "DB257.X10.2",
+    "Address": "DB257.X10.2",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44471,
+        "CycleId": 394,
+        "RegisterValue": "False",
+        "DataType": "System.Boolean",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 22,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "StatusPrueba4\r\n",
+    "Description": "StatusPrueba4\r\n",
+    "Alias": "DB257.X10.3",
+    "Address": "DB257.X10.3",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44506,
+        "CycleId": 394,
+        "RegisterValue": "False",
+        "DataType": "System.Boolean",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 23,
+    "MachineId": 100,
+    "PlcId": 100,
+    "Name": "StatusPrueba5\r\n",
+    "Description": "StatusPrueba5\r\n",
+    "Alias": "DB257.X10.4",
+    "Address": "DB257.X10.4",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44507,
+        "CycleId": 394,
+        "RegisterValue": "False",
+        "DataType": "System.Boolean",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:23:06.0341613"
+      }
+    ]
+  },
+  {
+    "VariableId": 108,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ResultValidation",
+    "Description": "ResultValidation",
+    "Alias": "DB256.DINT0",
+    "Address": "DB256.DINT0",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17482,
+        "CycleId": 147,
+        "RegisterValue": "63",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 111,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "CycleStatus",
+    "Description": "CycleStatus",
+    "Alias": "DB256.DINT12",
+    "Address": "DB256.DINT12",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17485,
+        "CycleId": 147,
+        "RegisterValue": "3",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 112,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "FlowStatus",
+    "Description": "FlowStatus",
+    "Alias": "DB256.DINT16",
+    "Address": "DB256.DINT16",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17486,
+        "CycleId": 147,
+        "RegisterValue": "88",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 113,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "PartStatus",
+    "Description": "PartStatus",
+    "Alias": "DB256.DINT20",
+    "Address": "DB256.DINT20",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17487,
+        "CycleId": 147,
+        "RegisterValue": "35",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 114,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "MachineType",
+    "Description": "MachineType",
+    "Alias": "DB256.DINT24",
+    "Address": "DB256.DINT24",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17488,
+        "CycleId": 147,
+        "RegisterValue": "25",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 115,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "WorkFlowType",
+    "Description": "WorkFlowType",
+    "Alias": "DB256.DINT28",
+    "Address": "DB256.DINT28",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17489,
+        "CycleId": 147,
+        "RegisterValue": "58",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 116,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ActualStation",
+    "Description": "ActualStation",
+    "Alias": "DB256.DINT32",
+    "Address": "DB256.DINT32",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17490,
+        "CycleId": 147,
+        "RegisterValue": "65",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 117,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "BarCodeId",
+    "Description": "BarCodeId",
+    "Alias": "DB256.DINT36",
+    "Address": "DB256.DINT36",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17491,
+        "CycleId": 147,
+        "RegisterValue": "23",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 109,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "LastMachineId",
+    "Description": "LastMachineId",
+    "Alias": "DB256.DINT4",
+    "Address": "DB256.DINT4",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17483,
+        "CycleId": 147,
+        "RegisterValue": "46",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 118,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "CycleId",
+    "Description": "CycleId",
+    "Alias": "DB256.DINT40",
+    "Address": "DB256.DINT40",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17492,
+        "CycleId": 147,
+        "RegisterValue": "97",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 119,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "RegistersSaved",
+    "Description": "RegistersSaved",
+    "Alias": "DB256.DINT44",
+    "Address": "DB256.DINT44",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17493,
+        "CycleId": 147,
+        "RegisterValue": "0",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 110,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "NextMachineId",
+    "Description": "NextMachineId",
+    "Alias": "DB256.DINT8",
+    "Address": "DB256.DINT8",
+    "VariableGroupId": 256,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17484,
+        "CycleId": 147,
+        "RegisterValue": "4",
+        "DataType": "System.Int32",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 88,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorReal5\r\n",
+    "Description": "ValorReal5\r\n",
+    "Alias": "DB257.D76",
+    "Address": "DB257.D76",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44554,
+        "CycleId": 396,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:27:06.9262026"
+      }
+    ]
+  },
+  {
+    "VariableId": 84,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value Test Current CHMSL",
+    "Description": "Value Test Current CHMSL",
+    "Alias": "DB257.D76",
+    "Address": "DB257.D76",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262750,
+        "CycleId": 123411,
+        "RegisterValue": "222.85715",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180470"
+      }
+    ]
+  },
+  {
+    "VariableId": 86,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValueTest Current SPOILER",
+    "Description": "ValueTest Current SPOILER",
+    "Alias": "DB257.D80",
+    "Address": "DB257.D80",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262751,
+        "CycleId": 123411,
+        "RegisterValue": "455.08334",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180478"
+      }
+    ]
+  },
+  {
+    "VariableId": 90,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorReal96\r\n",
+    "Description": "ValorReal96\r\n",
+    "Alias": "DB257.D80",
+    "Address": "DB257.D80",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44557,
+        "CycleId": 396,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:27:06.9262026"
+      }
+    ]
+  },
+  {
+    "VariableId": 91,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorReal7\r\n",
+    "Description": "ValorReal7\r\n",
+    "Alias": "DB257.D84",
+    "Address": "DB257.D84",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44555,
+        "CycleId": 396,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:27:06.9262026"
+      }
+    ]
+  },
+  {
+    "VariableId": 93,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorReal8\r\n",
+    "Description": "ValorReal8\r\n",
+    "Alias": "DB257.D88",
+    "Address": "DB257.D88",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 17467,
+        "CycleId": 147,
+        "RegisterValue": "48",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-08-27T17:22:21"
+      }
+    ]
+  },
+  {
+    "VariableId": 94,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorReal9\r\n",
+    "Description": "ValorReal9\r\n",
+    "Alias": "DB257.D92",
+    "Address": "DB257.D92",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44556,
+        "CycleId": 396,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:27:06.9262026"
+      }
+    ]
+  },
+  {
+    "VariableId": 95,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorReal10",
+    "Description": "ValorReal10",
+    "Alias": "DB257.D96",
+    "Address": "DB257.D96",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 44552,
+        "CycleId": 396,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2023-09-03T21:27:06.9262026"
+      }
+    ]
+  },
+  {
+    "VariableId": 134,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 1",
+    "Description": "Value LED CHMSL A 1",
+    "Alias": "DB257.DBW300",
+    "Address": "DB257.DBW300",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262756,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180518"
+      }
+    ]
+  },
+  {
+    "VariableId": 135,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 2",
+    "Description": "Value LED CHMSL A 2",
+    "Alias": "DB257.DBW302",
+    "Address": "DB257.DBW302",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262757,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180525"
+      }
+    ]
+  },
+  {
+    "VariableId": 136,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 3",
+    "Description": "Value LED CHMSL A 3",
+    "Alias": "DB257.DBW304",
+    "Address": "DB257.DBW304",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262758,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180531"
+      }
+    ]
+  },
+  {
+    "VariableId": 137,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 4",
+    "Description": "Value LED CHMSL A 4",
+    "Alias": "DB257.DBW306",
+    "Address": "DB257.DBW306",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262759,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180538"
+      }
+    ]
+  },
+  {
+    "VariableId": 138,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 5",
+    "Description": "Value LED CHMSL A 5",
+    "Alias": "DB257.DBW308",
+    "Address": "DB257.DBW308",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262760,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180543"
+      }
+    ]
+  },
+  {
+    "VariableId": 139,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 6",
+    "Description": "Value LED CHMSL A 6",
+    "Alias": "DB257.DBW310",
+    "Address": "DB257.DBW310",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262761,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180548"
+      }
+    ]
+  },
+  {
+    "VariableId": 140,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 7",
+    "Description": "Value LED CHMSL A 7",
+    "Alias": "DB257.DBW312",
+    "Address": "DB257.DBW312",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262762,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180554"
+      }
+    ]
+  },
+  {
+    "VariableId": 141,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 8",
+    "Description": "Value LED CHMSL A 8",
+    "Alias": "DB257.DBW314",
+    "Address": "DB257.DBW314",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262763,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180559"
+      }
+    ]
+  },
+  {
+    "VariableId": 142,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL A 9",
+    "Description": "Value LED CHMSL A 9",
+    "Alias": "DB257.DBW316",
+    "Address": "DB257.DBW316",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262764,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180564"
+      }
+    ]
+  },
+  {
+    "VariableId": 143,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 10",
+    "Description": "Value LED CHMSL B 10",
+    "Alias": "DB257.DBW318",
+    "Address": "DB257.DBW318",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262765,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180570"
+      }
+    ]
+  },
+  {
+    "VariableId": 144,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 11",
+    "Description": "Value LED CHMSL B 11",
+    "Alias": "DB257.DBW320",
+    "Address": "DB257.DBW320",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262766,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180576"
+      }
+    ]
+  },
+  {
+    "VariableId": 145,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 12",
+    "Description": "Value LED CHMSL B 12",
+    "Alias": "DB257.DBW322",
+    "Address": "DB257.DBW322",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262767,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180581"
+      }
+    ]
+  },
+  {
+    "VariableId": 146,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 13",
+    "Description": "Value LED CHMSL B 13",
+    "Alias": "DB257.DBW324",
+    "Address": "DB257.DBW324",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262768,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180588"
+      }
+    ]
+  },
+  {
+    "VariableId": 147,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 14",
+    "Description": "Value LED CHMSL B 14",
+    "Alias": "DB257.DBW326",
+    "Address": "DB257.DBW326",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262769,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180593"
+      }
+    ]
+  },
+  {
+    "VariableId": 148,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 15",
+    "Description": "Value LED CHMSL B 15",
+    "Alias": "DB257.DBW328",
+    "Address": "DB257.DBW328",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262770,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180599"
+      }
+    ]
+  },
+  {
+    "VariableId": 149,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 16",
+    "Description": "Value LED CHMSL B 16",
+    "Alias": "DB257.DBW330",
+    "Address": "DB257.DBW330",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262771,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180605"
+      }
+    ]
+  },
+  {
+    "VariableId": 150,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 17",
+    "Description": "Value LED CHMSL B 17",
+    "Alias": "DB257.DBW332",
+    "Address": "DB257.DBW332",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262772,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180610"
+      }
+    ]
+  },
+  {
+    "VariableId": 152,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED CHMSL B 18",
+    "Description": "Value LED CHMSL B 18",
+    "Alias": "DB257.DBW334",
+    "Address": "DB257.DBW334",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262773,
+        "CycleId": 123411,
+        "RegisterValue": "0",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180616"
+      }
+    ]
+  },
+  {
+    "VariableId": 153,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 1",
+    "Description": "Value LED SPOILER A 1",
+    "Alias": "DB257.DBW336",
+    "Address": "DB257.DBW336",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262774,
+        "CycleId": 123411,
+        "RegisterValue": "2067",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180621"
+      }
+    ]
+  },
+  {
+    "VariableId": 154,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 2",
+    "Description": "Value LED SPOILER A 2",
+    "Alias": "DB257.DBW338",
+    "Address": "DB257.DBW338",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262775,
+        "CycleId": 123411,
+        "RegisterValue": "3910",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180627"
+      }
+    ]
+  },
+  {
+    "VariableId": 155,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 3",
+    "Description": "Value LED SPOILER A 3",
+    "Alias": "DB257.DBW340",
+    "Address": "DB257.DBW340",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262776,
+        "CycleId": 123411,
+        "RegisterValue": "4587",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180633"
+      }
+    ]
+  },
+  {
+    "VariableId": 156,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 4",
+    "Description": "Value LED SPOILER A 4",
+    "Alias": "DB257.DBW342",
+    "Address": "DB257.DBW342",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262777,
+        "CycleId": 123411,
+        "RegisterValue": "6054",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180638"
+      }
+    ]
+  },
+  {
+    "VariableId": 157,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 5",
+    "Description": "Value LED SPOILER A 5",
+    "Alias": "DB257.DBW344",
+    "Address": "DB257.DBW344",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262778,
+        "CycleId": 123411,
+        "RegisterValue": "6786",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180642"
+      }
+    ]
+  },
+  {
+    "VariableId": 158,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 6",
+    "Description": "Value LED SPOILER A 6",
+    "Alias": "DB257.DBW346",
+    "Address": "DB257.DBW346",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262779,
+        "CycleId": 123411,
+        "RegisterValue": "8185",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180648"
+      }
+    ]
+  },
+  {
+    "VariableId": 159,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 7",
+    "Description": "Value LED SPOILER A 7",
+    "Alias": "DB257.DBW348",
+    "Address": "DB257.DBW348",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262780,
+        "CycleId": 123411,
+        "RegisterValue": "9333",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180653"
+      }
+    ]
+  },
+  {
+    "VariableId": 160,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 8",
+    "Description": "Value LED SPOILER A 8",
+    "Alias": "DB257.DBW350",
+    "Address": "DB257.DBW350",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262781,
+        "CycleId": 123411,
+        "RegisterValue": "10436",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180663"
+      }
+    ]
+  },
+  {
+    "VariableId": 161,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER A 9",
+    "Description": "Value LED SPOILER A 9",
+    "Alias": "DB257.DBW352",
+    "Address": "DB257.DBW352",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262782,
+        "CycleId": 123411,
+        "RegisterValue": "10493",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180669"
+      }
+    ]
+  },
+  {
+    "VariableId": 162,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 10",
+    "Description": "Value LED SPOILER B 10",
+    "Alias": "DB257.DBW354",
+    "Address": "DB257.DBW354",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262783,
+        "CycleId": 123411,
+        "RegisterValue": "13080",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180675"
+      }
+    ]
+  },
+  {
+    "VariableId": 163,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 11",
+    "Description": "Value LED SPOILER B 11",
+    "Alias": "DB257.DBW356",
+    "Address": "DB257.DBW356",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262784,
+        "CycleId": 123411,
+        "RegisterValue": "14505",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180680"
+      }
+    ]
+  },
+  {
+    "VariableId": 164,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 12",
+    "Description": "Value LED SPOILER B 12",
+    "Alias": "DB257.DBW358",
+    "Address": "DB257.DBW358",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262785,
+        "CycleId": 123411,
+        "RegisterValue": "15745",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180686"
+      }
+    ]
+  },
+  {
+    "VariableId": 165,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 13",
+    "Description": "Value LED SPOILER B 13",
+    "Alias": "DB257.DBW360",
+    "Address": "DB257.DBW360",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262786,
+        "CycleId": 123411,
+        "RegisterValue": "16717",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180690"
+      }
+    ]
+  },
+  {
+    "VariableId": 166,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 14",
+    "Description": "Value LED SPOILER B 14",
+    "Alias": "DB257.DBW362",
+    "Address": "DB257.DBW362",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262787,
+        "CycleId": 123411,
+        "RegisterValue": "18485",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180695"
+      }
+    ]
+  },
+  {
+    "VariableId": 167,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 15",
+    "Description": "Value LED SPOILER B 15",
+    "Alias": "DB257.DBW364",
+    "Address": "DB257.DBW364",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262788,
+        "CycleId": 123411,
+        "RegisterValue": "20459",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180700"
+      }
+    ]
+  },
+  {
+    "VariableId": 168,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 16",
+    "Description": "Value LED SPOILER B 16",
+    "Alias": "DB257.DBW366",
+    "Address": "DB257.DBW366",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262789,
+        "CycleId": 123411,
+        "RegisterValue": "22186",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180706"
+      }
+    ]
+  },
+  {
+    "VariableId": 169,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 17",
+    "Description": "Value LED SPOILER B 17",
+    "Alias": "DB257.DBW368",
+    "Address": "DB257.DBW368",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262790,
+        "CycleId": 123411,
+        "RegisterValue": "24076",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180713"
+      }
+    ]
+  },
+  {
+    "VariableId": 170,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 18",
+    "Description": "Value LED SPOILER B 18",
+    "Alias": "DB257.DBW370",
+    "Address": "DB257.DBW370",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262791,
+        "CycleId": 123411,
+        "RegisterValue": "26349",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180721"
+      }
+    ]
+  },
+  {
+    "VariableId": 171,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER B 19",
+    "Description": "Value LED SPOILER B 19",
+    "Alias": "DB257.DBW372",
+    "Address": "DB257.DBW372",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262792,
+        "CycleId": 123411,
+        "RegisterValue": "28545",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180726"
+      }
+    ]
+  },
+  {
+    "VariableId": 172,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 20",
+    "Description": "Value LED SPOILER C 20",
+    "Alias": "DB257.DBW374",
+    "Address": "DB257.DBW374",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262793,
+        "CycleId": 123411,
+        "RegisterValue": "29499",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180733"
+      }
+    ]
+  },
+  {
+    "VariableId": 173,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 21",
+    "Description": "Value LED SPOILER C 21",
+    "Alias": "DB257.DBW376",
+    "Address": "DB257.DBW376",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262794,
+        "CycleId": 123411,
+        "RegisterValue": "31486",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180739"
+      }
+    ]
+  },
+  {
+    "VariableId": 176,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 22",
+    "Description": "Value LED SPOILER C 22",
+    "Alias": "DB257.DBW378",
+    "Address": "DB257.DBW378",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262795,
+        "CycleId": 123411,
+        "RegisterValue": "28664",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180746"
+      }
+    ]
+  },
+  {
+    "VariableId": 177,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 23",
+    "Description": "Value LED SPOILER C 23",
+    "Alias": "DB257.DBW380",
+    "Address": "DB257.DBW380",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262796,
+        "CycleId": 123411,
+        "RegisterValue": "-26920",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180753"
+      }
+    ]
+  },
+  {
+    "VariableId": 178,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 24",
+    "Description": "Value LED SPOILER C 24",
+    "Alias": "DB257.DBW382",
+    "Address": "DB257.DBW382",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262797,
+        "CycleId": 123411,
+        "RegisterValue": "-24100",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180759"
+      }
+    ]
+  },
+  {
+    "VariableId": 179,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 25",
+    "Description": "Value LED SPOILER C 25",
+    "Alias": "DB257.DBW384",
+    "Address": "DB257.DBW384",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262798,
+        "CycleId": 123411,
+        "RegisterValue": "-21811",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180765"
+      }
+    ]
+  },
+  {
+    "VariableId": 180,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 26",
+    "Description": "Value LED SPOILER C 26",
+    "Alias": "DB257.DBW386",
+    "Address": "DB257.DBW386",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262799,
+        "CycleId": 123411,
+        "RegisterValue": "-17380",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180768"
+      }
+    ]
+  },
+  {
+    "VariableId": 181,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 27",
+    "Description": "Value LED SPOILER C 27",
+    "Alias": "DB257.DBW388",
+    "Address": "DB257.DBW388",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262800,
+        "CycleId": 123411,
+        "RegisterValue": "19292",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180773"
+      }
+    ]
+  },
+  {
+    "VariableId": 182,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 28",
+    "Description": "Value LED SPOILER C 28",
+    "Alias": "DB257.DBW390",
+    "Address": "DB257.DBW390",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262801,
+        "CycleId": 123411,
+        "RegisterValue": "29703",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180779"
+      }
+    ]
+  },
+  {
+    "VariableId": 183,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER C 29",
+    "Description": "Value LED SPOILER C 29",
+    "Alias": "DB257.DBW392",
+    "Address": "DB257.DBW392",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262802,
+        "CycleId": 123411,
+        "RegisterValue": "28393",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180784"
+      }
+    ]
+  },
+  {
+    "VariableId": 184,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 30",
+    "Description": "Value LED SPOILER D 30",
+    "Alias": "DB257.DBW394",
+    "Address": "DB257.DBW394",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262803,
+        "CycleId": 123411,
+        "RegisterValue": "26221",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180789"
+      }
+    ]
+  },
+  {
+    "VariableId": 185,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 31",
+    "Description": "Value LED SPOILER D 31",
+    "Alias": "DB257.DBW396",
+    "Address": "DB257.DBW396",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262804,
+        "CycleId": 123411,
+        "RegisterValue": "24593",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180795"
+      }
+    ]
+  },
+  {
+    "VariableId": 186,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 32",
+    "Description": "Value LED SPOILER D 32",
+    "Alias": "DB257.DBW398",
+    "Address": "DB257.DBW398",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262805,
+        "CycleId": 123411,
+        "RegisterValue": "22796",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180800"
+      }
+    ]
+  },
+  {
+    "VariableId": 187,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 33",
+    "Description": "Value LED SPOILER D 33",
+    "Alias": "DB257.DBW400",
+    "Address": "DB257.DBW400",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262806,
+        "CycleId": 123411,
+        "RegisterValue": "19490",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180805"
+      }
+    ]
+  },
+  {
+    "VariableId": 188,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 34",
+    "Description": "Value LED SPOILER D 34",
+    "Alias": "DB257.DBW402",
+    "Address": "DB257.DBW402",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262807,
+        "CycleId": 123411,
+        "RegisterValue": "18395",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180810"
+      }
+    ]
+  },
+  {
+    "VariableId": 189,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 35",
+    "Description": "Value LED SPOILER D 35",
+    "Alias": "DB257.DBW404",
+    "Address": "DB257.DBW404",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262808,
+        "CycleId": 123411,
+        "RegisterValue": "17099",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180815"
+      }
+    ]
+  },
+  {
+    "VariableId": 190,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 36",
+    "Description": "Value LED SPOILER D 36",
+    "Alias": "DB257.DBW406",
+    "Address": "DB257.DBW406",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262809,
+        "CycleId": 123411,
+        "RegisterValue": "16119",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180820"
+      }
+    ]
+  },
+  {
+    "VariableId": 191,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 37",
+    "Description": "Value LED SPOILER D 37",
+    "Alias": "DB257.DBW408",
+    "Address": "DB257.DBW408",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262810,
+        "CycleId": 123411,
+        "RegisterValue": "14820",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180825"
+      }
+    ]
+  },
+  {
+    "VariableId": 192,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 38",
+    "Description": "Value LED SPOILER D 38",
+    "Alias": "DB257.DBW410",
+    "Address": "DB257.DBW410",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262811,
+        "CycleId": 123411,
+        "RegisterValue": "13676",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180829"
+      }
+    ]
+  },
+  {
+    "VariableId": 193,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER D 39",
+    "Description": "Value LED SPOILER D 39",
+    "Alias": "DB257.DBW412",
+    "Address": "DB257.DBW412",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262812,
+        "CycleId": 123411,
+        "RegisterValue": "12532",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180834"
+      }
+    ]
+  },
+  {
+    "VariableId": 194,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 40",
+    "Description": "Value LED SPOILER E 40",
+    "Alias": "DB257.DBW414",
+    "Address": "DB257.DBW414",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262813,
+        "CycleId": 123411,
+        "RegisterValue": "11318",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180839"
+      }
+    ]
+  },
+  {
+    "VariableId": 195,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 41",
+    "Description": "Value LED SPOILER E 41",
+    "Alias": "DB257.DBW416",
+    "Address": "DB257.DBW416",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49192,
+        "CycleId": 1742,
+        "RegisterValue": "1.072E-41",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 196,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 42",
+    "Description": "Value LED SPOILER E 42",
+    "Alias": "DB257.DBW418",
+    "Address": "DB257.DBW418",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49193,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 197,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 43",
+    "Description": "Value LED SPOILER E 43",
+    "Alias": "DB257.DBW420",
+    "Address": "DB257.DBW420",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49194,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 198,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 44",
+    "Description": "Value LED SPOILER E 44",
+    "Alias": "DB257.DBW422",
+    "Address": "DB257.DBW422",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49195,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 199,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 45",
+    "Description": "Value LED SPOILER E 45",
+    "Alias": "DB257.DBW424",
+    "Address": "DB257.DBW424",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49196,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 200,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 46",
+    "Description": "Value LED SPOILER E 46",
+    "Alias": "DB257.DBW426",
+    "Address": "DB257.DBW426",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49197,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 201,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 47",
+    "Description": "Value LED SPOILER E 47",
+    "Alias": "DB257.DBW428",
+    "Address": "DB257.DBW428",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49198,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 202,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 48",
+    "Description": "Value LED SPOILER E 48",
+    "Alias": "DB257.DBW430",
+    "Address": "DB257.DBW430",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49199,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 203,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 49",
+    "Description": "Value LED SPOILER E 49",
+    "Alias": "DB257.DBW432",
+    "Address": "DB257.DBW432",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49146,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 204,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 50",
+    "Description": "Value LED SPOILER E 50",
+    "Alias": "DB257.DBW434",
+    "Address": "DB257.DBW434",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49147,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 205,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 51",
+    "Description": "Value LED SPOILER E 51",
+    "Alias": "DB257.DBW436",
+    "Address": "DB257.DBW436",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49148,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 206,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 52",
+    "Description": "Value LED SPOILER E 52",
+    "Alias": "DB257.DBW438",
+    "Address": "DB257.DBW438",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49149,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 207,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 53",
+    "Description": "Value LED SPOILER E 53",
+    "Alias": "DB257.DBW440",
+    "Address": "DB257.DBW440",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49150,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 208,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Value LED SPOILER E 54",
+    "Description": "Value LED SPOILER E 54",
+    "Alias": "DB257.DBW442",
+    "Address": "DB257.DBW442",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 49151,
+        "CycleId": 1742,
+        "RegisterValue": "0",
+        "DataType": "System.Single",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-06-21T16:43:12.9720928"
+      }
+    ]
+  },
+  {
+    "VariableId": 97,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorString1\r\n",
+    "Description": "ValorString1\r\n",
+    "Alias": "DB257.S100.32",
+    "Address": "DB257.S100.32",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 46831,
+        "CycleId": 873,
+        "RegisterValue": "",
+        "DataType": "System.String",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-05-16T15:51:47.6052600"
+      }
+    ]
+  },
+  {
+    "VariableId": 101,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "ValorString2\r\n",
+    "Description": "ValorString2\r\n",
+    "Alias": "DB257.S150.32",
+    "Address": "DB257.S150.32",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 46820,
+        "CycleId": 873,
+        "RegisterValue": "",
+        "DataType": "System.String",
+        "StatusValueId": 1,
+        "TimeStamp": "2024-05-16T15:51:47.6052600"
+      }
+    ]
+  },
+  {
+    "VariableId": 82,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "PartStatusPlc",
+    "Description": "PartStatusPlc",
+    "Alias": "DB257.W0",
+    "Address": "DB257.W0",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262748,
+        "CycleId": 123411,
+        "RegisterValue": "1",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180445"
+      }
+    ]
+  },
+  {
+    "VariableId": 83,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "CycleStatusPlc",
+    "Description": "CycleStatusPlc",
+    "Alias": "DB257.W2",
+    "Address": "DB257.W2",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262749,
+        "CycleId": 123411,
+        "RegisterValue": "4",
+        "DataType": "System.Int16",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180458"
+      }
+    ]
+  },
+  {
+    "VariableId": 99,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Test Current CHMSL",
+    "Description": "Test Current CHMSL",
+    "Alias": "DB257.X10.2",
+    "Address": "DB257.X10.2",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262752,
+        "CycleId": 123411,
+        "RegisterValue": "True",
+        "DataType": "System.Boolean",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180492"
+      }
+    ]
+  },
+  {
+    "VariableId": 100,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Test Current SPOILER",
+    "Description": "Test Current SPOILER",
+    "Alias": "DB257.X10.3",
+    "Address": "DB257.X10.3",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262753,
+        "CycleId": 123411,
+        "RegisterValue": "True",
+        "DataType": "System.Boolean",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180498"
+      }
+    ]
+  },
+  {
+    "VariableId": 132,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Leak Test",
+    "Description": "Leak Test",
+    "Alias": "DB257.X10.4",
+    "Address": "DB257.X10.4",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262754,
+        "CycleId": 123411,
+        "RegisterValue": "True",
+        "DataType": "System.Boolean",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180505"
+      }
+    ]
+  },
+  {
+    "VariableId": 133,
+    "MachineId": 500,
+    "PlcId": 500,
+    "Name": "Test Cam Ventpatch ",
+    "Description": "Test Cam Ventpatch ",
+    "Alias": "DB257.X10.5",
+    "Address": "DB257.X10.5",
+    "VariableGroupId": 128,
+    "TagStatus": 0,
+    "r": [
+      {
+        "RegisterId": 2262755,
+        "CycleId": 123411,
+        "RegisterValue": "True",
+        "DataType": "System.Boolean",
+        "StatusValueId": 1,
+        "TimeStamp": "2025-05-22T08:42:55.3180511"
+      }
+    ]
+  }
+]

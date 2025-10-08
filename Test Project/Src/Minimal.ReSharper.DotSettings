@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SettingsStorage xmlns="urn:schemas-jetbrains-com:settings-storage-xml">
+  <Profile Name="Minimal Refactor Profile" Kind="SolutionPersonal" />
+
+  <!-- Disable design-time inspections -->
+  <Entry Key="/Default/CodeInspection/Settings/EnableCodeAnalysis" Type="Bool" Value="false" />
+
+  <!-- Disable solution-wide analysis -->
+  <Entry Key="/Default/CodeInspection/Settings/EnableSolutionWideAnalysis" Type="Bool" Value="false" />
+
+  <!-- Keep in-editor analysis for quick fixes -->
+  <Entry Key="/Default/Environment/Performance/EnableCodeAnalysisInEditor" Type="Bool" Value="true" />
+
+  <!-- Turn off Solution Explorer overlay analysis -->
+  <Entry Key="/Default/Environment/Performance/EnableCodeAnalysisInSolutionExplorer" Type="Bool" Value="false" />
+
+  <!-- Disable computationally expensive inspections -->
+  <Entry Key="/Default/CodeInspection/Settings/EnableComputationallyExpensiveInspections" Type="Bool" Value="false" />
+
+  <!-- Disable highlight of unused non-private members -->
+  <Entry Key="/Default/CodeInspection/Settings/ShowUnusedNonPrivateMembersWhenSolutionWideAnalysisIsOff" Type="Bool" Value="false" />
+
+  <!-- Disable CodeLens and Cleanup-on-save -->
+  <Entry Key="/Default/Editor/CodeLens/Enabled" Type="Bool" Value="false" />
+  <Entry Key="/Default/CodeEditing/CodeCleanup/RunOnSave" Type="Bool" Value="false" />
+
+  <!-- Skip ReSharper unit test runner -->
+  <Entry Key="/Default/UnitTesting/Enabled" Type="Bool" Value="false" />
+
+  <!-- Keep navigation and refactoring intact -->
+  <!-- No specific toggle needed; default is enabled unless explicitly disabled -->
+</SettingsStorage>

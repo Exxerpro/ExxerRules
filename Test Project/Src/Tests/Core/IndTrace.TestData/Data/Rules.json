@@ -1,0 +1,16 @@
+[
+  {
+    "RuleId": 11,
+    "RuleJson": "{\"ruleId\": \"V3\",\"ruleFunction\": [\"lineIdentifier\", \"lineNumber\", \"fixedPart\", \"partNumber\", \"lastTwoYearDigits\", \"julianDay\", \"autoIncrement\"],\"components\": {\"lineIdentifier\": {\"action\": \"string\",\"origin\": \"fixed\",\"value\": \"QA\"},\"lineNumber\": {\"action\": \"string\",\"origin\": \"fixed\",\"value\": \"4\"},\"fixedPart\": {\"action\": \"string\",\"origin\": \"fixed\",\"value\": \"5\"},\"partNumber\": {\"action\": \"string\",\"origin\": \"program\",\"lengthMin\": 6,\"lengthMax\": 9},\"lastTwoYearDigits\": {\"action\": \"lastTwoYearDigits\",\"origin\": \"program\"},\"julianDay\": {\"action\": \"julianDay\",\"origin\": \"program\"},\"autoIncrement\": {\"action\": \"numeric\",\"origin\": \"program\",\"length\": 4,\"incremental\": true}}}",
+    "Name": "WS100",
+    "MachineId": 100,
+    "ProductId": 653,
+    "Description": "CHSML",
+    "Version": 3,
+    "IsActive": true,
+    "CreatedBy": "Admin",
+    "CreatedOn": "2023-08-28T17:02:28.0742445",
+    "ModifiedBy": "0",
+    "ModifiedOn": "2023-08-25T12:09:37.61"
+  }
+]

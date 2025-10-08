@@ -1,0 +1,535 @@
+classDiagram
+
+	class ITestTagWriter  {
+		-WriteCycleStepAsync(IFixtureContext context, ICycleStep step) Task
+		-WriteInvalidCommandAsync(IFixtureContext context, ICycleStep step) Task
+		-WriteFaultyThenRecoverAsync(IFixtureContext context) Task
+		-WriteCycleStartOnlyAsync(IFixtureContext context) Task
+	}
+	class PerformanceDataCollector  {
+		-ConcurrentQueue~int~ messagesList
+		-int errorCounter
+		-int messageCounter
+		-bool ingestDataFromS7
+		-Random random
+		-IReadOnlyDictionary~int&#44&#32PlcData~ plcs
+		-SemaphoreSlim ingestSemaphore
+		+ Connection : IHubConnection
+		- HubIsNotConnected : bool
+		+ IsHubConnected : bool
+		+StartingAsync(CancellationToken cancellationToken) Task
+		-ValidateNullServicesValues() bool
+		+DispatchPerformanceSnapshotAsync(CancellationToken cancellationToken) Task
+		-ConnectToHubServerAsync(CancellationToken cancellationToken) Task
+		-InitializeHubConnectionAsync(CancellationToken cancellationToken) Task
+		-RegisterHubEventHandlers(CancellationToken cancellationToken) void
+		-OnStartOfCycle(TaskGatewayRequest controller, int plc) void
+		-OnEndOfCycle(TaskGatewayResponse controller, int plc) void
+		-OnBroadcastMessageReceived(string user, string message) void
+		-AddConnectionHandlers(CancellationToken cancellationToken) void
+		-LogConnectionStateAsync(string state, CancellationToken? cancellationToken) Task
+	}
+	class ITestPathRunner  {
+		+ExecutePathAsync(Product product, TestPathType pathType, int sequenceIndex, ExecutionFlavor flavor, int maxNumberMachines, DryRunOptions options, CancellationToken cancellationToken) Task
+	}
+	class WorkFlowDbRecord  {
+		+ WorkFlowId : int
+		+ ProductId : int
+		+ NextMachineId : int
+		+ LastMachineId : int
+	}
+	class VariableS7  {
+		+ MachineId : int
+		+ Name : string
+		+ Alias : string
+		+ VariableId : int
+		+ Address : string
+		+ NetType : string
+		+ ValueInt : int
+		+ ValueReal : double
+		+ ValueBool : double
+		+ ValueString : string
+		+ Type : Type
+		+ParseValue(string rawValue, ILogger logger) void
+		+ResolveType(string netType) Type?
+		+GetValue() T
+	}
+	class VariableTag  {
+		+ Name : string
+		+ Address : string
+		+ NetType : string
+		+ Type : Type
+		+ ValueInt : int
+		+ ValueString : string
+	}
+	class PlcProcessor  {
+		-int TimeOut
+		-int ConnectionCheckDelayMs
+		-ILogger logger
+		-DateTimeMachine dateTimeMachine
+		-List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId&#44&#32string&#32Key)~ preparedPerformancesTagInfos
+		-IDisposable connectionTimeoutSubscription
+		+ AliasPerformancesToKeyMap : Dictionary~string&#44&#32string~
+		+ BatchReadPerformances : List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId)~
+		+ ConnectionTimeOut : bool
+		+ Controller : IPlc
+		+ IpAddress : string
+		+ IsConnected : bool
+		+ IsInitialized : bool
+		+ MachineId : int
+		+ Performances : IReadOnlyDictionary<string&#44&#32VariableS7>?
+		+ PlcData : PlcData
+		+ PlcId : int
+		+ Registers : IDictionary~string&#44&#32Register~
+		+InitializeAsync() Task~Result~
+		+ReadPerformanceDataFromPlcAsync(int PlcId, CancellationToken cancellationToken) Task~Result~PerformanceData~~
+		-ConfigureRegisterTags(IReadOnlyDictionary~string&#44&#32VariableS7~ variables) IDictionary~string&#44&#32Register~
+		-ConnectWithNotificationAsync(CancellationToken cancellationToken) Task~bool~
+		-InitializeControllerConnectionAsync(CancellationToken cancellationToken) Task
+		-MonitorConnectionState() void
+		-StartConnectionTimeoutMonitor() void
+		-PreparePerformanceForBatchReadTagInfos(PlcData plcData) void
+	}
+	class MachineResolver  {
+		+GetMachineSequenceAsync(int productId) Task~List~int~~
+	}
+	class FixtureStaticSnapshot  {
+		+ ProductId : int
+		+ PartNumber : string
+		+ ProductName : string
+		+ IsActive : bool
+		+ Description : string
+		+ WorkFlows : List~WorkFlowDbRecord~
+	}
+	class IMachineResolver  {
+		-GetMachineSequenceAsync(int productId) Task~List~int~~
+	}
+	class IFixtureDb  {
+		-LoadBarcodeStateAsync(string barcode) Task~BarcodeDbRecord~
+		-LoadPlcAddressAsync() Task~Dictionary~int&#44&#32PlcRecordDb~~
+		-LoadStaticSnapshotByPartNumberAsync(string partNumber, int machineId) Task~FixtureStaticSnapshot~
+	}
+	class NetworkUtils  {
+		+IsIpAddressAssigned(PlcData plcData) bool
+	}
+	class IPlcProcessor  {
+		- Controller : IPlc
+		- IsConnected : bool
+		- Registers : IDictionary~string&#44&#32Register~
+		- PlcId : int
+		- IpAddress : string
+		-InitializeAsync() Task~Result~
+		-ReadPerformanceDataFromPlcAsync(int PlcId, CancellationToken cancellationToken) Task~Result~PerformanceData~~
+	}
+	class IFixtureContext  {
+		- PartNumber : string
+		- Barcode : string
+		- ProductId : int
+		- MachineId : int
+		- ExpectedState : string
+		- TaskName : string
+		- Tags : Dictionary~string&#44&#32VariableS7~
+		- Tasks : List~ICycleStep~
+		- CycleStep : ICycleStep
+		-ToString() string
+	}
+	class IFixtureLogEntry  {
+		- PartNumber : string
+		- ProductId : int
+		- StationId : int
+		- TaskName : string
+		- Barcode : string
+		- State : string
+		- Timestamp : DateTime
+		- Result : string
+		- RetryCount : int
+		- Notes : string
+		-Equals(IFixtureLogEntry? other) bool
+		-Equals(object? other) bool
+		-GetHashCode() int
+		-Deconstruct(string PartNumber, int ProductId, int StationId, string TaskName, string Barcode, string State, DateTime Timestamp, string Result, int RetryCount, string Notes) void
+		-ToString() string
+	}
+	class PlcTagNames  {
+		+string ApplicationFlag
+		+string EventCounter
+		+string CurrentTime
+		+string RunningTime
+		+string StoppedTime
+		+string FaultedTime
+		+string StatusFaultReason
+		+string TotalProduction
+		+string ProductionOk
+		+string ProductionNok
+		+string StatusFaultReject
+		+string StopEventCounter
+		+string ProductionNoK
+		+string RejectEventCounter
+		+string RejectQuantityUnits
+		+string ResultValidation
+		+string LastMachineId
+		+string NextMachineId
+		+string FlowStatus
+		+string MachineType
+		+string WorkFlowType
+		+string ActualStation
+		+string BarCodeId
+		+string CycleId
+		+string PlcId
+		+string HeartBeat
+		+string PartNumber
+		+string BarCode
+		+string PartStatus
+		+string CycleStatus
+		+string PartStatusPlc
+		+string CycleStatusPlc
+		+string Command
+		+IReadOnlyList~string~ AllIntReferenceTags
+		+IReadOnlyList~string~ AllStringReferenceTags
+		+IReadOnlyDictionary~string&#44&#32Type~ AllReferenceTagTypes
+		+Dictionary~Type&#44&#32string~ SupportedS7DotNetTypes
+		+Dictionary~Type&#44&#32string~ ExpectedTagTypeMap
+		+List~TagDataStore~ Performance
+		+Dictionary~string&#44&#32string~ PerformanceReals
+		+Dictionary~string&#44&#32string~ PerformanceInts
+		+IReadOnlyList~string~ AllPerformanceTags
+		+IReadOnlyDictionary~string&#44&#32Type~ AllPerformanceTagTypes
+	}
+	class OeeRepository  {
+		-ILogger~OeeRepository~ logger
+		-List~OeeStoredRecord~ storage
+		+GetOeeHistoryAsync(int? machineId, DateTime startDate, DateTime endDate, OeePerformanceLevel? minPerformanceLevel, int pageNumber, int pageSize, CancellationToken cancellationToken) Task~(IEnumerable~OeeHistoryRecord~&#32Records&#44&#32int&#32TotalCount)~
+		+StoreOeeCalculationAsync(int machineId, OeeMetrics metrics, DateTime timestamp, string? shift, string? product, CancellationToken cancellationToken) Task~long~
+		+GetLatestOeeAsync(int machineId, CancellationToken cancellationToken) Task~OeeHistoryRecord?~
+		+GetOeeSummaryAsync(IEnumerable<int>? machineIds, DateTime startDate, DateTime endDate, CancellationToken cancellationToken) Task~IEnumerable~OeeSummaryRecord~~
+		+DeleteOldRecordsAsync(DateTime cutoffDate, CancellationToken cancellationToken) Task~int~
+		-GetMachineName(int machineId) string
+		-GetDominantPerformanceLevel(IEnumerable~OeePerformanceLevel~ levels) OeePerformanceLevel
+	}
+	class StringExtensions  {
+		+CleanString(string input) string
+	}
+	class IChannelBroker ~T~ {
+		-WriteAsync(T message, CancellationToken cancellationToken) Task~bool~
+		-ReadAllAsync(CancellationToken cancellationToken) IAsyncEnumerable~T~
+	}
+	class PlcMananger  {
+		-ReadOnlyDictionary~int&#44&#32PlcData~ plcManagedData
+		-ReadOnlyDictionary~int&#44&#32IPlcProcessor~ plcProcessors
+		+InitializeAsync(IReadOnlyDictionary~int&#44&#32PlcData~ plcsData, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) Task~Result~
+		+ReadPerformanceDataAsync(int plcId, CancellationToken cancellationToken) Task~Result~PerformanceData~~
+		-CreatePlcCollections(IReadOnlyDictionary~int&#44&#32PlcData~ plcs, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) void
+		-VerifyDataIsValid(IReadOnlyDictionary~int&#44&#32PlcData~ plcs) void
+		-VerifyPlcHavePerformanceTags(IReadOnlyDictionary~int&#44&#32PlcData~ plcs, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) int
+	}
+	class PlcProcessor  {
+		-int TimeOut
+		-ILogger logger
+		-DateTimeMachine dateTimeMachine
+		-List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId&#44&#32string&#32Key)~ preparedPerformancesTagInfos
+		-IDisposable connectionTimeoutSubscription
+		-int ConnectionCheckDelayMs
+		+ AliasPerformancesToKeyMap : Dictionary~string&#44&#32string~
+		+ BatchReadPerformances : List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId)~
+		+ ConnectionTimeOut : bool
+		+ Controller : IPlc
+		+ IpAddress : string
+		+ IsConnected : bool
+		+ IsInitialized : bool
+		+ MachineId : int
+		+ Performances : IReadOnlyDictionary<string&#44&#32VariableS7>?
+		+ PlcData : PlcData
+		+ PlcId : int
+		+ Registers : IDictionary~string&#44&#32Register~
+		+InitializeAsync() Task~Result~
+		+ReadPerformanceDataFromPlcAsync(int PlcId, CancellationToken cancellationToken) Task~Result~PerformanceData~~
+		-ConfigureRegisterTags(IReadOnlyDictionary~string&#44&#32VariableS7~ variables) IDictionary~string&#44&#32Register~
+		-ConnectWithNotificationAsync(CancellationToken cancellationToken) Task~bool~
+		-InitializeControllerConnectionAsync(CancellationToken cancellationToken) Task
+		-MonitorConnectionState() void
+		-StartConnectionTimeoutMonitor() void
+		-PreparePerformanceForBatchReadTagInfos(PlcData plcData) void
+	}
+	class PerformanceDataCollector  {
+		-IHubConnectionFactory connectionFactory
+		-ILogger~PerformanceDataCollector~ logger
+		-IRepoPlcService repoPlcService
+		-IPlcManager plcManager
+		-IChannelBroker~PerformanceData~ broker
+		-ConcurrentQueue~int~ messagesList
+		-int errorCounter
+		-int messageCounter
+		-bool ingestDataFromS7
+		-Random random
+		-IReadOnlyDictionary~int&#44&#32PlcData~ plcs
+		-SemaphoreSlim ingestSemaphore
+		+ Connection : IHubConnection
+		- HubIsNotConnected : bool
+		+ IsHubConnected : bool
+		+StartingAsync(CancellationToken cancellationToken) Task
+		-ValidateNullServicesValues() bool
+		+DispatchPerformanceSnapshotAsync(CancellationToken cancellationToken) Task
+		-ConnectToHubServerAsync(CancellationToken cancellationToken) Task
+		-InitializeHubConnectionAsync(CancellationToken cancellationToken) Task
+		-RegisterHubEventHandlers(CancellationToken cancellationToken) void
+		-OnStartOfCycle(TaskGatewayRequest controller, int plc) void
+		-OnEndOfCycle(TaskGatewayResponse controller, int plc) void
+		-OnBroadcastMessageReceived(string user, string message) void
+		-AddConnectionHandlers(CancellationToken cancellationToken) void
+		-LogConnectionStateAsync(string state, CancellationToken? cancellationToken) Task
+	}
+	class DryRunOptions  {
+		+ IsDryRun : bool
+		+ NumberOfRun : int
+		+ CycleDelayMs : int
+		+ CommandDelayMs : int
+		+ DelayTimeBetweenMachines : int
+		+ CycleTimeAverageTimeMs : int
+		+ MaxNumberOfRetry : int
+		+ WaitTimeForResponse : int
+		+ DelayTimeBetweenRetries : int
+		+ToString() string
+	}
+	class IProductRepository  {
+		-GetActiveProductsAsync() Task~IEnumerable~Product~~
+	}
+	class ProductDbRecord  {
+		+ ProductId : int
+		+ PartNumber : string
+		+ ProductName : string
+		+ IsActive : bool
+		+ Description : string
+	}
+	class PlcManager  {
+		-ReadOnlyDictionary~int&#44&#32PlcData~ plcManagedData
+		-ReadOnlyDictionary~int&#44&#32IPlcProcessor~ plcProcessors
+		+InitializeAsync(IReadOnlyDictionary~int&#44&#32PlcData~ plcsData, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) Task~Result~
+		+ReadPerformanceDataAsync(int plcId, CancellationToken cancellationToken) Task~Result~PerformanceData~~
+		-CreatePlcCollections(IReadOnlyDictionary~int&#44&#32PlcData~ plcs, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) void
+		-VerifyDataIsValid(IReadOnlyDictionary~int&#44&#32PlcData~ plcs) void
+		-VerifyPlcHavePerformanceTags(IReadOnlyDictionary~int&#44&#32PlcData~ plcs, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) int
+	}
+	class PlcDbOptions  {
+		+ ConnectionString : string
+	}
+	class FixtureDb  {
+		+LoadBarcodeStateAsync(string barcode) Task~BarcodeDbRecord~
+		+LoadPlcAddressAsync() Task~Dictionary~int&#44&#32PlcRecordDb~~
+		+LoadStaticSnapshotByPartNumberAsync(string partNumber, int machineId) Task~FixtureStaticSnapshot~
+	}
+	class IFixtureValidator  {
+		-ValidatePostExecutionStateAsync(IFixtureContext context) Task~Result~
+	}
+	class IReactiveEventService  {
+		-ProcessOeeRegisterAsync(CancellationToken stoppingToken) Task
+	}
+	class OeeResult  {
+		+ OEEDataId : long
+		+ Availability : double
+		+ Performance : double
+		+ Quality : double
+		+ OEE : double
+		+ Timestamp : DateTime
+	}
+	class IKpiDataSink  {
+		-WriteAsync(PerformanceData data, CancellationToken cancellationToken) Task
+		-WriteAsync(KpiOee data, CancellationToken cancellationToken) Task
+	}
+	class IFixtureStore  {
+		-LogResultAsync(IFixtureLogEntry entry) Task
+		-SaveAsync(IFixtureContext context, string pathType, int? retryCount) Task
+		-SaveAsync(IFixtureContext context, string pathType) Task
+	}
+	class IndTraceOeeException  {
+		+ IpAddress : string
+		+ VariableKey : string
+		+ DuplicateAddress : string
+		+ToJson() string
+		+FromJson(string json) IndTraceOeeException
+	}
+	class IRepoPlcService  {
+		-LoadPlcsDataAsync(CancellationToken cancellationToken) Task~Result~IReadOnlyDictionary~int&#44&#32PlcData~~~
+		-LoadTagsDataAsync(IEnumerable~int~ plcIds, int tagGroupId, CancellationToken cancellationToken) Task~Result~IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~~~
+		-VerifyOeeIsEnabled(IReadOnlyDictionary~int&#44&#32PlcData~ plcs, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) Result
+	}
+	class IFixtureExporter  {
+		-ExportAsync(IFixtureContext context) Task
+	}
+	class RepoPlcService  {
+		-ITagsRepository tagsRepository
+		-ILogger~RepoPlcService~ logger
+		+LoadPlcsDataAsync(CancellationToken cancellationToken) Task~Result~IReadOnlyDictionary~int&#44&#32PlcData~~~
+		+LoadTagsDataAsync(IEnumerable~int~ plcIds, int tagGroupId, CancellationToken cancellationToken) Task~Result~IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~~~
+		+VerifyOeeIsEnabled(IReadOnlyDictionary~int&#44&#32PlcData~ plcs, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) Result
+	}
+	class IPlcDBRepository  {
+		-GetPlcsAsync(CancellationToken cancellationToken) Task~IEnumerable~PlcData~~
+		-GetDistinctDbInfosAsync(CancellationToken cancellationToken) Task~IEnumerable~Db~~
+	}
+	class Product  {
+		+ ProductId : int
+		+ PartNumber : string
+		+ LineId : int
+	}
+	class BarcodeDbRecord  {
+		+ Barcode : string
+		+ BarCodeId : int
+		+ ProductId : int
+		+ MachineId : int
+		+ FlowStatus : int
+		+ PartStatus : int
+		+ CycleStatus : int
+		+ CycleId : int
+		+ CycleMachineId : int
+		+ ResultValidation : int
+		+ LastModified : DateTime?
+	}
+	class ITagsRepository  {
+		-GetPlcsAsync(CancellationToken cancellationToken) Task~IEnumerable~PlcData~~
+		+GetTagsGroupedByMachineAsync(CancellationToken cancelationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		+GetTagsGroupedByMachineAsync(IEnumerable~int~ machineId, CancellationToken cancelationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		+GetTagsGroupedByMachineAsync(IEnumerable~int~ machineId, int groupId, CancellationToken cancelationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		+GetTagsAsync(int machineId, CancellationToken cancellationToken) Task~Dictionary~string&#44&#32VariableS7~~
+	}
+	class IPerformanceDataCollector  {
+		-StartingAsync(CancellationToken stoppingToken) Task
+		-DispatchPerformanceSnapshotAsync(CancellationToken cancellationToken) Task
+	}
+	class IObservableService  {
+		- Stream : IObservable~OeeRegisterDto~
+	}
+	class TagDataStore  {
+		+ Address : string
+		+ Description : string
+		+ Value : string
+	}
+	class DbInfo  {
+		+ Address : string
+		+ BlockNumber : int
+	}
+	class PlcVirtualRepository  {
+		-string connectionString
+		-Regex DbStringFormatRegex
+		-Regex DbInt16FormatRegex
+		-Regex DbInt32FormatRegex
+		-Regex DbBoolFormatRegex
+		-Regex DbInt32OrRealFormatRegex
+		+GetPlcsAsync(CancellationToken cancellationToken) Task~IEnumerable~PlcData~~
+		+GetDistinctDbInfosAsync(CancellationToken cancellationToken) Task~IEnumerable~Db~~
+		+GetTagsGroupedByMachineAsync(CancellationToken cancellationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		+GetTagsGroupedByMachineAsync(IEnumerable~int~ machineId, CancellationToken cancellationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		+GetTagsGroupedByMachineAsync(IEnumerable~int~ machineId, int groupId, CancellationToken cancellationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		-IsValidFormat(string address, Type type) bool
+		+GetTagsAsync(int machineId, CancellationToken cancellationToken) Task~Dictionary~string&#44&#32VariableS7~~
+	}
+	class IPlcManager  {
+		+InitializeAsync(IReadOnlyDictionary~int&#44&#32PlcData~ plcsData, IReadOnlyDictionary~int&#44&#32IReadOnlyDictionary~string&#44&#32VariableS7~~ performanceTags) Task~Result~
+		+ReadPerformanceDataAsync(int plcId, CancellationToken cancellationToken) Task~Result~PerformanceData~~
+	}
+	class IKpiDataReader  {
+		-GetKpiResultsAsync(CancellationToken cancellationToken) Task~List~OeeResult~~
+	}
+	class ProductRepository  {
+		+GetActiveProductsAsync() Task~IEnumerable~Product~~
+	}
+	class IFixtureValidationResult  {
+		+ BarCodeId : int
+		+ Barcode : string
+		+ ProductId : int
+		+ CycleId : int
+		+ CycleStatus : int
+		+ PartStatus : int
+		+ FlowStatus : int
+		+ ResultValidation : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ CycleMachineId : int
+		+ BarcodeMachineId : int
+		+ ActualStation : int
+		+ Source : string
+	}
+	class PlcDbTagsRepository  {
+		-string connectionString
+		-Regex DbStringFormatRegex
+		-Regex DbInt16FormatRegex
+		-Regex DbInt32FormatRegex
+		-Regex DbBoolFormatRegex
+		-Regex DbInt32OrRealFormatRegex
+		+GetPlcsAsync(CancellationToken cancellationToken) Task~IEnumerable~PlcData~~
+		+GetDistinctDbInfosAsync(CancellationToken cancellationToken) Task~IEnumerable~Db~~
+		+GetTagsGroupedByMachineAsync(CancellationToken cancellationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		+GetTagsGroupedByMachineAsync(IEnumerable~int~ machineId, CancellationToken cancellationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		+GetTagsGroupedByMachineAsync(IEnumerable~int~ machineId, int groupId, CancellationToken cancellationToken) Task~Dictionary~int&#44&#32Dictionary~string&#44&#32VariableS7~~~
+		-IsValidFormat(string address, Type type) bool
+		+GetTagsAsync(int machineId, CancellationToken cancellationToken) Task~Dictionary~string&#44&#32VariableS7~~
+	}
+	class PlcData  {
+		-string ipAddress
+		+ Plc : IPlc
+		+ CpuMpiAddress : int
+		+ DataBlocks : ConcurrentDictionary~int&#44&#32Db~
+		+ DBs : List~DbInfo~
+		+ Enabled : int
+		+ IpAddress : string
+		+ IpAddressExist : bool
+		+ IpAddressIsNotAssigned : bool
+		+ IpAddressIsValid : bool
+		+ MachineId : int
+		+ Name : string
+		+ OeeEnabled : bool
+		+ PlcBrand : string
+		+ PlcId : int
+		+ PlcType : string
+		+ Port : int
+		+ RackNumber : int
+		+ Variables : Dictionary~string&#44&#32VariableS7~
+		+AddDb(Db db) bool
+		+RemoveDataBlock(int id) bool
+		+SaveDataBlocks() bool
+		-IsValidIp(string ipAddress) bool
+	}
+	class ICycleStep  {
+		- Name : string
+		- Command : int
+		- State : string
+		-Equals(ICycleStep? other) bool
+		-Equals(object? other) bool
+		-GetHashCode() int
+		-Deconstruct(string Name, int Command, string State) void
+		-ToString() string
+	}
+	class Db  {
+		+byte[] Data
+		+ Id : int
+		+ Size : int
+		+ Name : string
+	}
+	class ReactiveEventService  {
+		-Subject~OeeRegisterDto~ subject
+		+ Stream : IObservable~OeeRegisterDto~
+		+ProcessOeeRegisterAsync(CancellationToken stoppingToken) Task
+	}
+	class PlcRecordDb  {
+		+ MachineId : int
+		+ Name : string
+		+ IpAddress : string
+	}
+
+	PerformanceDataCollector --|> IPerformanceDataCollector
+	PlcProcessor --|> IPlcProcessor
+	MachineResolver --|> IMachineResolver
+	IFixtureLogEntry --|> IEquatable
+	OeeRepository --|> IOeeRepository
+	PlcMananger --|> IPlcManager
+	PlcProcessor --|> IPlcProcessor
+	PerformanceDataCollector --|> IPerformanceDataCollector
+	PlcManager --|> IPlcManager
+	FixtureDb --|> IFixtureDb
+	IndTraceOeeException --|> Exception
+	RepoPlcService --|> IRepoPlcService
+	PlcVirtualRepository --|> IPlcDBRepository
+	ProductRepository --|> IProductRepository
+	IFixtureValidationResult --|> IEquatable
+	PlcDbTagsRepository --|> ITagsRepository
+	ReactiveEventService --|> IReactiveEventService
+	ReactiveEventService --|> IObservableService

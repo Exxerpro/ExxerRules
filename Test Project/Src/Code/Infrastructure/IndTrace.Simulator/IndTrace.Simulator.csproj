@@ -1,0 +1,109 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <!-- ============================================================================ -->
+  <!-- CORE PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Target Framework -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- Language Features -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <!-- Globalization -->
+    <InvariantGlobalization>false</InvariantGlobalization>
+    <!-- Application Information -->
+    <Description>Intrace Simulator</Description>
+    <Company>Exxerpro Solutions</Company>
+    <Product>Intrace Simulator</Product>
+    <AssemblyName>Simulator</AssemblyName>
+    <AssemblyTitle>Simulator</AssemblyTitle>
+    <Title>Intrace Simulator</Title>
+    <!-- Versioning -->
+    <AssemblyVersion>2025.5.30.51</AssemblyVersion>
+    <FileVersion>2025.5.30.51</FileVersion>
+    <!-- Application Icon -->
+    <ApplicationIcon>Simulator.ico</ApplicationIcon>
+    <!-- Security & Configuration -->
+    <UserSecretsId>dotnet-CommandInjector-fc7f9150-4c07-4d30-bffa-a89ffd8a7bad</UserSecretsId>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- PUBLISHING PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Performance Enhancements -->
+    <PublishAot>false</PublishAot>
+    <EnableDynamicPgo>true</EnableDynamicPgo>
+    <TieredCompilation>true</TieredCompilation>
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- COMPILE EXCLUSIONS -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Excluded Files">
+    <Compile Remove="Export\FixtureValidationReportGenerator.cs" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- INCLUDED FILES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Included Files">
+    <None Include="Export\FixtureValidationReportGenerator.cs" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - UTILITIES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Utilities">
+
+    <PackageReference Include="TextCopy" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - LOGGING -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Logging">
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.Seq" />
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.Settings.Configuration" />
+    <PackageReference Include="Serilog.Enrichers.Demystifier" />
+    <PackageReference Include="Serilog.Enrichers.Process" />
+    <PackageReference Include="Serilog.Expressions" />
+    <PackageReference Include="Serilog.Extensions.Hosting" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Settings.AppSettings" />
+    <PackageReference Include="Serilog.Sinks.File" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - DATABASE -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Database">
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - CORE FRAMEWORK -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Core Framework">
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PROJECT REFERENCES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Infrastructure References">
+    <ProjectReference Include="..\IndTrace.DataStore\IndTrace.DataStore.csproj" />
+    <ProjectReference Include="..\Sharp7.Rx\Sharp7.Rx.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <!-- Enforce warnings-as-errors in Release now that project is clean -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+  </PropertyGroup>
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+</Project>

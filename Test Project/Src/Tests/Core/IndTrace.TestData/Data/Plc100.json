@@ -1,0 +1,12 @@
+[
+  {
+    "PlcId": 100,
+    "Name": "S7-1200",
+    "IpAddress": "192.168.0.100",
+    "PlcType": "S7-1200",
+    "PlcBrand": "Siemens",
+    "Options": " [\r\n  {\r\n  \"Rack\": 0,\r\n  \"Slot\": 1,\r\n  \"TSAP\" : \"FD.01\"\r\n  }\r\n  ] ",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens"
+  }
+]

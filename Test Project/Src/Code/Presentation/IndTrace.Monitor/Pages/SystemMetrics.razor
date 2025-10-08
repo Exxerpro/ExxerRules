@@ -1,0 +1,30 @@
+@page "/system-metrics"
+
+@using IndTrace.Dependencies.Services;
+@inject SystemMetricsService MetricsService
+
+<h3>
+    System Metrics || <strong>CPU Usage:</strong> @CpuUsage.ToString("F2") % || <strong>Memory avalaible:</strong> @((MemoryUsage/1024).ToString("F2"))MB || <strong>Network Sent:</strong> @BandwidthSent KB/  || <strong>Network Received:</strong> @BandwidthReceived KB/s
+</h3>
+
+@code {
+    private float CpuUsage;
+    private float MemoryUsage;
+    private double BandwidthSent;
+    private double BandwidthReceived;
+
+    protected override async Task OnInitializedAsync()
+    {
+        while (true)
+        {
+            CpuUsage = MetricsService.GetCpuUsage();
+            MemoryUsage = MetricsService.GetMemoryUsage();
+            var networkUtilization = MetricsService.GetNetworkUtilization();
+            BandwidthSent = networkUtilization.sent / 1024; // Convert to KB
+            BandwidthReceived = networkUtilization.received / 1024; // Convert to KB
+
+            StateHasChanged();
+            await Task.Delay(2000); // Update every 2 seconds
+        }
+    }
+}

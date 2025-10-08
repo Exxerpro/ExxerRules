@@ -1,0 +1,75 @@
+@page "/counter"
+@using System
+@using QuestDB
+@inject NavigationManager NavigationManager
+
+<PageTitle>Counter</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Counter</MudText>
+
+<MudText Typo="Typo.body1" Class="mb-4">Current count: @currentCount</MudText>
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="IncrementCount">Click me</MudButton>
+
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="SeeData">See Data</MudButton>
+
+<MudButton Color="Color.Primary" Variant="Variant.Filled" @onclick="AddData">Add Data</MudButton>
+
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private async Task AddData()
+    {
+        await AddDataInternalAsync();
+    }
+
+
+    private async Task AddDataInternalAsync(CancellationToken cancellationToken = default)
+    {
+        var random = new Random();
+
+        const string tableName = "OeeResults";
+        const string oeeDataIdSymbol = "OEEDataId";
+        const string availabilityColumn = "Availability";
+        const string performanceColumn = "Performance";
+        const string qualityColumn = "Quality";
+        const string oeeColumn = "OEE";
+
+        using var sender = Sender.New("http::addr=localhost:9000;");
+        sender.Transaction(tableName.AsSpan());
+
+        for (long i = 0; i < 60; i++)
+        {
+            var availability = 0.8 + random.NextDouble() * 0.2;
+            var performance = 0.8 + random.NextDouble() * 0.2;
+            var quality = 0.8 + random.NextDouble() * 0.2;
+            var oee = availability * performance * quality;
+
+            sender
+                .Symbol(oeeDataIdSymbol.AsSpan(), (i + 1).ToString().AsSpan())
+                .Column(availabilityColumn.AsSpan(), availability)
+                .Column(performanceColumn.AsSpan(), performance)
+                .Column(qualityColumn.AsSpan(), quality)
+                .Column(oeeColumn.AsSpan(), oee);
+
+            await sender.AtAsync(DateTime.UtcNow, cancellationToken);
+            await Task.Delay(1000, cancellationToken);
+        }
+
+        await sender.CommitAsync(cancellationToken);
+    }
+
+
+    private void SeeData()
+    {
+        NavigationManager.NavigateTo("/oee-results");
+    }
+
+}

@@ -142,6 +142,9 @@ pnpm-debug.log*
 # Tool outputs
 **/StrykerOutput/**
 *.tlog
+
+# MCP test output files
+**/tool-call-log-*.jsonl
 *.vspscc
 *.vssscc
 .builds

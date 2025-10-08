@@ -1,0 +1,27 @@
+﻿
+
+
+To add the service to windows services:
+
+
+if is instaled before
+
+        Stop the service
+        Remove the service
+        sc.exe delete  "Name"
+        sc.exe delete  S7W
+
+Now
+
+Publish te application
+run in powershell as Admin
+
+ sc.exe create S7W binpath= c:\temp\workerservice\s7Worker.exe
+ sc.exe create "Name" W binpath= "FullPath"
+
+ to remove:
+
+ Stop the service
+        Remove the service
+        sc.exe delete  "Name"
+        sc.exe delete  S7W

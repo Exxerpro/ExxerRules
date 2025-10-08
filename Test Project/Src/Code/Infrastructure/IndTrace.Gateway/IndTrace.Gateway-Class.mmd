@@ -1,0 +1,238 @@
+classDiagram
+
+	class DbTagMapper  {
+		-Regex DbStringFormatRegex
+		-Regex DbInt16FormatRegex
+		-Regex DbInt32FormatRegex
+		-Regex DbBoolFormatRegex
+		-Regex DbInt32OrRealFormatRegex
+		+GetTagsAsync(int machineId) Task~Dictionary~string&#44&#32VariableS7~~
+		-IsValidFormat(string address, Type type) bool
+	}
+	class RateLimitInfo  {
+		+SemaphoreSlim Semaphore
+		+DateTime LastExecutionTime
+		+int Controller
+		+Result<TaskGatewayResponse>? LastResult
+		+TimeSpan RateLimitInterval
+	}
+	class GatewayExecutionHelper  {
+		+ExecuteWithTimeoutAndLogging(Func~CancellationToken&#44&#32Task~Result~T~~~ action, TimeSpan timeout, CancellationToken parentToken, ILogger logger, string operationName) Task~Result~T~~
+		+ExecuteWithTimeoutAndLogging(Func~CancellationToken&#44&#32Task~Result~~ action, TimeSpan timeout, CancellationToken parentToken, ILogger logger, string operationName) Task~Result~
+	}
+	class VariableS7  {
+		+ MachineId : int
+		+ Name : string
+		+ Address : string
+		+ NetType : string
+		+ ValueInt : int
+		+ ValueReal : double
+		+ ValueBool : double
+		+ ValueString : string
+		+ Type : Type
+		+ParseValue(string rawValue, ILogger logger) void
+		+ResolveType(string netType) Type?
+		+GetValue() T
+	}
+	class AsyncCallers  {
+		+ExecuteAsync(Func~Task~ action, ILogger logger, string errorMessage, IIndTraceControllerRx controller) Task
+		+ExecuteAsync(Func~Task~T~~ action, ILogger logger, string errorMessage, IIndTraceControllerRx controller) Task~T?~
+		+ExecuteAsync(Func~CancellationToken&#44&#32Task~T~~ action, ILogger logger, string errorMessage, IIndTraceControllerRx controller, CancellationToken cancellationToken) Task~T?~
+	}
+	class GatewayTaskDefinition  {
+		-Dictionary~GatewayTask&#44&#32Func~IIndTraceControllerRx&#44&#32IGatewayCommandDispatcher&#44&#32IndTrace.HubConnection.Abstractions.IHubConnection&#44&#32IndTrace.HubConnection.Abstractions.IHubConnectionFactory&#44&#32ILogger&#44&#32CancellationToken&#44&#32Task~Result~TaskGatewayResponse~~~~ Commands
+		-ConcurrentDictionary~GatewayTask&#44&#32RateLimitInfo~ RateLimits
+		-AddCommand(GatewayTask id, Func~IIndTraceControllerRx&#44&#32IGatewayCommandDispatcher&#44&#32IndTrace.HubConnection.Abstractions.IHubConnection&#44&#32IndTrace.HubConnection.Abstractions.IHubConnectionFactory&#44&#32ILogger&#44&#32CancellationToken&#44&#32Task~Result~TaskGatewayResponse~~~ commandTask) void
+		+GetCommandTask(GatewayTask id) Func~IIndTraceControllerRx&#44&#32IGatewayCommandDispatcher&#44&#32IndTrace.HubConnection.Abstractions.IHubConnection&#44&#32IndTrace.HubConnection.Abstractions.IHubConnectionFactory&#44&#32ILogger&#44&#32CancellationToken&#44&#32Task~
+		+GetEventPlc(GatewayTask id) string
+		+ExecuteWithRateLimitingAsync(GatewayTask id, IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IndTrace.HubConnection.Abstractions.IHubConnection hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+	}
+	class IDbTagMapper  {
+		-GetTagsAsync(int machineId) Task~Dictionary~string&#44&#32VariableS7~~
+	}
+	class ControllerExtensions  {
+		-IEnumerable~string~ DefaultReferences
+		+HandleCommandAsync(IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task
+		+UploadCommandDataFromController(IIndTraceControllerRx controller, GatewayTask gatewayTask, IDateTimeMachine dateTimeMachine, ILogger logger, CancellationToken cancellationToken) Task~TaskGatewayRequest~
+		+DownloadReferenceDataToPlc(IIndTraceControllerRx controller, GatewayTask gatewayTask, IDateTimeMachine dateTimeMachine, ILogger logger, CancellationToken cancellationToken) Task
+		+ClearDefaultReferences(IIndTraceControllerRx controller, ILogger logger, CancellationToken cancellationToken) void
+		+PublishResultToPlc(IIndTraceControllerRx controller, TaskGatewayRequest request, Result~TaskGatewayResponse~ response, IHubConnection? hubConnection, ILogger logger, CancellationToken cancellationToken) Task
+		-SetBarCodeOnControllerAsync(IIndTraceControllerRx controller, string? value, ILogger logger, CancellationToken cancellationToken) Task
+		-SetErrorReferences(IIndTraceControllerRx controller, ILogger logger, CancellationToken cancellationToken) Task
+		-SetReferencesForController(IIndTraceControllerRx controller, IDictionary~string&#44&#32Register~ references) void
+		-SafeFireAndForget(Func~Task~ action, string context, ILogger logger) void
+	}
+	class GatewayTasks  {
+		-IDateTimeMachine DateTimeMachine
+		-bool OeeEnabledFromEnvironment
+		-ExecuteGatewayCommandAsync(GatewayTask task, string failureMessage, IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+CreateBarCodeAsync(IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+ReadBarCodeAsync(IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+CreateCycleAsync(IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+UpdateCycleOkAsync(IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+UpdateCycleNotOkAsync(IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+EndOfProcessAsync(IIndTraceControllerRx controller, IGatewayCommandDispatcher commandDispatcher, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+	}
+	class IManualStart  {
+		-StartAsync(CancellationToken cancellationToken) Task
+	}
+	class GatewayExecutor  {
+		-int ErrorTimeoutCreateGatewayCommandFromPlcMilliseconds
+		-int ErrorTimeoutClearReferenceDataOnPlcMilliseconds
+		-int ErrorTimeoutSendCommandAsyncMilliseconds
+		-int ErrorTimeoutHandleAndPublishCommandMilliseconds
+		-int ErrorTimeoutHandleAndPublishResultsMilliseconds
+		-int ErrorTimeoutDisabledSendCommandAsyncMilliseconds
+		+CreateGatewayCommandFromPlcAsync(GatewayTask gatewayTask, IIndTraceControllerRx controller, string errorMessage, IDateTimeMachine dateTimeMachine, ILogger logger, CancellationToken cancellationToken) Task~TCommandData~
+		-GatewayTaskRequireUploadRegisters(GatewayTask gatewayTask) bool
+		+ClearReferenceDataOnPlcAsync(GatewayTask gatewayTask, IIndTraceControllerRx controller, string errorMessage, IDateTimeMachine dateTimeMachine, ILogger logger, CancellationToken cancellationToken) Task~Result~
+		+SendCommandAsync(TCommand command, string errorMessage, IGatewayCommandDispatcher commandDispatcher, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+PublishResultsToPlcAndHubAsync(TaskGatewayRequest request, Result~TaskGatewayResponse~ response, IIndTraceControllerRx controller, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task
+		+PublishCommandToHubAsync(TaskGatewayRequest request, IIndTraceControllerRx controller, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task
+		+ReadPerformanceDataCommandFromPlcAsync(TaskGatewayRequest request, Result~TaskGatewayResponse~ response, IIndTraceControllerRx controller, IHubConnection? hubConnection, IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~PerformanceDataCommand~
+		+SendPerformanceDataCommandToApplication(TCommand command, string errorMessage, IGatewayCommandDispatcher commandDispatcher, ILogger logger, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+	}
+	class LogTimerExtensions  {
+		+int TimeForShortExecution
+		+int TimeForLongExecution
+		+int TimeForVeryLongExecution
+		+StartAndLog(string message, ILogger logger) Stopwatch
+		+StartAndLog(IIndTraceControllerRx controller, ILogger logger) Stopwatch
+		+StopAndLogTimer(Stopwatch timer, IIndTraceControllerRx controller, ILogger logger, string message) void
+		+StopAndLogTimer(Stopwatch timer, ILogger logger, int controllerId, int command) void
+	}
+	class PlcConfigurationException  {
+		+ IpAddress : string
+		+ VariableKey : string
+		+ DuplicateAddress : string
+		+ToJson() string
+		+FromJson(string json) PlcConfigurationException
+	}
+	class PlcTagNames  {
+		+string ResultValidation
+		+string LastMachineId
+		+string NextMachineId
+		+string FlowStatus
+		+string MachineType
+		+string WorkFlowType
+		+string ActualStation
+		+string BarCodeId
+		+string CycleId
+		+string PlcId
+		+string HeartBeat
+		+string PartNumber
+		+string BarCode
+		+string PartStatus
+		+string CycleStatus
+		+string PartStatusPlc
+		+string CycleStatusPlc
+		+string Command
+		+IReadOnlyList~string~ AllIntReferenceTags
+		+IReadOnlyList~string~ AllStringReferenceTags
+		+IReadOnlyDictionary~string&#44&#32Type~ AllReferenceTagTypes
+		+Dictionary~Type&#44&#32string~ SupportedS7DotNetTypes
+		+Dictionary~Type&#44&#32string~ ExpectedTagTypeMap
+	}
+	class GatewayWorkerManager  {
+		-ILogger~GatewayWorkerManager~ logger
+		-IServiceProvider serviceProvider
+		-IndTraceConfigurationService configService
+		-DateTimeMachine dateTimeMachine
+		-Dictionary~int&#44&#32GatewayWorker~ gatewayWorkers
+		-Dictionary~int&#44&#32Task~ runningWorkers
+		-CancellationTokenSource cts
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		-StartWorker(int plcId, CancellationToken cancellationToken) void
+		+StopAsync(CancellationToken cancellationToken) Task
+		-WaitForSimulationCommands(TimeSpan timeout, CancellationToken cancellationToken) Task~List~string~~
+		-SimulateEventFromKeyboard(List~string~ inputLines, CancellationToken stoppingToken) Task
+		-DiscoverDuplicatedTags(ApplicationConfiguration configuration) void
+	}
+	class GatewayConstants  {
+		+string ErrorGettingBarCode
+		+string ErrorReadingPartNumber
+		+string ErrorReadingPartStatus
+		+string ErrorReadingCycleStatus
+		+string ErrorDownloadingReferences
+		+string ErrorSettingBarCode
+		+string ErrorClearReferences
+		+string ErrorExecutingCommand
+		+string ErrorGatewayExecution
+		+string ErrorPlcExecution
+		+string ErrorStartingSignalRConnection
+		+string ErrorWhileSendingHeartbeat
+		+string ErrorUploadingRegisters
+		+string ErrorUploadingDataForCommand
+	}
+	class PlcExtensions  {
+		+AddControllerAsync(PlcDto value, ILogger logger, IndTrace.HubConnection.Abstractions.IHubConnection hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, DateTimeMachine dateTimeMachine, CancellationToken cancellationToken) Task~IIndTraceControllerRx~
+		+ConfigureControllerAsync(IIndTraceControllerRx controller, int key, ILogger logger, IndTrace.HubConnection.Abstractions.IHubConnection hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, CancellationToken cancellationToken) Task~bool~
+		+ValidateVariablesAsync(IIndTraceControllerRx controller, int key, ILogger logger, IndTrace.HubConnection.Abstractions.IHubConnection hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, CancellationToken cancellationToken) Task~bool~
+		+ConnectToControllerAsync(IIndTraceControllerRx controller, short key, ILogger logger, IndTrace.HubConnection.Abstractions.IHubConnection hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, CancellationToken cancellationToken) Task~int~
+		-GetControllerIdAsync(IIndTraceControllerRx controller, ILogger logger, IndTrace.HubConnection.Abstractions.IHubConnection hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, CancellationToken cancellationToken, bool connected) Task~int~
+		-SetControllerIdAsync(IIndTraceControllerRx controller, short value, CancellationToken cancellationToken) Task~int~
+		+LogPlcConnectionStatusAsync(ILogger logger, int key, int plcId, IndTrace.HubConnection.Abstractions.IHubConnection hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, CancellationToken cancellationToken) Task
+	}
+	class GatewayMessages  {
+		+string ErrorCreateBarcode
+		+string FailedCreateBarcode
+		+string ErrorReadBarcode
+		+string FailedReadBarcode
+		+string ErrorCreateCycle
+		+string FailedCreateCycle
+		+string ErrorUpdateCycle
+		+string FailedUpdateCycle
+		+string ErrorEndProcess
+		+string FailedEndProcess
+	}
+	class GatewayWorker  {
+		+int Id
+		-ILogger~GatewayWorker~ logger
+		-IndTraceConfigurationService configService
+		-IHubConnectionFactory connectionFactory
+		-DateTimeMachine dateTimeMachine
+		-CancellationTokenSource? cts
+		-IIndTraceControllerRx controller
+		-string machineName
+		-ApplicationConfiguration configApplicationConfiguration
+		-DateTime lasTimeStampCommandExecuted
+		-ConcurrentDictionary~int&#44&#32DateTime~ lastExecutionTimeStamps
+		-double minIntervalExecutionTime
+		-IDisposable? heartbeatSubscription
+		-CancellationTokenSource? heartbeatCts
+		-Lock syncLock
+		-IDisposable? commandChangedSubscription
+		-bool isCommandHandling
+		-TimeSpan resubscribeDelay
+		-IHubConnection hubConnection
+		+ PlcData : PlcDto
+		+ Configured : bool
+		+ IsHubConnected : bool
+		+StartAsync() Task
+		+StopAsync() Task
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		+TryConfigureGatewayAsync(CancellationToken cancellationToken) Task~bool~
+		-ValidateConfigurationIsCorrect() bool
+		-SetupCommunicationsPlcs(CancellationToken cancellationToken) Task
+		+StartAsync(CancellationToken cancellationToken) Task
+		+StopAsync(CancellationToken cancellationToken) Task
+		-LogInformationEveryFiveMinutes() void
+		-LogErrorToHubAsync(string message, CancellationToken cancellationToken) Task
+		-HeartBeatChangedHandler(IIndTraceControllerRx controller, CancellationToken cancellationToken) Task
+		-CommandChangedHandler(IIndTraceControllerRx controller, CancellationToken cancellationToken) Task
+		-ShouldSkipCommandProcessing() bool
+		-CommandIsFiringBeforeAcceptedInterval(int machineId) bool
+		-SetupControllerAsync(int key, PlcDto value, DateTimeMachine dateTimeMachine, CancellationToken cancellationToken) Task~IndTrace.S7Rx.Interfaces.IIndTraceControllerRx~
+		-SubscribeToEvents(CancellationToken cancellationToken) void
+		-UnsubscribeFromEvents() void
+		-EnsureHubConnectionInBackground(IHubConnection? currentConnection, IHubConnectionFactory factory, ILogger logger, CancellationToken cancellationToken) void
+		-SafeFireAndForget(Func~Task~ action, string context) void
+		+SimulateCommand(SimulatedCommand command, CancellationToken cancellationToken) Task
+		+TriggerCommand(IndTrace.S7Rx.Models.SimulatedCommand command) Task
+	}
+
+	DbTagMapper --|> IDbTagMapper
+	PlcConfigurationException --|> Exception
+	GatewayWorkerManager --|> BackgroundService
+	GatewayWorker --|> BackgroundService
+	GatewayWorker --|> IManualStart

@@ -1,0 +1,38 @@
+[
+  {
+    "VariableGroupId": 1,
+    "VariableGroupName": "EventsTags"
+  },
+  {
+    "VariableGroupId": 2,
+    "VariableGroupName": "ReadOnlyTags"
+  },
+  {
+    "VariableGroupId": 4,
+    "VariableGroupName": "WriteOnlyTags"
+  },
+  {
+    "VariableGroupId": 8,
+    "VariableGroupName": "WriteAndReadTags"
+  },
+  {
+    "VariableGroupId": 16,
+    "VariableGroupName": "ReadCyclicTags"
+  },
+  {
+    "VariableGroupId": 32,
+    "VariableGroupName": "WriteCyclicTags"
+  },
+  {
+    "VariableGroupId": 64,
+    "VariableGroupName": "HeartbeatTags"
+  },
+  {
+    "VariableGroupId": 128,
+    "VariableGroupName": "RegisterTags"
+  },
+  {
+    "VariableGroupId": 256,
+    "VariableGroupName": "ReferenceTags"
+  }
+]

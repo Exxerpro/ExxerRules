@@ -1,0 +1,260 @@
+classDiagram
+
+	class SignatureConverter  {
+		-MethodInfo ConvertToObjectObservableMethod
+		+ConvertToObjectObservable(IObservable~T~ obs) IObservable~object~
+		+ConvertToObjectObservable(object observable, Type sourceType) IObservable~object~
+	}
+	class IVariableNameParser  {
+		-Parse(string input) VariableAddress
+	}
+	class PlcConnectionSettings  {
+		+ CpuMpiAddress : int
+		+ IpAddress : string
+		+ Port : int
+		+ RackNumber : int
+	}
+	class VariableNameParser  {
+		-Regex Regex
+		-IReadOnlyDictionary~string&#44&#32DbType~ Types
+		+Parse(string input) VariableAddress
+	}
+	class ValueConverter  {
+		-Dictionary~Type&#44&#32WriteFunc~ WriteFunctions
+		-Dictionary~Type&#44&#32ReadFunc~ ReadFunctions
+		+TryWriteToBuffer(Span~byte~ buffer, object value, Type type, VariableAddress address) bool
+		+ReadFromBuffer(Span~byte~ buffer, VariableAddress address) TValue
+		+WriteToBuffer(Span~byte~ buffer, TValue value, VariableAddress address) void
+	}
+	class ConcurrentSubjectDictionary ~TKey, TValue~ {
+		-object dictionaryLock
+		-Func~TKey&#44&#32TValue~ valueFactory
+		-ConcurrentDictionary~TKey&#44&#32SubjectWithRefCounter~ dictionary
+		+ ExistingKeys : IEnumerable~TKey~
+		+ IsDisposed : bool
+		+Dispose() void
+		+GetOrCreateObservable(TKey key) DisposableItem~TValue~
+		+TryGetObserver(TKey key, IObserver~TValue~ subject) bool
+		-Dispose(bool disposing) void
+		-CreateSubject(TKey key) ISubject~TValue~
+		-RemoveIfNoLongerInUse(TKey variableName) void
+		+DecreaseCount() int
+		+IncreaseCount() int
+	}
+	class SubjectWithRefCounter  {
+		-int counter
+		+ Subject : ISubject~TValue~
+		+DecreaseCount() int
+		+IncreaseCount() int
+	}
+	class IPlc  {
+		- Logger : ILogger
+		- S7Connector : ISharp7Connector
+		- s7Connector : ISharp7Connector
+		- ConnectionState : IObservable~ConnectionState~
+		+GetBatchValuesPlcAsync(IEnumerable~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32StatusValueId)~ tags, CancellationToken token) Task~IEnumerable~PlcBatchReadResult~~
+		-SetValue(string variableName, TValue value, CancellationToken token) Task
+		-GetValue(string variableName, CancellationToken token) Task~TValue~
+		-GetValue(string variableName, CancellationToken token) Task~object~
+		-CreateNotification(string variableName, TransmissionMode transmissionMode) IObservable~TValue~
+		-CreateNotification(string variableName, TransmissionMode transmissionMode) IObservable~object~
+		-GetValueS7Client(string variableName, CancellationToken token) Task~TValue~
+		-InitializeConnection(CancellationToken token) Task
+	}
+	class ObservableExtensions  {
+		+DisposeMany(IObservable~T~ source) IObservable~T~
+		+LogAndRetry(IObservable~T~ source, ILogger logger, string message) IObservable~T~
+		+LogAndRetryAfterDelay(IObservable~T~ source, ILogger logger, TimeSpan retryDelay, string message, int retryCount, IScheduler scheduler) IObservable~T~
+		+RepeatAfterDelay(IObservable~T~ source, TimeSpan retryDelay, int repeatCount, IScheduler scheduler) IObservable~T~
+		+RetryAfterDelay(IObservable~T~ source, TimeSpan retryDelay, int retryCount, IScheduler scheduler) IObservable~T~
+		-RedoAfterDelay(IObservable~T~ source, TimeSpan retryDelay, int retryCount, IScheduler scheduler, Func~IObservable~T~&#44&#32IObservable~T~~ reDo, Func~IObservable~T~&#44&#32int&#44&#32IObservable~T~~ reDoCount) IObservable~T~
+	}
+	class OperandExtensions  {
+		+ToArea(Operand operand) S7Area
+	}
+	class DisposableExtensions  {
+		+AddDisposableTo(IDisposable disposable, CompositeDisposable compositeDisposable) void
+	}
+	class ValueConverter  {
+		-Dictionary~Type&#44&#32ReadFunc~ ReadFunctions
+		+ReadFromBuffer(Span~byte~ buffer, VariableAddress address, Type type) (dynamic&#32Result&#44&#32string&#32StringValue)
+		+ReadFromBuffer(Span~byte~ buffer, VariableAddress address, Type type) (T&#32Result&#44&#32string&#32StringValue)
+		-ParseString(Span~byte~ buffer, VariableAddress address) string
+		-ParseWString(Span~byte~ buffer, VariableAddress address) string
+	}
+	class LimitedConcurrencyLevelTaskScheduler  {
+		-bool currentThreadIsProcessingItems
+		-int maxDegreeOfParallelism
+		-LinkedList~Task~ tasks
+		-int delegatesQueuedOrRunning
+		+ MaximumConcurrencyLevel : int
+		-GetScheduledTasks() IEnumerable~Task~
+		-QueueTask(Task task) void
+		-TryDequeue(Task task) bool
+		-TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued) bool
+		-NotifyThreadPoolOfPendingWork() void
+	}
+	class CacheVariableNameParser  {
+		-ConcurrentDictionary~string&#44&#32VariableAddress~ AddressCache
+		-IVariableNameParser inner
+		+Parse(string input) VariableAddress
+	}
+	class S7Exception  {
+	}
+	class S7CommunicationException  {
+		+ S7ErrorCode : int
+		+ S7ErrorText : string
+	}
+	class DataTypeMissmatchException  {
+		+ Address : string
+		+ Type : Type
+	}
+	class UnsupportedS7TypeException  {
+		+ Address : string
+		+ Type : Type
+	}
+	class InvalidS7AddressException  {
+		+ Input : string
+	}
+	class S7ErrorCodes  {
+		-HashSet~int~ NotDisconnectedErrorCodes
+		-IReadOnlyDictionary~int&#44&#32string~ AdditionalErrorTexts
+		+AssumeConnectionLost(int errorCode) bool
+		+GetAdditionalErrorText(int errorCode) string?
+	}
+	class VariableAddressExtensions  {
+		-Dictionary~Type&#44&#32Func~VariableAddress&#44&#32bool~~ SupportedTypeMap
+		+MatchesType(VariableAddress address, Type type) bool
+		+GetClrType(VariableAddress address) Type
+	}
+	class PlcExtensions  {
+		+CreateDatatransferWithHandshake(IPlc plc, string triggerAddress, string ackTriggerAddress, Func~IPlc&#44&#32Task~TReturn~~ readData, bool initialTransfer) IObservable~TReturn~
+		+CreateDatatransferWithHandshake(IPlc plc, string triggerAddress, string ackTriggerAddress, Func~IPlc&#44&#32Task~TReturn~~ readData) IObservable~TReturn~
+		-ReadData(IPlc plc, Func~IPlc&#44&#32Task~TReturn~~ receiveData) Task~TReturn~
+		-ReadDataAndAcknowlodge(IPlc plc, Func~IPlc&#44&#32Task~TReturn~~ readData, string ackTriggerAddress) Task~TReturn~
+	}
+	class PlcMemoryReader  {
+		+ReadFromMemoryBuffer(byte[] buffer, Operand operand, int start, int length, int dbNo) byte[]
+	}
+	class Sharp7Plc  {
+		-ArrayPool~byte~ ArrayPool
+		-MethodInfo GetValueMethod
+		-MethodInfo CreateNotificationMethod
+		-ConcurrentSubjectDictionary~string&#44&#32byte[]~ multiVariableSubscriptions
+		-List~long~ performanceCounter
+		-PlcConnectionSettings plcConnectionSettings
+		-CacheVariableNameParser variableNameParser
+		-bool disposed
+		-int initialized
+		-IDisposable notificationSubscription
+		+ S7Connector : ISharp7Connector
+		+ s7Connector : ISharp7Connector
+		+ ConnectionState : IObservable~ConnectionState~
+		+ Logger : ILogger
+		+ MultiVarRequestCycleTime : TimeSpan
+		+ MultiVarRequestMaxItems : int
+		+Dispose() void
+		+CreateNotification(string variableName, TransmissionMode transmissionMode) IObservable~TValue~
+		+GetValue(string variableName, CancellationToken token) Task~TValue~
+		+GetValueS7Client(string variableName, CancellationToken token) Task~TValue~
+		+GetValue(string variableName, CancellationToken token) Task~object~
+		+SetValue(string variableName, TValue value, CancellationToken token) Task
+		+GetBatchValuesPlcAsync(IEnumerable~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32StatusValueId)~ tags, CancellationToken token) Task~IEnumerable~PlcBatchReadResult~~
+		+GetBatchValuesPlcAsync(IEnumerable~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32StatusValueId)~ tags, CancellationToken token) Task~IEnumerable~PlcBatchReadResult~~
+		-ConvertToIntValue(object value) int
+		+CreateNotification(string variableName, TransmissionMode transmissionMode) IObservable~object~
+		+InitializeAsync() Task~bool~
+		+InitializeConnection(CancellationToken token) Task
+		+TriggerConnection(CancellationToken token) Task
+		-Dispose(bool disposing) void
+		-DoInitializeConnection(bool waitForConnection, CancellationToken token) Task
+		-GetAllValues(ISharp7Connector connector) Task~Unit~
+		-ParseAndVerify(string variableName, Type type) VariableAddress
+		-PrintAndResetPerformanceStatistik() void
+		-StartNotificationLoop() void
+	}
+	class DisposableItem ~TValue~ {
+		-Action disposeAction
+		-bool disposed
+		+ Observable : IObservable~TValue~
+		+Dispose() void
+		-Dispose(bool disposing) void
+	}
+	class ISharp7Connector  {
+		- ConnectionState : IObservable~ConnectionState~
+		- Logger : ILogger
+		- ReconnectDelay : TimeSpan
+		-Dispose() void
+		-Connect() Task~bool~
+		-Disconnect() Task
+		-WriteBatchValuesPlcAsync(IEnumerable~PlcBatchWriteTag~ tags, CancellationToken token) Task~bool~
+		-ExecuteMultiVarRequestGateway(IReadOnlyList~string~ variableNames, CancellationToken token) Task~IReadOnlyDictionary~string&#44&#32byte[]~~
+		-ExecuteMultiVarRequest(IReadOnlyList~string~ variableNames, CancellationToken token) Task~IReadOnlyDictionary~string&#44&#32byte[]~~
+		-DisconnectS7Client() Task
+		-InitializeAsync() Task
+		-ReadBytes(Operand operand, ushort startByteAddress, ushort bytesToRead, ushort dbNo, CancellationToken token) Task~byte[]~
+		-ReadBytesS7Client(Operand operand, ushort startByteAddress, ushort bytesToRead, ushort dbNo, CancellationToken token) Task~byte[]~
+		-WriteBit(Operand operand, ushort startByteAddress, byte bitAdress, bool value, ushort dbNo, CancellationToken token) Task
+		-WriteBytes(Operand operand, ushort startByteAddress, byte[] data, ushort dbNo, ushort bytesToWrite, CancellationToken token) Task
+		-EnsureConnectionS7Valid() void
+	}
+	class Sharp7Connector  {
+		-BehaviorSubject~ConnectionState~ connectionStateSubject
+		-int cpuSlotNr
+		-CompositeDisposable disposables
+		-string ipAddress
+		-int port
+		-int rackNr
+		-LimitedConcurrencyLevelTaskScheduler scheduler
+		-IVariableNameParser variableNameParser
+		-bool disposed
+		+S7Client Sharp7
+		+S7Client S7Client
+		-int MaxPduSafeSize
+		-int MaxItemSize
+		-int MaxRetryDepth
+		-Lock s7ClientLock
+		+ ConnectionState : IObservable~ConnectionState~
+		+ Logger : ILogger
+		+ ReconnectDelay : TimeSpan
+		- IsConnected : bool
+		+Dispose() void
+		+Connect() Task~bool~
+		+Disconnect() Task
+		-WriteBatchCoreAsync(List~(PlcBatchWriteTag&#32Tag&#44&#32VariableAddress&#32Address)~ batch, int depth, CancellationToken token) Task~bool~
+		+WriteBatchValuesPlcAsync(IEnumerable~PlcBatchWriteTag~ tags, CancellationToken token) Task~bool~
+		+ExecuteMultiVarRequestGateway(IReadOnlyList~string~ variableNames, CancellationToken token) Task~IReadOnlyDictionary~string&#44&#32byte[]~~
+		+ExecuteMultiVarRequest(IReadOnlyList~string~ variableNames, CancellationToken token) Task~IReadOnlyDictionary~string&#44&#32byte[]~~
+		+DisconnectS7Client() Task
+		+InitializeAsync() Task
+		+ReadBytes(Operand operand, ushort startByteAddress, ushort bytesToRead, ushort dbNo, CancellationToken token) Task~byte[]~
+		+ReadBytesS7Client(Operand operand, ushort startByteAddress, ushort bytesToRead, ushort dbNo, CancellationToken token) Task~byte[]~
+		+WriteBit(Operand operand, ushort startByteAddress, byte bitAdress, bool value, ushort dbNo, CancellationToken token) Task
+		+WriteBytes(Operand operand, ushort startByteAddress, byte[] data, ushort dbNo, ushort bytesToWrite, CancellationToken token) Task
+		-Dispose(bool disposing) void
+		-ParseAndVerify(string variableName, Type type) VariableAddress
+		-CloseConnection() Task
+		-EnsureConnectionValid() void
+		+EnsureConnectionS7Valid() void
+		-EnsureSuccessOrThrow(int result, string message) void
+		-EnsureSuccessOrLog(int result, string message) void
+		-EvaluateErrorCode(int errorCode) string
+		-EvaluateErrorCodeS7(int errorCode) string
+		-Reconnect() Task~bool~
+		-SetConnectionLostState() void
+	}
+
+	VariableNameParser --|> IVariableNameParser
+	ConcurrentSubjectDictionary --|> IDisposable
+	IPlc --|> IDisposable
+	LimitedConcurrencyLevelTaskScheduler --|> TaskScheduler
+	CacheVariableNameParser --|> IVariableNameParser
+	S7Exception --|> Exception
+	S7CommunicationException --|> S7Exception
+	DataTypeMissmatchException --|> S7Exception
+	UnsupportedS7TypeException --|> S7Exception
+	InvalidS7AddressException --|> S7Exception
+	Sharp7Plc --|> IPlc
+	DisposableItem --|> IDisposable
+	Sharp7Connector --|> IDisposable
+	Sharp7Connector --|> ISharp7Connector

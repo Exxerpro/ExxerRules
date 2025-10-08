@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -53,12 +54,38 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
             return;
         }
 
+        // 1) Opt-out via custom attribute at method or containing type level
+        if (HasOptOutAttribute(methodDeclaration, context))
+        {
+            return;
+        }
+
+        // 2) Honor DisplayName/Description overrides on test attributes
+        if (HasDisplayNameOrDescriptionOverride(methodDeclaration, context))
+        {
+            return;
+        }
+
+        // 3) Relax for nested context classes (e.g., class When_... / Given_...)
+        if (IsWithinContextClass(methodDeclaration))
+        {
+            return;
+        }
+
         var methodName = methodDeclaration.Identifier.ValueText;
 
-        // Validate naming convention using ExxerRules.Analyzers.Operations pattern
-        var namingValidationResult = PatternDetector.ValidateMethodNaming(
-            methodName,
-            @"^Should_[A-Z][a-zA-Z0-9]*(_When_[A-Z][a-zA-Z0-9]*)?$");
+        // Validate naming convention using a more flexible pattern:
+        // - Optional leading prefixes before "Should_" (e.g., MethodUnderTest_Should_... or Feature_Should_...)
+        // - Allow behavior-only names (no explicit condition)
+        // - Accept alternate connectors: When|For|With|If|On
+        // - Support compound conditions with _And_/_With_ segments
+        // - Permit lowercase tokens and optional Async suffixes (handled via IgnoreCase)
+        const string flexiblePattern =
+            @"^(?:[A-Za-z][A-Za-z0-9]*_)*Should_" +
+            @"(?:[A-Za-z0-9]+(?:_[A-Za-z0-9]+)*)" +
+            @"(?:_(?:When|For|With|If|On)_[A-Za-z0-9]+(?:_(?:And|With)_[A-Za-z0-9]+)*)?$";
+
+        var namingValidationResult = PatternDetector.ValidateMethodNaming(methodName, flexiblePattern);
 
         // Use the extension method to report diagnostic if validation failed
         context.ReportDiagnosticIfFalse(
@@ -66,5 +93,112 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
             Rule,
             methodDeclaration.Identifier.GetLocation(),
             methodName);
+    }
+
+    private static bool HasDisplayNameOrDescriptionOverride(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        foreach (var attributeList in methodDeclaration.AttributeLists)
+        {
+            foreach (var attribute in attributeList.Attributes)
+            {
+                // Consider only test attributes that could carry DisplayName/Description
+                var attributeSymbol = context.SemanticModel.GetSymbolInfo(attribute).Symbol as IMethodSymbol;
+                var attributeTypeName = attributeSymbol?.ContainingType?.ToDisplayString() ?? attribute.Name.ToString();
+
+                // Heuristic: xUnit [Fact]/[Theory] commonly provide DisplayName; accept any attribute with named args DisplayName/Description
+                if (attribute.ArgumentList != null)
+                {
+                    foreach (var arg in attribute.ArgumentList.Arguments)
+                    {
+                        if (arg.NameEquals is { } named && (named.Name.Identifier.ValueText == "DisplayName" || named.Name.Identifier.ValueText == "Description"))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                // In case attribute is specified with named type, ensure we only consider known test attributes
+                if (attributeTypeName.EndsWith(".Fact", StringComparison.OrdinalIgnoreCase) ||
+                    attributeTypeName.EndsWith(".Theory", StringComparison.OrdinalIgnoreCase) ||
+                    attributeTypeName.EndsWith("Fact", StringComparison.OrdinalIgnoreCase) ||
+                    attributeTypeName.EndsWith("Theory", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Already checked arguments above
+                    continue;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private static bool HasOptOutAttribute(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        static bool MatchesOptOut(AttributeSyntax attribute, SemanticModel semanticModel)
+        {
+            var name = attribute.Name.ToString();
+            if (NameMatches(name))
+            {
+                return true;
+            }
+
+            var symbol = semanticModel.GetSymbolInfo(attribute).Symbol as IMethodSymbol;
+            var typeName = symbol?.ContainingType?.Name;
+            return typeName != null && NameMatches(typeName);
+
+            static bool NameMatches(string n) =>
+                n.Equals("AllowTestNamingVariations", StringComparison.OrdinalIgnoreCase) ||
+                n.Equals("AllowTestNamingVariationsAttribute", StringComparison.OrdinalIgnoreCase);
+        }
+
+        // Method-level
+        foreach (var list in methodDeclaration.AttributeLists)
+        {
+            foreach (var attr in list.Attributes)
+            {
+                if (MatchesOptOut(attr, context.SemanticModel))
+                {
+                    return true;
+                }
+            }
+        }
+
+        // Containing type-level (walk up to find nearest class)
+        for (SyntaxNode? node = methodDeclaration.Parent; node != null; node = node.Parent)
+        {
+            if (node is ClassDeclarationSyntax classDecl)
+            {
+                foreach (var list in classDecl.AttributeLists)
+                {
+                    foreach (var attr in list.Attributes)
+                    {
+                        if (MatchesOptOut(attr, context.SemanticModel))
+                        {
+                            return true;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+
+        return false;
+    }
+
+    private static bool IsWithinContextClass(MethodDeclarationSyntax methodDeclaration)
+    {
+        for (SyntaxNode? node = methodDeclaration.Parent; node != null; node = node.Parent)
+        {
+            if (node is ClassDeclarationSyntax classDecl)
+            {
+                var name = classDecl.Identifier.ValueText;
+                if (name.StartsWith("When_", StringComparison.OrdinalIgnoreCase) ||
+                    name.StartsWith("Given_", StringComparison.OrdinalIgnoreCase))
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

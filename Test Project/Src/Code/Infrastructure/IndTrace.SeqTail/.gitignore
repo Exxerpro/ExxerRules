@@ -1,0 +1,36 @@
+# IndTrace.SeqTail - Local .gitignore
+# Protects sensitive configuration files
+
+# Sensitive configuration files (if they contain real API keys)
+appsettings.Production.json
+appsettings.Local.json
+
+# User secrets directory (already protected by parent .gitignore but being explicit)
+.microsoft/
+secrets.json
+
+# Environment files with secrets
+.env
+.env.local
+.env.production
+
+# Seq export files (may contain sensitive log data)
+SeqExport_*.txt
+*.csv
+logs/
+
+# Backup files that might contain secrets
+*.bak
+*.backup
+*_backup.*
+
+# IDE specific files
+.vs/
+.vscode/settings.json
+*.suo
+*.user
+
+# Notes:
+# - appsettings.json and appsettings.Development.json are tracked but contain placeholder values
+# - Real API keys should be configured via user secrets or environment variables
+# - Never commit files with actual production secrets

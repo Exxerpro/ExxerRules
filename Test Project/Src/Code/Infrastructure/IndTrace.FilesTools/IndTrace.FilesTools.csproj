@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <AssemblyTitle>IndTrace File Tools</AssemblyTitle>
+    <Product>IndTrace File Tools</Product>
+    <Description>Cross-cutting file location and data loading utilities for IndTrace solution</Description>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Embed all JSON files as resources for reliable cross-platform access -->
+    <EmbeddedResource Include="Data\*.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Domain\IndTrace.Domain.csproj" />
+  </ItemGroup>
+  <!-- Enforce warnings-as-errors in Release once the project is clean -->
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+</Project>

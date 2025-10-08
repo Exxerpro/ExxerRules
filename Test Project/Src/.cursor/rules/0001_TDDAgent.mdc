@@ -1,0 +1,116 @@
+---
+attachmentType: auto
+globs: "**/*"
+description: Autonomous TDD agent directive and execution standard for enforcing Red-Green-Refactor with 100% passing tests
+---
+
+# Autonomous TDD Agent Standard
+
+## Meta
+**Title**: Autonomous TDD Agent Directive
+**Description**: Defines activation phrase, workflow, guardrails, and reporting for an autonomous Test-Driven Development agent which must maintain 100% passing tests.
+**Applies-to**: Agent execution, testing workflow, analyzer development, CI
+
+## Requirements
+
+### <requirement priority="critical">
+**Description**: Activation phrase and ownership
+**Examples**:
+<correct-example>
+User states: "autonomous TDD agent directive activated" → Agent takes full ownership of test-first workflow and progress reporting.
+</correct-example>
+<incorrect-example>
+Agent starts modifying production code without explicit activation and without tests.
+</incorrect-example>
+</requirement>
+
+### <requirement priority="critical">
+**Description**: Red-Green-Refactor loop is mandatory for every feature
+**Examples**:
+<correct-example>
+1) Write a failing test (RED)
+2) Implement the minimal code to pass (GREEN)
+3) Refactor while keeping tests green (REFACTOR)
+4) Repeat until the feature is complete
+</correct-example>
+<incorrect-example>
+Write production code directly and then add tests afterwards.
+</incorrect-example>
+</requirement>
+
+### <requirement priority="high">
+**Description**: Quality gates and success criteria
+**Examples**:
+<correct-example>
+- Maintain 100% test success rate at all times
+- Add tests incrementally per behavior (AAA pattern, clear naming)
+- Do not compromise test quality or skip failing tests
+</correct-example>
+<incorrect-example>
+- Commit code with failing tests or skipped assertions
+</incorrect-example>
+</requirement>
+
+### <requirement priority="high">
+**Description**: Reporting protocol during activation
+**Examples**:
+<correct-example>
+- Acknowledge activation
+- Present a short plan of testable units
+- Execute with incremental progress: X/Y tests passing
+- Continue until all targeted tests pass
+</correct-example>
+<incorrect-example>
+- Large unstructured changes without progress updates
+</incorrect-example>
+</requirement>
+
+### <requirement priority="medium">
+**Description**: Test structure & tooling
+**Examples**:
+<correct-example>
+- Use xUnit v3, Shouldly, NSubstitute when mocking is necessary
+- Prefer AAA pattern, descriptive test names: `Should_Action_When_Condition`
+- Keep tests independent and idempotent
+</correct-example>
+<incorrect-example>
+- Mix unrelated assertions in a single test; rely on global mutable state
+</incorrect-example>
+</requirement>
+
+### <requirement priority="medium">
+**Description**: Analyzer/test snippet pattern
+**Examples**:
+<correct-example>
+```csharp
+[DiagnosticAnalyzer(LanguageNames.CSharp)]
+public class MyAnalyzer : DiagnosticAnalyzer
+{
+    private static readonly DiagnosticDescriptor Rule = new(
+        DiagnosticIds.MyRule, Title, MessageFormat, DiagnosticCategories.Category,
+        DiagnosticSeverity.Warning, isEnabledByDefault: true);
+
+    public override void Initialize(AnalysisContext context)
+        => context.RegisterSyntaxNodeAction(AnalyzeNode, SyntaxKind.TargetNode);
+
+    private static void AnalyzeNode(SyntaxNodeAnalysisContext context)
+    {
+        if (ShouldReport(context.Node))
+            context.ReportDiagnostic(Diagnostic.Create(Rule, context.Node.GetLocation()));
+    }
+}
+```
+</correct-example>
+<incorrect-example>
+Analyzer registered without tests; behavior not covered by unit tests.
+</incorrect-example>
+</requirement>
+
+## References
+<reference as="dependency" href=".cursor/rules/0306_RuleForMigrationXUnitV3.mdc" reason="xUnit v3 setup and guidance">xUnit v3 Migration</reference>
+<reference as="dependency" href=".cursor/rules/1013_CSharpXunitPrompt.mdc" reason="Testing best practices">XUnit Best Practices</reference>
+<reference as="context" href=".cursor/rules/1005_CleanCodeStandards.mdc" reason="Clean code guidance">Clean Code Standards</reference>
+
+## Notes
+- Use small, incremental tests; refactor with green tests only
+- Prefer minimal implementations to achieve GREEN; then improve design

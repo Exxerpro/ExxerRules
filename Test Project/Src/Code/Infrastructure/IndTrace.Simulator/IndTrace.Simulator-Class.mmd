@@ -1,0 +1,249 @@
+classDiagram
+
+	class MachineStateEvaluator  {
+		+BuildNextExpectedState(IFixtureContext context, FixtureStaticSnapshot staticSnapshot) FixtureTaskSnapshot
+	}
+	class BarcodeVerifier  {
+		+IsBarcodeRecordedAsync(string barcode) Task~bool~
+		+HasExpectedCycleStateAsync(string barcode, string expectedState) Task~bool~
+		+ValidateCycleTransitionAsync(string barcode, string previousState, string expectedNewState) Task~bool~
+		+ValidatePostExecutionStateAsync(string barcode, string partNumber, string expectedState) Task~bool~
+	}
+	class FixtureProfile  {
+		+ PartNumbers : List~string~
+		+ MachineNames : List~string~
+		+ PathTypes : List~TestPathType~
+		+ BarcodesPerPath : int
+		+ MaxRetries : int
+		+ DelayMs : int
+		+Load(string path) FixtureProfile
+	}
+	class TestPathRunner  {
+		-string lastCode
+		-GenerateBarcode(string partNumber, int index) string
+		+RunAsync(FixtureContext context, TestPathType pathType) Task
+		-RunMidwayFailureAsync(FixtureContext context) Task
+		-RunRetryLoopAsync(FixtureContext context) Task
+		-RunIncompleteCycleAsync(FixtureContext context) Task
+		-RunFullSuccessAsync(FixtureContext context) Task
+		-RunFullFailureAsync(FixtureContext context) Task
+		-ExecuteTestRun(Product product, DryRunOptions options, ExecutionStepTask task, int attempt, FixtureContext context) Task~string~
+		-ValidateTestRun(Product product, DryRunOptions options, ExecutionStepTask task, int machineId, Dictionary~string&#44&#32VariableS7~ tags, int attempt, string barcode, FixtureContext context) Task~Result~
+		+ExecutePathAsync(Product product, TestPathType pathType, int sequenceIndex, ExecutionFlavor flavor, int maxNumberMachines, DryRunOptions options, CancellationToken cancellationToken) Task
+	}
+	class JsonFixtureExporter  {
+		-Lock lock
+		+ExportAsync(IFixtureContext context) Task
+	}
+	class PlcTagNames  {
+		+string ResultValidation
+		+string LastMachineId
+		+string NextMachineId
+		+string FlowStatus
+		+string MachineType
+		+string WorkFlowType
+		+string ActualStation
+		+string BarCodeId
+		+string CycleId
+		+string PlcId
+		+string HeartBeat
+		+string PartNumber
+		+string BarCode
+		+string PartStatus
+		+string CycleStatus
+		+string PartStatusPlc
+		+string CycleStatusPlc
+		+string Command
+		+IReadOnlyList~string~ AllIntReferenceTags
+		+IReadOnlyList~string~ AllStringReferenceTags
+		+IReadOnlyDictionary~string&#44&#32Type~ AllReferenceTagTypes
+		+Dictionary~Type&#44&#32string~ SupportedS7DotNetTypes
+		+Dictionary~Type&#44&#32string~ ExpectedTagTypeMap
+	}
+	class FixtureDbSnapshot  {
+		+ToValidationResult() FixtureValidationResult
+		+FromBarcodeAndStatic(BarcodeDbRecord barcode, FixtureStaticSnapshot staticSnapshot, FixtureContext context) FixtureDbSnapshot
+	}
+	class DebugHelpers  {
+		+LoadJson(string filePath) T
+		+SaveJson(T obj, string filePath) void
+	}
+	class MockTestTagWriter  {
+		+WriteCycleStepAsync(IFixtureContext context, CycleStep step) Task
+		+WriteInvalidCommandAsync(IFixtureContext context, CycleStep step) Task
+		+WriteFaultyThenRecoverAsync(IFixtureContext context) Task
+		+WriteCycleStartOnlyAsync(IFixtureContext context) Task
+		+WriteCycleStepAsync(IFixtureContext context, ICycleStep step) Task
+		+WriteInvalidCommandAsync(IFixtureContext context, ICycleStep step) Task
+	}
+	class ExecutionStepTask  {
+		+ Task : string
+		+ Command : short
+		+ State : string
+		+ DelayTimeBetweenTasks : int
+		+GetTaskListInitialStationCycleOk() IEnumerable~ExecutionStepTask~
+		+GetTaskListProcessStationCycleOk() IEnumerable~ExecutionStepTask~
+		+GetTaskListInitialStationCycleNotOk() IEnumerable~ExecutionStepTask~
+		+GetTaskListCycleProcessStationNotOk() IEnumerable~ExecutionStepTask~
+		+GetTaskListInitialStationCycleStarted() IEnumerable~ExecutionStepTask~
+		+GetTaskListProcessStationCycleStarted() IEnumerable~ExecutionStepTask~
+		+ResolveTaskList(bool initialMachine, ExecutionFlavor flavor, int machineNumberPath, int maxSteps) IEnumerable~ExecutionStepTask~
+	}
+	class FixturePlcSnapshot  {
+		+FromTagsValues(Dictionary~string&#44&#32VariableS7~ tags, FixtureContext context) FixturePlcSnapshot
+		+ToValidationResult() FixtureValidationResult
+	}
+	class CsvFixtureStore  {
+		-string path
+		-Lock lock
+		+LogResultAsync(IFixtureLogEntry entry) Task
+		+SaveAsync(IFixtureContext context, string pathType, int? retryCount) Task
+		+SaveAsync(IFixtureContext context, string pathType) Task
+	}
+	class FixtureValidationContext  {
+		+ PlcResults : FixturePlcSnapshot
+		+ DbResults : FixtureDbSnapshot
+		+ ExpectedResults : FixtureTaskSnapshot
+		+ ConfigDataSnapShot : FixtureStaticSnapshot
+		+ PlcResult : IFixtureValidationResult
+		+ DbResult : IFixtureValidationResult
+		+ TaskResult : IFixtureValidationResult
+	}
+	class FixtureContext  {
+		+ PartNumber : string
+		+ Barcode : string
+		+ ProductId : int
+		+ MachineId : int
+		+ ExpectedState : string
+		+ TaskName : string
+		+ Tags : Dictionary~string&#44&#32VariableS7~
+		+ CycleStep : ICycleStep
+		+ Tasks : List~ICycleStep~
+		+ToString() string
+		-ToString() string
+	}
+	class CycleStep  {
+		+ Name : string
+		+ Command : int
+		+ State : string
+		+ToString() string
+		-ToString() string
+		+Equals(ICycleStep? other) bool
+		+Deconstruct(string Name, int Command, string State) void
+	}
+	class FixtureValidationResult  {
+		+ BarCodeId : int
+		+ Barcode : string
+		+ ProductId : int
+		+ CycleId : int
+		+ CycleStatus : int
+		+ PartStatus : int
+		+ FlowStatus : int
+		+ ResultValidation : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ CycleMachineId : int
+		+ BarcodeMachineId : int
+		+ ActualStation : int
+		+ Source : string
+		+Equals(IFixtureValidationResult? other) bool
+		+Equals(object? obj) bool
+		+GetHashCode() int
+	}
+	class FixtureDbView  {
+		+ BarCodeId : int
+		+ ProductId : int
+		+ Barcode : string
+		+ BarcodeMachineId : int
+		+ BarcodePartStatus : int
+		+ FlowStatus : int
+		+ CycleId : int
+		+ CycleMachineId : int
+		+ CycleStatus : int
+		+ CyclePartStatus : int
+	}
+	class BarcodeValidator  {
+		+IsValidBarcode(string barcode, string partNumber) bool
+		+IsNextSequential(string lastBarcode, string currentBarcode) bool
+	}
+	class IMachineStateEvaluator  {
+		-BuildNextExpectedState(IFixtureContext snapshot, FixtureStaticSnapshot staticSnapshot) FixtureTaskSnapshot
+	}
+	class FixtureValidationResultComparer  {
+		+CompareAndLogDifferences(ILogger logger, IFixtureValidationResult expected, IFixtureValidationResult actual, string expectedName, string actualName, FixtureContext context) Result
+		+Compare(IFixtureValidationResult expected, IFixtureValidationResult actual, string expectedName, string actualName, FixtureContext context) IEnumerable~string~
+		-CompareField(string expectedName, string actualName, string fieldName, T expected, T actual, bool ignoreCase, FixtureContext context) IEnumerable~string~
+	}
+	class BarcodeStateResult  {
+		+ CurrentState : string
+		+MatchesExpectedState(string expected) bool
+	}
+	class FixtureValidator  {
+		-bool tagsRepoProvided
+		+ValidatePostExecutionStateAsync(FixtureContext context) Task~Result~
+		+BuildContextAsync(FixtureContext context) Task~FixtureValidationContext~
+		+ValidatePostExecutionStateAsync(IFixtureContext context) Task~Result~
+	}
+	class PlcCommandMap  {
+		+Dictionary~int&#44&#32string~ CommandNames
+		+GetCommandName(int command) string
+	}
+	class FixtureHostedService  {
+		-DryRunOptions dryRunOptions
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		-ExecuteDryRunAsync(IEnumerable~Product~ products, TestPathType pathType, ExecutionFlavor flavor, ILogger logger, ITestPathRunner pathRunner, IMachineResolver machineResolver, DryRunOptions options, CancellationToken cancellationToken) Task
+	}
+	class IPlcClient  {
+		-ExecuteCommandSimulation(Product product, Dictionary~string&#44&#32VariableS7~ tags, string barcode, ExecutionStepTask stepTask, int machineId, DryRunOptions options) Task~string~
+		-WriteTagsAsync(Dictionary~string&#44&#32VariableS7~ tags) Task
+		+InitializeConnection(string ipAddress, CancellationToken cancellationToken) Task
+		-ReadTagAsync(Dictionary~string&#44&#32VariableS7~ tags) Task~int~
+		-ReadListIntTagsAsync(Dictionary~string&#44&#32VariableS7~ tagsToRead, int plcId) Task~Dictionary~string&#44&#32VariableS7~~
+		-ClearTagsAsync(Dictionary~string&#44&#32VariableS7~ tags) Task
+	}
+	class FixtureTaskSnapshot  {
+		+From(string barcode, int productId, int barCodeId, int cycleId, int cycleStatus, int partStatus, int flowStatus, int resultValidation, int lastMachineId, int nextMachineId, int cycleMachineId, int barcodeMachineId, int actualStation) FixtureTaskSnapshot
+	}
+	class S7PlcClient  {
+		-Sharp7Plc? plc
+		-Sharp7.Rx.Enums.ConnectionState lastConnectionState
+		-int lastPlcContacted
+		- IpAddress : Dictionary~int&#44&#32PlcRecordDb~
+		+ IsConnected : bool
+		+WriteTagsAsync(Dictionary~string&#44&#32object~ tags) Task
+		+WriteTagsIntAsync(Dictionary~string&#44&#32int~ tags) Task
+		+WriteTagsShortAsync(Dictionary~string&#44&#32short~ tags) Task
+		+WriteStringTagsAsync(Dictionary~string&#44&#32string~ tags) Task
+		+ExecuteCommandSimulation(Product product, Dictionary~string&#44&#32VariableS7~ tags, string barcode, ExecutionStepTask stepTask, int machineId, DryRunOptions options) Task~string~
+		+WriteTagsAsync(Dictionary~string&#44&#32VariableS7~ tags) Task
+		+InitializeConnection(string ipAddress, CancellationToken cancellationToken) Task
+		+ReadTagAsync(Dictionary~string&#44&#32VariableS7~ tags) Task~int~
+		+MonitorConnection() void
+		+ReadListIntTagsAsync(Dictionary~string&#44&#32VariableS7~ tagsToRead, int plcId) Task~Dictionary~string&#44&#32VariableS7~~
+		+ClearTagsAsync(Dictionary~string&#44&#32VariableS7~ tags) Task
+		-EnsurePlcIsConnectedAsync(int machineId) Task~bool~
+		-ReTryConnectionAsync(int machineId) Task~bool~
+		-TryConnectionAsync(int machineId) Task~bool~
+	}
+	class MockFixtureExporter  {
+		+ExportAsync(IFixtureContext context) Task
+	}
+	class Program  {
+		+Main(string[] args) void
+	}
+
+	MachineStateEvaluator --|> IMachineStateEvaluator
+	TestPathRunner --|> ITestPathRunner
+	JsonFixtureExporter --|> IFixtureExporter
+	FixtureDbSnapshot --|> FixtureValidationResult
+	MockTestTagWriter --|> ITestTagWriter
+	FixturePlcSnapshot --|> FixtureValidationResult
+	CsvFixtureStore --|> IFixtureStore
+	FixtureContext --|> IFixtureContext
+	CycleStep --|> ICycleStep
+	FixtureValidationResult --|> IFixtureValidationResult
+	FixtureValidator --|> IFixtureValidator
+	FixtureHostedService --|> BackgroundService
+	FixtureTaskSnapshot --|> FixtureValidationResult
+	S7PlcClient --|> IPlcClient
+	MockFixtureExporter --|> IFixtureExporter

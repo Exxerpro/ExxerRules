@@ -1,0 +1,161 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!-- ============================================================================ -->
+  <!-- CORE PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Target Framework -->
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Package Management -->
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- Language Features -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Application Information -->
+    <AssemblyName>OEE</AssemblyName>
+    <AssemblyTitle>OEE</AssemblyTitle>
+    <Title>Intrace OEE</Title>
+    <Description>Intrace OEE</Description>
+    <Company>Exxerpro Solutions</Company>
+    <Product>Intrace OEE</Product>
+    <!-- Versioning -->
+    <AssemblyVersion>2025.5.30.51</AssemblyVersion>
+    <FileVersion>2025.5.30.51</FileVersion>
+    <!-- Application Startup -->
+    <StartupObject>IndTrace.OEE.Program</StartupObject>
+    <ApplicationIcon>Dashboard.ico</ApplicationIcon>
+    <!-- Security & Configuration -->
+    <UserSecretsId>aspnet-IndTrace.OEE-cd6af834-d8b5-43af-b7f9-0d1b2754197f</UserSecretsId>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+    <NoWarn>$Nowarn;BL0008;</NoWarn>
+
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- PUBLISHING PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Performance Enhancements -->
+    <!--<PublishReadyToRun>true</PublishReadyToRun>-->
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <EnableDynamic>true</EnableDynamic>
+    <TieredCompilation>true</TieredCompilation>
+    <!-- Static Web Assets -->
+    <DisableCompressionStaticWebAssets>true</DisableCompressionStaticWebAssets>
+    <CompressionEnabled>false</CompressionEnabled>
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- ASSEMBLY ATTRIBUTES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Assembly Attributes">
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>IndTrace.Oee.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - CODE ANALYSIS -->
+  <!-- ============================================================================ -->
+  <!--<ItemGroup Label="Code Analysis">
+	<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="StyleCop.Analyzers">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+  </ItemGroup>-->
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - HTTP AND RESILIENCE -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="HTTP and Resilience">
+    <PackageReference Include="Polly" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - UI COMPONENTS -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="UI Components">
+    <PackageReference Include="CodeBeam.MudBlazor.Extensions" />
+    <PackageReference Include="MudBlazor" />
+    <PackageReference Include="Extensions.MudBlazor.StaticInput" />
+    <PackageReference Include="MudBlazor.Extensions" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - ASP.NET CORE -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="ASP.NET Core">
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client.Core" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - ENTITY FRAMEWORK -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Entity Framework">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - QUESTDB -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="QuestDB">
+    <PackageReference Include="net-questdb-client" />
+    <PackageReference Include="net-questdb-client-tcp-auth" />
+    <PackageReference Include="Questdb.Net" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - LOGGING -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Logging">
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Sinks.Async" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Serilog.Enrichers.Demystifier" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PROJECT REFERENCES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Core References">
+    <ProjectReference Include="..\..\Core\Application\IndTrace.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup Label="Infrastructure References">
+    <ProjectReference Include="..\..\Infrastructure\IndTrace.DataStore\IndTrace.DataStore.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\IndTrace.Dependencies\IndTrace.Dependencies.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\IndTrace.Persistence\IndTrace.Persistence.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\IndTrace.S7Rx\IndTrace.S7Rx.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\IndTrace.HubConnection\IndTrace.HubConnection.csproj" />
+  </ItemGroup>
+  <ItemGroup Label="Presentation References">
+    <ProjectReference Include="..\IndTrace.Models\IndTrace.UI.Models.csproj" />
+    <ProjectReference Include="..\IndTrace.Components\IndTrace.Components.csproj" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- STATIC ASSETS -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Application Assets">
+    <Content Update="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- EDITOR CONFIG -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Editor Configuration">
+    <EditorConfigFiles Remove="E:\Dynamic\IndTrace\IndTraceV2025\Src\Presentation\IndTrace.OEE\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup Label="Editor Configuration Files">
+    <None Include="E:\Dynamic\IndTrace\IndTraceV2025\Src\Presentation\IndTrace.OEE\.editorconfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Exceptions\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,264 @@
+Hi, I need help greenlighting my test suite by re-grounding it in the first principles of TDD. The objective is to revalidate test coverage, ensure tests are behavior-focused (not implementation-bound), and align test names with their contract—serving as executable specifications.
+
+Please assist in auditing and refactoring both the production and test code to meet the following standards:
+
+TDD first principles: Red–Green–Refactor, outside-in, behavior-driven naming, incremental design
+
+SOLID and Clean Code: Refactor towards SRP, DIP, and OCP wherever violated
+
+Hexagonal/Ports & Adapters: Ensure tests assert behaviors at port boundaries, not internals
+
+Clean tests: Each test should be isolated, expressive, and intention-revealing
+
+Fix misaligned tests: Either clarify behavioral gaps or resolve hidden production defects
+
+If a test exposes a design flaw or brittle pattern, let’s fix the design—not just the test. I'm open to rethinking the suite structure and applying mocks/stubs only when they clarify contracts or drive better modularity.  et's begin with the Application layer, where we currently have ~64 failing tests. The goal is to reestablish test reliability and precision using first principles of TDD, Clean Architecture, and SOLID design.
+
+Please assist with:
+
+Diagnosing failing tests: Determine whether each failure indicates a production defect, a flawed test, or a design misalignment.
+
+Behavioral grounding: Ensure each test expresses observable behavior, not implementation specifics.
+
+Refactor strategy:
+
+Rework test names to reflect contractual behavior.
+
+Align tests with ports/adapters (Hexagonal Architecture), asserting at application boundaries.
+
+Fix violations of SRP, LSP, or DIP exposed through test friction.
+
+Isolation & determinism: Validate test independence, control over inputs, and minimal reliance on shared fixtures or global state.
+
+Minimize test rot: Eliminate tests that assert internal states, incidental structure, or overuse mocks that bind to implementation.
+
+The objective is not to simply make the tests pass, but to ensure they fail usefully when something meaningful breaks.
+Let’s iterate toward a test suite that can be trusted as a safety net and a design guide.
+
+Follow the patterns on  "F:\Dynamic\ExxerAi\ExxerAI\docs\CodePaterns.md"
+
+
+## 🔨 Test Refactoring Tasks (Domain, Integration, System Levels)
+
+
+---
+
+🧪 Test Refactoring & Alignment Task – Application Layer
+🎯 Objective
+
+Reground and refactor the test suite for the Application layer, aligning it with the first principles of TDD, Hexagonal Architecture, and Clean Code. This is not just about greenlighting tests, but about restoring trust in test precision, contract alignment, and diagnostic value.
+
+We currently have ~64 failing tests in the Application layer. Your task is to audit, diagnose, and refactor both test and production code to meet behavioral and architectural clarity.
+
+🔍 Refactoring Principles
+✅ TDD Grounding
+
+Follow the Red → Green → Refactor cycle
+
+Use outside-in, behavior-first design
+
+Rename tests to reflect contractual behavior, not mechanics
+
+Assert at port boundaries, not internals
+
+✅ Clean Code + SOLID
+
+Refactor production code surfaced by brittle tests or friction points
+
+Resolve violations of:
+
+SRP: One reason to change
+
+DIP: Depend on abstractions
+
+OCP: Avoid ripple effects for new use cases
+
+✅ Hexagonal Architecture
+
+Test should assert through ports, not internal details
+
+Verify behavior exposed via application services, handlers, or orchestrators
+
+Minimize direct dependency on infrastructure or framework code
+
+✅ Clean Tests
+
+Each test should be:
+
+Isolated (no global state leaks)
+
+Intention-revealing (clear purpose)
+
+Behavioral (not implementation-bound)
+
+Avoid:
+
+Excessive mocking of internals
+
+Asserting incidental structure
+
+Tests that don't fail for the right reasons
+
+🔧 Task Scope
+
+Start with the Application layer and execute the following steps:
+
+1. Failure Diagnosis
+
+For each failing test:
+
+Classify the failure as:
+
+🔴 Production defect
+
+⚠️ Flawed or outdated test
+
+🔁 Design misalignment
+
+Note recurring test smells (e.g., setup duplication, incidental asserts)
+
+2. Test Name & Structure Refactor
+
+Rename tests to reflect observable behavior
+
+Ensure test methods read like executable specifications
+
+Group related tests into cohesive fixtures by feature or port
+
+3. Align With Architecture
+
+Validate that each test:
+
+Starts at a port boundary
+
+Uses adapters or fakes only to isolate environmental influence
+
+Push back on test logic that knows too much about internal state or orchestration
+
+4. Production Refactor (When Needed)
+
+If a test exposes a design flaw, refactor the design, not the test
+
+Extract interfaces, apply dependency inversion, remove logic from framework-bound classes as necessary
+
+📄 Reference Pattern
+
+Follow the guidance and test structure conventions defined in:
+📘 F:\Dynamic\ExxerAi\ExxerAI\docs\CodePaterns.md
+
+✔️ Deliverables
+
+✅ Refactored tests: renamed, isolated, and behavior-focused
+
+✅ Fixed or redesigned production code where justified by test friction
+
+✅ Summary of:
+
+Tests reworked
+
+Patterns applied
+
+Tests removed (with rationale)
+
+Design shifts made in response to test pain
+
+✅ All tests passing reliably with clear, useful failure signals
+
+### 🔹 DOMAIN TEST REFACTORING PROMPT
+
+#### 🔧 Objective
+
+Refactor Domain tests to fully express domain behavior via pure, deterministic logic, avoiding dependency leaks or implementation knowledge.
+
+#### 🔍 Guidelines
+
+* Use **strict TDD**: red/green/refactor
+* Tests should assert business rules, invariants, and aggregates
+* Mocks: Use **NSubstitute**, but only for domain collaborators that are domain-defined interfaces
+* Avoid mocking infrastructure (e.g., databases, logging, time): use value objects or injected abstractions
+* Refactor for:
+
+  * SRP: Isolate rule engines, calculators, validators
+  * DIP: Ensure domain model does not reference infrastructure
+  * OCP: Prevent model breakage for new features
+
+#### 👁️ Patterns to Follow
+
+See: `F:\Dynamic\ExxerAi\ExxerAI\docs\CodePaterns.md`
+
+#### ✅ Deliverables
+
+* [ ] Behavior-aligned test names and assertions
+* [ ] Clean fixtures, isolated state
+* [ ] No leaking infrastructure
+* [ ] Refactored domain classes as needed
+
+---
+
+### 🔹 INTEGRATION TEST REFACTORING PROMPT
+
+#### 🔧 Objective
+
+Refactor Integration tests to verify behavior using **real databases** and **live transactional flows**, aligning tests with real-world system interaction.
+
+#### 🔍 Constraints & Guidelines
+
+* **Mocking is forbidden** at the data layer
+* Use real DB contexts (persisted or container-based persisted)
+* Design tests for **shared state environments** (e.g., test setup may bleed if not reset)
+* Prefer fixture-per-class or isolated transactional rollbacks
+* Assert external boundaries (e.g., persistence, events)
+* Refactor to:
+
+  * Reduce coupling between tests
+  * Ensure predictability under parallel or repeated execution
+  * Emphasize workflow coverage over technical detail
+
+#### 👁️ Patterns to Follow
+
+Use `F:\Dynamic\ExxerAi\ExxerAI\docs\CodePaterns.md` as your base.
+
+#### ✅ Deliverables
+
+* [ ] Realistic test data initialization (no mocks/stubs)
+* [ ] Stable execution under repeated runs
+* [ ] Behavior-anchored test names
+* [ ] No incidental assertion of internal states
+
+---
+
+### 🔹 SYSTEM TEST REFACTORING PROMPT
+
+#### 🔧 Objective
+
+Refactor System-level tests that exercise chained, **live subsystems** with real data. These tests verify behaviors across fully integrated boundaries, not mocked ones.
+
+#### 🔍 Constraints & Principles
+
+* Tests are **not E2E web or UI tests**, but validate live system wiring
+* **Use only real data sources** (in-memory, REST, file, queues, etc.)
+* **No mocking frameworks allowed** (e.g., NSubstitute, Moq)
+* Respect system context boundaries:
+
+  * `Aggregation tests`: use real adapters with isolated in-memory datasets
+  * `System interaction`: simulate time delays, idempotent commands, transient failures
+* Focus on:
+
+  * Failure paths
+  * Observability (logs, telemetry, traceability)
+  * Edge-case transitions (timeouts, retries, message drops)
+
+#### 👁️ Patterns to Follow
+
+Use `F:\Dynamic\ExxerAi\ExxerAI\docs\CodePaterns.md` and your domain-specific invariants.
+
+#### ✅ Deliverables
+
+* [ ] Each test validates an integrated business scenario
+* [ ] Failures expose chain-of-responsibility defects
+* [ ] No use of mocks; real data, real components only
+* [ ] Document boundary assumptions or setup conditions
+
+---
+
+Use these prompts to refactor each test layer in alignment with its architectural role and operational constraints.

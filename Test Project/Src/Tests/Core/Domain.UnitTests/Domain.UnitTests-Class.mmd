@@ -1,0 +1,1495 @@
+classDiagram
+
+	class CycleStatusEntityTests  {
+		+CycleStatusEntity_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+CycleStatusEntity_WhenParametrizedValues_ShouldSetProperties() void
+		+Id_WhenSet_ShouldReturnCorrectValue() void
+		+Name_WhenSet_ShouldReturnCorrectValue() void
+		+DisplayName_WhenSet_ShouldReturnCorrectValue() void
+		+Deconstruct_WhenCalled_ShouldReturnAllComponents() void
+		+CycleStatusEntity_WhenManufacturingCycleStatuses_ShouldCreateCorrectInstances(int id, string name, string displayName) void
+		+ToUpperClass_WhenCalled_ShouldConvertToSpecifiedType() void
+		+CycleStatusEntity_StringProperties_WhenSetToNullOrEmpty_ShouldAcceptValues(string? value) void
+		+Id_WhenSetToAnyValue_ShouldBeAccepted(int value) void
+		+PropertyRoundTrip_WhenSetAndGet_ShouldMaintainValues() void
+		+ManufacturingCycleWorkflow_WithRealWorldScenarios_ShouldHandleCorrectly(int id, string name, string displayName) void
+		+ProductionLineControl_WithCompleteCycleStatusMapping_ShouldMaintainDataIntegrity() void
+		+QualityControlIntegration_WithOkAndNokResults_ShouldSupportWorkflow() void
+		+EmergencyControl_WithCanceledAndRejectedStates_ShouldSupportEmergencyOperations() void
+		+EnumLookupAttribute_ShouldBeApplied() void
+		+InheritanceChain_ShouldBeCorrect() void
+		+InvalidCycleStatus_WithNegativeValue_ShouldBeHandledCorrectly() void
+		+ProcessControlWorkflow_WithCompleteLifecycle_ShouldSupportFullManufacturingControl() void
+	}
+	class IndTraceUserTests  {
+		+IndTraceUser_Constructor_WhenCreated_ShouldCreateInstanceWithDefaultValues() void
+		+IndTraceUserProperties_WhenSetToValidValues_ShouldReturnCorrectValues(int userId, string userName) void
+		+IndTraceUser_Properties_WithEdgeCaseValues_ShouldStoreCorrectly(int userId, string? userName) void
+		+ManufacturingUserRoles_WithDifferentPositions_ShouldHandleCorrectly(string userName) void
+		+InterfaceCompliance_ShouldImplementRequiredInterfaces() void
+		+ShiftManagement_WithDifferentShifts_ShouldSupportManufacturingOperations(int userId, string userName) void
+		+AuditableEntityFunctionality_ShouldInheritAuditFields() void
+		+ManufacturingScenarios_WithCompanySpecificUsers_ShouldProvideProperIdentification(string userName) void
+		+UserManagement_ShouldSupportCompleteUserLifecycle() void
+		+EdgeCaseHandling_WithVariousIdValues_ShouldStoreCorrectly(int edgeId, string userName) void
+		+PropertyRoundTrip_ShouldMaintainDataIntegrity() void
+		+SecurityCompliance_ShouldSupportManufacturingAccessControl() void
+	}
+	class FixedSizedStackSequentialTests  {
+		-Subject~Func~Task~~ _testSubject
+		-ITestOutputHelper _output
+		-int _testCount
+		+AEnqueue_Should_Add_Item_To_Stack() Task
+		+BEnqueue_Should_Remove_Excess_Items_When_Limit_Is_Reached() Task
+		+CEnqueue_Should_Maintain_Thread_Safety() Task
+		+DFixedSizedStack_Should_Initialize_With_Default_Size() Task
+		+EPeek_Should_Return_Top_Item_Without_Removing_It() Task
+		+Peek_Should_Return_Null_WhenStack_Is_Empty() Task
+		+GEnqueue_Should_Remove_Excess_Items_When_Limit_Is_Reached_Test1() Task
+		+HPeek_Should_Return_Top_Item_Without_Removing_It_After_Reaching_Limit() Task
+		-EnqueueTest(Action testAction) Task
+	}
+	class FlowStatusEntityTests  {
+		+FlowStatusEntity_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+FlowStatusEntity_WhenParametrizedValues_ShouldSetProperties() void
+		+Id_WhenSet_ShouldReturnCorrectValue() void
+		+Name_WhenSet_ShouldReturnCorrectValue() void
+		+DisplayName_WhenSet_ShouldReturnCorrectValue() void
+		+Deconstruct_WhenCalled_ShouldReturnAllComponents() void
+		+FlowStatusEntity_WhenManufacturingFlowStatuses_ShouldCreateCorrectInstances(int id, string name, string displayName) void
+		+ToUpperClass_WhenCalled_ShouldConvertToSpecifiedType() void
+		+FlowStatusEntity_StringProperties_WhenSetToNullOrEmpty_ShouldAcceptValues(string? value) void
+		+Id_WhenSetToAnyValue_ShouldBeAccepted(int value) void
+		+PropertyRoundTrip_WhenSetAndGet_ShouldMaintainValues() void
+		+ManufacturingWorkflow_WithRealWorldScenarios_ShouldHandleCorrectly(int id, string name, string displayName) void
+		+ProductionLineControl_WithCompleteStatusMapping_ShouldMaintainDataIntegrity() void
+		+QualityControlIntegration_WithStatusTransitions_ShouldSupportWorkflow() void
+		+EnumLookupAttribute_ShouldBeApplied() void
+		+InheritanceChain_ShouldBeCorrect() void
+	}
+	class MachineTypeEntityTests  {
+		+MachineTypeEntity_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+MachineTypeEntity_WhenParametrizedValues_ShouldSetProperties() void
+		+Id_WhenSet_ShouldReturnCorrectValue() void
+		+Name_WhenSet_ShouldReturnCorrectValue() void
+		+DisplayName_WhenSet_ShouldReturnCorrectValue() void
+		+Deconstruct_WhenCalled_ShouldReturnAllComponents() void
+		+MachineTypeEntity_WhenManufacturingMachineTypes_ShouldCreateCorrectInstances(int id, string name, string displayName) void
+		+ToUpperClass_WhenCalled_ShouldConvertToSpecifiedType() void
+		+MachineTypeEntity_StringProperties_WhenSetToNullOrEmpty_ShouldAcceptValues(string? value) void
+		+Id_WhenSetToAnyValue_ShouldBeAccepted(int value) void
+		+PropertyRoundTrip_WhenSetAndGet_ShouldMaintainValues() void
+		+ManufacturingWorkflow_WithRealWorldScenarios_ShouldHandleCorrectly(int id, string name, string displayName) void
+		+ProductionLineControl_WithCompleteTypeMapping_ShouldMaintainDataIntegrity() void
+		+QualityControlIntegration_WithInspectionAndMonitoring_ShouldSupportWorkflow() void
+		+AdvancedManufacturing_WithHybridStations_ShouldSupportComplexConfigurations() void
+		+EnumLookupAttribute_ShouldBeApplied() void
+		+InheritanceChain_ShouldBeCorrect() void
+		+InvalidMachineType_WithNegativeValue_ShouldBeHandledCorrectly() void
+		+Industry40Integration_WithCompleteAutomation_ShouldSupportDigitalManufacturing() void
+		+PowerOfTwoIds_ForBitwiseOperations_ShouldBeSupported() void
+	}
+	class ResultValidationTests  {
+		+ResultValidation_Constructor_WhenCreated_ShouldCreateInstanceWithDefaultValues() void
+		+StaticProperties_WhenAccessed_WhenQueried_ShouldReturnExpectedData(string propertyName, int expectedValue) void
+		+ImplicitConversion_FromInt_ShouldReturnCorrectResultValidation(int value, string expectedName) void
+		+ImplicitConversion_ToInt_ShouldReturnCorrectValue(string propertyName, int expectedValue) void
+		+ImplicitConversion_ToString_ShouldReturnStringValue(string propertyName, string expectedStringValue) void
+		+ManufacturingValidationScenarios_WithDifferentProducts_ShouldHandleCorrectly(string scenario) void
+		+ResultValidationBusinessRules_WhenValidatingManufacturingOperations_ShouldFollowHierarchy() void
+		+ErrorValidationCodes_WithManufacturingErrors_ShouldIndicateCorrectIssues(int errorCode) void
+		+QualityControlValidation_WithManufacturingWorkflow_ShouldEnforceBusinessRules() void
+		+ImplicitConversion_FromNullableInt_ShouldHandleCorrectly(int? nullableValue, int expectedValue) void
+	}
+	class FixedSizedStackTests  {
+		+Enqueue_Should_Add_String_With_Timestamp() void
+		+Enqueue_Should_Not_Add_Duplicate_Messages() void
+		+Enqueue_Should_Handle_Special_Characters_In_Messages() void
+		+Enqueue_Should_Handle_Large_Messages() void
+		+Enqueue_Should_Respect_Limit_And_Remove_Oldest_Item() void
+		+Enqueue_Should_NotAdd_DuplicatedLiteralStrings() void
+		+Enqueue_Should_NotAdd_DuplicatedStrings() void
+		+Enqueue_Should_Respect_Limit_And_Remove_Oldest_Item_AfterAdding_Many_Items() void
+		+Enqueue_Should_Not_Add_Duplicated_Items_NotMatter_TheOrder() void
+		+Enqueue_Should_Not_Add_Empty_Messages() void
+		+Enqueue_Should_Not_Add_Null_Object() void
+		+Enqueue_Should_Add_Two_Complex_Object() void
+		+Enqueue_Should_Not_Add_Two_Complex_Equal_Object() void
+		+Enqueue_Should_Add_Two_Complex_Equal_Object() void
+		+Peek_Should_Not_Remove_The_Item() void
+		+GetEnumerator_Should_Return_Items_In_Lifo_Order() void
+		+GetEnumerator_Should_Return_Items_In_Lifo_Order_Respecting_The_FIFO_Queing() void
+		+ToReadOnlyCollection_Should_Return_Items_In_Lifo_Order() void
+		+ToReadOnlyCollection_Should_Return_Items_In_Lifo_Order_Respecting_The_FIFO_Queing() void
+		+GetLifoEnumerator_Should_Return_Items_In_Lifo_Order() void
+	}
+	class DataFromPlcTests  {
+		+DataFromPlc_DataFromPlc_WhenCreatedWithDefaultConstructor_ShouldInitializeWithCorrectDefaults() void
+		+DataFromPlc_WhenCreatedWithEdgeCaseValues_ShouldHandleAllScenariesGracefully() void
+		+DataFromPlc_WhenAllPropertiesAssigned_ShouldStoreValuesAccurately() void
+		+DataFromPlc_WhenObjectMethodsInvoked_ShouldBehaveAsExpectedForPlcEntity() void
+		+DataFromPlc_WhenAppliedToManufacturingScenarios_ShouldEnforceProductionBusinessRules() void
+	}
+	class OeeTestCasesNormalCases  {
+		+GetWarningCases() IEnumerable~object[]~
+	}
+	class ChannelExample  {
+		-ITestOutputHelper outputHelper
+		-ILogger~ChannelExample~ logger
+		+RunAsync() Task
+		-ProduceAsync(ChannelWriter~string~ writer) Task
+		-ConsumeAsync(ChannelReader~string~ reader) Task
+	}
+	class OeeRegisterTests  {
+		-OeeRegister _register
+		-PerformanceData _data
+		+CalculateOee_WithIdealValues_ShouldCalculateCorrectly() void
+		+CalculateOee_WithNullInputs_ShouldReturnFailure() void
+		+CalculateOee_WithZeroPlannedTime_ShouldUseAggregatedTimeAndWarn() void
+		+CalculateOee_WithZeroRunningTime_ShouldClampPerformanceAndWarn() void
+		+CalculateOee_WithNegativeValues_ShouldClampAndWarn() void
+		+SafeRatio_WithZeroDenominator_ShouldReturnFallback() void
+		+ClampMetric_ShouldClampValueWithinRange() void
+		+ToKpiOee_ShouldMapAndRoundValuesCorrectly() void
+	}
+	class PerformanceSpecTests  {
+		+PerformanceSpec_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+PerformanceSpec_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+PerformanceSpec_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+PerformanceSpec_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+PerformanceSpec_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class WorkFlowTests  {
+		+WorkFlow_Constructor_Default_ShouldCreateInstanceWithDefaultValues() void
+		+WorkFlow_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+WorkFlowProperties_WhenSetToZero_ShouldAcceptZero() void
+		+WorkFlowProperties_WhenSetToNegative_ShouldAcceptNegative() void
+		+WorkFlowProperties_WhenSetToLargeValues_ShouldAcceptLargeValues() void
+		+AddNode_WithValidMachine_ShouldAddToMachineCollection() void
+		+AddNode_WithMultipleMachines_ShouldAddAllToMachineCollection() void
+		+AddNode_WithNullMachine_ShouldAddNullToMachineCollection() void
+		+AddEdge_WithValidEdge_ShouldAddToEdgesCollection() void
+		+AddEdge_WithMultipleEdges_ShouldAddAllToEdgesCollection() void
+		+AddEdge_WithNullEdge_ShouldAddNullToEdgesCollection() void
+		+WorkFlow_WhenWorkFlowIsCreated_ShouldHaveDefaultValues() void
+		+WorkFlow_WhenWorkFlowIsConfigured_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasSameNextAndLastMachine_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasDifferentNextAndLastMachine_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasZeroMachineIds_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasNegativeMachineIds_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasLargeMachineIds_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasZeroProductId_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasNegativeProductId_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasLargeProductId_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasZeroRuleId_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasNegativeRuleId_ShouldBeValid() void
+		+WorkFlow_WhenWorkFlowHasLargeRuleId_ShouldBeValid() void
+		+GraphOperations_WhenAddingNodesAndEdges_ShouldBuildValidGraph() void
+		+GraphOperations_WhenAddingDuplicateNodes_ShouldAllowDuplicates() void
+		+GraphOperations_WhenAddingDuplicateEdges_ShouldAllowDuplicates() void
+	}
+	class OeeTestCasesEdgeCases  {
+		+GetEdgeCasesWithErrors() IEnumerable~object[]~
+		+GetEdgeCases() IEnumerable~object[]~
+	}
+	class TaskGatewayResponseTests  {
+		+TaskGatewayResponse_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+TaskGatewayResponse_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+TaskGatewayResponse_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+TaskGatewayResponse_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+TaskGatewayResponse_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+FluentBuilder_ShouldChainAndSetPropertiesCorrectly() void
+		+EnsureIsValidToRenderAndPersist_WithNulls_ShouldSetDefaults() void
+		+ApplyReferencesValues_WithValidReferences_ShouldUpdateProperties() void
+		+ApplyReferencesValues_WithMissingKeys_ShouldNotThrow() void
+		+MapFrom_IBarCodeResult_ShouldMapCorrectly() void
+		+ToString_ShouldReturnNonEmptyString() void
+	}
+	class OrderTests  {
+		+Order_Order_WithDefaultConstructor_ShouldInitializeAllPropertiesToDefaultValues() void
+		+Order_WithNegativeValues_ShouldAcceptNegativeValuesForFlexibility() void
+		+Order_WhenAllManufacturingPropertiesSet_ShouldRetainAllAssignedValues() void
+		+Order_WhenCalculatingProductionMetrics_ShouldComputeCorrectProductionRate() void
+		+Order_WithAutomotiveManufacturingScenario_ShouldCalculateCorrectCycleTimeAndProductionRate() void
+		+Order_WithDayAndNightShifts_ShouldCalculateCorrectShiftDurationsAndProductionRates() void
+		+Order_WithHighVolumeProduction_ShouldMaintainRealisticCycleTimeAndUtilization() void
+		+Order_WithMinimumAndMaximumValues_ShouldHandleExtremeCycleTimesCorrectly() void
+	}
+	class MachineTests  {
+		+Machine_WithCompleteManufacturingConfiguration_ShouldInitializeAllPropertiesIncludingTraceability() void
+		+Machine_Machine_WithDefaultConstructor_ShouldInitializeWithEmptyStringsAndDisabledTraceability() void
+		+Machine_Machine_WhenUpdatingAllProperties_ShouldRetainNewValuesIncludingEdgesAndRuleId() void
+		+IsEnabled_WithDifferentTraceabilityFlags_ShouldReturnCorrectEnabledState() void
+		+Disable_WhenMachineIsEnabled_ShouldSetBypassTraceabilityAndReturnSuccess() void
+		+Enable_WhenMachineIsDisabled_ShouldSetAppTraceabilityAndReturnSuccess() void
+		+Machine_WithNegativeIdsAndNullStrings_ShouldAcceptAllValuesWithoutException() void
+		+Machine_CreatedWithoutParameters_ShouldHaveZeroIdsAndEmptyCollections() void
+		+Machine_WhenBasicPropertiesUpdated_ShouldRetainAllAssignedValues() void
+		+IsEnabled_WithAppTraceabilitySetToOne_ShouldReturnTrueRegardlessOfBypass() void
+		+IsEnabled_WithBothTraceabilityFlagsZero_ShouldReturnTrueAsDefault() void
+		+IsEnabled_WithOnlyBypassTraceabilitySet_ShouldReturnFalseIndicatingDisabled() void
+		+Disable_OnEnabledMachine_ShouldToggleTraceabilityFlagsCorrectly() void
+		+Enable_OnDisabledMachine_ShouldToggleTraceabilityFlagsCorrectly() void
+		+Machine_WhenNewlyCreated_ShouldHaveExpectedDefaultManufacturingConfiguration() void
+		+Machine_WithProductionConfiguration_ShouldMaintainValidManufacturingState() void
+		+Machine_OnInitialization_ShouldHaveEmptyEdgeCollectionsAndDefaultEnumerations() void
+		+IsEnabled_ShouldReturnCorrectState_BasedOnTraceabilityFlags(int appTraceability, int bypassTraceability, int expected) void
+		+Enable_WhenInvoked_ShouldSetAppTraceabilityTrueAndBypassFalse() void
+		+Disable_WhenInvoked_ShouldSetAppTraceabilityFalseAndBypassTrue() void
+	}
+	class ValidationAssert  {
+		+Regex InvalidStatusPattern
+		+Regex NotNextMachinePattern
+		+Regex StatusInvalidPattern
+		+ShouldContainErrorMatching(Result result, Regex pattern, string? description) void
+	}
+	class MetricHelperTests  {
+		+SafeRatio_ShouldBehaveCorrectly(double numerator, double denominator, double min, double max, double expected) void
+		+ClampMetric_ShouldClampCorrectly(double input, double min, double max, double expected) void
+	}
+	class TaskGatewayRequestTests  {
+		+TaskGatewayRequest_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+TaskGatewayRequest_WithDefaultConstructor_ShouldInitializeToExpectedDefaults() void
+		+TaskGatewayRequest_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+TaskGatewayRequestProperties_WhenSetToNull_ShouldHandleNullValues() void
+		+CommandId_WhenSetToZero_ShouldAcceptZero() void
+		+CommandId_WhenSetToNegative_ShouldAcceptNegative() void
+		+MachineId_WhenSetToZero_ShouldAcceptZero() void
+		+MachineId_WhenSetToNegative_ShouldAcceptNegative() void
+		+BarCodeId_WhenSetToZero_ShouldAcceptZero() void
+		+BarCodeId_WhenSetToNegative_ShouldAcceptNegative() void
+		+CycleId_WhenSetToZero_ShouldAcceptZero() void
+		+CycleId_WhenSetToNegative_ShouldAcceptNegative() void
+		+PartNumber_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Description_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+RequestTask_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Comment_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Error_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+IsEnabled_WhenSetToTrue_ShouldBeTrue() void
+		+IsEnabled_WhenSetToFalse_ShouldBeFalse() void
+		+TaskGatewayRequest_WhenTaskGatewayRequestIsCreated_ShouldHaveDefaultValues() void
+		+TaskGatewayRequest_WhenTaskGatewayRequestIsConfigured_ShouldBeValid() void
+		+TaskGatewayRequest_WhenTaskGatewayRequestHasLargeIds_ShouldBeValid() void
+		+TaskGatewayRequest_WhenTaskGatewayRequestHasNegativeIds_ShouldBeValid() void
+		+EnsureIsValidToRenderAndPersist_ShouldSetDefaultValues() void
+		+SetCommandStatusFromTask_ShouldSetCorrectStatus(string taskName, CycleStatus expectedCycleStatus, PartStatus expectedPartStatus) void
+		+Success_ShouldSetResultToValid() void
+		+Failure_ShouldSetResultToInvalid() void
+		+ToResponse_ShouldMapAllPropertiesCorrectly() void
+	}
+	class CalculatorTestData  {
+		+GetEnumerator() IEnumerator~object[]~
+		-GetEnumerator() IEnumerator
+	}
+	class PartStatusTests  {
+		+PartStatus_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+PartStatus_WhenDefaultValues_ShouldInitializePropertiesCorrectly() void
+		+StaticProperties_WhenAccessed_WhenQueried_ShouldReturnExpectedData(int expectedValue, string expectedName, string expectedDisplay) void
+		+ImplicitOperator_FromIntToPartStatus_ShouldConvertCorrectly(int value) void
+		+ManufacturingPartStatusScenarios_WithDifferentProducts_ShouldHandleCorrectly(int statusValue) void
+		+FromValue_WithValidValues_ShouldReturnCorrectPartStatus() void
+	}
+	class OeeRegisterDueDiligenceTests  {
+		+CalculateOee_DivisionByZero_FaultedPlusStoppedZero_ShouldNotCrash() void
+		+CalculateOee_DataRegisterRunningTimeMismatch_ShouldBeConsistent() void
+		+CalculateOee_RedundantNegativeCheck_ShouldNeverTrigger() void
+		+CalculateOee_FragileStringMatching_ShouldBeRobust() void
+		+CalculateOee_NegativeRunningTimeComputation_StateMismatch() void
+		+CalculateOee_IntegerOverflowInScaling_ShouldHandleGracefully() void
+		+CalculateOee_PerformanceNumeratorOverflow_ShouldHandleGracefully() void
+		+CalculateOee_EdgeCasesInScaling_ShouldNotCrash(int faultedTime, int stoppedTime, int currentTime) void
+	}
+	class ShiftDefinitionTests  {
+		+ShiftDefinition_WhenDefaultConstructor_ShouldCreateInstance() void
+		+ShiftDefinition_WhenInitializer_ShouldCreateInstanceWithValues() void
+		+ShiftDefinition_Properties_WithManufacturingShifts_ShouldSetAndGetCorrectly(int catalogId, int plantId, string shiftName, int startHour, int startMinute, int durationHours, int durationMinutes, int endHour, int endMinute) void
+		+ShiftDefinition_Properties_WithNullShiftName_ShouldAcceptNullValue() void
+		+ShiftDefinition_Properties_WithEmptyShiftName_ShouldAcceptEmptyString() void
+		+ShiftCatalogId_WithVariousValues_ShouldAcceptAllValues(int catalogId) void
+		+PlantId_WithVariousValues_ShouldAcceptAllValues(int plantId) void
+		+ShiftDefinition_DomainLogic_WithFordF150PlantShiftDefinition_ShouldCreateValidShiftDefinition() void
+		+ShiftDefinition_DomainLogic_WithTeslaModelSFactoryShiftDefinition_ShouldCreateValidShiftDefinition() void
+		+ShiftDefinition_DomainLogic_WithBMWX5PlantShiftDefinition_ShouldCreateValidShiftDefinition() void
+		+ShiftDefinition_DomainLogic_WithMercedesQualityControlShiftDefinition_ShouldCreateValidShiftDefinition() void
+		+ShiftDefinition_DomainLogic_WithAudiA4MaintenanceShiftDefinition_ShouldCreateValidShiftDefinition() void
+		+ShiftDefinition_DomainLogic_WithIndustry40ShiftDefinitions_ShouldCreateValidShiftDefinitions(int catalogId, int plantId, string shiftName, int startHour, int startMinute, int durationHours, int durationMinutes, int endHour, int endMinute) void
+		+ShiftDefinition_DomainLogic_WithCrossPlantShiftCoordination_ShouldSupportMultiplePlantOperations() void
+		+ShiftDefinition_DomainLogic_WithMaximumLengthShiftName_ShouldBeValidForDatabase() void
+		+ShiftDefinition_DomainLogic_WithComplexShiftRotationSchedule_ShouldSupportScheduleManagement() void
+		+ShiftDefinition_DomainLogic_AsAuditableEntity_ShouldSupportAuditingCapabilities() void
+	}
+	class DefectTests  {
+		+Defect_WhenCreatedForManufacturingScenarios_ShouldInitializeCorrectlyAsLookupEntity() void
+		+Defect_WhenCreatedWithEdgeCaseAndExtremeValues_ShouldHandleAllInputsGracefully() void
+		+Defect_WhenPropertiesSetToManufacturingDefectData_ShouldPersistAllValuesCorrectly() void
+		+Defect_WhenStandardObjectMethodsCalled_ShouldBehavePredictablyForLookupEntities() void
+		+Defect_WhenUsedInQualityControlScenarios_ShouldEnforceManufacturingDefectBusinessRules() void
+	}
+	class MachineTypeTests  {
+		+MachineType_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+Invalid_StaticProperty_ShouldHaveCorrectValues() void
+		+None_StaticProperty_ShouldHaveCorrectValues() void
+		+Printer_StaticProperty_ShouldHaveCorrectValues() void
+		+Initial_StaticProperty_ShouldHaveCorrectValues() void
+		+InitialPrinter_StaticProperty_ShouldHaveCorrectValues() void
+		+Process_StaticProperty_ShouldHaveCorrectValues() void
+		+Final_StaticProperty_ShouldHaveCorrectValues() void
+		+Inspection_StaticProperty_ShouldHaveCorrectValues() void
+		+DashBoard_StaticProperty_ShouldHaveCorrectValues() void
+		+ImplicitConversion_ToInt_ShouldReturnValue() void
+		+ImplicitConversion_ToString_ShouldReturnStringValue() void
+		+FromValue_WithValidValues_ShouldReturnCorrectInstance(int value, string expectedName) void
+		+FromValue_WithInvalidValue_ShouldReturnInvalidInstance() void
+		+FromName_WithValidNames_ShouldReturnCorrectInstance(string name) void
+		+FromName_WithInvalidName_ShouldReturnInvalidInstance() void
+		+GetAll_WhenCalled_ShouldReturnAllMachineTypes() void
+		+Equals_WithSameType_ShouldReturnTrue() void
+		+Equals_WithDifferentTypes_ShouldReturnFalse() void
+		+CompareTo_WithDifferentValues_ShouldReturnCorrectComparison() void
+		+ManufacturingWorkflow_WithTypicalProgression_ShouldFollowLogicalOrder() void
+		+AbsoluteDifference_BetweenTypes_ShouldReturnCorrectDifference(int value1, int value2, int expectedDifference) void
+		+ProductionLineConfiguration_WithDifferentMachineTypes_ShouldHandleCorrectly() void
+		+ToString_WhenCalled_ShouldReturnDisplayNameOrName() void
+		+ManufacturingStageGrouping_WithRelatedMachineTypes_ShouldMaintainLogicalValues(int[] values) void
+		+ProductionLineControl_WithCompleteManufacturingFlow_ShouldHandleAllMachineTypes() void
+		+QualityControlWorkflow_WithInspectionAndDashboard_ShouldSupportMonitoring() void
+		+NegativeValue_InvalidState_ShouldBeHandledCorrectly() void
+		+PowerOfTwoValues_ForBitwiseOperations_ShouldBeCorrect() void
+	}
+	class ProductSpecTests  {
+		+ProductSpec_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+ProductSpec_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+ProductSpec_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+ProductSpec_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+ProductSpec_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class InvalidCasesData  {
+		+GetEnumerator() IEnumerator~object[]~
+		-GetEnumerator() IEnumerator
+	}
+	class MasterLabelTests  {
+		+MasterLabel_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+MasterLabel_WithDefaultConstructor_ShouldInitializeToExpectedDefaults() void
+		+MasterLabel_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+MasterLabelProperties_WhenSetToNull_ShouldHandleNullValues() void
+		+MasterLabelId_WhenSetToZero_ShouldAcceptZero() void
+		+MasterLabelId_WhenSetToNegative_ShouldAcceptNegative() void
+		+MasterLabelCode_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Description_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+MasterLabel_WhenMasterLabelIsCreated_ShouldHaveDefaultValues() void
+		+MasterLabel_WhenMasterLabelIsConfigured_ShouldBeValid() void
+		+MasterLabel_WhenMasterLabelHasLargeId_ShouldBeValid() void
+		+MasterLabel_WhenMasterLabelHasNegativeId_ShouldBeValid() void
+		+MasterLabel_WhenMasterLabelHasEmptyCode_ShouldBeValid() void
+		+MasterLabel_WhenMasterLabelHasEmptyDescription_ShouldBeValid() void
+	}
+	class CreateBarCodeDictionaryExecutorTestsRule3  {
+		-ITestOutputHelper _output
+		-string RuleJson
+		-string RuleJson1
+		-string RuleJson2
+		-string RuleJson3
+		-string RuleJson4
+		+ApplyRuleCreateBarCode_GivenDifferentRules_ShouldRespectOrder(string partNumber, string date, int consecutive, string expectedBarCode, string ruleJson) void
+		+ApplyRuleCreateBarCode_GivenValidRule_ShouldReturnCorrectBarCodeList(string partNumber, string date, int consecutive, string expectedBarCode) void
+		+ParseRuleFromJson_GivenValidJson_ShouldReturnCorrectRuleObject() void
+		+ParseRuleFromJson_GivenInvalidJson_ShouldReturnNull() void
+		+ComponentActions_ShouldContainAllExpectedActions() void
+		+InitializeComponentActions_ShouldInitializeCorrectActionsBasedOnJsonRuleFunction() void
+	}
+	class ProductionMetadataTests  {
+		+ProductionMetadata_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+ProductionMetadata_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+ProductionMetadata_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+ProductionMetadata_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+ProductionMetadata_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class DistinctRegisterTests  {
+		+DistinctRegister_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+DistinctRegister_WhenInitializer_ShouldCreateInstanceWithValues() void
+		+DistinctRegister_Properties_WithManufacturingVariables_ShouldSetAndGetCorrectly(string name, int variableId, int machineId) void
+		+Name_WithNullValue_ShouldAcceptNullValue() void
+		+Name_WithEmptyString_ShouldAcceptEmptyString() void
+		+VariableId_WithVariousValues_ShouldAcceptAllValues(int variableId) void
+		+MachineId_WithVariousValues_ShouldAcceptAllValues(int machineId) void
+		+DistinctRegister_DomainLogic_WithFordF150Assembly_ShouldCreateValidDistinctRegister() void
+		+DistinctRegister_DomainLogic_WithTeslaModelSProduction_ShouldCreateValidDistinctRegister() void
+		+DistinctRegister_DomainLogic_WithBMWX5Paint_ShouldCreateValidDistinctRegister() void
+		+DistinctRegister_DomainLogic_WithMercedesQualityControl_ShouldCreateValidDistinctRegister() void
+		+DistinctRegister_DomainLogic_WithAudiA4Welding_ShouldCreateValidDistinctRegister() void
+		+DistinctRegister_DomainLogic_WithIndustry40Variables_ShouldCreateValidDistinctRegisters(string name, int variableId, int machineId) void
+		+DistinctRegister_DomainLogic_AsCompositeKey_ShouldRepresentUniqueRegisterCombination() void
+		+DistinctRegister_DomainLogic_WithMaximumLengthName_ShouldBeValidForDatabase() void
+		+DistinctRegister_DomainLogic_WithMultipleMachineRegisters_ShouldSupportMultiMachineScenarios() void
+	}
+	class ShiftTests  {
+		+Shift_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+Shift_WithDefaultConstructor_ShouldInitializeToExpectedDefaults() void
+		+Shift_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+Shift_Shift_Properties_ShouldSetAndGetCorrectly() void
+		+IsRunningNow_ShouldBeFalse_WhenCurrentTimeIsBeforeStart() void
+		+IsRunningNow_ShouldBeTrue_WhenCurrentTimeIsAtStart() void
+		+IsRunningNow_ShouldBeTrue_WhenCurrentTimeIsDuringShift() void
+		+IsRunningNow_ShouldBeTrue_WhenCurrentTimeIsAtEnd() void
+		+IsRunningNow_ShouldBeFalse_WhenCurrentTimeIsAfterEnd() void
+		+Shift_WhenShiftIsCreated_ShouldHaveDefaultValues() void
+		+Shift_WhenShiftIsConfigured_ShouldBeValid() void
+		+Shift_WhenShiftHasZeroCycles_ShouldBeValid() void
+		+Shift_WhenShiftHasNegativeCycles_ShouldBeValid() void
+	}
+	class EnumLookUpTableTests  {
+		+EnumLookUpTable_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+EnumLookUpTable_WhenParametrizedValues_ShouldSetProperties() void
+		+Id_WhenSet_ShouldReturnCorrectValue() void
+		+Name_WhenSet_ShouldReturnCorrectValue() void
+		+DisplayName_WhenSet_ShouldReturnCorrectValue() void
+		+Deconstruct_WhenCalled_ShouldReturnAllComponents() void
+		+EnumLookUpTable_WhenValidManufacturingData_ShouldCreateCorrectInstance(int id, string name, string displayName) void
+		+ToUpperClass_WhenCalled_ShouldConvertToSpecifiedType() void
+		+EnumLookUpTable_StringProperties_WhenSetToNullOrEmpty_ShouldAcceptValues(string? value) void
+		+NegativeId_WhenSet_ShouldBeAccepted() void
+		+ZeroId_WhenSet_ShouldBeAccepted() void
+		+PartStatusScenarios_WhenCreated_ShouldHandleManufacturingStatuses(int id, string name, string displayName) void
+		+MachineTypeScenarios_WhenCreated_ShouldHandleManufacturingMachineTypes(int id, string name, string displayName) void
+		+PropertyRoundTrip_WhenSetAndGet_ShouldMaintainValues() void
+		+ToUpperClass_WithMachineTypeEntity_ShouldConvertCorrectly() void
+		+CompleteWorkflow_WhenCreatedAndProcessed_ShouldMaintainDataIntegrity() void
+	}
+	class EnumerationInvalidValueTests  {
+		+FromValue_ShouldReturnInvalidInstance_ForInvalidValue() void
+		+FromDisplayName_ShouldReturnInvalidInstance_ForInvalidDisplayName() void
+		+FromName_ShouldReturnInvalidInstance_ForInvalidName() void
+	}
+	class SettingTests  {
+		+Setting_Setting_Properties_ShouldSetAndGetCorrectly() void
+	}
+	class ShiftDetectionRuleTests  {
+		+FirstShiftRule_AppliesTo_ShouldReturnCorrectResult(int hour, bool expected) void
+		+SecondShiftRule_AppliesTo_ShouldReturnCorrectResult(int hour, bool expected) void
+		+ThirdShiftRule_SpansMidnight_ShouldReturnCorrectResult(int hour, bool expected) void
+		+ShiftDetectionRule_Properties_ShouldBeSetCorrectly() void
+		+ShiftDetectionRule_AppliesTo_WithInvalidHour_ShouldThrowArgumentOutOfRangeException(int invalidHour) void
+		+Complete3ShiftPattern_ShouldCoverAllHoursWithoutOverlap(int hour, int expectedShiftValue) void
+	}
+	class ConfigDbTests  {
+		+ConfigDb_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+ConfigDb_Constructor_WhenCreated_ShouldImplementIEntityRoot() void
+		+SystemInformationId_WhenSetToValidValues_ShouldReturnCorrectValue(int systemId) void
+		+DatabaseVersion_WhenSetToValidValues_ShouldReturnCorrectValue(string version) void
+		+VersionDate_WhenSetToValidValues_ShouldReturnCorrectValue(string dateTimeString) void
+		+ModifiedDate_WhenSetToValidValues_ShouldReturnCorrectValue(string dateTimeString) void
+		+ConfigDb_Properties_WithProductionDatabaseScenario_ShouldConfigureCorrectly() void
+		+ConfigDb_Properties_WithTestDatabaseScenario_ShouldConfigureCorrectly() void
+		+ConfigDb_Properties_WithManufacturingDatabaseScenario_ShouldConfigureCorrectly() void
+		+DatabaseVersion_WithPlantSpecificVersions_ShouldStoreCorrectly(string version) void
+		+DatabaseVersion_WithEdgeCaseValues_ShouldStoreCorrectly(string? value) void
+		+ConfigDb_DateProperties_WithSequentialDates_ShouldMaintainTemporalOrder() void
+		+EntityInterface_ShouldImplementCorrectly() void
+		+SystemInformationId_WithEdgeCaseValues_ShouldStoreCorrectly(int value) void
+	}
+	class ResultTests  {
+		+Result_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+Result_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+Result_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+Result_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+Result_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+CombineErrors_NonGeneric_BothNull_ShouldReturnNoErrorsFoundMessage() void
+		+CombineErrors_NonGeneric_PrimaryErrorsOnly_ShouldReturnPrimaryErrors() void
+		+CombineErrors_NonGeneric_SecondaryErrorsOnly_ShouldReturnSecondaryErrors() void
+		+CombineErrors_NonGeneric_BothPrimaryAndSecondaryErrors_ShouldReturnCombinedErrors() void
+		+CombineErrors_NonGeneric_NoErrors_ShouldReturnNoErrorsFoundMessage() void
+		+CombineErrors_BothNull_ShouldReturnNoErrorsFoundMessageWithDefault() void
+		+CombineErrors_PrimaryErrorsOnly_ShouldReturnPrimaryErrorsWithDefault() void
+		+CombineErrors_SecondaryErrorsOnly_ShouldReturnSecondaryErrorsWithValue() void
+		+CombineErrors_BothPrimaryAndSecondaryErrors_ShouldReturnCombinedErrorsWithValue() void
+		+CombineErrors_NoErrors_ShouldReturnNoErrorsFoundMessageWithValue() void
+		+Result_Success_ShouldBeSuccessful() void
+		+ResultGeneric_Success_ShouldBeSuccessful() void
+		+Result_Failure_ShouldBeFailureWithErrors() void
+		+ResultGeneric_Failure_SingleError_ShouldBeFailureWithSingleError() void
+		+ResultGeneric_ToString_ShouldReturnSuccessOrFailureString() void
+		+Result_Failure_SingleError_ShouldBeFailureWithSingleError() void
+		+Result_ToString_ShouldReturnSuccessOrFailureString() void
+		+Result_OnSuccess_ShouldInvokeAction_WhenResultIsSuccess() void
+		+Result_OnFailure_ShouldInvokeActionWithErrors_WhenResultIsFailure() void
+		+Result_Ensure_ShouldReturnFailure_WhenConditionFails() void
+		+Result_Tap_ShouldInvokeAction_WhenResultIsSuccess() void
+		+Result_Recover_ShouldReturnRecoveredResult_WhenResultIsFailure() void
+	}
+	class CustomerTests  {
+		+Customer_WhenCreatedWithValidData_ShouldSetIdAndNameCorrectly() void
+		+Customer_WhenCreatedWithoutParameters_ShouldInitializeWithDefaultValues() void
+		+Customer_WhenAllPropertiesAssigned_ShouldStoreAllValuesCorrectly() void
+		+Customer_ShouldInheritFromAuditableEntity() void
+		+Customer_WithNullName_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+Customer_WithEmptyName_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+Customer_WithNegativeId_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+Customer_WhenDefaultConstructorCalled_ShouldHaveExpectedInitialState() void
+		+Customer_WhenAllPropertiesUpdated_ShouldPersistAllChangesWithTimestamps() void
+		+Customer_WhenNameSetToNull_ShouldHandleNullValueGracefully() void
+		+IsActive_WhenSetToFalse_ShouldReturnFalse() void
+		+CreatedOn_WhenSet_ShouldStoreDateTime() void
+		+ModifiedOn_WhenSet_ShouldStoreDateTime() void
+		+CustomerId_WhenSetToZero_ShouldAcceptZero() void
+		+CustomerId_WhenSetToNegative_ShouldAcceptNegative() void
+		+Name_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Name_WhenSetToWhitespace_ShouldAcceptWhitespace() void
+		+Customer_WhenCustomerIsActive_ShouldIndicateActiveStatus() void
+		+Customer_WhenCustomerIsInactive_ShouldIndicateInactiveStatus() void
+		+Customer_WhenCustomerHasName_ShouldBeValid() void
+		+Customer_WhenCustomerIsNew_ShouldHaveDefaultValues() void
+		+Customer_WhenCustomerIsFullyConfigured_ShouldBeComplete() void
+		+Customer_WhenCustomerHasShortName_ShouldBeValid() void
+		+Customer_WhenCustomerHasLongName_ShouldBeValid() void
+		+Customer_WhenCustomerHasSpecialCharactersInName_ShouldBeValid() void
+		+Customer_WhenCustomerHasNumericName_ShouldBeValid() void
+		+Customer_WhenCustomerIsActiveWithValidData_ShouldBeValidConfiguration() void
+		+Customer_WhenCustomerIsInactiveWithValidData_ShouldBeValidConfiguration() void
+		+Customer_WhenCustomerHasLargeId_ShouldBeValid() void
+		+Customer_WhenCustomerHasUnicodeCharactersInName_ShouldBeValid() void
+		+Customer_WhenCustomerHasWhitespaceInName_ShouldBeValid() void
+		+Customer_WhenCustomerHasTimestamps_ShouldBeValid() void
+	}
+	class ConfigStationTests  {
+		+ConfigStation_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+ConfigAppId_WhenSet_ShouldReturnCorrectValue() void
+		+AppId_WhenSet_ShouldReturnCorrectValue() void
+		+Cliente_WhenSet_ShouldReturnCorrectValue() void
+		+Planta_WhenSet_ShouldReturnCorrectValue() void
+		+Linea_WhenSet_ShouldReturnCorrectValue() void
+		+MaquinaId_WhenSet_ShouldReturnCorrectValue() void
+		+Proyecto_WhenSet_ShouldReturnCorrectValue() void
+		+Version_WhenSet_ShouldReturnCorrectValue() void
+		+VersionDate_WhenSet_ShouldReturnCorrectValue() void
+		+ModifiedDate_WhenSet_ShouldReturnCorrectValue() void
+		+ManufacturingConfiguration_WhenSetWithValidData_ShouldRetainAllValues(string cliente, string planta, string linea) void
+		+MachineConfiguration_WhenSetWithValidData_ShouldRetainAllValues(int maquinaId, string proyecto, string version) void
+		+CompleteStationConfiguration_WhenPopulated_ShouldMaintainAllProperties() void
+		+ConfigStation_DateProperties_WhenSetToDefault_ShouldHandleMinValues() void
+		+IEntityRoot_Implementation_ShouldBeCorrect() void
+		+ConfigStation_StringProperties_WhenSetToNullOrEmpty_ShouldAcceptValues(string? value) void
+		+VersionTracking_WhenDatesAreSet_ShouldAllowTemporalOrder() void
+	}
+	class OeeTestCases  {
+		+GetEnumerator() IEnumerator~object[]~
+		-GetEnumerator() IEnumerator
+	}
+	class AllOeeTestCases  {
+		+GetEnumerator() IEnumerator~object[]~
+		-GetEnumerator() IEnumerator
+	}
+	class ValidCasesData  {
+		+GetEnumerator() IEnumerator~object[]~
+		-GetEnumerator() IEnumerator
+	}
+	class EdgeTests  {
+		+Edge_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+Edge_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+Edge_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+Edge_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+Edge_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+Edge_WhenMachinesAndWeight_ShouldSetProperties() void
+		+Edge_Constructor_WithMachines_DefaultWeightIsOne() void
+		+Equals_WithSameMachines_ShouldReturnTrue() void
+		+Equals_WithDifferentMachines_ShouldReturnFalse() void
+		+GetHashCode_WithSameMachines_ShouldReturnSameHashCode() void
+		+ToString_ShouldReturnExpectedFormat() void
+	}
+	class OeeRegisterTests  {
+		+OeeRegister_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+OeeRegister_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+OeeRegister_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+OeeRegister_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+OeeRegister_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+CalculateOee_WithNullInputs_ShouldReturnFailure() void
+		+CalculateOee_WithInvalidData_ShouldGenerateWarnings() void
+		+CalculateOee_WithPerfectScenario_ShouldReturn100PercentOee() void
+		+ToKpiOee_WithNullRegister_ShouldThrowArgumentNullException() void
+		+ManufacturingOeeScenarios_WithRealWorldData_ShouldCalculateCorrectly() void
+	}
+	class EnumerationTestsFlowStatus  {
+		+GetInvalidEnum() void
+		+GetInvalidEnumWhenValueIsNotValid() void
+	}
+	class GatewayTaskTests  {
+		+GatewayTask_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+GatewayTask_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+GatewayTask_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+GatewayTask_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+GatewayTask_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+ManufacturingWorkflowScenarios_WithGatewayTasks_ShouldSupportAutomotiveProcesses() void
+		+BitwiseOperations_WithGatewayTasks_ShouldSupportCombinedOperations() void
+		+EdgeCaseTaskValues_ShouldBeHandledAppropriately() void
+	}
+	class TagsGroupEntityTests  {
+		+TagsGroupEntity_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+TagsGroupEntity_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+TagsGroupEntityProperties_WhenSetToNull_ShouldHandleNullValues() void
+		+Id_WhenSetToZero_ShouldAcceptZero() void
+		+Id_WhenSetToNegative_ShouldAcceptNegative() void
+		+Name_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+DisplayName_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+TagsGroupEntity_WhenTagsGroupIsConfigured_ShouldBeValid() void
+		+TagsGroupEntity_WhenTagsGroupHasLargeId_ShouldBeValid() void
+		+TagsGroupEntity_WhenTagsGroupHasNegativeId_ShouldBeValid() void
+		+TagsGroupEntity_WhenTagsGroupHasEmptyName_ShouldBeValid() void
+		+TagsGroupEntity_WhenTagsGroupHasEmptyDisplayName_ShouldBeValid() void
+		+Deconstruct_WhenQueried_ShouldReturnExpectedData() void
+	}
+	class RuleTests  {
+		+Rule_Rule_Properties_ShouldSetAndGetCorrectly() void
+	}
+	class ConfigAppFromJsonTests  {
+		+ConfigAppFromJson_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+Name_WhenSetToValidValues_ShouldReturnCorrectValue(string name) void
+		+GateWayWorker_WhenSetToValidValues_ShouldReturnCorrectValue(bool enabled) void
+		+Reports_WhenSetToValidValues_ShouldReturnCorrectValue(bool enabled) void
+		+Gp12_WhenSetToValidValues_ShouldReturnCorrectValue(bool enabled) void
+		+ConfigAppFromJson_Properties_WithManufacturingProductionScenario_ShouldConfigureCorrectly() void
+		+ConfigAppFromJson_Properties_WithTestEnvironmentScenario_ShouldConfigureCorrectly() void
+		+ConfigAppFromJson_Properties_WithQualityControlScenario_ShouldConfigureCorrectly() void
+	}
+	class PerformanceDataTests  {
+		+FromPlc_WithValidRegisters_ShouldParseAllPropertiesCorrectly() void
+		+FromPlc_WithMissingKeys_ShouldDefaultToZero() void
+		+FromPlc_WithInvalidData_ShouldDefaultToZero() void
+		+FromPlc_WithNullRegisterValue_ShouldDefaultToZero() void
+	}
+	class BarCodeTests  {
+		+BarCode_WhenCreatedWithValidData_ShouldSetAllPropertiesCorrectly() void
+		+BarCode_WhenCreatedWithoutParameters_ShouldInitializeWithDefaultValues() void
+		+BarCode_WhenAllPropertiesUpdated_ShouldPersistAllChangesCorrectly() void
+		+BarCodeProperties_WhenSetToNull_ShouldHandleNullValues() void
+		+BarCodeId_WhenSetToZero_ShouldAcceptZero() void
+		+BarCodeId_WhenSetToNegative_ShouldAcceptNegative() void
+		+ProductId_WhenSetToZero_ShouldAcceptZero() void
+		+ProductId_WhenSetToNegative_ShouldAcceptNegative() void
+		+MachineId_WhenSetToZero_ShouldAcceptZero() void
+		+MachineId_WhenSetToNegative_ShouldAcceptNegative() void
+		+Label_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Label_WhenSetToWhitespace_ShouldAcceptWhitespace() void
+		+CreatedOn_WhenSet_ShouldStoreDateTime() void
+		+ModifiedOn_WhenSet_ShouldStoreDateTime() void
+		+PartStatus_WhenSetToNone_ShouldAcceptNone() void
+		+PartStatus_WhenSetToOk_ShouldAcceptOk() void
+		+PartStatus_WhenSetToNok_ShouldAcceptNok() void
+		+FlowStatus_WhenSetToNone_ShouldAcceptNone() void
+		+FlowStatus_WhenSetToCreated_ShouldAcceptCreated() void
+		+FlowStatus_WhenSetToInProcess_ShouldAcceptInProcess() void
+		+FlowStatus_WhenSetToFinished_ShouldAcceptFinished() void
+		+BarCode_WhenPartStatusSetToOk_ShouldRetainOkStatusValue() void
+		+BarCode_WhenPartStatusSetToNok_ShouldRetainNokStatusValue() void
+		+BarCode_WhenFlowStatusSetToCreated_ShouldMaintainCreatedState() void
+		+BarCode_WhenFlowStatusSetToInProcess_ShouldMaintainInProcessState() void
+		+BarCode_WhenFlowStatusSetToFinished_ShouldMaintainFinishedState() void
+		+BarCode_WhenCreatedAndModifiedTimestampsSet_ShouldValidateTimestampProgression() void
+		+BarCode_WhenInstanceCreatedNew_ShouldInitializeWithExpectedDefaultValues() void
+		+BarCode_WhenAllPropertiesPopulated_ShouldRepresentCompleteBarCodeEntity() void
+		+BarCode_WhenLabelSetToSingleCharacter_ShouldAcceptMinimalLabelLength() void
+		+BarCode_WhenLabelSetToVeryLongString_ShouldAcceptExtendedLabelLength() void
+		+BarCode_WhenLabelContainsSpecialCharacters_ShouldAcceptNonAlphanumericCharacters() void
+		+BarCode_WhenLabelSetToNumericString_ShouldAcceptDigitsOnlyLabels() void
+		+BarCode_WhenLabelContainsUnicodeCharacters_ShouldAcceptInternationalCharacters() void
+		+BarCode_WhenPartStatusOkAndFlowFinished_ShouldRepresentValidCompletedState() void
+		+BarCode_WhenPartStatusNokAndFlowFinished_ShouldRepresentValidRejectedState() void
+		+BarCode_WhenPartStatusOkAndFlowInProcess_ShouldRepresentValidInProgressState() void
+		+BarCode_WhenPartStatusNokAndFlowInProcess_ShouldRepresentValidDefectiveInProgressState() void
+		+BarCode_WhenAssignedToSpecificMachine_ShouldRetainCorrectMachineIdentifier() void
+		+BarCode_WhenNotAssignedToMachine_ShouldHaveZeroMachineIdentifier() void
+		+BarCode_WhenPropertiesSetToMaximumValues_ShouldAcceptIntegerLimits() void
+		+BarCode_WhenLabelContainsWhitespaceCharacters_ShouldPreserveSpacesInLabel() void
+		+ToString_WhenLabelIsNull_ShouldReturnEmptyString() void
+		+ToString_WhenLabelIsSet_ShouldReturnLabel() void
+	}
+	class PerformanceDataTests  {
+		+PerformanceData_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+PerformanceData_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+PerformanceData_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+PerformanceData_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+PerformanceData_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+FromPlc_WithMissingRegisters_ShouldUseDefaultValues() void
+		+FromPlc_WithInvalidValues_ShouldUseDefaultValues() void
+		+ManufacturingPerformanceScenarios_WithRealWorldData_ShouldCalculateCorrectly() void
+	}
+	class BarCodeValidationWithRegexServiceTests  {
+		+BarCodeValidationWithRegexService_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+BarCodeValidationWithRegexService_Constructor_WhenCreated_ShouldInitializeWithNullResult() void
+		+Validate_WithValidParameters_ShouldReturnValid() void
+		+Validate_WithPartStatusNotOkAndCycleStatusNotFinishedNok_ShouldReturnPartNotValid() void
+		+Validate_WithNextMachineIdNotMatching_ShouldReturnDestinationNotValid() void
+		+Validate_WithFlowStatusRejected_ShouldReturnPartRejected() void
+		+Validate_WithInvalidCombination_ShouldReturnInvalidAndSetResult() void
+		+Validate_WithNullFlowStatus_ShouldThrowArgumentNullException() void
+		+Validate_WithNullMachineType_ShouldThrowArgumentNullException() void
+		+Validate_WithNullCycleStatus_ShouldThrowArgumentNullException() void
+	}
+	class OeeRegisterCriticalTests  {
+		+CalculateOee_DivisionByZero_FaultedPlusStoppedTime_ShouldNotCrash() void
+		+CalculateOee_NegativeRunningTimeComputation_ShouldClampToZero() void
+		+CalculateOee_ProductionNoKEdgeCase_WhenTotalEqualsOk_ShouldBeZero() void
+		+CalculateOee_AllZeroInputs_ShouldUseFallbacksWithoutCrashing() void
+		+CalculateOee_ExtremeDoubleValues_ShouldHandleGracefully(double extremeValue) void
+		+CalculateOee_SafeRatio_ZeroDenominatorInQuality_ShouldUseFallback() void
+		+CalculateOee_SafeRatio_ZeroDenominatorInAvailability_ShouldUseFallbackLogic() void
+		+CalculateOee_SafeRatio_ZeroDenominatorInPerformance_ShouldUseFallbackLogic() void
+		+CalculateOee_IntegerOverflow_InScaling_ShouldHandleGracefully() void
+		+CalculateOee_ClampMetric_ExtremeOeeValue_ShouldClampTo01Range() void
+		+CalculateOee_NullInputs_ShouldReturnFailure() void
+		+CalculateOee_PerformanceClampingUpperBound_ShouldNotExceed15() void
+	}
+	class DefectRegisterTests  {
+		+DefectRegister_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+DefectRegister_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+DefectRegister_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+DefectRegister_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+DefectRegister_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class ValueObjectTests  {
+		+Equals_GivenDifferentValues_ShouldReturnFalse() void
+		+Equals_GivenMatchingValues_ShouldReturnTrue() void
+		-GetAtomicValues() IEnumerable~object~
+	}
+	class Point  {
+		+ X : int
+		+ Y : int
+		-GetAtomicValues() IEnumerable~object~
+	}
+	class LineTests  {
+		+Line_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+Line_WithDefaultConstructor_ShouldInitializeToExpectedDefaults() void
+		+Line_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+ToString_WhenCalled_ShouldReturnName() void
+		+Products_WhenSet_ShouldReturnCorrectCollection() void
+		+Machines_WhenSet_ShouldReturnCorrectCollection() void
+		+Line_WhenLineIsCreated_ShouldHaveDefaultValues() void
+		+Line_WhenLineIsConfigured_ShouldBeValid() void
+	}
+	class AuditableEntityTests  {
+		+AuditableEntity_WhenCreated_ShouldInitializeWithDefaultAuditFields() void
+		+AuditableEntity_Constructor_WhenCreated_ShouldInitializeDefaultValues() void
+		+CreatedBy_WhenSetToValidValues_ShouldReturnCorrectValue(string createdBy) void
+		+ModifiedBy_WhenSetToValidValues_ShouldReturnCorrectValue(string modifiedBy) void
+		+CreatedOn_WhenSetToValidDate_ShouldReturnCorrectValue() void
+		+ModifiedOn_WhenSetToValidDate_ShouldReturnCorrectValue() void
+		+CreatedOn_WhenSetToDateBefore2000_ShouldSetToNull(int year, int month, int day) void
+		+ModifiedOn_WhenSetToDateBefore2000_ShouldSetToNull(int year, int month, int day) void
+		+CreatedOn_WhenSetToNull_ShouldReturnNull() void
+		+ModifiedOn_WhenSetToNull_ShouldReturnNull() void
+		+AuditableEntity_Properties_WithManufacturingScenarios_ShouldHandleCorrectly(int year, int month, int day, string scenario) void
+		+AuditFields_WhenUsedInManufacturingWorkflow_ShouldTrackChangesCorrectly() void
+		+CreatedBy_WithEdgeCaseValues_ShouldStoreCorrectly(string value) void
+		+ModifiedBy_WithEdgeCaseValues_ShouldStoreCorrectly(string value) void
+	}
+	class ConfigAppTests  {
+		+ConfigApp_ConfigApp_WhenCreatedWithDefaultConstructor_ShouldInitializeAllPropertiesCorrectly() void
+		+ConfigApp_Constructor_WhenCreated_ShouldInheritAuditableEntityBehavior() void
+		+ConfigApp_WhenAllPropertiesSetToSpecificValues_ShouldPersistAllChangesAccurately() void
+		+ConfigApp_Properties_WithManufacturingScenarios_ShouldStoreCorrectly(int appId, int machineId, int plcId, string pc, string client, string factory, string line, string project, string version) void
+		+ConfigAppId_WhenSetToValidValues_ShouldReturnCorrectValue(string configId) void
+		+MachineId_WhenSetToValidValues_ShouldReturnCorrectValue(int machineId) void
+		+PlcId_WhenSetToValidValues_ShouldReturnCorrectValue(int plcId) void
+		+ConfigApp_AuditProperties_WithManufacturingWorkflow_ShouldTrackChangesCorrectly() void
+		+Client_WithEdgeCaseValues_ShouldStoreCorrectly(string? value) void
+		+Version_WithVariousFormats_ShouldStoreCorrectly(string? value) void
+		+EntityInterfaces_ShouldImplementCorrectly() void
+	}
+	class BarCodeDetailsRequestTests  {
+		+BarCodeDetailsRequest_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+Build_WithInvalidMachineId_ShouldReturnFailure() void
+		+Build_WithNullLabel_ShouldReturnFailure() void
+		+Build_WithNullPartNumber_ShouldReturnFailure() void
+		+BarCodeDetailsRequest_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+BarCodeDetailsRequest_Properties_AreReadOnly_ShouldNotAllowModification() void
+	}
+	class VariableTests  {
+		+Variable_Constructor_Default_ShouldCreateInstanceWithDefaultValues() void
+		+Variable_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+VariableProperties_WhenSetToNull_ShouldHandleNullValues() void
+		+VariableProperties_WhenSetToEmptyStrings_ShouldAcceptEmptyStrings() void
+		+VariableProperties_WhenSetToZero_ShouldAcceptZero() void
+		+VariableProperties_WhenSetToNegative_ShouldAcceptNegative() void
+		+VariableProperties_WhenSetToLargeValues_ShouldAcceptLargeValues() void
+		+Variable_WhenVariableIsCreated_ShouldHaveDefaultValues() void
+		+Variable_WhenVariableIsConfigured_ShouldBeValid() void
+		+Variable_WhenVariableIsActive_ShouldBeValid() void
+		+Variable_WhenVariableIsInactive_ShouldBeValid() void
+		+Variable_WhenVariableHasValidAddress_ShouldBeValid() void
+		+Variable_WhenVariableHasComplexAddress_ShouldBeValid() void
+		+Variable_WhenVariableHasValidNetType_ShouldBeValid() void
+		+Variable_WhenVariableHasValidNativeType_ShouldBeValid() void
+		+Variable_WhenVariableHasValidDirection_ShouldBeValid() void
+		+Variable_WhenVariableHasOutputDirection_ShouldBeValid() void
+		+Variable_WhenVariableHasValidTagStatus_ShouldBeValid() void
+		+Variable_WhenVariableHasValidLength_ShouldBeValid() void
+		+Variable_WhenVariableHasZeroLength_ShouldBeValid() void
+		+Variable_WhenVariableHasLargeLength_ShouldBeValid() void
+		+Variable_WhenVariableHasValidValue_ShouldBeValid() void
+		+Variable_WhenVariableHasEmptyValue_ShouldBeValid() void
+		+Variable_WhenVariableIsValidated_ShouldBeValid() void
+		+Variable_WhenVariableIsNotValidated_ShouldBeValid() void
+		+Variable_WhenVariableHasNullValidated_ShouldBeValid() void
+		+Variable_WhenVariableHasNullVariableSpecId_ShouldBeValid() void
+		+Variable_WhenVariableHasValidVariableSpecId_ShouldBeValid() void
+		+Variable_WhenVariableHasSpecialCharacters_ShouldBeValid() void
+		+Variable_WhenVariableHasLongStrings_ShouldBeValid() void
+	}
+	class GatewayTaskEntityTests  {
+		+GatewayTaskEntity_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+GatewayTaskEntity_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+GatewayTaskEntity_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+GatewayTaskEntity_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+GatewayTaskEntity_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+DatabaseLookupScenarios_WithGatewayTaskEntities_ShouldSupportManufacturingOperations() void
+		+EnumLookupMapping_WithGatewayTaskEntity_ShouldMaintainDataIntegrity() void
+		+EdgeCaseEntityValues_ShouldBeHandledAppropriately() void
+	}
+	class TagsGroupsEnumTests  {
+		+TagsGroupsEnum_Constructor_WhenCreated_ShouldCreateInstanceWithDefaultValues() void
+		+StaticProperties_WhenAccessed_WhenQueried_ShouldReturnExpectedData(string propertyName, int expectedValue) void
+		+ImplicitConversion_FromInt_ShouldReturnCorrectTagsGroupsEnum(int value, string expectedName) void
+		+ImplicitConversion_ToInt_ShouldReturnCorrectValue(string propertyName, int expectedValue) void
+		+ImplicitConversion_ToString_ShouldReturnStringValue(string propertyName, string expectedStringValue) void
+		+ManufacturingTagScenarios_WithDifferentProducts_ShouldHandleCorrectly(string scenario) void
+		+TagsGroupsEnumBusinessRules_WhenValidatingTagGroups_ShouldFollowPowerOfTwoPattern() void
+		+TagGroupTypes_WithManufacturingScenarios_ShouldIndicateCorrectOperation(int tagValue) void
+		+ComplexManufacturingTagCombination_WithMultipleGroups_ShouldSupportBitwiseOperations() void
+		+TagGroupTransitions_BetweenTypes_ShouldMaintainPLCIntegrity(string fromGroup, string toGroup, string scenario) void
+		+PLCTagGroupClassification_ShouldEnableEffectiveCommunication() void
+		+ImplicitConversion_FromNullableInt_ShouldHandleCorrectly(int? nullableValue, int expectedValue) void
+		+IndustrialAutomationSupport_ShouldEnableAdvancedPLCOperations() void
+		+EdgeCaseHandling_WithVariousValues_ShouldStoreCorrectly(int edgeValue, string scenario, int expectedValue) void
+		+ManufacturingTagWorkflow_ShouldSupportCompleteProductionLineOperations() void
+	}
+	class ProductionDataTests  {
+		+ProductionData_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+ProductionData_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+ProductionData_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+ProductionData_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class PlcSiemensOptionsTests  {
+		+PlcSiemensOptions_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+PlcSiemensOptions_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+PlcSiemensOptions_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+PlcSiemensOptions_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+PlcSiemensOptions_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class MachineStatusTests  {
+		+MachineStatus_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+MachineId_WhenSet_ShouldReturnCorrectValue() void
+		+StatusMachineId_WhenSet_ShouldReturnCorrectValue() void
+		+BreakDownTime_WhenSet_ShouldReturnCorrectValue() void
+		+UpdatedOn_WhenSet_ShouldReturnCorrectValue() void
+		+MachineStatusProperties_WhenSetWithManufacturingData_ShouldRetainAllValues(int machineId, int statusMachineId, decimal breakDownTime, string scenario) void
+		+CompleteStatusRecord_WhenPopulated_ShouldMaintainAllProperties() void
+		+MachineId_WhenSetToAnyValue_ShouldBeAccepted(int value) void
+		+StatusMachineId_WhenSetToAnyValue_ShouldBeAccepted(int value) void
+		+BreakDownTime_WhenSetToAnyValue_ShouldBeAccepted(decimal value) void
+		+ZeroBreakDownTime_ShouldIndicateNormalOperation() void
+		+PositiveBreakDownTime_ShouldIndicateMachineDowntime() void
+		+UpdatedOn_WhenSetToCurrentTime_ShouldAcceptTimestamp() void
+		+UpdatedOn_WhenSetToMinValue_ShouldAcceptValue() void
+		+UpdatedOn_WhenSetToMaxValue_ShouldAcceptValue() void
+		+PropertyRoundTrip_WhenSetAndGet_ShouldMaintainValues() void
+		+ManufacturingStatusScenarios_WithDifferentOperationalStates_ShouldHandleCorrectly(int machineId, int statusMachineId, decimal breakDownTime, string operationalState) void
+		+ProductionLineMonitoring_WithMultipleMachineStatuses_ShouldTrackEffectively() void
+		+QualityControlIntegration_WithInspectionMachineStatus_ShouldSupportMonitoring() void
+		+EmergencyStopScenario_WithHighBreakdownTime_ShouldIndicateCriticalIssue() void
+		+MaintenanceWindow_WithScheduledDowntime_ShouldTrackAccurately() void
+		+ILookupEntity_Implementation_ShouldBeCorrect() void
+		+TimestampAccuracy_WhenSetWithPrecision_ShouldMaintainAccuracy() void
+		+IndustryStandardOEE_WithBreakdownTracking_ShouldSupportCalculations() void
+	}
+	class MachinePlcTests  {
+		+MachinePlc_Constructor_Default_ShouldCreateInstanceWithDefaultValues() void
+		+MachinePlc_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+MachinePlc_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+MachinePlcProperties_WhenSetToZero_ShouldAcceptZero() void
+		+MachinePlcProperties_WhenSetToNegative_ShouldAcceptNegative() void
+		+MachinePlcProperties_WhenSetToLargeValues_ShouldAcceptLargeValues() void
+		+MachinePlc_WhenMachinePlcIsCreated_ShouldHaveDefaultValues() void
+		+MachinePlc_WhenMachinePlcIsConfigured_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcIsActive_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcIsInactive_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasSameMachineAndPlcIds_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasDifferentMachineAndPlcIds_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasZeroMachineId_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasZeroPlcId_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasNegativeMachineId_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasNegativePlcId_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasLargeMachineId_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasLargePlcId_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasLargeIsActive_ShouldBeValid() void
+		+MachinePlc_WhenMachinePlcHasNegativeIsActive_ShouldBeValid() void
+		+MachinePlc_WhenValidParameters_ShouldSetAllProperties() void
+		+MachinePlc_WhenZeroParameters_ShouldSetAllProperties() void
+		+MachinePlc_WhenNegativeParameters_ShouldSetAllProperties() void
+		+MachinePlc_WhenLargeParameters_ShouldSetAllProperties() void
+	}
+	class ConnectionStatusTests  {
+		+ConnectionStatus_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+ConnectionStatus_WhenDefaultValues_ShouldInitializePropertiesCorrectly() void
+		+ConnectionStatusProperties_WhenSetToValidValues_ShouldReturnCorrectValues(int machineId, int status, string message) void
+		+ManufacturingConnectionMonitoring_WithDifferentMachines_ShouldHandleCorrectly(int machineId, int status, string message) void
+		+ConnectionStatus_AsAuditableEntity_ShouldInheritAuditingCapabilities() void
+		+ConnectionStatus_AsLookupEntity_ShouldImplementInterface() void
+	}
+	class LabelTests  {
+		+Label_WhenValidString_ShouldCreateInstance() void
+		+Label_WhenValidStringAndLabel_ShouldCreateInstance() void
+		+Label_WhenEmptyString_ShouldThrowArgumentException() void
+		+Label_WhenNullString_ShouldThrowArgumentException() void
+		+ImplicitConversion_FromString_ShouldCreateLabel() void
+		+ImplicitConversion_ToString_ShouldReturnString() void
+		+ToString_ShouldReturnLabelValue() void
+		+Equals_WithSameLabel_ShouldReturnTrue() void
+		+Equals_WithDifferentLabel_ShouldReturnFalse() void
+		+Equals_WithNull_ShouldReturnFalse() void
+		+Equals_WithSameReference_ShouldReturnTrue() void
+		+GetHashCode_WithSameLabel_ShouldReturnSameHashCode() void
+		+GetHashCode_WithDifferentLabel_ShouldReturnDifferentHashCode() void
+		+CompareTo_WithSameLabel_ShouldReturnZero() void
+		+CompareTo_WithDifferentLabel_ShouldReturnNonZero() void
+		+CompareTo_WithInvalidObject_ShouldThrowArgumentException() void
+		+Label_WhenLabelIsCreated_ShouldBeValid() void
+		+Label_WhenLabelIsCreatedWithValueAndLabel_ShouldBeValid() void
+		+Label_WhenLabelIsImplicitlyConverted_ShouldBeValid() void
+		+Label_WhenLabelIsImplicitlyConvertedToString_ShouldBeValid() void
+		+Label_WhenLabelsAreEqual_ShouldBeValid() void
+		+Label_WhenLabelsAreNotEqual_ShouldBeValid() void
+	}
+	class ShiftsCatalogTests  {
+		+ShiftsCatalog_ShiftsCatalog_Properties_ShouldSetAndGetCorrectly() void
+	}
+	class StoppageRegisterTests  {
+		+StoppageRegister_StoppageRegister_Properties_ShouldSetAndGetCorrectly() void
+	}
+	class EnumModelTests  {
+		+Enumeration_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+Invalid_StaticProperty_ShouldReturnInvalidInstance() void
+		+Deconstruct_WhenCalled_ShouldReturnAllComponents() void
+		+ImplicitConversion_ToInt_ShouldReturnValue() void
+		+ToString_WhenCalled_ShouldReturnDisplayNameOrName() void
+		+Exists_WhenCalledWithValues_ShouldReturnCorrectResult(int value, bool expected) void
+		+GetAll_WhenCalled_ShouldReturnAllInstancesOfType() void
+		+ToLookUpTable_Generic_ShouldReturnLookupTableList() void
+		+ToLookUpTable_NonGeneric_ShouldReturnEnumLookUpTableList() void
+		+Equals_WithSameInstance_ShouldReturnTrue() void
+		+Equals_WithDifferentValues_ShouldReturnFalse() void
+		+Equals_WithNullObject_ShouldReturnFalse() void
+		+GetHashCode_WithSameValues_ShouldReturnSameHashCode() void
+		+AbsoluteDifference_BetweenValues_ShouldReturnCorrectDifference() void
+		+FromValue_WithValidValues_ShouldReturnCorrectInstance(int value) void
+		+FromValue_WithInvalidValue_ShouldReturnInvalidInstance() void
+		+FromName_WithValidNames_ShouldReturnCorrectInstance(string name) void
+		+FromName_WithInvalidName_ShouldReturnInvalidInstance() void
+		+FromDisplayName_WithValidDisplayName_ShouldReturnCorrectInstance() void
+		+FromDisplayName_WithInvalidDisplayName_ShouldReturnInvalidInstance() void
+		+FromValue_WithNullableInt_ShouldHandleCorrectly(int? value) void
+		+InvalidValue_WhenCalled_ShouldReturnInvalidInstance() void
+		+CompareTo_WithSameType_ShouldCompareByValue() void
+		+CompareTo_WithNull_ShouldReturnDefault() void
+		+ManufacturingWorkflow_WithDifferentPartStatuses_ShouldMaintainOrder(int value1, int value2) void
+		+QualityControlScenario_WithMultipleStatuses_ShouldHandleCorrectly() void
+	}
+	class TestEnumModel  {
+	}
+	class OeeRegisterBugHunt2Tests  {
+		+SafeRatio_WithNaNOrInfinity_ShouldUseFallback(double numerator, double denominator) void
+		+ClampMetric_WithSpecialValues_ShouldHandleGracefully(double value) void
+		+SafeRatio_DivisionResultingInNaN_ShouldUseFallback() void
+		+SafeRatio_DivisionResultingInInfinity_ShouldClampProperly() void
+		+ToKpiOee_WithNaNValues_ShouldNotPropagateNaN() void
+		+ToKpiOee_WithInfinityValues_ShouldNotPropagateInfinity() void
+		+PerformanceData_FromPlc_SilentFailures_ShouldBeDocumented(string? invalidValue, int expectedDefault) void
+		+PerformanceData_FromPlc_MissingKeys_ShouldUseDefaults() void
+		+PerformanceData_FromPlc_NullRegisterValues_ShouldHandleGracefully() void
+		+SafeRatio_PrecisionLoss_VerySmallValues_ShouldHandleCorrectly() void
+		+SafeRatio_PrecisionLoss_VeryLargeValues_ShouldHandleCorrectly() void
+	}
+	class WorkFlowTypeEntityTests  {
+		+WorkFlowTypeEntity_WhenDefaultConstructor_ShouldCreateInstance() void
+		+WorkFlowTypeEntity_WhenParameters_ShouldCreateInstanceWithValues() void
+		+WorkFlowTypeEntity_WhenManufacturingWorkflowTypes_ShouldCreateValidEntities(int id, string name, string displayName) void
+		+WorkFlowTypeEntityProperties_WhenSetThroughParameterizedConstructor_ShouldReturnCorrectValues() void
+		+WorkFlowTypeEntityProperties_WhenSetAfterDefaultConstruction_ShouldReturnCorrectValues() void
+		+WorkFlowTypeEntity_Properties_WithEdgeCaseValues_ShouldAcceptAllValues(int id, string? name, string? displayName) void
+		+WorkFlowTypeEntity_DomainLogic_WithFordF150AssemblyWorkflow_ShouldCreateValidWorkflowTypeEntity() void
+		+WorkFlowTypeEntity_DomainLogic_WithTeslaModelSBatteryWorkflow_ShouldCreateValidWorkflowTypeEntity() void
+		+WorkFlowTypeEntity_DomainLogic_WithBMWX5PaintShopWorkflow_ShouldCreateValidWorkflowTypeEntity() void
+		+WorkFlowTypeEntity_DomainLogic_WithMercedesQualityControlWorkflow_ShouldCreateValidWorkflowTypeEntity() void
+		+WorkFlowTypeEntity_DomainLogic_WithAudiA4WeldingWorkflow_ShouldCreateValidWorkflowTypeEntity() void
+		+WorkFlowTypeEntity_DomainLogic_WithIndustry40StampingWorkflow_ShouldCreateValidWorkflowTypeEntities(int id, string name, string displayName) void
+		+WorkFlowTypeEntity_DomainLogic_AsLookupEntity_ShouldSupportEntityFrameworkConfiguration() void
+		+WorkFlowTypeEntity_DomainLogic_WithComplexManufacturingPipeline_ShouldSupportWorkflowOrchestration() void
+		-IsPowerOfTwo(int num) bool
+	}
+	class CycleTests  {
+		+Cycle_WhenCreatedWithCompleteValidData_ShouldSetAllPropertiesCorrectly() void
+		+Cycle_WhenCreatedWithoutParameters_ShouldInitializeWithDefaultValues() void
+		+Cycle_WhenAllPropertiesUpdated_ShouldPersistAllChangesWithTimestamps() void
+		+Cycle_WithNegativeAndLargeValues_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+Cycle_Cycle_WhenCreatedWithDefaultConstructor_ShouldHaveExpectedInitialState() void
+		+Cycle_WhenPropertiesSetToSpecificValues_ShouldReturnExactValues() void
+		+CycleId_WhenSetToZero_ShouldAcceptZero() void
+		+CycleId_WhenSetToNegative_ShouldAcceptNegative() void
+		+MachineId_WhenSetToZero_ShouldAcceptZero() void
+		+MachineId_WhenSetToNegative_ShouldAcceptNegative() void
+		+BarCodeId_WhenSetToZero_ShouldAcceptZero() void
+		+BarCodeId_WhenSetToNegative_ShouldAcceptNegative() void
+		+CycleTime_WhenSetToZero_ShouldAcceptZero() void
+		+CycleTime_WhenSetToNegative_ShouldAcceptNegative() void
+		+TaktTime_WhenSetToZero_ShouldAcceptZero() void
+		+TaktTime_WhenSetToNegative_ShouldAcceptNegative() void
+		+CyclesOk_WhenSetToZero_ShouldAcceptZero() void
+		+CyclesOk_WhenSetToNegative_ShouldAcceptNegative() void
+		+StartedOn_WhenSet_ShouldStoreDateTime() void
+		+FinishedOn_WhenSet_ShouldStoreDateTime() void
+		+CycleStatus_WhenSetToNone_ShouldAcceptNone() void
+		+CycleStatus_WhenSetToStarted_ShouldAcceptStarted() void
+		+CycleStatus_WhenSetToFinishedOk_ShouldAcceptFinishedOk() void
+		+CycleStatus_WhenSetToFinishedNok_ShouldAcceptFinishedNok() void
+		+PartStatus_WhenSetToNone_ShouldAcceptNone() void
+		+PartStatus_WhenSetToOk_ShouldAcceptOk() void
+		+PartStatus_WhenSetToNok_ShouldAcceptNok() void
+		+Cycle_WhenCycleStatusSetToStarted_ShouldRetainStartedStatusValue() void
+		+Cycle_WhenCycleStatusSetToFinishedOk_ShouldRetainFinishedOkStatusValue() void
+		+Cycle_WhenCycleStatusSetToFinishedNok_ShouldRetainFinishedNokStatusValue() void
+		+Cycle_WhenPartStatusSetToOk_ShouldRetainOkPartStatusValue() void
+		+Cycle_WhenPartStatusSetToNok_ShouldRetainNokPartStatusValue() void
+		+Cycle_WhenCycleHasTimestamps_ShouldBeValid() void
+		+Cycle_WhenCycleIsNew_ShouldHaveDefaultValues() void
+		+Cycle_WhenCycleIsFullyConfigured_ShouldBeComplete() void
+		+Cycle_WhenCycleTimeIsGreaterThanTaktTime_ShouldBeValid() void
+		+Cycle_WhenCycleTimeIsLessThanTaktTime_ShouldBeValid() void
+		+Cycle_WhenCycleTimeEqualsTaktTime_ShouldBeValid() void
+		+Cycle_WhenCyclesOkIsPositive_ShouldBeValid() void
+		+Cycle_WhenCyclesOkIsZero_ShouldBeValid() void
+		+Cycle_WhenCyclesOkIsNegative_ShouldBeValid() void
+		+Cycle_WhenCycleHasLargeValues_ShouldBeValid() void
+		+Cycle_WhenCycleIsStartedWithOkPart_ShouldBeValidConfiguration() void
+		+Cycle_WhenCycleIsFinishedOkWithOkPart_ShouldBeValidConfiguration() void
+		+Cycle_WhenCycleIsFinishedNokWithNokPart_ShouldBeValidConfiguration() void
+		+Cycle_Cycle_Properties_ShouldSetAndGetCorrectly() void
+	}
+	class WorkFlowTypeTests  {
+		+WorkFlowType_Constructor_WhenCreated_ShouldCreateInstanceWithDefaultValues() void
+		+StaticProperties_WhenAccessed_WhenQueried_ShouldReturnExpectedData(string propertyName, int expectedValue) void
+		+ImplicitConversion_FromInt_ShouldReturnCorrectWorkFlowType(int value, string expectedName) void
+		+ImplicitConversion_ToInt_ShouldReturnCorrectValue(string propertyName, int expectedValue) void
+		+ImplicitConversion_ToString_ShouldReturnStringValue(string propertyName, string expectedStringValue) void
+		+ManufacturingWorkflowScenarios_WithDifferentProducts_ShouldHandleCorrectly(string scenario) void
+		+WorkFlowTypeBusinessRules_WhenValidatingWorkflowSequence_ShouldFollowManufacturingOrder() void
+		+WorkflowTypes_WithManufacturingScenarios_ShouldIndicateCorrectStage(int workflowValue) void
+		+ComplexManufacturingWorkflow_WithMultipleStages_ShouldSupportBitwiseOperations() void
+		+WorkflowTransitions_BetweenStages_ShouldMaintainManufacturingIntegrity(string fromStage, string toStage, string scenario) void
+		+InvalidWorkflowType_ShouldBeDistinguishedFromValidTypes() void
+	}
+	class RecipeTests  {
+		+Recipe_Constructor_Default_ShouldCreateInstanceWithDefaultValues() void
+		+Recipe_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+RecipeProperties_WhenSetToZero_ShouldAcceptZero() void
+		+RecipeProperties_WhenSetToNegative_ShouldAcceptNegative() void
+		+RecipeProperties_WhenSetToLargeValues_ShouldAcceptLargeValues() void
+		+Recipe_WhenRecipeIsCreated_ShouldHaveReasonableDefaults() void
+		+Recipe_WhenRecipeIsConfigured_ShouldBeValid() void
+		+Recipe_WhenCycleTimeRangeIsValid_ShouldBeValid() void
+		+Recipe_WhenCycleTimeRangeIsReversed_ShouldStillBeValid() void
+		+Recipe_WhenRetryCountIsZero_ShouldBeValid() void
+		+Recipe_WhenMaxCyclesAreZero_ShouldBeValid() void
+		+Recipe_WhenRecipeHasLargeCycleTimes_ShouldBeValid() void
+		+Recipe_WhenRecipeHasHighRetryCount_ShouldBeValid() void
+		+Recipe_WhenRecipeHasHighCycleLimits_ShouldBeValid() void
+	}
+	class KpiOeeTests  {
+		+KpiOee_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+KpiOee_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+KpiOee_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+KpiOee_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+KpiOee_BusinessScenario_ShouldEnforceAllDomainRules() void
+		+ManufacturingKpiScenarios_WithRealWorldData_ShouldCalculateCorrectly() void
+		+EdgeCaseKpiValues_ShouldBeHandledAppropriately() void
+		+KpiOeeComparison_WithDifferentTimeStamps_ShouldSupportTrendAnalysis() void
+	}
+	class VariablesGroupTests  {
+		+VariablesGroup_Constructor_WhenCreated_ShouldCreateInstanceWithDefaultValues() void
+		+VariablesGroupProperties_WhenSetToValidValues_ShouldReturnCorrectValues(int groupId, string groupName) void
+		+VariablesGroup_Properties_WithEdgeCaseValues_ShouldStoreCorrectly(int groupId, string? groupName) void
+		+ManufacturingVariableGroups_WithDifferentCategories_ShouldHandleCorrectly(string groupName) void
+		+InterfaceCompliance_ShouldImplementILookupEntity() void
+		+PLCVariableGrouping_WithDifferentTypes_ShouldSupportManufacturingOperations(int groupId, string groupName) void
+		+PropertyRoundTrip_ShouldMaintainDataIntegrity() void
+		+ManufacturingScenarios_WithRealWorldExamples_ShouldProvideProperOrganization(string groupName) void
+		+IndustrialAutomationSupport_ShouldEnableEffectiveVariableManagement() void
+		+EdgeCaseHandling_WithVariousIdValues_ShouldStoreCorrectly(int edgeId, string groupName) void
+	}
+	class ProductionDataTests  {
+		+ProductionData_Constructor_Default_ShouldCreateProductionDataWithDefaultValues() void
+		+ProductionData_WhenParameters_ShouldCreateProductionDataWithSpecifiedValues() void
+		+ProductionData_WhenNegativeValues_ShouldHandleGracefully() void
+		+ProductionData_WhenLargeValues_ShouldHandleGracefully() void
+		+AddLastShift_ShouldCreateLastShiftProductionData() void
+		+AddLastShift_WithNegativeValues_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+SetPartInformation_WithValidProduct_ShouldSetPartInformation() void
+		+SetPartInformation_WithNullProduct_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+SetPartInformation_WithProductHavingNullValues_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+CreateFromProductionData_ShouldCreateNewInstanceWithSameValues() void
+		+CreateFromProductionData_WithNullSource_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+ToString_WithBasicData_ShouldReturnCorrectString() void
+		+ToString_WithPartInformation_ShouldIncludePartInformation() void
+		+ToString_WithLastShift_ShouldIncludeLastShiftInformation() void
+		+ToString_WithAllData_ShouldIncludeAllInformation() void
+		+ProductionData_AllProperties_ShouldBeSettableAndGettable() void
+		+LastShift_WhenAssigned_ShouldStoreAndRetrieveValue() void
+	}
+	class PlcTests  {
+		+Plc_Constructor_Default_ShouldCreateInstanceWithDefaultValues() void
+		+Plc_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+PlcProperties_WhenSetToNull_ShouldHandleNullValues() void
+		+PlcProperties_WhenSetToEmptyStrings_ShouldAcceptEmptyStrings() void
+		+PlcProperties_WhenSetToZero_ShouldAcceptZero() void
+		+PlcProperties_WhenSetToNegative_ShouldAcceptNegative() void
+		+PlcProperties_WhenSetToLargeValues_ShouldAcceptLargeValues() void
+		+Plc_WhenPlcIsCreated_ShouldHaveDefaultValues() void
+		+Plc_WhenPlcIsConfigured_ShouldBeValid() void
+		+Plc_WhenPlcIsDisabled_ShouldBeValid() void
+		+Plc_WhenPlcIsEnabled_ShouldBeValid() void
+		+Plc_WhenPlcHasValidIpAddress_ShouldBeValid() void
+		+Plc_WhenPlcHasInvalidIpAddress_ShouldStillBeValid() void
+		+Plc_WhenPlcHasLongStrings_ShouldBeValid() void
+		+Plc_WhenPlcHasSpecialCharacters_ShouldBeValid() void
+		+Plc_WhenPlcHasZeroMachineId_ShouldBeValid() void
+		+Plc_WhenPlcHasNegativeMachineId_ShouldBeValid() void
+		+Plc_WhenPlcHasLargeMachineId_ShouldBeValid() void
+	}
+	class CycleStatusTests  {
+		+CycleStatus_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+Invalid_StaticProperty_ShouldHaveCorrectValues() void
+		+None_StaticProperty_ShouldHaveCorrectValues() void
+		+NotStarted_StaticProperty_ShouldHaveCorrectValues() void
+		+Started_StaticProperty_ShouldHaveCorrectValues() void
+		+FinishedOk_StaticProperty_ShouldHaveCorrectValues() void
+		+FinishedNok_StaticProperty_ShouldHaveCorrectValues() void
+		+EndOfProcess_StaticProperty_ShouldHaveCorrectValues() void
+		+Rejected_StaticProperty_ShouldHaveCorrectValues() void
+		+Canceled_StaticProperty_ShouldHaveCorrectValues() void
+		+FromValue_WithValidValues_ShouldReturnCorrectInstance(int value, string expectedName) void
+		+FromValue_WithInvalidValue_ShouldReturnInvalidInstance() void
+		+FromName_WithValidNames_ShouldReturnCorrectInstance(string name) void
+		+FromName_WithInvalidName_ShouldReturnInvalidInstance() void
+		+GetAll_WhenCalled_ShouldReturnAllCycleStatuses() void
+		+Equals_WithSameStatus_ShouldReturnTrue() void
+		+Equals_WithDifferentStatuses_ShouldReturnFalse() void
+		+CompareTo_WithDifferentValues_ShouldReturnCorrectComparison() void
+		+ManufacturingCycle_WithTypicalProgression_ShouldFollowLogicalOrder() void
+		+AbsoluteDifference_BetweenStatuses_ShouldReturnCorrectDifference(int value1, int value2, int expectedDifference) void
+		+QualityControlScenario_WithOkAndNokResults_ShouldHandleCorrectly() void
+		+ToString_WhenCalled_ShouldReturnDisplayNameOrName() void
+		+ManufacturingCycleProgression_WithMultipleStatuses_ShouldMaintainLogicalValues(int[] values) void
+		+ProductionLineControl_WithCompleteManufacturingCycle_ShouldHandleAllStates() void
+		+EmergencyControl_WithCanceledAndRejectedStates_ShouldSupportEmergencyStops() void
+		+NegativeValue_InvalidState_ShouldBeHandledCorrectly() void
+	}
+	class RegisterTests  {
+		+Register_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+Register_Constructor_ShouldCreateRegisterWithDefaultValues() void
+		+Register_AllProperties_ShouldBeSettableAndGettable() void
+		+Register_WithNullAndEmptyStrings_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+Register_WithNegativeAndLargeValues_WithEdgeCases_ShouldHandleWithoutErrors() void
+		+Register_WithDefaultConstructor_ShouldInitializeToExpectedDefaults() void
+		+Register_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+RegisterProperties_WhenSetToNull_ShouldHandleNullValues() void
+		+RegisterId_WhenSetToZero_ShouldAcceptZero() void
+		+RegisterId_WhenSetToNegative_ShouldAcceptNegative() void
+		+Name_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Description_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Value_WhenSetToNull_ShouldAcceptNull() void
+		+DataType_WhenSetToEmptyString_ShouldAcceptEmptyString() void
+		+Register_WhenRegisterIsCreated_ShouldHaveDefaultValues() void
+		+Register_WhenRegisterIsConfigured_ShouldBeValid() void
+		+Register_WhenRegisterHasNullValue_ShouldBeValid() void
+		+Register_WhenRegisterHasLargeIds_ShouldBeValid() void
+		+Register_WhenRegisterHasNegativeIds_ShouldBeValid() void
+	}
+	class FlowStatusTests  {
+		+FlowStatus_WhenDefaultParameters_ShouldCreateValidInstance() void
+		+None_StaticProperty_ShouldHaveCorrectValues() void
+		+Created_StaticProperty_ShouldHaveCorrectValues() void
+		+InProcess_StaticProperty_ShouldHaveCorrectValues() void
+		+Finished_StaticProperty_ShouldHaveCorrectValues() void
+		+Invalid_StaticProperty_ShouldHaveCorrectValues() void
+		+Restored_StaticProperty_ShouldHaveCorrectValues() void
+		+Rejected_StaticProperty_ShouldHaveCorrectValues() void
+		+ImplicitConversion_ToInt_ShouldReturnValue() void
+		+ImplicitConversion_ToString_ShouldReturnStringValue() void
+		+ImplicitConversion_FromInt_ShouldReturnCorrectFlowStatus() void
+		+FromValue_WithValidValues_ShouldReturnCorrectInstance(int value, string expectedName) void
+		+FromValue_WithInvalidValue_ShouldReturnInvalidInstance() void
+		+FromName_WithValidNames_ShouldReturnCorrectInstance(string name) void
+		+FromName_WithInvalidName_ShouldReturnInvalidInstance() void
+		+GetAll_WhenCalled_ShouldReturnAllFlowStatuses() void
+		+Equals_WithSameStatus_ShouldReturnTrue() void
+		+Equals_WithDifferentStatuses_ShouldReturnFalse() void
+		+CompareTo_WithDifferentValues_ShouldReturnCorrectComparison() void
+		+ManufacturingWorkflow_WithTypicalProgression_ShouldFollowLogicalOrder() void
+		+AbsoluteDifference_BetweenStatuses_ShouldReturnCorrectDifference(int value1, int value2, int expectedDifference) void
+		+QualityControlScenario_WithRejectionAndRestoration_ShouldHandleCorrectly() void
+		+ToString_WhenCalled_ShouldReturnDisplayNameOrName() void
+		+ManufacturingStateProgression_WithMultipleStatuses_ShouldMaintainLogicalValues(int[] values) void
+		+ProductionLineControl_WithCompleteWorkflow_ShouldHandleAllStates() void
+	}
+	class EnumModelComprehensiveTests  {
+		+FromValue_WithValidValue_ShouldReturnCorrectInstance() void
+		+FromValue_WithInvalidValue_ShouldReturnInvalidInstance_NegativeInvalid() void
+		+FromValue_WithInvalidValue_ShouldReturnInvalidInstance_PositiveInvalid() void
+		+FromValue_WithInvalidValue_NoExplicitInvalid_ShouldReturnBaseInvalid() void
+		+FromValue_WithAllValidValues_ShouldReturnCorrectInstances(int value) void
+		+FromValue_WithInvalidValues_ShouldReturnInvalidInstance(int value) void
+		+FromValue_MultipleCallsSameType_ShouldUseCachedLookup() void
+		+FromValue_DifferentEnumTypes_ShouldHaveSeparateCaches() void
+		+FromValue_ConcurrentAccess_ShouldBeThreadSafe() Task
+		+FromValue_NeverThrowsException_AlwaysReturnsValue() void
+		+FromValue_DuplicateValues_ShouldHandleGracefully() void
+		+FromValue_ActualProductionEnums_ShouldWorkCorrectly() void
+		+ProductionEnums_InvalidValueConsistency_ShouldMatchExpectedValues(Type enumType, int expectedInvalidValue) void
+		+FromValue_ManufacturingLoadSimulation_ShouldHandleHighThroughput() Task
+	}
+	class TestEnumNegativeInvalid  {
+		+TestEnumNegativeInvalid Invalid
+		+TestEnumNegativeInvalid None
+		+TestEnumNegativeInvalid First
+		+TestEnumNegativeInvalid Second
+		+TestEnumNegativeInvalid Fourth
+	}
+	class TestEnumPositiveInvalid  {
+		+TestEnumPositiveInvalid None
+		+TestEnumPositiveInvalid First
+		+TestEnumPositiveInvalid Second
+		+TestEnumPositiveInvalid Fourth
+		+TestEnumPositiveInvalid Invalid
+		+TestEnumPositiveInvalid Rejected
+	}
+	class TestEnumNoExplicitInvalid  {
+		+TestEnumNoExplicitInvalid None
+		+TestEnumNoExplicitInvalid Active
+		+TestEnumNoExplicitInvalid Inactive
+	}
+	class DateTimeMachineTests  {
+		+DateTimeMachine_Constructor_ShouldCreateInstanceWithDefaultTimeProvider() void
+		+DateTimeMachine_WithFakeTimeProvider_ShouldUseProvidedTime() void
+		+AuditableEntity_Constructor_ShouldUseDateTimeMachine() void
+		+TaskGatewayResponse_Constructor_ShouldUseDateTimeMachine() void
+		+OeeRegister_CreateKpiOee_ShouldUseDateTimeMachine() void
+		+DateTimeMachine_AdvanceTime_WithFakeTimeProvider_ShouldAdvanceTime() void
+		+DateTimeMachine_AdvanceTime_WithRealTimeProvider_ShouldReturnFailure() void
+	}
+	class BuildConfig  {
+		+ IsDebug : bool
+	}
+	class BarCodeValidationServiceTests  {
+		-IBarCodeValidationService _service
+		+Validate_ShouldThrowArgumentNullException_WhenFlowStatusIsNull() void
+		+Validate_ShouldThrowArgumentNullException_WhenMachineTypeIsNull() void
+		+Validate_ShouldThrowArgumentNullException_WhenCycleStatusIsNull() void
+		+Validate_ShouldReturnPartNotValid_WhenPartStatusNotOkAndCycleStatusNotFinishedNok(PartStatus partStatus, CycleStatus cycleStatus) void
+		+Validate_ShouldReturnDestinationNotValid_WhenNextMachineIdDoesNotMatchMachineId() void
+		+Validate_ShouldReturnExpectedResult_ForValidCases(Domain.Enum.FlowStatus flowStatus, MachineType machineType, CycleStatus cycleStatus, ResultValidation expectedResult) void
+		+Validate_ShouldReturnWorkFlowNotValid_ForInvalidCases(Domain.Enum.FlowStatus flowStatus, MachineType machineType, CycleStatus cycleStatus, ResultValidation expectedResult) void
+		+Validate_ShouldSetResultToInvalid_WhenNoCaseMatches() void
+		+PartNotValidTestData() IEnumerable~object[]~
+	}
+	class GatewayTaskEnumTests  {
+		+GatewayTask_Exists_ShouldReturnExpectedResult_ForGivenValue(int value, bool expectedResult) void
+	}
+	class RuleFragmentTests  {
+		+RuleFragment_RuleFragment_Properties_ShouldSetAndGetCorrectly() void
+	}
+	class EnumerationTestsCycleStatus  {
+		+GetAllTest() void
+		+ToLookUpTableTest() void
+		+FromValue_ShouldReturnCorrectInstance() void
+		+GetAll_ShouldReturnAllInstances() void
+		+ImplicitConversion_ShouldWorkAsExpected() void
+		+FromValue_ShouldReturnCorrectPartStatus() void
+		+FromValue_ShouldReturnCorrectCycleStatus() void
+	}
+	class ResultValidationEntityTests  {
+		+ResultValidationEntity_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+ResultValidationEntity_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+ResultValidationEntity_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+ResultValidationEntity_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+ResultValidationEntity_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class TestPriorityAttribute  {
+		+ Priority : int
+	}
+	class PartStatusEntityTests  {
+		+PartStatusEntity_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+PartStatusEntity_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+PartStatusEntity_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+PartStatusEntity_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+PartStatusEntity_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class ValidationTests2  {
+		+ResultValidation_Should_Not_Have_Duplicate_Ids() void
+		+ResultValidation_Should_Not_Have_Duplicate_Names() void
+		+GatewayTask_Should_Not_Have_Duplicate_Ids() void
+		+GatewayTask_Should_Not_Have_Duplicate_Names() void
+		+CycleStatus_Should_Not_Have_Duplicate_Names() void
+		+FlowStatus_Should_Not_Have_Duplicate_Names() void
+		+MachineType_Should_Not_Have_Duplicate_Names() void
+		+PartStatus_Should_Not_Have_Duplicate_Names() void
+		+ShiftType_Should_Not_Have_Duplicate_Names() void
+		+WorkFlowType_Should_Not_Have_Duplicate_Names() void
+		+TagsGroupsEnum_Should_Not_Have_Duplicate_Names() void
+		+CycleStatus_Should_Not_Have_Duplicate_Values() void
+		+FlowStatus_Should_Not_Have_Duplicate_Values() void
+		+MachineType_Should_Not_Have_Duplicate_Values() void
+		+PartStatus_Should_Not_Have_Duplicate_Values() void
+		+ShiftType_Should_Not_Have_Duplicate_Values() void
+		+WorkFlowType_Should_Not_Have_Duplicate_Values() void
+		+TagsGroupsEnum_Should_Not_Have_Duplicate_Values() void
+	}
+	class TestCaseOrderer  {
+		+OrderTestCases(IEnumerable~TTestCase~ testCases) IEnumerable~TTestCase~
+		+OrderTestCases(IReadOnlyCollection~TTestCase~ testCases) IReadOnlyCollection~TTestCase~
+	}
+	class CustomerProductTests  {
+		+CustomerProduct_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+CustomerProduct_WithInvalidConfiguration_ShouldHandleErrorsGracefully() void
+		+CustomerProduct_WhenPropertiesAssigned_ShouldMaintainAllValues() void
+		+CustomerProduct_WhenMethodsInvoked_ShouldProduceExpectedOutcomes() void
+		+CustomerProduct_BusinessScenario_ShouldEnforceAllDomainRules() void
+	}
+	class StatusConfigurationTests  {
+		+StatusConfiguration_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+StatusConfiguration_WhenDefaultValues_ShouldInitializePropertiesCorrectly() void
+		+StatusConfigurationProperties_WhenSetToValidValues_ShouldReturnCorrectValues(int machineId, int status, string message) void
+		+ManufacturingStatusConfiguration_WithDifferentMachines_ShouldHandleCorrectly(int machineId, int status, string message) void
+		+StatusConfiguration_AsLookupEntity_ShouldImplementInterface() void
+	}
+	class ShiftTypeTests  {
+		+ShiftType_WhenDefaultConstructor_ShouldCreateInstance() void
+		+ShiftType_StaticProperties_ShouldHaveCorrectValuesAndNames() void
+		+ShiftType_StaticProperties_WithManufacturingShifts_ShouldHaveExpectedValues(int expectedValue, string expectedName) void
+		+PowerOfTwoValues_ShouldSupportBitwiseOperations() void
+		+ImplicitConversion_FromInt_ShouldCreateCorrectShiftType(int value) void
+		+ImplicitConversion_FromNullableInt_ShouldCreateCorrectShiftType(int value) void
+		+ImplicitConversion_FromNullInt_ShouldCreateNoneShiftType() void
+		+ImplicitConversion_ToInt_ShouldReturnCorrectValue(int expectedValue) void
+		+ImplicitConversion_ToNullableInt_ShouldReturnCorrectValue(int expectedValue) void
+		+ImplicitConversion_ToString_ShouldReturnStringValue(int value, string expectedString) void
+		+ShiftType_DomainLogic_WithFordF150Production_ShouldSupportThreeShiftOperation() void
+		+ShiftType_DomainLogic_WithTeslaModelSAssembly_ShouldSupportContinuousProduction() void
+		+ShiftType_DomainLogic_WithBMWX5Maintenance_ShouldSupportShiftBasedMaintenance() void
+		+ShiftType_DomainLogic_WithMercedesQualityControl_ShouldSupportShiftTransitions() void
+		+ShiftType_DomainLogic_WithAudiA4Production_ShouldSupportShiftReporting() void
+		+FromName_WithValidShiftNames_ShouldReturnCorrectShiftType(string shiftName, int expectedValue) void
+		+ShiftType_DomainLogic_WithInvalidShiftType_ShouldRepresentErrorState() void
+		+ShiftType_DomainLogic_WithNoneShiftType_ShouldRepresentNoShiftState() void
+		+ShiftType_DomainLogic_WithComplexShiftScheduling_ShouldSupportIndustry40Operations() void
+		-IsPowerOfTwo(int num) bool
+	}
+	class ToolingTests  {
+		+Tooling_Constructor_WhenCreated_ShouldCreateInstanceWithDefaultValues() void
+		+ToolingProperties_WhenSetToValidValues_ShouldReturnCorrectValues(int toolId, int code, string name) void
+		+Tooling_Properties_WithEdgeCaseValues_ShouldStoreCorrectly(int toolId, int code, string? name) void
+		+ManufacturingToolingTypes_WithDifferentCategories_ShouldHandleCorrectly(string toolName) void
+		+InterfaceCompliance_ShouldImplementILookupEntity() void
+		+StampingDieTypes_WithDifferentOperations_ShouldSupportManufacturingProcesses(int toolId, int code, string name) void
+		+PropertyRoundTrip_ShouldMaintainDataIntegrity() void
+		+ManufacturingScenarios_WithRealWorldExamples_ShouldProvideProperToolingManagement(string toolName) void
+		+MassProductionTooling_ShouldEnableEfficientManufacturing() void
+		+EdgeCaseHandling_WithVariousIdValues_ShouldStoreCorrectly(int edgeId, int edgeCode, string toolName) void
+		+AdvancedToolingTypes_WithModernManufacturing_ShouldSupportIndustry40(int toolId, int code, string name) void
+		+ToolingLifecycleManagement_ShouldSupportCompleteToolingOperations() void
+	}
+	class ProductTests  {
+		+Product_Product_WithAllRequiredProperties_ShouldCreateInstanceWithCorrectValues() void
+		+Product_Product_WithDefaultConstructor_ShouldInitializeAllPropertiesToDefaultValues() void
+		+ProductId_WhenSetToPositiveInteger_ShouldStoreValueCorrectly() void
+		+PartNumber_WhenSetToValidString_ShouldStoreValueCorrectly() void
+		+ProductName_WhenSetToString_ShouldStoreValueCorrectly() void
+		+IsActive_WhenSetToOne_ShouldIndicateActiveStatus() void
+		+Version_WhenSetToInteger_ShouldStoreVersionNumber() void
+		+CustomerPartNumber_WhenSetToString_ShouldStoreCustomerSpecificPartNumber() void
+		+AliasPartNumber_WhenSetToString_ShouldStoreAlternativePartNumber() void
+		+Description_WhenSetToString_ShouldStoreProductDescription() void
+		+RuleId_WhenSetToInteger_ShouldStoreAssociatedRuleId() void
+		+CustomerId_WhenSetToInteger_ShouldStoreAssociatedCustomerId() void
+		+LineId_WhenSetToInteger_ShouldStoreAssociatedLineId() void
+		+CustomerName_WhenSetToString_ShouldStoreCustomerNameForDisplay() void
+		+Line_WhenSetToLineEntity_ShouldStoreAssociatedLineReference() void
+		+Customer_WhenSetToCustomerEntity_ShouldStoreAssociatedCustomerReference() void
+		+Product_AsAuditableEntity_ShouldInheritAuditableEntityProperties() void
+		+Product_WithCompleteConfiguration_ShouldMaintainAllPropertyValues() void
+		+Product_Product_WithNullStringProperties_ShouldAcceptAndStoreNullValues() void
+		+Product_Product_WithEmptyStringProperties_ShouldAcceptAndStoreEmptyStrings() void
+		+Product_WithNegativeIdValues_ShouldAcceptNegativeIntegers() void
+		+Product_WithMaxIntegerValues_ShouldHandleIntegerMaxValues() void
+		+Product_CreatedWithoutParameters_ShouldHaveExpectedDefaultValues() void
+		+Product_WhenMultiplePropertiesUpdated_ShouldRetainAllAssignedValues() void
+		+Product_WhenStringPropertiesSetToNull_ShouldAllowNullAssignment() void
+		+IsActive_WhenSetToZero_ShouldIndicateInactiveStatus() void
+		+CreatedOn_WhenSetToDateTime_ShouldStoreCreationTimestamp() void
+		+ModifiedOn_WhenSetToDateTime_ShouldStoreModificationTimestamp() void
+		+CustomerId_WhenSetToZero_ShouldAcceptZeroAsValidValue() void
+		+CustomerId_WhenSetToNegativeValue_ShouldAcceptNegativeInteger() void
+		+ProductId_WhenSetToZero_ShouldAcceptZeroAsValidValue() void
+		+ProductId_WhenSetToNegativeValue_ShouldAcceptNegativeInteger() void
+		+PartNumber_WhenSetToEmptyString_ShouldStoreEmptyStringValue() void
+		+PartNumber_WhenSetToWhitespaceOnly_ShouldPreserveWhitespaceCharacters() void
+		+Description_WhenSetToEmptyString_ShouldStoreEmptyStringValue() void
+		+Description_WhenSetToWhitespaceOnly_ShouldPreserveWhitespaceCharacters() void
+		+IsActive_WhenSetToOne_ShouldRepresentActiveProductState() void
+		+IsActive_WhenSetToZero_ShouldRepresentInactiveProductState() void
+		+PartNumber_WhenPopulated_ShouldNotBeNullOrEmpty() void
+		+Description_WhenPopulated_ShouldNotBeNullOrEmpty() void
+		+CustomerId_WhenSetToPositiveValue_ShouldBeGreaterThanZero() void
+		+Timestamps_WhenBothCreatedAndModified_ShouldHaveModifiedAfterCreated() void
+		+Product_WhenNewlyCreated_ShouldHaveExpectedInitialState() void
+		+Product_WithAllPropertiesConfigured_ShouldMaintainCompleteDataIntegrity() void
+	}
+	class ConfigDatabaseLogTests  {
+		+ConfigDatabaseLog_WithAllRequiredProperties_ShouldCreateInstanceSuccessfully() void
+		+ConfigDatabaseLog_Constructor_WhenCreated_ShouldImplementIEntityRoot() void
+		+DatabaseLogId_WhenSetToValidValues_ShouldReturnCorrectValue(int logId) void
+		+PostTime_WhenSetToValidValues_ShouldReturnCorrectValue(string dateTimeString) void
+		+DatabaseUser_WhenSetToValidValues_ShouldReturnCorrectValue(string user) void
+		+Event_WhenSetToValidValues_ShouldReturnCorrectValue(string eventType) void
+		+Schema_WhenSetToValidValues_ShouldReturnCorrectValue(string schema) void
+		+Object_WhenSetToValidValues_ShouldReturnCorrectValue(string objectName) void
+		+Tsql_WhenSetToValidValues_ShouldReturnCorrectValue(string tsqlStatement) void
+		+XmlEvent_WhenSetToValidValues_ShouldReturnCorrectValue(string xmlEvent) void
+		+ConfigDatabaseLog_Properties_WithManufacturingAuditScenario_ShouldConfigureCorrectly() void
+		+ConfigDatabaseLog_Properties_WithQualityControlAuditScenario_ShouldConfigureCorrectly() void
+		+DatabaseUser_WithEdgeCaseValues_ShouldStoreCorrectly(string? value) void
+		+Tsql_WithEdgeCaseValues_ShouldStoreCorrectly(string? value) void
+		+XmlEvent_WithEdgeCaseValues_ShouldStoreCorrectly(string? value) void
+	}
+	class ProductsViewStateTests  {
+		+CreateWorkFlowDtos_ShouldReturnCorrectWorkFlowDtos_WhenMachinesAreProvided() void
+		+CreateWorkFlowDtos_ShouldReturnEmptyList_WhenNoMachinesAreProvided() void
+		+CreateWorkFlowDtos_ShouldReturnCorrectSingleWorkFlow_WhenOneMachineIsProvided() void
+		+CreateWorkFlowDtos_ShouldRemoveDuplicates_WhenMachinesContainDuplicates() void
+	}
+	class StoppageTests  {
+		+Stoppage_Stoppage_Properties_ShouldSetAndGetCorrectly() void
+	}
+	class SelfRegisteredExtensions  {
+		+AddSelfRegisteredExtensions(global::Microsoft.Testing.Platform.Builder.ITestApplicationBuilder builder, string[] args) void
+	}
+	class XunitAutoGeneratedEntryPoint  {
+		+Main(string[] args) int
+	}
+
+	CalculatorTestData --|> IEnumerable
+	InvalidCasesData --|> IEnumerable
+	AllOeeTestCases --|> IEnumerable
+	ValidCasesData --|> IEnumerable
+	Point --|> ValueObject
+	TestEnumModel --|> EnumModel
+	TestEnumNegativeInvalid --|> EnumModel
+	TestEnumPositiveInvalid --|> EnumModel
+	TestEnumNoExplicitInvalid --|> EnumModel
+	TestPriorityAttribute --|> Attribute
+	TestCaseOrderer --|> ITestCaseOrderer

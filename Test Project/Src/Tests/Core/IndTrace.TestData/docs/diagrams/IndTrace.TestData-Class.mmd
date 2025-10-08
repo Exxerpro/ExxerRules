@@ -1,0 +1,758 @@
+classDiagram
+
+	class SettingsRawData  {
+		-ImmutableDictionary~int&#44&#32Setting~ _settingsDict
+		-Lazy~IReadOnlyList~Setting~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Setting~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Setting~
+		+ Count : int
+		+GetById(int id) Setting?
+		+Contains(int id) bool
+		+GetSettings() List~Setting~
+	}
+	class DataValidationResult  {
+		+ FilesValidated : List~string~
+		+ FilesWithDuplicates : Dictionary~string&#44&#32List~DuplicateEntry~~
+		+ Errors : List~DataValidationError~
+		+ TotalDuplicatesFound : int
+		+ IsValid : bool
+	}
+	class ResilientSmartEnumConverter ~T~ {
+		+Read(Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) T
+		+Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options) void
+	}
+	class ShiftRawData  {
+		-ImmutableDictionary~int&#44&#32Shift~ _shiftsDict
+		-Lazy~IReadOnlyList~Shift~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Shift~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Shift~
+		+ Count : int
+		+GetById(int id) Shift?
+		+Contains(int id) bool
+	}
+	class VariableRawData  {
+		-ImmutableDictionary~int&#44&#32Variable~ _variablesDict
+		-Lazy~IReadOnlyList~Variable~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Variable~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Variable~
+		+ Count : int
+		+GetById(int id) Variable?
+		+GetVariable(int id) Variable?
+		+Contains(int id) bool
+	}
+	class RegisterPlc100RawData  {
+		-ImmutableDictionary~int&#44&#32Register~ _registersDict
+		-Lazy~IReadOnlyList~Register~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Register~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Register~
+		+ Count : int
+		+GetById(int id) Register?
+		+GetRegister(int id) Register?
+		+Contains(int id) bool
+	}
+	class ShiftsCatalogCatalogRawData  {
+		-ImmutableDictionary~int&#44&#32ShiftsCatalog~ _ShiftsCatalogsDict
+		-Lazy~IReadOnlyList~ShiftsCatalog~~ _fixtureCache
+		+ Fixture : IReadOnlyList~ShiftsCatalog~
+		+ Dictionary : IImmutableDictionary~int&#44&#32ShiftsCatalog~
+		+ Count : int
+		+GetById(int id) ShiftsCatalog?
+		+Contains(int id) bool
+	}
+	class DbSetExtensions  {
+		-ILogger? _logger
+		-JsonSerializerOptions ResilientOptions
+		+SetLogger(ILogger logger) void
+		+AddRangeAsyncFromJsonAsync(DbSet~T~ dataSet, string filename, CancellationToken cancellationToken) Task~DbSet~T~~
+		-DetachNavigationProperties(T entity) void
+		+AddRangeFromEnumerationAsync(DbSet~TLookUpTable~ entity, CancellationToken cancellationToken) Task~DbSet~TLookUpTable~~
+		+LoadListFromJsonAsync(string filename, CancellationToken cancellationToken) Task~IList~T~~
+		+LoadListFromJsonAsync(List~T~ list, string filename, CancellationToken cancellationToken) Task
+		+LoadListFromJsonAsync(List~T~ list, string filename, string Key, CancellationToken cancellationToken) Task
+		+LoadListFromJsonAsync(List~T~ list, string filename, string key1, string key2, CancellationToken cancellationToken) Task
+		+LoadDictionaryFromJsonAsync(string filename, string key, CancellationToken cancellationToken) Task~Dictionary~string&#44&#32T~~
+		+LoadObjectFromJsonAsync(string filename, CancellationToken cancellationToken) Task~T~
+		+LoadContentFromJsonAsync(string filename, CancellationToken cancellationToken) Task~string~
+	}
+	class PerformanceDataRawData  {
+		-ImmutableDictionary~long&#44&#32PerformanceData~ _performanceDataDict
+		-Lazy~IReadOnlyList~PerformanceData~~ _fixtureCache
+		+ Fixture : IReadOnlyList~PerformanceData~
+		+ Dictionary : IImmutableDictionary~long&#44&#32PerformanceData~
+		+ Count : int
+		+GetById(long id) PerformanceData?
+		+Contains(long id) bool
+		+GetByMachineId(int machineId) IEnumerable~PerformanceData~
+		+GetByPlcId(int plcId) IEnumerable~PerformanceData~
+		+GetByCycleId(int cycleId) PerformanceData?
+		+GetByBarCodeId(int barCodeId) PerformanceData?
+		+GetRecent(TimeSpan timeRange) IEnumerable~PerformanceData~
+		+GetHighProduction(double productionThreshold) IEnumerable~PerformanceData~
+	}
+	class CyclesRawData  {
+		-ImmutableDictionary~int&#44&#32Cycle~ _cyclesDict
+		-Lazy~IReadOnlyList~Cycle~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Cycle~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Cycle~
+		+ Cycles : IImmutableDictionary~int&#44&#32Cycle~
+		+ Count : int
+		+GetById(int id) Cycle?
+		+GetCycle(int id) Cycle?
+		+Contains(int id) bool
+		+GetByMachineId(int machineId) IEnumerable~Cycle~
+		+GetByBarCodeId(int barCodeId) Cycle?
+		+GetByStatus(CycleStatus status) IEnumerable~Cycle~
+	}
+	class JsonTestDataStrategy  {
+		-TestDataStrategyMetrics _metrics
+		-EmbeddedTestDataLoader _loader
+		+ StrategyName : string
+		+LoadDataAsync(string dataSource, CancellationToken cancellationToken) Task~TestDataLoadResult~T~~
+		+CanHandle(string dataSource) bool
+		+GetMetrics() TestDataStrategyMetrics
+		+ClearCache() void
+	}
+	class SourceGenerationResult  {
+		+ IsSuccess : bool
+		+ GeneratedFiles : List~string~
+		+ Warnings : List~string~
+		+ ErrorMessage : string
+		+ ClassesGenerated : int
+		+ LinesOfCodeGenerated : int
+	}
+	class JsonValidation  {
+		-JsonSerializerOptions DefaultOptions
+		+ValidateJson(string jsonString, JsonSerializerOptions? options) bool
+		+ValidateJsonWithError(string jsonString, string? error, JsonSerializerOptions? options) bool
+		+ValidateEmbeddedJsonFileAsync(string fileName) Task~(bool&#32IsValid&#44&#32string&#32Error)~
+		+ValidateAllEmbeddedJsonFilesAsync() Task~Dictionary~string&#44&#32JsonFileValidationResult~~
+		-ValidateFileAsync(string fileName, ITestDataLoader loader) Task~JsonFileValidationResult~
+	}
+	class ReleaseAttribute  {
+		+ Description : string?
+	}
+	class TestDataStrategyFactory  {
+		-Dictionary~string&#44&#32ITestDataLoadingStrategy~ _strategies
+		-TestDataStrategyConfiguration _configuration
+		+GetDefaultStrategy() ITestDataLoadingStrategy
+		+GetStrategy() T
+		+GetStrategyForDataSource(string dataSource) ITestDataLoadingStrategy
+		+GetAllStrategies() IEnumerable~ITestDataLoadingStrategy~
+		+GetAllMetrics() Dictionary~string&#44&#32TestDataStrategyMetrics~
+		+ClearAllCaches() void
+		+RegisterStrategy(ITestDataLoadingStrategy strategy) void
+		-InitializeStrategies() void
+	}
+	class TestDataStrategyConfiguration  {
+		+ DefaultStrategy : string
+		+ StrategyPreference : List~string~
+		+ EnableStaticStrategy : bool
+		+ EnableJsonStrategy : bool
+		+ EnableHybridStrategy : bool
+		+ JsonBasePath : string
+		+ EnableCaching : bool
+		+ EnableUsageTracking : bool
+		+ EnableMetrics : bool
+	}
+	class HybridTestDataStrategy  {
+		-List~ITestDataLoadingStrategy~ _strategies
+		-TestDataStrategyMetrics _metrics
+		+ StrategyName : string
+		+LoadDataAsync(string dataSource, CancellationToken cancellationToken) Task~TestDataLoadResult~T~~
+		+CanHandle(string dataSource) bool
+		+GetMetrics() TestDataStrategyMetrics
+		+ClearCache() void
+	}
+	class StaticTestDataStrategy  {
+		-Dictionary~string&#44&#32object~ _cache
+		-object _cacheLock
+		-TestDataStrategyMetrics _metrics
+		+ StrategyName : string
+		+LoadDataAsync(string dataSource, CancellationToken cancellationToken) Task~TestDataLoadResult~T~~
+		+CanHandle(string dataSource) bool
+		+GetMetrics() TestDataStrategyMetrics
+		+ClearCache() void
+		-TryGetFromCache(string dataSource, List~T~ data) bool
+		-AddToCache(string dataSource, List~T~ data) void
+		-GetStaticData(string dataSource) List<T>?
+		-NormalizeDataSource(string dataSource) string
+		-GetJsonOptions() JsonSerializerOptions
+		-LogUsageForList(string type, List~T~ list) void
+		-UpdateMetrics(TimeSpan loadTime, bool wasCached) void
+		-CalculateMemoryUsage() long
+	}
+	class JsonFileValidationResult  {
+		+ FileName : string
+		+ IsValid : bool
+		+ Error : string
+		+ RecordCount : int
+	}
+	class RegistersRawData  {
+		-ImmutableDictionary~int&#44&#32Register~ _registersDict
+		-Lazy~IReadOnlyList~Register~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Register~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Register~
+		+ Registers : IImmutableDictionary~int&#44&#32Register~
+		+ Count : int
+		+GetById(int id) Register?
+		+GetRegister(int id) Register?
+		+Contains(int id) bool
+		+GetByMachineId(int machineId) IEnumerable~Register~
+		+GetByVariableId(int variableId) IEnumerable~Register~
+		+GetByCycleId(int cycleId) IEnumerable~Register~
+		+GetByName(string name) Register?
+	}
+	class JsonValidationTests  {
+		+ValidateJson_WithValidJsonString_ShouldReturnTrue() void
+		+ValidateJson_WithInvalidJsonString_ShouldReturnFalse() void
+		+ValidateJson_WithNullOrEmptyString_ShouldReturnFalse() void
+		+ValidateJsonWithError_WithValidJsonString_ShouldReturnTrueWithNullError() void
+		+ValidateJsonWithError_WithInvalidJsonString_ShouldReturnFalseWithError() void
+		+ValidateJsonWithError_WithNullOrEmptyString_ShouldReturnFalseWithError() void
+		+ValidateEmbeddedJsonFileAsync_WithValidFile_ShouldReturnTrue() Task
+		+ValidateEmbeddedJsonFileAsync_WithNonExistentFile_ShouldReturnFalse() Task
+		+ValidateAllEmbeddedJsonFilesAsync_ShouldValidateAllFiles() Task
+		+ValidateAllEmbeddedJsonFilesAsync_ShouldProvideValidationResults() Task
+		+ValidateEmbeddedJsonFileAsync_WithMachinesFile_ShouldHandleEnums() Task
+		+ValidateJson_WithCustomOptions_ShouldUseProvidedOptions() void
+		+ValidateJsonWithError_WithCustomOptions_ShouldUseProvidedOptions() void
+	}
+	class DataValidationTests  {
+		+ValidateJsonFilesForDuplicatesAsync_ShouldReturnValidationResult() Task
+		+ValidateJsonFilesForDuplicatesAsync_WithNullLogger_ShouldNotThrow() Task
+		+ValidateJsonFilesForDuplicatesAsync_ShouldHandleCancellation() Task
+		+ValidateJsonFilesForDuplicatesAsync_ShouldDetectDuplicatesInRules() Task
+		+ValidateJsonFilesForDuplicatesAsync_ShouldHandleAllEntityTypes() Task
+		+ValidateJsonFilesForDuplicatesAsync_ShouldHandleCompositeKeys() Task
+	}
+	class VariablesGroupRawData  {
+		-ImmutableDictionary~int&#44&#32VariablesGroup~ _variablesGroupsDict
+		-Lazy~IReadOnlyList~VariablesGroup~~ _fixtureCache
+		+ Fixture : IReadOnlyList~VariablesGroup~
+		+ Dictionary : IImmutableDictionary~int&#44&#32VariablesGroup~
+		+ Count : int
+		+GetById(int id) VariablesGroup?
+		+Contains(int id) bool
+		+GetByName(string name) VariablesGroup?
+	}
+	class MachinePlcRawData  {
+		-ImmutableDictionary~int&#44&#32MachinePlc~ _machinePlcsDict
+		-Lazy~IReadOnlyList~MachinePlc~~ _fixtureCache
+		+ Fixture : IReadOnlyList~MachinePlc~
+		+ Dictionary : IImmutableDictionary~int&#44&#32MachinePlc~
+		+ Count : int
+		+GetByMachineId(int machineId) MachinePlc?
+		+Contains(int machineId) bool
+		+GetByPlcId(int plcId) MachinePlc?
+		+GetActive() IEnumerable~MachinePlc~
+	}
+	class KpiOeeRawData  {
+		-ImmutableDictionary~int&#44&#32KpiOee~ _kpiOeesDict
+		-Lazy~IReadOnlyList~KpiOee~~ _fixtureCache
+		+ Fixture : IReadOnlyList~KpiOee~
+		+ Dictionary : IImmutableDictionary~int&#44&#32KpiOee~
+		+ Count : int
+		+GetById(int id) KpiOee?
+		+Contains(int id) bool
+		+GetByOeeRegisterId(int oeeRegisterId) IEnumerable~KpiOee~
+		+GetRecent(TimeSpan timeRange) IEnumerable~KpiOee~
+		+GetHighPerformance(double oeeThreshold) IEnumerable~KpiOee~
+		+GetLowPerformance(double oeeThreshold) IEnumerable~KpiOee~
+	}
+	class VariablesRawData  {
+		-ImmutableDictionary~int&#44&#32Variable~ _variablesDict
+		+ Fixture : IReadOnlyList~Variable~
+		+ Variables : IImmutableDictionary~int&#44&#32Variable~
+		+ Count : int
+		+GetVariable(int variableId) Variable?
+		+Contains(int variableId) bool
+		+GetByAddressPattern(string pattern) IEnumerable~Variable~
+		+GetByNetType(string netType) IEnumerable~Variable~
+		+GetDbVariables() IEnumerable~Variable~
+		+GetTemperatureVariables() (Variable?&#32Temperature&#44&#32Variable?&#32TemperingTime)
+	}
+	class TestDataUsageTracker  {
+		-Dictionary~string&#44&#32HashSet~string~~ _usageLog
+		-List~TestDataUsageReport~ _reports
+		-object _lockObject
+		+TrackUsage(string entityType, string entityId) void
+		+GetCurrentStats() TestDataUsageStats
+		+AddReport(TestDataUsageReport report) void
+		+GetUsageLog() IReadOnlyDictionary~string&#44&#32HashSet~string~~
+		+GenerateComprehensiveReport() TestDataUsageReport
+		+SaveReportAsync(string? filePath) Task
+		+Clear() void
+		+GenerateOptimizationRecommendations(TestDataUsageReport report) List~string~
+		-GetEntityIds(string entityType) List~int~
+		-GetEntityCount(string entityType) int
+	}
+	class TestDataUsageReport  {
+		+ AccessedRegisterIds : List~int~
+		+ AccessedBarCodeIds : List~int~
+		+ AccessedCycleIds : List~int~
+		+ AccessedMachineIds : List~int~
+		+ AccessedTables : List~string~
+		+ TotalRegistersAccessed : int
+		+ TotalBarCodesAccessed : int
+		+ TotalCyclesAccessed : int
+		+ TotalMachinesAccessed : int
+		+ ContextId : int
+		+ TotalContexts : int
+		+ ContextReports : List~TestDataUsageReport~
+		+ Timestamp : DateTime
+	}
+	class DataValidationError  {
+		+ FileName : string
+		+ EntityType : string
+		+ ErrorMessage : string
+	}
+	class RecipeRawData  {
+		-ImmutableDictionary~int&#44&#32Recipe~ _recipesDict
+		-Lazy~IReadOnlyList~Recipe~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Recipe~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Recipe~
+		+ Count : int
+		+GetById(int id) Recipe?
+		+Contains(int id) bool
+	}
+	class TestDataSourceGenerator  {
+		-string _outputDirectory
+		+GenerateFromUsageLogAsync(IReadOnlyDictionary~string&#44&#32HashSet~string~~ usageLog, CancellationToken cancellationToken) Task~SourceGenerationResult~
+		+GenerateFromReportFileAsync(string reportFilePath, CancellationToken cancellationToken) Task~SourceGenerationResult~
+	}
+	class EmbeddedTestDataLoaderIntegrationTests  {
+		-ITestDataLoader _loader
+		+LoadBarCodeDataAsync_WithValidDataSource_ShouldReturnBarCodeData() Task
+		+LoadMachineDataAsync_WithValidDataSource_ShouldReturnMachineData() Task
+		+LoadRuleDataAsync_WithValidDataSource_ShouldReturnRuleData() Task
+		+LoadCycleDataAsync_WithValidDataSource_ShouldReturnCycleData() Task
+		+LoadRegisterDataAsync_WithLargeDataSet_ShouldHandleEfficiently() Task
+		+LoadDataAsync_WithInvalidDataSource_ShouldReturnEmptyList() Task
+		+LoadSingleConfigAsync_WithValidDataSource_ShouldReturnSingleConfig() Task
+		+LoadSingleConfigAsync_WithListDataSource_ShouldReturnFirstItem() Task
+		+LoadSingleAsync_WithNonExistentFile_ShouldReturnNull() Task
+		+LoadDataAsync_WithCancellationToken_ShouldRespectCancellation() Task
+		+LoadAllManufacturingDataAsync_ShouldLoadConsistentData() void
+		+LoadRelatedManufacturingData_ShouldHaveConsistentRelationships() Task
+		+GetAvailableFiles_ShouldReturnAllEmbeddedJsonFiles() void
+		+Exists_WithValidFile_ShouldReturnTrue() void
+		+Exists_WithInvalidFile_ShouldReturnFalse() void
+		+LoadComplexManufacturingScenario_ShouldHandleIndustrialWorkflow() Task
+	}
+	class TestDataLoaderTests  {
+		-ITestDataLoader _loader
+		+Constructor_ShouldInitializeCorrectly() void
+		+GetAvailableFiles_ShouldReturnJsonFiles() void
+		+Exists_WithValidFile_ShouldReturnTrue() void
+		+Exists_WithInvalidFile_ShouldReturnFalse() void
+		+LoadListAsync_WithValidRulesFile_ShouldReturnData() Task
+		+LoadListAsync_WithValidMachinesFile_ShouldReturnDataAndHandleEnums() Task
+		+LoadListAsync_WithNonExistentFile_ShouldReturnEmptyList() Task
+		+LoadSingleAsync_WithValidFile_ShouldReturnFirstItem() Task
+		+LoadSingleAsync_WithEmptyFile_ShouldReturnNull() Task
+	}
+	class DbSetExtensionsTests  {
+		+JsonConvertTestAsync() Task
+		+JsonConvertRulesTestAsync() Task
+		+JsonConvertFileToListsTestAsync() Task
+		+JsonConvertFileToListsWithoutDuplicatedTestAsync() Task
+		+JsonConvertDynamicDataJsonFileToListsTestAsync() Task
+		+LoadEntitiesFromFileAsyncTestsAsync() Task
+		+LoadContentFromJsonTestAsync() Task
+	}
+	class ResilientEnumConverter ~T~ {
+		+Read(Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) T
+		+Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options) void
+	}
+	class CustomerRawData  {
+		-ImmutableDictionary~int&#44&#32Customer~ _customersDict
+		+List~Customer~ Fixture
+		+ Count : int
+		+GetCustomer(int id) Customer?
+		+GetCustomers() IReadOnlyList~Customer~
+		+GetByName(string name) Customer?
+	}
+	class VariablePlc100RawData  {
+		-ImmutableDictionary~int&#44&#32Variable~ _variablesDict
+		-Lazy~IReadOnlyList~Variable~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Variable~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Variable~
+		+ Count : int
+		+GetById(int id) Variable?
+		+GetVariable(int id) Variable?
+		+Contains(int id) bool
+	}
+	class PLCData  {
+		+        GetPlcs() List~Plc~
+	}
+	class BarCodeRawData  {
+		-ImmutableDictionary~int&#44&#32BarCode~ _barCodesDict
+		-Lazy~IReadOnlyList~BarCode~~ _fixtureCache
+		+ Fixture : IReadOnlyList~BarCode~
+		+ Dictionary : IImmutableDictionary~int&#44&#32BarCode~
+		+ BarCodes : IImmutableDictionary~int&#44&#32BarCode~
+		+ Count : int
+		+GetById(int id) BarCode?
+		+GetBarCode(int id) BarCode?
+		+Contains(int id) bool
+		+GetByLabel(string label) BarCode?
+		+GetByMachineId(int machineId) IEnumerable~BarCode~
+	}
+	class TestEntityDataUsageTracker  {
+		-ConcurrentDictionary~string&#44&#32HashSet~string~~ _usageLog
+		-object _fileLock
+		-string? _logFilePath
+		+Initialize(string? logFilePath) void
+		+LogUsage(string type, string key) void
+		+GetUsageLog() IReadOnlyDictionary~string&#44&#32HashSet~string~~
+		+Clear() void
+	}
+	class DataValidation  {
+		+ValidateJsonFilesForDuplicatesAsync(ILogger? logger, CancellationToken cancellationToken) Task~DataValidationResult~
+		-ValidateFileForDuplicatesAsync(ITestDataLoader loader, string fileName, string entityName, Func~dynamic&#44&#32string~ keyExtractor, DataValidationResult result, ILogger? logger, CancellationToken cancellationToken) Task
+		-FindDuplicatesWithLineNumbersAsync(string jsonContent, string fileName, string entityName, Func~dynamic&#44&#32string~ keyExtractor, ILogger? logger) Task~List~DuplicateEntry~~
+		-TryGetName(dynamic entity) string?
+	}
+	class RawDataPattern  {
+	}
+	class TestDataLoaderV2Tests  {
+		+LoadDataAsync_WithValidDataSource_ShouldReturnData() Task
+		+LoadStaticDataAsync_WithValidDataSource_ShouldReturnData() Task
+		+LoadJsonDataAsync_WithValidDataSource_ShouldReturnData() Task
+		+LoadHybridDataAsync_WithValidDataSource_ShouldReturnData() Task
+		+LoadDataWithStrategyAsync_WithStaticStrategy_ShouldReturnData() Task
+		+LoadDataWithStrategyAsync_WithJsonStrategy_ShouldReturnData() Task
+		+LoadDataWithStrategyAsync_WithHybridStrategy_ShouldReturnData() Task
+		+LoadDataAsync_WithInvalidDataSource_ShouldThrowException() Task
+		+GetMetrics_ShouldReturnMetrics() void
+		+ClearAllCaches_ShouldNotThrowException() void
+		+Configure_WithValidConfiguration_ShouldNotThrowException() void
+		+GenerateStaticClassesAsync_ShouldReturnResult() Task
+		+SaveUsageReportAsync_ShouldNotThrowException() Task
+		+GetUsageStats_ShouldReturnStats() void
+		+ClearUsageTracking_ShouldNotThrowException() void
+		+LoadDataAsync_WithCancellationToken_ShouldRespectCancellation() Task
+		+MultipleLoads_ShouldUseCache() Task
+		+DifferentStrategies_ShouldReturnConsistentData() Task
+	}
+	class TestDataUsageStats  {
+		+ TotalEntitiesAccessed : int
+		+ UniqueEntityTypes : int
+		+ EntitiesPerType : Dictionary~string&#44&#32int~
+		+ CapturedAt : DateTime
+		+ SessionDuration : TimeSpan
+	}
+	class ConfigAppRawData  {
+		-ImmutableDictionary~int&#44&#32ConfigApp~ _configAppsDict
+		+ Fixture : IReadOnlyList~ConfigApp~
+		+ ConfigApps : IImmutableDictionary~int&#44&#32ConfigApp~
+		+ Count : int
+		+GetConfigApp(int id) ConfigApp?
+	}
+	class ManufacturingDataValidationTests  {
+		-ITestDataLoader _loader
+		+LoadMachinesDataAsync_ShouldReturnValidManufacturingEquipment() Task
+		+LoadRulesDataAsync_ShouldReturnValidBusinessRules() Task
+		+LoadCompleteManufacturingDataset_ShouldValidateAllEntities() Task
+		+LoadManufacturingDataWithoutDuplication_ShouldValidateUniqueKeys() Task
+		+LoadDynamicManufacturingData_ShouldValidateProductionData() Task
+		+LoadApplicationConfiguration_ShouldReturnValidConfig() Task
+		+LoadJsonContentDirectly_ShouldReturnValidJsonString() Task
+		+LoadManufacturingRelationships_ShouldValidateDataIntegrity() Task
+		-GetEntityCountAsync(string filename) Task~int~
+		-ValidateEntityUniquenessAsync(string filename, Type entityType, string keyProperty) Task
+		-GetJsonContentAsync(string filename) Task~string~
+	}
+	class TestDataFactory  {
+		-Lazy~ITestDataLoader~ _loader
+		+ Default : ITestDataLoader
+		+LoadListAsync(string fileName, CancellationToken cancellationToken) Task~List~T~~
+		+LoadSingleAsync(string fileName, CancellationToken cancellationToken) Task~T~
+		+Exists(string fileName) bool
+		+GetAvailableFiles() IEnumerable~string~
+	}
+	class MachineRawData  {
+		-ImmutableDictionary~int&#44&#32Machine~ _machinesDict
+		+List~Machine~ FixtureMachines
+		+ SampleMachines : string
+		+ Fixture : IReadOnlyList~Machine~
+		+ Count : int
+		+GetMachine(int id) Machine?
+		+Contains(int id) bool
+		+GetByName(string name) Machine?
+	}
+	class DeduplicationVerificationTests  {
+		-ITestDataLoader _loader
+		-ILogger~DeduplicationVerificationTests~ _logger
+		+ValidationLogic_ShouldDetectDuplicatesInTestScenario() void
+		+SpecificEntityFile_ShouldHaveNoDuplicateIds(string fileName, string keyProperty) Task
+		+DataDirectory_ShouldContainAllExpectedFiles() void
+		+PostDeduplication_AllFilesShouldBeClean() Task
+		-CheckFileForDuplicatesDirectAsync(string fileName, string keyProperty) Task~bool~
+		-CheckSpecificFileForDuplicatesAsync(string fileName) Task~bool~
+		-CheckDuplicatesAsync(string fileName, Func~T&#44&#32string~ keyExtractor) Task~bool~
+	}
+	class TestEntity  {
+		+ Id : int
+		+ Name : string
+	}
+	class HybridTestDataManager  {
+		-TestDataStrategyFactory _strategyFactory
+		-TestDataUsageTracker _usageTracker
+		-PerformanceMeasurer _performanceMeasurer
+		-Dictionary~Type&#44&#32object~ _staticCache
+		-Lock _cacheLock
+		+LoadDataAsync(string? dataSource) Task~List~T~~
+		+GetOptimalStrategyFor() ITestDataLoadingStrategy
+		+GenerateReportAsync(CancellationToken cancellationToken) Task~HybridDataManagerReport~
+		+SaveReportsAsync(string? basePath) Task
+		+ClearAll() void
+		+GetCurrentMetrics() Dictionary~string&#44&#32TestDataStrategyMetrics~
+		-InitializeStaticCache() void
+		-IsStaticCacheCandidate(Type entityType) bool
+		-TryGetFromStaticCache(List~T~ data) bool
+		-CacheStaticData(List~T~ data) void
+		-GetOptimalStrategy(Type entityType, string dataSource) ITestDataLoadingStrategy
+		-IsLargeDataSet(Type entityType) bool
+		-TrackUsage(string entityType, int count, string strategy) void
+		-GenerateOptimizationRecommendations(TestDataUsageStats usageStats, PerformanceReport performanceReport) List~string~
+		-CalculateStaticCacheMemoryUsage() long
+		-SaveHybridReportAsync(string filePath) Task
+		+Dispose() void
+	}
+	class HybridDataManagerReport  {
+		+ GeneratedAt : DateTime
+		+ PerformanceReport : PerformanceReport?
+		+ UsageStats : TestDataUsageStats?
+		+ StrategyMetrics : Dictionary<string&#44&#32TestDataStrategyMetrics>?
+		+ StaticCacheSize : int
+		+ TotalEntitiesLoaded : int
+		+ RecommendedOptimizations : List~string~
+	}
+	class PerformanceMeasurer  {
+		-List~PerformanceMeasurement~ _measurements
+		-Lock _lockObject
+		+MeasureAsync(string operationName, Func~Task~T~~ operation) Task~T~
+		+GenerateReport() PerformanceReport
+		+SaveReportAsync(string? filePath) Task
+		+Clear() void
+		-GetStatistics(string operationName) PerformanceStatistics
+	}
+	class PerformanceMeasurement  {
+		+ OperationName : string
+		+ ElapsedMilliseconds : long
+		+ ElapsedTicks : long
+		+ MemoryUsedBytes : long
+		+ Timestamp : DateTime
+		+ Success : bool
+		+ ErrorMessage : string?
+	}
+	class PerformanceStatistics  {
+		+ OperationName : string
+		+ Count : int
+		+ AverageTimeMs : double
+		+ MinTimeMs : long
+		+ MaxTimeMs : long
+		+ TotalTimeMs : long
+	}
+	class PerformanceReport  {
+		+ GeneratedAt : DateTime
+		+ TotalMeasurements : int
+		+ SuccessfulMeasurements : int
+		+ FailedMeasurements : int
+		+ OperationStatistics : List~PerformanceStatistics~
+		+ AllMeasurements : List~PerformanceMeasurement~
+	}
+	class RuleRawData  {
+		-ImmutableDictionary~int&#44&#32Rule~ _rulesDict
+		-Lazy~IReadOnlyList~Rule~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Rule~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Rule~
+		+ Count : int
+		+GetById(int id) Rule?
+		+Contains(int id) bool
+		+GetByMachineId(int machineId) Rule?
+		+GetByProductId(int productId) Rule?
+		+GetByName(string name) Rule?
+	}
+	class DataIntegrityTests  {
+		-ITestDataLoader _loader
+		+AllJsonFiles_ShouldHaveNoDuplicateEntries() Task
+		+ConfigApp_ShouldBeSingleEntity() Task
+		+AllJsonFiles_ShouldHaveValidPrimaryKeys() Task
+		+AllJsonFiles_ShouldHaveNonEmptyNames() Task
+		+AllJsonFiles_ShouldExistInEmbeddedResources() void
+		+DuplicateDetection_ShouldWorkCorrectly() void
+		-ValidateNoDuplicatesAsync(string fileName, string entityType, Func~T&#44&#32string~ keyExtractor) Task~List~string~~
+		-ValidateValidPrimaryKeysAsync(string fileName, Func~T&#44&#32int~ keySelector, string keyName) Task
+		-ValidateNonEmptyNamesAsync(string fileName, Func~T&#44&#32string~ nameSelector, string entityType) Task
+	}
+	class LineRawData  {
+		-ImmutableDictionary~int&#44&#32Line~ _linesDict
+		-Lazy~IReadOnlyList~Line~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Line~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Line~
+		+ Lines : IImmutableDictionary~int&#44&#32Line~
+		+ Count : int
+		+GetById(int id) Line?
+		+GetLine(int id) Line?
+		+Contains(int id) bool
+		+GetByName(string name) Line?
+		+GetActive() IEnumerable~Line~
+	}
+	class TestDataLoaderV2  {
+		-TestDataStrategyFactory? _factory
+		-object _factoryLock
+		- Factory : TestDataStrategyFactory
+		+LoadDataAsync(string dataSource, CancellationToken cancellationToken) Task~List~T~~
+		+LoadDataWithStrategyAsync(string dataSource, Type strategyType, CancellationToken cancellationToken) Task~TestDataLoadResult~T~~
+		+LoadStaticDataAsync(string dataSource, CancellationToken cancellationToken) Task~List~T~~
+		+LoadJsonDataAsync(string dataSource, CancellationToken cancellationToken) Task~List~T~~
+		+LoadHybridDataAsync(string dataSource, CancellationToken cancellationToken) Task~List~T~~
+		+GetMetrics() Dictionary~string&#44&#32TestDataStrategyMetrics~
+		+ClearAllCaches() void
+		+Configure(TestDataStrategyConfiguration configuration) void
+		+GenerateStaticClassesAsync(string outputDirectory, CancellationToken cancellationToken) Task~SourceGenerationResult~
+		+GenerateStaticClassesFromReportAsync(string reportFilePath, string outputDirectory, CancellationToken cancellationToken) Task~SourceGenerationResult~
+		+SaveUsageReportAsync(string? filePath, CancellationToken cancellationToken) Task
+		+GetUsageStats() TestDataUsageStats
+		+ClearUsageTracking() void
+	}
+	class OeeRegisterRawData  {
+		-ImmutableDictionary~int&#44&#32OeeRegister~ _oeeRegistersDict
+		-Lazy~IReadOnlyList~OeeRegister~~ _fixtureCache
+		+ Fixture : IReadOnlyList~OeeRegister~
+		+ Dictionary : IImmutableDictionary~int&#44&#32OeeRegister~
+		+ Count : int
+		+GetById(int id) OeeRegister?
+		+Contains(int id) bool
+		+GetByMachineId(int machineId) IEnumerable~OeeRegister~
+		+GetByPlcId(int plcId) IEnumerable~OeeRegister~
+		+GetRecent(TimeSpan timeRange) IEnumerable~OeeRegister~
+	}
+	class EmbeddedTestDataLoader  {
+		-Assembly _assembly
+		-string _resourceNamespace
+		-JsonSerializerOptions _jsonOptions
+		-Lazy~HashSet~string~~ _availableFiles
+		-Lazy~Dictionary~string&#44&#32string~~ _resourceNameMap
+		+LoadListAsync(string fileName, CancellationToken cancellationToken) Task~List~T~~
+		+LoadSingleAsync(string fileName, CancellationToken cancellationToken) Task~T~
+		+LoadJsonContentAsync(string fileName, CancellationToken cancellationToken) Task~string~
+		+Exists(string fileName) bool
+		+GetAvailableFiles() IEnumerable~string~
+		-GetResourceName(string fileName) string
+		-NormalizeFileName(string fileName) string
+		-LoadAvailableFiles() HashSet~string~
+		-BuildResourceNameMap() Dictionary~string&#44&#32string~
+		-GetRawDataFallback(string fileName) List<T>?
+		-GetRegisterPlc100Data() List~Domain.Entities.Register~
+	}
+	class ITestDataLoader  {
+		-LoadListAsync(string fileName, CancellationToken cancellationToken) Task~List~T~~
+		-LoadSingleAsync(string fileName, CancellationToken cancellationToken) Task~T~
+		-Exists(string fileName) bool
+		-GetAvailableFiles() IEnumerable~string~
+	}
+	class ITestDataLoadingStrategy  {
+		- StrategyName : string
+		-LoadDataAsync(string dataSource, CancellationToken cancellationToken) Task~TestDataLoadResult~T~~
+		-CanHandle(string dataSource) bool
+		-GetMetrics() TestDataStrategyMetrics
+		-ClearCache() void
+	}
+	class TestDataLoadResult ~T~ {
+		+ Data : List~T~
+		+ StrategyUsed : string
+		+ DataSource : string
+		+ LoadTime : TimeSpan
+		+ WasCached : bool
+		+ Warnings : List~string~
+		+ IsSuccess : bool
+		+ IsFailure : bool
+		+ ErrorMessage : string
+	}
+	class TestDataStrategyMetrics  {
+		+ TotalLoads : int
+		+ CacheHits : int
+		+ AverageLoadTimeMs : double
+		+ TotalLoadTimeMs : double
+		+ CacheHitRatio : double
+		+ MemoryUsageBytes : long
+	}
+	class WorkFlowRawData  {
+		-ImmutableDictionary~int&#44&#32WorkFlow~ _workFlowsDict
+		-Lazy~IReadOnlyList~WorkFlow~~ _fixtureCache
+		+ Fixture : IReadOnlyList~WorkFlow~
+		+ Dictionary : IImmutableDictionary~int&#44&#32WorkFlow~
+		+ Count : int
+		+GetById(int id) WorkFlow?
+		+Contains(int id) bool
+	}
+	class ProductRawData  {
+		-ImmutableDictionary~int&#44&#32Product~ DictDict
+		+List~Product~ FixtureProducts
+		+ SampleProducts : string
+		+ Fixture : IReadOnlyList~Product~
+		+ Dict : IImmutableDictionary~int&#44&#32Product~
+		+ Count : int
+		+GetProduct(int id) Product?
+		+GetProducts() IReadOnlyList~Product~
+		+Contains(int id) bool
+		+GetByPartNumber(string partNumber) Product?
+	}
+	class DuplicateEntry  {
+		+ FileName : string
+		+ EntityType : string
+		+ EntityId : string
+		+ EntityName : string
+		+ LineNumber : int
+		+ OriginalLineNumber : int
+	}
+	class ResilientJsonConverters  {
+		+CreateResilientOptions() JsonSerializerOptions
+	}
+	class MasterLabelRawData  {
+		-ImmutableDictionary~int&#44&#32MasterLabel~ _masterLabelsDict
+		-Lazy~IReadOnlyList~MasterLabel~~ _fixtureCache
+		+ Fixture : IReadOnlyList~MasterLabel~
+		+ Dictionary : IImmutableDictionary~int&#44&#32MasterLabel~
+		+ Count : int
+		+GetById(int id) MasterLabel?
+		+Contains(int id) bool
+	}
+	class TestDataHelper  {
+		-JsonSerializerOptions JsonOptions
+		+Deserialize(string jsonString) T?
+		+DeserializeList(string jsonString) List<T>?
+		+DeserializeArray(string jsonString) T[]?
+		+CreateCachedLoader(string jsonString) Func~T?~
+		+CreateCachedListLoader(string jsonString) Func~List~T~?~
+		+ValidateJson(string jsonString) bool
+		+GetSample(string jsonString) T
+	}
+	class PlcRawData  {
+		-ImmutableDictionary~int&#44&#32Plc~ _plcsDict
+		-Lazy~IReadOnlyList~Plc~~ _fixtureCache
+		+ Fixture : IReadOnlyList~Plc~
+		+ Dictionary : IImmutableDictionary~int&#44&#32Plc~
+		+ Count : int
+		+GetById(int id) Plc?
+		+GetPlc(int id) Plc?
+		+Contains(int id) bool
+	}
+	class SelfRegisteredExtensions  {
+		+AddSelfRegisteredExtensions(global::Microsoft.Testing.Platform.Builder.ITestApplicationBuilder builder, string[] args) void
+	}
+	class XunitAutoGeneratedEntryPoint  {
+		+Main(string[] args) int
+	}
+
+	ResilientSmartEnumConverter --|> JsonConverter
+	JsonTestDataStrategy --|> ITestDataLoadingStrategy
+	ReleaseAttribute --|> Attribute
+	HybridTestDataStrategy --|> ITestDataLoadingStrategy
+	StaticTestDataStrategy --|> ITestDataLoadingStrategy
+	ResilientEnumConverter --|> JsonConverter
+	HybridTestDataManager --|> IDisposable
+	EmbeddedTestDataLoader --|> ITestDataLoader

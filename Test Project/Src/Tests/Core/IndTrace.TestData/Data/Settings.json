@@ -1,0 +1,7 @@
+[
+  {
+    "SettingID": 1,
+    "MachineID": 150,
+    "Config": "[\r\n\t{\r\n\t\tcolor: \"red\",\r\n\t\tvalue: \"#f00\"\r\n\t},\r\n\t{\r\n\t\tcolor: \"green\",\r\n\t\tvalue: \"#0f0\"\r\n\t},\r\n\t{\r\n\t\tcolor: \"blue\",\r\n\t\tvalue: \"#00f\"\r\n\t},\r\n\t{\r\n\t\tcolor: \"cyan\",\r\n\t\tvalue: \"#0ff\"\r\n\t},\r\n\t{\r\n\t\tcolor: \"magenta\",\r\n\t\tvalue: \"#f0f\"\r\n\t},\r\n\t{\r\n\t\tcolor: \"yellow\",\r\n\t\tvalue: \"#ff0\"\r\n\t},\r\n\t{\r\n\t\tcolor: \"black\",\r\n\t\tvalue: \"#000\"\r\n\t}\r\n]"
+  }
+]

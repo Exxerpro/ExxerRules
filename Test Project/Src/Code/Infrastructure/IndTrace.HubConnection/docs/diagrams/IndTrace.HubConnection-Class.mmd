@@ -1,0 +1,172 @@
+classDiagram
+
+	class ServiceCollectionExtensions  {
+		+AddHubConnectionAbstractions(IServiceCollection services, IConfiguration configuration) IServiceCollection
+	}
+	class HubConnectionMetrics  {
+		-string _connectionId
+		-CircularLatencyBuffer _latencyBuffer
+		-long _messagesSent
+		-long _messagesReceived
+		-long _bytesSent
+		-long _bytesReceived
+		-int _reconnectionCount
+		-int _consecutiveFailures
+		-long _connectedAtTicks
+		-long _lastActivityAtTicks
+		-long _lastFailureAtTicks
+		-string? _lastFailureReason
+		+ ConnectedAt : DateTimeOffset?
+		+ LastActivityAt : DateTimeOffset?
+		+ Uptime : TimeSpan
+		+ ReconnectionCount : int
+		+ MessagesSent : long
+		+ MessagesReceived : long
+		+ BytesSent : long
+		+ BytesReceived : long
+		+ AverageLatencyMs : double
+		+ P95LatencyMs : double
+		+ P99LatencyMs : double
+		+ ConsecutiveFailures : int
+		+ LastFailureAt : DateTimeOffset?
+		+ LastFailureReason : string?
+		+RecordMessageSent(long bytes) void
+		+RecordMessageReceived(long bytes) void
+		+RecordMessageLatency(double latencyMs) void
+		+RecordConnectionStarted(DateTimeOffset connectedAt) void
+		+RecordReconnection() void
+		+RecordFailure(Exception exception) void
+		+RecordSuccess() void
+		+GetSnapshot() HubMetricsSnapshot
+	}
+	class CircularLatencyBuffer  {
+		-double[] _buffer
+		-int _capacity
+		-long _writeIndex
+		-long _count
+		+ Average : double
+		+ P95 : double
+		+ P99 : double
+		+TryAdd(double latency) bool
+		-UpdateStatistics() void
+		-GetPercentile(double[] sortedArray, double percentile) double
+	}
+	class SignalRHubConnectionAdapter  {
+		-HubConnection inner
+		-IHubConnectionMetrics metrics
+		+ State : HubConnectionState
+		+ ConnectionId : string?
+		+ Metrics : IHubConnectionMetrics
+		+StartAsync(CancellationToken cancellationToken) Task
+		+StopAsync(CancellationToken cancellationToken) Task
+		+SendAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task
+		+InvokeAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task~T?~
+		+On(string methodName, Func~T&#44&#32Task~ handler) IDisposable
+		+On(string methodName, Func~T1&#44&#32T2&#44&#32Task~ handler) IDisposable
+		+DisposeAsync() ValueTask
+	}
+	class HubConnectionFactory  {
+		+CreateAsync(CancellationToken cancellationToken) Task~IHubConnection~
+	}
+	class HubMonitorOptionsValidator  {
+		+Validate(string? name, HubMonitorOptions options) ValidateOptionsResult
+	}
+	class MetricsRegisteringHubConnectionFactory  {
+		-IHubConnectionFactory innerFactory
+		-IHubMetricsDashboard dashboard
+		+CreateAsync(CancellationToken cancellationToken) Task~IHubConnection~
+	}
+	class IHubConnectionFactory  {
+		-CreateAsync(CancellationToken cancellationToken) Task~IHubConnection~
+	}
+	class HubMethods  {
+		+string BroadcastMessageToClients
+		+string BroadcastTaskGatewayRequest
+		+string BroadcastTaskGatewayResponse
+		+string BroadcastHeartbeatSignal
+	}
+	class IHubConnectionMetrics  {
+		- ConnectedAt : DateTimeOffset?
+		- LastActivityAt : DateTimeOffset?
+		- Uptime : TimeSpan
+		- ReconnectionCount : int
+		- MessagesSent : long
+		- MessagesReceived : long
+		- BytesSent : long
+		- BytesReceived : long
+		- AverageLatencyMs : double
+		- P95LatencyMs : double
+		- P99LatencyMs : double
+		- ConsecutiveFailures : int
+		- LastFailureAt : DateTimeOffset?
+		- LastFailureReason : string?
+		-RecordMessageSent(long bytes) void
+		-RecordMessageReceived(long bytes) void
+		-RecordMessageLatency(double latencyMs) void
+		-RecordConnectionStarted(DateTimeOffset connectedAt) void
+		-RecordReconnection() void
+		-RecordFailure(Exception exception) void
+		-RecordSuccess() void
+		-GetSnapshot() HubMetricsSnapshot
+	}
+	class HubMetricsDashboard  {
+		-ConcurrentDictionary~string&#44&#32IHubConnection~ _connections
+		-DateTimeOffset _startTime
+		-object _trendLock
+		-List~MetricsSample~ _trendHistory
+		-int MaxTrendSamples
+		+RegisterConnection(IHubConnection? connection) void
+		+UnregisterConnection(string connectionId) void
+		+GetAggregatedMetricsAsync(TimeSpan? timeout, CancellationToken cancellationToken) Task~AggregatedMetrics~
+		+GetHealthStatusAsync(CancellationToken cancellationToken) Task~HealthStatus~
+		+GetTopConnectionsByActivityAsync(int limit, CancellationToken cancellationToken) Task~IReadOnlyList~HubMetricsSnapshot~~
+		+GetSystemPerformanceAsync(CancellationToken cancellationToken) Task~SystemPerformanceMetrics~
+		+GetTrendDataAsync(TimeSpan period, CancellationToken cancellationToken) Task~TrendData~
+		-GetAllSnapshotsAsync(CancellationToken cancellationToken) Task~List~HubMetricsSnapshot~~
+		-GetSnapshotSafeAsync(IHubConnection connection, CancellationToken cancellationToken) Task~HubMetricsSnapshot?~
+		-AggregateSnapshots(List~HubMetricsSnapshot~ snapshots, DateTimeOffset timestamp) AggregatedMetrics
+		-CalculateHealthStatus(List~HubMetricsSnapshot~ snapshots) HealthStatus
+		-CalculateSystemPerformance(List~HubMetricsSnapshot~ snapshots) SystemPerformanceMetrics
+		-RecordCurrentSampleAsync(CancellationToken cancellationToken) Task
+	}
+	class HubConnectionInterfaceExtensions  {
+		-ThreadLocal~Random~ threadLocalRandom
+		-SemaphoreSlim ConnectionSemaphore
+		-ConcurrentDictionary~int&#44&#32IHubConnection~ ConnectionCache
+		+TryStartHubConnectionAsync(IHubConnection hubConnection, ILogger logger, CancellationToken cancellationToken) Task~IHubConnection~
+		-ScheduleReconnectAsync(IHubConnection hubConnection, ILogger logger, CancellationToken cancellationToken) Task
+		+ClearConnectionCache() void
+		+EnsureHubConnectionIsValid(IHubConnection? hubConnection, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~IHubConnection?~
+		+TryInvokeAsync(IHubConnection hubConnection, string methodName, object arg1, object arg2, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task~bool~
+		+PublishCommandToHubAsync(IHubConnection? hubConnection, TaskGatewayRequest request, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task
+		+PublishResultsToHubAsync(IHubConnection? hubConnection, TaskGatewayRequest request, Result~TaskGatewayResponse~ result, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, ILogger logger, CancellationToken cancellationToken) Task
+		+LogAndSendMessageFromControllerAsync(IHubConnection hubConnection, string message, ILogger logger, IndTrace.HubConnection.Abstractions.IHubConnectionFactory connectionFactory, CancellationToken cancellationToken) Task
+	}
+	class IHubMetricsDashboard  {
+		-RegisterConnection(IHubConnection? connection) void
+		-UnregisterConnection(string connectionId) void
+		-GetAggregatedMetricsAsync(TimeSpan? timeout, CancellationToken cancellationToken) Task~AggregatedMetrics~
+		-GetHealthStatusAsync(CancellationToken cancellationToken) Task~HealthStatus~
+		-GetTopConnectionsByActivityAsync(int limit, CancellationToken cancellationToken) Task~IReadOnlyList~HubMetricsSnapshot~~
+		-GetSystemPerformanceAsync(CancellationToken cancellationToken) Task~SystemPerformanceMetrics~
+		-GetTrendDataAsync(TimeSpan period, CancellationToken cancellationToken) Task~TrendData~
+	}
+	class IHubConnection  {
+		- State : HubConnectionState
+		- ConnectionId : string?
+		- Metrics : IHubConnectionMetrics
+		-StartAsync(CancellationToken cancellationToken) Task
+		-StopAsync(CancellationToken cancellationToken) Task
+		-SendAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task
+		-InvokeAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task~T?~
+		-On(string methodName, Func~T&#44&#32Task~ handler) IDisposable
+		-On(string methodName, Func~T1&#44&#32T2&#44&#32Task~ handler) IDisposable
+	}
+
+	HubConnectionMetrics --|> IHubConnectionMetrics
+	SignalRHubConnectionAdapter --|> IHubConnection
+	HubConnectionFactory --|> IHubConnectionFactory
+	HubMonitorOptionsValidator --|> IValidateOptions
+	MetricsRegisteringHubConnectionFactory --|> IHubConnectionFactory
+	HubMetricsDashboard --|> IHubMetricsDashboard
+	IHubConnection --|> IAsyncDisposable

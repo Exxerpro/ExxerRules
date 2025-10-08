@@ -1,0 +1,1422 @@
+classDiagram
+
+	class CreateItemCommandHandler ~T~ {
+		+Handle(CreateItemCommand~T~ message) T
+		+ProcessAsync(CreateItemCommand~T~ request, CancellationToken cancellationToken) Task~Result~T~~
+	}
+	class CreateBarCodeCommandTests  {
+		-string RuleJson
+		-IValidator~CreateBarCodeCommand~ _validator
+		+ShouldPassValidation_WhenCommandIsValid() void
+		+ShouldFailValidation_WhenPartNumberIsEmpty() void
+		+ShouldHandleRequestWithNegativeResponse() Task
+		+ShouldNotPrintLabel_OnlyPrinterMachinesCanPrint(string partNumber, int machineId, string date) Task
+	}
+	class DbContextStaticData  {
+		+IReadOnlyList~Machine~ _fixtureMachines
+		+IReadOnlyList~Plc~ _fixturePlcs
+	}
+	class DependenciesFactoryTests  {
+		+DpRoBarCodeRepository_ShouldInitialize_AndContainData() Task
+		+DpBarCodeRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpBarCodeRepository_ShouldFindSpecificBarcodes_ByLabel(string expectedLabel) Task
+		+DpBarCodeRepository_ShouldFindBarcodes_ByIdRange(int minId, int maxId) Task
+		+DpBarCodeRepository_ShouldFindBarcodes_ByLabelPattern(string labelPattern) Task
+		+DpBarCodeRepository_ShouldFindHighestIdBarcode() Task
+		+DpBarCodeRepository_ShouldCountBarcodes_WithSpecificCriteria() Task
+		+DpBarCodeRepository_ShouldSupportPagination() Task
+		+DpRoCustomerRepository_ShouldInitialize_AndContainData() Task
+		+DpCustomerRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoCycleRepository_ShouldInitialize_AndContainData() Task
+		+DpCycleRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoMachineRepository_ShouldInitialize_AndContainData() Task
+		+DpRoMachineRepository_ShouldInitialize_FindMachineById() Task
+		+DpMachineRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoRuleRepository_ShouldInitialize_AndContainData() Task
+		+DpRuleRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoPlcRepository_ShouldInitialize_AndContainData() Task
+		+DpPlcRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoProductRepository_ShouldInitialize_AndContainData() Task
+		+DpProductRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoRecipeRepository_ShouldInitialize_AndContainData() Task
+		+DpRecipeRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoRegisterRepository_ShouldInitialize_AndContainData() Task
+		+DpRegisterRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoVariablesRepository_ShouldInitialize_AndContainData() Task
+		+DpVariablesRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoVariablesGroupRepository_ShouldInitialize_AndContainData() Task
+		+DpVariablesGroupRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoWorkFlowRepository_ShouldInitialize_AndContainData() Task
+		+DpWorkFlowRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoLineRepository_ShouldInitialize_AndContainData() Task
+		+DpLineRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoMachinePlcRepository_ShouldInitialize_AndContainData() Task
+		+DpMachinePlcRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoMasterLabelRepository_ShouldInitialize_AndContainData() Task
+		+DpRoDistinctRegisterRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpConfigAppRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoOeeRegisterRepository_ShouldInitialize_AndContainData() Task
+		+DpOeeRegisterRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoKpiOeeRepository_ShouldInitialize_AndContainData() Task
+		+DpKpiOeeRepository_ShouldInitialize_AndBeFunctional() Task
+		+DpRoPerformanceDataRepository_ShouldInitialize_AndContainData() Task
+		+DpPerformanceDataRepository_ShouldInitialize_AndBeFunctional() Task
+	}
+	class SimpleDIValidationTest  {
+		+All_Core_Services_Should_Resolve_Successfully() Task
+		+All_Core_Repositories_Should_Resolve_Successfully() Task
+		+Database_Context_Should_Work() Task
+		+Technical_Services_Should_Resolve() Task
+		+Service_Resolution_Performance_Should_Be_Acceptable() Task
+	}
+	class SmartEnumHybridCacheSerializer ~T~ {
+		+Deserialize(ReadOnlySequence~byte~ source) T
+		+Serialize(T item, IBufferWriter~byte~ target) void
+	}
+	class DependenciesFactory  {
+		-ServiceProvider? _serviceProvider
+		-IIndTraceDbContext? _dbContext
+		-IDbContextFactory<IndTraceDbContext>? _efContextFactory
+		-IIndTraceDbContextFactory? _contextFactory
+		-DbContextTests? _dbContextTestsData
+		-ITestOutputHelper _outputHelper
+		-SemaphoreSlim _initLock
+		-bool _isInitialized
+		-TaskCompletionSource~bool~ _initializationTcs
+		+ DpBarCodeRepository : IRepository~BarCode~
+		+ DpCommandRepository : IRepository~TaskGatewayRequest~
+		+ DpRequestRepository : IRepository~TaskGatewayRequest~
+		+ DpCustomerRepository : IRepository~Customer~
+		+ DpCycleRepository : IRepository~Cycle~
+		+ DpDistinctRegisterRepository : IRepository~DistinctRegister~
+		+ DpLineRepository : IRepository~Line~
+		+ DpMachineRepository : IRepository~Machine~
+		+ DpResponseRepository : IRepository~TaskGatewayResponse~
+		+ DpMachinePlcRepository : IRepository~MachinePlc~
+		+ DpMasterLabelRepository : IRepository~MasterLabel~
+		+ DpPlcRepository : IRepository~Plc~
+		+ DpProductRepository : IRepository~Product~
+		+ DpRecipeRepository : IRepository~Recipe~
+		+ DpRegisterRepository : IRepository~Register~
+		+ DpRuleRepository : IRepository~Rule~
+		+ DpShiftRepository : IRepository~Shift~
+		+ DpVariablesRepository : IRepository~Variable~
+		+ DpVariablesGroupRepository : IRepository~VariablesGroup~
+		+ DpWorkFlowRepository : IRepository~WorkFlow~
+		+ DpSettingRepository : IRepository~Setting~
+		+ DpConfigAppRepository : IRepository~Domain.Entities.ConfigApp~
+		+ DpOeeRegisterRepository : IRepository~OeeRegister~
+		+ DpKpiOeeRepository : IRepository~KpiOee~
+		+ DpPerformanceDataRepository : IRepository~PerformanceData~
+		+ DpRoBarCodeRepository : IReadOnlyRepository~BarCode~
+		+ DpRoCommandRepository : IReadOnlyRepository~TaskGatewayRequest~
+		+ DpRoRequestRepository : IReadOnlyRepository~TaskGatewayRequest~
+		+ DpRoCustomerRepository : IReadOnlyRepository~Customer~
+		+ DpRoCycleRepository : IReadOnlyRepository~Cycle~
+		+ DpRoDistinctRegisterRepository : IReadOnlyRepository~DistinctRegister~
+		+ DpRoLineRepository : IReadOnlyRepository~Line~
+		+ DpRoMachineRepository : IReadOnlyRepository~Machine~
+		+ DpRoMachinePlcRepository : IReadOnlyRepository~MachinePlc~
+		+ DpRoMasterLabelRepository : IReadOnlyRepository~MasterLabel~
+		+ DpRoPlcRepository : IReadOnlyRepository~Plc~
+		+ DpRoProductRepository : IReadOnlyRepository~Product~
+		+ DpRoRecipeRepository : IReadOnlyRepository~Recipe~
+		+ DpRoRegisterRepository : IReadOnlyRepository~Register~
+		+ DpRoRuleRepository : IReadOnlyRepository~Rule~
+		+ DpRoShiftRepository : IReadOnlyRepository~Shift~
+		+ DpRoVariablesRepository : IReadOnlyRepository~Variable~
+		+ DpRoVariablesGroupRepository : IReadOnlyRepository~VariablesGroup~
+		+ DpRoWorkFlowRepository : IReadOnlyRepository~WorkFlow~
+		+ DpRoOeeRegisterRepository : IReadOnlyRepository~OeeRegister~
+		+ DpRoKpiOeeRepository : IReadOnlyRepository~KpiOee~
+		+ DpRoPerformanceDataRepository : IReadOnlyRepository~PerformanceData~
+		+ DpRoSettingRepository : IReadOnlyRepository~Setting~
+		+ DpRoConfigAppRepository : IReadOnlyRepository~Domain.Entities.ConfigApp~
+		+ DpRoResponseRepository : IReadOnlyRepository~TaskGatewayResponse~
+		+ DpIndTraceContext : IIndTraceDbContext
+		+ DpIndTraceDbTestContextFactory : IDbContextFactory~IndTraceDbContext~
+		+ DpIndTraceDbContextFactory : IIndTraceDbContextFactory
+		+ DbContextTestsData : DbContextTests
+		+ Initialization : Task
+		+ DpMonitorRequestDispatcher : IMonitorRequestDispatcher
+		+ DpGatewayCommandDispatcher : IGatewayCommandDispatcher
+		+ DpBarCodeService : IBarCodeService
+		+ DpMasterLabelService : IMasterLabelService
+		+ DpShiftService : IShiftService
+		+ DpBarCodeIS : IBarCodeResult
+		+ DpRegisterService : IRegisterService
+		+ DpCycleService : ICycleService
+		+ DpProductService : IProductService
+		+ DpHybridCache : ICacheService
+		+ DpDateTimeMachine : DateTimeMachine
+		+ DpIDateTimeMachine : IDateTimeMachine
+		+ DpBarCodeValidationService : IBarCodeValidationService
+		+ DpShiftDetectionRuleExecutor : IShiftDetectionRuleExecutor
+		+ Logger : ILogger~DependenciesFactory~
+		+ DpLogger : ILogger
+		+EnsureInitializedAsync() ValueTask~bool~
+		+InitializeAsync() ValueTask
+		-InitializeInternalAsync() Task~bool~
+		+DisposeAsync() ValueTask
+		-GetService() T
+		-SeedTestDataAsync() Task
+		+Dispose() void
+	}
+	class BadRequestExceptionTests  {
+		+Constructor_WithValidParameters_ShouldCreateInstance() void
+		+Constructor_WithInvalidParameters_ShouldThrowException() void
+		+Properties_WhenSet_ShouldReturnCorrectValues() void
+		+Methods_WhenCalled_ShouldReturnExpectedResults() void
+	}
+	class ComprehensiveEnumRepositoryTests  {
+		-ILogger~ComprehensiveEnumRepositoryTests~ _logger
+		+MachineRepository_ShouldHandleEnums_RW(int id, string expectedType, string expectedWorkFlow) Task
+		+MachineRepository_ShouldHandleEnums_RO(int id, string expectedType, string expectedWorkFlow) Task
+		+CycleRepository_ShouldHandleEnums_RW(int id, string expectedCycleStatus, string expectedPartStatus) Task
+		+CycleRepository_ShouldHandleEnums_RO(int id, string expectedCycleStatus, string expectedPartStatus) Task
+		+BarCodeRepository_ShouldHandleEnums_RW(int id, string expectedPartStatus, string expectedFlowStatus) Task
+		+BarCodeRepository_ShouldHandleEnums_RO(int id) Task
+		+ShiftRepository_ShouldHandleEnums_RW() Task
+		+ShiftRepository_ShouldHandleEnums_RO() Task
+		+TaskGatewayRequestRepository_ShouldHandleEnums_RW() Task
+		+TaskGatewayRequestRepository_ShouldHandleEnums_RO() Task
+		+VariableRepository_ShouldHandleEnums_RW() Task
+		+VariableRepository_ShouldHandleEnums_RO() Task
+		+EnumModel_ConversionMethods_ShouldWorkCorrectly() Task
+	}
+	class GenericTestListCommand  {
+		+ Includes : string[]
+		+ Page : int
+		+ PageSize : int
+	}
+	class UpdateMachinePlcCommandTest  {
+		+ShouldSendRequestAsync() Task
+	}
+	class CacheKeyBuilderReadOnlyReposTests  {
+		-string _prefix
+		+BuildKey_WithSpecification_ReturnsUniqueKeyUsingSpecKey() void
+		+BuildKey_WithoutId_ReturnsKeyWithTypeName() void
+		+BuildKey_WithId_ReturnsUniqueKeyWithEntitySpecificIdField(string operation, int id) void
+		+BuildKey_DifferentEntityTypes_ProducesDifferentKeys() void
+		+BuildKey_ParallelExecution_ThreadSafeAndConsistent() Task
+		+BuildKey_DifferentOperations_ProduceDifferentKeys(string[] operations) void
+		+BuildKey_KnownEntityTypes_UsesCorrectIdFieldNames() void
+		+BuildKey_HighFrequencyOperations_PerformanceIsConsistent() void
+		+BuildKey_EdgeCases_HandlesCorrectly() void
+		+BuildKey_SpecificationWithComplexKey_PreservesKeyIntegrity() void
+		+BuildKey_Composite_MachinePlc_UsesNamedFieldsInOrder() void
+		+BuildKey_Composite_DistinctRegister_UsesNamedFieldsInOrder() void
+		+BuildKey_Composite_MismatchedCount_FallsBackToPositionalLabels() void
+		+BuildKey_OperationNormalization_AliasesProduceSameKeys_SingleId(string operation, int id) void
+		+BuildKey_OperationNormalization_AliasesProduceSameKeys_Composite(string operation, int id1, int id2) void
+	}
+	class TestEntity  {
+		+ Id : int
+	}
+	class AnotherEntity  {
+		+ Id : int
+	}
+	class ThirdEntity  {
+		+ Id : int
+	}
+	class TestDataSourceGenerator  {
+		-string _outputDirectory
+		-string _namespace
+		+GenerateFromUsageLogAsync(IReadOnlyDictionary~string&#44&#32HashSet~string~~ usageLog, CancellationToken cancellationToken) Task~SourceGenerationResult~
+		+GenerateFromReportFileAsync(string reportFilePath, CancellationToken cancellationToken) Task~SourceGenerationResult~
+		-GenerateClassContent(string entityType, HashSet~string~ usedIds) string
+		-GenerateSummaryContent(SourceGenerationResult result) string
+	}
+	class SourceGenerationResult  {
+		+ IsSuccess : bool
+		+ GeneratedFiles : List~string~
+		+ TotalEntities : int
+		+ GeneratedAt : DateTime
+		+ ErrorMessage : string?
+	}
+	class SimpleEnumModelTest  {
+		+EnumModelJsonConverter_RoundTrip_ShouldWork() void
+		+MachineType_Properties_ShouldNotBeNull() void
+	}
+	class CreateCycleCommandTest  {
+		-ITestOutputHelper Output
+		+ LastCycleFinishedOkMustStartCycleNextStationData : IEnumerable~object[]~
+		+ BarCodesWhitInvalid_Flow_Status_Must_ReturnInvalid : IEnumerable~object[]~
+		+ LastCycle_NotFinishedOk_MustStartCycle_SameStation_Data : IEnumerable~object[]~
+		+ LastCycleNotFinishedOkMustStartCycleSameStationDataF : IEnumerable~object[]~
+		+Handle_GivenValidRequest_ShouldRaiseCreateCycleCommandTestNotification() Task
+		+LastCycleFinishedOk_MustStartCycleNextStationTest(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+		+BarCodesWhitInvalid_Flow_Status_Must_ReturnInvalid_Tests(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+		+LastCycle_NotFinishedOk_MustStartCycle_SameStation_Test(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+		+LastCycleNotFinishedOkMustStartCycleSameStationTestF(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+		+Should_Not_Create_Cycle_When_Skipped_Station_On_Next_Station_Destination_Not_Valid(string label, int machineId, int lenPartNumber) Task
+		+Should_Not_Create_Cycle_When_Label_Skipped_Next_Station_Part_Not_Valid(string label, int machineId, int lenPartNumber) Task
+	}
+	class TestUpdateCommand  {
+		+ EntitieId : int
+		+ Name : string
+		+ TimeStamp : DateTime
+	}
+	class ShiftServiceTests  {
+		+CreateOrRetrieveShiftAndCyclesOkAsync_WhenShiftExists_ShouldReturnExistingShift() Task
+		+CreateOrRetrieveShiftAndCyclesOkAsync_WhenShiftDoesNotExist_ShouldCreateNewShift() Task
+		+CreateOrRetrieveShiftAndCyclesOkAsync_ShouldUpdateCycleCount_WhenCyclesAdded() Task
+		+CreateOrRetrieveShiftAndCyclesOkAsync_WithDifferentMachines_ShouldHandleCorrectly(int machineId) Task
+		+ShiftDetectionRules_ShouldCreateNewShift_WhenTimeExceedsShiftDuration() Task
+	}
+	class GetBarCodeDetailGatewayQueryHandlerTests  {
+		+GetBarCodeDetailGatewayQueryHandler_ShouldProcessCommand_AndReturnTaskGatewayResponse() Task
+	}
+	class NormalRepositoryTest  {
+		+NormalRepository_ShouldWork_WithConverter() Task
+	}
+	class CreateSettingCommandTest  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+		+DiagnosticTest_CaptureFailureDetails() Task
+	}
+	class UpdateWorkFlowCommandTests  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class UpdateSettingCommandTests  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class GenericTestEntity  {
+		+ Id : int
+		+ Name : string
+		+ Description : string
+		+ CreatedAt : DateTime
+	}
+	class Startup  {
+	}
+	class EnumModelSerializationTests  {
+		+EnumModelHybridCacheSerializer_SerializeDeserialize_ShouldPreserveEnumModel() void
+		+EnumModelHybridCacheSerializer_SerializeNull_ShouldReturnInvalidOnDeserialize() void
+		+EnumModelHybridCacheSerializer_SerializeAllMachineTypes_ShouldPreserveValues(string machineTypeName) void
+		+EnumModel_AfterSerialization_PropertiesShouldNotBeNull() void
+	}
+	class EntityUsageStatistics  {
+		-ConcurrentDictionary~Type&#44&#32EntityUsageInfo~ _entityUsage
+		-ILogger~EntityUsageStatistics~ _logger
+		+ EntityUsage : IReadOnlyDictionary~Type&#44&#32EntityUsageInfo~
+		+RecordEntityLoaded(int count, DataSource source, long approximateMemoryBytes) void
+		+RecordEntityAccessed(int entityId) void
+		+RecordEntitiesAccessed(IEnumerable~int~ entityIds) void
+		+GetUnusedEntitiesReport() Dictionary~string&#44&#32UnusedEntityInfo~
+		+LogUsageSummary() void
+		-DetermineRecommendation(EntityUsageInfo info) string
+	}
+	class EntityUsageInfo  {
+		-long _loadCount
+		-long _accessCount
+		-long _memoryBytes
+		+ EntityType : string
+		+ AccessedIds : ConcurrentDictionary~int&#44&#32byte~
+		+ LoadCount : long
+		+ AccessCount : long
+		+ Source : DataSource
+		+ MemoryBytes : long
+		+ LastAccessed : DateTime
+	}
+	class UnusedEntityInfo  {
+		+ EntityType : string
+		+ LoadCount : long
+		+ Source : DataSource
+		+ MemoryWastedBytes : long
+		+ Recommendation : string
+	}
+	class GetSettingDetailQueryHandlerTests  {
+		+GetSettingDetail() Task
+	}
+	class GetMachinePlcDetailQueryHandlerTest  {
+		+GetMachinePlcDetailTest() Task
+	}
+	class TestDbContextPool  {
+		-ConcurrentBag~PooledContext~ _pool
+		-SemaphoreSlim _poolSemaphore
+		-DbContextTests _contextTestsData
+		-EntityUsageStatistics _usageStatistics
+		-ILogger~TestDbContextPool~ _logger
+		-int _maxPoolSize
+		-int _warmupThreshold
+		-int _totalCreated
+		-int _currentRented
+		-long _totalRentals
+		-long _totalReturns
+		-SemaphoreSlim _warmupSemaphore
+		-bool _isWarming
+		-string _databaseName
+		-bool _isDatabaseInitialized
+		-bool _isDisposing
+		-SemaphoreSlim _dataLoadSemaphore
+		+RentAsync(CancellationToken cancellationToken) Task~PooledContext~
+		-ReturnAsync(PooledContext context) Task
+		-CreateNewContextAsync(CancellationToken cancellationToken) Task~IndTraceDbContext~
+		-ResetContextAsync(IndTraceDbContext context) Task
+		-ClearAllDbSetsAsync(IndTraceDbContext context) Task
+		-LoadTestDataAsync(IndTraceDbContext context) Task
+		-LoadStaticReferenceData(IndTraceDbContext context) Task
+		+GetStatistics() PoolStatistics
+		+LogStatistics() void
+		+WarmupAsync(int contextCount) Task
+		-InitialWarmupAsync(int? overrideSize) Task
+		-CheckAndTriggerWarmup() void
+		-BackgroundWarmupAsync() Task
+		-UrgentWarmupAsync() Task
+		-CreateWarmupContext() Task
+		+Dispose() void
+	}
+	class PoolStatistics  {
+		+ MaxPoolSize : int
+		+ TotalCreated : int
+		+ CurrentRented : int
+		+ CurrentAvailable : int
+		+ TotalRentals : long
+		+ TotalReturns : long
+		+ UtilizationPercentage : double
+	}
+	class PooledContext  {
+		-TestDbContextPool _pool
+		-EntityUsageStatistics _usageStatistics
+		-bool _disposed
+		-DateTime _rentedAt
+		-bool _isReadyForReuse
+		- Context : IndTraceDbContext
+		- IsReadyForReuse : bool
+		-MarkRented() void
+		-MarkReturned() void
+		-MarkReadyForReuse() void
+		-MarkDisposing() void
+		+Dispose() void
+		+DisposeAsync() ValueTask
+	}
+	class DbContextExtensions  {
+		+UpsertRangeAsync(Microsoft.EntityFrameworkCore.DbContext context, IEnumerable~TEntity~ entities, Func~TEntity&#44&#32TKey~ keySelector) Task
+		+UpsertRangeAsync(DbContext context, IEnumerable~TEntity~ entities, Func~TEntity&#44&#32(TKey1&#44&#32TKey2)~ keySelector) Task
+	}
+	class StatefulTestContext  {
+		-IndTraceDbContext _context
+		-string _testName
+		+ Context : IndTraceDbContext
+		+CreateDbContext() IIndTraceDbContext
+		+DisposeAsync() ValueTask
+	}
+	class StatefulTestExample  {
+		-ITestOutputHelper _output
+		+StatefulTest_StatePreservedWithinTest() Task
+		+MultipleTests_EachHasOwnState() Task
+	}
+	class ValidationServiceTests  {
+		-IBarCodeValidationService _validationService
+		+Validate_WithDifferentConditions_ReturnsExpectedResult(FlowStatus flowStatus, MachineType machineType, CycleStatus cycleStatus, ResultValidation expectedResult) void
+		+Validate_WhenInvalidPartStatus_ReturnsPartNotValid() void
+		+Validate_WhenMachineIdDoesNotMatchNextMachineId_ReturnsDestinationNotValid() void
+		+Validate_WithDefaultCase_ReturnsInvalid() void
+	}
+	class TesterUserService  {
+		+ CurrentUserId : Task~string~
+		+ CurrentUserName : Task~string~
+		+ IsAuthenticated : Task~bool~
+	}
+	class UpdateCyclesOkCommandTests  {
+		+Handle_CommandUpdatedCyclesTestsAsync() Task
+		-ShouldUpdateCycle(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType, DateTime dateTime) Task
+		-ShouldNotUpdateCycle(string label, int machineId, int barCodeId, int cycleId, DateTime dateTime) Task
+		+ShouldNotUpdateCycle_WhenCreatedOnAnotherStation(string label, int machineId, int barCodeId, int cycleId, DateTime dateTime) Task
+		+ShouldReturnFail_WhenCycleNotFound(string label, int machineId, int barCodeId, int cycleId, DateTime dateTime) Task
+		+ShouldFail_WhenCycleTimeIsInvalid(string label, int machineId, int barCodeId, int cycleId, int cycleTime, DateTime cycleInitDateTime) Task
+	}
+	class ValidationHelper  {
+		+Validate(T instance, IValidator~T~ validator) void
+	}
+	class UpdatePLCCommandTests  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class MinimalConverterTest  {
+		+ConverterTest_ShouldWork() void
+	}
+	class MachineRepositorieTests  {
+		+ShouldGetMachineForAGivenID_RetrieveCorrectsMAchineType() Task
+	}
+	class ValidationBehaviorTests  {
+		+Handle_WithValidRequest_ShouldPassValidationAndProceedToNext() Task
+		+Handle_WithMultipleValidators_ShouldRunAllValidators() Task
+		+Handle_WithFailingValidator_ShouldThrowValidationException() Task
+	}
+	class AlwaysValidValidator ~T~ {
+	}
+	class AlwaysInvalidValidator ~T~ {
+	}
+	class DbContextFactoryTests  {
+		+CreateAndLoadDbContext() Task~IIndTraceDbContextFactory~
+		+Destroy(IndTraceDbContext context) void
+		+CreateEfDbContext() Microsoft.EntityFrameworkCore.DbContext
+		+CreateDbContextAsync(CancellationToken cancellationToken) Task~Persistence.Interfaces.IIndTraceDbContext~
+		+CreateDbContext() Persistence.Interfaces.IIndTraceDbContext
+		+DisposeAsync() ValueTask
+	}
+	class HybridTestDataManager  {
+		-string _edgeCaseDataPath
+		-string _regressionDataPath
+		-DbContextTests _fullContextTestsData
+		+GetFocusedTestData() FocusedTestDataResult
+		+LoadEdgeCaseDataAsync(string scenario) Task~EdgeCaseTestDataResult~
+		+GenerateRegressionTestDataAsync(RegressionTestScenario scenario) Task~RegressionTestDataResult~
+		+GetTestDataAsync(TestDataRequirements requirements) Task~ITestDataResult~
+		+SaveEdgeCaseDataAsync(EdgeCaseTestData data, string scenario) Task
+		+AnalyzeTestDataUsage() TestDataAnalysisResult
+		-MeetsRequirements(ITestDataResult data, TestDataRequirements requirements) bool
+		-GenerateDataForScenario(RegressionTestScenario scenario) Task~TestData~
+		-GenerateRecommendations(TestDataStats focusedStats, int edgeCaseFiles) List~string~
+	}
+	class TestDataRequirements  {
+		+ MinRegisters : int
+		+ MinBarCodes : int
+		+ MinCycles : int
+		+ MinMachines : int
+		+ Scenario : string
+		+ RequireEdgeCases : bool
+	}
+	class RegressionTestScenario  {
+		+ Name : string
+		+ RegisterCount : int
+		+ BarCodeCount : int
+		+ CycleCount : int
+		+ MachineCount : int
+	}
+	class EdgeCaseTestData  {
+		+ Registers : Register[]
+		+ BarCodes : BarCode[]
+		+ Cycles : Cycle[]
+		+ Machines : Machine[]
+		+ Metadata : EdgeCaseMetadata?
+	}
+	class EdgeCaseMetadata  {
+		+ Description : string
+		+ Tags : string[]
+		+ CreatedAt : DateTime
+		+ CreatedBy : string
+	}
+	class TestData  {
+		+ Registers : Register[]
+		+ BarCodes : BarCode[]
+		+ Cycles : Cycle[]
+		+ Machines : Machine[]
+	}
+	class TestDataStats  {
+		+ Registers : int
+		+ BarCodes : int
+		+ Cycles : int
+		+ Machines : int
+		+ TotalEntities : int
+	}
+	class TestDataAnalysisResult  {
+		+ FocusedDataStats : TestDataStats
+		+ EdgeCaseFiles : int
+		+ Recommendations : List~string~
+	}
+	class ITestDataResult  {
+		- Registers : Register[]
+		- BarCodes : BarCode[]
+		- Cycles : Cycle[]
+		- Machines : Machine[]
+		- Source : string
+		- LoadTime : TimeSpan
+	}
+	class FocusedTestDataResult  {
+		+ Registers : Register[]
+		+ BarCodes : BarCode[]
+		+ Cycles : Cycle[]
+		+ Machines : Machine[]
+		+ Source : string
+		+ LoadTime : TimeSpan
+	}
+	class EdgeCaseTestDataResult  {
+		+ Registers : Register[]
+		+ BarCodes : BarCode[]
+		+ Cycles : Cycle[]
+		+ Machines : Machine[]
+		+ Source : string
+		+ LoadTime : TimeSpan
+		+ FilePath : string
+		+ Metadata : EdgeCaseMetadata?
+	}
+	class RegressionTestDataResult  {
+		+ Registers : Register[]
+		+ BarCodes : BarCode[]
+		+ Cycles : Cycle[]
+		+ Machines : Machine[]
+		+ Source : string
+		+ LoadTime : TimeSpan
+		+ Scenario : RegressionTestScenario
+		+ GeneratedAt : DateTime
+	}
+	class MappingTestHelper  {
+		-HashSet~string~ GloballyIgnoredProperties
+		+AssertAllPropertiesMapped(object source, object target, ITestOutputHelper output) List~MappingResult~
+		-AreValuesEquivalent(object? sourceVal, object? targetVal) bool
+	}
+	class GenericTestDataHelper  {
+		+CreateTestEntities(int count) List~GenericTestEntity~
+		+CreateManufacturingTestEntities(string industry, string equipment, int count) List~GenericTestEntity~
+	}
+	class GetCyclesListQueryHandlerTest  {
+		+GetCyclesListTotalMaxTest() Task
+		+GetCyclesListTotalPageTest() Task
+		+GetCyclesListByBarCode(int barCodeId, int countCycles) Task
+	}
+	class RepositoryCancellationAndNullGuardTests  {
+		-CreateSut() Repository~Machine~
+		+Cancelled_token_ReturnsFailure_On_Common_Operations() Task
+		+Null_guards_ReturnFailure_For_Null_Inputs() Task
+	}
+	class UpdateConfigAppCommandTests  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class GetConsecutiveByBarCodeLabelAsyncTests  {
+		+GetBarCodesListTest() Task
+		+GetConsecutiveByBarCodeLabelAsync_MustRolBackToZeroAfter9999() Task
+		+GetConsecutiveByBarCodeLabelAsync_NoMatchingLabels_ReturnsFailure() Task
+		+GetConsecutiveByBarCodeLabelAsync_MatchingLabelFound_ReturnsCorrectConsecutive() Task
+		+GetConsecutiveByBarCodeLabelAsync_ConsecutiveExceedsLimit_ReturnsWrappedConsecutive() Task
+	}
+	class UpdateProductCommandTests  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class CreateMachineMonitorRequestTest  {
+		-ILogger~CreateMachineMonitorRequestHandler~ logger
+		+ShouldThrowExceptionWhenMachineExists() Task
+		+ShouldThrowExceptionWhenMachineIdExists() Task
+		+ShouldThrowExceptionWhenMachineNameExists() Task
+	}
+	class TestCachePartitionProvider  {
+		-string _partitionGuid
+		+GetPrefix() string
+	}
+	class GetBarCodeReportQueryHandlerTests  {
+		+GetBarCodeDetailQuery_ShouldSendRequest_ToGuiCommandDispatcher() Task
+		+ShouldHaveCorrectInformation(string barCode, int barCodeId, int machineId) Task
+		+ShouldRetrieveCorrectInformation(string barCode, int barCodeId, int machineId) Task
+	}
+	class EnumConverterDiagnosticTest  {
+		+DiagnoseEnumValueConverterIssue() Task
+		+TestDefaultValueHypothesis() Task
+	}
+	class CreateWorkFlowCommandTest  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class GetMachineDetailQueryHandlerTest  {
+		+GetMachineDetail() Task
+	}
+	class UpdateMachineCommandTest  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class DeleteFailureExceptionTests  {
+		+Constructor_WithValidParameters_ShouldCreateException() void
+		+Constructor_WithAutomotiveScenario_ShouldCreateCorrectMessage() void
+		+Constructor_WithElectronicsScenario_ShouldCreateCorrectMessage() void
+		+Constructor_WithPharmaceuticalScenario_ShouldCreateCorrectMessage() void
+		+Constructor_WithAerospaceScenario_ShouldCreateCorrectMessage() void
+		+Constructor_WithFoodBeverageScenario_ShouldCreateCorrectMessage() void
+		+Constructor_WithVariousScenarios_ShouldCreateCorrectMessage(string name, int key, string message) void
+		+Constructor_WithStringKey_ShouldHandleCorrectly() void
+		+Constructor_WithComplexKey_ShouldHandleCorrectly() void
+		+Message_ShouldFollowExpectedFormat() void
+	}
+	class DueDiligenceSimpleTest  {
+		+New_Repositories_Should_Be_Accessible() Task
+		+Core_Services_Still_Resolve_After_Changes() Task
+		+Database_Infrastructure_Still_Works() Task
+		+Existing_BarCode_Operations_Still_Work() Task
+		+Overall_Health_Check_After_Changes() Task
+	}
+	class TestDataLoaderVerificationTest  {
+		+TestDataLoader_WithFixes_PreservesSmartEnumValues() Task
+		+TestDataLoader_LoadsCycles_Successfully() Task
+		+TestDataLoader_LoadsRegisters_Successfully() Task
+		+TestDataLoader_LoadsVariables_Successfully() Task
+	}
+	class GetCycleDetailQueryHandlerTest  {
+		+GetCycleDetail() Task
+	}
+	class TestDataUsageTracker  {
+		-HashSet~int~ _accessedRegisterIds
+		-HashSet~int~ _accessedBarCodeIds
+		-HashSet~int~ _accessedCycleIds
+		-HashSet~int~ _accessedMachineIds
+		-HashSet~string~ _accessedTables
+		-List~TestDataUsageReport~ _contextReports
+		-object _lockObject
+		+TrackRegisterAccess(int registerId) void
+		+TrackBarCodeAccess(int barCodeId) void
+		+TrackCycleAccess(int cycleId) void
+		+TrackMachineAccess(int machineId) void
+		+AddContextReport(TestDataUsageReport report) void
+		+GenerateComprehensiveReport() TestDataUsageReport
+		+SaveReportAsync(string filePath) Task
+		+Clear() void
+		+GetCurrentStats() TestDataUsageStats
+	}
+	class GetBarCodeDetailQueryHelperTests  {
+		-ITestOutputHelper _output
+		+ InvalidPartResultValidationData : IEnumerable~object[]~
+		+ InvalidDestinationMachineData : IEnumerable~object[]~
+		+ Last_Cycle_Finished_Ok_Must_Get_Rejected_When_Trying_To_Repeat_Cycle_On_Last_Station : IEnumerable~object[]~
+		+ LastCycleFinishedOkMustNotGetResponseValidOnSameStation : IEnumerable~object[]~
+		+ LastCycleNotFinishedOkPieceInvalidFlowMustNotGetResponseValidOnSameStation : IEnumerable~object[]~
+		+ LastCycleNotFinishedOkMustGetResponseValidOnSameStation : IEnumerable~object[]~
+		+ ValidateRequestValidData : IEnumerable~object[]~
+		+GetBarCodeDetails_ShouldReturnBarCodeResult_WhenValidRequestProvided() Task
+		+InvalidPartResultValidationDataTest(string label, int barCodeId, int machineId, int lenPartNumber, ResultValidation expectedResult) Task
+		+InvalidDestinationMachineTest(string label, int barCodeId, int machineId, int lenPartNumber, ResultValidation expectedResult) Task
+		+Last_Cycle_Finished_Ok_Must_Get_Response_Valid_Next_Station_Test(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType, ResultValidation resultValidation) Task
+		+LastCycleFinishedOkMustNotGetResponseValidOnSameStationTest(string label, int lenPartNumber, int machineId, int lastMachineId, int nextMachineId, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+		+LastCycleNotFinishedOkPieceHaveInvalidFlowMustNotGetResponseValidOnSameStationTest(string label, int lenPartNumber, int machineId, int lastMachineId, int nextMachineId, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+		+LastCycleStartedButNotFinishedNOk_MustStartAgaingOnSameStataionResponseValid(string label, int lenPartNumber, int machineId, int lastMachineId, int nextMachineId, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+		+ValidateRequestValid(string label, int lenPartNumber, int machineId, int lastMachineId, int nextMachineId, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType) Task
+	}
+	class RestExceptionTests  {
+		+Constructor_ShouldCreateInstance() void
+		+Constructor_WithNullMessage_ShouldCreateInstance() void
+		+Constructor_WithComplexObject_ShouldCreateInstance() void
+		+Properties_WhenSet_ShouldReturnCorrectValues() void
+		+Methods_WhenCalled_ShouldReturnExpectedResults() void
+	}
+	class NotFoundExceptionTests  {
+		+Constructor_WithValidParameters_ShouldCreateInstance() void
+		+Constructor_WithNullKey_ShouldCreateInstanceWithNullKey() void
+		+Constructor_WithVariousEntityTypes_ShouldFormatMessageCorrectly(string entityName, object entityKey) void
+		+Exception_WithProductionLineMachine_ShouldContainCorrectDetails() void
+		+Exception_WithElectronicsManufacturingVariable_ShouldContainCorrectDetails() void
+		+Constructor_WithEdgeCaseStrings_ShouldHandleCorrectly(string entityName, string entityKey) void
+		+Exception_InheritanceChain_ShouldBeCorrect() void
+		+Properties_InheritedFromException_ShouldBeAccessible() void
+		+Exception_WhenThrown_ShouldMaintainStackTrace() void
+		+Constructor_WithIntegerKeys_ShouldFormatCorrectly(int key) void
+		+Constructor_WithComplexObjectKey_ShouldUseToString() void
+	}
+	class GetSettingsListQueryHandlerTests  {
+		+GetSettingsTest() Task
+	}
+	class GetConfigAppsListQueryHandlerTests  {
+		+GetConfigAppsTest() Task
+	}
+	class TestCommand  {
+		+ Id : int
+		+ Page : int
+		+ PageSize : int
+		+ Includes : string[]
+		+ Name : string
+	}
+	class SequentialTestContext  {
+		-IndTraceDbContext _context
+		+CreateDbContext() IIndTraceDbContext
+		+Dispose() void
+	}
+	class SimpleSequentialTest  {
+		-ITestOutputHelper _output
+		+SequentialOperations_NoComplexity() Task
+	}
+	class ValidationExceptionTests  {
+		+Constructor_WithDefaultParameters_ShouldCreateInstance() void
+		+Constructor_WithSingleFailure_ShouldCreateInstanceWithOneError() void
+		+Constructor_WithMultipleFailures_ShouldCreateInstanceWithMultipleErrors() void
+		+Constructor_WithGroupedFailures_ShouldGroupErrorsByProperty() void
+		+Exception_ShouldInheritFromSystemException() void
+		+Exception_WithAutomotiveValidationScenario_ShouldHandleComplexRules() void
+		+Constructor_WithSingleValidationError_ShouldCreateCorrectly() void
+		+Failures_Property_ShouldBeReadOnly() void
+		+Message_Property_ShouldProvideDefaultMessage() void
+	}
+	class GenericCrudTestHelperTests  {
+		+CreateTestCommand_WithoutPropertyValues_ReturnsCommandWithDefaults() void
+		+CreateTestCommand_WithPropertyValues_SetsPropertiesCorrectly() void
+		+CreatePaginationData_WithDefaults_ReturnsCorrectData() void
+		+CreatePaginationData_WithCustomValues_ReturnsCorrectData() void
+		+CreateEntityIdData_WithId_ReturnsCorrectData() void
+		+CountEnumerableResult_WithDifferentCollections_ReturnsCorrectCount(object[] items, int expectedCount) void
+		+CountEnumerableResult_WithNull_ReturnsZero() void
+		+CreateCommandForEntityType_WithValidTypes_ReturnsCommand() void
+		+CreateCommandForEntityType_WithPropertyValues_SetsProperties() void
+		+TestGenericListCommand_HasCorrectDefaultValues() void
+		+TestGenericCreateCommand_CanBeInstantiated() void
+		+TestGenericDeleteCommand_HasIdProperty() void
+		+GenericCrudTestHelper_WorksWithMultipleEntityTypes() void
+		+GenericCrudTestHelper_HandlesComplexPropertyValues() void
+	}
+	class CreateItemCommand ~T~ {
+	}
+	class Sample  {
+		+Execute() Task~int~
+	}
+	class TestDataUsageReport  {
+		+ AccessedRegisterIds : List~int~
+		+ AccessedBarCodeIds : List~int~
+		+ AccessedCycleIds : List~int~
+		+ AccessedMachineIds : List~int~
+		+ AccessedTables : List~string~
+		+ TotalRegistersAccessed : int
+		+ TotalBarCodesAccessed : int
+		+ TotalCyclesAccessed : int
+		+ TotalMachinesAccessed : int
+		+ ContextId : int
+		+ TotalContexts : int
+		+ ContextReports : List~TestDataUsageReport~
+		+ Timestamp : DateTime
+	}
+	class ValidationTestData  {
+		+GetValidationTestData() IEnumerable~object[]~
+	}
+	class RepositoryRegistration  {
+		+AddRepository(IServiceCollection services, ServiceLifetime lifetime) IServiceCollection
+		+AddReadOnlyRepository(IServiceCollection services, ServiceLifetime lifetime) IServiceCollection
+	}
+	class EfDbContextFactoryAdapter  {
+		-IDbContextFactory~IndTraceDbContext~ _efContextFactory
+		+CreateEfDbContext() DbContext
+		+CreateDbContextAsync(CancellationToken cancellationToken) Task~IIndTraceDbContext~
+		+CreateDbContext() IIndTraceDbContext
+		+DisposeAsync() ValueTask
+	}
+	class CreateProductCommandTest  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteReturnError_CustomerWasNotOnTheSystem() Task
+		+ShouldExecuteReturnSuccesfully() Task
+	}
+	class PerformanceMeasurer  {
+		-List~PerformanceMeasurement~ _measurements
+		-object _lockObject
+		+MeasureAsync(string operationName, Func~Task~T~~ operation) Task~T~
+		+GetAllMeasurements() List~PerformanceMeasurement~
+		+GetStatistics(string operationName) PerformanceStatistics
+		+GenerateReport() PerformanceReport
+		+SaveReportAsync(string filePath) Task
+		+Clear() void
+		-GetMedian(List~long~ values) double
+	}
+	class PerformanceMeasurement  {
+		+ OperationName : string
+		+ ElapsedMilliseconds : long
+		+ ElapsedTicks : long
+		+ MemoryUsedBytes : long
+		+ Timestamp : DateTime
+		+ Success : bool
+		+ ErrorMessage : string?
+	}
+	class PerformanceStatistics  {
+		+ OperationName : string
+		+ Count : int
+		+ AverageTimeMs : double
+		+ MinTimeMs : long
+		+ MaxTimeMs : long
+		+ MedianTimeMs : double
+		+ AverageMemoryBytes : double
+		+ MinMemoryBytes : long
+		+ MaxMemoryBytes : long
+		+ TotalTimeMs : long
+		+ SuccessRate : double
+	}
+	class PerformanceReport  {
+		+ GeneratedAt : DateTime
+		+ TotalMeasurements : int
+		+ SuccessfulMeasurements : int
+		+ FailedMeasurements : int
+		+ OperationStatistics : List~PerformanceStatistics~
+		+ AllMeasurements : List~PerformanceMeasurement~
+	}
+	class ExactFailingTestReplication  {
+		+DpRoMachineRepository_ShouldInitialize_FindMachineById_WithDetailedLogging() Task
+	}
+	class GenericTestDeleteCommand  {
+		+ Id : int
+	}
+	class LabelDataForTests  {
+		+ Label : string
+		+ MachineId : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ PartStatus : PartStatus
+		+ FlowStatus : FlowStatus
+		+ CycleStatus : CycleStatus
+		+ MachineType : MachineType
+		+ Result : Result
+		+ BarCodeId : int
+		+ CycleId : int
+		+Equals(TaskGatewayResponse taskGatewayInfo) bool
+		+Equals(BarCodeResult barCodeInfo) bool
+	}
+	class DirectDatabaseTest  {
+		+DatabaseConverter_ShouldWork() Task
+	}
+	class TestGenericDeleteCommand ~TEntity~ {
+		+ Id : int
+	}
+	class GenericReadOnlyRepositoryContractTests  {
+		+IReadOnlyRepository_ContractShouldBeGeneric(Type entityType) void
+		+ReadOnlyRepositoryStub_ShouldWorkGenerically(Type entityType, string testName) void
+		+GenericReadOnlyRepositoryPattern_ShouldValidateAcrossEntityTypes() void
+		+ReadOnlyRepository_ShouldBeSeparateFromFullRepository(Type entityType) void
+	}
+	class GetConfigAppDetailQueryHandlerTests  {
+		+GetConfigAppDetail() Task
+	}
+	class GetTagDetailQueryHandlerTests  {
+		+GetVariableDetail() Task
+		+GetVariableDetails(int id, string address, string netType) Task
+	}
+	class GetPlcDetailQueryHandlerTests  {
+		+GetPlcDetail() Task
+	}
+	class UpdateCommandHandlerTests  {
+		+Constructor_WithValidRepository_InitializesCorrectly() Task
+		+Constructor_WithNullRepository_ThrowsException() void
+		+Update_WithValidIdAndExistingEntity_ReturnsTrue() Task
+		+Update_WithNonExistentId_ReturnsFalse() Task
+		+Update_WithGetByIdFailure_ReturnsFalse() Task
+		+Update_WithUpdateFailure_ReturnsFalse() Task
+		+Update_WithUpdateReturningFalse_ReturnsFalse() Task
+		+Update_WithDifferentIds_HandlesCorrectly(int id) Task
+		+Update_WithInvalidIds_RejectCorrectly(int id) Task
+		+Update_WithCancellationToken_PassesToRepository() Task
+		+Update_WithMultipleEntityTypes_WorksCorrectly() Task
+		+Update_WithConcurrentCalls_HandlesCorrectly() Task
+		+Update_WithComplexCommandData_HandlesCorrectly() Task
+		+Update_WithRepositoryThrowingException_PropagatesException() Task
+		+Update_WithUpdateThrowingException_PropagatesException() Task
+		+UpdateCommandHandler_ImplementsCorrectInterfaces() void
+		+Update_WithEntityRetrievedButNotModified_StillCallsUpdate() Task
+		+Update_MaxIntIds_HandlesCorrectly() Task
+		+Update_MinIds_HandlesCorrectly() Task
+		+Update_Performance_HandlesReasonablyQuickly() Task
+	}
+	class SpecificationTests  {
+		+Constructor_WithValidCriteria_ShouldCreateSpecification() void
+		+Constructor_WithNullCriteria_ShouldCreateSpecification() void
+		+AddInclude_WithExpression_ShouldAddInclude() void
+		+AddInclude_WithString_ShouldAddIncludeString() void
+		+AddOrderBy_ShouldSetOrderByExpression() void
+		+AddOrderByDescending_ShouldSetOrderByDescendingExpression() void
+		+ApplyPaging_ShouldSetSkipAndTake() void
+		+ApplyNoTracking_ShouldSetIsTrackingToFalse() void
+		+Key_ShouldGenerateUniqueKey() void
+		+Key_WithIncludes_ShouldIncludeInKey() void
+		+Key_WithOrderBy_ShouldIncludeInKey() void
+		+Key_WithOrderByDescending_ShouldIncludeInKey() void
+		+Key_WithPaging_ShouldIncludeInKey() void
+		+Key_WithNoTracking_ShouldIncludeInKey() void
+		+Key_ShouldBeConsistentForSameSpecification() void
+		+Key_ShouldBeDifferentForDifferentSpecifications() void
+		+MultipleIncludes_ShouldBeAddedCorrectly() void
+		+FluentInterface_ShouldWorkCorrectly() void
+		+Key_ShouldBeCached() void
+		+BarCodeRepository_WithComplexSpecification_ShouldFilterAndPageCorrectly() Task
+		+MachineRepository_WithSpecification_ShouldFilterAndPage() Task
+		+CrossRepository_WithSpecifications_ShouldMaintainDataIntegrity() Task
+		+Repository_WithCombinedSpecifications_ShouldApplyComplexLogic() Task
+		+Repository_WithSameSpecification_ShouldUseCaching() Task
+	}
+	class GatewayPersistenceBehaviorTests  {
+		+Constructor_WithValidParameters_ShouldCreateInstance() void
+		+Handle_WithValidCommandData_ShouldPersistRequestAndResponse() Task
+		+Handle_WithFailedResponse_ShouldPersistErrorInformation() Task
+		+Handle_WithNonCommandDataRequest_ShouldSkipPersistence() Task
+		+Handle_WithRepositoryFailure_ShouldHandleGracefully() Task
+		+Handle_WithManufacturingErrors_ShouldPersistCorrectly(string errorMessage) Task
+		+Handle_WithCancellation_ShouldPassCancellationToken() Task
+		-CreateTestCommand() CreateBarCodeCommand
+		-CreateTestGatewayResponse() TaskGatewayResponse
+	}
+	class IAsyncInitialization  {
+		- Initialization : Task
+	}
+	class CreateVariableCommandTest  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class FrictionlessMigrationTest  {
+		+Should_AccessRepositories_WhenUsingCompositionPattern() Task
+		+Should_UsePartitionedCache_WhenAccessingCacheService() Task
+		+Should_AccessWorkingHandlers_WhenUsingDomainRegistrations() Task
+		+Should_PreserveState_BetweenTestMethods() Task
+	}
+	class MappingResult  {
+		+ SourceType : string
+		+ TargetType : string
+		+ Property : string
+		+ Status : string
+		+ SourceValue : string
+		+ TargetValue : string
+		+ToString() string
+	}
+	class GetProductDetailQueryHandlerTests  {
+		+GetProductDetail(int productId, string partNumber) Task
+	}
+	class ListQueryHandlerTests  {
+		-CreateRepository() IReadOnlyRepository~TEntity~
+		-        CreateGenericHandlerAndCommand() Task~(object&#32handler&#44&#32object&#32command&#44&#32Type&#32handlerType&#44&#32Type&#32commandType)~
+		+PageSizeConstraints_ShouldHaveCorrectValues_ForAnyEntityType() void
+		+GenericHandler_ShouldInstantiate_WithAnyIEntityType(Type entityType) Task
+		-CreateGenericHandler() Task~ListQueryHandler~TCommand&#44&#32TEntity~~
+		+GenericPagination_ShouldCalculateCorrectOffsets(int page, int pageSize) Task
+		+GenericHandler_ShouldInstantiate_WithAnyEntityType(Type entityType) Task
+		+ListProcessAsync_WithInvalidPagination_ShouldReflectCurrentBuggyBehavior(int inputPage, int inputPageSize, int expectedPageSize) Task
+		+ListProcessAsync_WithPagination_ShouldReturnCorrectOffsetAndLimit(int page, int pageSize, int expectedSkip, int expectedTake) Task
+		+ListProcessAsync_WithEmptyDatabase_ShouldReturnEmptyResult() Task
+		+ListProcessAsync_WithManufacturingScenarios_ShouldHandleCorrectly(string industry, int recordCount) Task
+		+ListProcessAsync_WithCancellation_ShouldRespectCancellationToken() Task
+		+ListProcessAsync_WithLargePageRequest_ShouldRespectMaxPageSize() Task
+		+ProcessAsync_WhenCalled_ShouldReturnResult() Task
+		+ListProcessAsync_WithBoundaryConditions_ShouldHandleCorrectly(int page, int pageSize, int expectedResultCount) Task
+		+Entities_Property_ShouldBeSettable() Task
+	}
+	class TestListCommand ~TEntity~ {
+		+ Includes : string[]
+		+ Page : int
+		+ PageSize : int
+	}
+	class UpdateBarCodesCommandTests  {
+		+ Last_Cycle_Not_Finished_Ok_Must_Start_Cycle_Same_Station_PartStatusOk_On_Barcode_Data : IEnumerable~object[]~
+		+ Last_Cycle_Not_Finished_Ok_Must_Start_Cycle_Same_Station_Data : IEnumerable~object[]~
+		+UpdateBarCodeCommand_ShouldSendRequest_ToGatewayCommandDispatcher() Task
+		+UpdateBarCodeCommandHandler_ShouldProcessCommand_AndReturnValidResponse() Task
+		+ShouldUpdateBarCode_WithUpdateCycleOk(string label, int machineId, int lenPartNumber, int barCodeId, int cycleId, DateTime startCycleStr) Task
+		+Last_Cycle_Not_Finished_Ok_Must_Start_Cycle_Same_Station_PartStatusOk_On_Barcode_Test(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType, DateTime startCycle) Task
+		+Last_Cycle_Not_Finished_Ok_Must_Start_Cycle_Same_Station_Test(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType, DateTime startCycle) Task
+		+ShouldNotUpdate_BarCodes_InFinalStation_WhenFlow_IsNotComplete(string label, int machineId, int lenPartNumber, int barCodeId, int cycleId, DateTime startCycle) Task
+	}
+	class ReadOnlyRepositoryCancellationAndNullGuardTests  {
+		-DependenciesFactory _deps
+		+Cancelled_token_ReturnsFailure_On_Common_Reads() Task
+		+Null_spec_ReturnsFailure_On_Reads() Task
+	}
+	class OutputHelperLoggerProvider  {
+		+CreateLogger(string categoryName) ILogger
+		+Dispose() void
+		+BeginScope(TState state) IDisposable?
+		+IsEnabled(LogLevel logLevel) bool
+		+Log(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func~TState&#44&#32Exception?&#44&#32string~ formatter) void
+		+Log(LogLevel logLevel, EventId eventId, TState state, Func~TState&#44&#32string~ formatter) void
+	}
+	class OutputHelperLogger  {
+		+BeginScope(TState state) IDisposable?
+		+IsEnabled(LogLevel logLevel) bool
+		+Log(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func~TState&#44&#32Exception?&#44&#32string~ formatter) void
+		+Log(LogLevel logLevel, EventId eventId, TState state, Func~TState&#44&#32string~ formatter) void
+	}
+	class CreateWorkFlowCommandHandlerTests  {
+		-CreateHandlerAsync(CancellationToken cancellationToken) Task~CreateWorkFlowCommandHandler~
+		+Constructor_WithValidParameters_ShouldCreateInstance() Task
+		+Process_WithValidCommand_ShouldReturnSuccess() Task
+		+Process_WithInvalidProductId_ShouldStillSucceed() Task
+		+Process_ShouldSwapLastAndNextMachineIds() Task
+		+Process_WithMinimalData_ShouldStillSucceed() Task
+		+Process_MultipleWorkflows_ShouldCreateSuccessfully() Task
+		+Process_ConcurrentCreation_ShouldHandleCorrectly() Task
+	}
+	class EventLoggerBehaviorTests  {
+		+Constructor_WithValidParameters_ShouldCreateInstance() void
+		+Handle_WithValidRequest_ShouldLogHandlingEventAndProceedToNext() Task
+		+Handle_WithManufacturingRequest_ShouldLogRequestTypeCorrectly() Task
+		+Handle_WithAutomotiveProductionRequest_ShouldLogRequestTypeCorrectly() Task
+		+Handle_WithPharmaceuticalManufacturingRequest_ShouldLogAndProcess() Task
+		+Handle_WithElectronicsManufacturingRequest_ShouldLogCorrectRequestType() Task
+		+Handle_WithCancellationToken_ShouldPassTokenToNextDelegate() Task
+		+Handle_WithExceptionInNextDelegate_ShouldStillLog() Task
+		+Handle_WithDifferentCommandTypes_ShouldLogCorrectRequestName(Type commandType, string expectedCommandName) Task
+	}
+	class GenericRepositoryContractTests  {
+		+IRepository_ContractShouldBeGeneric(Type entityType) void
+		+RepositoryStub_ShouldWorkGenerically(Type entityType, string testName) void
+		+GenericRepositoryPattern_ShouldValidateAcrossEntityTypes() void
+		+AddAsync_MethodValidation() void
+	}
+	class AnotherTestEntity  {
+		+ Id : int
+		+ Title : string
+		+ IsEnabled : bool
+	}
+	class GetWorkFlowDetailQueryHandlerTests  {
+		+GetWorkFlowDetail(string partNumber, int rowCount) Task
+	}
+	class QuickSmokeTest  {
+		-ITestOutputHelper _output
+	}
+	class GetReportsListMonitorQueryHandlerTests  {
+		+GetBarCodesListTest() Task
+	}
+	class MappingScanner2  {
+		+GetMappingPairs() IEnumerable~object[]~
+	}
+	class MappingScanner2TestSource  {
+		+ MappingData : IEnumerable~object[]~
+	}
+	class GetTagListQueryHandlerTests  {
+		+GetVariablesListTest() Task
+	}
+	class UpdateVariableCommandTests  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class TestDataUsageStats  {
+		+ TotalRegistersAccessed : int
+		+ TotalBarCodesAccessed : int
+		+ TotalCyclesAccessed : int
+		+ TotalMachinesAccessed : int
+		+ TotalContexts : int
+	}
+	class QuickPerformanceTest  {
+		+VerifyOptimizedDataLoading_ShouldUseStaticMemory() Task
+		+CompareStaticVsJsonLoading_ShouldShowPerformanceDifference() Task
+		+VerifyTrackedDbContextFactoryIntegration_ShouldWork() Task
+	}
+	class TrackedDbContext  {
+		-TestDataUsageTracker _usageTracker
+		-HashSet~string~ _accessedTables
+		-HashSet~int~ _accessedRegisterIds
+		-HashSet~int~ _accessedBarCodeIds
+		-HashSet~int~ _accessedCycleIds
+		-HashSet~int~ _accessedMachineIds
+		+ UsageTracker : TestDataUsageTracker
+		+ AccessedRegisterIds : IReadOnlySet~int~
+		+ AccessedBarCodeIds : IReadOnlySet~int~
+		+ AccessedCycleIds : IReadOnlySet~int~
+		+ AccessedMachineIds : IReadOnlySet~int~
+		+ AccessedTables : IReadOnlySet~string~
+		-OnModelCreating(ModelBuilder modelBuilder) void
+		-OnEntityStateChanged(object? sender, EntityStateChangedEventArgs e) void
+		+SaveChangesAsync(CancellationToken cancellationToken) Task~int~
+		-TrackEntityAccess(EntityEntry entry) void
+		+GenerateUsageReport() TestDataUsageReport
+		+ClearTracking() void
+		+Dispose(bool disposing) void
+	}
+	class ErrorHandlingMiddlewareTests  {
+		-ILogger~ErrorHandlingMiddleware~ _logger
+		+Constructor_WithValidParameters_ShouldCreateInstance() void
+		+Invoke_WithSuccessfulNext_ShouldCallNextMiddleware() Task
+		+Invoke_WithRestException_ShouldReturnCorrectStatusAndResponse() Task
+		+Invoke_WithUnauthorizedRestException_ShouldReturn401() Task
+		+Invoke_WithNotFoundRestException_ShouldReturn404() Task
+		+Invoke_WithGeneralException_ShouldReturn500() Task
+		+Invoke_WithDatabaseException_ShouldHandleManufacturingScenario() Task
+		+Invoke_WithNetworkException_ShouldHandleIndustrialConnectivityIssues() Task
+		+Invoke_WithVariousRestExceptions_ShouldHandleManufacturingErrors(HttpStatusCode statusCode, string message) Task
+		+Invoke_WithRestExceptionWithNullMessage_ShouldHandleGracefully() Task
+		+Invoke_WithRestExceptionWithEmptyMessage_ShouldHandleGracefully() Task
+		+Invoke_WithNullReferenceException_ShouldLogErrorAndReturn500() Task
+		+Invoke_WithTimeoutException_ShouldHandleManufacturingTimeouts() Task
+		+Invoke_ShouldLogExceptionDetails() Task
+		+Invoke_WithCancellationException_ShouldHandleGracefully() Task
+		+Invoke_WithArgumentException_ShouldHandleInvalidInputs() Task
+		+Invoke_ResponseShouldContainValidJsonStructure() Task
+		+Invoke_WithRestExceptionResponseShouldContainErrorArray() Task
+		+Invoke_WithMultipleInvocations_ShouldHandleConsistently() Task
+		-CreateHttpContext() HttpContext
+	}
+	class DomainRegistrations  {
+		+AddAllDomainHandlers(IServiceCollection services) IServiceCollection
+	}
+	class GenericTestDetailQuery  {
+		+ Id : int
+	}
+	class CreatemachinePlcCommandTest  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class CacheKeyBuilderReadOnlyReposTests  {
+		-string _prefix
+		+GetPrefix() string
+		-NewProductSpec(string? tag) ISpecification~Product~
+		+SpecKey_IncludesTypeAndSpec_WhenHashingDisabled() void
+		+SpecKey_UsesHash_WhenHashingEnabled() void
+		+SingleId_UsesEntitySpecificFieldName() void
+		+CompositeIds_TwoInts_UsesCompositeFieldNames() void
+		+CompositeIds_Params_UsesFieldNames_WhenCountMatches() void
+		+CompositeIds_Params_FallbacksToPositional_WhenCountDiffers() void
+		+OperationNormalization_MapsAliases_AndStripsSpaces() void
+	}
+	class TestPartitionProvider  {
+		-string _prefix
+		+GetPrefix() string
+	}
+	class MappingToTest  {
+		+ MapMethod : MethodInfo
+		+ SourceType : Type
+		+ TargetType : Type
+	}
+	class DIContainerSmokeTest  {
+		+DI_Container_Should_Initialize_Successfully() Task
+		+Core_Repositories_Should_Resolve() Task
+		+Core_Services_Should_Resolve() Task
+		+Database_Context_Should_Work() Task
+		+Service_Resolution_Should_Be_Fast() Task
+	}
+	class ServiceRegistration  {
+		+AddCommonServices(IServiceCollection services) IServiceCollection
+		+AddRepositoriesCollection(IServiceCollection services) IServiceCollection
+		+AddBarCodeResult(IServiceCollection services) IServiceCollection
+		+AddCommandHandlers(IServiceCollection services) IServiceCollection
+		+AddQueryHandlers(IServiceCollection services) IServiceCollection
+		+AddApplicationServices(IServiceCollection services) IServiceCollection
+		+AddBarCodeService(IServiceCollection services) IServiceCollection
+		+AddCommandDispatchers(IServiceCollection services, ServiceLifetime lifetime) IServiceCollection
+		+AddTestLogging(IServiceCollection services, ITestOutputHelper _testOutputHelper) IServiceCollection
+		+AddInterceptors(IServiceCollection services) IServiceCollection
+		+AddConfigAppHandlers(IServiceCollection services) IServiceCollection
+		+AddSettingsHandlers(IServiceCollection services) IServiceCollection
+		+AddVariablesHandlers(IServiceCollection services) IServiceCollection
+		+AddWorkFlowsHandlers(IServiceCollection services) IServiceCollection
+		+AddProductsHandlers(IServiceCollection services) IServiceCollection
+		+AddPlcsHandlers(IServiceCollection services) IServiceCollection
+		+AddMachinesHandlers(IServiceCollection services) IServiceCollection
+		+AddMachinesPlcsHandlers(IServiceCollection services) IServiceCollection
+		+AddShiftsHandlers(IServiceCollection services) IServiceCollection
+		+AddRegistersHandlers(IServiceCollection services) IServiceCollection
+		+AddCyclesHandlers(IServiceCollection services) IServiceCollection
+		+AddNotificationsHandlers(IServiceCollection services) IServiceCollection
+		+AddBarCodeHandlers(IServiceCollection services) IServiceCollection
+		+AddConfigStationHandlers(IServiceCollection services) IServiceCollection
+		+AddCyclesCommandHandlers(IServiceCollection services) IServiceCollection
+		+AddPerformanceHandlers(IServiceCollection services) IServiceCollection
+		+AddOeeHandlers(IServiceCollection services) IServiceCollection
+		+AddProductsHandlersComplete(IServiceCollection services) IServiceCollection
+		+AddShiftsHandlersComplete(IServiceCollection services) IServiceCollection
+		+AddRegistersHandlersComplete(IServiceCollection services) IServiceCollection
+	}
+	class VariableTestUpdateCommand  {
+		+ EntitieId : int
+		+ Name : string
+		+ MachineId : int
+	}
+	class CreateConfigAppCommandTest  {
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class MappingScanner  {
+		+GetApplicationWithDto() ApplicationWithDto
+		+GetMappingPairs() IEnumerable~ScannedClass~
+	}
+	class GenericTestDbContext  {
+		+ TestEntities : DbSet~GenericTestEntity~
+		-OnConfiguring(DbContextOptionsBuilder optionsBuilder) void
+		-OnModelCreating(ModelBuilder modelBuilder) void
+	}
+	class MonitorRequestDispatcherTests  {
+		-Microsoft.Extensions.Logging.ILogger _logger
+		+ProcessAsync(CreateItemCommand~T~ request, CancellationToken cancellationToken) Task~Result~T~~
+		+ExampleUsage() void
+	}
+	class HomeItem  {
+	}
+	class IItem  {
+	}
+	class CreateItemCommand ~T~ {
+	}
+	class CreateItemCommandHandler ~T~ {
+		+ProcessAsync(CreateItemCommand~T~ request, CancellationToken cancellationToken) Task~Result~T~~
+	}
+	class UnhandledExceptionBehaviourTests  {
+		+Constructor_ShouldCreateInstance() void
+		+Handle_ShouldProcessRequest() Task
+		+Handle_ShouldLogException() Task
+	}
+	class LoggingBehaviorTests  {
+		+Constructor_WithValidParameters_ShouldCreateInstance() void
+		+Handle_WithValidRequest_ShouldLogRequestAndResponse() Task
+		+Handle_WithProductionLineRequest_ShouldProcessCorrectly() Task
+		+Handle_WithElectronicsManufacturingRequest_ShouldProcessCorrectly() Task
+		+Handle_WhenNextHandlerThrows_ShouldPropagateException() Task
+		+Handle_WithCancellationToken_ShouldPassTokenToNext() Task
+		+Handle_WithVariousRequestTypes_ShouldLogCorrectly(string requestData, string responseData) Task
+		+Handle_WithGenericTypes_ShouldHandleCorrectly() Task
+		+Handle_WithTaskGatewayResponse_ShouldLogSpecialHandling() Task
+		+Handle_WithNullResponse_ShouldHandleGracefully() Task
+		+Handle_PipelineBehaviorPattern_ShouldFollowCorrectSequence() Task
+	}
+	class TestDataLoader  {
+		-int RawStringThreshold
+		-JsonSerializerOptions JsonOptions
+		-Dictionary~string&#44&#32object~ _largeFileCache
+		+LoadDataAsync(string fileName) Task~List~T~~
+		-IsSmallFile(string fileName) bool
+		-LoadFromRawStringAsync(string fileName) Task~List~T~~
+		-GetStaticData(string fileName) List<T>?
+		-LoadFromFileOptimizedAsync(string fileName) Task~List~T~~
+		-LoadWithMemoryMapping(string filePath) Task~List~T~~
+		-GetFilePath(string fileName) string
+		-GetRawStringData(string fileName) string
+		+ClearCache() void
+		+GetCacheStats() (int&#32CachedFiles&#44&#32long&#32TotalSize)
+		-LogUsageForList(string type, List~T~ list) void
+	}
+	class GetRegistersListQueryHandlerTests  {
+		-CreateValidQuery() GetRegistersListQuery
+		+GetSomeRegisterFromTheDataBase() Task
+		+GetRegisters_ByNameTest() Task
+		+GetRegistersByIdTest() Task
+	}
+	class DbContextTests  {
+		+ Rules : List~Rule~
+		+ Machines : List~Machine~
+		+ Plcs : List~Plc~
+		+ MachinePlcs : List~MachinePlc~
+		+ VariablesGroups : List~VariablesGroup~
+		+ Variables : List~Variable~
+		+ Lines : List~Line~
+		+ Customers : List~Customer~
+		+ Products : List~Product~
+		+ Recipes : List~Recipe~
+		+ WorkFlows : List~WorkFlow~
+		+ ConfigApps : List~Domain.Entities.ConfigApp~
+		+ Settings : List~Setting~
+		+ BarCodes : List~BarCode~
+		+ Cycles : List~Cycle~
+		+ Registers : List~Register~
+		+LoadAllDataAsync(CancellationToken cancellationToken) Task
+		+LoadReferenceDataAsync(IndTraceDbContext context) Task~IndTraceDbContext~
+		-LoadEntityAsync(string fileName) Task~List~T~~
+		+ClearCache() void
+		+GetCacheStats() Dictionary~string&#44&#32TestDataStrategyMetrics~
+		+DeduplicateKeys() void
+	}
+	class CreatePerformanceDataCommandHandlerTests  {
+		+Process_WithNullRequest_ShouldReturnFailure() Task
+		+Process_WithValidRequest_ShouldReturnSuccess() Task
+		+Process_WhenOeeRegisterAddFails_ShouldReturnFailure() Task
+		+Process_WhenKpiOeeAddFails_ShouldReturnFailure() Task
+		+Process_WhenBothRepositoriesReturnInvalidIds_ShouldReturnFailure() Task
+		+TryReset_ShouldReturnTrue() void
+		+Process_WithCancellationToken_ShouldReturnFailure() Task
+	}
+	class TestGenericCreateCommand ~TEntity~ {
+	}
+	class DependenciesFactoryComprehensiveTests  {
+		+RegularRepositories_ShouldBeInitialized_AndNotNull() Task
+		+ReadOnlyRepositories_ShouldBeInitialized_WithCaching() Task
+		+CriticalRepositories_ShouldContainTestData() Task
+		+CoreServices_ShouldBeInitialized_AndOperational() Task
+		+InfrastructureComponents_ShouldBeConfigured_AndOperational() Task
+		+CrossCuttingConcerns_ShouldBeConfigured_AndFunctional() Task
+		+RepositoryDataConsistency_ShouldMatchExpectedCounts() Task
+		+FactoryLifecycle_ShouldManageResources_Properly() Task
+		+ShouldGetMachineForA_GivenBarCode_() Task
+		+EndToEndIntegration_ShouldWork_AcrossAllComponents() Task
+		+MachineID_ShouldWork_ShouldWorkForAllMachines(int machineId) Task
+		+MachineID_ShouldWork_ShouldWorkForAllMachinesLessThan(int machineId) Task
+	}
+	class LevenshteinMetrics  {
+		+Levenshtein(string s, string t) int
+	}
+	class IsOeeEnabledCheckerTests  {
+		+CheckOeeFeatureByMachineIdsAsync_ShouldReturnCorrectConfiguration() Task
+	}
+	class SelfRegisteredExtensions  {
+		+AddSelfRegisteredExtensions(global::Microsoft.Testing.Platform.Builder.ITestApplicationBuilder builder, string[] args) void
+	}
+	class XunitAutoGeneratedEntryPoint  {
+		+Main(string[] args) int
+	}
+
+	CreateItemCommandHandler --|> IMonitorRequestHandler
+	CreateBarCodeCommandTests --|> DependenciesFactory
+	DependenciesFactoryTests --|> DependenciesFactory
+	SimpleDIValidationTest --|> DependenciesFactory
+	SmartEnumHybridCacheSerializer --|> IHybridCacheSerializer
+	DependenciesFactory --|> IAsyncLifetime
+	DependenciesFactory --|> IDisposable
+	ComprehensiveEnumRepositoryTests --|> DependenciesFactory
+	GenericTestListCommand --|> IMonitorRequest
+	GenericTestListCommand --|> TCommandList
+	UpdateMachinePlcCommandTest --|> DependenciesFactory
+	CreateCycleCommandTest --|> DependenciesFactory
+	TestUpdateCommand --|> IUpdateCommand
+	ShiftServiceTests --|> DependenciesFactory
+	GetBarCodeDetailGatewayQueryHandlerTests --|> DependenciesFactory
+	CreateSettingCommandTest --|> DependenciesFactory
+	UpdateWorkFlowCommandTests --|> DependenciesFactory
+	UpdateSettingCommandTests --|> DependenciesFactory
+	GenericTestEntity --|> IEntityRoot
+	GetSettingDetailQueryHandlerTests --|> DependenciesFactory
+	GetMachinePlcDetailQueryHandlerTest --|> DependenciesFactory
+	TestDbContextPool --|> IDisposable
+	PooledContext --|> IDisposable
+	PooledContext --|> IAsyncDisposable
+	StatefulTestContext --|> IAsyncDisposable
+	TesterUserService --|> IIndTraceUserService
+	UpdateCyclesOkCommandTests --|> DependenciesFactory
+	UpdatePLCCommandTests --|> DependenciesFactory
+	MachineRepositorieTests --|> DependenciesFactory
+	ValidationBehaviorTests --|> DependenciesFactory
+	AlwaysValidValidator --|> AbstractValidator
+	AlwaysInvalidValidator --|> AbstractValidator
+	DbContextFactoryTests --|> IIndTraceDbContextFactory
+	FocusedTestDataResult --|> ITestDataResult
+	EdgeCaseTestDataResult --|> ITestDataResult
+	RegressionTestDataResult --|> ITestDataResult
+	GetCyclesListQueryHandlerTest --|> DependenciesFactory
+	UpdateConfigAppCommandTests --|> DependenciesFactory
+	GetConsecutiveByBarCodeLabelAsyncTests --|> DependenciesFactory
+	UpdateProductCommandTests --|> DependenciesFactory
+	CreateMachineMonitorRequestTest --|> DependenciesFactory
+	TestCachePartitionProvider --|> ICachePartitionProvider
+	GetBarCodeReportQueryHandlerTests --|> DependenciesFactory
+	EnumConverterDiagnosticTest --|> DependenciesFactory
+	CreateWorkFlowCommandTest --|> DependenciesFactory
+	GetMachineDetailQueryHandlerTest --|> DependenciesFactory
+	UpdateMachineCommandTest --|> DependenciesFactory
+	DueDiligenceSimpleTest --|> DependenciesFactory
+	GetCycleDetailQueryHandlerTest --|> DependenciesFactory
+	GetBarCodeDetailQueryHelperTests --|> DependenciesFactory
+	GetSettingsListQueryHandlerTests --|> DependenciesFactory
+	GetConfigAppsListQueryHandlerTests --|> DependenciesFactory
+	SequentialTestContext --|> IDisposable
+	CreateItemCommand --|> IMonitorRequest
+	EfDbContextFactoryAdapter --|> IIndTraceDbContextFactory
+	CreateProductCommandTest --|> DependenciesFactory
+	ExactFailingTestReplication --|> DependenciesFactory
+	GenericTestDeleteCommand --|> IDeleteCommand
+	TestGenericDeleteCommand --|> IDeleteCommand
+	GetConfigAppDetailQueryHandlerTests --|> DependenciesFactory
+	GetTagDetailQueryHandlerTests --|> DependenciesFactory
+	GetPlcDetailQueryHandlerTests --|> DependenciesFactory
+	UpdateCommandHandlerTests --|> DependenciesFactory
+	SpecificationTests --|> DependenciesFactory
+	GatewayPersistenceBehaviorTests --|> DependenciesFactory
+	CreateVariableCommandTest --|> DependenciesFactory
+	FrictionlessMigrationTest --|> DependenciesFactory
+	GetProductDetailQueryHandlerTests --|> DependenciesFactory
+	ListQueryHandlerTests --|> DependenciesFactory
+	TestListCommand --|> IMonitorRequest
+	TestListCommand --|> TCommandList
+	UpdateBarCodesCommandTests --|> DependenciesFactory
+	OutputHelperLoggerProvider --|> ILoggerProvider
+	OutputHelperLogger --|> ILogger
+	CreateWorkFlowCommandHandlerTests --|> DependenciesFactory
+	GetWorkFlowDetailQueryHandlerTests --|> DependenciesFactory
+	GetReportsListMonitorQueryHandlerTests --|> DependenciesFactory
+	GetTagListQueryHandlerTests --|> DependenciesFactory
+	UpdateVariableCommandTests --|> DependenciesFactory
+	QuickPerformanceTest --|> DependenciesFactory
+	TrackedDbContext --|> IndTraceDbContext
+	GenericTestDetailQuery --|> IDetailQuery
+	CreatemachinePlcCommandTest --|> DependenciesFactory
+	TestPartitionProvider --|> ICachePartitionProvider
+	DIContainerSmokeTest --|> DependenciesFactory
+	VariableTestUpdateCommand --|> IUpdateCommand
+	CreateConfigAppCommandTest --|> DependenciesFactory
+	GenericTestDbContext --|> DbContext
+	HomeItem --|> IItem
+	CreateItemCommand --|> IMonitorRequest
+	CreateItemCommandHandler --|> IMonitorRequestHandler
+	GetRegistersListQueryHandlerTests --|> DependenciesFactory
+	CreatePerformanceDataCommandHandlerTests --|> DependenciesFactory
+	TestGenericCreateCommand --|> ICreateCommand
+	DependenciesFactoryComprehensiveTests --|> DependenciesFactory
+	IsOeeEnabledCheckerTests --|> DependenciesFactory

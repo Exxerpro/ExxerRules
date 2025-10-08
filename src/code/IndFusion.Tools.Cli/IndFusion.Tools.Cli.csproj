@@ -12,6 +12,13 @@
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
+	  <!-- NuGet Tool Packaging -->
+	  <PackAsTool>true</PackAsTool>
+	  <ToolCommandName>indfusion</ToolCommandName>
+	  <PackageId>IndFusion.Tools.Cli</PackageId>
+	  <PackageVersion>1.0.5-rc.1</PackageVersion>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+
   </PropertyGroup>
   <!-- ===================================================================== -->
   <!-- Package Dependencies                                                   -->
@@ -34,5 +41,8 @@
   <!-- ===================================================================== -->
   <ItemGroup>
 	<ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
 </Project>

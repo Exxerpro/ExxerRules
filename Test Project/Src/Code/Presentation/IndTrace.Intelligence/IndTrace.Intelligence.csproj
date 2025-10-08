@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!-- ============================================================================ -->
+  <!-- CORE PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Target Framework -->
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Language Features -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>aspnet-IndTrace.Intelligence-2359a41d-b3d9-4d1b-9f00-997340ba31f6</UserSecretsId>
+    <!-- Allow nullability warnings to remain warnings (not errors) for this Web UI in non-Shipping configs -->
+    <!-- Suppress MudBlazor analyzer warnings in UI -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <NoWarn>$Nowarn;BL0008;</NoWarn>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+  </PropertyGroup>
+  <!-- Shipping configuration: treat all warnings as errors, do not whitelist nullability warnings -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Shipping'">
+    <WarningsNotAsErrors>
+    </WarningsNotAsErrors>
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- CONTENT FILES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Content Files">
+    <None Update="Data\app.db" CopyToOutputDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="UI Components">
+    <PackageReference Include="MudBlazor" />
+    <PackageReference Include="Extensions.MudBlazor.StaticInput" />
+  </ItemGroup>
+  <ItemGroup Label="ASP.NET Core">
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
+  </ItemGroup>
+  <ItemGroup Label="Entity Framework">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PROJECT REFERENCES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Infrastructure References">
+    <ProjectReference Include="..\..\Infrastructure\IndTrace.Dependencies\IndTrace.Dependencies.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,285 @@
+classDiagram
+
+	class IHubConnectionFactoryContractTests  {
+		+CreateAsync_ShouldReturnDisconnectedConnection() Task
+		+CreateAsync_MultipleCalls_ShouldReturnDifferentInstances() Task
+		+CreateAsync_WithCancellation_ShouldRespectToken() Task
+		+CreateAsync_ShouldNotAutoStartConnection() Task
+		+CreateAsync_CreatedConnections_ShouldBeIndependent() Task
+		+CreateAsync_WhenFactoryFails_ShouldPropagateException() Task
+		+Factory_ShouldTrackCreatedConnections() Task
+		+Factory_WithCustomCreator_ShouldUseProvidedLogic() Task
+		+Factory_Reset_ShouldClearState() Task
+		-CreateFactory() IHubConnectionFactory
+	}
+	class HubConnectionFactoryTests  {
+		-TestHubConnectionFactory _factory
+		+TestFactory_InitialState_ShouldBeEmpty() void
+		+CreateAsync_WithValidOptions_ShouldReturnConnection() Task
+		+CreateAsync_ShouldReturnTestHubConnection() Task
+		+CreateAsync_WithFactoryException_ShouldPropagateException() Task
+		+CreateAsync_MultipleCalls_ShouldReturnDifferentInstances() Task
+		+CreateAsync_ShouldTrackCreatedConnections() Task
+		+CreateAsync_WithCustomCreator_ShouldUseProvidedLogic() Task
+		+CreateAsync_WithCancellation_ShouldRespectToken() Task
+		+CreateAsync_ConnectionShouldNotBeStarted() Task
+		+Factory_Reset_ShouldClearState() Task
+		+CreateAsync_WithDelayedCreation_ShouldEventuallySucceed() Task
+		+Factory_ShouldBeThreadSafe() Task
+	}
+	class Startup  {
+		- RequiredService : string
+	}
+	class HubConnectionExtensionsTestsM  {
+		+EnsureHubConnectionIsValid_ShouldInitializeConnection_WhenConnectionIsNull() Task
+		+EnsureHubConnectionIsValid_ShouldStartConnection_WhenDisconnected() Task
+		+EnsureHubConnectionIsValid_ShouldNotReinitialize_WhenAlreadyConnected() Task
+		+EnsureHubConnectionIsValid_ShouldLogError_WhenExceptionOccurs() Task
+		+EnsureHubConnectionIsValid_ShouldHandleConcurrentAccess() Task
+	}
+	class TestHubConnectionFactory  {
+		-List~TestHubConnection~ _createdConnections
+		-Func<TestHubConnection>? _customCreator
+		-Exception? _exceptionToThrow
+		-TimeSpan _creationDelay
+		+ CreatedConnections : IReadOnlyList~TestHubConnection~
+		+ CreateCallCount : int
+		+CreateAsync(CancellationToken cancellationToken) Task~IHubConnection~
+		+WithCustomCreator(Func~TestHubConnection~ creator) TestHubConnectionFactory
+		+WithException(Exception exception) TestHubConnectionFactory
+		+WithCreationDelay(TimeSpan delay) TestHubConnectionFactory
+		+Reset() TestHubConnectionFactory
+	}
+	class IHubConnectionContractTests  {
+		+StartAsync_WhenDisconnected_ShouldConnectSuccessfully() Task
+		+StartAsync_WhenAlreadyConnected_ShouldNotThrow() Task
+		+StartAsync_WithCancellationToken_ShouldRespectCancellation() Task
+		+StopAsync_WhenConnected_ShouldDisconnectSuccessfully() Task
+		+StopAsync_WhenAlreadyDisconnected_ShouldNotThrow() Task
+		+SendAsync_WhenConnected_ShouldSendMessage() Task
+		+SendAsync_WhenDisconnected_ShouldThrow() Task
+		+InvokeAsync_WhenConnected_ShouldReturnResult() Task
+		+InvokeAsync_WhenDisconnected_ShouldThrow() Task
+		+On_SingleParameter_ShouldRegisterHandler() Task
+		+On_TwoParameters_ShouldRegisterHandler() Task
+		+On_DisposedRegistration_ShouldNotReceiveMessages() Task
+		+Events_Reconnecting_ShouldFireWhenReconnecting() void
+		+Events_Reconnected_ShouldFireWhenReconnected() void
+		+Events_Closed_ShouldFireWhenConnectionClosed() void
+		+DisposeAsync_ShouldCleanupResources() Task
+		+DisposeAsync_MultipleTimes_ShouldNotThrow() Task
+		-CreateConnection() IHubConnection
+	}
+	class HubConnectionInterfaceExtensionsTests  {
+		+EnsureHubConnectionIsValid_Creates_And_Starts_When_Disconnected() Task
+		+EnsureHubConnectionIsValid_Should_Start_Disconnected_Connection() Task
+		+EnsureHubConnectionIsValid_Should_Preserve_Connected_State() Task
+		+EnsureHubConnectionIsValid_Should_Handle_Factory_Exception() Task
+		+TryStartHubConnectionAsync_Should_Skip_Already_Connected() Task
+		+TryStartHubConnectionAsync_Should_Start_Disconnected_Hub() Task
+		+TryStartHubConnectionAsync_Should_Handle_Start_Exception_With_Retry() Task
+		+TryStartHubConnectionAsync_Should_Ignore_NonDisconnected_States(HubConnectionState state) Task
+		+EnsureHubConnectionIsValid_Should_Handle_Concurrent_Access_Safely() Task
+		+EnsureHubConnectionIsValid_Should_Respect_Cancellation() Task
+		+TryInvokeAsync_Should_Invoke_Method_When_Connected() Task
+		+TryInvokeAsync_Should_Ensure_Connection_When_Disconnected() Task
+		+TryInvokeAsync_Should_Return_False_On_Exception() Task
+		+PublishCommandToHubAsync_Should_Publish_Valid_Request() Task
+		+PublishCommandToHubAsync_Should_Handle_Null_Connection() Task
+		+PublishResultsToHubAsync_Should_Publish_Successful_Result() Task
+		+PublishResultsToHubAsync_Should_Publish_Failed_Result_With_Errors() Task
+		+PublishResultsToHubAsync_Should_Handle_Null_Value_Failure() Task
+		+LogAndSendMessageFromControllerAsync_Should_Log_And_Send_Message() Task
+		+Extension_Methods_Should_Respect_Cancellation(string methodName) Task
+	}
+	class FailingTestHubConnection  {
+		+ ShouldFailOnStart : bool
+		+ StartException : Exception?
+		+ ShouldFailOnInvoke : bool
+		+ InvokeException : Exception?
+		+StartAsync(CancellationToken cancellationToken) Task
+		+InvokeAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task~T?~
+		+SendAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task
+	}
+	class IHubConnectionMetricsTests  {
+		+Metrics_Should_Track_Messages_Sent_With_Lock_Free_Counters() void
+		+Metrics_Should_Track_Connection_Uptime() void
+		+Metrics_Should_Record_Latency_Without_Blocking_Messages() Task
+		+Metrics_Should_Track_Reconnection_Count() void
+		+Metrics_Should_Record_Failures_With_Timestamps() void
+		+Metrics_Should_Provide_Immutable_Snapshot_For_Dashboard() void
+		+Metrics_Collection_Should_Never_Throw_Exceptions() void
+		-CreateTestMetrics() IHubConnectionMetrics
+	}
+	class IHubMetricsDashboardTests  {
+		+Dashboard_Should_Aggregate_Metrics_From_Multiple_Connections() Task
+		+Dashboard_Should_Provide_Health_Check_Status() Task
+		+Dashboard_Should_Handle_Connection_Removal_Gracefully() Task
+		+Dashboard_Should_Never_Block_On_Slow_Connections() Task
+		+Dashboard_Should_Provide_Top_N_Connections_By_Activity() Task
+		+Dashboard_Should_Track_System_Wide_Performance_Metrics() Task
+		+Dashboard_Should_Never_Throw_Exceptions_During_Registration() void
+		+Dashboard_Should_Provide_Historical_Trend_Data() Task
+		-CreateTestDashboard() IHubMetricsDashboard
+		-CreateTestConnectionWithMetrics(string connectionId, long messagesSent, TimeSpan? uptime, int consecutiveFailures, double averageLatency, double p99Latency) IHubConnection
+		-CreateSlowTestConnection(string connectionId) IHubConnection
+	}
+	class TestHubConnectionWithCustomMetrics  {
+		-TestMetrics _customMetrics
+		+ Metrics : IHubConnectionMetrics
+		+SetupMetrics(long messagesSent, TimeSpan? uptime, int consecutiveFailures, double averageLatency, double p99Latency) void
+		+SetupValues(long messagesSent, TimeSpan uptime, int consecutiveFailures, double averageLatency, double p99Latency) void
+		+RecordMessageSent(long bytes) void
+		+RecordMessageReceived(long bytes) void
+		+RecordMessageLatency(double latencyMs) void
+		+RecordConnectionStarted(DateTimeOffset connectedAt) void
+		+RecordReconnection() void
+		+RecordFailure(Exception exception) void
+		+RecordSuccess() void
+		+GetSnapshot() HubMetricsSnapshot
+	}
+	class TestMetrics  {
+		-string _connectionId
+		-long _messagesSent
+		-TimeSpan _uptime
+		-int _consecutiveFailures
+		-double _averageLatency
+		-double _p99Latency
+		+ ConnectedAt : DateTimeOffset?
+		+ LastActivityAt : DateTimeOffset?
+		+ Uptime : TimeSpan
+		+ ReconnectionCount : int
+		+ MessagesSent : long
+		+ MessagesReceived : long
+		+ BytesSent : long
+		+ BytesReceived : long
+		+ AverageLatencyMs : double
+		+ P95LatencyMs : double
+		+ P99LatencyMs : double
+		+ ConsecutiveFailures : int
+		+ LastFailureAt : DateTimeOffset?
+		+ LastFailureReason : string?
+		+SetupValues(long messagesSent, TimeSpan uptime, int consecutiveFailures, double averageLatency, double p99Latency) void
+		+RecordMessageSent(long bytes) void
+		+RecordMessageReceived(long bytes) void
+		+RecordMessageLatency(double latencyMs) void
+		+RecordConnectionStarted(DateTimeOffset connectedAt) void
+		+RecordReconnection() void
+		+RecordFailure(Exception exception) void
+		+RecordSuccess() void
+		+GetSnapshot() HubMetricsSnapshot
+	}
+	class SlowTestHubConnection  {
+		+ Metrics : IHubConnectionMetrics
+		+RecordMessageSent(long bytes) void
+		+RecordMessageReceived(long bytes) void
+		+RecordMessageLatency(double latencyMs) void
+		+RecordConnectionStarted(DateTimeOffset connectedAt) void
+		+RecordReconnection() void
+		+RecordFailure(Exception exception) void
+		+RecordSuccess() void
+		+GetSnapshot() HubMetricsSnapshot
+	}
+	class SlowTestMetrics  {
+		+ ConnectedAt : DateTimeOffset?
+		+ LastActivityAt : DateTimeOffset?
+		+ Uptime : TimeSpan
+		+ ReconnectionCount : int
+		+ MessagesSent : long
+		+ MessagesReceived : long
+		+ BytesSent : long
+		+ BytesReceived : long
+		+ AverageLatencyMs : double
+		+ P95LatencyMs : double
+		+ P99LatencyMs : double
+		+ ConsecutiveFailures : int
+		+ LastFailureAt : DateTimeOffset?
+		+ LastFailureReason : string?
+		+RecordMessageSent(long bytes) void
+		+RecordMessageReceived(long bytes) void
+		+RecordMessageLatency(double latencyMs) void
+		+RecordConnectionStarted(DateTimeOffset connectedAt) void
+		+RecordReconnection() void
+		+RecordFailure(Exception exception) void
+		+RecordSuccess() void
+		+GetSnapshot() HubMetricsSnapshot
+	}
+	class HubConnectionExtensionsTests  {
+		+Should_ScheduleReconnect_When_ConnectionFails() Task
+	}
+	class TestLogger ~T~ {
+		-ILogger~T~ _xunitLogger
+		-List~LogEntry~ _logEntries
+		+ LogEntries : IReadOnlyList~LogEntry~
+		+BeginScope(TState state) IDisposable?
+		+IsEnabled(LogLevel logLevel) bool
+		+Log(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func~TState&#44&#32Exception?&#44&#32string~ formatter) void
+		+Clear() void
+		+HasLogLevel(LogLevel logLevel) bool
+		+HasMessage(string message) bool
+		+GetLogCount(LogLevel logLevel) int
+	}
+	class TestHubConnection  {
+		-List~(string&#32method&#44&#32object?[]&#32args)~ _sentMessages
+		-Dictionary~string&#44&#32List~Delegate~~ _handlers
+		-IHubConnectionMetrics _metrics
+		-bool _disposed
+		+ State : HubConnectionState
+		+ ConnectionId : string?
+		+ Metrics : IHubConnectionMetrics
+		+StartAsync(CancellationToken cancellationToken) Task
+		+StopAsync(CancellationToken cancellationToken) Task
+		+SendAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task
+		+InvokeAsync(string methodName, object?[] args, CancellationToken cancellationToken) Task~T?~
+		+On(string methodName, Func~T&#44&#32Task~ handler) IDisposable
+		+On(string methodName, Func~T1&#44&#32T2&#44&#32Task~ handler) IDisposable
+		+DisposeAsync() ValueTask
+		+SimulateReconnecting(Exception? error) void
+		+SimulateReconnected() void
+		+SimulateConnectionClosed(Exception? error) void
+		+SimulateMessage(string methodName, T data, CancellationToken cancellationToken) Task
+		+SimulateMessage(string methodName, T1 arg1, T2 arg2, CancellationToken cancellationToken) Task
+		+WasMessageSent(string methodName) bool
+		+GetLastSentMessageArg(string methodName, int argIndex) T?
+		+GetMessageCount(string methodName) int
+		+GetAllSentMessages() IReadOnlyList~(string&#32method&#44&#32object?[]&#32args)~
+		-ThrowIfDisposed() void
+		+Dispose() void
+	}
+	class HandlerDisposable  {
+		-Action _dispose
+		+Dispose() void
+	}
+	class SignalRHubConnectionAdapterTests  {
+		-IHubConnection _connection
+		+InitialState_ShouldBeDisconnected() void
+		+StartAsync_ShouldChangeStateToConnected() Task
+		+StopAsync_ShouldChangeStateToDisconnected() Task
+		+StartAsync_WhenAlreadyConnected_ShouldNotThrow() Task
+		+StopAsync_WhenAlreadyDisconnected_ShouldNotThrow() Task
+		+SendAsync_WhenConnected_ShouldTrackMessage() Task
+		+InvokeAsync_WhenConnected_ShouldReturnResult() Task
+		+On_SingleParameter_ShouldRegisterHandler() Task
+		+On_TwoParameters_ShouldRegisterHandler() Task
+		+DisposeAsync_ShouldCleanupResources() Task
+		+Events_Reconnecting_ShouldFireWhenReconnecting() void
+		+Events_Reconnected_ShouldFireWhenReconnected() void
+		+Events_Closed_ShouldFireWhenConnectionClosed() void
+		+Operations_AfterDispose_ShouldThrowObjectDisposedException() Task
+	}
+	class SelfRegisteredExtensions  {
+		+AddSelfRegisteredExtensions(global::Microsoft.Testing.Platform.Builder.ITestApplicationBuilder builder, string[] args) void
+	}
+	class XunitAutoGeneratedEntryPoint  {
+		+Main(string[] args) int
+	}
+
+	TestHubConnectionFactory --|> IHubConnectionFactory
+	FailingTestHubConnection --|> TestHubConnection
+	TestHubConnectionWithCustomMetrics --|> TestHubConnection
+	TestMetrics --|> IHubConnectionMetrics
+	SlowTestHubConnection --|> TestHubConnection
+	SlowTestMetrics --|> IHubConnectionMetrics
+	TestLogger --|> ILogger
+	TestHubConnection --|> IHubConnection
+	HandlerDisposable --|> IDisposable

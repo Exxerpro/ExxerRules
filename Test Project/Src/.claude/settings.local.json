@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(git config:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git checkout:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet --version)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(true)",
+      "Bash(ls:*)",
+      "Bash(rg:*)",
+      "Bash(dotnet test:*)"
+    ],
+    "deny": []
+  }
+}

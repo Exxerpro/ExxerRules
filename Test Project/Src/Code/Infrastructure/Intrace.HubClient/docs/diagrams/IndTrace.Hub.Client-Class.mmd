@@ -1,0 +1,24 @@
+classDiagram
+
+	class WorkerHubClient  {
+		-ILogger~WorkerHubClient~ logger
+		-IHubConnectionFactory connectionFactory
+		-IHubConnection connection
+		-List~string~ messagesList
+		-int counter
+		- IsHubConnected : bool
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		-SendSimulatedData(CancellationToken stoppingToken) Task
+		-ConnectToHubServer(CancellationToken stoppingToken) Task
+	}
+	class HubMethods  {
+		+string ReceiveMessage
+		+string BroadcastTaskGatewayRequest
+		+string BroadcastTaskGatewayResponse
+		+string BroadcastHeartbeatSignal
+	}
+	class Program  {
+		+Main(string[] args) void
+	}
+
+	WorkerHubClient --|> BackgroundService

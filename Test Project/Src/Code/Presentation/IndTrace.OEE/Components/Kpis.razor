@@ -1,0 +1,180 @@
+@page "/Kpis"
+@using IndTrace.DataStore.Services.OEE
+@using IndTrace.OEE.Data
+@using IndTrace.OEE.Infrastructure.Repository
+@inject IReactiveEventService EventService
+@inject IKpiDataReader KpiReader
+
+@inject ILogger<Kpis> Logger
+
+@*
+/// <summary>
+/// KPI Results display component that shows OEE (Overall Equipment Effectiveness) calculation results in a tabular format.
+/// This Blazor component provides an interactive interface for viewing historical OEE data with manual refresh capabilities.
+/// </summary>
+/// <remarks>
+/// The component integrates with the QuestDB time-series database through the IKpiDataReader interface
+/// to retrieve and display comprehensive OEE metrics including:
+/// - Individual KPI components (Availability, Performance, Quality)
+/// - Overall OEE calculations with formatted decimal precision
+/// - Historical data with unique record identifiers
+///
+/// Features:
+/// - Manual data loading with visual loading indicators
+/// - Responsive table layout using MudBlazor components
+/// - Error handling for data retrieval operations
+/// - Formatted numeric display for professional presentation
+///
+/// The component follows reactive patterns and can be extended to support real-time data updates,
+/// filtering, and export capabilities for comprehensive OEE analysis.
+/// </remarks>
+*@
+
+//TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Validate Kpis component logic and handle edge cases defensively. Ensure all required properties are set and handle missing/invalid values gracefully.
+//TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add real-time data updates using SignalR instead of manual refresh for better user experience.
+//TODO [PERFORMANCE][CURSOR][20/JUNE/2025] - Implement pagination and virtual scrolling for large datasets to improve rendering performance.
+//TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add filtering and sorting capabilities for better data analysis and user productivity.
+
+<MudPaper Class="p-4">
+    @*
+    /// <summary>
+    /// Main container for the KPI results display with consistent padding and Material Design styling.
+    /// </summary>
+    *@
+
+    @*TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add breadcrumb navigation and page context information for better user orientation.*@
+    <MudText Typo="Typo.h5">OEE Results</MudText>
+
+    @*
+    /// <summary>
+    /// Interactive load button with integrated loading state indication.
+    /// Provides visual feedback during data retrieval operations.
+    /// </summary>
+    /// <remarks>
+    /// The button automatically disables during loading to prevent duplicate requests
+    /// and displays a progress indicator with descriptive text for better UX.
+    /// </remarks>
+    *@
+    @*TODO [PERFORMANCE][CURSOR][20/JUNE/2025] - Add automatic data refresh capabilities with configurable intervals.*@
+    @*TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Implement keyboard shortcuts for common actions like refresh (F5, Ctrl+R).*@
+    <MudButton Color="Color.Primary" OnClick="LoadData" Disabled="@isLoading">
+        @if (isLoading)
+        {
+            <MudProgressCircular Indeterminate Color="Color.Primary" Size=Size.Medium />
+            <span class="ml-2">Loading...</span>
+        }
+        else
+        {
+            <span>Load Data</span>
+        }
+    </MudButton>
+
+    @*
+    /// <summary>
+    /// Data table component displaying OEE calculation results in a structured, sortable format.
+    /// Uses MudBlazor table component for consistent styling and responsive behavior.
+    /// </summary>
+    /// <remarks>
+    /// Table Features:
+    /// - Dense layout for maximum data visibility
+    /// - Hover effects for improved row identification
+    /// - Formatted numeric columns with consistent decimal precision
+    /// - Responsive design that adapts to different screen sizes
+    ///
+    /// Data formatting follows industry standards with 2-decimal precision
+    /// for professional presentation of manufacturing KPI metrics.
+    /// </remarks>
+    *@
+    @*TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add column sorting, filtering, and export functionality for comprehensive data analysis.*@
+    @*TODO [PERFORMANCE][CURSOR][20/JUNE/2025] - Implement virtual scrolling for large result sets to maintain responsive UI.*@
+    @*TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add color coding for OEE performance levels (excellent, good, poor) to improve data visualization.*@
+    <MudTable Items="results" Dense Hover>
+        <HeaderContent>
+            @*TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add column tooltips explaining OEE calculation methodology and benchmarks.*@
+            <MudTh>OEEDataUserRegisterId</MudTh>
+            <MudTh>Availability</MudTh>
+            <MudTh>Performance</MudTh>
+            <MudTh>Quality</MudTh>
+            <MudTh>OEE</MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            @*TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add data validation and null checking for robust display of potentially incomplete records.*@
+            @*TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Implement row selection and detail view functionality for comprehensive analysis.*@
+            <MudTd DataLabel="OEEDataUserRegisterId">@context.OEEDataId</MudTd>
+            <MudTd DataLabel="Availability">@context.Availability.ToString("F2")</MudTd>
+            <MudTd DataLabel="Performance">@context.Performance.ToString("F2")</MudTd>
+            <MudTd DataLabel="Quality">@context.Quality.ToString("F2")</MudTd>
+            <MudTd DataLabel="OEE">@context.OEE.ToString("F2")</MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
+
+@code {
+    /// <summary>
+    /// Collection of OEE calculation results retrieved from the database.
+    /// Initialized as empty collection to prevent null reference exceptions.
+    /// </summary>
+    /// <remarks>
+    /// Uses collection expression syntax for modern C# initialization patterns.
+    /// The collection is updated through the LoadData method and bound to the UI table component.
+    /// </remarks>
+    //TODO [PERFORMANCE][CURSOR][20/JUNE/2025] - Consider using ObservableCollection for automatic UI updates when data changes.
+    //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add data validation and filtering capabilities for the results collection.
+    private List<OeeResult> results = [];
+
+    /// <summary>
+    /// Flag indicating whether a data loading operation is currently in progress.
+    /// Used to control UI state and prevent concurrent data operations.
+    /// </summary>
+    /// <value>
+    /// <c>true</c> when data is being loaded from the database; otherwise, <c>false</c>.
+    /// </value>
+    /// <remarks>
+    /// This flag ensures the load button is disabled during operations and
+    /// provides visual feedback through the loading indicator display logic.
+    /// </remarks>
+    //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Consider using a more sophisticated loading state enum to handle different operation types.
+    private bool isLoading = false;
+
+    /// <summary>
+    /// Asynchronously loads OEE calculation results from the database and updates the UI.
+    /// Handles loading state management and error scenarios gracefully.
+    /// </summary>
+    /// <returns>A task representing the asynchronous data loading operation.</returns>
+    /// <remarks>
+    /// The method implements the following workflow:
+    /// 1. Sets loading state to prevent concurrent operations
+    /// 2. Calls the KPI reader service to retrieve data from QuestDB
+    /// 3. Updates the results collection for UI binding
+    /// 4. Handles exceptions with error logging
+    /// 5. Ensures loading state is reset in all scenarios
+    ///
+    /// Error handling is implemented with console output for development scenarios.
+    /// Production implementations should include proper user notification and logging strategies.
+    /// </remarks>
+    //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Replace console error logging with proper user notification and structured logging.
+    //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add cancellation token support for long-running data operations.
+    //TODO [PERFORMANCE][CURSOR][20/JUNE/2025] - Implement caching strategy to reduce database calls for frequently accessed data.
+    //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add retry logic with exponential backoff for transient database failures.
+    private async Task LoadData()
+    {
+        isLoading = true;
+        try
+        {
+            //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add input validation and query parameters for filtering capabilities.
+            //TODO [PERFORMANCE][CURSOR][20/JUNE/2025] - Implement pagination parameters to handle large result sets efficiently.
+            results = await KpiReader.GetKpiResultsAsync(new CancellationToken(false));
+        }
+        catch (Exception ex)
+        {
+            //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Replace console error with proper user notification using MudBlazor snackbar or dialog.
+            //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Add structured logging with correlation IDs for better error tracking and debugging.
+            Console.Error.WriteLine($"Error loading data: {ex.Message}");
+        }
+        finally
+        {
+            //TODO [BEST PRACTICE][CURSOR][20/JUNE/2025] - Consider adding finally block logging for operation completion tracking.
+            isLoading = false;
+        }
+    }
+}

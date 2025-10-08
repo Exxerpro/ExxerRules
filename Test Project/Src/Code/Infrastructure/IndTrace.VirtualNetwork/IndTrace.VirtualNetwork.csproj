@@ -1,0 +1,103 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <!-- ============================================================================ -->
+  <!-- CORE PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Target Framework -->
+    <TargetFramework>net10.0</TargetFramework>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <!-- Language Features -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <!-- Security & Configuration -->
+    <UserSecretsId>dotnet-IndTrace.S7Server-67bddc8b-7010-4d2b-9290-68ebae441241</UserSecretsId>
+    <!-- Application Information -->
+    <AssemblyName>IndTrace.VirtualNetwork</AssemblyName>
+    <AssemblyTitle>VirtualNetwork</AssemblyTitle>
+    <Title>VirtualNetwork</Title>
+    <Description>IndTrace.VirtualNetwork</Description>
+    <Company>Exxerpro Solutions</Company>
+    <Product>VirtualNetwork</Product>
+    <!-- Application Icons -->
+    <ApplicationIcon>YourIconFile.ico</ApplicationIcon>
+    <ApplicationIcon>VirtualNetwork.ico</ApplicationIcon>
+    <!-- Application Startup -->
+    <StartupObject>IndTrace.VirtualNetwork.Program</StartupObject>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- PUBLISHING PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Publishing Enhancements -->
+    <EnableDynamicPgo>true</EnableDynamicPgo>
+    <TieredCompilation>true</TieredCompilation>
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - UTILITIES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Utilities">
+    <PackageReference Include="Bogus" />
+    <PackageReference Include="Polly" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - LOGGING -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Logging">
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Settings.Configuration" />
+    <PackageReference Include="Serilog.Extensions.Hosting" />
+    <PackageReference Include="Serilog.Enrichers.Context" />
+    <PackageReference Include="Serilog.Enrichers.Demystifier" />
+    <PackageReference Include="Serilog.Enrichers.Process" />
+    <PackageReference Include="Serilog.Expressions" />
+    <PackageReference Include="Serilog.Sinks.Async" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Settings.AppSettings" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.Seq" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - DATABASE -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Database">
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.Data.SqlClient" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PROJECT REFERENCES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Infrastructure References">
+    <ProjectReference Include="..\IndTrace.DataStore\IndTrace.DataStore.csproj" />
+    <ProjectReference Include="..\IndTrace.Dependencies\IndTrace.Dependencies.csproj" />
+    <ProjectReference Include="..\Sharp7.Rx\Sharp7.Rx.csproj" />
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- NATIVE LIBRARIES & ASSETS -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Native Libraries Assets">
+    <None Update="native\win\snap7.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>snap7.dll</TargetPath>
+    </None>
+    <None Update="VirtualNetwork.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <TargetPath>libsnap7.so</TargetPath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+</Project>

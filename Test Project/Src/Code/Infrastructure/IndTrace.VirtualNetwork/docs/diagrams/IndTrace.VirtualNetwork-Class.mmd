@@ -1,0 +1,755 @@
+classDiagram
+
+	class S7Client  {
+		-int MsgTextLen
+		+uint ErrNegotiatingPdu
+		+uint ErrCliInvalidParams
+		+uint ErrCliJobPending
+		+uint ErrCliTooManyItems
+		+uint ErrCliInvalidWordLen
+		+uint ErrCliPartialDataWritten
+		+uint ErrCliSizeOverPdu
+		+uint ErrCliInvalidPlcAnswer
+		+uint ErrCliAddressOutOfRange
+		+uint ErrCliInvalidTransportSize
+		+uint ErrCliWriteDataSizeMismatch
+		+uint ErrCliItemNotAvailable
+		+uint ErrCliInvalidValue
+		+uint ErrCliCannotStartPlc
+		+uint ErrCliAlreadyRun
+		+uint ErrCliCannotStopPlc
+		+uint ErrCliCannotCopyRamToRom
+		+uint ErrCliCannotCompress
+		+uint ErrCliAlreadyStop
+		+uint ErrCliFunNotAvailable
+		+uint ErrCliUploadSequenceFailed
+		+uint ErrCliInvalidDataSizeRecvd
+		+uint ErrCliInvalidBlockType
+		+uint ErrCliInvalidBlockNumber
+		+uint ErrCliInvalidBlockSize
+		+uint ErrCliDownloadSequenceFailed
+		+uint ErrCliInsertRefused
+		+uint ErrCliDeleteRefused
+		+uint ErrCliNeedPassword
+		+uint ErrCliInvalidPassword
+		+uint ErrCliNoPasswordToSetOrClear
+		+uint ErrCliJobTimeout
+		+uint ErrCliPartialDataRead
+		+uint ErrCliBufferTooSmall
+		+uint ErrCliFunctionRefused
+		+uint ErrCliDestroying
+		+uint ErrCliInvalidParamNumber
+		+uint ErrCliCannotChangeParam
+		+byte S7AreaPe
+		+byte S7AreaPa
+		+byte S7AreaMk
+		+byte S7AreaDb
+		+byte S7AreaCt
+		+byte S7AreaTm
+		+int S7WlBit
+		+int S7WlByte
+		+int S7WlWord
+		+int S7WldWord
+		+int S7WlReal
+		+int S7WlCounter
+		+int S7WlTimer
+		+byte BlockOb
+		+byte BlockDb
+		+byte BlockSdb
+		+byte BlockFc
+		+byte BlockSfc
+		+byte BlockFb
+		+byte BlockSfb
+		+byte SubBlkOb
+		+byte SubBlkDb
+		+byte SubBlkSdb
+		+byte SubBlkFc
+		+byte SubBlkSfc
+		+byte SubBlkFb
+		+byte SubBlkSfb
+		+byte BlockLangAwl
+		+byte BlockLangKop
+		+byte BlockLangFup
+		+byte BlockLangScl
+		+byte BlockLangDb
+		+byte BlockLangGraph
+		+int MaxVars
+		+ushort ConntypePg
+		+ushort ConntypeOp
+		+ushort ConntypeBasic
+		-int JobComplete
+		-int JobPending
+		-IntPtr client
+		-Us7BlockInfo uBlockInfo
+		+ushort[] Ts7BlocksOfType
+		-Us7OrderCode uOrderCode
+		-Us7CpuInfo uCpuInfo
+		-CppTm tm
+		-Cli_Create() IntPtr
+		-Cli_Destroy(IntPtr client) int
+		-Cli_Connect(IntPtr client) int
+		+Connect() int
+		-Cli_ConnectTo(IntPtr client, string address, int rack, int slot) int
+		+ConnectTo(string address, int rack, int slot) int
+		-Cli_SetConnectionParams(IntPtr client, string address, ushort localTsap, ushort remoteTsap) int
+		+SetConnectionParams(string address, ushort localTsap, ushort remoteTsap) int
+		-Cli_SetConnectionType(IntPtr client, ushort connectionType) int
+		+SetConnectionType(ushort connectionType) int
+		-Cli_Disconnect(IntPtr client) int
+		+Disconnect() int
+		-Cli_GetParam_i16(IntPtr client, int paramNumber, short intValue) int
+		+GetParam(int paramNumber, short intValue) int
+		-Cli_GetParam_u16(IntPtr client, int paramNumber, ushort intValue) int
+		+GetParam(int paramNumber, ushort intValue) int
+		-Cli_GetParam_i32(IntPtr client, int paramNumber, int intValue) int
+		+GetParam(int paramNumber, int intValue) int
+		-Cli_GetParam_u32(IntPtr client, int paramNumber, uint intValue) int
+		+GetParam(int paramNumber, uint intValue) int
+		-Cli_GetParam_i64(IntPtr client, int paramNumber, long intValue) int
+		+GetParam(int paramNumber, long intValue) int
+		-Cli_GetParam_u64(IntPtr client, int paramNumber, ulong intValue) int
+		+GetParam(int paramNumber, ulong intValue) int
+		-Cli_SetParam_i16(IntPtr client, int paramNumber, short intValue) int
+		+SetParam(int paramNumber, short intValue) int
+		-Cli_SetParam_u16(IntPtr client, int paramNumber, ushort intValue) int
+		+SetParam(int paramNumber, ushort intValue) int
+		-Cli_SetParam_i32(IntPtr client, int paramNumber, int intValue) int
+		+SetParam(int paramNumber, int intValue) int
+		-Cli_SetParam_u32(IntPtr client, int paramNumber, uint intValue) int
+		+SetParam(int paramNumber, uint intValue) int
+		-Cli_SetParam_i64(IntPtr client, int paramNumber, long intValue) int
+		+SetParam(int paramNumber, long intValue) int
+		-Cli_SetParam_u64(IntPtr client, int paramNumber, ulong intValue) int
+		+SetParam(int paramNumber, ulong intValue) int
+		-Cli_SetAsCallback(IntPtr client, S7CliCompletion completion, IntPtr usrPtr) int
+		+SetAsCallBack(S7CliCompletion completion, IntPtr usrPtr) int
+		-Cli_ReadArea(IntPtr client, int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		+ReadArea(int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		-Cli_ReadArea_ptr(IntPtr client, int area, int dbNumber, int start, int amount, int wordLen, IntPtr pointer) int
+		+ReadArea(int area, int dbNumber, int start, int amount, int wordLen, IntPtr pointer) int
+		-Cli_WriteArea(IntPtr client, int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		+WriteArea(int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		-Cli_ReadMultiVars(IntPtr client, S7DataItem item, int itemsCount) int
+		+ReadMultiVars(S7DataItem[] items, int itemsCount) int
+		-Cli_WriteMultiVars(IntPtr client, S7DataItem item, int itemsCount) int
+		+WriteMultiVars(S7DataItem[] items, int itemsCount) int
+		-Cli_DBRead(IntPtr client, int dbNumber, int start, int size, byte[] buffer) int
+		+DbRead(int dbNumber, int start, int size, byte[] buffer) int
+		-Cli_DBWrite(IntPtr client, int dbNumber, int start, int size, byte[] buffer) int
+		+DbWrite(int dbNumber, int start, int size, byte[] buffer) int
+		-Cli_MBRead(IntPtr client, int start, int size, byte[] buffer) int
+		+MbRead(int start, int size, byte[] buffer) int
+		-Cli_MBWrite(IntPtr client, int start, int size, byte[] buffer) int
+		+MbWrite(int start, int size, byte[] buffer) int
+		-Cli_EBRead(IntPtr client, int start, int size, byte[] buffer) int
+		+EbRead(int start, int size, byte[] buffer) int
+		-Cli_EBWrite(IntPtr client, int start, int size, byte[] buffer) int
+		+EbWrite(int start, int size, byte[] buffer) int
+		-Cli_ABRead(IntPtr client, int start, int size, byte[] buffer) int
+		+AbRead(int start, int size, byte[] buffer) int
+		-Cli_ABWrite(IntPtr client, int start, int size, byte[] buffer) int
+		+AbWrite(int start, int size, byte[] buffer) int
+		-Cli_TMRead(IntPtr client, int start, int amount, ushort[] buffer) int
+		+TmRead(int start, int amount, ushort[] buffer) int
+		-Cli_TMWrite(IntPtr client, int start, int amount, ushort[] buffer) int
+		+TmWrite(int start, int amount, ushort[] buffer) int
+		-Cli_CTRead(IntPtr client, int start, int amount, ushort[] buffer) int
+		+CtRead(int start, int amount, ushort[] buffer) int
+		-Cli_CTWrite(IntPtr client, int start, int amount, ushort[] buffer) int
+		+CtWrite(int start, int amount, ushort[] buffer) int
+		-Cli_ListBlocks(IntPtr client, S7BlocksList list) int
+		+ListBlocks(S7BlocksList list) int
+		-Cli_GetAgBlockInfo(IntPtr client, int blockType, int blockNum, Us7BlockInfo info) int
+		+GetAgBlockInfo(int blockType, int blockNum, S7BlockInfo info) int
+		-Cli_GetPgBlockInfo(IntPtr client, Us7BlockInfo info, byte[] buffer, int size) int
+		+GetPgBlockInfo(S7BlockInfo info, byte[] buffer, int size) int
+		-Cli_ListBlocksOfType(IntPtr client, int blockType, ushort[] list, int itemsCount) int
+		+ListBlocksOfType(int blockType, ushort[] list, int itemsCount) int
+		-Cli_Upload(IntPtr client, int blockType, int blockNum, byte[] usrData, int size) int
+		+Upload(int blockType, int blockNum, byte[] usrData, int size) int
+		-Cli_FullUpload(IntPtr client, int blockType, int blockNum, byte[] usrData, int size) int
+		+FullUpload(int blockType, int blockNum, byte[] usrData, int size) int
+		-Cli_Download(IntPtr client, int blockNum, byte[] usrData, int size) int
+		+Download(int blockNum, byte[] usrData, int size) int
+		-Cli_Delete(IntPtr client, int blockType, int blockNum) int
+		+Delete(int blockType, int blockNum) int
+		-Cli_DBGet(IntPtr client, int dbNumber, byte[] usrData, int size) int
+		+DbGet(int dbNumber, byte[] usrData, int size) int
+		-Cli_DBFill(IntPtr client, int dbNumber, int fillChar) int
+		+DbFill(int dbNumber, int fillChar) int
+		-Cli_GetPlcDateTime(IntPtr client, CppTm tm) int
+		+GetPlcDateTime(DateTime dt) int
+		-Cli_SetPlcDateTime(IntPtr client, CppTm tm) int
+		+SetPlcDateTime(DateTime dt) int
+		-Cli_SetPlcSystemDateTime(IntPtr client) int
+		+SetPlcSystemDateTime() int
+		-Cli_GetOrderCode(IntPtr client, Us7OrderCode info) int
+		+GetOrderCode(S7OrderCode info) int
+		-Cli_GetCpuInfo(IntPtr client, Us7CpuInfo info) int
+		+GetCpuInfo(S7CpuInfo info) int
+		-Cli_GetCpInfo(IntPtr client, S7CpInfo info) int
+		+GetCpInfo(S7CpInfo info) int
+		-Cli_ReadSZL(IntPtr client, int id, int index, S7Szl data, int size) int
+		+ReadSzl(int id, int index, S7Szl data, int size) int
+		-Cli_ReadSZLList(IntPtr client, S7SzlList list, int itemsCount) int
+		+ReadSzlList(S7SzlList list, int itemsCount) int
+		-Cli_PlcHotStart(IntPtr client) int
+		+PlcHotStart() int
+		-Cli_PlcColdStart(IntPtr client) int
+		+PlcColdStart() int
+		-Cli_PlcStop(IntPtr client) int
+		+PlcStop() int
+		-Cli_CopyRamToRom(IntPtr client, uint timeout) int
+		+PlcCopyRamToRom(uint timeout) int
+		-Cli_Compress(IntPtr client, uint timeout) int
+		+PlcCompress(uint timeout) int
+		-Cli_GetPlcStatus(IntPtr client, int status) int
+		+PlcGetStatus(int status) int
+		-Cli_GetProtection(IntPtr client, S7Protection protection) int
+		+GetProtection(S7Protection protection) int
+		-Cli_SetSessionPassword(IntPtr client, string password) int
+		+SetSessionPassword(string password) int
+		-Cli_ClearSessionPassword(IntPtr client) int
+		+ClearSessionPassword() int
+		-Cli_IsoExchangeBuffer(IntPtr client, byte[] buffer, int size) int
+		+IsoExchangeBuffer(byte[] buffer, int size) int
+		-Cli_AsReadArea(IntPtr client, int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		+AsReadArea(int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		-Cli_AsWriteArea(IntPtr client, int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		+AsWriteArea(int area, int dbNumber, int start, int amount, int wordLen, byte[] buffer) int
+		-Cli_AsDBRead(IntPtr client, int dbNumber, int start, int size, byte[] buffer) int
+		+AsDbRead(int dbNumber, int start, int size, byte[] buffer) int
+		-Cli_AsDBWrite(IntPtr client, int dbNumber, int start, int size, byte[] buffer) int
+		+AsDbWrite(int dbNumber, int start, int size, byte[] buffer) int
+		-Cli_AsMBRead(IntPtr client, int start, int size, byte[] buffer) int
+		+AsMbRead(int start, int size, byte[] buffer) int
+		-Cli_AsMBWrite(IntPtr client, int start, int size, byte[] buffer) int
+		+AsMbWrite(int start, int size, byte[] buffer) int
+		-Cli_AsEBRead(IntPtr client, int start, int size, byte[] buffer) int
+		+AsEbRead(int start, int size, byte[] buffer) int
+		-Cli_AsEBWrite(IntPtr client, int start, int size, byte[] buffer) int
+		+AsEbWrite(int start, int size, byte[] buffer) int
+		-Cli_AsABRead(IntPtr client, int start, int size, byte[] buffer) int
+		+AsAbRead(int start, int size, byte[] buffer) int
+		-Cli_AsABWrite(IntPtr client, int start, int size, byte[] buffer) int
+		+AsAbWrite(int start, int size, byte[] buffer) int
+		-Cli_AsTMRead(IntPtr client, int start, int amount, ushort[] buffer) int
+		+AsTmRead(int start, int amount, ushort[] buffer) int
+		-Cli_AsTMWrite(IntPtr client, int start, int amount, ushort[] buffer) int
+		+AsTmWrite(int start, int amount, ushort[] buffer) int
+		-Cli_AsCTRead(IntPtr client, int start, int amount, ushort[] buffer) int
+		+AsCtRead(int start, int amount, ushort[] buffer) int
+		-Cli_AsCTWrite(IntPtr client, int start, int amount, ushort[] buffer) int
+		+AsCtWrite(int start, int amount, ushort[] buffer) int
+		-Cli_AsListBlocksOfType(IntPtr client, int blockType, ushort[] list) int
+		+AsListBlocksOfType(int blockType, ushort[] list) int
+		-Cli_AsReadSZL(IntPtr client, int id, int index, S7Szl data, int size) int
+		+AsReadSzl(int id, int index, S7Szl data, int size) int
+		-Cli_AsReadSZLList(IntPtr client, S7SzlList list, int itemsCount) int
+		+AsReadSzlList(S7SzlList list, int itemsCount) int
+		-Cli_AsUpload(IntPtr client, int blockType, int blockNum, byte[] usrData, int size) int
+		+AsUpload(int blockType, int blockNum, byte[] usrData, int size) int
+		-Cli_AsFullUpload(IntPtr client, int blockType, int blockNum, byte[] usrData, int size) int
+		+AsFullUpload(int blockType, int blockNum, byte[] usrData, int size) int
+		-Cli_AsDownload(IntPtr client, int blockNum, byte[] usrData, int size) int
+		+AsDownload(int blockNum, byte[] usrData, int size) int
+		-Cli_AsPlcCopyRamToRom(IntPtr client, uint timeout) int
+		+AsPlcCopyRamToRom(uint timeout) int
+		-Cli_AsPlcCompress(IntPtr client, uint timeout) int
+		+AsPlcCompress(uint timeout) int
+		-Cli_AsDBGet(IntPtr client, int dbNumber, byte[] usrData, int size) int
+		+AsDbGet(int dbNumber, byte[] usrData, int size) int
+		-Cli_AsDBFill(IntPtr client, int dbNumber, int fillChar) int
+		+AsDbFill(int dbNumber, int fillChar) int
+		-Cli_CheckAsCompletion(IntPtr client, int opResult) int
+		+CheckAsCompletion(int opResult) bool
+		-Cli_WaitAsCompletion(IntPtr client, int timeout) int
+		+WaitAsCompletion(int timeout) int
+		-Cli_GetExecTime(IntPtr client, uint time) int
+		+ExecTime() int
+		-Cli_GetLastError(IntPtr client, int lastError) int
+		+LastError() int
+		-Cli_GetPduLength(IntPtr client, int requested, int negotiated) int
+		+RequestedPduLength() int
+		+NegotiatedPduLength() int
+		-Cli_ErrorText(int error, StringBuilder errMsg, int textSize) int
+		+ErrorText(int error) string
+		-Cli_GetConnected(IntPtr client, uint isConnected) int
+		+Connected() bool
+	}
+	class S7Consts  {
+		+string Snap7LibName
+		+int PU16LocalPort
+		+int PU16RemotePort
+		+int PI32PingTimeout
+		+int PI32SendTimeout
+		+int PI32RecvTimeout
+		+int PI32WorkInterval
+		+int PU16SrcRef
+		+int PU16DstRef
+		+int PU16SrcTSap
+		+int PI32PduRequest
+		+int PI32MaxClients
+		+int PI32BSendTimeout
+		+int PI32BRecvTimeout
+		+int PU32RecoveryTime
+		+int PU32KeepAliveTime
+	}
+	class DbExistsException  {
+		+ DbNo : int
+		+ StatusCode : int
+		+ Title : string
+	}
+	class DateExceedsDbLengthException  {
+		+ DataLength : int
+		+ DbLength : int
+		+ DbNo : int
+		+ StatusCode : int
+		+ Title : string
+	}
+	class S7Partner  {
+		-int MsgTextLen
+		+int ParStopped
+		+int ParConnecting
+		+int ParWaiting
+		+int ParLinked
+		+int ParSending
+		+int ParReceiving
+		+int ParBinderror
+		+uint ErrParAddressInUse
+		+uint ErrParNoRoom
+		+uint ErrServerNoRoom
+		+uint ErrParInvalidParams
+		+uint ErrParNotLinked
+		+uint ErrParBusy
+		+uint ErrParFrameTimeout
+		+uint ErrParInvalidPdu
+		+uint ErrParSendTimeout
+		+uint ErrParRecvTimeout
+		+uint ErrParSendRefused
+		+uint ErrParNegotiatingPdu
+		+uint ErrParSendingBlock
+		+uint ErrParRecvingBlock
+		+uint ErrBindError
+		+uint ErrParDestroying
+		+uint ErrParInvalidParamNumber
+		+uint ErrParCannotChangeParam
+		-int JobComplete
+		-int JobPending
+		-IntPtr partner
+		-int parBytesSent
+		-int parBytesRecv
+		-int parSendErrors
+		-int parRecvErrors
+		+ BytesSent : int
+		+ BytesRecv : int
+		+ SendErrors : int
+		+ RecvErrors : int
+		+ Status : int
+		+ Linked : bool
+		-Par_Create(int parActive) IntPtr
+		-Par_Destroy(IntPtr partner) int
+		-Par_StartTo(IntPtr partner, string localAddress, string remoteAddress, ushort localTsap, ushort remoteTsap) int
+		+StartTo(string localAddress, string remoteAddress, ushort localTsap, ushort remoteTsap) int
+		-Par_Start(IntPtr partner) int
+		+Start() int
+		-Par_Stop(IntPtr partner) int
+		+Stop() int
+		-Par_GetParam_i16(IntPtr partner, int paramNumber, short intValue) int
+		+GetParam(int paramNumber, short intValue) int
+		-Par_GetParam_u16(IntPtr partner, int paramNumber, ushort intValue) int
+		+GetParam(int paramNumber, ushort intValue) int
+		-Par_GetParam_i32(IntPtr partner, int paramNumber, int intValue) int
+		+GetParam(int paramNumber, int intValue) int
+		-Par_GetParam_u32(IntPtr partner, int paramNumber, uint intValue) int
+		+GetParam(int paramNumber, uint intValue) int
+		-Par_GetParam_i64(IntPtr partner, int paramNumber, long intValue) int
+		+GetParam(int paramNumber, long intValue) int
+		-Par_GetParam_u64(IntPtr partner, int paramNumber, ulong intValue) int
+		+GetParam(int paramNumber, ulong intValue) int
+		-Par_SetParam_i16(IntPtr partner, int paramNumber, short intValue) int
+		+SetParam(int paramNumber, short intValue) int
+		-Par_SetParam_u16(IntPtr partner, int paramNumber, ushort intValue) int
+		+SetParam(int paramNumber, ushort intValue) int
+		-Par_SetParam_i32(IntPtr partner, int paramNumber, int intValue) int
+		+SetParam(int paramNumber, int intValue) int
+		-Par_SetParam_u32(IntPtr partner, int paramNumber, uint intValue) int
+		+SetParam(int paramNumber, uint intValue) int
+		-Par_SetParam_i64(IntPtr partner, int paramNumber, long intValue) int
+		+SetParam(int paramNumber, long intValue) int
+		-Par_SetParam_u64(IntPtr partner, int paramNumber, ulong intValue) int
+		+SetParam(int paramNumber, ulong intValue) int
+		-Par_BSend(IntPtr partner, uint rId, byte[] buffer, int size) int
+		+BSend(uint rId, byte[] buffer, int size) int
+		-Par_AsBSend(IntPtr partner, uint rId, byte[] buffer, int size) int
+		+AsBSend(uint rId, byte[] buffer, int size) int
+		-Par_CheckAsBSendCompletion(IntPtr partner, int opResult) int
+		+CheckAsBSendCompletion(int opResult) bool
+		-Par_WaitAsBSendCompletion(IntPtr partner, int timeout) int
+		+WaitAsBSendCompletion(int timeout) int
+		-Par_SetSendCallback(IntPtr partner, S7ParSendCompletion completion, IntPtr usrPtr) int
+		+SetSendCallBack(S7ParSendCompletion completion, IntPtr usrPtr) int
+		-Par_BRecv(IntPtr partner, uint rId, byte[] buffer, int size, uint timeout) int
+		+BRecv(uint rId, byte[] buffer, int size, uint timeout) int
+		-Par_CheckAsBRecvCompletion(IntPtr partner, int opResult, uint rId, byte[] buffer, int size) int
+		+CheckAsBRecvCompletion(int opResult, uint rId, byte[] buffer, int size) bool
+		-Par_SetRecvCallback(IntPtr partner, S7ParRecvCallback callback, IntPtr usrPtr) int
+		+SetRecvCallback(S7ParRecvCallback callback, IntPtr usrPtr) int
+		-Par_GetLastError(IntPtr partner, int lastError) int
+		+LastError(int lastError) int
+		-Par_ErrorText(int error, StringBuilder errMsg, int textSize) int
+		+ErrorText(int error) string
+		-Par_GetStats(IntPtr partner, int bytesSent, int bytesRecv, int sendErrors, int recvErrors) int
+		-GetStatistics() void
+		-Par_GetStatus(IntPtr partner, int status) int
+	}
+	class VirtualNetworkWorker  {
+		-CommandSimulator commandSimulator
+		+ PlcNetwork : Dictionary~int&#44&#32VirtualPlc~
+		+ Plcs : Dictionary~int&#44&#32PlcData~
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		-InitializeAsync(CancellationToken cancellationToken) Task
+	}
+	class S7MultiVar  {
+		-S7Client fClient
+		-GCHandle[] handles
+		-int count
+		-S7Client.S7DataItem[] items
+		+int[] Results
+		+Add(int area, int wordLen, int dbNumber, int start, int amount, T[] buffer) bool
+		+Add(int area, int wordLen, int dbNumber, int start, int amount, T[] buffer, int offset) bool
+		+Read() int
+		+Write() int
+		+Clear() void
+	}
+	class S7Server  {
+		-int MsgTextLen
+		-int MkEvent
+		-int MkLog
+		+byte S7AreaPe
+		+byte S7AreaPa
+		+byte S7AreaMk
+		+byte S7AreaDb
+		+byte S7AreaCt
+		+byte S7AreaTm
+		+int S7WlBit
+		+int S7WlByte
+		+int S7WlWord
+		+int S7WldWord
+		+int S7WlReal
+		+int S7WlCounter
+		+int S7WlTimer
+		+int SrvAreaPe
+		+int SrvAreaPa
+		+int SrvAreaMk
+		+int SrvAreaCt
+		+int SrvAreaTm
+		+int SrvAreaDb
+		+uint ErrSrvCannotStart
+		+uint ErrSrvDbNullPointer
+		+uint ErrSrvAreaAlreadyExists
+		+uint ErrSrvUnknownArea
+		+uint ErrSrvInvalidParams
+		+uint ErrSrvTooManyDb
+		+uint ErrSrvInvalidParamNumber
+		+uint ErrSrvCannotChangeParam
+		+uint EvcServerStarted
+		+uint EvcServerStopped
+		+uint EvcListenerCannotStart
+		+uint EvcClientAdded
+		+uint EvcClientRejected
+		+uint EvcClientNoRoom
+		+uint EvcClientException
+		+uint EvcClientDisconnected
+		+uint EvcClientTerminated
+		+uint EvcClientsDropped
+		+uint EvcReserved00000400
+		+uint EvcReserved00000800
+		+uint EvcReserved00001000
+		+uint EvcReserved00002000
+		+uint EvcReserved00004000
+		+uint EvcReserved00008000
+		+uint EvcPdUincoming
+		+uint EvcDataRead
+		+uint EvcDataWrite
+		+uint EvcNegotiatePdu
+		+uint EvcReadSzl
+		+uint EvcClock
+		+uint EvcUpload
+		+uint EvcDownload
+		+uint EvcDirectory
+		+uint EvcSecurity
+		+uint EvcControl
+		+uint EvcReserved08000000
+		+uint EvcReserved10000000
+		+uint EvcReserved20000000
+		+uint EvcReserved40000000
+		+uint EvcReserved80000000
+		+uint EvcAll
+		+uint EvcNone
+		+ushort EvsUnknown
+		+ushort EvsStartUpload
+		+ushort EvsStartDownload
+		+ushort EvsGetBlockList
+		+ushort EvsStartListBoT
+		+ushort EvsListBoT
+		+ushort EvsGetBlockInfo
+		+ushort EvsGetClock
+		+ushort EvsSetClock
+		+ushort EvsSetPassword
+		+ushort EvsClrPassword
+		+ushort GrProgrammer
+		+ushort GrCyclicData
+		+ushort GrBlocksInfo
+		+ushort GrSzl
+		+ushort GrPassword
+		+ushort GrBSend
+		+ushort GrClock
+		+ushort GrSecurity
+		+ushort CodeControlUnknown
+		+ushort CodeControlColdStart
+		+ushort CodeControlWarmStart
+		+ushort CodeControlStop
+		+ushort CodeControlCompress
+		+ushort CodeControlCpyRamRom
+		+ushort CodeControlInsDel
+		+ushort EvrNoError
+		+ushort EvrFragmentRejected
+		+ushort EvrMalformedPdu
+		+ushort EvrSparseBytes
+		+ushort EvrCannotHandlePdu
+		+ushort EvrNotImplemented
+		+ushort EvrErrException
+		+ushort EvrErrAreaNotFound
+		+ushort EvrErrOutOfRange
+		+ushort EvrErrOverPdu
+		+ushort EvrErrTransportSize
+		+ushort EvrInvalidGroupUData
+		+ushort EvrInvalidSzl
+		+ushort EvrDataSizeMismatch
+		+ushort EvrCannotUpload
+		+ushort EvrCannotDownload
+		+ushort EvrUploadInvalidId
+		+ushort EvrResNotFound
+		+int OperationRead
+		+int OperationWrite
+		-Dictionary~int&#44&#32GCHandle~ hArea
+		-IntPtr server
+		+ LogMask : uint
+		+ EventMask : uint
+		+ CpuStatus : int
+		+ ServerStatus : int
+		+ ClientsCount : int
+		-Srv_Create() IntPtr
+		-Srv_Destroy(IntPtr server) int
+		-Srv_StartTo(IntPtr server, string address) int
+		+StartTo(string address) int
+		-Srv_Start(IntPtr server) int
+		+Start() int
+		-Srv_Stop(IntPtr server) int
+		+Stop() int
+		-Srv_GetParam_i16(IntPtr server, int paramNumber, short intValue) int
+		+GetParam(int paramNumber, short intValue) int
+		-Srv_GetParam_u16(IntPtr server, int paramNumber, ushort intValue) int
+		+GetParam(int paramNumber, ushort intValue) int
+		-Srv_GetParam_i32(IntPtr server, int paramNumber, int intValue) int
+		+GetParam(int paramNumber, int intValue) int
+		-Srv_GetParam_u32(IntPtr server, int paramNumber, uint intValue) int
+		+GetParam(int paramNumber, uint intValue) int
+		-Srv_GetParam_i64(IntPtr server, int paramNumber, long intValue) int
+		+GetParam(int paramNumber, long intValue) int
+		-Srv_GetParam_u64(IntPtr server, int paramNumber, ulong intValue) int
+		+GetParam(int paramNumber, ulong intValue) int
+		-Srv_SetParam_i16(IntPtr server, int paramNumber, short intValue) int
+		+SetParam(int paramNumber, short intValue) int
+		-Srv_SetParam_u16(IntPtr server, int paramNumber, ushort intValue) int
+		+SetParam(int paramNumber, ushort intValue) int
+		-Srv_SetParam_i32(IntPtr server, int paramNumber, int intValue) int
+		+SetParam(int paramNumber, int intValue) int
+		-Srv_SetParam_u32(IntPtr server, int paramNumber, uint intValue) int
+		+SetParam(int paramNumber, uint intValue) int
+		-Srv_SetParam_i64(IntPtr server, int paramNumber, long intValue) int
+		+SetParam(int paramNumber, long intValue) int
+		-Srv_SetParam_u64(IntPtr server, int paramNumber, ulong intValue) int
+		+SetParam(int paramNumber, ulong intValue) int
+		-Srv_RegisterArea(IntPtr server, int areaCode, int index, IntPtr pUsrData, int size) int
+		+RegisterArea(int areaCode, int index, T pUsrData, int size) int
+		-Srv_UnregisterArea(IntPtr server, int areaCode, int index) int
+		+UnregisterArea(int areaCode, int index) int
+		-Srv_LockArea(IntPtr server, int areaCode, int index) int
+		+LockArea(int areaCode, int index) int
+		-Srv_UnlockArea(IntPtr server, int areaCode, int index) int
+		+UnlockArea(int areaCode, int index) int
+		-Srv_SetEventsCallback(IntPtr server, SrvCallback callback, IntPtr usrPtr) int
+		+SetEventsCallBack(SrvCallback callback, IntPtr usrPtr) int
+		-Srv_SetReadEventsCallback(IntPtr server, SrvCallback callback, IntPtr usrPtr) int
+		+SetReadEventsCallBack(SrvCallback callback, IntPtr usrPtr) int
+		-Srv_SetRWAreaCallback(IntPtr server, SrvRwAreaCallback callback, IntPtr usrPtr) int
+		+SetRwAreaCallBack(SrvRwAreaCallback callback, IntPtr usrPtr) int
+		-Srv_PickEvent(IntPtr server, USrvEvent @event, int evtReady) int
+		+PickEvent(USrvEvent @event) bool
+		-Srv_ClearEvents(IntPtr server) int
+		+ClearEvents() int
+		-Srv_EventText(USrvEvent @event, StringBuilder evtMsg, int textSize) int
+		+EventText(USrvEvent @event) string
+		+EvtTimeToDateTime(IntPtr timeStamp) DateTime
+		-Srv_GetMask(IntPtr server, int maskKind, uint mask) int
+		-Srv_SetMask(IntPtr server, int maskKind, uint mask) int
+		-Srv_GetStatus(IntPtr server, int serverStatus, int cpuStatus, int clientsCount) int
+		-Srv_SetCpuStatus(IntPtr server, int cpuStatus) int
+		-Srv_ErrorText(int error, StringBuilder errMsg, int textSize) int
+		+ErrorText(int error) string
+	}
+	class DbNotFoundException  {
+		+ DbNo : int
+		+ StatusCode : int
+		+ Title : string
+	}
+	class SimulationEngine  {
+		-IOptionsMonitor~SimulationSettings~ options
+		-DateTime lastSimulatedDate
+		-SimulationSnapshot lastSnapshot
+		-bool firstRun
+		+Simulate() SimulationSnapshot
+		-CalculateIncrement(int remaining, double step, double weight, double weightSum, double maxStep) int
+		-DistributeIncrements(int totalStep, int remA, int remB, int remC) (int&#44&#32int&#44&#32int)
+		-AdvanceSimulation(SimulationSnapshot lastSnapshot, SimulationSettings settings) SimulationSnapshot
+		-FirstSimulationStep(SimulationSettings settings) SimulationSnapshot
+		+StartSimulation(double ratio, SimulationSnapshot actual, SimulationSettings target) SimulationSnapshot
+		-SimulateValue(float current, float target, double ratio) float
+		-SimulateValue(int currentFloat, double target, double ratio) int
+	}
+	class VirtualPlc  {
+		+Sharp7Plc S7Conn
+		-PlcData virtualPlc
+		-S7Server server
+		-ILogger~VirtualPlc~ logger
+		-VariableS7 heartBeat
+		-VariableS7 plcId
+		+ IndTraceTags : IDictionary~string&#44&#32TagDataStore~
+		+Dispose() void
+		+GetMachineIdFromPlc() Task~short~
+		+InitializeClientAsync() Task
+		+InitializeServerAsync() Task
+		+SetHeartBeat(int seconds) Task
+		+SetMachineIdToPlcAsync(short plcId, CancellationToken cancellationToken) Task~short~
+		+UpdateDataBlockData(int id, byte[] data) void
+		-MapVariableRecordsToIndTraceTags(Dictionary~string&#44&#32VariableS7~ variables) void
+	}
+	class CommandSimulator  {
+		-ILogger~CommandSimulator~ logger
+		-IOptionsMonitor~SimulationSettings~ optionsMonitor
+		-SimulationEngine engine
+		-Regex CommandRegex
+		+ MachineId : int
+		+ PartNumber : string
+		+ BarCode : string
+		+ Command : short
+		+ CycleStatus : int
+		+ PartStatus : int
+		+ CycleStatusPlc : short
+		+ PartStatusPlc : short
+		+ SimulateReference : bool
+		+ WatchDog : int
+		+ParseCommands(IEnumerable~string~ lines, ILogger? logger) List~CommandSimulator~
+		+SimulateEvents(Dictionary~int&#44&#32VirtualPlc~ plcNetwork, List~string~ inputLines, CancellationToken stoppingToken) Task
+		+WaitForSimulationCommands(TimeSpan timeout, CancellationToken cancellationToken) Task~List~string~~
+		+SimulateCommandAsync(VirtualPlc plc, CommandSimulator command, CancellationToken stoppingToken) Task~string~
+		+WriteSimulatedCommandAsync(VirtualPlc plcDataData, CommandSimulator command, CancellationToken stoppingToken) Task
+		+WriteSimulatedPerformanceDataAsync(VirtualPlc plcDataData, CancellationToken stoppingToken) Task
+	}
+	class NetworkConfigurator  {
+		+AddIpAddressWindows(string interfaceName, string ipAddress, string subnetMask, string gateway, ILogger logger) bool
+		-RunNetshCommand(string arguments) (bool&#32Success&#44&#32string&#32Output&#44&#32string&#32Error)
+	}
+	class DbAccessException  {
+		+ StatusCode : int
+		+ Title : string
+	}
+	class PlcExtensions  {
+		+string InterfaceName
+		+string SubnetMask
+		+string GatewayAddress
+		+AddIpAddressToNetwork(PlcData plcDataData, ILogger logger) bool
+		+CheckIfNetworkInterfaceExists(string interfaceName, ILogger logger) bool
+		+AddIpAddressWindows(string interfaceName, string ipAddress, string subnetMask, string gateway, ILogger logger) bool
+		-RunCommand(string command, ILogger logger) void
+	}
+	class InvalidDbSizeException  {
+		+ Size : int
+		+ StatusCode : int
+		+ Title : string
+		+ThrowIfInvalid(int size) void
+	}
+	class S7  {
+		-long bias
+		-BcDtoByte(byte b) int
+		-ByteToBcd(int value) byte
+		-CopyFrom(byte[] buffer, int pos, int size) byte[]
+		+GetBitAt(byte[] buffer, int pos, int bit) bool
+		+SetBitAt(byte[] buffer, int pos, int bit, bool value) void
+		+GetSIntAt(byte[] buffer, int pos) int
+		+SetSIntAt(byte[] buffer, int pos, int value) void
+		+GetIntAt(byte[] buffer, int pos) int
+		+SetIntAt(byte[] buffer, int pos, short value) void
+		+GetDIntAt(byte[] buffer, int pos) int
+		+SetDIntAt(byte[] buffer, int pos, int value) void
+		+GetLIntAt(byte[] buffer, int pos) long
+		+SetLIntAt(byte[] buffer, int pos, long value) void
+		+GetUsIntAt(byte[] buffer, int pos) byte
+		+SetUsIntAt(byte[] buffer, int pos, byte value) void
+		+GetUIntAt(byte[] buffer, int pos) ushort
+		+SetUIntAt(byte[] buffer, int pos, ushort value) void
+		+GetUdIntAt(byte[] buffer, int pos) uint
+		+SetUdIntAt(byte[] buffer, int pos, uint value) void
+		+GetUlIntAt(byte[] buffer, int pos) ulong
+		+SetULintAt(byte[] buffer, int pos, ulong value) void
+		+GetByteAt(byte[] buffer, int pos) byte
+		+SetByteAt(byte[] buffer, int pos, byte value) void
+		+GetWordAt(byte[] buffer, int pos) ushort
+		+SetWordAt(byte[] buffer, int pos, ushort value) void
+		+GetDWordAt(byte[] buffer, int pos) uint
+		+SetDWordAt(byte[] buffer, int pos, uint value) void
+		+GetLWordAt(byte[] buffer, int pos) ulong
+		+SetLWordAt(byte[] buffer, int pos, ulong value) void
+		+GetRealAt(byte[] buffer, int pos) float
+		+SetRealAt(byte[] buffer, int pos, float value) void
+		+GetLRealAt(byte[] buffer, int pos) double
+		+SetLRealAt(byte[] buffer, int pos, double value) void
+		+GetDateTimeAt(byte[] buffer, int pos) DateTime
+		+SetDateTimeAt(byte[] buffer, int pos, DateTime value) void
+		+GetDateAt(byte[] buffer, int pos) DateTime
+		+SetDateAt(byte[] buffer, int pos, DateTime value) void
+		+GetTodAt(byte[] buffer, int pos) DateTime
+		+SetTodAt(byte[] buffer, int pos, DateTime value) void
+		+GetLtodAt(byte[] buffer, int pos) DateTime
+		+SetLtodAt(byte[] buffer, int pos, DateTime value) void
+		+GetLdtAt(byte[] buffer, int pos) DateTime
+		+SetLdtAt(byte[] buffer, int pos, DateTime value) void
+		+GetDtlAt(byte[] buffer, int pos) DateTime
+		+SetDtlAt(byte[] buffer, int pos, DateTime value) void
+		+GetStringAt(byte[] buffer, int pos) string
+		+SetStringAt(byte[] buffer, int pos, int maxLen, string value) void
+		+GetCharsAt(byte[] buffer, int pos, int size) string
+		+SetCharsAt(byte[] buffer, int pos, string value) void
+	}
+	class DbAccessExceptionHandler  {
+	}
+	class Program  {
+		+Main(string[] args) void
+	}
+	class DbOutOfRangeException  {
+		+ DbNo : int
+		+ Title : string
+		+ StatusCode : int
+		+ThrowIfInvalid(int dbNo) void
+	}
+
+	DbExistsException --|> DbAccessException
+	DateExceedsDbLengthException --|> DbAccessException
+	VirtualNetworkWorker --|> BackgroundService
+	DbNotFoundException --|> DbAccessException
+	VirtualPlc --|> IDisposable
+	DbAccessException --|> Exception
+	InvalidDbSizeException --|> DbAccessException
+	DbOutOfRangeException --|> DbAccessException

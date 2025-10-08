@@ -1,0 +1,64 @@
+using IndTrace.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace IndTrace.Persistence.Configurations;
+/// <summary>
+/// Represents the StoppegesConfiguration.
+/// </summary>
+
+public class StoppegesConfiguration : IEntityTypeConfiguration<Stoppage>
+{
+    /// <summary>
+    /// Executes Configure operation.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    public void Configure(EntityTypeBuilder<Stoppage> builder)
+    {
+        builder.HasKey(e => e.StoppageId)
+            .HasName("PK.IndTraceData.Stoppages.StoppageId");
+
+        builder.Property(e => e.StoppageId)
+            .HasColumnName(nameof(Stoppage.StoppageId))
+            .HasColumnType("int")
+            .ValueGeneratedNever()
+            .IsRequired();
+
+        builder.Property(e => e.Description)
+            .HasColumnName(nameof(Stoppage.Description))
+            .IsRequired()
+            .IsUnicode()
+            .HasMaxLength(240);
+
+        builder.Property(e => e.Description2)
+            .HasColumnName(nameof(Stoppage.Description2))
+            .IsRequired()
+            .IsUnicode()
+            .HasMaxLength(240);
+
+        builder.Property(e => e.MaxValue)
+            .HasColumnType("decimal(18, 4)");
+
+        builder.Property(e => e.MinValue)
+            .HasColumnType("decimal(18, 4)");
+
+        builder.Property(e => e.StoppageName)
+            .HasColumnName(nameof(Stoppage.StoppageName))
+            .IsRequired()
+            .IsUnicode()
+            .HasMaxLength(80);
+
+        builder.Property(e => e.ShortName)
+            .HasColumnName(nameof(Stoppage.ShortName))
+            .IsRequired()
+            .IsUnicode()
+            .HasMaxLength(80);
+
+        builder.Property(e => e.StoppageTypeId)
+            .HasColumnName(nameof(Stoppage.StoppageTypeId))
+            .HasColumnType("int")
+            .IsRequired();
+
+        builder.ToTable("Stoppages");
+    }
+}

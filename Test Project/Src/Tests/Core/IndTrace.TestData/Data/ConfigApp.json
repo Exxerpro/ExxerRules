@@ -1,0 +1,19 @@
+[
+  {
+    "AppId": 1,
+    "ConfigAppId": "IndTrace L1A",
+    "MachineId": 100,
+    "PlcId": 100,
+    "Pc": "1",
+    "Client": "Valeo",
+    "Factory": "Valeo",
+    "Line": "CHMSL",
+    "Project": "IndTrace",
+    "Version": "3",
+    "Machine": "L1A_Assembly",
+    "CreatedBy": "Admin",
+    "CreatedOn": "2023-08-31T10:46:18",
+    "ModifiedBy": "Admin",
+    "ModifiedOn": "2023-08-31T10:46:18"
+  }
+]

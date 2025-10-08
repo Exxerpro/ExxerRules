@@ -1,0 +1,18 @@
+  Determining projects to restore...
+  Restored F:\Dynamic\IndTraceV2025\Src\Code\Core\Domain\IndTrace.Domain.csproj (in 1.16 sec).
+  Restored F:\Dynamic\IndTraceV2025\Src\Code\Generators\IndTrace.Generators\IndTrace.Generators.csproj (in 1.17 sec).
+  Restored F:\Dynamic\IndTraceV2025\Src\Code\Core\Application\IndTrace.Application.csproj (in 1.25 sec).
+C:\Program Files\dotnet\sdk\10.0.100-rc.1.25451.107\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(345,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [F:\Dynamic\IndTraceV2025\Src\Code\Core\Application\IndTrace.Application.csproj]
+  IndTrace.Domain -> F:\Dynamic\IndTraceV2025\IndTraceV2024\Output\IndTrace.Domain\Debug\net\net10.0\IndTrace.Domain.dll
+C:\Program Files\dotnet\sdk\10.0.100-rc.1.25451.107\Sdks\Microsoft.NET.Sdk\targets\Microsoft.NET.RuntimeIdentifierInference.targets(345,5): message NETSDK1057: You are using a preview version of .NET. See: https://aka.ms/dotnet-support-policy [F:\Dynamic\IndTraceV2025\Src\Code\Generators\IndTrace.Generators\IndTrace.Generators.csproj]
+  IndTrace.Generators -> F:\Dynamic\IndTraceV2025\Src\Code\Generators\IndTraceV2024\build\IndTrace.Generators\Debug\netstandard2.0\netstandard2.0\IndTrace.Generators.dll
+  The package IndTrace.EnumLookup.Generator.2025.6.0 is missing a readme. Go to https://aka.ms/nuget/authoring-best-practices/readme to learn why package readmes are important.
+  Successfully created package 'F:\Dynamic\IndTraceV2025\Src\Code\Generators\IndTraceV2024\build\IndTrace.Generators\Debug\netstandard2.0\IndTrace.EnumLookup.Generator.2025.6.0.nupkg'.
+  Successfully created package 'F:\Dynamic\IndTraceV2025\Src\Code\Generators\IndTraceV2024\build\IndTrace.Generators\Debug\netstandard2.0\IndTrace.EnumLookup.Generator.2025.6.0.snupkg'.
+  IndTrace.Application -> F:\Dynamic\IndTraceV2025\IndTraceV2024\Output\IndTrace.Application\Debug\net\net10.0\IndTrace.Application.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:18.53

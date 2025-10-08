@@ -1,0 +1,17 @@
+classDiagram
+
+	class SeqApiOptions  {
+		+ Server : string
+		+ ApiKey : string
+		+ Filter : string
+	}
+	class Worker  {
+		-ILogger~Worker~ logger
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		+ReadEvents(CancellationToken stoppingToken) Task
+	}
+	class Program  {
+		+Main(string[] args) void
+	}
+
+	Worker --|> BackgroundService

@@ -39,6 +39,7 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         context.EnableConcurrentExecution();
 
         context.RegisterSyntaxNodeAction(AnalyzeThrowStatement, SyntaxKind.ThrowStatement);
+        context.RegisterSyntaxNodeAction(AnalyzeThrowExpression, SyntaxKind.ThrowExpression);
     }
 
     private static void AnalyzeThrowStatement(SyntaxNodeAnalysisContext context)
@@ -51,17 +52,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Skip if we're in a catch block doing a proper rethrow with transformation
-        if (IsInCatchBlockRethrow(throwStatement))
+        // Heuristic-based exemptions
+        if (ShouldSkipThrow(throwStatement, context.SemanticModel))
         {
             return;
         }
-
-		// Skip known boundary layers (e.g., controllers/web)
-		if (IsInBoundaryLayer(throwStatement))
-		{
-			return;
-		}
 
 		// Get exception type name for reporting
         var exceptionType = GetExceptionTypeName(throwStatement.Expression);
@@ -70,6 +65,23 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         var diagnostic = Diagnostic.Create(
             Rule,
             throwStatement.GetLocation(),
+            exceptionType);
+        context.ReportDiagnostic(diagnostic);
+    }
+
+    private static void AnalyzeThrowExpression(SyntaxNodeAnalysisContext context)
+    {
+        var throwExpression = (ThrowExpressionSyntax)context.Node;
+
+        if (ShouldSkipThrow(throwExpression, context.SemanticModel))
+        {
+            return;
+        }
+
+        var exceptionType = GetExceptionTypeName(throwExpression);
+        var diagnostic = Diagnostic.Create(
+            Rule,
+            throwExpression.GetLocation(),
             exceptionType);
         context.ReportDiagnostic(diagnostic);
     }
@@ -83,9 +95,17 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Allow rethrowing with transformation or wrapping
-        // This is a simplified check - in practice you might want more sophisticated logic
-        return false; // For now, flag all throws as we want Result<T> pattern
+        // Allow wrapping: throw new X(..., ex)
+        if (throwStatement.Expression is ObjectCreationExpressionSyntax creation && creation.ArgumentList != null)
+        {
+            if (creation.ArgumentList.Arguments.Any(a => a.Expression is IdentifierNameSyntax id && (id.Identifier.Text == "ex" || id.Identifier.Text == "exception")))
+            {
+                return true;
+            }
+        }
+
+        // Bare rethrow handled earlier; any other explicit throw in catch considered allowed when wrapping present
+        return false;
     }
 
     private static string GetExceptionTypeName(ExpressionSyntax expression) => expression switch
@@ -107,6 +127,122 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
 			{
 				return true;
 			}
+
+    private static bool ShouldSkipThrow(SyntaxNode node, SemanticModel semanticModel)
+    {
+        // Boundary layers
+        if (IsInBoundaryLayer(node)) return true;
+
+        // Test/benchmark/spec contexts (class name hints)
+        var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (cls != null)
+        {
+            var cn = cls.Identifier.Text;
+            if (cn.EndsWith("Tests") || cn.EndsWith("Specs") || cn.EndsWith("Benchmarks")) return true;
+        }
+
+        // Program/Startup/Bootstrap contexts
+        if (cls != null)
+        {
+            var n = cls.Identifier.Text;
+            if (n == "Program" || n == "Startup" || n == "Bootstrap") return true;
+        }
+
+        // NotSupported/NotImplemented defensive throws
+        if (GetThrownTypeName(node) is string typeName &&
+            (typeName.Contains("NotSupportedException") || typeName.Contains("NotImplementedException")))
+        {
+            return true;
+        }
+
+        // ArgumentNullException guard: if-statement with null check or coalesce throw expression
+        if (IsArgumentNullGuard(node)) return true;
+
+        // ArgumentOutOfRangeException/ArgumentException range guards
+        if (IsRangeGuard(node)) return true;
+
+        // Switch expression default arm throw
+        if (node.Ancestors().OfType<SwitchExpressionArmSyntax>().Any()) return true;
+
+        // Domain validation exception types inside Parser/Validator classes
+        if (cls != null && (cls.Identifier.Text.Contains("Parser") || cls.Identifier.Text.Contains("Validator")))
+        {
+            if (!string.IsNullOrEmpty(typeName) && typeName.EndsWith("Exception")) return true;
+        }
+
+        // Constructor invariants
+        if (node.Ancestors().OfType<ConstructorDeclarationSyntax>().Any())
+        {
+            if (!string.IsNullOrEmpty(typeName) && (typeName.Contains("Argument") || typeName.Contains("InvalidOperationException"))) return true;
+        }
+
+        // Factory methods Create/Build/Factory performing validation
+        var method = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+        if (method != null)
+        {
+            var mn = method.Identifier.Text;
+            if ((mn.StartsWith("Create") || mn.StartsWith("Build") || mn.Contains("Factory"))
+                && !string.IsNullOrEmpty(typeName)
+                && (typeName.Contains("ArgumentException") || typeName.Contains("ArgumentOutOfRangeException")))
+            {
+                return true;
+            }
+        }
+
+        // Expression-bodied guard with conditional operator (?:) using throw expression
+        if (node is ThrowExpressionSyntax te && te.Parent is ConditionalExpressionSyntax)
+        {
+            return true;
+        }
+
+        // Catch wrapping already handled in IsInCatchBlockRethrow; still allow here if pattern matches
+        if (node is ThrowStatementSyntax ts && IsInCatchBlockRethrow(ts)) return true;
+
+        return false;
+    }
+
+    private static string GetThrownTypeName(SyntaxNode node)
+    {
+        if (node is ThrowStatementSyntax ts && ts.Expression is ObjectCreationExpressionSyntax oc) return oc.Type.ToString();
+        if (node is ThrowExpressionSyntax te && te.Expression is ObjectCreationExpressionSyntax oce) return oce.Type.ToString();
+        return string.Empty;
+    }
+
+    private static bool IsArgumentNullGuard(SyntaxNode node)
+    {
+        // if (...) throw new ArgumentNullException(...)
+        if (node is ThrowStatementSyntax ts && ts.Expression is ObjectCreationExpressionSyntax oc)
+        {
+            if (oc.Type.ToString().Contains("ArgumentNullException"))
+            {
+                var ifStmt = ts.Ancestors().OfType<IfStatementSyntax>().FirstOrDefault();
+                if (ifStmt != null) return true;
+            }
+        }
+        // x ?? throw new ArgumentNullException(...)
+        if (node is ThrowExpressionSyntax te && te.Parent is BinaryExpressionSyntax be && be.IsKind(SyntaxKind.CoalesceExpression))
+        {
+            if (te.Expression is ObjectCreationExpressionSyntax oc2 && oc2.Type.ToString().Contains("ArgumentNullException")) return true;
+        }
+        return false;
+    }
+
+    private static bool IsRangeGuard(SyntaxNode node)
+    {
+        if (node is ThrowStatementSyntax ts && ts.Expression is ObjectCreationExpressionSyntax oc)
+        {
+            var typeText = oc.Type.ToString();
+            if (typeText.Contains("ArgumentOutOfRangeException") || typeText.Contains("ArgumentException"))
+            {
+                var ifStmt = ts.Ancestors().OfType<IfStatementSyntax>().FirstOrDefault();
+                if (ifStmt == null) return false;
+                return ifStmt.Condition.DescendantNodesAndSelf().OfType<BinaryExpressionSyntax>().Any(b =>
+                    b.IsKind(SyntaxKind.LessThanExpression) || b.IsKind(SyntaxKind.GreaterThanExpression) ||
+                    b.IsKind(SyntaxKind.LessThanOrEqualExpression) || b.IsKind(SyntaxKind.GreaterThanOrEqualExpression));
+            }
+        }
+        return false;
+    }
 		}
 
 		var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;

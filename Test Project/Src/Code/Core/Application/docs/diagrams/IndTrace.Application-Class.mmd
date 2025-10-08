@@ -1,0 +1,3476 @@
+classDiagram
+
+	class IBarCodeService  {
+		-GetConsecutiveByBarCodeLabelAsync(string partNumber, List~string~ masterLabel, CancellationToken cancellationToken) Task~Result~int~~
+		-GetBarCodeByLabelAsync(string label, CancellationToken cancellationToken) Task~Result~BarCode~~
+		-GetBarCodeByIdAsync(int barCodeId, CancellationToken cancellationToken) Task~Result~BarCode~~
+		-GetBarCodeByRegisterDataAsync(string label, CancellationToken cancellationToken) Task~Result~List~BarCodeDto~~~
+	}
+	class GetMachineConfigQuery  {
+		+ PartNumber : string?
+	}
+	class GetSettingDetailQuery  {
+		+ SettingId : int
+	}
+	class GetConfigStationDetailQueryValidator  {
+	}
+	class RejectBarCodeValidator  {
+	}
+	class VariableCreatedEvent  {
+		+ MachineId : int
+		+ Plc : string
+		+ Name : string
+		+ Address : string
+		+ Type : string
+		+ Length : int
+		+ Event : int
+		+ Direction : int
+		+ VariableGroupId : int
+		+ Model : string
+		+ Transaction : string
+		+ToString() string
+		+Process(VariableCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class VariableCreatedHandler  {
+		+Process(VariableCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class IRule ~T~ {
+		-ApplyAsync(T target) Task~Result~
+	}
+	class CreatePlcValidator  {
+		-BeValidIpAddress(string ipAddress) bool
+	}
+	class BarCodeResultService  {
+		-IRepository~BarCode~ _barCodes
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ CyclesOk : int
+		+ ShiftId : int
+		+ CommandId : int
+		+ ResultValidation : ResultValidation
+		+ Error : string?
+		+ Label : string?
+		+ PartNumber : string?
+		+ Description : string
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ RegistersSaved : int
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ Recipe : Recipe
+		+ Cycle : Cycle
+		+ Cycles : IEnumerable~Cycle~
+		+ BarCode : BarCode
+		+ MasterLabel : MasterLabel
+		+ References : IDictionary~string&#44&#32Register~
+		+GetBarCodeDetails(BarCodeDetailsRequest barCodeDetailsRequest, CancellationToken cancellationToken) Task~BarCodeResultService~
+		+UpdateBarCodeInformationOnCycle(FlowStatus flowStatus, PartStatus partStatus, CycleStatus cycleStatus) void
+		+SetCycle(Cycle cycle) void
+		+SetBarCode(BarCode barCode) void
+		+SetCyclesOk(int cyclesOk) void
+		+SetRegistersSaved(int registers) void
+	}
+	class WorkFlowCreatedEvent  {
+		+ WorkFlowId : int
+		+ ProductId : int
+		+ NextMachineId : int
+		+ LastMachineId : int
+		+ToString() string
+		+Process(WorkFlowCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class FlujoTrabajoCreatedHandler  {
+		+Process(WorkFlowCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class CreateBarCodeExecutor  {
+		-IDateTimeMachine dateTimeMachineProvider
+		+ApplyAsync(BarCode target) Task~Result~
+		+ApplyRuleCreateBarCode(Rule rule, string partNumber, int consecutive) Result~string~
+	}
+	class OeeService  {
+		-ICommandHandler~CalculateOeeCommand&#44&#32OeeMetrics~ calculateOeeHandler
+		-IPerformanceQueryHandler~GetOeeHistoryQuery&#44&#32GetOeeHistoryResponse~ getHistoryHandler
+		-IOeeRepository oeeRepository
+		-ILogger~OeeService~ logger
+		-IDateTimeMachine dateTimeMachine
+		+CalculateOeeAsync(int machineId, double totalTimeMinutes, double downtimeMinutes, double idealCycleTimeSeconds, int totalCount, int defectCount, CancellationToken cancellationToken) Task~OeeMetrics~
+		+GetOeeHistoryAsync(int? machineId, DateTime? startDate, DateTime? endDate, OeePerformanceLevel? minPerformanceLevel, int pageNumber, int pageSize, CancellationToken cancellationToken) Task~Result~GetOeeHistoryResponse~~
+		+GetLatestOeeAsync(int machineId, CancellationToken cancellationToken) Task~OeeHistoryRecord?~
+		+GetOeeSummaryAsync(IEnumerable<int>? machineIds, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken) Task~IEnumerable~OeeSummaryRecord~~
+		+ValidateOeeParametersAsync(int machineId, double totalTimeMinutes, double downtimeMinutes, double idealCycleTimeSeconds, int totalCount, int defectCount) Task~(bool&#32IsValid&#44&#32IEnumerable~string~&#32Errors)~
+		+GetPerformanceLevelThresholds() Dictionary~OeePerformanceLevel&#44&#32decimal~
+		+FormatMetricsForDisplay(OeeMetrics metrics, bool includePercentageSymbol, int decimalPlaces) OeeDisplayMetrics
+	}
+	class CreateCyclesCommand  {
+		+ Command : TaskGatewayRequest
+		+Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+WithData(TaskGatewayRequest taskGatewayRequest) CreateCyclesCommand
+		+WithCycleStatus(string cycleStatusName) CreateCyclesCommand
+		+WithPartStatus(string partStatusName) CreateCyclesCommand
+		+WithFlowStatus(string flowStatusName) CreateCyclesCommand
+		+WithGatewayTask(string gatewayTaskName) CreateCyclesCommand
+		+WithMachineType(string machineTypeName) CreateCyclesCommand
+		+WithResultValidation(string resultValidationName) CreateCyclesCommand
+		+TryReset() bool
+	}
+	class IUserManagerService ~TUser~ {
+		-CreateAsync(TUser user, string password) Task~IUserManagerResult~
+		-UpdateAsync(TUser user) Task~IUserManagerResult~
+		-DeleteAsync(TUser user) Task~IUserManagerResult~
+		-FindByIdAsync(string userId) Task~TUser~
+		-FindByNameAsync(string userName) Task~TUser~
+		-AddToRoleAsync(TUser user, string role) Task~IUserManagerResult~
+		-RemoveFromRoleAsync(TUser user, string role) Task~IUserManagerResult~
+		-ChangePasswordAsync(TUser user, string currentPassword, string newPassword) Task~IUserManagerResult~
+		-CheckPasswordAsync(TUser user, string password) Task~bool~
+		-ConfirmEmailAsync(TUser user, string token) Task~IUserManagerResult~
+		-CurrentUser() Task~IIndTraceApplicationUser~
+	}
+	class RecipeDto  {
+		+ Id : int
+		+ ProductId : int
+		+ MachineId : int
+		+ CycleTimeMinimum : int
+		+ CycleTimeMaximum : int
+		+ToDto(Recipe src) IndQuestResults.Result<RecipeDto>
+		+ToEntity(RecipeDto src) IndQuestResults.Result<Recipe>
+	}
+	class UserOfflineCreationService  {
+		-Random random
+		+string SharedSecret
+		-long PrimeMultiplier
+		-long PrimeModulo
+		-long MaxDigits
+		+ LastGeneratedChallenge : List~string~
+		+ LastGeneratedResponse : Dictionary~string&#44&#32string~
+		+GenerateChallenge() string
+		+ValidateResponse(string challenge, string response) bool
+		+ValidateResponse(string response) bool
+		+VerifyResponse(long challenge, long response) bool
+		+ComputeResponse(long challenge) long
+		+ComputeResponse(string challenge) string
+		+ComputeResponseWithSharedSecret(long challenge) long
+		+ComputeSha256Hash(string rawData) string
+	}
+	class ToggleEnableMachineCommand  {
+		+ MachineId : int
+		+ Enable : bool
+		+ Disable : bool
+	}
+	class GatewayPerformanceBehaviour ~TRequest, TResponse~ {
+		-ILogger~TRequest~ logger
+		-TimeSpan longExecutionTime
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~Result~TaskGatewayResponse~~ next, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+	}
+	class GetMachinePlcDetailQuery  {
+		+ MachineId : int
+		+ PlcId : int
+	}
+	class UpdateShiftCommand  {
+		+ ShiftId : int?
+		+ PartNumber : string?
+		+ ShiftName : string?
+		+ Shifto : string?
+		+ IsActive : int?
+		+ Version : int?
+		+ CustomerPartNumber : string?
+		+ AliasNoParte : string?
+		+ Description : string?
+	}
+	class PlcCreated  {
+		-string ipAddress
+		-string plcType
+		-string plcBrand
+		-string commLibrary
+		-string name
+		-string brandOwner
+		+ PlcId : int
+		+ IpAddress : string
+		+ PlcType : string
+		+ PlcBrand : string
+		+ CommLibrary : string
+		+ Name : string
+		+ BrandOwner : string
+		+ToString() string
+		+Process(PlcCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class PlcCreatedHandler  {
+		+Process(PlcCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class GatewayRequestFilter  {
+		+FilterByModel(IDictionary~int&#44&#32TSource~ source, TimeSpan? expirationTime) IReadOnlyDictionary~int&#44&#32TSource~
+	}
+	class CreateConfigAppCommandHandler  {
+		-IRepository~Domain.Entities.ConfigApp~ repository
+		-ILogger~CreateConfigAppCommandHandler~ logger
+		+ProcessAsync(CreateConfigAppCommand request, CancellationToken cancellationToken) Task~Result~ConfigAppCreated~~
+	}
+	class VariableDto  {
+		+ VariableId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ Name : string
+		+ Description : string
+		+ Alias : string
+		+ Address : string
+		+ NetType : string
+		+ Length : int
+		+ IsActive : int
+		+ Direction : int
+		+ VariableGroupId : int
+		+ VariableSpecId : int?
+		+ TagStatus : int
+		+ NativeType : string
+		+ Value : string
+		+ NativeAddress : string
+		+ToDto(Variable src) IndQuestResults.Result<VariableDto>
+		+ToDtoList(IEnumerable~Variable~ src) IndQuestResults.Result<List<VariableDto>>
+		+ToEntity(VariableDto src) IndQuestResults.Result<Variable>
+	}
+	class CreateProductCommandHandler  {
+		-IRepository~Product~ productRepository
+		-IRepository~Customer~ customerRepository
+		-IRepository~WorkFlow~ workflowRepository
+		-IRepository~Rule~ ruleRepository
+		-IRepository~Recipe~ recipeRepository
+		-IRepository~Line~ lineRepository
+		-IMonitorRequestDispatcher monitorRequestDispatcher
+		-ILogger~CreateProductCommandHandler~ logger
+		+ProcessAsync(CreateProductCommand request, CancellationToken cancellationToken) Task~Result~ProductCreatedEvent~~
+		-ValidateProductDontExistAsync(ProductDto product, CancellationToken cancellationToken) Task~Result~ProductCreatedEvent~~
+		-ValidateLineAsync(int lineId, CancellationToken cancellationToken) Task~Result~ProductCreatedEvent~~
+		-FetchCustomerByName(string name, CancellationToken cancellationToken) Task~Result~Customer?~~
+		-ValidateCustomerAsync(int customerId, CancellationToken cancellationToken) Task~Result~ProductCreatedEvent~~
+		-CreateProductAsync(CreateProductCommand request, CancellationToken cancellationToken) Task~Product~
+		-AddRulesAsync(CreateProductCommand request, Product product, CancellationToken cancellationToken) Task~Result~
+		-IsProductIdFreeToUseAsync(int productId, CancellationToken cancellationToken) Task~bool~
+		-AddWorkflowsAsync(CreateProductCommand request, Product product, CancellationToken cancellationToken) Task
+		-AddRecipesAsync(CreateProductCommand request, Product product, CancellationToken cancellationToken) Task~Result~
+		+TryParseLastInteger(string partNumber) (bool&#44&#32int)
+		+TryParseLastInteger(string partNumber, int result) bool
+		-GetDynamicOffset(int parsedNumber) int
+	}
+	class UpdateConfigStationCommand  {
+		+ ConfigId : string
+		+ MachineId : int
+		+ Client : string
+		+ Factorie : string
+		+ Line : string
+		+ Machine : string
+		+ Project : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+	}
+	class GetCyclesDetailQuery  {
+		+ Id : int
+	}
+	class MonitorRequestDispatcher  {
+		+ProcessAsync(IMonitorRequest command, CancellationToken cancellationToken) Task~Result~
+		+ProcessAsync(IMonitorRequest~TResponse~ monitorRequest, CancellationToken cancellationToken) Task~Result~TResponse~~
+		+QueryAsync(IMonitorRequest~TResponse~ monitorRequest, CancellationToken cancellationToken) Task~Result~TResponse~~
+		-InvokePipeline(Type requestType, object request, Type handlerInterfaceType, CancellationToken cancellationToken) Task~TResponse~
+	}
+	class UpdateMachinePlcCommandHandler  {
+		-IRepository~MachinePlc~ repository
+		-ILogger~UpdateMachinePlcCommandHandler~ logger
+		+ProcessAsync(UpdateMachinePlcCommand request, CancellationToken cancellationToken) Task~Result~MachinePlcDetailVm~~
+		-ShouldUpdateIsActiveOnly(UpdateMachinePlcCommand request, MachinePlc machinePlc) bool
+		-ShouldUpdateKeyAndIsActive(UpdateMachinePlcCommand request, MachinePlc machinePlc) bool
+		-IsActiveSameAndKeyIsNull(UpdateMachinePlcCommand request, MachinePlc machinePlc) bool
+		-IsActiveNullAndKeyIsNull(UpdateMachinePlcCommand request) bool
+	}
+	class GetConfigStationDetailQuery  {
+		+ PartNumber : string?
+	}
+	class UpdateConfigStationValidator  {
+	}
+	class GetSettingDetailQueryValidator  {
+	}
+	class EventBus  {
+		-IServiceProvider provider
+		+Publish(TEvent @event, CancellationToken cancellationToken) Task
+	}
+	class CreatePerformanceDataCommandHandler  {
+		+ProcessAsync(PerformanceDataCommand request, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+TryReset() bool
+	}
+	class GetEventsListQuery  {
+		+ StartDate : DateTime
+		+ EndDate : DateTime
+		+ PageNumber : int
+		+ PageSize : int
+	}
+	class CreateBarCodeCommandHandler  {
+		+ProcessAsync(CreateBarCodeCommand cmd, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+TryReset() bool
+	}
+	class CreateShiftValidator  {
+	}
+	class TimeSeriesDataPoint  {
+		-string name
+		-string value
+		-string valueType
+		+ MachineId : int
+		+ Name : string
+		+ Value : string
+		+ ValueType : string
+		+ TimeStamp : DateTime
+	}
+	class CalculateOeeCommandHandler  {
+		-IOeeCalculationService oeeCalculationService
+		-IValidator~CalculateOeeCommand~ validator
+		-ILogger~CalculateOeeCommandHandler~ logger
+		+ProcessAsync(CalculateOeeCommand command, CancellationToken cancellationToken) Task~Result~OeeMetrics~~
+	}
+	class GetWorkFlowDetailQueryHandler  {
+		-IRepository~Product~ productRepository
+		-IRepository~WorkFlow~ workFlowRepository
+		-ILogger~GetWorkFlowDetailQueryHandler~ logger
+		+ProcessAsync(GetWorkFlowDetailQuery request, CancellationToken cancellationToken) Task~Result~List~WorkFlowDetailVm~~~
+	}
+	class MachinePlcDto  {
+		+ MachineId : int
+		+ PlcId : int
+		+ToDto(MachinePlc src) IndQuestResults.Result<MachinePlcDto>
+		+ToEntity(MachinePlcDto src) IndQuestResults.Result<MachinePlc>
+	}
+	class IMediatorAssemblyMarker  {
+	}
+	class GetReportsListQuery  {
+		+ IsMaster : bool
+		+ FilterByShift : bool
+		+ FilterByLine : bool
+		+ Line : string
+		+ RegisterSearch : string
+		+ FilterByRegister : bool
+		+ FilterByProduct : bool
+		+ FilterByState : bool
+		+ FilterByCustomer : bool
+		+ CustomerSearch : string
+		+ Model : string
+		+ Shift : int
+		+ State : string
+		+ StartDate : DateTime
+		+ EndDate : DateTime
+	}
+	class CreateCyclesValidator  {
+	}
+	class SettingUpdated  {
+		+ SettingId : int?
+		+ MaquinaId : int?
+		+ToString() string
+		+Process(SettingUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class SettingUpdatedHandler  {
+		+Process(SettingUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class RestException  {
+		+ Code : HttpStatusCode
+		+ Message : object
+	}
+	class ControllerMonitor  {
+		-IDateTimeMachine dateTimeMachine
+		-object lock
+		-DateTime timeStamp
+		-bool isConnected
+		-int TimeOut
+		-TimeSpan heartBeatInterval
+		+ PlcId : int
+		+ MachineId : int
+		+ PartNumber : string
+		+ Description : string
+		+ Label : string
+		+ HeartBeat : int
+		+ CyclesOk : int
+		+ IpAddress : string
+		+ Name : string
+		+ Parameters : Dictionary~string&#44&#32string~
+		+ TimeStamp : DateTime
+		+ IsConnected : bool
+		+ HeartBeatTimer : Timer
+		+ IsConnectionAlive : bool
+		+GetHashCode() int
+		-InitializeHeartBeatTimer() void
+		-RestartHeartBeatTimer() void
+		-OnHeartBeatTimerElapsed(object? sender, ElapsedEventArgs e) void
+		-OnConnectionLost(EventArgs e) void
+		-OnConnectionRecovered(EventArgs e) void
+		-OnUpdateReceived(EventArgs e) void
+		-CompareTo(ControllerMonitor? other) int
+		+Equals(object? obj) bool
+		-Equals(ControllerMonitor? other) bool
+		+RefreshConnection() void
+		+MapTo(PlcDto src) IndQuestResults.Result<ControllerMonitor>
+		+ToEntity(ControllerMonitor src) IndQuestResults.Result<PlcDto>
+		+ToString() string
+	}
+	class PerformanceDataCreated  {
+		+ PerformanceDataId : long
+		+ MachineId : int
+		+ PlcId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ TimeStamp : DateTime
+		+ ApplicationFlag : int
+		+ EventCounter : int
+		+ CurrentTime : int
+		+ RunningTime : int
+		+ StoppedTime : int
+		+ FaultedTime : int
+		+ StatusFaultReason : int
+		+ TotalProduction : double
+		+ ProductionOk : double
+		+ ProductionNoK : double
+		+ StatusFaultReject : int
+		+ToString() string
+		+ToDto(PerformanceDataCommand performance) PerformanceDataCreated
+		+ToEntity(PerformanceDataCommand performance) IndQuestResults.Result<Domain.Entities.PerformanceData>
+	}
+	class GetShiftsListQueryHandler  {
+		-IRepository~Shift~ repository
+		-ILogger~GetShiftsListQueryHandler~ logger
+		+ProcessAsync(GetShiftsListQuery request, CancellationToken cancellationToken) Task~Result~ShiftsListVm~~
+	}
+	class UpdateCyclesOkCommandHandler  {
+		+ProcessAsync(UpdateCyclesOkCommand cmd, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		-StationHaveCycleUpdatedOnThisStation(UpdateCyclesOkCommand cmd, IBarCodeResult barCodeInfo) bool
+		-StationCannotUpdateCyclesNotCreatedOnThisStation(UpdateCyclesOkCommand cmd, IBarCodeResult barCodeInfo) bool
+		-UpdateMachineIdOnRegisters(IDictionary~string&#44&#32Register~ commandRegisters, int machineId) void
+		-SaveCommandAsync(CancellationToken cancellationToken, IBarCodeResult barCodeInfo, string? comment) Task
+		-GetBarCodeInformation(UpdateCyclesOkCommand cmd, CancellationToken cancellationToken) Task~IBarCodeResult?~
+		-UpdateCycleInformation(UpdateCyclesOkCommand cmd, IBarCodeResult barCodeInfo) void
+		-UpdateBarCodeInformation(UpdateCyclesOkCommand cmd, IBarCodeResult barCodeInfo, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		-SaveRegisters(IEnumerable~Register~ registers, CancellationToken cancellationToken) Task~Result~int~~
+		-UpdateCycleAndBarcode(IBarCodeResult barCodeInfo, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		-DetermineFlowStatus(UpdateCyclesOkCommand request, IBarCodeResult barCodeInfo) FlowStatus
+		+IsProcessFinishedOkOnFinalStation(UpdateCyclesOkCommand request, IBarCodeResult barCodeInfo) bool
+		-StationCannotUpdateCyclesCreatedOnAnotherStation(UpdateCyclesOkCommand request, IBarCodeResult barCodeInfo) bool
+		-IsCycleTimeInvalid(int cycleTime, Recipe? recipe) bool
+		-StationCannotUpdateCycles(IBarCodeResult barCodeInfo) bool
+		-CleanRegisterValuesFromNonVisibleCharacters(IDictionary~string&#44&#32Register~ registers, int cycleId) void
+		+TryReset() bool
+	}
+	class CreateVariableCommand  {
+		+ VariableId : int
+		+ MachineId : int
+		+ Plc : string
+		+ Name : string
+		+ Address : string
+		+ Type : string
+		+ Length : int
+		+ Event : int
+		+ Direction : int
+		+ VariableGroupId : int
+		+ Model : string
+		+ Transaction : string
+	}
+	class GetShiftsListQuery  {
+	}
+	class IDeleteCommand ~TEntity~ {
+		- Id : int
+	}
+	class IDeleteCommandHandler ~TCommand, TEntity~ {
+		-Remove(TCommand command, CancellationToken cancellationToken) Task~Result~bool~~
+	}
+	class DeleteCommandHandler ~TCommand, TEntity~ {
+		-IRepository~TEntity~ repository
+		+Remove(TCommand command, CancellationToken cancellationToken) Task~Result~bool~~
+	}
+	class GetPlcDetailQuery  {
+		+ Id : int
+	}
+	class ApplicationConfiguration  {
+		+ WorkFlows : IEnumerable~WorkFlowDto~
+		+ MachinePlcs : IEnumerable~MachinePlcDto~
+		+ Machines : IEnumerable~MachineDto~
+		+ Customers : IEnumerable~CustomerDto~
+		+ Products : IEnumerable~ProductDto~
+		+ Plcs : IEnumerable~PlcDto~
+		+ ConfigApp : ConfigAppDto
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ ActiveCustomer : IEnumerable~CustomerDto~
+		+ LineConfiguration : MainLineConfiguration
+		+ MachineProductCompatibility : List~MachineProductMap~
+		+ OeeConfiguration : OeeConfiguration
+	}
+	class RestoreBarCodeCommand  {
+		+ Label : string
+	}
+	class VariableDetailVm  {
+		+ VariableId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ Name : string
+		+ Address : string
+		+ Alias : string
+		+ NetType : string
+		+ Length : int
+		+ IsActive : int
+		+ Direction : int
+		+ VariableGroupId : int
+		+ NativeType : string
+		+ NativeAddress : string
+		+ToDto(Variable src) IndQuestResults.Result<VariableDetailVm>
+		+ToEntity(VariableDetailVm src) IndQuestResults.Result<Variable>
+	}
+	class UpdateProductValidator  {
+	}
+	class GetConfigAppsDetailQueryHandler  {
+		-IRepository~Domain.Entities.ConfigApp~ repository
+		-ILogger~GetConfigAppsDetailQueryHandler~ logger
+		+ProcessAsync(GetConfigAppsDetailQuery request, CancellationToken cancellationToken) Task~Result~ConfigAppDto~~
+	}
+	class UpdateVariableCommandHandler  {
+		-IRepository~Variable~ repository
+		-ILogger~UpdateVariableCommandHandler~ logger
+		+ProcessAsync(UpdateVariableCommand request, CancellationToken cancellationToken) Task~Result~VariableDetailVm~~
+	}
+	class IOeeRepository  {
+		-GetOeeHistoryAsync(int? machineId, DateTime startDate, DateTime endDate, OeePerformanceLevel? minPerformanceLevel, int pageNumber, int pageSize, CancellationToken cancellationToken) Task~(IEnumerable~OeeHistoryRecord~&#32Records&#44&#32int&#32TotalCount)~
+		-StoreOeeCalculationAsync(int machineId, OeeMetrics metrics, DateTime timestamp, string? shift, string? product, CancellationToken cancellationToken) Task~long~
+		-GetLatestOeeAsync(int machineId, CancellationToken cancellationToken) Task~OeeHistoryRecord?~
+		-GetOeeSummaryAsync(IEnumerable<int>? machineIds, DateTime startDate, DateTime endDate, CancellationToken cancellationToken) Task~IEnumerable~OeeSummaryRecord~~
+		-DeleteOldRecordsAsync(DateTime cutoffDate, CancellationToken cancellationToken) Task~int~
+	}
+	class GetConfigAppsListQueryValidator  {
+	}
+	class GetEventsListQueryValidator  {
+	}
+	class EventsService  {
+		+ ActualPage : int
+		+ PageSize : int
+		+GetNextEventsAsync(CancellationToken cancellationToken) Task~Result~EventsListVm~~
+		+GetPreviousEventsAsync(CancellationToken cancellationToken) Task~Result~EventsListVm~~
+		-FetchEventsFromSourceAsync(int page, int pageSize, CancellationToken cancellationToken) Task~EventsListVm~
+	}
+	class GetVariableListQueryHandler  {
+		-IRepository~Variable~ repository
+		-ILogger~GetVariableListQueryHandler~ logger
+		+ProcessAsync(GetVariableListQuery request, CancellationToken cancellationToken) Task~Result~VariableListVm~~
+	}
+	class MachineUpdateCommandHandler  {
+		-IMonitorRequestDispatcher monitorRequestDispatcher
+		+ProcessAsync(MachineUpdateCommand request, CancellationToken cancellationToken) Task~Result~MachineDto~~
+	}
+	class PerformanceDataValidator  {
+	}
+	class SafeRepository ~T~ {
+		-IRepository~T~ innerRepository
+		-IDataContext dataContext
+		-DatabaseSafetyInterceptor safetyInterceptor
+		-ILogger~SafeRepository~T~~ logger
+		+GetByIdAsync(int id, CancellationToken cancellationToken) Task~Result~T?~~
+		+GetByIdsAsync(CancellationToken cancellationToken, object[] ids) Task~Result~T?~~
+		+ListAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		+ListAsync(CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		+FirstOrDefaultAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~T?~~
+		+FirstOrDefaultAsync(CancellationToken cancellationToken) Task~Result~T?~~
+		+AddAsync(T entity, CancellationToken cancellationToken) Task~Result~int~~
+		+AddRangeBulkAsync(IEnumerable~T~ entities, CancellationToken cancellationToken) Task~Result~int~~
+		+AddAsync(T entity, int id, string tableName, CancellationToken cancellationToken) Task~Result~int~~
+		+AddRangeAsync(IEnumerable~T~ entities, CancellationToken cancellationToken) Task~Result~int~~
+		+UpdateAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		+DeleteAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		+CommitAsync(CancellationToken cancellationToken) Task~Result~
+		+CountAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~int~~
+		+AsQueryableAsync(CancellationToken cancellationToken) Task~Result~IQueryable~T~~~
+		+AsQueryableAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IQueryable~T~~~
+		+DetachAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		+ApplyNoTrackingAsync(CancellationToken cancellationToken) Task~Result~
+		+ApplyTrackingAsync(CancellationToken cancellationToken) Task~Result~
+	}
+	class ConfigStationDto  {
+		+ ConfigStationId : int
+		+ ProductId : int
+		+ NextMachineId : int
+		+ LastMachineId : int
+		+ ConfigStation : ConfigStation
+		+ ConfigAppId : string
+		+ AppId : int
+		+ Cliente : string
+		+ Planta : string
+		+ Linea : string
+		+ MaquinaId : int
+		+ Proyecto : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+		+ToDto(ConfigStation src) IndQuestResults.Result<ConfigStationDto>
+		+ToEntity(ConfigStationDto src) IndQuestResults.Result<ConfigStation>
+	}
+	class GetBarCodeListQueryReportsValidator  {
+	}
+	class OeeConfiguration  {
+		+ Enabled : bool
+		+ EnabledByMachine : Dictionary~int&#44&#32bool~
+	}
+	class CycleCreatedEvent  {
+		+ CycleId : int
+		+ MachineId : int
+		+ToString() string
+	}
+	class HubMonitorOptions  {
+		+ Url : string
+		+ AcceptAnyServerCertificate : bool
+		+ RetryTime : int
+	}
+	class CreateConfigStationCommandHandler  {
+		-IRepository~ConfigStation~ repository
+		-ILogger~CreateConfigStationCommandHandler~ logger
+		+ProcessAsync(CreateConfigStationCommand request, CancellationToken cancellationToken) Task~Result~ConfigStationCreated~~
+	}
+	class CreateMachineMonitorRequest  {
+		+ Id : int
+		+ MachineId : int
+		+ Name : string
+		+ Location : string
+		+ MachineType : int
+		+ EnableAppTraceability : int
+		+ EnableBypassTraceability : int
+	}
+	class TaskExtensions  {
+		-ILogger? logger
+		+SetLogger(ILogger logger) void
+		+Forget(Task task) void
+	}
+	class DistinctRegisterService  {
+		+UpdateDistinctRegistersAsync(CancellationToken cancellationToken) Task
+		+GetDistinctRegistersAsync(CancellationToken cancellationToken) Task~IEnumerable~DistinctRegister~~
+		-InsertTheDistinctRegistersValues(IEnumerable~DistinctRegister~ distinctValues, CancellationToken cancellationToken) Task
+		-ClearTheExistingDistinctRegisters(CancellationToken cancellationToken) Task
+	}
+	class ReferencesExtensions  {
+	}
+	class UpdateConfigAppCommandHandler  {
+		-IRepository~Domain.Entities.ConfigApp~ repository
+		-ILogger~UpdateConfigAppCommandHandler~ logger
+		+ProcessAsync(UpdateConfigAppCommand request, CancellationToken cancellationToken) Task~Result~ConfigAppDto~~
+	}
+	class IndTraceConfiguration  {
+		-DateTime lastUpdateTime
+		-DateTime? cacheTimestamp
+		-TimeSpan cacheDuration
+		-ApplicationConfiguration? appDetails
+		+ LastUpdateTime : DateTime
+		+ AppDetails : ApplicationConfiguration?
+		+ HasValidData : bool
+		+SetUpdateTime(DateTime timeExecuted) void
+		+SetConfigDetails(ApplicationConfiguration details) void
+		+InvalidateCache() void
+		+RefreshCache(ApplicationConfiguration details) void
+	}
+	class GetWorkFlowDetailQueryValidator  {
+	}
+	class ConfigAppsListVm  {
+		+ ConfigApp : IList~ConfigAppsDto~
+		+ Count : int
+	}
+	class UpdateConfigAppValidator  {
+	}
+	class GetBarCodesLabelHandler  {
+		-IRepository~BarCode~ repository
+		-IMonitorRequestDispatcher dispatcher
+		-IDateTimeMachine dateTimeMachine
+		-ILogger~GetBarCodesLabelHandler~ logger
+		+ProcessAsync(GetBarCodesLabelQuery request, CancellationToken cancellationToken) Task~Result~BarCodesListVm~~
+	}
+	class IUserOfflineCreationService  {
+		- LastGeneratedChallenge : List~string~
+		-GenerateChallenge() string
+		-ValidateResponse(string challenge, string response) bool
+		-ValidateResponse(string response) bool
+	}
+	class CyclesListVm  {
+		+ Cycles : IList~CyclesDto~
+		+ Count : int
+	}
+	class UnhandledExceptionBehaviour ~TRequest, TResponse~ {
+		-ILogger~TRequest~ logger
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+		-CreateGenericResultFailure(Type resultType, string message) object
+	}
+	class IProductService  {
+		-ExecuteCreateProductCommand(ProductCreationDto productDto) Task~Result~ProductCreatedEvent~~
+	}
+	class RejectBarCodeCommand  {
+		+ Label : string
+	}
+	class IIsOeeEnabledChecker  {
+		-CheckOeeFeatureByMachineIdsAsync(List~int~ machineIds, CancellationToken cancellationToken) Task~Result~OeeConfiguration~~
+	}
+	class LoggingBehavior ~TRequest, TResponse~ {
+		-ILogger logger
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+		-ResponseName(Type responseType) string
+	}
+	class GetReportsListMonitorQueryHandler  {
+		-IRepository~BarCode~ barCodeRepository
+		-IRepository~Register~ registerRepository
+		-IRepository~Cycle~ cycleRepository
+		-IRepository~MasterLabel~ masterLabelRepository
+		-IRepository~Customer~ customerRepository
+		-IRepository~Product~ productRepository
+		-IRepository~Line~ lineRepository
+		-ILogger~GetReportsListMonitorQueryHandler~ logger
+		-ValidateConstructorParameters(IRepository<BarCode>? barCodeRepository, IRepository<Register>? registerRepository, IRepository<Cycle>? cycleRepository, IRepository<MasterLabel>? masterLabelRepository, IRepository<Customer>? customerRepository, IRepository<Product>? productRepository, IRepository<Line>? lineRepository, ILogger<GetReportsListMonitorQueryHandler>? logger) Result
+		+ProcessAsync(GetReportsListQuery request, CancellationToken cancellationToken) Task~Result~BarCodesListVm~~
+	}
+	class QueryableExtensions  {
+		+GetMatchingBarCodes(List~BarCodeDto~ barCodes, List~BarCodeDto~ barCodesRegister) List~BarCodeDto~
+	}
+	class GetPlcDetailQueryValidator  {
+	}
+	class ShiftsListVm  {
+		+ Shifts : IList~ShiftsDto~
+		+ Count : int
+	}
+	class StateChange  {
+		+ PropertyName : string
+		+ State : object
+		+ OldState : object
+		+ Data : object
+	}
+	class CreateMaquinaPlcValidator  {
+	}
+	class GetConfigStationListQueryHandler  {
+		-IRepository~ConfigStation~ repository
+		-ILogger~GetConfigStationListQueryHandler~ logger
+		+ProcessAsync(GetConfigStationListQuery request, CancellationToken cancellationToken) Task~Result~ApplicationConfiguration~~
+	}
+	class GetProductDetailQuery  {
+		+ ProductId : int
+		+ ProductName : string
+	}
+	class IndTraceConfigurationService  {
+		-IServiceProvider serviceProvider
+		-ApplicationConfiguration? applicationConfiguration
+		+GetConfigurationAsync(bool refresh, CancellationToken cancellationToken) Task~Result~ApplicationConfiguration~~
+	}
+	class IOeeService  {
+		-CalculateOeeAsync(int machineId, double totalTimeMinutes, double downtimeMinutes, double idealCycleTimeSeconds, int totalCount, int defectCount, CancellationToken cancellationToken) Task~OeeMetrics~
+		-GetOeeHistoryAsync(int? machineId, DateTime? startDate, DateTime? endDate, OeePerformanceLevel? minPerformanceLevel, int pageNumber, int pageSize, CancellationToken cancellationToken) Task~Result~GetOeeHistoryResponse~~
+		-GetLatestOeeAsync(int machineId, CancellationToken cancellationToken) Task~OeeHistoryRecord?~
+		-GetOeeSummaryAsync(IEnumerable<int>? machineIds, DateTime? startDate, DateTime? endDate, CancellationToken cancellationToken) Task~IEnumerable~OeeSummaryRecord~~
+		-ValidateOeeParametersAsync(int machineId, double totalTimeMinutes, double downtimeMinutes, double idealCycleTimeSeconds, int totalCount, int defectCount) Task~(bool&#32IsValid&#44&#32IEnumerable~string~&#32Errors)~
+		-GetPerformanceLevelThresholds() Dictionary~OeePerformanceLevel&#44&#32decimal~
+		-FormatMetricsForDisplay(OeeMetrics metrics, bool includePercentageSymbol, int decimalPlaces) OeeDisplayMetrics
+	}
+	class IsOeeEnabledChecker  {
+		-string[] requiredVariableNames
+		+CheckOeeFeatureByMachineIdsAsync(List~int~ machineIds, CancellationToken cancellationToken) Task~Result~OeeConfiguration~~
+	}
+	class ITestDatabaseHelper  {
+		-ResetDatabaseAsync(CancellationToken cancellationToken) Task
+		-SeedTestDataAsync(CancellationToken cancellationToken) Task
+		-EnsureDatabaseCreatedAsync(CancellationToken cancellationToken) Task
+		-ApplyMigrationAsync(string? migrationName, CancellationToken cancellationToken) Task
+		-RevertMigrationAsync(string? migrationName, CancellationToken cancellationToken) Task
+		-CreateSnapshotAsync(string snapshotName, string dbName, string filePath, CancellationToken cancellationToken) Task
+		-RestoreSnapshotAsync(string snapshotName, string dbName, CancellationToken cancellationToken) Task
+		-DropSnapshotAsync(string snapshotName, CancellationToken cancellationToken) Task
+		-IsSnapshotPresentAsync(string snapshotName, CancellationToken cancellationToken) Task~bool~
+		-GetDatabaseFilePathAsync(string dbName, CancellationToken cancellationToken) Task~string~
+	}
+	class UpdateCyclesNotOkCommandHandler  {
+		+ProcessAsync(UpdateCyclesNotOkCommand cmd, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		-StationHaveCycleUpdatedOnThisStation(UpdateCyclesNotOkCommand cmd, IBarCodeResult barCodeInfo) bool
+		-StationCannotUpdateCyclesNotCreatedOnThisStation(UpdateCyclesNotOkCommand cmd, IBarCodeResult barCodeInfo) bool
+		-UpdateMachineIdOnRegisters(IDictionary~string&#44&#32Register~ commandRegisters, int machineId) void
+		-SaveCommandAsync(CancellationToken cancellationToken, IBarCodeResult barCodeInfo, string? comment) Task
+		-GetBarCodeInformation(UpdateCyclesNotOkCommand cmd, CancellationToken cancellationToken) Task~IBarCodeResult?~
+		-UpdateCycleInformation(UpdateCyclesNotOkCommand cmd, IBarCodeResult barCodeInfo) void
+		-UpdateBarCodeInformation(UpdateCyclesNotOkCommand cmd, IBarCodeResult barCodeInfo) void
+		-SaveRegisters(IEnumerable~Register~ registers, CancellationToken cancellationToken) Task~Result~int~~
+		-UpdateCycleAndBarcode(IBarCodeResult barCodeInfo, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		-DetermineFlowStatus(UpdateCyclesNotOkCommand request, IBarCodeResult barCodeInfo) FlowStatus
+		+IsProcessFinishedOkOnFinalStation(UpdateCyclesNotOkCommand request, IBarCodeResult barCodeInfo) bool
+		-StationCannotUpdateCyclesCreatedOnAnotherStation(UpdateCyclesNotOkCommand request, IBarCodeResult barCodeInfo) bool
+		-IsCycleTimeInvalid(int cycleTime, Recipe? recipe) bool
+		-StationCannotUpdateCycles(IBarCodeResult barCodeInfo) bool
+		-CleanRegisterValuesFromNonVisibleCharacters(IDictionary~string&#44&#32Register~ registers, int cycleId) void
+		+TryReset() bool
+	}
+	class CreatePlcCommandHandler  {
+		-IRepository~Plc~ repository
+		-ILogger~CreatePlcCommandHandler~ logger
+		+ProcessAsync(CreatePlcCommand request, CancellationToken cancellationToken) Task~Result~PlcCreated~~
+	}
+	class GetProductoDetailQueryValidator  {
+	}
+	class GetWorkFlowDetailQuery  {
+		+ NoParte : string?
+	}
+	class UpdateCyclesNotOkCommand  {
+		+ Command : TaskGatewayRequest
+		+Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+WithData(TaskGatewayRequest taskGatewayRequest) UpdateCyclesNotOkCommand
+		+TryReset() bool
+	}
+	class GetConfigStationDetailQueryHandler  {
+		-IRepository~ConfigStation~ repository
+		-ILogger~GetConfigStationDetailQueryHandler~ logger
+		+ProcessAsync(GetConfigStationDetailQuery request, CancellationToken cancellationToken) Task~Result~ConfigStationDetailVm~~
+	}
+	class MainLineConfiguration  {
+		+ HasMultipleInitialPrinters : bool
+		+ HasMultipleClients : bool
+		+ InitialPrinterIds : List~int~
+		+ DictClientsProducts : Dictionary~string&#44&#32List~string~~
+		+ Associations : List~PrinterProductAssociation~
+		+ ActiveCustomer : IEnumerable~CustomerDto~
+	}
+	class GetBarCodeDetailQueryValidator  {
+	}
+	class GetShiftsListQueryValidator  {
+	}
+	class GetOeeHistoryQueryValidator  {
+	}
+	class IUserManagerResult  {
+		- Succeeded : bool
+		- Errors : IEnumerable~string~
+	}
+	class PlcUpdated  {
+		+ Id : int?
+		+ MaquinaId : int?
+		+ IpAddress : string?
+		+ TipoPlc : string?
+		+ MarcaPlc : string?
+		+ LibreriaCommunicacion : string?
+		+ToString() string
+		+Process(PlcUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class PlcUpdatedHandler  {
+		+Process(PlcUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class UpdateBarCodeCommandValidator  {
+		-DateTimeMachine dateTimeMachine
+		-HaveValidRegisters(IDictionary~string&#44&#32Register~ registers) bool
+		-IsValidRegister(Register register) bool
+		-IsValidDate(DateTime timestamp) bool
+	}
+	class TCommandList  {
+		- Includes : string[]
+		- Page : int
+		- PageSize : int
+	}
+	class IListQuery ~TCommand, TResponse~ {
+		- Entities : IEnumerable~TResponse~
+		+ListProcessAsync(TCommand command, CancellationToken cancellationToken) Task~Result~IEnumerable~TResponse~~~
+	}
+	class ListQueryHandler ~TCommand, TResponse~ {
+		-IReadOnlyRepository~TResponse~ repository
+		+int PageSizeMin
+		+int PageSizeMax
+		+ Includes : string[]
+		+ Page : int
+		+ PageSize : int
+		+ Entities : IEnumerable~TResponse~
+		+ListProcessAsync(TCommand command, CancellationToken cancellationToken) Task~Result~IEnumerable~TResponse~~~
+		+ProcessAsync(TCommand request, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class DatabaseSafetyInterceptor  {
+		-ILogger~DatabaseSafetyInterceptor~ logger
+		+ValidateEntity(T entity, IDataContext context) IndQuestResults.Result
+		+ValidateEntities(IEnumerable~T~ entities, IDataContext context) IndQuestResults.Result
+	}
+	class GetBarCodeDetailQueryQrCodeHandler  {
+		-IRepository~BarCode~ barCodeRepository
+		-IRepository~Register~ registerRepository
+		-IRepository~Cycle~ cycleRepository
+		-IRepository~Variable~ variableRepository
+		-ILogger~GetBarCodeDetailQueryQrCodeHandler~ logger
+		+ProcessAsync(GetBarCodeDetailQrCodeQuery request, CancellationToken cancellationToken) Task~Result~BarCodeDetailMonitorVm~~
+		+UpdateMachineIds(List~RegisterView~ registers, List~CycleView~ cycles) void
+	}
+	class MachineDto  {
+		+ MachineId : int
+		+ Name : string
+		+ Location : string
+		+ Description : string
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ IpAddress : string
+		+ EnableAppTraceability : int
+		+ EnableBypassTraceability : int
+		+ IsEnabled : bool
+		+ Retry : int
+		+ ImageName : string
+		+ FromEdges : ICollection~Edge~
+		+ ToEdges : ICollection~Edge~
+		+ RuleId : int
+		+ToDto(Machine src) Result~MachineDto~
+		+ToEntity(MachineDto src) Result~Machine~
+	}
+	class GetMaquinaConfigQueryValidator  {
+	}
+	class FixedSizedStack ~T~ {
+		-ConcurrentQueue~T~ queue
+		-object syncLock
+		+int DefaultSize
+		+ Limit : int
+		+ Count : int
+		+Push(T item) void
+		+Peek() T?
+		+ToEnumerable() IEnumerable~T~
+		+ToReadOnlyCollection() IReadOnlyCollection~T~
+		+ToArray() T[]
+	}
+	class BarCodeRepositoryExtensions  {
+		+GetConsecutiveByBarCodeLabelAsync(IRepository~BarCode~ barCodeRepository, string partNumber, List~string~ masterLabel, CancellationToken cancellationToken) Task~Result~int~~
+		+GetBarCodeByLabelAsync(IRepository~BarCode~ barCodeRepository, string label, CancellationToken cancellationToken) Task~Result~BarCode~~
+		+GetBarCodeByIdAsync(IRepository~BarCode~ barCodeRepository, int barCodeId, CancellationToken cancellationToken) Task~Result~BarCode~~
+		+GetBarCodeByRegisterDataAsync(IRepository~Register~ registerRepository, IRepository~Cycle~ cycleRepository, IRepository~BarCode~ barCodeRepository, string label, CancellationToken cancellationToken) Task~Result~List~BarCodeDto~~~
+	}
+	class CycleUpdatedNotOk  {
+		+ CycleId : int
+		+ToString() string
+		+Process(CycleUpdatedNotOk notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class CycleUpdatedNotOkHandler  {
+		+Process(CycleUpdatedNotOk notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class GatewayDispatcherWarmup  {
+		+PreloadDispatcherCache() void
+	}
+	class SettingDetailVm  {
+		+ SettingId : int
+		+ MachineId : int
+		+ Config : string
+		+ToDto(Setting src) IndQuestResults.Result<SettingDetailVm>
+		+ToEntity(SettingDetailVm src) IndQuestResults.Result<Setting>
+	}
+	class CycleCreatedEventHandler  {
+		+Process(CycleCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ICreateCommand ~TEntity~ {
+	}
+	class ICreateCommandHandler ~TCommand, TEntity~ {
+		-CreateAsync(TCommand command, CancellationToken cancellationToken) Task~Result~TEntity~~
+	}
+	class CreateCommandHandler ~TCommand, TEntity~ {
+		-IRepository~TEntity~ repository
+		+CreateAsync(TCommand command, CancellationToken cancellationToken) Task~Result~TEntity~~
+		+ProcessAsync(TCommand request, CancellationToken cancellationToken) Task~Result~TEntity~~
+	}
+	class IWorkflowCompatibilityRepository  {
+		-GetAll() IReadOnlyList~MachineProductMap~
+		-GetByCustomer(int customerId) IEnumerable~MachineProductMap~
+		-GetByProduct(int productId) IEnumerable~MachineProductMap~
+		-GetByMachine(int machineId) IEnumerable~MachineProductMap~
+		-IsCompatible(int machineId, int productId) bool
+		-RefreshAsync() Task
+	}
+	class ProductService  {
+		+ExecuteCreateProductCommand(ProductCreationDto productDto) Task~Result~ProductCreatedEvent~~
+	}
+	class GetVariableDetailQuery  {
+		+ Id : int
+	}
+	class RegisterService  {
+		-IRepository~Register~ registerRepository
+		-IRepository~Variable~ variableRepository
+		+GetRegistersGroupedByMachineAsync(List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~Register~~~
+		+GetRegistersWithVariablesAsync(List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~RegisterView~~~
+		+GetRegisterByCycleIdListAsync(List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~RegisterView~~~
+	}
+	class DataTableExtensions  {
+		+ToDataTable(IEnumerable~T~ items) DataTable
+	}
+	class CreateMachineMonitorRequestHandler  {
+		+ProcessAsync(CreateMachineMonitorRequest request, CancellationToken cancellationToken) Task~Result~MachineCreated~~
+	}
+	class ConfigStationDetailVm  {
+		+ WorkFlow : IEnumerable~WorkFlow~
+		+ Maquinas : IEnumerable~Machine~
+		+ PlCs : IEnumerable~Plc~
+		+ MaquinasPlCs : IEnumerable~MachinePlc~
+		+ VariablesGroups : IDictionary~string&#44&#32VariablesGroup~
+		+ Variables : IDictionary~string&#44&#32Variable~
+		+ToDto(ConfigApp src) IndQuestResults.Result<ConfigStationDetailVm>
+		+ToEntity(ConfigStationDetailVm src) IndQuestResults.Result<ConfigApp>
+	}
+	class UpdateMachinePlcCommand  {
+		+ MachineId : int
+		+ PlcId : int
+		+ IsActive : int?
+		+ NewMachineId : int?
+		+ NewPlcId : int?
+	}
+	class GetBarCodesListQuery  {
+		+ IsMaster : bool
+		+ StartDate : DateTime
+		+ EndDate : DateTime
+	}
+	class VariablesView  {
+		+ VariableId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ Name : string
+		+ Description : string
+		+ Alias : string
+		+ Address : string
+		+ NetType : string
+		+ Length : int
+		+ IsActive : int
+		+ Direction : int
+		+ VariableGroupId : int
+		+ VariableSpecId : int?
+		+ TagStatus : int
+		+ NativeType : string
+		+ Value : string
+		+ NativeAddress : string
+		+ EnumValue : string
+		+ToDto(Variable src) IndQuestResults.Result<VariablesView>
+		+ToDtoList(IEnumerable~Variable~ src) IndQuestResults.Result<List<VariablesView>>
+		+ToEntity(VariablesView src) IndQuestResults.Result<Variable>
+	}
+	class IRegisterInformationService  {
+		+GetListOfAvailableRegisters() Task~Result~IEnumerable~RegistersRecords~~~
+		+            GetListRegisterTrends(IEnumerable~RegistersRecords~ variables, int maxItems) Task~Result~Dictionary~(int&#32MachineId&#44&#32string&#32Name)&#44
+	&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32&#32IEnumerable~TimeSeriesDataPoint~~~~
+	}
+	class ShiftCreatedEvent  {
+		+ ShiftId : int
+		+ StartBy : DateTime
+		+ Duration : TimeSpan
+		+ EndTime : DateTime
+		+ ShiftType : string
+		+ CyclesOk : int
+		+ToString() string
+		+CreatedWithFailure(string reason) Result~ShiftCreatedEvent~
+		+Process(ShiftCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+		+ToDto(Shift src) Result~ShiftCreatedEvent~
+		+ToEntity(ShiftCreatedEvent src) Result~Shift~
+		+ToT(ShiftCreatedEvent src) Result~Shift~
+		+FromCreateShiftCommand(CreateShiftCommand src) Result~ShiftCreatedEvent~
+		+ToCreateShiftCommand(ShiftCreatedEvent src) Result~CreateShiftCommand~
+	}
+	class ShiftCreatedHandler  {
+		+Process(ShiftCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ConfigAppUpdated  {
+		+ ConfigAppId : int
+		+ToString() string
+		+Process(ConfigAppUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ConfigAppUpdatedHandler  {
+		+Process(ConfigAppUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class RejectBarCodeCommandHandler  {
+		+ProcessAsync(RejectBarCodeCommand request, CancellationToken cancellationToken) Task~Result~BarCodeRejectedView~~
+	}
+	class UpdateMachineValidator  {
+	}
+	class BarCodesListVm  {
+		+ BarCodes : IList~BarCodeDto~
+		+ Count : int
+		+ Shift : Shift
+		+ ProductionByShift : int
+	}
+	class ICachePartitionProvider  {
+		-GetPrefix() string
+	}
+	class GetBarCodeListQueryValidator  {
+	}
+	class CyclesDto  {
+		+ CycleId : int
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleStatus : int
+		+ CyclesOk : int
+		+ PartStatus : int
+		+ CycleTime : int
+		+ TaktTime : int
+		+ StartedOn : DateTime
+		+ FinishedOn : DateTime
+		+ StatusCicloId : int
+		+ BarCode : BarCode
+		+ Machine : Machine
+		+ Product : Product
+		+ToDto(Cycle src) IndQuestResults.Result<CyclesDto>
+		+ToEntity(CyclesDto src) IndQuestResults.Result<Cycle>
+		+ToDtoList(IEnumerable~Cycle~ src) IndQuestResults.Result<List<CyclesDto>>
+	}
+	class IDetailQuery ~TEntity~ {
+		- Id : int
+	}
+	class IDetailQueryHandler ~TQuery, TEntity~ {
+		-Find(TQuery command, CancellationToken cancellationToken) Task~Result~TEntity~~
+	}
+	class DetailQueryHandler ~TQuery, TEntity~ {
+		-IReadOnlyRepository~TEntity~ repository
+		+Find(TQuery query, CancellationToken cancellationToken) Task~Result~TEntity~~
+	}
+	class GetVariableListQueryValidator  {
+	}
+	class EventLoggerBehavior ~TRequest, TResponse~ {
+		-ILogger~EventLoggerBehavior~TRequest&#44&#32TResponse~~ logger
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+	}
+	class GetRegisterDetailQuery  {
+		+ RegisterId : int
+	}
+	class GetRegistroDetailQueryValidator  {
+	}
+	class ByteExtensions  {
+		+DecodeBarCode(byte[] imageData) string
+	}
+	class ReadBarCodeQuery  {
+		+ Command : TaskGatewayRequest
+		+Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+WithData(TaskGatewayRequest taskGatewayRequest) ReadBarCodeQuery
+		+TryReset() bool
+	}
+	class CacheManager ~T~ {
+		-T? cachedData
+		-DateTime? cacheTimestamp
+		-SemaphoreSlim semaphore
+		+GetOrRefreshAsync(Func~Task~T~~ refreshFunc, bool forceRefresh, CancellationToken cancellationToken, ILogger? logger) Task~T?~
+		+InvalidateCache() void
+	}
+	class GetVariableDetailQueryHandler  {
+		-IRepository~Variable~ repository
+		-ILogger~GetVariableDetailQueryHandler~ logger
+		+ProcessAsync(GetVariableDetailQuery request, CancellationToken cancellationToken) Task~Result~VariableDetailVm~~
+	}
+	class BarCodeDto  {
+		+ BarCodeId : int
+		+ Label : string
+		+ ProductId : int
+		+ MachineId : int
+		+ PartStatus : PartStatus
+		+ FlowStatus : FlowStatus
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+		+ CycleCount : int
+		+ToDto(BarCode src) IndQuestResults.Result<BarCodeDto>
+		+ToEntity(BarCodeDto src) IndQuestResults.Result<BarCode>
+		+ToDtoList(IEnumerable~BarCode~ src) IndQuestResults.Result<IEnumerable<BarCodeDto>>
+	}
+	class TestGenericListCommand ~TEntity~ {
+		+ Page : int
+		+ PageSize : int
+		+ Includes : string[]
+	}
+	class GetBarCodeLabelQueryValidator  {
+	}
+	class GetEventsListQueryHandler  {
+		+ProcessAsync(GetEventsListQuery request, CancellationToken cancellationToken) Task~Result~EventsListVm~~
+	}
+	class SimulationDataContext  {
+		-string SimulationEnvironment
+		-string SimulationDatabaseId
+		+ IsSimulation : bool
+		+ Environment : string
+		+ AllowsDatabaseWrites : bool
+		+ DatabaseIdentifier : string
+	}
+	class GetBarCodeDetailGatewayQueryHandler  {
+		+ProcessAsync(ReadBarCodeQuery cmd, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+TryReset() bool
+	}
+	class GetBarCodesLabelQuery  {
+		+ Label : string
+	}
+	class MachineCreated  {
+		+ Id : int
+		+ MachineId : int
+		+ Name : string
+		+ Location : string
+		+ MachineType : int
+		+ EnableAppTraceability : int
+		+ EnableBypassTraceability : int
+		+ToString() string
+		+ToDto(string machineName) IndQuestResults.Result<MachineCreated>
+		+ToDto(Machine src) IndQuestResults.Result<MachineCreated>
+		+Process(MachineCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class MachineCreatedHandler  {
+		+Process(MachineCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class CreateSettingCommandHandler  {
+		-IRepository~Domain.Entities.Setting~ repository
+		-ILogger~CreateSettingCommandHandler~ logger
+		+ProcessAsync(CreateSettingCommand request, CancellationToken cancellationToken) Task~Result~SettingCreatedEvent~~
+	}
+	class UpdatePlcCommandHandler  {
+		-IRepository~Plc~ repository
+		-ILogger~UpdatePlcCommandHandler~ logger
+		+ProcessAsync(UpdatePlcCommand request, CancellationToken cancellationToken) Task~Result~PlcDto~~
+	}
+	class PerformanceCreatedHandler  {
+		+Process(PerformanceDataCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class IRepository ~T~ {
+		-GetByIdAsync(int id, CancellationToken cancellationToken) Task~Result~T?~~
+		-GetByIdsAsync(CancellationToken cancellationToken, object[] ids) Task~Result~T?~~
+		-ListAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		-ListAsync(CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		-FirstOrDefaultAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~T?~~
+		-FirstOrDefaultAsync(CancellationToken cancellationToken) Task~Result~T?~~
+		-AddAsync(T entity, CancellationToken cancellationToken) Task~Result~int~~
+		-AddRangeBulkAsync(IEnumerable~T~ entities, CancellationToken cancellationToken) Task~Result~int~~
+		-AddAsync(T entity, int id, string tableName, CancellationToken cancellationToken) Task~Result~int~~
+		-AddRangeAsync(IEnumerable~T~ entities, CancellationToken cancellationToken) Task~Result~int~~
+		-UpdateAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		-DeleteAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		-CommitAsync(CancellationToken cancellationToken) Task~Result~
+		-CountAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~int~~
+		-AsQueryableAsync(CancellationToken cancellationToken) Task~Result~IQueryable~T~~~
+		-AsQueryableAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IQueryable~T~~~
+		-DetachAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		-ApplyNoTrackingAsync(CancellationToken cancellationToken) Task~Result~
+		-ApplyTrackingAsync(CancellationToken cancellationToken) Task~Result~
+	}
+	class ValidationConstants  {
+		+string MachineIdRequired
+		+string TotalTimeRequired
+		+string DowntimeNonNegative
+		+string IdealCycleTimeRequired
+		+string TotalCountNonNegative
+		+string DefectCountNonNegative
+		+string DowntimeExceedsTotalTime
+		+string DefectCountExceedsTotalCount
+		+string TimestampRequired
+		+string StartDateRequired
+		+string EndDateRequired
+		+string EndDateMustBeAfterStartDate
+		+string DateRangeTooLarge
+		+string PageNumberInvalid
+		+string PageSizeInvalid
+	}
+	class ErrorMessages  {
+		+string InputsCannotBeNull
+		+string OeeValueOutOfRange
+		+string AvailabilityOutOfRange
+		+string PerformanceOutOfRange
+		+string QualityOutOfRange
+		+string NegativeProductionValues
+		+string NegativeTimeValues
+		+string InvalidMachineId
+		+string InvalidPlcId
+		+string MissingRequiredData
+	}
+	class WarningMessages  {
+		+string PerformanceOverHundredPercent
+		+string VeryLowAvailability
+		+string VeryLowQuality
+		+string InconsistentData
+		+string ZeroProduction
+		+string ExcessiveDowntime
+		+string MissingCycleTimeData
+		+string StaleData
+	}
+	class Rules  {
+		+int MaxMachineNameLength
+		+int MaxPartNumberLength
+		+int MaxLabelLength
+		+int MinDataPointsForTrends
+		+int MaxDataPointsPerQuery
+		+int MaxDataAgeHours
+		+int MinMachineId
+		+int MinPlcId
+		+int MaxMachineId
+		+int MaxPlcId
+	}
+	class InfoMessages  {
+		+string OeeCalculationSuccess
+		+string DataProcessingComplete
+		+string ValidationPassed
+		+string WorldClassPerformance
+		+string GoodPerformance
+	}
+	class FieldNames  {
+		+string Oee
+		+string Availability
+		+string Performance
+		+string Quality
+		+string MachineId
+		+string PlcId
+		+string TotalProduction
+		+string ProductionOk
+		+string ProductionNoK
+		+string RunningTime
+		+string PlannedProductionTime
+		+string StandardCycleTime
+		+string ActualCycleTime
+	}
+	class UpdatePlcCommand  {
+		+ PlcId : int
+		+ IpAddress : string
+		+ PlcType : string
+		+ PlcBrand : string
+		+ CommLibrary : string
+		+ Name : string
+		+ BrandOwner : string
+		+ EnableSimulation : bool
+	}
+	class CycleView  {
+		+ CycleId : int
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleStatus : CycleStatus
+		+ CyclesOk : int
+		+ PartStatus : PartStatus
+		+ CycleTime : int
+		+ TaktTime : int
+		+ StartedOn : DateTime
+		+ FinishedOn : DateTime
+		+ToDto(Cycle src) IndQuestResults.Result<CycleView>
+		+ToDtoList(IEnumerable~Cycle~ src) IndQuestResults.Result<List<CycleView>>
+		+ToEntity(CycleView src) IndQuestResults.Result<Cycle>
+	}
+	class ConfigAppDto  {
+		+ ConfigAppId : string
+		+ MachineId : int
+		+ PlcId : int
+		+ Pc : string
+		+ AppId : int
+		+ Client : string
+		+ Factory : string
+		+ Line : string
+		+ Project : string
+		+ Version : string
+		+ToDto(ConfigApp src) IndQuestResults.Result<ConfigAppDto>
+		+ToEntity(ConfigAppDto src) IndQuestResults.Result<ConfigApp>
+	}
+	class CreateConfigStationValidator  {
+	}
+	class IShiftDetectionRuleExecutor  {
+		-DetectShift(DateTime currentTime) (ShiftType&#32shiftType&#44&#32DateTime&#32startTime&#44&#32TimeSpan&#32duration)
+		-DetectShiftWithRules(DateTime currentTime, IShiftDetectionRule[] rules) (ShiftType&#32shiftType&#44&#32DateTime&#32startTime&#44&#32TimeSpan&#32duration)
+	}
+	class ShiftDetectionRuleExecutor  {
+		+int FirstShiftStart
+		+int SecondShiftStart
+		+int ThirdShiftStart
+		-IShiftDetectionRule[] current3ShiftRules
+		-IShiftDetectionRule[] example2ShiftRules
+		+DetectShift(DateTime currentTime) (ShiftType&#32shiftType&#44&#32DateTime&#32startTime&#44&#32TimeSpan&#32duration)
+		+DetectShiftWithRules(DateTime currentTime, IShiftDetectionRule[] rules) (ShiftType&#32shiftType&#44&#32DateTime&#32startTime&#44&#32TimeSpan&#32duration)
+	}
+	class GetMachineDetailQuery  {
+		+ Id : int
+	}
+	class BarCodeDtoGateway  {
+		+ BarCodeId : int
+		+ Label : Label
+		+ ProductId : int
+		+ MachineId : int
+		+ FlowStatus : FlowStatus
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+		+ Machine : Machine
+		+ToDto(BarCode src) IndQuestResults.Result<BarCodeDtoGateway>
+		+ToEntity(BarCodeDtoGateway src) IndQuestResults.Result<BarCode>
+	}
+	class CreateSettingCommand  {
+		+ SettingId : int
+		+ MachineId : int
+		+ Setting : string
+	}
+	class GetBarCodeDetailGatewayQueryValidator  {
+	}
+	class GetSettingDetailQueryHandler  {
+		-IRepository~Domain.Entities.Setting~ repository
+		-ILogger~GetSettingDetailQueryHandler~ logger
+		+ProcessAsync(GetSettingDetailQuery request, CancellationToken cancellationToken) Task~Result~SettingDetailVm~~
+	}
+	class GetCyclesDetailQueryHandler  {
+		-IRepository~Cycle~ repository
+		-ILogger~GetCyclesDetailQueryHandler~ logger
+		+ProcessAsync(GetCyclesDetailQuery request, CancellationToken cancellationToken) Task~Result~CyclesDetailVm~~
+	}
+	class GetConfigAppsListQuery  {
+		+ Id : string
+	}
+	class GetBarCodesListQueryHandler  {
+		+ProcessAsync(GetBarCodesListQuery request, CancellationToken cancellationToken) Task~Result~BarCodesListVm~~
+	}
+	class UpdateVariableValidator  {
+	}
+	class ICacheService  {
+		-GetOrSetAsync(string key, Func~CancellationToken&#44&#32Task~T~~ factory, TimeSpan? expiration, CancellationToken cancellationToken) Task~T?~
+		-RemoveAsync(string key, CancellationToken cancellationToken) Task~bool~
+		-RemoveByPatternAsync(string pattern, CancellationToken cancellationToken) Task~int~
+		-SetAsync(string key, T value, TimeSpan? expiration, CancellationToken cancellationToken) Task
+		-GetAsync(string key, CancellationToken cancellationToken) Task~T?~
+		-ExistsAsync(string key, CancellationToken cancellationToken) Task~bool~
+	}
+	class CreatePlcCommand  {
+		+ PlcId : int
+		+ Enabled : int
+		+ IpAddress : string
+		+ PlcType : string
+		+ PlcBrand : string
+		+ CommLibrary : string
+		+ BrandOwner : string
+		+ Name : string
+	}
+	class BarCodeRejectedView  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ Label : string
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ToDto(BarCode src) IndQuestResults.Result<BarCodeRejectedView>
+		+ToEntity(BarCodeRejectedView src) IndQuestResults.Result<BarCode>
+	}
+	class GetBarCodeReportQuery  {
+		+ BarCodesIdList : List~int~
+	}
+	class GetCyclesDetailQueryValidator  {
+	}
+	class CreateProductCommand  {
+		+ Product : ProductDto
+		+ WorkFlows : List~WorkFlowDto~
+		+ Rule : RuleDto
+		+ Recipe : RecipeDto
+		+CreateWorkFlowDtos(IEnumerable~int~ machines) List~WorkFlowDto~
+	}
+	class EventsListVm  {
+		+ Requests : IEnumerable~TaskGatewayRequest~
+		+ Responses : IEnumerable~TaskGatewayResponse~
+		+CreateEventsListVm(Result~IEnumerable~TaskGatewayRequest~~ requests, Result~IEnumerable~TaskGatewayResponse~~ responses) Result~EventsListVm~
+	}
+	class GenericCrudCommand ~TEntity, TCommand~ {
+		+CreateGenericHandler(object repository) THandler
+		+CreateTestCommand(Dictionary<string&#44&#32object>? propertyValues, ILogger? logger) TCommand
+		+InvokeHandlerMethodAsync(object handler, string methodName, object command, CancellationToken cancellationToken) Task~object~
+		+ExtractResult(object result) (bool&#32IsSuccess&#44&#32object?&#32Value&#44&#32string[]?&#32Errors)
+		+ValidateHandlerInterfaces(object handler, Type[] expectedInterfaces) bool
+		+CreatePaginationData(int page, int pageSize, string[]? includes) Dictionary~string&#44&#32object~
+		+CreateEntityIdData(int id) Dictionary~string&#44&#32object~
+		+CountEnumerableResult(object? enumerableResult) int
+		-SetDefaultPropertyValues(object command) void
+	}
+	class GenericCrudTestHelper  {
+		+CreateHandlerForEntityType(Type handlerGenericType, Type commandType, Type entityType, object repository) object
+		+CreateCommandForEntityType(Type commandGenericType, Type entityType, Dictionary<string&#44&#32object>? propertyValues) object
+		+ValidateGenericPattern(Type[] entityTypes, Type handlerGenericType, Func~Type&#44&#32object~ repositoryFactory) bool
+	}
+	class GetRegistersListQueryValidator  {
+	}
+	class RegisterInformationService  {
+		+GetListOfAvailableRegisters() Task~Result~IEnumerable~RegistersRecords~~~
+		+GetListRegisterTrends(IEnumerable~RegistersRecords~ variables, int maxItems) Task~Result~Dictionary~(int&#32MachineId&#44&#32string&#32Name)&#44&#32IEnumerable~TimeSeriesDataPoint~~~~
+		-GenerateMockData(int maxItems) Dictionary~(int&#32MachineId&#44&#32string&#32Name)&#44&#32IEnumerable~TimeSeriesDataPoint~~
+		+ParseVariables(IEnumerable~RegistersRecords~ variables) Result~GetRegistersListQuery~
+		+MapToTimeSeries(IEnumerable~RegisterDto~ registerDtos) Dictionary~(int&#32MachineId&#44&#32string&#32Name)&#44&#32IEnumerable~TimeSeriesDataPoint~~
+	}
+	class INotificationService  {
+		-SendAsync(MessageDto message, CancellationToken cancellationToken) Task~Result~
+	}
+	class UpdateVariableCommand  {
+		+ VariableId : int?
+		+ MachineId : int?
+		+ Plc : string?
+		+ Name : string?
+		+ Address : string?
+		+ Alias : string?
+		+ Type : string?
+		+ Length : int?
+		+ Event : int?
+		+ Direction : int?
+		+ VariableGroupId : int?
+		+ Model : string?
+		+ Transaction : string?
+	}
+	class GetCyclesListQueryValidator  {
+	}
+	class CreateMachinePlcCommand  {
+		+ MachineId : int
+		+ Machine : Machine
+		+ PlCsId : int
+		+ Plc : Plc
+	}
+	class IShiftService  {
+		-CreateOrRetrieveShiftAndCyclesOkAsync(int machineId, CancellationToken cancellationToken) Task~Result~ShiftCreatedEvent~~
+	}
+	class BadRequestException  {
+	}
+	class ReportDetailMonitorVm  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ ResultValidation : ResultValidation
+		+ Label : string
+		+ Cycles : List~CycleView~
+		+ Registers : List~RegisterView~
+		+ StatusMonitor : StatusMonitor
+		+ Variables : List~Variable~
+		+ToDto(BarCode src) IndQuestResults.Result<ReportDetailMonitorVm>
+		+ToEntity(ReportDetailMonitorVm src) IndQuestResults.Result<BarCode>
+	}
+	class UpdatePlcValidator  {
+		-BeValidIpAddress(string ipAddress) bool
+	}
+	class UpdateProductCommandHandler  {
+		-IRepository~Product~ repository
+		-IMonitorRequestDispatcher monitorRequestDispatcher
+		-ILogger~UpdateProductCommandHandler~ logger
+		+ProcessAsync(UpdateProductCommand request, CancellationToken cancellationToken) Task~Result~ProductDto~~
+	}
+	class MachinePlcDetailVm  {
+		+ MachineId : int
+		+ PlcId : int
+		+ IsActive : int
+		+ToDto(MachinePlc src) IndQuestResults.Result<MachinePlcDetailVm>
+		+ToEntity(MachinePlcDetailVm src) IndQuestResults.Result<MachinePlc>
+	}
+	class ConfigAppCreated  {
+		+ ConfigId : string
+		+ AppId : int
+		+ Client : string
+		+ Factory : string
+		+ Line : string
+		+ MachineId : int
+		+ Project : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+		+ToString() string
+		+Process(ConfigAppCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ConfigAppCreatedHandler  {
+		+Process(ConfigAppCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class OeeRegisterDto  {
+		+ OeeRegisterId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ TimeStamp : DateTime
+		+ ApplicationFlag : int
+		+ EventCounter : int
+		+ CurrentTime : int
+		+ RunningTime : int
+		+ StoppedTime : int
+		+ FaultedTime : int
+		+ StatusFaultReason : int
+		+ ProductId : int
+		+ TotalProduction : double
+		+ StandardCycleTime : double
+		+ ActualCycleTime : double
+		+ PlanedProductionTime : double
+		+ RejectEventCounter : int
+		+ StatusReject : int
+		+ RejectQuantityUnits : double
+		+ ProductionOk : double
+		+ ProductionNoK : double
+		+ Oee : double
+		+ Availability : double
+		+ Performance : double
+		+ Quality : double
+		+ToDto(OeeRegister entity) Result~OeeRegisterDto~
+	}
+	class WorkFlowistVm  {
+		+ Variables : IList~VariableDto~
+		+ Count : int
+	}
+	class IndTraceEventsService  {
+		-FixedSizedStack~string~ messages
+		-ConcurrentDictionary~int&#44&#32TaskGatewayResponse~ responseEvents
+		-ConcurrentDictionary~int&#44&#32TaskGatewayRequest~ requestEvents
+		-ConcurrentDictionary~int&#44&#32ControllerMonitor~ controllerMonitors
+		-ConcurrentDictionary~int&#44&#32StationMonitor~ stationMonitors
+		-List~IObserver~StateChange~~ observers
+		-Lock observersLock
+		-IndTraceEventsService instance
+		+ Messages : IReadOnlyCollection~string~
+		+ ResponseEvents : IReadOnlyDictionary~int&#44&#32TaskGatewayResponse~
+		+ RequestEvents : IReadOnlyDictionary~int&#44&#32TaskGatewayRequest~
+		+ ControllerMonitors : IReadOnlyDictionary~int&#44&#32ControllerMonitor~
+		+ StationMonitors : IReadOnlyDictionary~int&#44&#32StationMonitor~
+		+ ProductionData : ProductionData
+		+ Instance : IndTraceEventsService
+		- ApplicationConfiguration : ApplicationConfiguration?
+		+ApplyConfiguration(ApplicationConfiguration configuration) void
+		+PushMessage(string user, string message) void
+		+AddOrUpdateTaskGatewayRequest(int id, TaskGatewayRequest requestEvent) void
+		+AddOrUpdateTaskGatewayResponse(int id, TaskGatewayResponse responseEvent) void
+		-UpdateRequestEventsFromConfiguration(ApplicationConfiguration configuration) void
+		-UpdateResponseEventsFromConfiguration(ApplicationConfiguration configuration) void
+		-UpdateStationsFromConfiguration(ApplicationConfiguration configuration) void
+		-UpdateControllersFromConfiguration(ApplicationConfiguration configuration) void
+		-InitializeProductInfoFromConfiguration(ApplicationConfiguration applicationConfiguration) void
+		+UpdateStationFromGatewayRequest(TaskGatewayRequest? request) void
+		-AddStationFromGatewayRequest(TaskGatewayRequest request, DateTime currentTime) void
+		+UpdateStationFromGatewayResponse(TaskGatewayResponse? response) void
+		-AddStationFromGatewayResponse(TaskGatewayResponse response, DateTime currentTime) void
+		-UpdateControllerFromConfiguration(ControllerMonitor controller, PlcDto plc, DateTime currentTime) void
+		-AddControllerFromConfiguration(PlcDto plc, DateTime currentTime) void
+		+AddOrUpdateControllerFromGateway(int id, ControllerMonitor heartBeatControllerMonitor) void
+		-AddOrUpdateControllerMonitor(int id, ControllerMonitor heartBeatControllerMonitor) void
+		+Subscribe(IObserver~StateChange~ observer) IDisposable
+		+NotifyStateChanged(StateChange change) void
+		+UpdateState(StateChange change) void
+	}
+	class ICycleService  {
+		-GetCyclesByBarCodeIdAsync(int barCodeId, CancellationToken cancellationToken) Task~Result~List~CycleView~~~
+		-GetProductionByShiftAsync(DateTime startBy, DateTime endTime, int machineId, CancellationToken cancellationToken) Task~Result~int~~
+		-GetCycleByIdAsync(int barCodeId, CancellationToken cancellationToken) Task~Result~Cycle?~~
+	}
+	class ProductUpdated  {
+		+ ProductId : int
+		+ PartNumber : string
+		+ ProductName : string
+		+ Product : string
+		+ IsActive : bool
+		+ Version : int
+		+ CustomerPartNumber : string
+		+ AliasPartNumber : string
+		+ Description : string
+		+ToString() string
+		+Process(ProductUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ProductUpdatedHandler  {
+		+Process(ProductUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class UpdateWorkFlowCommandHandler  {
+		-IRepository~WorkFlow~ repository
+		-ILogger~UpdateWorkFlowCommandHandler~ logger
+		+ProcessAsync(UpdateWorkFlowCommand request, CancellationToken cancellationToken) Task~Result~WorkFlowDetailVm~~
+	}
+	class GetBarCodeDetailMonitorQuery  {
+		+ BarCode : string
+		+ BarCodeId : int
+	}
+	class WorkFlowDto  {
+		+ WorkFlowId : int
+		+ ProductId : int
+		+ NextMachineId : int
+		+ LastMachineId : int
+		+ RuleId : int
+		+ Machine : List~Machine~
+		+ Edges : List~Edge~
+		+ToDto(WorkFlow src) IndQuestResults.Result<WorkFlowDto>
+		+ToEntity(WorkFlowDto src) IndQuestResults.Result<WorkFlow>
+	}
+	class BarCodeResultData  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ CyclesOk : int
+		+ ShiftId : int
+		+ CommandId : int
+		+ ResultValidation : ResultValidation
+		+ Error : string
+		+ Label : string
+		+ PartNumber : string
+		+ Description : string
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ RegistersSaved : int
+		+ Shift : Shift
+		+ LastShift : Shift
+		+ Product : Product
+		+ Command : TaskGatewayRequest
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ Recipe : Recipe
+		+ Machine : Machine
+		+ Cycle : Cycle
+		+ Cycles : IEnumerable~Cycle~
+		+ BarCode : BarCode
+		+ MasterLabel : MasterLabel
+		+ References : IDictionary~string&#44&#32Register~
+	}
+	class BarCodeResult  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ CyclesOk : int
+		+ ShiftId : int
+		+ CommandId : int
+		+ ResultValidation : ResultValidation
+		+ Error : string
+		+ Label : string
+		+ PartNumber : string
+		+ Name : string
+		+ Description : string
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ RegistersSaved : int
+		+ Shift : Shift
+		+ LastShift : Shift
+		+ Product : Product
+		+ Command : TaskGatewayRequest
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ Recipe : Recipe
+		+ Machine : Machine
+		+ Cycle : Cycle
+		+ Cycles : IEnumerable~Cycle~
+		+ BarCode : BarCode
+		+ MasterLabel : MasterLabel
+		+ References : IDictionary~string&#44&#32Register~
+		+Create(int lastMachineId, int nextMachineId, CycleStatus cycleStatus, FlowStatus flowStatus, PartStatus partStatus, MachineType machineType, WorkFlowType workFlowType, int barCodeId, int cycleId, string label, string partNumber, int cyclesOk, int shiftId, ResultValidation resultValidation) BarCodeResult
+		-InitResults(BarCodeDetailsRequest barCodeDetailsRequest) void
+		+TryReset() bool
+		-FetchMachineByIdAsync(int machineId, CancellationToken cancellationToken) Task~Result~Machine?~~
+		-FetchReferencesByMachineIdAsync(int machineId, int cycleId, CancellationToken cancellationToken) Task~Result~IDictionary~string&#44&#32Register~?~~
+		-FetchBarCodeByLabelAsync(string label, CancellationToken cancellationToken) Task~Result~BarCode?~~
+		-FetchCyclesByBarCodeIdAsync(int barCodeId, CancellationToken cancellationToken) Task~Result~IEnumerable~Cycle~~~
+		-FetchWorkflowsByProductIdAsync(int productId, CancellationToken cancellationToken) Task~Result~Dictionary~int&#44&#32WorkFlow~~~
+		-FetchRecipeAsync(int productId, int machineId, CancellationToken cancellationToken) Task~Result~Recipe?~~
+		-FetchProductAsync(int productId, int machineId, CancellationToken cancellationToken) Task~Result~Product?~~
+		-FetchCurrentShiftAsync(CancellationToken cancellationToken) Task~Result~Shift?~~
+		-FetchMasterLabelAsync(string label, CancellationToken cancellationToken) Task~Result~MasterLabel?~~
+		+GetBarCodeDetails(BarCodeDetailsRequest barCodeDetailsRequest, CancellationToken cancellationToken) Task~IBarCodeResult~
+		-HasMaxAllowedCyclesOnStation(BarCodeDetailsRequest request) bool
+		-HasMaxAllowedCyclesNotOkOnStation(BarCodeDetailsRequest request) bool
+		-ValidatePartNumber(string label, string partNumber) bool
+		-FetchLastCycleCycleAsync(Result~IEnumerable~Cycle~~ cycles) Result~Cycle?~
+		-DetermineNextMachineId(Dictionary~int&#44&#32WorkFlow~ vmFt, int lastMachineId, Cycle? cycle) int
+		-DetermineLastMachineId(Cycle? cycle, BarCode barCode) int
+		-HandleProcessMachineTypeAsync(CancellationToken cancellationToken, Dictionary~int&#44&#32WorkFlow~ vmFt) Task
+		-UpdateNextMachineIdIfDisabled(Machine nextMachine, Dictionary~int&#44&#32WorkFlow~ vmFt) void
+		-UpdateStatusForMasterLabel() void
+		-HandleRestoredBarCode() void
+		-AssignWorkflowAndMachineDetails(Machine machineInfo, BarCode barCode, Cycle? cycle) void
+		-IsBarCodeRestored() bool
+		+ToDto(BarCodeResult src, TDest dest) Result~TDest~
+		+ToEntity(T src, BarCodeResult dest) Result~BarCodeResult~
+		-SetFailureAndReturn(string errorMessage, ResultValidation validation) IBarCodeResult
+		-SetFailureAndReturn(string errorMessage, Exception ex, ResultValidation validation) IBarCodeResult
+		-LogAndReturnValidationFailure() IBarCodeResult
+		-SetFailureResult(string errorMessage, ResultValidation validation) void
+		+UpdateBarCodeInformationOnCycle(FlowStatus flowStatus, PartStatus partStatus, CycleStatus cycleStatus) void
+		+SetBarCode(BarCode barCode) void
+		+SetCycle(Cycle cycle) void
+		+SetCyclesOk(int cyclesOk) void
+		+SetRegistersSaved(int registers) void
+		+InitReferences(IDictionary~string&#44&#32Register~ references) void
+		+ToString() string
+	}
+	class CreateVariableValidator  {
+	}
+	class ToggleEnableMachineCommandValidator  {
+		-HaveInverseEnableAndDisable(ToggleEnableMachineCommand command) bool
+	}
+	class ShiftsDto  {
+		+ ShiftId : int
+		+ StartBy : DateTime
+		+ Duration : TimeSpan
+		+ MaxDuration : TimeSpan
+		+ MinDuration : TimeSpan
+		+ NormalDuration : TimeSpan
+		+ToDto(Shift src) IndQuestResults.Result<ShiftsDto>
+		+ToEntity(ShiftsDto src) IndQuestResults.Result<Shift>
+		+ToDtoList(IEnumerable~Shift~ src) IndQuestResults.Result<List<ShiftsDto>>
+	}
+	class GetShiftoDetailQueryValidator  {
+	}
+	class CycleService  {
+		-IRepository~Cycle~ cycleRepository
+		+GetCyclesByBarCodeIdAsync(int barCodeId, CancellationToken cancellationToken) Task~Result~List~CycleView~~~
+		+GetProductionByShiftAsync(DateTime startBy, DateTime endTime, int machineId, CancellationToken cancellationToken) Task~Result~int~~
+		+GetCycleByIdAsync(int barCodeId, CancellationToken cancellationToken) Task~Result~Cycle?~~
+	}
+	class LineDto  {
+		+ LineId : int
+		+ Name : string
+		+ Description : string
+		+ Status : int
+		+ToDto(Line src) IndQuestResults.Result<LineDto>
+		+ToEntity(LineDto src) IndQuestResults.Result<Line>
+	}
+	class GetReportesFilterInfoMonitorQueryHandler  {
+		-IRepository~FlowStatus~ flowStatusRepository
+		-IRepository~Customer~ customerRepository
+		-IRepository~Product~ productRepository
+		-IRepository~ShiftsCatalog~ shiftCatalogRepository
+		-ILogger~GetReportesFilterInfoMonitorQueryHandler~ logger
+		+ProcessAsync(GetReportsFilterInfoQuery request, CancellationToken cancellationToken) Task~Result~ReportsFilterInfoVm~~
+	}
+	class ShiftDetailVm  {
+		+ ShiftId : int
+		+ PartNumber : string
+		+ ShiftName : string
+		+ IsActive : int
+		+ Version : int
+		+ CustomerPartNumber : string
+		+ AliasPartNumber : string
+		+ Description : string
+		+ CreatedBy : string
+		+ ModifiedBy : string
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+		+ToDto(Shift src) Result~ShiftDetailVm~
+	}
+	class UpdateSettingValidator  {
+	}
+	class GetPlcDetailQueryHandler  {
+		-IRepository~Plc~ plcRepository
+		-IRepository~MachinePlc~ machinePlcRepository
+		-IRepository~Machine~ machineRepository
+		-IRepository~Variable~ variableRepository
+		-IRepository~VariablesGroup~ variablesGroupRepository
+		-ILogger~GetPlcDetailQueryHandler~ logger
+		+ProcessAsync(GetPlcDetailQuery request, CancellationToken cancellationToken) Task~Result~PlcDto~~
+	}
+	class MessageDto  {
+		+ From : string
+		+ To : string
+		+ Subject : string
+		+ Body : string
+		+CreateMessage(INotification notification) MessageDto
+		-GetActionType(string notificationTypeName) string
+		-GetEntityName(string notificationTypeName) string
+	}
+	class GetBarCodeDetailQrCodeQuery  {
+		-string barCode
+		+ BarCode : string
+	}
+	class MachineUpdateCommand  {
+		+ MachineId : int
+		+ Name : string
+		+ Location : string
+		+ MachineType : MachineType?
+		+ WorkFlowType : WorkFlowType?
+	}
+	class GetMachineConfigQueryHandler  {
+		-IRepository~Product~ productRepository
+		-IRepository~WorkFlow~ workFlowRepository
+		-IRepository~Machine~ machineRepository
+		-IRepository~Plc~ plcRepository
+		-IRepository~MachinePlc~ machinePlcRepository
+		-IRepository~Variable~ variableRepository
+		-ILogger~GetMachineConfigQueryHandler~ logger
+		+ProcessAsync(GetMachineConfigQuery request, CancellationToken cancellationToken) Task~Result~MachineConfigVm~~
+	}
+	class CycleUpdatedOk  {
+		+ CycleId : int
+		+ToString() string
+		+Process(CycleUpdatedOk notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class CycleUpdatedOkHandler  {
+		+Process(CycleUpdatedOk notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class BarCodeDetailVm  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ Error : string
+		+ Shift : Shift
+		+ ProductionData : ProductionData
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ ResultValidation : ResultValidation
+		+ Label : string
+		+ BarCode : BarCode
+		+ Cycles : List~Cycle~
+		+ Registers : List~Register~
+		+ RegistersVm : List~RegisterVm~
+		+ StatusMonitor : StatusMonitor
+		+ Variables : List~Variable~
+		+ToDto(BarCode src) IndQuestResults.Result<BarCodeDetailVm>
+		+ToDto(IBarCodeResult src) IndQuestResults.Result<BarCodeDetailVm>
+		+ToEntity(BarCodeDetailVm src) IndQuestResults.Result<BarCode>
+	}
+	class INotificationHandler ~in TEvent~ {
+		-Process(TEvent @event, CancellationToken cancellationToken) Task~Result~
+	}
+	class ProductCreatedEvent  {
+		+ ProductId : int
+		+ CustomerId : int
+		+ PartNumber : string
+		+ Name : string
+		+ IsActive : int
+		+ Version : int
+		+ PartNumberCustomer : string
+		+ AliasNoParte : string
+		+ Description : string
+		+ToString() string
+		+FromProduct(Product src) Result~ProductCreatedEvent~
+		+ToProduct(ProductCreatedEvent src) Result~Product~
+		+Process(ProductCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ProductCreatedHandler  {
+		+Process(ProductCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class UpdateShiftCommandHandler  {
+		-IRepository~Shift~ repository
+		-ILogger~UpdateShiftCommandHandler~ logger
+		+ProcessAsync(UpdateShiftCommand request, CancellationToken cancellationToken) Task~Result~ShiftDetailVm~~
+	}
+	class GetShiftDetailQuery  {
+		+ TimeRequest : DateTime
+		+ ShiftId : int
+	}
+	class IMasterLabelService  {
+		-GetMasterLabelByPartNumberAsync(string partNumber, CancellationToken cancellationToken) Task~Result~List~string~~~
+	}
+	class IEventsService  {
+		- ActualPage : int
+		- PageSize : int
+		-GetNextEventsAsync(CancellationToken cancellationToken) Task~Result~EventsListVm~~
+		-GetPreviousEventsAsync(CancellationToken cancellationToken) Task~Result~EventsListVm~~
+	}
+	class CreateConfigAppValidator  {
+	}
+	class ReportsDetailMonitorQuery  {
+		+ BarCode : string
+		+ BarCodeId : int
+	}
+	class MachineUpdated  {
+		+ MachineId : int
+		+ToString() string
+		+Process(MachineUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class MachineUpdatedHandler  {
+		+Process(MachineUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class GetCyclesListQuery  {
+		+ Id : int
+		+ Page : int
+		+ PageSize : int
+	}
+	class MachineProductMap  {
+		+ MachineId : int
+		+ MachineName : string
+		+ ProductId : int
+		+ PartNumber : string
+		+ CustomerId : int
+		+ CustomerName : string
+		+ WorkFlowId : int
+		+ LastMachineId : int?
+		+ NextMachineId : int?
+		+ ProductAlias : string
+	}
+	class NotFoundException  {
+	}
+	class CustomerDto  {
+		+ CustomerId : int
+		+ Name : string
+		+ IsActive : bool
+		+ HasProductRunningOnLine : bool
+		+ CreatedBy : string
+		+ CreatedOn : DateTime?
+		+ ModifiedBy : string
+		+ ModifiedOn : DateTime?
+		+ToDto(Customer src) Result~CustomerDto~
+		+ToEntity(CustomerDto src) Result~Customer~
+		+ToDtoList(IEnumerable~Customer~ src) Result~List~CustomerDto~~
+		+ToEntityList(IEnumerable~CustomerDto~ src) Result~List~Customer~~
+	}
+	class MasterLabelRepositoryExtensions  {
+		+GetMasterLabelByPartNumberAsync(IReadOnlyRepository~MasterLabel~ masterLabelRepository, string partNumber, HybridCache cache, CancellationToken cancellationToken) Task~Result~List~string~~~
+		+GetMasterLabelByPartNumberAsyncFromDb(IReadOnlyRepository~MasterLabel~ masterLabelRepository, string partNumber, CancellationToken cancellationToken) Task~Result~List~string~~~
+	}
+	class CreateBarCodeCommand  {
+		+ Command : TaskGatewayRequest
+		+Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+WithData(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+TryReset() bool
+	}
+	class GetConfigStationListQuery  {
+		-string? partNumber
+		+ PartNumber : string?
+	}
+	class OeeCalculationService  {
+		-ILogger~OeeCalculationService~ logger
+		+CalculateOee(TimeSpan totalTime, TimeSpan downtime, TimeSpan idealCycleTime, int totalCount, int defectCount) Result~OeeMetrics~
+		+CalculateAvailability(TimeSpan totalTime, TimeSpan downtime) decimal
+		+CalculatePerformance(TimeSpan idealCycleTime, int totalCount, TimeSpan runTime) decimal
+		+CalculateQuality(int totalCount, int defectCount) decimal
+		+ValidateInputs(TimeSpan totalTime, TimeSpan downtime, TimeSpan idealCycleTime, int totalCount, int defectCount) bool
+		-GetValidationErrors(TimeSpan totalTime, TimeSpan downtime, TimeSpan idealCycleTime, int totalCount, int defectCount) List~string~
+	}
+	class CreateMachinePlcCommandHandler  {
+		-IRepository~MachinePlc~ repository
+		-ILogger~CreateMachinePlcCommandHandler~ logger
+		+ProcessAsync(CreateMachinePlcCommand request, CancellationToken cancellationToken) Task~Result~MachinePlcCreated~~
+	}
+	class Specification ~T~ {
+		-string? key
+		+ Criteria : Expression~Func~T&#44&#32bool~~
+		+ Includes : List~Expression~Func~T&#44&#32object~~~
+		+ IncludeStrings : List~string~
+		+ OrderBy : Expression<Func<T&#44&#32object>>?
+		+ OrderByDescending : Expression<Func<T&#44&#32object>>?
+		+ ThenBy : Expression<Func<T&#44&#32object>>?
+		+ ThenByDescending : Expression<Func<T&#44&#32object>>?
+		+ Select : Expression<Func<T&#44&#32object>>?
+		+ Key : string
+		+ Skip : int?
+		+ Take : int?
+		+ IsTracking : bool
+		+AddInclude(Expression~Func~T&#44&#32object~~ includeExpression) ISpecification~T~
+		+AddInclude(string includeString) ISpecification~T~
+		+AddOrderBy(Expression~Func~T&#44&#32object~~ orderByExpression) ISpecification~T~
+		+AddOrderByDescending(Expression~Func~T&#44&#32object~~ orderByDescExpression) ISpecification~T~
+		+AddThenBy(Expression~Func~T&#44&#32object~~ thenByExpression) ISpecification~T~
+		+AddThenByDescending(Expression~Func~T&#44&#32object~~ thenByDescExpression) ISpecification~T~
+		+ApplyPaging(int skip, int take) ISpecification~T~
+		+ApplyNoTracking() ISpecification~T~
+		+And(ISpecification~T~ specification) ISpecification~T~
+		+Or(ISpecification~T~ specification) ISpecification~T~
+		+AddSelect(Expression~Func~T&#44&#32object~~ selectExpression) ISpecification~T~
+		-GenerateKey() string
+	}
+	class ProductionDataContext  {
+		-string ProductionEnvironment
+		-string ProductionDatabaseId
+		+ IsSimulation : bool
+		+ Environment : string
+		+ AllowsDatabaseWrites : bool
+		+ DatabaseIdentifier : string
+	}
+	class RestoreBarCodeCommandHandler  {
+		+ProcessAsync(RestoreBarCodeCommand request, CancellationToken cancellationToken) Task~Result~BarCodeRestoredView~~
+	}
+	class ConfigStationUpdated  {
+		+ ConfigStationId : int
+		+ ConfigAppId : string
+		+ Client : string
+		+ Factory : string
+		+ Line : string
+		+ MachineId : int
+		+ Project : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+		+ PlcId : int
+		+ Pc : int
+		+ CreatedBy : string
+		+ CreatedOn : DateTime?
+		+ ModifiedBy : string
+		+ ModifiedOn : DateTime?
+		+From(ConfigStation? entity) Result~ConfigStationUpdated~
+		+ToString() string
+		+Process(ConfigStationUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ConfigStationUpdatedHandler  {
+		+Process(ConfigStationUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ReportsDetailMonitorQrQuery  {
+		+ BarCode : string
+		+ BarCodeId : int
+	}
+	class IndTraceNotificationService  {
+		-INotificationService notificationService
+		+SendAsync(MessageDto message, CancellationToken cancellationToken) Task~Result~
+	}
+	class GetBarCodeDetailQueryValidator  {
+	}
+	class GetMachineDetailQueryHandler  {
+		+ProcessAsync(GetMachineDetailQuery request, CancellationToken cancellationToken) Task~Result~MachineDto~~
+	}
+	class PlcDto  {
+		+ PlcId : int
+		+ MachineId : int
+		+ Name : string
+		+ PlcType : string
+		+ IpAddress : string
+		+ PlcBrand : string
+		+ Options : string
+		+ BrandOwner : string
+		+ CommLibrary : string
+		+ EnableSimulation : bool
+		+ Machines : IEnumerable~Machine~
+		+ VariablesGroups : IDictionary~string&#44&#32VariablesGroup~
+		+ Variables : IDictionary~string&#44&#32Variable~
+		+ Registers : IDictionary~string&#44&#32Register~
+		+ Perfomances : IDictionary~string&#44&#32Register~
+		+ References : IDictionary~string&#44&#32Register~
+		+ Enabled : bool
+		+ HasOeeEnabled : bool
+		+ToDto(Plc src) IndQuestResults.Result<PlcDto>
+		+ToEntity(PlcDto src) IndQuestResults.Result<Plc>
+	}
+	class ServiceControl  {
+		+IsProcessOpen(string processName) bool
+		+StartProcessIfNotOpen(string processName, string? fullName, string? path) IndQuestResults.Result<bool>
+	}
+	class CreateConfigAppCommand  {
+		+ ConfigId : string
+		+ AppId : int
+		+ Client : string
+		+ Factorie : string
+		+ Machine : string
+		+ Pc : string
+		+ Line : string
+		+ MachineId : int
+		+ Project : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+	}
+	class GetVariableDetailQueryValidator  {
+	}
+	class UpdateCyclesOkCommandValidator  {
+		-DateTimeMachine dateTimeMachine
+		-HaveValidRegisters(IDictionary~string&#44&#32Register~ registers) bool
+		-IsValidRegister(Register register) bool
+		-IsValidDate(DateTime timestamp) bool
+	}
+	class GetRegistersListQuery  {
+		+ RegistersName : IEnumerable~string~
+		+ VariablesId : IEnumerable~int~
+		+ MachineId : IEnumerable~int~
+		+ StartDate : DateTime
+		+ EndDate : DateTime
+	}
+	class CreateCyclesCommandValidator  {
+	}
+	class PerformanceDataCommand  {
+		+ PerformanceDataId : long
+		+ MachineId : int
+		+ PlcId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ TimeStamp : DateTime
+		+ ApplicationFlag : int
+		+ EventCounter : int
+		+ CurrentTime : int
+		+ RunningTime : int
+		+ StoppedTime : int
+		+ FaultedTime : int
+		+ StatusFaultReason : int
+		+ TotalProduction : double
+		+ ProductionOk : double
+		+ ProductionNoK : double
+		+ StatusFaultReject : int
+		+Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+TryReset() bool
+		+ToEntity(PerformanceDataCommand command) Domain.Entities.PerformanceData
+		+UpdateDataFromResult(Result~TaskGatewayResponse~ result) void
+		+FromPlc(IDictionary~string&#44&#32Register~ perfomances) Result~PerformanceDataCommand~
+	}
+	class SettingsListVm  {
+		+ Settings : IList~SettingDto~
+		+ Count : int
+	}
+	class StatusMonitor  {
+		+ BarCodeId : int
+		+ CycleId : int
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ Label : string
+		+ LastMachineId : int
+		+ MachineId : int
+		+ MachineType : MachineType
+		+ NextMachineId : int
+		+ PartStatus : PartStatus
+		+ PlcId : int
+		+ ResultValidation : ResultValidation
+		+ TimeStamp : DateTime
+		+ WorkFlowType : WorkFlowType
+		+CompareTo(StatusMonitor? other) int
+		+Equals(StatusMonitor? other) bool
+		+ToDto(TaskGatewayResponse src) IndQuestResults.Result<StatusMonitor>
+		+ToEntity(StatusMonitor src) IndQuestResults.Result<TaskGatewayResponse>
+	}
+	class GetBarCodeReportQueryHandler  {
+		-IRepository~Cycle~ cycleRepository
+		-IRepository~Register~ registerRepository
+		-IRepository~Variable~ variableRepository
+		-IDateTimeMachine dateTimeMachine
+		-IBarCodeResult barCodeResult
+		-ILogger~GetBarCodeReportQueryHandler~ logger
+		+ProcessAsync(GetBarCodeDetailQuery request, CancellationToken cancellationToken) Task~Result~BarCodeDetailVm~~
+	}
+	class GetBarCodeReportQueryValidator  {
+	}
+	class TooGleMachineEnableCommandHandler  {
+		+ProcessAsync(ToggleEnableMachineCommand request, CancellationToken cancellationToken) Task~Result~MachineDto~~
+	}
+	class GetMachinePlcDetailQueryValidator  {
+	}
+	class CreateWorkFlowCommand  {
+		+ WorkFlowId : int
+		+ ProductId : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+	}
+	class GetReportsFilterInfoQuery  {
+		+ IsMaster : bool
+		+ StartDate : DateTime
+		+ EndDate : DateTime
+	}
+	class INotification  {
+	}
+	class UpdateCyclesOkCommand  {
+		+ Command : TaskGatewayRequest
+		+Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+WithData(TaskGatewayRequest taskGatewayRequest) UpdateCyclesOkCommand
+		+TryReset() bool
+	}
+	class DatabaseSafeAttribute  {
+		+ Environment : string
+		+ AllowCrossEnvironment : bool
+		+ ValidationRules : string?
+		-ValidateEnvironmentResult() IndQuestResults.Result
+	}
+	class CreateBarCodeCommandValidator  {
+	}
+	class CreateMachineValidator  {
+	}
+	class ExpressionToKeyStringVisitor  {
+		-StringBuilder builder
+		+ToKeyString(Expression expression) string
+		-VisitLambda(Expression~T~ node) Expression
+		-VisitBinary(BinaryExpression node) Expression
+		-VisitMember(MemberExpression node) Expression
+		-VisitConstant(ConstantExpression node) Expression
+		-GetValueFromClosure(ConstantExpression constantExpression, MemberInfo member) object?
+		-ValueToString(object? value) string
+	}
+	class UpdateBarCodeValidator  {
+	}
+	class CreateCyclesCommandHandler  {
+		+ProcessAsync(CreateCyclesCommand cmd, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		-HasMaxAllowedCyclesOnStation(IBarCodeResult barCodeInfo, CreateCyclesCommand cmd) bool
+		-HasMaxAllowedCyclesNotOkOnStation(IBarCodeResult barCodeInfo, CreateCyclesCommand cmd) bool
+		-GetBarCodeInformation(CreateCyclesCommand cmd, CancellationToken cancellationToken) Task~IBarCodeResult?~
+		-StationCanNotStartCycles(IBarCodeResult barCodeInfo) bool
+		+TryReset() bool
+	}
+	class GetAppDetailsMonitorRequest  {
+		+ Refresh : bool
+	}
+	class GetConfigAppsListQueryHandler  {
+		-IRepository~Domain.Entities.ConfigApp~ repository
+		-ILogger~GetConfigAppsListQueryHandler~ logger
+		+ProcessAsync(GetConfigAppsListQuery request, CancellationToken cancellationToken) Task~Result~ConfigAppsListVm~~
+	}
+	class GetRegistersListQueryHandler  {
+		+ProcessAsync(GetRegistersListQuery request, CancellationToken cancellationToken) Task~Result~IEnumerable~RegisterDto~~~
+		-GetVariablesIdFromRequest(GetRegistersListQuery request, CancellationToken cancellationToken) Task~IEnumerable~int~~
+		-GetRegisterOnRequestSpec(GetRegistersListQuery request, CancellationToken cancellationToken, IEnumerable~int~ variablesIds) Task~Result~IEnumerable~RegisterDto~~~
+	}
+	class GetBarCodeListQueryReportValidator  {
+	}
+	class CreateProductCommandValidator  {
+		-BeValidJson(string jsonString) bool
+	}
+	class StationMonitor  {
+		-IDateTimeMachine dateTimeMachine
+		+ StatusRequest : string
+		+ Name : string
+		+ Label : string
+		+ PartNumber : string
+		+ Error : string
+		+ Description : string
+		+ ResultValidation : ResultValidation
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ GatewayTask : GatewayTask
+		+ RequestTask : string
+		+ ProductionData : ProductionData
+		+ TimeStamp : DateTime
+		+ Parameters : Dictionary~string&#44&#32string~
+		+ MachineId : int
+		+ PlcId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ CyclesOk : int
+		+ ShiftId : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ IsEnabled : bool
+		+ EventStatus : string
+		+EnsureIsValidToRenderAndPersist() bool
+		+CreateStationFromGatewayResponse(TaskGatewayResponse response, DateTime currentTime) StationMonitor
+		+CreateStationFromGatewayRequest(TaskGatewayRequest request, DateTime currentTime) StationMonitor
+		+UpdateStationFromGatewayRequest(TaskGatewayRequest request, DateTime currentTime) void
+		+UpdateStationFromGatewayResponse(TaskGatewayResponse response, DateTime currentTime) void
+		+ToDto(TaskGatewayResponse src, TDest dest) Result~TDest~
+		+ToEntity(T src, TaskGatewayResponse dest) Result~TaskGatewayResponse~
+		+ToDto(TaskGatewayRequest src, TDest dest, IDateTimeMachine? dateTimeMachine) Result~TDest~
+		+ToEntity(T src, TaskGatewayRequest dest) Result~TaskGatewayRequest~
+	}
+	class RegisterDto  {
+		+ RegisterId : int
+		+ MachineId : int
+		+ Name : string
+		+ VariableId : int
+		+ CycleId : int
+		+ Value : string
+		+ DataType : string
+		+ StatusValueId : int
+		+ TimeStamp : DateTime
+		+ToDto(Register src) IndQuestResults.Result<RegisterDto>
+		+ToEntity(RegisterDto src) IndQuestResults.Result<Register>
+		+ToDtoList(IEnumerable~Register~ src) IndQuestResults.Result<List<RegisterDto>>
+	}
+	class IEventBus  {
+		-Publish(TEvent @event, CancellationToken cancellationToken) Task
+	}
+	class BarcodeUtility  {
+		+BarCodeImageToDataBase64(QRCodeData barCodeImage) string
+		+ToBase64DataUri(QRCodeData barCodeImage) string
+		+ImageToDataBase64(Image image) string
+		+ToBase64DataUri(Image qrCodeImage) string
+	}
+	class GatewayPersistenceBehavior ~TRequest, TResponse~ {
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+		-HandleResultPersistenceAsync(Result~TaskGatewayResponse~ result, TRequest request, int commandId, CancellationToken cancellationToken) Task
+		-PersistValidResultAsync(TRequest request, TaskGatewayResponse value, int commandId, CancellationToken cancellationToken) Task
+		-PersistFailedResultAsync(TRequest request, Result~TaskGatewayResponse~ result, int commandId, CancellationToken cancellationToken) Task
+		-PersistFallbackResultAsync(ICommandData command, string error, int commandId, CancellationToken cancellationToken) Task
+		-UpdateCommandWithSuccess(TaskGatewayRequest command, int commandId) void
+		-UpdateCommandWithFailure(TaskGatewayRequest command, int commandId, string error, int validationResult) void
+		-SafeExecuteAsync(Func~Task~ action, string logMessage) Task
+	}
+	class GetBarCodeQuery  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ ResultValidation : ResultValidation?
+		+ Label : string?
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ CycleStatus : CycleStatus?
+		+ FlowStatus : FlowStatus?
+		+ PartStatus : PartStatus?
+		+ MachineType : MachineType?
+		+ WorkFlowType : WorkFlowType?
+		+ Cycle : Cycle?
+		+ BarCode : BarCode?
+		+ MasterLabel : MasterLabel?
+		+ References : IDictionary<string&#44&#32Register>?
+		+DetailVm(string label, int machineId, CancellationToken cancellationToken) Task~Result~GetBarCodeQuery~~
+		-LoadMasterLabelAsync(CancellationToken cancellationToken) Task~Result~MasterLabel~~
+		-LoadBarCodeAsync(CancellationToken cancellationToken) Task~Result~BarCode~~
+		-LoadCycleAsync(CancellationToken cancellationToken) Task~Result~
+		-LoadWorkFlowsAsync(CancellationToken cancellationToken) Task~Result~IDictionary~int&#44&#32WorkFlow~~~
+		-ProcessMachineDetails(IDictionary~int&#44&#32WorkFlow~ vmFt, CancellationToken cancellationToken) Task~Result~
+		-Validate() Result~bool~
+		+EvaluateMachineProcess() Result~bool~
+		-HandleFlowStatusCreated() Result~bool~
+		-HandleFlowStatusInProcess() Result~bool~
+		-HandleFinalMachineType() Result~bool~
+		-HandleDashBoardMachineType() Result~bool~
+		+AssignReferences() Result
+		-AssignReference(string key, object? value) Result
+		-ValidateConstructorParameters(string? label) Result
+		-ValidateRequiredProperties() Result
+		-ValidateAllRequiredProperties() Result
+	}
+	class BarCodeDetailMonitorVm  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ ResultValidation : ResultValidation
+		+ Label : string
+		+ Cycles : List~CycleView~
+		+ Registers : List~RegisterView~
+		+ StatusMonitor : StatusMonitor
+		+ Variables : List~VariablesView~
+		+ToDto(BarCode src) IndQuestResults.Result<BarCodeDetailMonitorVm>
+		+ToEntity(BarCodeDetailMonitorVm src) IndQuestResults.Result<BarCode>
+	}
+	class IIdentityService  {
+		-RegisterAsync(string username, string password) Task
+		-SignInAsync(string username, string password) Task~bool~
+		-SignOutAsync() Task
+		-ChangePasswordAsync(string oldPassword, string newPassword) Task
+		-AssignRoleAsync(string username, string role) Task
+		-GetRolesAsync(string username) Task~IEnumerable~string~~
+	}
+	class CyclesDetailVm  {
+		+ CycleId : int
+		+ MachineId : int
+		+ BarCodeId : int
+		+ PartStatus : int
+		+ CycleStatus : int
+		+ CycleTime : int
+		+ TaktTime : int
+		+ StartedOn : DateTime
+		+ FinishedOn : DateTime
+		+ToDto(Cycle src) IndQuestResults.Result<CyclesDetailVm>
+		+ToEntity(CyclesDetailVm src) IndQuestResults.Result<Cycle>
+	}
+	class CalculateOeeCommandValidator  {
+	}
+	class MachineConfigDto  {
+		+ Id : int
+		+ MachineId : int
+		+ Name : string
+		+ Location : string
+		+ MachineType : int
+		+ IpAddress : string
+		+ EnableAppTraceability : int
+		+ EnableBypassTraceability : int
+		+ BarCodes : ICollection~BarCode~
+		+ Cycles : ICollection~Cycle~
+		+ WorkFlows : ICollection~WorkFlow~
+		+ DefectRegisters : ICollection~DefectRegister~
+		+ Settings : ICollection~Setting~
+		+ Variables : ICollection~Variable~
+		+ MachinesPlc : ICollection~MachinePlc~
+		+ Plcs : ICollection~Plc~
+		+ToDto(Machine src) Result~MachineConfigDto~
+		+ToEntity(MachineConfigDto src) Result~Machine~
+	}
+	class CycleCreatedHandler  {
+		+Process(CycleCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class UpdateProductCommand  {
+		+ ProductId : int?
+		+ NoParte : string?
+		+ ProductName : string?
+		+ Product : string?
+		+ IsActive : int?
+		+ Version : int?
+		+ CustomerPartNumber : string?
+		+ AliasNoParte : string?
+		+ Description : string?
+	}
+	class GetConfigAppsDetailQuery  {
+		+ Id : int
+	}
+	class PrinterProductAssociation  {
+		+ MachineId : int
+		+ MachineName : string
+		+ MachineType : MachineType
+		+ ProductId : int
+		+ PartNumber : string
+		+ CustomerName : string
+	}
+	class GetSettingsListQueryHandler  {
+		-IRepository~Domain.Entities.Setting~ repository
+		-ILogger~GetSettingsListQueryHandler~ logger
+		+ProcessAsync(GetSettingsListQuery request, CancellationToken cancellationToken) Task~Result~SettingsListVm~~
+	}
+	class GetConfigStationListQueryValidator  {
+	}
+	class WorkFlowDtoValidator  {
+	}
+	class RegisterView  {
+		+ RegisterId : int
+		+ Name : string
+		+ Description : string
+		+ MachineId : int
+		+ VariableId : int
+		+ CycleId : int
+		+ Value : string
+		+ DataType : string
+		+ StatusValueId : int
+		+ TimeStamp : DateTime
+		+ EnumValue : string
+		+ToDto(Register src) IndQuestResults.Result<RegisterView>
+		+ToEntity(RegisterView src) IndQuestResults.Result<Register>
+		+ToDtoList(IEnumerable~Register~ src) IndQuestResults.Result<List<RegisterView>>
+	}
+	class CycleRepositoryExtensions  {
+		+GetCyclesByBarCodeIdAsync(IRepository~Cycle~ cycleRepository, int barCodeId, CancellationToken cancellationToken) Task~Result~List~CycleView~~~
+		+GetProductionByShiftAsync(IRepository~Cycle~ cycleRepository, DateTime startBy, DateTime endTime, int machineId, CancellationToken cancellationToken) Task~Result~int~~
+		+GetCycleByIdAsync(IRepository~Cycle~ cycleRepository, int barCodeId, CancellationToken cancellationToken) Task~Result~Cycle?~~
+	}
+	class WorkFlowDetailVm  {
+		+ WorkFlowId : int
+		+ ProductId : int
+		+ NextMachineId : int
+		+ LastMachineId : int
+		+ Machine : List~Machine~
+		+ Edges : List~Edge~
+		+ToDto(WorkFlow src) IndQuestResults.Result<WorkFlowDetailVm>
+		+ToDtoList(IEnumerable~WorkFlow~ src) IndQuestResults.Result<List<WorkFlowDetailVm>>
+	}
+	class UpdateShiftoValidator  {
+	}
+	class CreateBarCodeDictionaryExecutor  {
+		-IDateTimeMachine dateTimeMachineProvider
+		+Dictionary~string&#44&#32Func~RuleFragment&#44&#32string&#44&#32int&#44&#32IndQuestResults.Result~string?~~~ ComponentActions
+		+ Rule : Rule?
+		+ParseRuleFromJson(string ruleJson) Rule?
+		+InitializeComponentActions() IndQuestResults.Result
+		+ApplyRuleCreateBarCode(string partNumber, int consecutive) IndQuestResults.Result<string>
+		-StringAction(RuleFragment component, string partNumber, int consecutive) IndQuestResults.Result<string?>
+		-LastTwoYearDigitsAction(RuleFragment component, string partNumber, int consecutive) IndQuestResults.Result<string?>
+		-JulianDayAction(RuleFragment component, string partNumber, int consecutive) IndQuestResults.Result<string?>
+		-NumericAction(RuleFragment component, string partNumber, int consecutive) IndQuestResults.Result<string?>
+	}
+	class ReflectionExtensions  {
+		+InvokeMethod(T obj, string methodName, object[] args) IndQuestResults.Result<TU>
+		+InvokeMethod(T obj, string methodName, object[] args) IndQuestResults.Result<object>
+		+GetPrivatePropertyValue(object obj, string propName) IndQuestResults.Result<T>
+		+GetPrivateFieldValue(object obj, string propName) IndQuestResults.Result<T>
+		+SetPrivatePropertyValue(object obj, string propName, T val) IndQuestResults.Result
+		+SetPrivateFieldValue(object obj, string propName, T val) IndQuestResults.Result
+	}
+	class UpdateConfigStationCommandHandler  {
+		-IRepository~ConfigStation~ repository
+		-ILogger~UpdateConfigStationCommandHandler~ logger
+		+ProcessAsync(UpdateConfigStationCommand request, CancellationToken cancellationToken) Task~Result~ConfigStationUpdated~~
+	}
+	class ISpecification ~T~ {
+		- Criteria : Expression~Func~T&#44&#32bool~~
+		- Includes : List~Expression~Func~T&#44&#32object~~~
+		- IncludeStrings : List~string~
+		- OrderBy : Expression<Func<T&#44&#32object>>?
+		- OrderByDescending : Expression<Func<T&#44&#32object>>?
+		- ThenBy : Expression<Func<T&#44&#32object>>?
+		- ThenByDescending : Expression<Func<T&#44&#32object>>?
+		- Select : Expression<Func<T&#44&#32object>>?
+		- Key : string
+		- Skip : int?
+		- Take : int?
+		- IsTracking : bool
+		-AddInclude(Expression~Func~T&#44&#32object~~ includeExpression) ISpecification~T~
+		-AddInclude(string includeString) ISpecification~T~
+		-AddOrderBy(Expression~Func~T&#44&#32object~~ orderByExpression) ISpecification~T~
+		-AddOrderByDescending(Expression~Func~T&#44&#32object~~ orderByDescExpression) ISpecification~T~
+		-AddThenBy(Expression~Func~T&#44&#32object~~ thenByExpression) ISpecification~T~
+		-AddThenByDescending(Expression~Func~T&#44&#32object~~ thenByDescExpression) ISpecification~T~
+		-ApplyPaging(int skip, int take) ISpecification~T~
+		-ApplyNoTracking() ISpecification~T~
+		-And(ISpecification~T~ specification) ISpecification~T~
+		-Or(ISpecification~T~ specification) ISpecification~T~
+		-AddSelect(Expression~Func~T&#44&#32object~~ selectExpression) ISpecification~T~
+	}
+	class UpdateSettingCommand  {
+		+ SettingId : int?
+		+ MachineId : int?
+		+ Config : string
+	}
+	class IRegisterService  {
+		-GetRegistersGroupedByMachineAsync(List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~Register~~~
+		-GetRegistersWithVariablesAsync(List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~RegisterView~~~
+		-GetRegisterByCycleIdListAsync(List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~RegisterView~~~
+	}
+	class RequestPerformanceBehaviour ~TRequest, TResponse~ {
+		-ILogger~TRequest~ logger
+		-Stopwatch timer
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+	}
+	class VariableUpdated  {
+		+ VariableId : int?
+		+ MaquinaId : int?
+		+ Plc : string?
+		+ Name : string?
+		+ Address : string?
+		+ Type : string?
+		+ Length : int?
+		+ Event : int?
+		+ Direction : int?
+		+ VariableGroupId : int?
+		+ Model : string?
+		+ Transaction : string?
+		+ToString() string
+		+Process(VariableUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class VariableUpdatedHandler  {
+		+Process(VariableUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class UpdateSettingCommandHandler  {
+		-IRepository~Domain.Entities.Setting~ repository
+		-ILogger~UpdateSettingCommandHandler~ logger
+		+ProcessAsync(UpdateSettingCommand request, CancellationToken cancellationToken) Task~Result~SettingDetailVm~~
+	}
+	class GetOeeHistoryPerformanceQueryHandler  {
+		-IOeeRepository oeeRepository
+		-IValidator~GetOeeHistoryQuery~ validator
+		-ILogger~GetOeeHistoryPerformanceQueryHandler~ logger
+		+HandleAsync(GetOeeHistoryQuery query, CancellationToken cancellationToken) Task~Result~GetOeeHistoryResponse~~
+	}
+	class GetBarCodeDetailQuery  {
+		+ BarCode : string?
+		+ PartNumber : string?
+		+ MachineId : int
+		+ References : IDictionary~string&#44&#32Register~
+	}
+	class IReadOnlyRepository ~T~ {
+		-GetByIdAsync(int id, CancellationToken cancellationToken) Task~Result~T?~~
+		-GetByIdsAsync(CancellationToken cancellationToken, object[] ids) Task~Result~T?~~
+		-ListAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		-ListAsync(CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		-FirstOrDefaultAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~T?~~
+		-FirstOrDefaultAsync(CancellationToken cancellationToken) Task~Result~T?~~
+		-CountAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~int~~
+	}
+	class ValidationBehavior ~TRequest, TResponse~ {
+		-IEnumerable~IValidator~TRequest~~ validators
+		-ILogger~ValidationBehavior~TRequest&#44&#32TResponse~~ logger
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+	}
+	class UpdateMaquinaPlcValidator  {
+	}
+	class ShiftService  {
+		+CreateOrRetrieveShiftAndCyclesOkAsync(int machineId, CancellationToken cancellationToken) Task~Result~ShiftCreatedEvent~~
+		-CreateNewShiftAsync(CreateShiftCommand request, CancellationToken cancellationToken) Task~Shift~
+		-GetCyclesOkUpdateShiftDuration(ShiftCreatedEvent result, CreateShiftCommand request, CancellationToken cancellationToken) Task
+	}
+	class TaskExtensions  {
+		+FireAndForgetSafeAsync(Task task, ILogger? logger) void
+	}
+	class GetConfigAppsDetailQueryValidator  {
+	}
+	class ConfigAppsDto  {
+		+ ConfigAppId : string
+		+ AppId : int
+		+ Client : string
+		+ Factory : string
+		+ Line : string
+		+ MachineId : int
+		+ Project : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+		+ToDto(ConfigApp src) IndQuestResults.Result<ConfigAppsDto>
+		+ToEntity(ConfigAppsDto src) IndQuestResults.Result<ConfigApp>
+		+ToDtoList(IEnumerable~ConfigApp~ src) IndQuestResults.Result<List<ConfigAppsDto>>
+	}
+	class GetBarCodeDetailMonitorMonitorQueryHandler  {
+		-IRepository~BarCode~ barCodeRepository
+		-IRepository~Register~ registerRepository
+		-IRepository~Cycle~ cycleRepository
+		-IRepository~Variable~ variableRepository
+		-ILogger~GetBarCodeDetailMonitorMonitorQueryHandler~ logger
+		+ProcessAsync(GetBarCodeDetailMonitorQuery request, CancellationToken cancellationToken) Task~Result~BarCodeDetailMonitorVm~~
+		+UpdateMachineIds(List~RegisterView~ registers, List~CycleView~ cycles) void
+	}
+	class GetVariableListQuery  {
+	}
+	class ReferencesExtensions  {
+	}
+	class IPipelineBehavior ~TRequest, TResponse~ {
+		-HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+	}
+	class GatewayCommandDispatcher  {
+		-IServiceProvider provider
+		-ILogger~GatewayCommandDispatcher~ logger
+		-Dictionary~Type&#44&#32Func~object&#44&#32CancellationToken&#44&#32Task~object~~~ handlers
+		+ProcessAsync(IGatewayRequest~TResponse~ request, CancellationToken cancellationToken) Task~Result~TResponse~~
+		+QueryAsync(IGatewayRequest~TResponse~ request, CancellationToken cancellationToken) Task~Result~TResponse~~
+		-InvokeBehaviors(TRequest request, RequestFunctionalHandlerDelegate~Result~TResponse~~ finalFunctionalHandler, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class BarCodeUpdated  {
+		+ BarcodeId : int
+		+ToString() string
+		+Process(BarCodeUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class BarcodeUpdatedHandler  {
+		+Process(BarCodeUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class CreateConfigStationCommand  {
+		+ Pc : int
+		+ ConfigId : string
+		+ MachineId : int
+		+ Client : string
+		+ Factorie : string
+		+ Line : string
+		+ Machine : string
+		+ Project : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+		+ PlcId : int
+	}
+	class VariableListVm  {
+		+ICollection~VariableDto~ VariableList
+		+ Count : int
+	}
+	class MachineConfigVm  {
+		+ Machines : IList~MachineConfigDto~
+		+ Count : int
+	}
+	class UpdateBarCodeCommand  {
+		+ Command : TaskGatewayRequest
+		+ Registers : IDictionary~string&#44&#32Register~
+		+Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+WithData(TaskGatewayRequest taskGatewayRequest) UpdateBarCodeCommand
+		+TryReset() bool
+	}
+	class MediatorAssemblyMarker  {
+	}
+	class ShiftRepositoryExtensions  {
+		+GetShiftByDateAsync(IRepository~Shift~ shiftRepository, IDateTimeMachine dateTimeMachine, CancellationToken cancellationToken) Task~Result~Shift~~
+	}
+	class ErrorHandlingMiddleware  {
+		-RequestDelegate next
+		-ILogger~ErrorHandlingMiddleware~ logger
+		+Invoke(HttpContext context) Task
+		-HandleExceptionAsync(HttpContext context, Exception exception) Task
+	}
+	class IndTraceUserService  {
+		+ CurrentUserId : Task~string~
+		+ CurrentUserName : Task~string~
+		+ IsAuthenticated : Task~bool~
+	}
+	class CreateWorkFlowCommandHandler  {
+		-IRepository~WorkFlow~ repository
+		-ILogger~CreateWorkFlowCommandHandler~ logger
+		+ProcessAsync(CreateWorkFlowCommand request, CancellationToken cancellationToken) Task~Result~WorkFlowCreatedEvent~~
+	}
+	class MasterLabelService  {
+		-IReadOnlyRepository~MasterLabel~ masterLabelRepository
+		+GetMasterLabelByPartNumberAsync(string partNumber, CancellationToken cancellationToken) Task~Result~List~string~~~
+	}
+	class CreateVariableCommandHandler  {
+		-IRepository~Variable~ repository
+		-ILogger~CreateVariableCommandHandler~ logger
+		+ProcessAsync(CreateVariableCommand request, CancellationToken cancellationToken) Task~Result~VariableCreatedEvent~~
+	}
+	class BarCodeDetailsValidator  {
+	}
+	class UpdateWorkFlowCommand  {
+		+ WorkFlowId : int?
+		+ ProductId : int?
+		+ NextMachineId : int?
+		+ LastMachineId : int?
+	}
+	class UpdateWorkFlowValidator  {
+	}
+	class IIndTraceEventsService  {
+		- Messages : IReadOnlyCollection~string~
+		- ResponseEvents : IReadOnlyDictionary~int&#44&#32TaskGatewayResponse~
+		- RequestEvents : IReadOnlyDictionary~int&#44&#32TaskGatewayRequest~
+		- ControllerMonitors : IReadOnlyDictionary~int&#44&#32ControllerMonitor~
+		- StationMonitors : IReadOnlyDictionary~int&#44&#32StationMonitor~
+		- ProductionData : ProductionData
+		-ApplyConfiguration(ApplicationConfiguration configuration) void
+		-UpdateStationFromGatewayRequest(TaskGatewayRequest request) void
+		-UpdateStationFromGatewayResponse(TaskGatewayResponse response) void
+		-AddOrUpdateControllerFromGateway(int id, ControllerMonitor heartBeatControllerMonitor) void
+		-PushMessage(string user, string message) void
+		-AddOrUpdateTaskGatewayRequest(int id, TaskGatewayRequest requestEvent) void
+		-AddOrUpdateTaskGatewayResponse(int id, TaskGatewayResponse responseEvent) void
+	}
+	class ReportsFilterInfoVm  {
+		+ States : List~string~
+		+ Shifts : List~int~
+		+ Products : List~string~
+		+ Customers : List~string~
+		+ CustomerProducts : List~CustomerProduct~
+	}
+	class CreateWorkFlowValidator  {
+	}
+	class CreateSettingValidator  {
+	}
+	class IDataContext  {
+		- IsSimulation : bool
+		- Environment : string
+		- AllowsDatabaseWrites : bool
+		- DatabaseIdentifier : string
+	}
+	class UpdateBarCodeCommandHandler  {
+		+ProcessAsync(UpdateBarCodeCommand cmd, CancellationToken cancellationToken) Task~Result~TaskGatewayResponse~~
+		+TryReset() bool
+	}
+	class RegistersRecords  {
+		+ MachineId : int
+		+ Name : string
+		+ ValueType : string
+		+ Unit : string
+		+ VariableId : int
+		+ Selected : bool
+	}
+	class GetAppDetailsMonitorRequestHandler  {
+		+ProcessAsync(GetAppDetailsMonitorRequest request, CancellationToken cancellationToken) Task~Result~ApplicationConfiguration~~
+	}
+	class GetMachineDetailQueryValidator  {
+	}
+	class CreateShiftCommand  {
+		+int FirstShiftStart
+		+int SecondShiftStart
+		+int ThirdShiftStart
+		+ CyclesOk : int
+		+ Duration : TimeSpan
+		+ MachineId : int
+		+ MaxDuration : TimeSpan
+		+ MinDuration : TimeSpan
+		+ NormalDuration : TimeSpan
+		+ ShiftProduction : int
+		+ ShiftType : ShiftType
+		+ StartBy : DateTime
+		+FromShiftCreatedEvent(ShiftCreatedEvent shiftCreatedEvent) CreateShiftCommand
+		+Equals(object? obj) bool
+		+GetHashCode() int
+	}
+	class RuleDto  {
+		-string ruleJson
+		-string name
+		-string description
+		+ RuleId : int
+		+ RuleJson : string
+		+ Name : string
+		+ Description : string
+		+ Version : int
+		+ IsActive : bool
+		+ToDto(Rule src) IndQuestResults.Result<RuleDto>
+		+ToEntity(RuleDto src) IndQuestResults.Result<Rule>
+	}
+	class CreateShiftCommandHandler  {
+		+ProcessAsync(CreateShiftCommand request, CancellationToken cancellationToken) Task~Result~ShiftCreatedEvent~~
+	}
+	class ShiftUpdated  {
+		+ ShiftId : int
+		+ PartNumber : string
+		+ ShiftName : string
+		+ Shift : string
+		+ IsActive : bool
+		+ Version : int
+		+ CustomerPartNumber : string
+		+ AliasPartNumber : string
+		+ Description : string
+		+ToString() string
+		+Process(ShiftUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ShiftUpdatedHandler  {
+		+Process(ShiftUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class RegisterVm  {
+		+ VariableId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ Name : string
+		+ Description : string
+		+ Alias : string
+		+ Address : string
+		+ NetType : string
+		+ Length : int
+		+ Value : string?
+		+ CycleTime : int
+		+ CycleId : int
+		+ NativeType : string
+		+ EnumValue : string
+		+ToDto(Register src) IndQuestResults.Result<RegisterVm>
+		+ToDtoList(IEnumerable~Register~ src) IndQuestResults.Result<List<RegisterVm>>
+		+ToDto(Variable src) IndQuestResults.Result<RegisterVm>
+		+ToDtoList(IEnumerable~Variable~ src) IndQuestResults.Result<List<RegisterVm>>
+	}
+	class CycleViewModel  {
+		+ CycleId : int
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleStatus : CycleStatus
+		+ PartStatus : PartStatus
+		+ CycleTime : int
+		+ TaktTime : int
+		+ StartedOn : DateTime
+		+ FinishedOn : DateTime
+		+ToDto(Cycle src, TDest dest) IndQuestResults.Result<TDest>
+		+ToEntity(T src, Cycle dest) IndQuestResults.Result<Cycle>
+		-CompareTo(CycleViewModel? other) int
+		-Equals(CycleViewModel? other) bool
+	}
+	class GetBarCodeReportQueryHandler  {
+		+ProcessAsync(GetBarCodeReportQuery request, CancellationToken cancellationToken) Task~Result~List~BarCodeReportVm~~~
+	}
+	class IRuleEngine ~T~ {
+		-ApplyRulesAsync(T target, IEnumerable~IRule~T~~ rules) Task~Result~
+	}
+	class DeleteFailureException  {
+	}
+	class SettingDto  {
+		+ SettingId : int
+		+ MachineId : int
+		+ Config : string
+		+ToDto(Domain.Entities.Setting src) IndQuestResults.Result<SettingDto>
+		+ToEntity(SettingDto src) IndQuestResults.Result<Domain.Entities.Setting>
+		+ToDtoList(IEnumerable~Domain.Entities.Setting~ src) IndQuestResults.Result<List<SettingDto>>
+	}
+	class ConfigStationCreated  {
+		+ ConfigId : string
+		+ToString() string
+		+Process(ConfigStationCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ConfigAppCreatedHandler  {
+		+Process(ConfigStationCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class MaquinaPlcUpdated  {
+		+ MaquinaId : int?
+		+ Machine : Machine
+		+ PlCsId : int?
+		+ Plc : Plc
+		+ToString() string
+		+Process(MaquinaPlcUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class MaquinaPlcUpdatedHandler  {
+		+Process(MaquinaPlcUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class ValidationException  {
+		+ Failures : IDictionary~string&#44&#32string[]~
+	}
+	class BarCodeService  {
+		-IRepository~BarCode~ barCodeRepository
+		-IRepository~Register~ registerRepository
+		-IRepository~Cycle~ cycleRepository
+		+GetConsecutiveByBarCodeLabelAsync(string partNumber, List~string~ masterLabel, CancellationToken cancellationToken) Task~Result~int~~
+		+GetBarCodeByLabelAsync(string label, CancellationToken cancellationToken) Task~Result~BarCode~~
+		+GetBarCodeByIdAsync(int barCodeId, CancellationToken cancellationToken) Task~Result~BarCode~~
+		+GetBarCodeByRegisterDataAsync(string label, CancellationToken cancellationToken) Task~Result~List~BarCodeDto~~~
+	}
+	class BarCodeRestoredView  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ Label : string
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ToDto(BarCode src) IndQuestResults.Result<BarCodeRestoredView>
+		+ToEntity(BarCodeRestoredView src) IndQuestResults.Result<BarCode>
+	}
+	class RegisterRepositoryExtensions  {
+		+GetRegistersGroupedByMachineAsync(IRepository~Register~ registerRepository, IRepository~Variable~ variableRepository, List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~Register~~~
+		+GetRegistersWithVariablesAsync(IRepository~Register~ registerRepository, IRepository~Variable~ variableRepository, List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~RegisterView~~~
+		+GetRegisterByCycleIdListAsync(IRepository~Register~ registerRepository, IRepository~Variable~ variableRepository, List~int~ cycleIdList, CancellationToken cancellationToken) Task~Result~List~RegisterView~~~
+	}
+	class BarCodeReportVm  {
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ Label : string
+		+ ProductId : int
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ CycleStatus : CycleStatus
+		+ FlowStatus : FlowStatus
+		+ PartStatus : PartStatus
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ Cycles : List~CycleView~
+		+ Registers : List~RegisterView~
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+		+ToDto(BarCode src) IndQuestResults.Result<BarCodeReportVm>
+		+ToDtoList(IEnumerable~BarCode~ src) IndQuestResults.Result<List<BarCodeReportVm>>
+		+ToEntity(BarCodeReportVm src) IndQuestResults.Result<BarCode>
+	}
+	class GetBarCodeDetailQueryValidator  {
+	}
+	class GetProductDetailQueryHandler  {
+		-IRepository~Product~ productRepository
+		-IRepository~Customer~ customerRepository
+		-ILogger~GetProductDetailQueryHandler~ logger
+		+ProcessAsync(GetProductDetailQuery request, CancellationToken cancellationToken) Task~Result~ProductDto~~
+	}
+	class GetSettingsListQueryValidator  {
+	}
+	class ProductCreationDto  {
+		+ Product : ProductDto
+		+ Machines : IEnumerable~int~
+		+ Rule : RuleDto
+		+ Recipe : RecipeDto
+	}
+	class SpecificationExample  {
+		+GetActiveProductsSpec() ISpecification~Product~
+		+GetProductsWithCategorySpec() ISpecification~Product~
+		+GetProductsWithCategoryExpressionSpec() ISpecification~Product~
+		+GetProductsOrderedSpec() ISpecification~Product~
+		+GetProductsOrderedDescSpec() ISpecification~Product~
+		+GetProductsPagedSpec(int page, int pageSize) ISpecification~Product~
+		+GetProductNamesSpec() ISpecification~Product~
+		+GetActiveExpensiveProductsSpec() ISpecification~Product~
+		+GetActiveOrExpensiveProductsSpec() ISpecification~Product~
+		+GetComplexProductSpec() ISpecification~Product~
+		+GetReadOnlyProductsSpec() ISpecification~Product~
+	}
+	class Product  {
+		+ Id : int
+		+ Name : string
+		+ Price : decimal
+		+ Category : string
+		+ IsActive : bool
+		+ CreatedDate : DateTime
+		+ CategoryNavigation : Category
+		+ Orders : List~Order~
+	}
+	class Category  {
+		+ Id : int
+		+ Name : string
+	}
+	class Order  {
+		+ Id : int
+		+ OrderDate : DateTime
+		+ Amount : decimal
+	}
+	class ProductDto  {
+		+ ProductId : int
+		+ PartNumber : string
+		+ ProductName : string
+		+ IsActive : int
+		+ Version : int
+		+ CustomerPartNumber : string
+		+ CustomerId : int
+		+ CustomerName : string
+		+ CustomerLogo : string
+		+ AliasPartNumber : string
+		+ Description : string
+		+ CreatedBy : string
+		+ ModifiedBy : string
+		+ LineId : int
+		+ RuleId : int
+		+ Customer : Customer
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+		+ Machines : IEnumerable~int~
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ Line : Line
+		+ToDto(Product src) IndQuestResults.Result<ProductDto>
+		+ToEntity(ProductDto src) IndQuestResults.Result<Product>
+	}
+	class IUpdateCommand ~TEntity~ {
+		- EntitieId : int
+	}
+	class IUpdateCommandHandler ~TCommand, TEntity~ {
+		-Update(TCommand command, CancellationToken cancellationToken) Task~Result~bool~~
+	}
+	class UpdateCommandHandler ~TCommand, TEntity~ {
+		-IRepository~TEntity~ repository
+		+Update(TCommand command, CancellationToken cancellationToken) Task~Result~bool~~
+	}
+	class GetShiftDetailQueryHandler  {
+		-IRepository~Shift~ repository
+		-ILogger~GetShiftDetailQueryHandler~ logger
+		+ProcessAsync(GetShiftDetailQuery request, CancellationToken cancellationToken) Task~Result~ShiftDetailVm~~
+	}
+	class MachinePlcCreated  {
+		+ MachineId : int
+		+ PlCsId : int
+		+ToString() string
+		+Process(MachinePlcCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class MaquinaPlcCreatedHandler  {
+		+Process(MachinePlcCreated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class UpdateConfigAppCommand  {
+		+ ConfigAppId : string
+		+ AppId : int?
+		+ Client : string
+		+ Factory : string
+		+ Line : string
+		+ MachineId : int
+		+ Project : string
+		+ Version : string
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+	}
+	class GetCyclesListQueryHandler  {
+		-IRepository~Cycle~ repository
+		-ILogger~GetCyclesListQueryHandler~ logger
+		+ProcessAsync(GetCyclesListQuery request, CancellationToken cancellationToken) Task~Result~CyclesListVm~~
+	}
+	class UpdateCyclesNotOkCommandValidator  {
+		-DateTimeMachine dateTimeMachine
+		-HaveValidRegisters(IDictionary~string&#44&#32Register~ registers) bool
+		-IsValidRegister(Register register) bool
+		-IsValidDate(DateTime timestamp) bool
+	}
+	class BarCodesListVm  {
+		+ BarCodes : IList~BarCodeDto~
+		+ Count : int
+		+ Shift : Shift
+		+ ProductionByShift : int
+	}
+	class GetMachinePlcDetailQueryHandler  {
+		-IRepository~MachinePlc~ repository
+		-ILogger~GetMachinePlcDetailQueryHandler~ logger
+		+ProcessAsync(GetMachinePlcDetailQuery request, CancellationToken cancellationToken) Task~Result~MachinePlcDetailVm~~
+	}
+	class IDistinctRegisterService  {
+		-UpdateDistinctRegistersAsync(CancellationToken cancellationToken) Task
+		-GetDistinctRegistersAsync(CancellationToken cancellationToken) Task~IEnumerable~DistinctRegister~~
+	}
+	class GetSettingsListQuery  {
+	}
+	class RestoreBarCodeValidator  {
+	}
+	class AppDetailsFactory  {
+		+CreateAppDetailsAsync(CancellationToken cancellationToken) Task~ApplicationConfiguration~
+		+MapPlcListToPlcDtos(IEnumerable~Plc~ plcList, IEnumerable~MachinePlc~ machinePlcList, IEnumerable~Machine~ machineList, IEnumerable~Variable~ variablesList, IEnumerable~VariablesGroup~ variablesGroupList, OeeConfiguration oeeConfiguration) List~PlcDto~
+		-MapPlcToPlcDto(Plc plc, IEnumerable~MachinePlc~ machinePlcList, IEnumerable~Machine~ machineList, IEnumerable~Variable~ variablesList, IEnumerable~VariablesGroup~ variablesGroupList, OeeConfiguration oeeConfiguration) PlcDto
+		-GetMachinesForPlc(int plcId, IEnumerable~MachinePlc~ machinePlcList, IEnumerable~Machine~ machineList) IEnumerable~Machine~
+		-GetActiveVariablesForPlc(int plcId, IEnumerable~Variable~ variablesList) IEnumerable~Variable~
+		-MapVariablesToDictionary(IEnumerable~Variable~ plcVariables) Dictionary~string&#44&#32Variable~
+		-MapVariablesGroupsToDictionary(IEnumerable~VariablesGroup~ variablesGroupList) Dictionary~string&#44&#32VariablesGroup~
+		-MapVariablesToRegisters(IEnumerable~Variable~ plcVariables, int variableGroupId) Dictionary~string&#44&#32Register~
+		+GetActiveCustomer(IEnumerable~CustomerDto~ customer, IEnumerable~ProductDto~ products) Result~IEnumerable~CustomerDto~~
+		-GetMonitorPrinterProductMapping(IEnumerable~MachineDto~ machines, IEnumerable~ProductDto~ products, IEnumerable~CustomerDto~ activeCustomers) MainLineConfiguration
+	}
+	class Unsubscriber ~TStateChange~ {
+		-List~IObserver~TStateChange~~ observers
+		-IObserver~TStateChange~ observer
+		-Lock lock
+		+Dispose() void
+	}
+	class WorkFlowUpdated  {
+		+ WorkFlowId : int?
+		+ ProductId : int?
+		+ NextMachineId : int?
+		+ LastMachineId : int?
+		+ToString() string
+		+Process(WorkFlowUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class WorkFlowUpdatedHandler  {
+		+Process(WorkFlowUpdated notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class RuleEngine ~T~ {
+		+ApplyRulesAsync(T target, IEnumerable~IRule~T~~ rules) Task~Result~
+	}
+	class CsvFileBuilder ~TBarcodes~ {
+		+BuildProductsFile(IEnumerable~TBarcodes~ records) byte[]
+	}
+	class SettingCreatedEvent  {
+		+ SettingId : int
+		+ MachineId : int
+		+ Setting : string
+		+ Machine : Machine
+		+ToString() string
+		+Process(SettingCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+	class SettingCreatedHandler  {
+		+Process(SettingCreatedEvent notification1, CancellationToken cancellationToken) Task~Result~
+	}
+
+	GetMachineConfigQuery --|> IMonitorRequest
+	GetSettingDetailQuery --|> IMonitorRequest
+	GetConfigStationDetailQueryValidator --|> AbstractValidator
+	RejectBarCodeValidator --|> AbstractValidator
+	VariableCreatedEvent --|> INotification
+	VariableCreatedHandler --|> Models
+	CreatePlcValidator --|> AbstractValidator
+	WorkFlowCreatedEvent --|> INotification
+	FlujoTrabajoCreatedHandler --|> Models
+	CreateBarCodeExecutor --|> IRule
+	OeeService --|> IOeeService
+	CreateCyclesCommand --|> IGatewayRequest
+	CreateCyclesCommand --|> ICommandData
+	CreateCyclesCommand --|> IResettable
+	UserOfflineCreationService --|> IUserOfflineCreationService
+	ToggleEnableMachineCommand --|> IMonitorRequest
+	GatewayPerformanceBehaviour --|> IPipelineBehavior
+	GetMachinePlcDetailQuery --|> IMonitorRequest
+	UpdateShiftCommand --|> IMonitorRequest
+	PlcCreated --|> INotification
+	PlcCreatedHandler --|> Application
+	CreateConfigAppCommandHandler --|> IMonitorRequestHandler
+	CreateProductCommandHandler --|> IMonitorRequestHandler
+	UpdateConfigStationCommand --|> IMonitorRequest
+	GetCyclesDetailQuery --|> IMonitorRequest
+	MonitorRequestDispatcher --|> IMonitorRequestDispatcher
+	UpdateMachinePlcCommandHandler --|> IMonitorRequestHandler
+	GetConfigStationDetailQuery --|> IMonitorRequest
+	UpdateConfigStationValidator --|> AbstractValidator
+	GetSettingDetailQueryValidator --|> AbstractValidator
+	EventBus --|> IEventBus
+	CreatePerformanceDataCommandHandler --|> IGatewayRequestHandler
+	CreatePerformanceDataCommandHandler --|> IResettable
+	GetEventsListQuery --|> IMonitorRequest
+	CreateBarCodeCommandHandler --|> IGatewayRequestHandler
+	CreateBarCodeCommandHandler --|> IResettable
+	CreateShiftValidator --|> AbstractValidator
+	CalculateOeeCommandHandler --|> ICommandHandler
+	GetWorkFlowDetailQueryHandler --|> IMonitorRequestHandler
+	GetReportsListQuery --|> IMonitorRequest
+	CreateCyclesValidator --|> AbstractValidator
+	SettingUpdated --|> INotification
+	SettingUpdatedHandler --|> Models
+	RestException --|> Exception
+	ControllerMonitor --|> IMonitorFilter
+	ControllerMonitor --|> IComparable
+	ControllerMonitor --|> IEquatable
+	PerformanceDataCreated --|> INotification
+	GetShiftsListQueryHandler --|> IMonitorRequestHandler
+	UpdateCyclesOkCommandHandler --|> IGatewayRequestHandler
+	UpdateCyclesOkCommandHandler --|> IResettable
+	CreateVariableCommand --|> IMonitorRequest
+	GetShiftsListQuery --|> IMonitorRequest
+	IDeleteCommand --|> IMonitorRequest
+	DeleteCommandHandler --|> IDeleteCommandHandler
+	GetPlcDetailQuery --|> IMonitorRequest
+	RestoreBarCodeCommand --|> IMonitorRequest
+	UpdateProductValidator --|> AbstractValidator
+	GetConfigAppsDetailQueryHandler --|> IMonitorRequestHandler
+	UpdateVariableCommandHandler --|> IMonitorRequestHandler
+	GetConfigAppsListQueryValidator --|> AbstractValidator
+	GetEventsListQueryValidator --|> AbstractValidator
+	EventsService --|> IEventsService
+	GetVariableListQueryHandler --|> IMonitorRequestHandler
+	MachineUpdateCommandHandler --|> IMonitorRequestHandler
+	PerformanceDataValidator --|> AbstractValidator
+	SafeRepository --|> IRepository
+	GetBarCodeListQueryReportsValidator --|> AbstractValidator
+	CycleCreatedEvent --|> INotification
+	CreateConfigStationCommandHandler --|> IMonitorRequestHandler
+	CreateMachineMonitorRequest --|> IMonitorRequest
+	DistinctRegisterService --|> IDistinctRegisterService
+	UpdateConfigAppCommandHandler --|> IMonitorRequestHandler
+	GetWorkFlowDetailQueryValidator --|> AbstractValidator
+	UpdateConfigAppValidator --|> AbstractValidator
+	GetBarCodesLabelHandler --|> IMonitorRequestHandler
+	UnhandledExceptionBehaviour --|> IPipelineBehavior
+	RejectBarCodeCommand --|> IMonitorRequest
+	LoggingBehavior --|> IPipelineBehavior
+	GetReportsListMonitorQueryHandler --|> Domain
+	GetPlcDetailQueryValidator --|> AbstractValidator
+	CreateMaquinaPlcValidator --|> AbstractValidator
+	GetConfigStationListQueryHandler --|> IMonitorRequestHandler
+	GetProductDetailQuery --|> IMonitorRequest
+	IsOeeEnabledChecker --|> IIsOeeEnabledChecker
+	UpdateCyclesNotOkCommandHandler --|> IGatewayRequestHandler
+	UpdateCyclesNotOkCommandHandler --|> IResettable
+	CreatePlcCommandHandler --|> IMonitorRequestHandler
+	GetProductoDetailQueryValidator --|> AbstractValidator
+	GetWorkFlowDetailQuery --|> IMonitorRequest
+	UpdateCyclesNotOkCommand --|> IGatewayRequest
+	UpdateCyclesNotOkCommand --|> ICommandData
+	UpdateCyclesNotOkCommand --|> IResettable
+	GetConfigStationDetailQueryHandler --|> IMonitorRequestHandler
+	GetBarCodeDetailQueryValidator --|> AbstractValidator
+	GetShiftsListQueryValidator --|> AbstractValidator
+	GetOeeHistoryQueryValidator --|> AbstractValidator
+	PlcUpdated --|> INotification
+	PlcUpdatedHandler --|> Application
+	UpdateBarCodeCommandValidator --|> AbstractValidator
+	IListQuery --|> IMonitorRequestHandler
+	ListQueryHandler --|> IListQuery
+	GetBarCodeDetailQueryQrCodeHandler --|> IMonitorRequestHandler
+	GetMaquinaConfigQueryValidator --|> AbstractValidator
+	CycleUpdatedNotOk --|> INotification
+	CycleUpdatedNotOkHandler --|> Models
+	CycleCreatedEventHandler --|> Models
+	ICreateCommand --|> IMonitorRequest
+	ICreateCommandHandler --|> IMonitorRequestHandler
+	CreateCommandHandler --|> ICreateCommandHandler
+	ProductService --|> IProductService
+	GetVariableDetailQuery --|> IMonitorRequest
+	RegisterService --|> IRegisterService
+	CreateMachineMonitorRequestHandler --|> IMonitorRequestHandler
+	UpdateMachinePlcCommand --|> IMonitorRequest
+	GetBarCodesListQuery --|> IMonitorRequest
+	ShiftCreatedEvent --|> INotification
+	ShiftCreatedHandler --|> Models
+	ConfigAppUpdated --|> INotification
+	ConfigAppUpdatedHandler --|> Models
+	RejectBarCodeCommandHandler --|> IMonitorRequestHandler
+	UpdateMachineValidator --|> AbstractValidator
+	GetBarCodeListQueryValidator --|> AbstractValidator
+	IDetailQuery --|> IMonitorRequest
+	DetailQueryHandler --|> IDetailQueryHandler
+	GetVariableListQueryValidator --|> AbstractValidator
+	EventLoggerBehavior --|> IPipelineBehavior
+	GetRegisterDetailQuery --|> IMonitorRequest
+	GetRegistroDetailQueryValidator --|> AbstractValidator
+	ReadBarCodeQuery --|> IGatewayRequest
+	ReadBarCodeQuery --|> ICommandData
+	ReadBarCodeQuery --|> IResettable
+	GetVariableDetailQueryHandler --|> IMonitorRequestHandler
+	TestGenericListCommand --|> IMonitorRequest
+	TestGenericListCommand --|> TCommandList
+	GetBarCodeLabelQueryValidator --|> AbstractValidator
+	GetEventsListQueryHandler --|> IMonitorRequestHandler
+	SimulationDataContext --|> IDataContext
+	GetBarCodeDetailGatewayQueryHandler --|> IGatewayRequestHandler
+	GetBarCodeDetailGatewayQueryHandler --|> IResettable
+	GetBarCodesLabelQuery --|> IMonitorRequest
+	MachineCreated --|> INotification
+	MachineCreatedHandler --|> Models
+	CreateSettingCommandHandler --|> IMonitorRequestHandler
+	UpdatePlcCommandHandler --|> IMonitorRequestHandler
+	PerformanceCreatedHandler --|> Models
+	UpdatePlcCommand --|> IMonitorRequest
+	CreateConfigStationValidator --|> AbstractValidator
+	ShiftDetectionRuleExecutor --|> IShiftDetectionRuleExecutor
+	GetMachineDetailQuery --|> IMonitorRequest
+	CreateSettingCommand --|> IMonitorRequest
+	GetBarCodeDetailGatewayQueryValidator --|> AbstractValidator
+	GetSettingDetailQueryHandler --|> IMonitorRequestHandler
+	GetCyclesDetailQueryHandler --|> IMonitorRequestHandler
+	GetConfigAppsListQuery --|> IMonitorRequest
+	GetBarCodesListQueryHandler --|> IMonitorRequestHandler
+	UpdateVariableValidator --|> AbstractValidator
+	CreatePlcCommand --|> IMonitorRequest
+	GetBarCodeReportQuery --|> IMonitorRequest
+	GetCyclesDetailQueryValidator --|> AbstractValidator
+	CreateProductCommand --|> IMonitorRequest
+	GetRegistersListQueryValidator --|> AbstractValidator
+	RegisterInformationService --|> IRegisterInformationService
+	UpdateVariableCommand --|> IMonitorRequest
+	GetCyclesListQueryValidator --|> AbstractValidator
+	CreateMachinePlcCommand --|> IMonitorRequest
+	BadRequestException --|> Exception
+	UpdatePlcValidator --|> AbstractValidator
+	UpdateProductCommandHandler --|> IMonitorRequestHandler
+	ConfigAppCreated --|> INotification
+	ConfigAppCreatedHandler --|> Models
+	IndTraceEventsService --|> IIndTraceEventsService
+	IndTraceEventsService --|> IObservable
+	ProductUpdated --|> INotification
+	ProductUpdatedHandler --|> Models
+	UpdateWorkFlowCommandHandler --|> IMonitorRequestHandler
+	GetBarCodeDetailMonitorQuery --|> IMonitorRequest
+	BarCodeResult --|> IBarCodeResult
+	BarCodeResult --|> IResettable
+	CreateVariableValidator --|> AbstractValidator
+	ToggleEnableMachineCommandValidator --|> AbstractValidator
+	GetShiftoDetailQueryValidator --|> AbstractValidator
+	CycleService --|> ICycleService
+	GetReportesFilterInfoMonitorQueryHandler --|> IMonitorQueryHandler
+	UpdateSettingValidator --|> AbstractValidator
+	GetPlcDetailQueryHandler --|> IMonitorRequestHandler
+	GetBarCodeDetailQrCodeQuery --|> IMonitorRequest
+	MachineUpdateCommand --|> IMonitorRequest
+	GetMachineConfigQueryHandler --|> IMonitorRequestHandler
+	CycleUpdatedOk --|> INotification
+	CycleUpdatedOkHandler --|> Models
+	ProductCreatedEvent --|> INotification
+	ProductCreatedHandler --|> Models
+	UpdateShiftCommandHandler --|> IMonitorRequestHandler
+	GetShiftDetailQuery --|> IMonitorRequest
+	CreateConfigAppValidator --|> AbstractValidator
+	ReportsDetailMonitorQuery --|> IMonitorRequest
+	MachineUpdated --|> INotification
+	MachineUpdatedHandler --|> Models
+	GetCyclesListQuery --|> IMonitorRequest
+	NotFoundException --|> Exception
+	CreateBarCodeCommand --|> IGatewayRequest
+	CreateBarCodeCommand --|> ICommandData
+	GetConfigStationListQuery --|> IMonitorRequest
+	OeeCalculationService --|> IOeeCalculationService
+	CreateMachinePlcCommandHandler --|> IMonitorRequestHandler
+	Specification --|> ISpecification
+	ProductionDataContext --|> IDataContext
+	RestoreBarCodeCommandHandler --|> IMonitorRequestHandler
+	ConfigStationUpdated --|> INotification
+	ConfigStationUpdatedHandler --|> Models
+	ReportsDetailMonitorQrQuery --|> IMonitorRequest
+	IndTraceNotificationService --|> INotificationService
+	GetBarCodeDetailQueryValidator --|> AbstractValidator
+	GetMachineDetailQueryHandler --|> IMonitorRequestHandler
+	CreateConfigAppCommand --|> IMonitorRequest
+	GetVariableDetailQueryValidator --|> AbstractValidator
+	UpdateCyclesOkCommandValidator --|> AbstractValidator
+	GetRegistersListQuery --|> IMonitorRequest
+	CreateCyclesCommandValidator --|> AbstractValidator
+	PerformanceDataCommand --|> Domain
+	PerformanceDataCommand --|> IGatewayRequest
+	PerformanceDataCommand --|> ICommandData
+	StatusMonitor --|> IEquatable
+	StatusMonitor --|> IComparable
+	GetBarCodeReportQueryHandler --|> IMonitorRequestHandler
+	GetBarCodeReportQueryValidator --|> AbstractValidator
+	TooGleMachineEnableCommandHandler --|> IMonitorRequestHandler
+	GetMachinePlcDetailQueryValidator --|> AbstractValidator
+	CreateWorkFlowCommand --|> IMonitorRequest
+	GetReportsFilterInfoQuery --|> IMonitorRequest
+	UpdateCyclesOkCommand --|> IGatewayRequest
+	UpdateCyclesOkCommand --|> ICommandData
+	UpdateCyclesOkCommand --|> IResettable
+	DatabaseSafeAttribute --|> Attribute
+	CreateBarCodeCommandValidator --|> AbstractValidator
+	CreateMachineValidator --|> AbstractValidator
+	ExpressionToKeyStringVisitor --|> ExpressionVisitor
+	UpdateBarCodeValidator --|> AbstractValidator
+	CreateCyclesCommandHandler --|> IGatewayRequestHandler
+	CreateCyclesCommandHandler --|> IResettable
+	GetAppDetailsMonitorRequest --|> IMonitorRequest
+	GetConfigAppsListQueryHandler --|> IMonitorRequestHandler
+	GetRegistersListQueryHandler --|> IMonitorRequestHandler
+	GetBarCodeListQueryReportValidator --|> AbstractValidator
+	CreateProductCommandValidator --|> AbstractValidator
+	StationMonitor --|> IMonitorFilter
+	GatewayPersistenceBehavior --|> IPipelineBehavior
+	CalculateOeeCommandValidator --|> AbstractValidator
+	CycleCreatedHandler --|> Models
+	UpdateProductCommand --|> IMonitorRequest
+	GetConfigAppsDetailQuery --|> IMonitorRequest
+	GetSettingsListQueryHandler --|> IMonitorRequestHandler
+	GetConfigStationListQueryValidator --|> AbstractValidator
+	WorkFlowDtoValidator --|> AbstractValidator
+	UpdateShiftoValidator --|> AbstractValidator
+	UpdateConfigStationCommandHandler --|> IMonitorRequestHandler
+	UpdateSettingCommand --|> IMonitorRequest
+	RequestPerformanceBehaviour --|> IPipelineBehavior
+	VariableUpdated --|> INotification
+	VariableUpdatedHandler --|> Models
+	UpdateSettingCommandHandler --|> IMonitorRequestHandler
+	GetOeeHistoryPerformanceQueryHandler --|> IPerformanceQueryHandler
+	GetBarCodeDetailQuery --|> IMonitorRequest
+	ValidationBehavior --|> IPipelineBehavior
+	UpdateMaquinaPlcValidator --|> AbstractValidator
+	ShiftService --|> IShiftService
+	GetConfigAppsDetailQueryValidator --|> AbstractValidator
+	GetBarCodeDetailMonitorMonitorQueryHandler --|> IMonitorQueryHandler
+	GetVariableListQuery --|> IMonitorRequest
+	GatewayCommandDispatcher --|> IGatewayCommandDispatcher
+	BarCodeUpdated --|> INotification
+	BarcodeUpdatedHandler --|> Models
+	CreateConfigStationCommand --|> IMonitorRequest
+	UpdateBarCodeCommand --|> IGatewayRequest
+	UpdateBarCodeCommand --|> ICommandData
+	UpdateBarCodeCommand --|> IResettable
+	MediatorAssemblyMarker --|> IMediatorAssemblyMarker
+	IndTraceUserService --|> IIndTraceUserService
+	CreateWorkFlowCommandHandler --|> IMonitorRequestHandler
+	MasterLabelService --|> IMasterLabelService
+	CreateVariableCommandHandler --|> IMonitorRequestHandler
+	BarCodeDetailsValidator --|> AbstractValidator
+	UpdateWorkFlowCommand --|> IMonitorRequest
+	UpdateWorkFlowValidator --|> AbstractValidator
+	IIndTraceEventsService --|> IObservable
+	CreateWorkFlowValidator --|> AbstractValidator
+	CreateSettingValidator --|> AbstractValidator
+	UpdateBarCodeCommandHandler --|> IGatewayRequestHandler
+	GetAppDetailsMonitorRequestHandler --|> IMonitorRequestHandler
+	GetMachineDetailQueryValidator --|> AbstractValidator
+	CreateShiftCommand --|> IMonitorRequest
+	CreateShiftCommandHandler --|> IMonitorRequestHandler
+	ShiftUpdated --|> INotification
+	ShiftUpdatedHandler --|> Models
+	CycleViewModel --|> IEquatable
+	CycleViewModel --|> IComparable
+	GetBarCodeReportQueryHandler --|> IMonitorQueryHandler
+	DeleteFailureException --|> Exception
+	ConfigStationCreated --|> INotification
+	ConfigAppCreatedHandler --|> Models
+	MaquinaPlcUpdated --|> INotification
+	MaquinaPlcUpdatedHandler --|> Models
+	ValidationException --|> Exception
+	BarCodeService --|> IBarCodeService
+	GetBarCodeDetailQueryValidator --|> AbstractValidator
+	GetProductDetailQueryHandler --|> IMonitorRequestHandler
+	GetSettingsListQueryValidator --|> AbstractValidator
+	IUpdateCommand --|> IMonitorRequest
+	UpdateCommandHandler --|> IUpdateCommandHandler
+	GetShiftDetailQueryHandler --|> IMonitorRequestHandler
+	MachinePlcCreated --|> INotification
+	MaquinaPlcCreatedHandler --|> Models
+	UpdateConfigAppCommand --|> IMonitorRequest
+	GetCyclesListQueryHandler --|> IMonitorRequestHandler
+	UpdateCyclesNotOkCommandValidator --|> AbstractValidator
+	GetMachinePlcDetailQueryHandler --|> IMonitorRequestHandler
+	GetSettingsListQuery --|> IMonitorRequest
+	RestoreBarCodeValidator --|> AbstractValidator
+	Unsubscriber --|> IDisposable
+	WorkFlowUpdated --|> INotification
+	WorkFlowUpdatedHandler --|> Models
+	RuleEngine --|> IRuleEngine
+	CsvFileBuilder --|> ICsvFileBuilder
+	SettingCreatedEvent --|> INotification
+	SettingCreatedHandler --|> Models

@@ -1,0 +1,459 @@
+classDiagram
+
+	class VariablesData  {
+		+ Register : RegistersRecords
+		+ Name : string
+		+ MachineId : int
+		+ ValueType : string
+		+ Unit : string
+		+ VariableId : int
+		+ Data : double[]
+		+ Color : Color
+		+ TimeStamp : DateTime
+	}
+	class PerformanceRecord  {
+		+ ProductionData : ProductionData
+		+ HistoricData : List~ProductionData~
+		+ Name : string
+		+ Description : string
+		+ Capacity : double
+		+ Indicator : PerformanceIndicator
+		+ HistoricIndicator : List~PerformanceIndicator~
+		+UpdateData(ProductionData productionData) void
+	}
+	class BarCodeModel  {
+		+ Label : string
+		+IsValidLabel() bool
+	}
+	class NewProductForm  {
+		+ Name : string
+	}
+	class NewProductForm  {
+		+ Name : string
+	}
+	class ProductModel  {
+		+ ProductName : string
+		+ PartNumber : string
+		+ AliasPartNumber : string
+		+ CustomerPartNumber : string
+		+ Description : string
+		+ CustomerName : string
+		+ Version : int
+		+ CustomerId : int
+	}
+	class IMachineOee  {
+		- Availability : double
+		- Capacity : double
+		- DefectiveRate : double
+		- Name : string
+		- Oee : double
+		- Performance : double
+		- ProducedPieces : double
+		- Quality : double
+		- RejectedPieces : double
+		- RunningTime : double
+		- StoppingTime : double
+		-SetInitialCondition(int producedPieces, int rejectedPieces, double runningTime, double stoppingTime) void
+		-ToString() string
+		-UpdateInfo(int producedPieces, int rejectedPieces, double runningTime, double stoppingTime) void
+	}
+	class ReflectionHelper  {
+		+GetDropZones(MudDropContainer~ProductMachineItem~ container) Dictionary~string&#44&#32MudDropZone~T~~
+		+GetIndexs(MudDropZone~T~ dropZone) Dictionary~T&#44&#32int~
+	}
+	class IIndicator  {
+		- Value : double
+		- Data : double[&#44]
+		- CalculateValue : Action
+	}
+	class MetricsClasses  {
+		+Dictionary~string&#44&#32IIndicator~ IndicatorInstances
+		+ Indicators : List~string~
+	}
+	class AverageCycleTime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class ChangeoverTime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class CustomerRejects  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class CycleTime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class DefectRate  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class Downtime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class FirstPassYield  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class InventoryTurnover  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class LaborEfficiency  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class LeadTime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class MeanTimeBetweenFailures  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class MeanTimeToRepair  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class OnTimeDeliveryRate  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class OrderFulfillmentCycleTime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class OverallEquipmentEffectiveness  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class ProcessEfficiency  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class ProductionRate  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class ReworkRate  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class ScheduleAdherence  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class ScrapRate  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class SetupTime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class TaktTime  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class Throughput  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class UtilizationRate  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class WorkInProgress  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class Yield  {
+		+ CalculateValue : Action
+		+ Data : double[&#44]
+		+ Value : double
+	}
+	class BarCodeDetails  {
+		-IMonitorRequestDispatcher monitorRequestDispatcher
+		-ILogger~BarCodeDetails~ logger
+		+GetBarCodeDetail(string barCode, CancellationToken cancellationToken) Task~BarCodeDetailMonitorVm~
+	}
+	class ProductMachineItem  {
+		+ Name : string
+		+ Status : string
+		+ IndexInZone : int
+		+ MachineId : int
+		+ MachineName : string
+		+ SourceZoneIdentifier : string
+		+ Product : ProductDto?
+		+ Machine : MachineDto?
+		+SetProduct(ProductDto product) void
+		+SetMachine(MachineDto machine) void
+	}
+	class RandomExtensions  {
+		+NextDecimal(Random random, int minValue, int maxValue) double
+		+SampleWithTendencyToTheRight(Random random) double
+		+SampleWithTendencyToTheLeft(Random random) double
+		-BetaSample(Random random, double alpha, double beta) double
+		-GammaSample(Random random, double shape, double scale) double
+		-NormalSample(Random random) double
+	}
+	class ProductionData  {
+		+ ProducedPieces : double
+		+ RejectedPieces : double
+		+ RunningTime : double
+		+ StoppingTime : double
+		+ StartTime : DateTime
+		+ EndTime : DateTime
+		+AddProductionData(ProductionData productionData) void
+		+ToString() string
+	}
+	class ReportsListQueryModel  {
+		-TimeSpan maxRangeConsult
+		-IMonitorRequestDispatcher? monitorRequestDispatcher
+		+ StartDate : DateTime?
+		+ EndDate : DateTime?
+		+ IsMaster : bool
+		+ FilterByProduct : bool
+		+ FilterByShift : bool
+		+ FilterByLine : bool
+		+ FilterByState : bool
+		+ FilterByRegister : bool
+		+ FilterByCustomer : bool
+		+ SelectedProduct : string
+		+ SelectedState : string
+		+ SelectedCustomer : string
+		+ SelectedLine : string
+		+ SelectedRegister : string
+		+ SelectedShift : int
+		+ Products : List~string~
+		+ Customers : List~string~
+		+ CustomerProducts : List~CustomerProduct~
+		+ StatesList : List~string~
+		+ Shifts : List~int~
+		+ IsInitialized : bool
+		- IsRangeValidEndAfterInitialDate : bool
+		- IsRangeLesThanMaxRange : bool
+		-GetInfoFilterReports(IMonitorRequestDispatcher monitorRequestDispatcher) Task~ReportsFilterInfoVm~
+		+InitializeAsync() Task
+		+ValidateRangeOfDates(string fieldChanged) void
+		-ValidateRangeWhenEndDateChanged() void
+		-ValidateRangeWhenInitialDateChanged() void
+	}
+	class BarCodesListQueryModel  {
+		-TimeSpan maxRangeConsult
+		+ InitialDate : DateTime?
+		+ EndDate : DateTime?
+		+ IsMaster : bool
+		- IsRangeValidEndAfterInitialDate : bool
+		- IsRangeLesThanMaxRange : bool
+		+ValidateRangeOfDates(string fieldChanged) void
+		-ValidateRangeWhenEndDateChanged() void
+		-ValidateRangeWhenInitialDateChanged() void
+	}
+	class ProductsViewState  {
+		-ApplicationConfiguration applicationConfiguration
+		+ ProductsView : List~ProductDefinition~
+		+ ProductsList : List~ProductDefinition~
+		+ MachineItems : List~ProductMachineItem~
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ ProductSelectedItem : ProductDto
+		+ SelectedCustomer : string
+		+SetMachineNames(Dictionary~int&#44&#32string~ machineNames) void
+		+NewProductAdded(ProductDto newProduct) void
+		+ProductSelected(ProductDto selected) void
+		+GenerateProductsList(List~ProductDto~ products) List~ProductDefinition~
+		+GenerateProductsItems(List~ProductDto~ products, IEnumerable~WorkFlowDto~ workflows, Dictionary<int&#44&#32string>? machineNames) IEnumerable<ProductMachineItem>?
+		-MapProductIdsToNames(List~ProductDto~ products) Dictionary~int&#44&#32string~
+		-GetProductName(int productId, Dictionary~int&#44&#32string~ productIdToNameMap) string
+		-GetMachineOrder(int productId, Dictionary~int&#44&#32int~ machineOrderMap) int
+		-CreateProductMachineItem(WorkFlowDto workflow, string productName, int order, Dictionary<int&#44&#32string>? machineNames) ProductMachineItem?
+		+GenerateCatalogMachineItems(IEnumerable~WorkFlowDto~ workFlowList, Dictionary<int&#44&#32string>? machineNames) IEnumerable~ProductMachineItem~
+		-GetDistinctMachineIds(Dictionary<int&#44&#32string>? machineNames) HashSet~int~
+		-CreateCatalogMachineItems(HashSet~int~ distinctMachineIds, Dictionary<int&#44&#32string>? machineNames) IEnumerable~ProductMachineItem~
+		+InitializeMachineItems(List~ProductDto~ products, IEnumerable~WorkFlowDto~ workflows, Dictionary<int&#44&#32string>? machineNames) void
+		+InitializeProducts(List~ProductDto~ products) void
+		+HandleCatalogItemDrop(MudItemDropInfo~ProductMachineItem~ info) void
+		-ReplaceExistingItem(MudItemDropInfo~ProductMachineItem~ info, ProductMachineItem existingItem) void
+		+HandleCatalogItemDropIntoDiscard(MudItemDropInfo~ProductMachineItem~ info) void
+		-AddNewCatalogItem(MudItemDropInfo~ProductMachineItem~ info) void
+		+RemoveItemFromState(ProductMachineItem item) void
+		+AddMachine(ProductDefinition section) void
+		+DeleteSection(ProductDefinition section) void
+		-IsLastSection() bool
+		-ClearViewAndItems() void
+		-UpdateMachineStatusesAfterSectionDeletion(ProductDefinition section) void
+		-GetNewIndexAfterDeletion(ProductDefinition section) int
+		-UpdateMachineStatuses(string oldStatus, string newStatus) void
+		+AddProduct(IProductService productService, ProductDto productDto) Task~Result~ProductCreatedEvent~~
+		+SetSelectedCustomer(string selectedCustomer) void
+	}
+	class StatisticalExtensions  {
+		+ComputeMean(double[] samples) double
+		+ComputeStandardDeviation(double[] samples) double
+		+ComputeStandardDeviation(double[] samples, double mean) double
+		+ComputeMode(double[] samples) double
+		+ComputeSkewness(double[] samples, double mean, double stdDev) double
+		+ComputeSkewness(double[] samples) double
+		+ComputeKurtosis(double[] samples, double mean, double stdDev) double
+		+ComputeKurtosis(double[] samples) double
+	}
+	class ProductDefinition  {
+		+ Name : string
+		+ NewMachine : bool
+		+ NewMachineName : string
+	}
+	class ProductMachineItemExtensions  {
+		+RemoveDuplicates(IEnumerable~ProductMachineItem~ source) IEnumerable~ProductMachineItem~
+		+InsertIfNotExist(IList~ProductMachineItem~ source, int index, ProductMachineItem item) void
+		+AddIfNotExist(IList~ProductMachineItem~ source, ProductMachineItem item) void
+	}
+	class MachinePerformanceIndicator  {
+		+ MachineId : int
+		+ MachineName : string
+		+ Status : string
+		+ ImageName : string
+		+ LastMaintenanceDate : DateTime
+		+GenerateBogusData(int numberOfMachines) List~MachinePerformanceIndicator~
+		+ToString() string
+	}
+	class OeeState  {
+		-Random random
+		-IDateTimeMachine dateTimeMachine
+		-DateTime startTime
+		+ Machines : Dictionary~string&#44&#32PerformanceRecord~
+		-InitializeMachines() void
+		+GenerateNewData() void
+		+GeneratePastData() void
+	}
+	class ExportService  {
+		+ExportToExcel(List~BarCodeReportVm~ barCodeReports, Dictionary~int&#44&#32string~ machineNames) string
+		-SaveTheWorkbookAsExcelOnMemoryStream(XLWorkbook workbook) MemoryStream
+		-CreateSheetsForEachBarCodeId(List~BarCodeReportVm~ barCodeReports, XLWorkbook workbook, Dictionary~int&#44&#32string~ machineNames) void
+		-WriteRegisterData(BarCodeReportVm report, IXLWorksheet sheet, int registersStartRow, Dictionary~int&#44&#32string~ machineNames) void
+		-WriteRegistersHeader(BarCodeReportVm report, IXLWorksheet sheet) int
+		-WriteCyclesData(BarCodeReportVm report, IXLWorksheet sheet, Dictionary~int&#44&#32string~ machineNames) void
+		-ApplyHeaderStyle(IXLWorksheet summarySheet, int firstCellRow, int firstCellColumn, int lastCellRow, int lastCellColumn) void
+		-WriteHeaderData(IXLWorksheet sheet) void
+		-WriteDataSummarySheet(List~BarCodeReportVm~ barCodeReports, IXLWorksheet summarySheet, Dictionary~int&#44&#32string~ machineNames) void
+		-WriteHeaderSummarySheet(IXLWorksheet summarySheet) void
+	}
+	class PerformanceIndicator  {
+		-ProductionData productionData
+		+ Oee : double
+		+ Availability : double
+		+ Performance : double
+		+ Quality : double
+		-CalculateOee() double
+		-CalculateAvailability() double
+		-CalculatePerformance() double
+		-CalculateQuality() double
+		-CalculatePercentage(Func~double~ calculationMethod) double
+		-EnsurePercentageRange(double value) double
+	}
+	class UserInputModel  {
+		+ Email : string
+		+ Password : string
+		+ ConfirmPassword : string
+		+ Response : string
+	}
+	class ProductionExtensions  {
+		+GenerateNewData(PerformanceRecord machine, Random random, DateTime startTime, DateTime endTime) ProductionData
+		+GeneratePastData(PerformanceRecord machine, Random random, DateTime startTime, DateTime endTime) void
+	}
+	class QrCodeGenerator  {
+		+ Label : string
+	}
+	class ShiftModel  {
+		-bool isInitialized
+		+ Duration : TimeSpan
+		+ DurationString : string
+		+ HourlyProduction : double
+		+ IsRunningNow : bool
+		+ MaxDuration : TimeSpan
+		+ MinDuration : TimeSpan
+		+ NormalDuration : TimeSpan
+		+ ShiftId : int
+		+ ShiftProduction : int
+		+ StartBy : DateTime
+		+InitializeAsync() Task~Result~
+		+RequestInfoShiftAsync() Task~Result~
+		+UpdateShiftAsync() Task
+	}
+	class ReflectionHelper  {
+		+GetDropZones(MudDropContainer~ProductMachineItem~ container) Dictionary~string&#44&#32MudDropZone~T~~
+		+GetIndices(MudDropZone~T~ dropZone) Dictionary~T&#44&#32int~
+	}
+	class ShiftValidator  {
+	}
+	class AdvancedTrapezoidFunction  {
+		-double startRise
+		-double endRise
+		-double startFall
+		-double endFall
+		-double peakValue
+		-double frequency
+		-double amplitude
+		-LogisticRise(double x) double
+		-LogisticFall(double x) double
+		-SinusoidalNoise(double x) double
+		+Evaluate(double x) double
+	}
+	class OeeDataExtensions  {
+		+ExportHistoricalDataToCsv(OeeState oeeState, string filePath) void
+	}
+
+	AverageCycleTime --|> IIndicator
+	ChangeoverTime --|> IIndicator
+	CustomerRejects --|> IIndicator
+	CycleTime --|> IIndicator
+	DefectRate --|> IIndicator
+	Downtime --|> IIndicator
+	FirstPassYield --|> IIndicator
+	InventoryTurnover --|> IIndicator
+	LaborEfficiency --|> IIndicator
+	LeadTime --|> IIndicator
+	MeanTimeBetweenFailures --|> IIndicator
+	MeanTimeToRepair --|> IIndicator
+	OnTimeDeliveryRate --|> IIndicator
+	OrderFulfillmentCycleTime --|> IIndicator
+	OverallEquipmentEffectiveness --|> IIndicator
+	ProcessEfficiency --|> IIndicator
+	ProductionRate --|> IIndicator
+	ReworkRate --|> IIndicator
+	ScheduleAdherence --|> IIndicator
+	ScrapRate --|> IIndicator
+	SetupTime --|> IIndicator
+	TaktTime --|> IIndicator
+	Throughput --|> IIndicator
+	UtilizationRate --|> IIndicator
+	WorkInProgress --|> IIndicator
+	Yield --|> IIndicator
+	ShiftValidator --|> AbstractValidator

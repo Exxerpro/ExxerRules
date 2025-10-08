@@ -1,0 +1,46 @@
+xUnit.net v3 Microsoft.Testing.Platform Runner v3.0.1+9214bef154 (64-bit .NET 10.0.0-rc.1.25451.107)
+
+[+3/x0/?0] GateWay.Tests.dll (net10.0|x64) - 4 tests running (3s)
+
+failed GateWay.Tests.Gateway.GatewayTasksEndOfProcessAsyncTests.EndOfProcessAsync_ShouldLogError_WhenCommandFails (2s 330ms)
+  Shouldly.ShouldAssertException : result.Value
+      should not be null but was
+    at GateWay.Tests.Gateway.GatewayTasksEndOfProcessAsyncTests.EndOfProcessAsync_ShouldLogError_WhenCommandFails() in F:\Dynamic\IndTraceV2025\Src\Tests\Integration\IndTrace.Gateway.Tests\Gateway\GatewayTasksEndOfProcessAsyncTests.cs:58
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+    --- End of stack trace from previous location ---
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+  Standard output
+    Gateway Task EndOfProcessAsync Starting
+    Gateway Operation Starting CreateGatewayCommandFromPlc-EndOfProcessAsync with timeout 300 seconds.
+    Gateway Operation CreateGatewayCommandFromPlc-EndOfProcessAsync completed successfully in 15 ms.
+    Gateway Operation Starting PublishCommandToHub with timeout 300 seconds.
+    HubConnection is null while trying to publish command for MachineId 100
+    Gateway Operation PublishCommandToHub completed successfully in 0 ms.
+    Gateway Operation Starting ClearReferenceDataOnPlc with timeout 300 seconds.
+    Gateway Operation ClearReferenceDataOnPlc completed successfully in 3 ms.
+    Gateway Operation Starting SendCommandAsync-EndOfProcessAsync with timeout 300 seconds.
+    Gateway Operation SendCommandAsync-EndOfProcessAsync completed with failure in 1 ms.
+    Gateway Task EndOfProcessAsync from Machine ID (null) Finished on 0ms
+    Gateway Operation Starting PublishResultsToPlcAndHub with timeout 300 seconds.
+    Publishing results to PLC and Hub for MachineId 100
+    request RejectPartAsyncMonitor result (null)
+    Gateway Operation PublishResultsToPlcAndHub completed successfully in 3 ms.
+
+  Error output
+[+10/x1/?0] GateWay.Tests.dll (net10.0|x64) - GateWay.Tests.Gateway.GatewayTasksCreateBarCodeAsyncTests.CreateBarCodeAsync_ShouldReturnValidResult_WhenCalled (6s)
+
+[+10/x1/?0] GateWay.Tests.dll (net10.0|x64) - GateWay.Tests.Gateway.GatewayTasksCreateBarCodeAsyncTests.CreateBarCodeAsync_ShouldReturnValidResult_WhenCalled (9s)
+
+[+12/x1/?0] GateWay.Tests.dll (net10.0|x64) - GateWay.Tests.Gateway.GatewayTasksCreateBarCodeAsyncTests.CreateBarCodeAsync_ShouldReturnLabel_WhenCommandSucceeds (12s)
+
+
+Test run summary: Failed! - F:\Dynamic\IndTraceV2025\Src\Tests\Integration\IndTrace.Gateway.Tests\bin\Debug\net10.0\GateWay.Tests.dll (net10.0|x64)
+  total: 14
+  failed: 1
+  succeeded: 13
+  skipped: 0
+  duration: 13s 254ms

@@ -1,0 +1,27 @@
+{
+  "description": "IndFusion MCP Web server hosting ExxerFactor MCP tools and HTTP API.",
+  "name": "io.indfusion/IndFusion.Mcp.Web",
+  "packages": [
+    {
+      "registry_name": "nuget",
+      "name": "IndFusion.Mcp.Web",
+      "version": "1.0.5-rc.1",
+      "package_arguments": [],
+      "environment_variables": [
+        {
+          "name": "ASPNETCORE_URLS",
+          "description": "Kestrel URLs to bind (e.g. http://0.0.0.0:8080)",
+          "is_required": false,
+          "is_secret": false
+        }
+      ]
+    }
+  ],
+  "repository": {
+    "url": "https://github.com/indfusion/indfusion",
+    "source": "github"
+  },
+  "version_detail": {
+    "version": "1.0.5-rc.1"
+  }
+}

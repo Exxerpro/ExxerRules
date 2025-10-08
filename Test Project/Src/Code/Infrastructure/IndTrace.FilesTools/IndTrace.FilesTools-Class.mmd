@@ -1,0 +1,101 @@
+classDiagram
+
+	class JsonLoader  {
+		+LoadJsonFromSrcFolder(string folderPath, string fileName) IndQuestResults.Result<T>
+		-FindSrcFolder(string folderPath) IndQuestResults.Result<string>
+		-FindJsonFile(string folderPath, string fileName) IndQuestResults.Result<string?>
+	}
+	class CompositeFileLocator  {
+		-IFileLocator[] locators
+		+ StrategyName : string
+		+CanHandle(string fileName) bool
+		+GetFileStreamAsync(string fileName, CancellationToken cancellationToken) Task~Stream?~
+		+GetFileContentAsync(string fileName, CancellationToken cancellationToken) Task~string?~
+		+ExistsAsync(string fileName) Task~bool~
+		+GetDiagnosticInfo() Dictionary~string&#44&#32object~
+	}
+	class LegacyFileSystemLocator  {
+		-string[] searchPaths
+		+ StrategyName : string
+		+CanHandle(string fileName) bool
+		+GetFileStreamAsync(string fileName, CancellationToken cancellationToken) Task~Stream?~
+		+GetFileContentAsync(string fileName, CancellationToken cancellationToken) Task~string?~
+		+ExistsAsync(string fileName) Task~bool~
+		-FindFilePathAsync(string fileName) Task~string?~
+		-DiscoverSearchPaths() string[]
+		+GetDiagnosticInfo() Dictionary~string&#44&#32object~
+	}
+	class EmbeddedResourceFileLocator  {
+		-Assembly assembly
+		-string resourceNamespace
+		-Dictionary~string&#44&#32string~ resourceMap
+		+ StrategyName : string
+		+CanHandle(string fileName) bool
+		+GetFileStreamAsync(string fileName, CancellationToken cancellationToken) Task~Stream?~
+		+GetFileContentAsync(string fileName, CancellationToken cancellationToken) Task~string?~
+		+ExistsAsync(string fileName) Task~bool~
+		+GetAvailableFiles() IEnumerable~string~
+		-BuildResourceMap() Dictionary~string&#44&#32string~
+		-DetectResourceNamespace() string
+		+GetDiagnosticInfo() Dictionary~string&#44&#32object~
+	}
+	class IFileLocator  {
+		- StrategyName : string
+		-CanHandle(string fileName) bool
+		-GetFileStreamAsync(string fileName, CancellationToken cancellationToken) Task~Stream?~
+		-GetFileContentAsync(string fileName, CancellationToken cancellationToken) Task~string?~
+		-ExistsAsync(string fileName) Task~bool~
+	}
+	class FileLocator  {
+		-string SrcMarkerFolder
+		-Dictionary~string&#44&#32string?~ PathCache
+		+ Logger : Action<string>?
+		+FindFilePathAsync(string fileName, string? searchFolder, CancellationToken cancellationToken) Task~Result~string~~
+		+FindFolderPathAsync(string fileName, string? searchFolder, CancellationToken cancellationToken) Task~Result~string~~
+		+ClearCache() void
+		-LocateAsync(string fileName, string? searchFolder, bool returnDirectory, CancellationToken cancellationToken) Task~Result~string~~
+		-ResolveFileLocationAsync(string fileName, string? searchFolder, CancellationToken cancellationToken) Task~Result~string~~
+		-TryPathAsync(string? basePath, string? searchFolder, string fileName) Task~string?~
+		-TryRecursiveSearchAsync(string basePath, string? searchFolder, string fileName) Task~string?~
+		-TryTraverseUpToFindSrcAsync(string fileName, string? searchFolder) Task~string?~
+		-TryCommonLocationsAsync(string fileName, string? searchFolder) Task~string?~
+	}
+	class EmbeddedResourceTest  {
+		+TestEmbeddedResourcesAsync() Task~bool~
+	}
+	class FileLocatorFactory  {
+		-IFileLocator? defaultLocator
+		-object Lock
+		+ Default : IFileLocator
+		+CreateEmbeddedResourceLocator(Assembly? assembly, string? resourceNamespace) IFileLocator
+		+CreateLegacyFileSystemLocator(string[] searchPaths) IFileLocator
+		+CreateCompositeLocator(IFileLocator[] locators) IFileLocator
+		+SetDefaultForTesting(IFileLocator locator) void
+		+ResetToDefault() void
+	}
+	class EmbeddedDataLoader  {
+		-IFileLocator fileLocator
+		-JsonSerializerOptions jsonOptions
+		+LoadDataAsync(string fileName, CancellationToken cancellationToken) Task~List~T~?~
+		+LoadSingleAsync(string fileName, CancellationToken cancellationToken) Task~T?~
+		+ExistsAsync(string fileName) Task~bool~
+		+GetRawContentAsync(string fileName, CancellationToken cancellationToken) Task~string?~
+		+GetDiagnosticInfo() Dictionary~string&#44&#32object~
+		-CreateDefaultJsonOptions() JsonSerializerOptions
+	}
+	class FileTools  {
+		-EmbeddedDataLoader? defaultLoader
+		-object Lock
+		- DefaultLoader : EmbeddedDataLoader
+		+LoadListAsync(string fileName, CancellationToken cancellationToken) Task~List~T~~
+		+LoadSingleAsync(string fileName, CancellationToken cancellationToken) Task~T?~
+		+ExistsAsync(string fileName) Task~bool~
+		+GetContentAsync(string fileName, CancellationToken cancellationToken) Task~string?~
+		+GetDiagnosticInfo() Dictionary~string&#44&#32object~
+		+CreateCustomLoader(JsonSerializerOptions? jsonOptions) EmbeddedDataLoader
+		-ResetForTesting() void
+	}
+
+	CompositeFileLocator --|> IFileLocator
+	LegacyFileSystemLocator --|> IFileLocator
+	EmbeddedResourceFileLocator --|> IFileLocator

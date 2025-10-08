@@ -1,0 +1,110 @@
+[
+  {
+    "PlcId": 100,
+    "MachineId": 100,
+    "Name": "S7-1200",
+    "IpAddress": "192.168.0.100",
+    "PlcType": "S7-1200",
+    "PlcBrand": "Siemens",
+    "Options": "[{\"Rack\": 0, \"Slot\": 1, \"TSAP\" : \"FD.01\"}]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 400,
+    "MachineId": 400,
+    "Name": "S7-1200",
+    "IpAddress": "192.168.0.4\n",
+    "PlcType": "S7-1200",
+    "PlcBrand": "Siemens",
+    "Options": "[{\"Rack\": 0, \"Slot\": 1, \"TSAP\" : \"FD.01\"}]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 500,
+    "MachineId": 500,
+    "Name": "S7-1200",
+    "IpAddress": "192.168.0.30",
+    "PlcType": "S7-1200",
+    "PlcBrand": "Siemens",
+    "Options": "[{\"Rack\": 0, \"Slot\": 1, \"TSAP\" : \"FD.01\"}]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 600,
+    "MachineId": 600,
+    "Name": "S7-1500",
+    "IpAddress": "192.168.1.100",
+    "PlcType": "S7-1500",
+    "PlcBrand": "Siemens",
+    "Options": "[\r\n  {\r\n  \"Rack\": 0,\r\n  \"Slot\": 1,\r\n  \"TSAP\" : \"FD.01\"\r\n  }\r\n  ]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 700,
+    "MachineId": 700,
+    "Name": "S7-1500",
+    "IpAddress": "192.168.1.101",
+    "PlcType": "S7-1500",
+    "PlcBrand": "Siemens",
+    "Options": "[\r\n  {\r\n  \"Rack\": 0,\r\n  \"Slot\": 1,\r\n  \"TSAP\" : \"FD.01\"\r\n  }\r\n  ]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 800,
+    "MachineId": 800,
+    "Name": "S7-1500",
+    "IpAddress": "192.168.1.102",
+    "PlcType": "S7-1500",
+    "PlcBrand": "Siemens",
+    "Options": "[\r\n  {\r\n  \"Rack\": 0,\r\n  \"Slot\": 1,\r\n  \"TSAP\" : \"FD.01\"\r\n  }\r\n  ]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 900,
+    "MachineId": 900,
+    "Name": "S7-1500",
+    "IpAddress": "192.168.1.103",
+    "PlcType": "S7-1500",
+    "PlcBrand": "Siemens",
+    "Options": "[\r\n  {\r\n  \"Rack\": 0,\r\n  \"Slot\": 1,\r\n  \"TSAP\" : \"FD.01\"\r\n  }\r\n  ]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 200,
+    "MachineId": 200,
+    "Name": "S7-1200",
+    "IpAddress": "192.168.0.101",
+    "PlcType": "S7-1200",
+    "PlcBrand": "Siemens",
+    "Options": "[{\"Rack\": 0, \"Slot\": 1, \"TSAP\" : \"FD.01\"}]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  },
+  {
+    "PlcId": 300,
+    "MachineId": 300,
+    "Name": "S7-1200",
+    "IpAddress": "192.168.0.102",
+    "PlcType": "S7-1200",
+    "PlcBrand": "Siemens",
+    "Options": "[{\"Rack\": 0, \"Slot\": 1, \"TSAP\" : \"FD.01\"}]",
+    "CommLibrary": "S7-Link",
+    "BrandOwner": "Siemens",
+    "Enabled": 1
+  }
+]

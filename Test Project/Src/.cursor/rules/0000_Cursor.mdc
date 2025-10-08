@@ -1,0 +1,117 @@
+---
+attachmentType: always
+globs: **/*.cs
+description: Foundational rule defining agent operation standards and programming best practices
+alwaysApply: true
+---
+
+# Cursor Agent & Programming Best Practices
+
+This document defines how agents should operate in this repository, which programming standards apply by default, and how to load rules efficiently. It is designed to minimize context size while maximizing rule enforcement.
+
+## Meta
+**Title**: Cursor Agent & Programming Best Practices
+**Description**: Foundational rule defining agent operation standards, rule loading strategy, and mandatory tooling for the Cursor environment
+**Applies-to**: All agent operations, rule loading, tooling, programming standards
+
+## Requirements
+
+### <requirement priority="critical">
+**Description**: Rule Loading Strategy - Always load rules.json first to determine relevant packs
+**Examples**:
+<correct-example>
+- Load `.cursor/rules/rules.json` first to determine relevant packs
+- Select rule packs based on task goal: refactoring, testing, architecture, cqrs, docs, tooling
+- Load only referenced rules from selected pack(s), not entire rule set
+- Cite rule IDs in plans and edits
+</correct-example>
+<incorrect-example>
+- Load all rules without considering task relevance
+- Ignore rule packs and load entire rule set
+</incorrect-example>
+</requirement>
+
+### <requirement priority="critical">
+**Description**: Mandatory Tooling - Use specified MCP servers for different operations
+**Examples**:
+<correct-example>
+- **Serena**: `mcp_serena_activate_project`, `mcp_serena_search_for_pattern`, `mcp_serena_read_file`, `mcp_serena_execute_shell_command`
+- **SequentialThinking**: `mcp_sequential-thinking_sequentialthinking` before complex operations
+- **Microsoft Learn**: `mcp_microsoft-docs_microsoft_docs_search` and `mcp_microsoft-docs_microsoft_docs_fetch`
+- **RefactorMCP**: `mcp_refactorMcp_*` family for safe code transformations
+</correct-example>
+<incorrect-example>
+- Use generic tools instead of specified MCP servers
+- Skip SequentialThinking for complex operations
+</incorrect-example>
+</requirement>
+
+### <requirement priority="high">
+**Description**: Programming Standards - Follow modern C# guidelines and patterns
+**Examples**:
+<correct-example>
+- Immutability, expression-bodied members, null-safety, async/await
+- Use `Result`/`Result<T>` instead of exceptions for control flow
+- Propagate `CancellationToken` in APIs and xUnit v3 tests
+- Avoid `#region`; extract smaller classes/methods instead
+- Prefer source-generated regex over `RegexOptions.Compiled`
+- Structured logging with `ILogger<T>`
+- One public type per file; separate interfaces from implementations
+- XML documentation on all public classes/methods/properties
+</correct-example>
+<incorrect-example>
+- Using exceptions for control flow
+- Not propagating CancellationToken
+- Using regions extensively
+- Missing XML documentation
+</incorrect-example>
+</requirement>
+
+### <requirement priority="high">
+**Description**: Planning & Approval Flow - Use proper planning templates and approval process
+**Examples**:
+<correct-example>
+- Use `.cursor/plans/templates/Refactor_AuditPlan_Template.md` for batches
+- Reference applicable rule packs and rule IDs in plans
+- Do not execute RefactorMCP until explicit approval is recorded
+</correct-example>
+<incorrect-example>
+- Skip planning templates
+- Execute RefactorMCP without approval
+</incorrect-example>
+</requirement>
+
+### <requirement priority="medium">
+**Description**: Minimal Working Set - Load only relevant rules for efficiency
+**Examples**:
+<correct-example>
+- Refactoring batch → load: `rules.json.pack.refactoring` → rules `[1034, 1033, 1032, 1030, 1028]`
+- Testing task → load: `rules.json.pack.testing` → rules `[1029, 305, 306, 307]`
+</correct-example>
+<incorrect-example>
+- Loading all rules regardless of task
+- Not using pack-based loading strategy
+</incorrect-example>
+</requirement>
+
+### <requirement priority="medium">
+**Description**: Safety & CI Hooks - Ensure plans list selected packs and rules
+**Examples**:
+<correct-example>
+- Plans must list selected packs and rules
+- CI may verify pack existence and run targeted scans
+- Target scans for regions, compiled regex, sync-over-async
+</correct-example>
+<incorrect-example>
+- Plans without pack/rule references
+- Skip CI verification steps
+</incorrect-example>
+</requirement>
+
+## References
+<reference as="dependency" href=".cursor/rules/rules.json" reason="Central index for all rule packs">Rules Index</reference>
+<reference as="dependency" href=".cursor/rules/1034_GeneralRefactoringStandards.mdc" reason="Refactoring standards">General Refactoring Standards</reference>
+<reference as="dependency" href=".cursor/rules/1033_EXXER200NullParameterRefactoring.mdc" reason="Null parameter refactoring">Null Parameter Refactoring</reference>
+<reference as="dependency" href=".cursor/rules/1032_SourceGeneratedRegexBestPractices.mdc" reason="Regex best practices">Source Generated Regex Best Practices</reference>
+<reference as="dependency" href=".cursor/rules/1030_ToolUsageBestPractices.mdc" reason="Tool usage guidance">Tool Usage Best Practices</reference>
+<reference as="dependency" href=".cursor/rules/1029_ExxerAITestingStandards.mdc" reason="Testing standards">ExxerAI Testing Standards</reference>

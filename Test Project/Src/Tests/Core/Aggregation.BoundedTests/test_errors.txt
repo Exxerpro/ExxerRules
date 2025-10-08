@@ -1,0 +1,805 @@
+xUnit.net v3 Microsoft.Testing.Platform Runner v3.0.1+9214bef154 (64-bit .NET 10.0.0-rc.1.25451.107)
+
+[+2/x0/?0] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.BarCodes.Queries.GetBarCodeDetailQueryHelperTests.InvalidDestinationMachineTest(label: "L1AL687508232372504", barCodeId: 4, machineId: 500, lenPartNumber: 7, expectedResult: DestinationNotValid) (3s)
+
+[+26/x0/?0] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.BarCodes.Queries.GetBarCodeDetailQueryHelperTests.Last_Cycle_Finished_Ok_Must_Get_Response_Valid_Next_Station_Test(label: "L1AL90164629232372557", machineId: 300, lastMachineId: 300, nextMachineId: 100, lenPartNumber: 9, partStatus: "Ok", flowStatus: "InProcess", cycleStatus: "FinishedOk", barCodeId: 57, cycleId: 155, machineType: "Process", resultValidation: DestinationNotValid) (6s)
+
+[+50/x0/?0] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.BarCodes.Queries.GetBarCodeReportQueryHandlerTests.ShouldHaveCorrectInformation(barCode: "L1AL687508232372530", barCodeId: 30, machineId: 500) (9s)
+
+[+94/x0/?0] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.BarCodes.Commands.UpdateBarCodesCommandTests.ShouldUpdateBarCode_WithUpdateCycleOk(label: "L1AL687508232372518", machineId: 300, lenPartNumber: 7, barCodeId: 18, cycleId: 21, startCycleStr: "2023-08-27T12:24:15") (12s)
+
+Direct FromValue(8): Process (Value: 8)
+Static Process: Process (Value: 8)
+[+157/x0/?0] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.Products.Commands.CreateProductHandlerRefactoredIntegrationTests.Handle_EarlyValidationFailure_ShouldNotCallLaterServices (15s)
+
+[+229/x0/?0] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.BarCodes.Commands.UpdateBarCodesCommandNotOkTests.ShouldUpdateBarCode_WithUpdateCycleNotOk(label: "L1AL687508232372518", machineId: 300, lenPartNumber: 7, barCodeId: 18, cycleId: 21, startCycleStr: "2023-08-27T12:24:15") (18s)
+
+failed IndTrace.Aggregation.BoundedTests.BarCodes.Commands.CreateBarCodeGoldenTests.CreateBarCode_PerformanceBaseline_MeasureExecutionTime (265ms)
+  Shouldly.ShouldAssertException : measurements.Count
+      should be greater than
+  0
+      but was
+  0
+
+  Additional Info:
+      At least one successful barcode creation is required for performance baseline
+    at IndTrace.Aggregation.BoundedTests.BarCodes.Commands.CreateBarCodeGoldenTests.CreateBarCode_PerformanceBaseline_MeasureExecutionTime() in F:\Dynamic\IndTraceV2025\Src\Tests\Core\Aggregation.BoundedTests\BarCodes\Commands\CreateBarCodeGoldenTests.cs:121
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+    --- End of stack trace from previous location ---
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+  Standard output
+    info: 9/23/2025 12:31:56.128 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 0 entities to in-memory store.
+    info: 9/23/2025 12:31:56.148 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1989 entities to in-memory store.
+    Γ£à Test data seeded from fixtures
+    Γ£à CleanDependenciesFixture initialized successfully
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK]: instance created
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK]: setup serializer (SERIALIZER=ZiggyCreatures.Caching.Fusion.Serialization.SystemTextJson.FusionCacheSystemTextJsonSerializer)
+    ProcessAsync: Starting with MachineId=100, PartNumber=DEFAULT
+    ProcessAsync: Creating initial command with MachineId=100
+    ProcessAsync: Validating machine with MachineId=100
+    ReadOnlyRepository: FirstOrDefaultAsync<Machine> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Machine Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): waiting to acquire the LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): LOCK acquired
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): calling the factory (timeout=/)
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] saving memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): releasing MEMORY LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): MEMORY LOCK released
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFL K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Machine lookup completed, result.IsSuccess=True
+    ProcessAsync: Machine found, Name=WS100, MachineType=InitialPrinter
+    ProcessAsync: Looking up product with PartNumber=DEFAULT
+    ReadOnlyRepository: FirstOrDefaultAsync<Product> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Product Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): waiting to acquire the LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): LOCK acquired
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): calling the factory (timeout=/)
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] saving memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): releasing MEMORY LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): MEMORY LOCK released
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFM K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Product lookup completed, result.IsSuccess=True
+    ProcessAsync: Product found, ProductId=1
+    ProcessAsync: Looking up rule for MachineId=100, ProductId=1
+    ReadOnlyRepository: FirstOrDefaultAsync<Rule> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Rule Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): waiting to acquire the LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): LOCK acquired
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): calling the factory (timeout=/)
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] saving memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): releasing MEMORY LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): MEMORY LOCK released
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFN K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Rule lookup completed, result.IsSuccess=True
+    ProcessAsync: Rule found, RuleId=1
+    ProcessAsync: Getting master labels for PartNumber=DEFAULT
+    ReadOnlyRepository: ListAsync<MasterLabel> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=MasterLabel Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): waiting to acquire the LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): LOCK acquired
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): calling the factory (timeout=/)
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] saving memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): releasing MEMORY LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): MEMORY LOCK released
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFO K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Master label lookup completed, result.IsSuccess=False
+    ProcessAsync: Master labels retrieved, count=0
+    ProcessAsync: Getting consecutive number for PartNumber=DEFAULT
+    ProcessAsync: Consecutive number lookup completed, result.IsSuccess=True, Value=0
+    ProcessAsync: Creating rule executor
+    ProcessAsync: Applying rule to create barcode label
+    ProcessAsync: Rule application completed, result.IsSuccess=True
+    ProcessAsync: Creating barcode with Label=WS100DEFAULT252660000, ProductId=1, MachineId=100
+    ProcessAsync: Adding barcode to repository
+    info: 9/23/2025 12:31:56.226 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Barcode add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Creating cycle for MachineId=100, BarCodeId=10000
+    ProcessAsync: Creating or retrieving shift for MachineId=100
+    info: 9/23/2025 12:31:56.250 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Shift creation completed, result.IsSuccess=True
+    ProcessAsync: Shift created, CyclesOk=0
+    ProcessAsync: Adding cycle to repository
+    info: 9/23/2025 12:31:56.252 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Cycle add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Getting variables for MachineId=100
+    ReadOnlyRepository: ListAsync<Variable> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Variable Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): waiting to acquire the LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): LOCK acquired
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] memory entry not found
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): calling the factory (timeout=/)
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] saving memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): releasing MEMORY LOCK
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): MEMORY LOCK released
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFP K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Variables lookup completed, result.IsSuccess=True
+    ProcessAsync: Creating references from variables, count=0
+    ProcessAsync: No references created for PartNumber=DEFAULT
+    info: 9/23/2025 12:31:56.288 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    ProcessAsync: Starting with MachineId=100, PartNumber=DEFAULT
+    ProcessAsync: Creating initial command with MachineId=100
+    ProcessAsync: Validating machine with MachineId=100
+    ReadOnlyRepository: FirstOrDefaultAsync<Machine> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Machine Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFQ K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFQ K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFQ K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFQ K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFQ K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Machine lookup completed, result.IsSuccess=True
+    ProcessAsync: Machine found, Name=WS100, MachineType=InitialPrinter
+    ProcessAsync: Looking up product with PartNumber=DEFAULT
+    ReadOnlyRepository: FirstOrDefaultAsync<Product> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Product Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFR K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFR K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFR K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFR K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFR K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Product lookup completed, result.IsSuccess=True
+    ProcessAsync: Product found, ProductId=1
+    ProcessAsync: Looking up rule for MachineId=100, ProductId=1
+    ReadOnlyRepository: FirstOrDefaultAsync<Rule> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Rule Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFS K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFS K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFS K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFS K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFS K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Rule lookup completed, result.IsSuccess=True
+    ProcessAsync: Rule found, RuleId=1
+    ProcessAsync: Getting master labels for PartNumber=DEFAULT
+    ReadOnlyRepository: ListAsync<MasterLabel> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=MasterLabel Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFT K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFT K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFT K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFT K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFT K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Master label lookup completed, result.IsSuccess=False
+    ProcessAsync: Master labels retrieved, count=0
+    ProcessAsync: Getting consecutive number for PartNumber=DEFAULT
+    ProcessAsync: Consecutive number lookup completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Creating rule executor
+    ProcessAsync: Applying rule to create barcode label
+    ProcessAsync: Rule application completed, result.IsSuccess=True
+    ProcessAsync: Creating barcode with Label=WS100DEFAULT252660001, ProductId=1, MachineId=100
+    ProcessAsync: Adding barcode to repository
+    info: 9/23/2025 12:31:56.304 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Barcode add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Creating cycle for MachineId=100, BarCodeId=10001
+    ProcessAsync: Creating or retrieving shift for MachineId=100
+    Shift already exists with ID: 4
+    ProcessAsync: Shift creation completed, result.IsSuccess=True
+    ProcessAsync: Shift created, CyclesOk=0
+    ProcessAsync: Adding cycle to repository
+    info: 9/23/2025 12:31:56.305 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Cycle add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Getting variables for MachineId=100
+    ReadOnlyRepository: ListAsync<Variable> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Variable Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFU K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFU K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFU K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFU K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFU K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Variables lookup completed, result.IsSuccess=True
+    ProcessAsync: Creating references from variables, count=0
+    ProcessAsync: No references created for PartNumber=DEFAULT
+    info: 9/23/2025 12:31:56.305 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    ProcessAsync: Starting with MachineId=100, PartNumber=DEFAULT
+    ProcessAsync: Creating initial command with MachineId=100
+    ProcessAsync: Validating machine with MachineId=100
+    ReadOnlyRepository: FirstOrDefaultAsync<Machine> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Machine Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFV K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFV K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFV K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFV K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DFV K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Machine lookup completed, result.IsSuccess=True
+    ProcessAsync: Machine found, Name=WS100, MachineType=InitialPrinter
+    ProcessAsync: Looking up product with PartNumber=DEFAULT
+    ReadOnlyRepository: FirstOrDefaultAsync<Product> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Product Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG0 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG0 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG0 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG0 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG0 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Product lookup completed, result.IsSuccess=True
+    ProcessAsync: Product found, ProductId=1
+    ProcessAsync: Looking up rule for MachineId=100, ProductId=1
+    ReadOnlyRepository: FirstOrDefaultAsync<Rule> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Rule Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG1 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG1 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG1 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG1 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG1 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Rule lookup completed, result.IsSuccess=True
+    ProcessAsync: Rule found, RuleId=1
+    ProcessAsync: Getting master labels for PartNumber=DEFAULT
+    ReadOnlyRepository: ListAsync<MasterLabel> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=MasterLabel Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG2 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG2 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG2 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG2 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG2 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Master label lookup completed, result.IsSuccess=False
+    ProcessAsync: Master labels retrieved, count=0
+    ProcessAsync: Getting consecutive number for PartNumber=DEFAULT
+    ProcessAsync: Consecutive number lookup completed, result.IsSuccess=True, Value=2
+    ProcessAsync: Creating rule executor
+    ProcessAsync: Applying rule to create barcode label
+    ProcessAsync: Rule application completed, result.IsSuccess=True
+    ProcessAsync: Creating barcode with Label=WS100DEFAULT252660002, ProductId=1, MachineId=100
+    ProcessAsync: Adding barcode to repository
+    info: 9/23/2025 12:31:56.319 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Barcode add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Creating cycle for MachineId=100, BarCodeId=10002
+    ProcessAsync: Creating or retrieving shift for MachineId=100
+    Shift already exists with ID: 4
+    ProcessAsync: Shift creation completed, result.IsSuccess=True
+    ProcessAsync: Shift created, CyclesOk=0
+    ProcessAsync: Adding cycle to repository
+    info: 9/23/2025 12:31:56.320 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Cycle add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Getting variables for MachineId=100
+    ReadOnlyRepository: ListAsync<Variable> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Variable Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG3 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG3 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG3 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG3 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG3 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Variables lookup completed, result.IsSuccess=True
+    ProcessAsync: Creating references from variables, count=0
+    ProcessAsync: No references created for PartNumber=DEFAULT
+    info: 9/23/2025 12:31:56.320 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    ProcessAsync: Starting with MachineId=100, PartNumber=DEFAULT
+    ProcessAsync: Creating initial command with MachineId=100
+    ProcessAsync: Validating machine with MachineId=100
+    ReadOnlyRepository: FirstOrDefaultAsync<Machine> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Machine Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG4 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG4 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG4 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG4 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG4 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Machine lookup completed, result.IsSuccess=True
+    ProcessAsync: Machine found, Name=WS100, MachineType=InitialPrinter
+    ProcessAsync: Looking up product with PartNumber=DEFAULT
+    ReadOnlyRepository: FirstOrDefaultAsync<Product> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Product Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG5 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG5 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG5 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG5 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG5 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Product lookup completed, result.IsSuccess=True
+    ProcessAsync: Product found, ProductId=1
+    ProcessAsync: Looking up rule for MachineId=100, ProductId=1
+    ReadOnlyRepository: FirstOrDefaultAsync<Rule> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Rule Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG6 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG6 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG6 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG6 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG6 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Rule lookup completed, result.IsSuccess=True
+    ProcessAsync: Rule found, RuleId=1
+    ProcessAsync: Getting master labels for PartNumber=DEFAULT
+    ReadOnlyRepository: ListAsync<MasterLabel> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=MasterLabel Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG7 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG7 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG7 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG7 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG7 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Master label lookup completed, result.IsSuccess=False
+    ProcessAsync: Master labels retrieved, count=0
+    ProcessAsync: Getting consecutive number for PartNumber=DEFAULT
+    ProcessAsync: Consecutive number lookup completed, result.IsSuccess=True, Value=3
+    ProcessAsync: Creating rule executor
+    ProcessAsync: Applying rule to create barcode label
+    ProcessAsync: Rule application completed, result.IsSuccess=True
+    ProcessAsync: Creating barcode with Label=WS100DEFAULT252660003, ProductId=1, MachineId=100
+    ProcessAsync: Adding barcode to repository
+    info: 9/23/2025 12:31:56.329 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Barcode add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Creating cycle for MachineId=100, BarCodeId=10003
+    ProcessAsync: Creating or retrieving shift for MachineId=100
+    Shift already exists with ID: 4
+    ProcessAsync: Shift creation completed, result.IsSuccess=True
+    ProcessAsync: Shift created, CyclesOk=0
+    ProcessAsync: Adding cycle to repository
+    info: 9/23/2025 12:31:56.330 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Cycle add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Getting variables for MachineId=100
+    ReadOnlyRepository: ListAsync<Variable> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Variable Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG8 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG8 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG8 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG8 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG8 K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Variables lookup completed, result.IsSuccess=True
+    ProcessAsync: Creating references from variables, count=0
+    ProcessAsync: No references created for PartNumber=DEFAULT
+    info: 9/23/2025 12:31:56.330 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    ProcessAsync: Starting with MachineId=100, PartNumber=DEFAULT
+    ProcessAsync: Creating initial command with MachineId=100
+    ProcessAsync: Validating machine with MachineId=100
+    ReadOnlyRepository: FirstOrDefaultAsync<Machine> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Machine Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG9 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG9 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG9 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG9 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DG9 K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Machine lookup completed, result.IsSuccess=True
+    ProcessAsync: Machine found, Name=WS100, MachineType=InitialPrinter
+    ProcessAsync: Looking up product with PartNumber=DEFAULT
+    ReadOnlyRepository: FirstOrDefaultAsync<Product> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Product Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGA K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGA K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGA K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGA K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGA K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Product lookup completed, result.IsSuccess=True
+    ProcessAsync: Product found, ProductId=1
+    ProcessAsync: Looking up rule for MachineId=100, ProductId=1
+    ReadOnlyRepository: FirstOrDefaultAsync<Rule> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Rule Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGB K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGB K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGB K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGB K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGB K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Rule lookup completed, result.IsSuccess=True
+    ProcessAsync: Rule found, RuleId=1
+    ProcessAsync: Getting master labels for PartNumber=DEFAULT
+    ReadOnlyRepository: ListAsync<MasterLabel> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=MasterLabel Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGC K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGC K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGC K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGC K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGC K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Master label lookup completed, result.IsSuccess=False
+    ProcessAsync: Master labels retrieved, count=0
+    ProcessAsync: Getting consecutive number for PartNumber=DEFAULT
+    ProcessAsync: Consecutive number lookup completed, result.IsSuccess=True, Value=4
+    ProcessAsync: Creating rule executor
+    ProcessAsync: Applying rule to create barcode label
+    ProcessAsync: Rule application completed, result.IsSuccess=True
+    ProcessAsync: Creating barcode with Label=WS100DEFAULT252660004, ProductId=1, MachineId=100
+    ProcessAsync: Adding barcode to repository
+    info: 9/23/2025 12:31:56.348 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Barcode add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Creating cycle for MachineId=100, BarCodeId=10004
+    ProcessAsync: Creating or retrieving shift for MachineId=100
+    Shift already exists with ID: 4
+    ProcessAsync: Shift creation completed, result.IsSuccess=True
+    ProcessAsync: Shift created, CyclesOk=0
+    ProcessAsync: Adding cycle to repository
+    info: 9/23/2025 12:31:56.349 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Cycle add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Getting variables for MachineId=100
+    ReadOnlyRepository: ListAsync<Variable> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Variable Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGD K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGD K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGD K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGD K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGD K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Variables lookup completed, result.IsSuccess=True
+    ProcessAsync: Creating references from variables, count=0
+    ProcessAsync: No references created for PartNumber=DEFAULT
+    info: 9/23/2025 12:31:56.349 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    Handling IGatewayRequest`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    IndTrace UI Request: IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand
+    Transaction not required for IGatewayRequest`1 (IndTrace.Application.BarCodes.Commands.Create.CreateBarCodeCommand)
+    ProcessAsync: Starting with MachineId=100, PartNumber=DEFAULT
+    ProcessAsync: Creating initial command with MachineId=100
+    ProcessAsync: Validating machine with MachineId=100
+    ReadOnlyRepository: FirstOrDefaultAsync<Machine> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Machine Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGE K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGE K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGE K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGE K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGE K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Machine|Spec:BF68E8F395C579EE): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.174599, LEXP=2025-09-23T19:31:56.174596][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Machine lookup completed, result.IsSuccess=True
+    ProcessAsync: Machine found, Name=WS100, MachineType=InitialPrinter
+    ProcessAsync: Looking up product with PartNumber=DEFAULT
+    ReadOnlyRepository: FirstOrDefaultAsync<Product> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Product Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGF K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGF K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGF K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGF K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGF K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Product|Spec:4B3667E1266A6260): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.184602, LEXP=2025-09-23T19:31:56.184599][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Product lookup completed, result.IsSuccess=True
+    ProcessAsync: Product found, ProductId=1
+    ProcessAsync: Looking up rule for MachineId=100, ProductId=1
+    ReadOnlyRepository: FirstOrDefaultAsync<Rule> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Rule Operation=FirstOrDefaultAsync CacheKey=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGG K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGG K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGG K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGG K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGG K=41b63fc5522840fda7c7f80915861d24:FirstOrDefault|Type:Rule|Spec:5944A04E42A1153D): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.197126, LEXP=2025-09-23T19:31:56.197123][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Rule lookup completed, result.IsSuccess=True
+    ProcessAsync: Rule found, RuleId=1
+    ProcessAsync: Getting master labels for PartNumber=DEFAULT
+    ReadOnlyRepository: ListAsync<MasterLabel> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=MasterLabel Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGH K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGH K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGH K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGH K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGH K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:MasterLabel|Spec:AC3778DF9DFA313A): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.205641, LEXP=2025-09-23T19:31:56.205638][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Master label lookup completed, result.IsSuccess=False
+    ProcessAsync: Master labels retrieved, count=0
+    ProcessAsync: Getting consecutive number for PartNumber=DEFAULT
+    ProcessAsync: Consecutive number lookup completed, result.IsSuccess=True, Value=5
+    ProcessAsync: Creating rule executor
+    ProcessAsync: Applying rule to create barcode label
+    ProcessAsync: Rule application completed, result.IsSuccess=True
+    ProcessAsync: Creating barcode with Label=WS100DEFAULT252660005, ProductId=1, MachineId=100
+    ProcessAsync: Adding barcode to repository
+    info: 9/23/2025 12:31:56.360 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Barcode add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Creating cycle for MachineId=100, BarCodeId=10005
+    ProcessAsync: Creating or retrieving shift for MachineId=100
+    Shift already exists with ID: 4
+    ProcessAsync: Shift creation completed, result.IsSuccess=True
+    ProcessAsync: Shift created, CyclesOk=0
+    ProcessAsync: Adding cycle to repository
+    info: 9/23/2025 12:31:56.361 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    ProcessAsync: Cycle add completed, result.IsSuccess=True, Value=1
+    ProcessAsync: Getting variables for MachineId=100
+    ReadOnlyRepository: ListAsync<Variable> CacheEnabled=True ServiceKey=
+    ReadOnlyRepository: Entity=Variable Operation=ListAsync CacheKey=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGI K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> call FEO[DUR=01:00:00 LKTO=/ SKMR=N SKMW=N SKDR=N SKDW=N SKDRWS=N DDUR=/ JIT=0 PR=N SZ=/ FS=Y FSMAX=1.00:00:00 DFSMAX=/ FSTHR=30s FSTO=/ FHTO=/ TOFC=Y DSTO=/ DHTO=/ ABDO=N SBN=N ABBO=Y AC=N]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGI K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] trying to get from memory
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGI K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): [MC] memory entry found FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGI K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): using memory entry
+    FUSION [N=FusionCache I=0HNFQPTNI1DFK] (O=0HNFQPTNI1DGI K=41b63fc5522840fda7c7f80915861d24:ListAsync|Type:Variable|Spec:B9837199A1F83418): GetOrSetAsync<T> return FE(M)[T=2025-09-23T18:31:56.262262, LEXP=2025-09-23T19:31:56.262260][S=N, EEXP=/, LM=/, ET=/, S=/, P=Normal]
+    ProcessAsync: Variables lookup completed, result.IsSuccess=True
+    ProcessAsync: Creating references from variables, count=0
+    ProcessAsync: No references created for PartNumber=DEFAULT
+    info: 9/23/2025 12:31:56.361 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    IndTrace UI Request: IGatewayRequest`1 of Result<TaskGatewayResponse>
+    Handled Result`1
+    CleanDependenciesFixture disposal (minimal by design)
+
+  Error output
+Before Save - MachineType: Process (Value: 8)
+After Read - MachineType: Process (Value: 8)
+[+288/x1/?0] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.ConfigApp.Commands.UpdateConfigAppCommandTests.ShouldSendRequestAsync (21s)
+
+Before Save - MachineType: Process (Value: 8)
+skipped IndTrace.Aggregation.BoundedTests.Templates.TemplateCommandHandlerTests.CreateEntity_Persists_And_Returns_Id (0ms)
+  TEMPLATE ΓÇö DO NOT MODIFY. Copy into your slice and rename.
+[+428/x1/?1] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.Middleware.LoggingBehaviorTests.Handle_WithVariousRequestTypes_ShouldLogCorrectly(requestData: "GetEventsListQuery", responseData: "EventsListVm") (24s)
+
+failed IndTrace.Aggregation.BoundedTests.Products.Commands.CreateProductGoldenTests.CreateProduct_PerformanceBaseline_MeasureExecutionTime (99ms)
+  Xunit.Runner.InProc.SystemConsole.TestingPlatform.XunitException: System.InvalidOperationException : Sequence contains no elements
+    at System.Linq.ThrowHelper.ThrowNoElementsException()
+    at System.Linq.Enumerable.Average[TSource,TAccumulator,TResult](IEnumerable`1 source)
+    at IndTrace.Aggregation.BoundedTests.Products.Commands.CreateProductGoldenTests.CreateProduct_PerformanceBaseline_MeasureExecutionTime() in F:\Dynamic\IndTraceV2025\Src\Tests\Core\Aggregation.BoundedTests\Products\Commands\CreateProductGoldenTests.cs:133
+    --- End of stack trace from previous location ---
+  Standard output
+    info: 9/23/2025 12:32:01.268 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 0 entities to in-memory store.
+    info: 9/23/2025 12:32:01.288 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1989 entities to in-memory store.
+    Γ£à Test data seeded from fixtures
+    Γ£à CleanDependenciesFixture initialized successfully
+    === TESTING: Performance Baseline Measurement ===
+    Starting warm-up iteration
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Starting CreateProduct Railway pipeline for PartNumber: FORD-F150-VALID, CustomerId: 6, Activity: (null)
+    Pipeline Step 0: Validating input requirements for FORD-F150-VALID
+    Input validation successful for FORD-F150-VALID
+    Pipeline Step 1: Validating product uniqueness for FORD-F150-VALID
+    Validating product uniqueness for PartNumber: FORD-F150-VALID, ProductName: Product FORD-F150-VALID
+    Product uniqueness validation successful - product does not exist
+    Product uniqueness validation successful for FORD-F150-VALID
+    Pipeline Step 2: Resolving customer for CustomerId: 6, CustomerName: Ford
+    Starting customer resolution for CustomerId: 6, CustomerName: Ford
+    Using CustomerName-based resolution: Ford
+    Customer found by name: Ford, CustomerId: 6
+    Customer resolution successful: 6 -> Ford
+    Pipeline Step 3: Validating line 1
+    Retrieving line for LineId: 1
+    Line retrieval successful for LineId: 1, LineName: Assembly Line 1
+    Line validation successful for LineId: 1
+    Pipeline Step 4: Creating product entity for FORD-F150-VALID
+    Product entity created successfully. ParsedId: 150, DynamicOffset: 1000
+    Pipeline Step 5: Persisting product with intelligent ID assignment
+    Checking if ProductId 1150 is available for use
+    ProductId 1150 is available for use
+    info: 9/23/2025 12:32:01.298 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    Product persisted successfully with ProductId: 1150
+    Pipeline Step 6: Creating and linking rule for ProductId: 1150
+    info: 9/23/2025 12:32:01.298 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    Rule created and linked successfully. RuleId: 12
+    Pipeline Step 7: Creating workflows for ProductId: 1150
+    info: 9/23/2025 12:32:01.298 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    info: 9/23/2025 12:32:01.298 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    info: 9/23/2025 12:32:01.298 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    info: 9/23/2025 12:32:01.298 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 1 entities to in-memory store.
+    Workflows created successfully. Count: 4
+    Pipeline Step 8: Creating recipes for ProductId: 1150
+    info: 9/23/2025 12:32:01.299 InMemoryEventId.ChangesSaved[30100] (Microsoft.EntityFrameworkCore.Update)
+          Saved 3 entities to in-memory store.
+    Recipes created successfully. Count: 3
+    Pipeline Step 9: Creating ProductCreatedEvent for ProductId: 1150
+    ProductCreatedEvent created successfully for ProductId: 1150
+    Successfully completed CreateProduct Railway pipeline for PartNumber: FORD-F150-VALID, ProductId: 1150, Duration: 4ms, Activity: (null)
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    Warm-up result - Success: True, Errors:
+    Starting performance iteration 1/5
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Starting CreateProduct Railway pipeline for PartNumber: FORD-F150-VALID, CustomerId: 6, Activity: (null)
+    Pipeline Step 0: Validating input requirements for FORD-F150-VALID
+    Input validation successful for FORD-F150-VALID
+    Pipeline Step 1: Validating product uniqueness for FORD-F150-VALID
+    Validating product uniqueness for PartNumber: FORD-F150-VALID, ProductName: Product FORD-F150-VALID
+    Product validation failed - product already exists with PartNumber: FORD-F150-VALID
+    Product uniqueness validation failed for FORD-F150-VALID: Product already exists FORD-F150-VALID
+    CreateProduct Railway pipeline failed for PartNumber: FORD-F150-VALID, Duration: 0ms, Errors: Product already exists FORD-F150-VALID, Activity: (null)
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    Iteration 1 - Success: False, Time: 8ms, Errors: Product already exists FORD-F150-VALID
+    Starting performance iteration 2/5
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Starting CreateProduct Railway pipeline for PartNumber: FORD-F150-VALID, CustomerId: 6, Activity: (null)
+    Pipeline Step 0: Validating input requirements for FORD-F150-VALID
+    Input validation successful for FORD-F150-VALID
+    Pipeline Step 1: Validating product uniqueness for FORD-F150-VALID
+    Validating product uniqueness for PartNumber: FORD-F150-VALID, ProductName: Product FORD-F150-VALID
+    Product validation failed - product already exists with PartNumber: FORD-F150-VALID
+    Product uniqueness validation failed for FORD-F150-VALID: Product already exists FORD-F150-VALID
+    CreateProduct Railway pipeline failed for PartNumber: FORD-F150-VALID, Duration: 0ms, Errors: Product already exists FORD-F150-VALID, Activity: (null)
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    Iteration 2 - Success: False, Time: 11ms, Errors: Product already exists FORD-F150-VALID
+    Starting performance iteration 3/5
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Starting CreateProduct Railway pipeline for PartNumber: FORD-F150-VALID, CustomerId: 6, Activity: (null)
+    Pipeline Step 0: Validating input requirements for FORD-F150-VALID
+    Input validation successful for FORD-F150-VALID
+    Pipeline Step 1: Validating product uniqueness for FORD-F150-VALID
+    Validating product uniqueness for PartNumber: FORD-F150-VALID, ProductName: Product FORD-F150-VALID
+    Product validation failed - product already exists with PartNumber: FORD-F150-VALID
+    Product uniqueness validation failed for FORD-F150-VALID: Product already exists FORD-F150-VALID
+    CreateProduct Railway pipeline failed for PartNumber: FORD-F150-VALID, Duration: 0ms, Errors: Product already exists FORD-F150-VALID, Activity: (null)
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    Iteration 3 - Success: False, Time: 11ms, Errors: Product already exists FORD-F150-VALID
+    Starting performance iteration 4/5
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Starting CreateProduct Railway pipeline for PartNumber: FORD-F150-VALID, CustomerId: 6, Activity: (null)
+    Pipeline Step 0: Validating input requirements for FORD-F150-VALID
+    Input validation successful for FORD-F150-VALID
+    Pipeline Step 1: Validating product uniqueness for FORD-F150-VALID
+    Validating product uniqueness for PartNumber: FORD-F150-VALID, ProductName: Product FORD-F150-VALID
+    Product validation failed - product already exists with PartNumber: FORD-F150-VALID
+    Product uniqueness validation failed for FORD-F150-VALID: Product already exists FORD-F150-VALID
+    CreateProduct Railway pipeline failed for PartNumber: FORD-F150-VALID, Duration: 0ms, Errors: Product already exists FORD-F150-VALID, Activity: (null)
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    Iteration 4 - Success: False, Time: 8ms, Errors: Product already exists FORD-F150-VALID
+    Starting performance iteration 5/5
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Handling CreateProductCommand
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    IndTrace UI Request: IndTrace.Application.Products.Commands.Create.CreateProductCommand
+    Transaction not required for CreateProductCommand (IndTrace.Application.Products.Commands.Create.CreateProductCommand)
+    Starting CreateProduct Railway pipeline for PartNumber: FORD-F150-VALID, CustomerId: 6, Activity: (null)
+    Pipeline Step 0: Validating input requirements for FORD-F150-VALID
+    Input validation successful for FORD-F150-VALID
+    Pipeline Step 1: Validating product uniqueness for FORD-F150-VALID
+    Validating product uniqueness for PartNumber: FORD-F150-VALID, ProductName: Product FORD-F150-VALID
+    Product validation failed - product already exists with PartNumber: FORD-F150-VALID
+    Product uniqueness validation failed for FORD-F150-VALID: Product already exists FORD-F150-VALID
+    CreateProduct Railway pipeline failed for PartNumber: FORD-F150-VALID, Duration: 0ms, Errors: Product already exists FORD-F150-VALID, Activity: (null)
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    IndTrace UI Request: CreateProductCommand of Result<ProductCreatedEvent>
+    Handled Result`1
+    Iteration 5 - Success: False, Time: 9ms, Errors: Product already exists FORD-F150-VALID
+    CleanDependenciesFixture disposal (minimal by design)
+
+  Error output
+skipped IndTrace.Aggregation.BoundedTests.Templates.TemplateQueryHandlerTests.GetEntityDetail_Returns_ExpectedDTO_When_ValidId (0ms)
+  TEMPLATE ΓÇö DO NOT MODIFY. Copy into your slice and rename.
+[+555/x2/?2] IndTrace.Aggregation.BoundedTests.dll (net10.0|x64) - IndTrace.Aggregation.BoundedTests.HybridCacheTest.UpdateCommandHandlerTests.Update_WithNonExistentId_ReturnsFalse (27s)
+
+skipped IndTrace.Aggregation.BoundedTests.Shifts.Services.ShiftServiceTests.ShiftDetectionRules_ShouldCreateNewShift_WhenTimeExceedsShiftDuration (0ms)
+  Complex async cycle creation process requires replicate busines rules
+
+Test run summary: Failed! - F:\Dynamic\IndTraceV2025\Src\Tests\Core\Aggregation.BoundedTests\bin\Debug\net10.0\IndTrace.Aggregation.BoundedTests.dll (net10.0|x64)
+  total: 585
+  failed: 2
+  succeeded: 580
+  skipped: 3
+  duration: 27s 851ms

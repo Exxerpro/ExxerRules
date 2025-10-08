@@ -1,0 +1,123 @@
+classDiagram
+
+	class ErrorModel  {
+		-ILogger~ErrorModel~ _logger
+		+ RequestId : string?
+		+ ShowRequestId : bool
+		+OnGet() void
+	}
+	class WeatherForecastService  {
+		-string[] Summaries
+		+GetForecastAsync(DateOnly startDate) Task~WeatherForecast[]~
+	}
+	class WeatherForecast  {
+		+ Date : DateOnly
+		+ TemperatureC : int
+		+ TemperatureF : int
+		+ Summary : string?
+	}
+	class IWorker  {
+		-DoSomeWork(int timeInSeconds) Task
+	}
+	class Worker  {
+		-ILogger~Worker~ _logger
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		+DoSomeWork(int timeInSeconds) Task
+	}
+	class Program  {
+		+Main(string[] args) void
+	}
+	class ValidatableTypeAttribute  {
+	}
+	class EmbeddedAttribute  {
+	}
+	class Counter  {
+		-int currentCount
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-IncrementCount() void
+	}
+	class FetchData  {
+		-WeatherForecast[]? forecasts
+		- ForecastService : WeatherForecastService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class SurveyPrompt  {
+		+ Title : string?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class NavMenu  {
+		-bool collapseNavMenu
+		- NavMenuCssClass : string?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-ToggleNavMenu() void
+	}
+	class _Imports  {
+		-Execute() void
+	}
+	class Index  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class MainLayout  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Pages__Host  {
+		-global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0
+		-global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_1
+		-global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_2
+		-global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext __tagHelperExecutionContext
+		-global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperRunner __tagHelperRunner
+		-string __tagHelperStringValueBuffer
+		-global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager __backed__tagHelperScopeManager
+		-global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper
+		-global::Microsoft.AspNetCore.Mvc.TagHelpers.ComponentTagHelper __Microsoft_AspNetCore_Mvc_TagHelpers_ComponentTagHelper
+		-global::Microsoft.AspNetCore.Mvc.TagHelpers.EnvironmentTagHelper __Microsoft_AspNetCore_Mvc_TagHelpers_EnvironmentTagHelper
+		- __tagHelperScopeManager : global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager
+		+ ModelExpressionProvider : global::Microsoft.AspNetCore.Mvc.ViewFeatures.IModelExpressionProvider
+		+ Url : global::Microsoft.AspNetCore.Mvc.IUrlHelper
+		+ Component : global::Microsoft.AspNetCore.Mvc.IViewComponentHelper
+		+ Json : global::Microsoft.AspNetCore.Mvc.Rendering.IJsonHelper
+		+ Html : global::Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper<Pages__Host>
+		+ ViewData : global::Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary<Pages__Host>
+		+ Model : Pages__Host
+		+ExecuteAsync() global::System.Threading.Tasks.Task
+	}
+	class Pages_Error  {
+		-global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0
+		-global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_1
+		-global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_2
+		-global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_3
+		-global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperExecutionContext __tagHelperExecutionContext
+		-global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperRunner __tagHelperRunner
+		-string __tagHelperStringValueBuffer
+		-global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager __backed__tagHelperScopeManager
+		-global::Microsoft.AspNetCore.Mvc.Razor.TagHelpers.UrlResolutionTagHelper __Microsoft_AspNetCore_Mvc_Razor_TagHelpers_UrlResolutionTagHelper
+		- __tagHelperScopeManager : global::Microsoft.AspNetCore.Razor.Runtime.TagHelpers.TagHelperScopeManager
+		+ ModelExpressionProvider : global::Microsoft.AspNetCore.Mvc.ViewFeatures.IModelExpressionProvider
+		+ Url : global::Microsoft.AspNetCore.Mvc.IUrlHelper
+		+ Component : global::Microsoft.AspNetCore.Mvc.IViewComponentHelper
+		+ Json : global::Microsoft.AspNetCore.Mvc.Rendering.IJsonHelper
+		+ Html : global::Microsoft.AspNetCore.Mvc.Rendering.IHtmlHelper<IndTrace.LogAnalyzer.Pages.ErrorModel>
+		+ ViewData : global::Microsoft.AspNetCore.Mvc.ViewFeatures.ViewDataDictionary<IndTrace.LogAnalyzer.Pages.ErrorModel>
+		+ Model : IndTrace.LogAnalyzer.Pages.ErrorModel
+		+ExecuteAsync() global::System.Threading.Tasks.Task
+	}
+	class App  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+
+	ErrorModel --|> PageModel
+	Worker --|> BackgroundService
+	Worker --|> IWorker
+	ValidatableTypeAttribute --|> global
+	EmbeddedAttribute --|> global
+	Counter --|> global
+	FetchData --|> global
+	SurveyPrompt --|> global
+	NavMenu --|> global
+	_Imports --|> object
+	Index --|> global
+	MainLayout --|> LayoutComponentBase
+	Pages__Host --|> global
+	Pages_Error --|> global
+	App --|> global

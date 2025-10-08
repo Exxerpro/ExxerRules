@@ -1,0 +1,14 @@
+﻿{
+  "profiles": {
+    "Sharp7.Monitor": {
+      "commandName": "Project",
+      "commandLineArgs": "NoFile",
+      "commandOneArgs": "192.168.0.100 DB254.DBW0 DB249.S0.32 DB249.S100.32 DB256.DINT12 DB256.DINT16 DB256.DINT20 DB256.DINT24 DB256.DINT28 DB256.DINT0 DB254.DBW4 -q 2 -a 192.168.0.1 -a 192.168.0.2 -a 192.168.0.3"
+    },
+
+    "no args": {
+      "commandName": "Project",
+      "commandLineArgs": ""
+    }
+  }
+}

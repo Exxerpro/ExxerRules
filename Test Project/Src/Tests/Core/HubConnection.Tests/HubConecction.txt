@@ -1,0 +1,61 @@
+xUnit.net v3 Microsoft.Testing.Platform Runner v3.0.1+9214bef154 (64-bit .NET 10.0.0-rc.1.25451.107)
+
+skipped HubConnection.Tests.HubConnectionExtensionsTests.Should_ScheduleReconnect_When_ConnectionFails (0ms)
+  Planing to make a Interface Wrapper to fully test the connection and reconnection strategy
+failed HubConnection.Tests.Unit.Dashboard.IHubMetricsDashboardTests.Dashboard_Should_Never_Block_On_Slow_Connections (2s 021ms)
+  Shouldly.ShouldAssertException : duration
+      should be less than
+  00:00:01
+      but was
+  00:00:02.0059643
+    at HubConnection.Tests.Unit.Dashboard.IHubMetricsDashboardTests.Dashboard_Should_Never_Block_On_Slow_Connections() in F:\Dynamic\IndTraceV2025\Src\Tests\Core\HubConnection.Tests\Unit\Dashboard\IHubMetricsDashboardTests.cs:95
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+    --- End of stack trace from previous location ---
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+failed HubConnection.Tests.Unit.Dashboard.IHubMetricsDashboardTests.Dashboard_Should_Track_System_Wide_Performance_Metrics (5ms)
+  Shouldly.ShouldAssertException : performance.TotalThroughputMbps
+      should be greater than
+  0d
+      but was
+  0d
+    at HubConnection.Tests.Unit.Dashboard.IHubMetricsDashboardTests.Dashboard_Should_Track_System_Wide_Performance_Metrics() in F:\Dynamic\IndTraceV2025\Src\Tests\Core\HubConnection.Tests\Unit\Dashboard\IHubMetricsDashboardTests.cs:144
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+    --- End of stack trace from previous location ---
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+failed HubConnection.Tests.Unit.Dashboard.IHubMetricsDashboardTests.Dashboard_Should_Provide_Health_Check_Status (3ms)
+  Shouldly.ShouldAssertException : health.Status
+      should be
+  "Degraded"
+      but was
+  "Critical"
+      difference
+  Difference     |  |    |    |    |    |    |    |    |
+                 | \|/  \|/  \|/  \|/  \|/  \|/  \|/  \|/
+  Index          | 0    1    2    3    4    5    6    7
+  Expected Value | D    e    g    r    a    d    e    d
+  Actual Value   | C    r    i    t    i    c    a    l
+  Expected Code  | 68   101  103  114  97   100  101  100
+  Actual Code    | 67   114  105  116  105  99   97   108
+    at HubConnection.Tests.Unit.Dashboard.IHubMetricsDashboardTests.Dashboard_Should_Provide_Health_Check_Status() in F:\Dynamic\IndTraceV2025\Src\Tests\Core\HubConnection.Tests\Unit\Dashboard\IHubMetricsDashboardTests.cs:55
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+    --- End of stack trace from previous location ---
+    at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+    at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+
+Test run summary: Failed! - F:\Dynamic\IndTraceV2025\Src\Tests\Core\HubConnection.Tests\bin\Debug\net10.0\HubConnection.Tests.dll (net10.0|x64)
+  total: 97
+  failed: 3
+  succeeded: 93
+  skipped: 1
+  duration: 2s 411ms

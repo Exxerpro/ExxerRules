@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!-- ============================================================================ -->
+  <!-- CORE PROPERTIES -->
+  <!-- ============================================================================ -->
+  <PropertyGroup>
+    <!-- Target Framework -->
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Language Features -->
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateRazorTargetAssemblyInfo>false</GenerateRazorTargetAssemblyInfo>
+    <GenerateRazorAssemblyInfo>false</GenerateRazorAssemblyInfo>
+    <!-- Suppress MudBlazor analyzer warnings in UI -->
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+  </PropertyGroup>
+  <!-- Shipping configuration: treat all warnings as errors, do not whitelist nullability warnings -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Shipping'">
+    <WarningsNotAsErrors>
+    </WarningsNotAsErrors>
+  </PropertyGroup>
+  <!-- ============================================================================ -->
+  <!-- PACKAGE REFERENCES - CORE FRAMEWORK -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Core Framework">
+  </ItemGroup>
+  <!-- ============================================================================ -->
+  <!-- PROJECT REFERENCES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Infrastructure References">
+    <ProjectReference Include="..\..\Infrastructure\IndTrace.Dependencies\IndTrace.Dependencies.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+</Project>

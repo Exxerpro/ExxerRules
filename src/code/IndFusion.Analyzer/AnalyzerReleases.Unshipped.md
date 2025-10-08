@@ -19,3 +19,10 @@ EXXER700 | IndFusion.Analyzers.Performance | Warning | Use efficient LINQ operat
 EXXER702 | IndFusion.Analyzers.CodeQuality | Info | Use modern pattern matching with declaration patterns
 EXXER900 | IndFusion.Analyzers.CodeQuality | Hidden | Format project using dotnet format command
 EXXER901 | IndFusion.Analyzers.CodeQuality | Info | Code formatting inconsistency detected
+EXXER003 | IndFusion.Analyzers.FunctionalPatterns | Error | DoNotThrowExceptionsAnalyzer updated to recognise guard patterns (null/range), switch default-throws, domain parser exceptions, constructor invariants, factory validation, expression-bodied guards, defensive NotSupported/NotImplemented, and catch-wrapping; boundary/test contexts ignored; reduced false positives.
+
+### Changes
+
+Rule ID | Notes
+--------|------
+EXXER100 | Relaxed test naming: allow prefixes before Should, alternate connectors (When/For/With/If/On), behavior-only names, compound conditions, async suffixes, nested context classes, DisplayName/Description overrides, and opt-out attribute.

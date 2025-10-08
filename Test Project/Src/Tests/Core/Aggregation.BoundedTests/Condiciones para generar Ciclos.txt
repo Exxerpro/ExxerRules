@@ -1,0 +1,271 @@
+now we need to generate cycles with the following rules
+
+	public int CycleId { get; set; }
+	public int MachineId { get; set; }
+	public int BarCodeId { get; set; }
+	public int CycleStatus { get; set; }
+	public int PartStatus { get; set; }
+
+	public int CycleTime { get; set; }
+	public int TaktTime { get; set; }
+	public DateTime StartedOn { get; set; }
+	public DateTime FinishedOn { get; set; }
+
+
+	I have the following code
+public static List<Cycle> GenerateCyclesForAllBarCodes(IList<BarCode> barCodes)
+	{
+
+		var cycles = new List<Cycle>();
+
+		var counter = 1;
+
+		foreach (var barcode in barCodes)
+		{
+			var cycle = new Cycle();
+
+			cycle.CycleId = counter;
+			cycle.BarCodeId = barcode.BarCodeId;
+
+
+
+
+
+
+
+			counter++;
+			cycles.Add(cycle);
+		}
+
+		return cycles;
+	}
+
+this what i need your help to is to write code to do this:
+
+For each barcode
+
+when barCode.station =500 and  barCode.FlowStatus  = 4 and   barCode.PartStatus = 1;
+we need to generate 3 cycles on for each machine
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime
+
+For machine 300
+	   cycle.CycleId = counter+1;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=300
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 100+ TaktTime fomr cyclo station 100 random between ( 100)
+	   FinishedOn= StartedOn + CycleTime
+
+For machine 500
+	   cycle.CycleId = counter+2;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=500
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 300 + TaktTime fomr cyclo station 100 random between ( 50 and 100)
+	   FinishedOn= StartedOn + CycleTime
+
+
+
+when barCode.station =500 and  barCode.FlowStatus  = 2 and   barCode.PartStatus = 1;
+we need to generate 3 cycles on for each machine
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime
+
+For machine 300
+	   cycle.CycleId = counter+1;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=300
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 100+ TaktTime fomr cyclo station 100 random between ( 100)
+	   FinishedOn= StartedOn + CycleTime
+
+For machine 500
+	   cycle.CycleId = counter+2;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=500
+	   CycleStatus = 2
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 300 + TaktTime fomr cyclo station 100 random between ( 50 and 100)
+	   FinishedOn= StartedOn + CycleTime
+
+
+when barCode.station =500 and  barCode.FlowStatus  = 2 and barCode.partStatus  = 2
+we need to generate 3 cycles on for each machine
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime
+
+For machine 300
+	   cycle.CycleId = counter+1;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=300
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 100+ TaktTime fomr cyclo station 100 random between ( 100)
+	   FinishedOn= StartedOn + CycleTime
+
+
+
+For machine 500	we need to generate noOk cycle
+	   cycle.CycleId = counter+2;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=500
+	   CycleStatus = 8
+	   PartStatus = 2
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 300 + TaktTime fomr cyclo station 100 random between ( 50 and 100)
+	   FinishedOn= StartedOn + CycleTime
+
+
+
+
+when barCode.station =300 and  barCode.FlowStatus  = 2 and   barCode.PartStatus = 1;
+we need to generate 2 cycles on for each machine
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime
+
+For machine 300
+	   cycle.CycleId = counter+1;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=300
+	   CycleStatus = 2
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 100+ TaktTime fomr cyclo station 100 random between ( 100)
+	   FinishedOn= StartedOn + CycleTime
+
+
+
+
+when barCode.station =300 and  barCode.FlowStatus  = 2 and   barCode.PartStatus = 2;
+we need to generate 2 cycles on for each machine
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime
+
+For machine 300
+	   cycle.CycleId = counter+1;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=300
+	   CycleStatus = 8
+	   PartStatus = 2
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn =equal  cycle.StartedOn from the cycle station 100+ TaktTime fomr cyclo station 100 random between ( 100)
+	   FinishedOn= StartedOn + CycleTime
+
+
+
+when barCode.station =100 and  barCode.FlowStatus  = 1 and   barCode.PartStatus = 1;
+we need to generate 1
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 2
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime
+
+
+
+
+when barCode.station =100 and  barCode.FlowStatus  = 2 and   barCode.PartStatus = 1;
+we need to generate 1
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 4
+	   PartStatus = 1
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime
+
+
+
+when barCode.station =100 and  barCode.FlowStatus  = 2 and   barCode.PartStatus = 2;
+we need to generate 1
+whith the following data
+
+For machine 100
+	   cycle.CycleId = counter;
+	   cycle.BarCodeId = barcode.BarCodeId;
+	   MachineId=100
+	   CycleStatus = 8
+	   PartStatus = 2
+	   CycleTime = random between (50 and 100)
+	   TaktTime = CycleTime + random between (50 and 100)
+	   StartedOn = equal to barcode.StartedOn
+	   FinishedOn= StartedOn + CycleTime

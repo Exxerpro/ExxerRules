@@ -1,0 +1,84 @@
+classDiagram
+
+	class CognexBackGroundWorker  {
+		-ILogger<CognexBackGroundWorker>? logger
+		-DataMan dataMan
+		-IBarCodeScanned barCodeScanned
+		+string? Result
+		-IMonitorRequestDispatcher monitorRequestDispatcher
+		-bool isDataManInitialized
+		-DateTime lasTimeCodeRead
+		-DataManSettings dataManSettings
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		+SetupDataMan(DataManSettings dataManSettings) void
+		+PublishEventBarCodeScanned(string? barCode) Task
+	}
+	class DataManHelper  {
+		+ValidateLabel(DataMan dataMan, string? barCode) bool
+	}
+	class IBarCodeScanned  {
+		- Label : string?
+	}
+	class DataMan  {
+		-Subject~DataMan~ subject
+		+bool IsConnected
+		-object currentResultInfoSyncLock
+		-Logging.ILogger logger
+		-ISystemConnector? connector
+		-EthSystemDiscoverer? ethSystemDiscoverer
+		-ResultCollector? resultsCollector
+		-DataManSystem? dataManSystem
+		-bool Autoconnect
+		-DataManSettings? dataManSettings
+		+ BarCode : IObservable~DataMan~
+		+ ListImages : List~Image~
+		+ ListStrings : List~string~
+		+ Result : string?
+		+ IpAddress : IPAddress?
+		+ Password : string?
+		+ UserName : string?
+		- AsyncResult : IAsyncResult?
+		- InfoConnectionDataMan : SystemInfo?
+		- ListDiscoveredItems : List~SystemInfo~
+		+ Ip : IPAddress?
+		+ User : string?
+		+ Pwd : string?
+		+ConfigNetwork(DataManSettings dataManSettings) void
+		+Connect(IPAddress ip, string user, string pwd) void
+		+Connect() void
+		-BarCodeChanged() void
+		-CallBackStringResult(IAsyncResult ar) void
+		-CleanupConnection() void
+		-ConnectDataMan(SystemInfo systemInfo) void
+		-DisConnectDataMan() void
+		-GetComplexResults(ComplexResult complexResult) void
+		-GetReadStringFromResultXml(string resultXml) string?
+		-OffProtocolByteReceived(object sender, OffProtocolByteReceivedEventArgs args) void
+		-OnAutomaticResponseArrived(object sender, AutomaticResponseArrivedEventArgs args) void
+		-OnBinaryDataTransferProgress(object sender, BinaryDataTransferProgressEventArgs args) void
+		-OnComplexResultCompleted(object sender, ComplexResult e) void
+		-OnEthSystemDiscovered(SystemInfo systemInfo) void
+		-OnImageArrived(object sender, EventArgs args) void
+		-OnImageGraphicsArrived(object sender, EventArgs args) void
+		-OnKeepAliveResponseMissed(object sender, EventArgs args) void
+		-OnReadStringArrived(object sender, EventArgs args) void
+		-OnSimpleResultDropped(object sender, SimpleResult e) void
+		-OnSystemConnected(object sender, EventArgs args) void
+		-OnSystemDisconnected(object sender, EventArgs args) void
+		-OnSystemWentOffline(object sender, EventArgs args) void
+		-OnSystemWentOnline(object sender, EventArgs args) void
+		-OnXmlResultArrived(object sender, EventArgs args) void
+	}
+	class DataManSettings  {
+		+ IpAddress : string
+		+ UserName : string
+		+ Password : string
+	}
+	class BarCodeScanned  {
+		+ Guid : string
+		+ Label : string?
+	}
+
+	CognexBackGroundWorker --|> BackgroundService
+	BarCodeScanned --|> INotification
+	BarCodeScanned --|> IBarCodeScanned

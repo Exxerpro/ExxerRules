@@ -1,0 +1,18 @@
+<Project>
+	<PropertyGroup>
+		<!-- Define custom base path relative to SolutionDir -->
+		<CustomBasePath>$(SolutionDir)..\..\IndTraceV2024\</CustomBasePath>
+
+		<NoWarn>EXXER101</NoWarn>
+		<!-- Set BaseOutputPath, OutputPath, and BaseIntermediateOutputPath -->
+		<BaseOutputPath>$(CustomBasePath)Output\$(MSBuildProjectName)\</BaseOutputPath>
+		<OutputPath>$(BaseOutputPath)$(Configuration)\net$(TargetFramework)\</OutputPath>
+		<BaseIntermediateOutputPath>$(CustomBasePath)Intermediate\$(MSBuildProjectName)\</BaseIntermediateOutputPath>
+
+		<!-- Set MSBuildProjectExtensionsPath to match BaseIntermediateOutputPath -->
+		<MSBuildProjectExtensionsPath>$(BaseIntermediateOutputPath)</MSBuildProjectExtensionsPath>
+
+		<!-- Enable warning to catch mismatches -->
+		<EnableBaseIntermediateOutputPathMismatchWarning>true</EnableBaseIntermediateOutputPathMismatchWarning>
+	</PropertyGroup>
+</Project>

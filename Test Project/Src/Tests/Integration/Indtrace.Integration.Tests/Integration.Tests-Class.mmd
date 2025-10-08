@@ -1,0 +1,360 @@
+classDiagram
+
+	class TriplicateTestDataGenerator  {
+		+GenerateForAllDatabases(string testMethodName) IEnumerable~object[]~
+		-PrependDatabaseKey(object[] testCase, string dbKey) object[]
+		-GetCycleTestData() IEnumerable~object[]~
+		-GetMachineTestData() IEnumerable~object[]~
+	}
+	class DatabaseKeyExtensions  {
+		+WithDatabaseKeys(IEnumerable~object[]~ testData) IEnumerable~object[]~
+	}
+	class PooledKeyedDbContextFactory  {
+		-IDbContextFactory~IndTraceDbContext~ _pooledFactory
+		-string _connectionString
+		+CreateEfDbContext() MicrosoftEntityFrameworkDbContext
+		+CreateDbContext() IIndTraceDbContext
+		+CreateDbContextAsync(CancellationToken cancellationToken) Task~IIndTraceDbContext~
+		+DisposeAsync() ValueTask
+		+Dispose() void
+	}
+	class ReadOnlyRepositoryCancellationAndNullGuardTests  {
+		-TestHostFixture _fixture
+		-string DbKey
+		+Cancelled_token_ReturnsFailure_List_First() Task
+		+Cancelled_token_ReturnsFailure_Count_WithSpec() Task
+		+Null_spec_ReturnsFailure_List_First_Count() Task
+	}
+	class SimpleDiVerificationTests  {
+		-TestHostFixture _fixture
+		+Should_Resolve_DbContextFactory_From_TestHostFixture() void
+		+Should_Resolve_Machine_Repository_From_TestHostFixture() void
+		+Should_Create_DbContext_From_TestHostFixture() Task
+	}
+	class FortressStressTests  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+Fortress_Should_Handle_10000_Parallel_BarCode_Validations_Across_3_Workers() Task
+		+Fortress_Should_Handle_Random_Chaos_Load_Like_Real_Manufacturing() Task
+		-ExecuteWorker(int workerId, string dbKey, int barcodesTarget) Task~WorkerResult~
+		-ExecuteChaosWorker(int workerId, string dbKey, int targetBarcodes, Random random) Task~WorkerResult~
+		-ExtractDatabaseFromLabel(string label) string
+	}
+	class DbProfiles  {
+		+string IndTraceDbContext45
+		+string IndTraceDbContext46
+		+string IndTraceDbContext62
+		+HashSet~string~ Allowed
+	}
+	class CreateMachineTestsTheory  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+ DuplicateMachineTestCases : IEnumerable~object[]~
+		+Should_Fail_When_MachineId_Or_Name_Already_Exists(int machineId, string name) Task
+	}
+	class BarCodeCases_Db45  {
+		+IEnumerable~object[]~ Cases
+	}
+	class DbProfileTheoryData  {
+		-List~object[]~ _data
+		+GetEnumerator() IEnumerator~object[]~
+		-GetEnumerator() IEnumerator
+	}
+	class SyncDbContextFactoryAdapter  {
+		-IndTraceDbContextFactory _inner
+		+CreateEfDbContext() MicrosoftEntityFrameworkDbContext
+		+CreateDbContextAsync(CancellationToken cancellationToken) Task~IIndTraceDbContext~
+		+CreateDbContext() IIndTraceDbContext
+		+Dispose() void
+		+DisposeAsync() ValueTask
+	}
+	class TestDbGuards  {
+		+ ShouldSkipDb45 : bool
+		+ ShouldSkipQA62 : bool
+		+ ShouldSkipQA46 : bool
+		+ShouldSkipDb(string dbKey) bool
+		+SkipIfDbMissing(IServiceProvider sp, string dbKey) void
+	}
+	class BarCodeCases_QA62  {
+		+IEnumerable~object[]~ Cases
+	}
+	class DatabaseConnectivityDebugTests  {
+		-TestHostFixture _fixture
+		+Should_Connect_To_Database(string profile) Task
+	}
+	class DbSkipConditions  {
+		+ IsCiSkip : bool
+		+ SkipDb45 : bool
+		+ SkipQA62 : bool
+		+ SkipQA46 : bool
+		+SkipDb(string dbKey) bool
+		-ResolveConnectionString(string dbKey) string?
+		-IsTrue(string? value) bool
+	}
+	class GetMachineDetailQueryHandlerTest  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+GetMachineDetail() Task
+		+GetMachineDetail_On_QA62() Task
+	}
+	class CreateConfigAppIntegrationTests  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+Process_WithValidCommand_ShouldCreateConfigApp() Task
+		+Process_WithDuplicateConfigId_ShouldHandleGracefully() Task
+		+Process_WithVariousStringLengths_ShouldHandleCorrectly(string client, string? factory, string? line) Task
+		+Process_WithCancellationToken_ShouldRespectCancellation() Task
+		+Process_MultipleEntities_ShouldPersistAll() Task
+	}
+	class BarCodeTests_QA62_Debug  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipQA62 : bool
+		+Debug_Check_QA62_Database_Connection_And_Data() Task
+	}
+	class KeyedDbContextFactory  {
+		-string _connectionString
+		+CreateEfDbContext() MicrosoftEntityFrameworkDbContext
+		+CreateDbContext() IIndTraceDbContext
+		+CreateDbContextAsync(CancellationToken cancellationToken) Task~IIndTraceDbContext~
+		-CreateOptions() DbContextOptions~IndTraceDbContext~
+		+DisposeAsync() ValueTask
+		+Dispose() void
+	}
+	class BarCodeTests_QA46  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ Cases : IEnumerable~object[]~
+		+ ShouldSkipQA46 : bool
+		+Should_Find_Label_On_QA46(string barCode, int machineId, int expectedBarCodeId) Task
+		-ExtractPartNumber(string barCode) string
+	}
+	class SpResolution  {
+		-IServiceProvider serviceProvider
+		+TheProjectTest_ShouldHaveAccessToTheServiceProvider() void
+	}
+	class KeyedServiceRegistrationExtensions  {
+		+AddKeyedRepositoriesForProfile(IServiceCollection services, string profile, ServiceLifetime lifetime) IServiceCollection
+		-AddKeyedRepository(IServiceCollection services, string profile, ServiceLifetime lifetime) IServiceCollection
+		+AddKeyedReadOnlyRepositoriesForProfile(IServiceCollection services, string profile, ServiceLifetime lifetime) IServiceCollection
+		+AddKeyedExtendedRepositoriesForProfile(IServiceCollection services, string profile, ServiceLifetime lifetime) IServiceCollection
+		+AddKeyedApplicationServicesForProfile(IServiceCollection services, string profile) IServiceCollection
+	}
+	class NonParallelCollectionDefinition  {
+	}
+	class BarCodeTests_QA62  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ Cases : IEnumerable~object[]~
+		+ ShouldSkipQA62 : bool
+		+Should_Find_Label_On_QA62(string barCode, int machineId, int expectedBarCodeId) Task
+		-ExtractPartNumber(string barCode) string
+	}
+	class KeyedPersistenceRegistrationTest  {
+		+AddKeyedPersistenceFromConfigTest(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+	}
+	class ServiceRegistration  {
+		+GetRequiredKeyedService(IServiceProvider services, string key) T
+	}
+	class BarCodeCases_QA46  {
+		+IEnumerable~object[]~ Cases
+	}
+	class CyclesIntegrationTest  {
+		-ITestOutputHelper _output
+		-IServiceProvider _services
+		+ ShouldSkipDb45 : bool
+		+ LastCycleCases : IEnumerable~object[]~
+		+Should_Continue_Cycle_When_Last_Not_Finished(string label, int machineId, int lastMachineId, int nextMachineId, int lenPartNumber, string partStatus, string flowStatus, string cycleStatus, int barCodeId, int cycleId, string machineType, DateTime startCycle) Task
+	}
+	class GetBarCodeDetailGatewayQueryTests  {
+		-ITestOutputHelper _output
+		-IServiceProvider _services
+		+ BarCodeDetailCases : IEnumerable~object[]~
+		+ ShouldSkipDb45 : bool
+		+ ShouldSkipQA62 : bool
+		+Should_Return_BarCodeDetail_For_Known_Label(string barCode, int machineId, int barCodeId) Task
+		+Should_Return_BarCodeDetail_For_Known_Label_On_QA62() Task
+		-ExtractPartNumber(string barCode) string
+	}
+	class HandlerTestExtensions  {
+		+        BuildHandler(IServiceProvider services, ITestOutputHelper output, string dbKey, Func~IRepository~TEntity~&#44&#32ILogger~THandler~&#44&#32THandler~ factory) (THandler&#32sut&#44&#32IRepository<TEntity>&#32repo&#44&#32ILogger<THandler>&#32logger)
+		+        BuildHandler(IServiceProvider services, ITestOutputHelper output, Func~TRepo&#44&#32ILogger~THandler~&#44&#32THandler~ factory) (THandler&#32sut&#44&#32TRepo&#32repo&#44&#32ILogger<THandler>&#32logger)
+	}
+	class BarCodeCases_Db45ddd  {
+		+IEnumerable~object[]~ Cases
+	}
+	class UpdateMachineCommandTest  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+ShouldSendRequestAsync() Task
+		+ShouldExecuteRequestHandler() Task
+	}
+	class CreateMachineTests  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+Should_Create_Machine_When_Valid() Task
+		-CreateSutRepoLogger() (CreateMachineMonitorRequestHandler&#32sut&#44&#32IRepository<Machine>&#32repo&#44&#32ILogger<CreateMachineMonitorRequestHandler>&#32logger)
+	}
+	class WorkingTestData  {
+		+BarCodeTestCases() IEnumerable~object[]~
+		+CycleTestCases() IEnumerable~object[]~
+		+MachineTestCases() IEnumerable~object[]~
+	}
+	class LoggerIntegrationTests  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+Should_Log_Message() Task
+	}
+	class DbContextIntegrationTestsQA45  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+Should_Connect_And_Ping_DbContext() Task
+	}
+	class BarCodeCases_StressTest  {
+		+IEnumerable~object[]~ Cases
+	}
+	class RandomDistinctBarCodeGenerator  {
+		-ConcurrentDictionary~string&#44&#32ClientTracker~ _clientTrackers
+		-List~object[]~ _allTestCases
+		+GetRandomDistinctCases(string clientId, int? maxItems) IEnumerable~object[]~
+		+GetDeterministicRandomCases(int seed, int count) IEnumerable~object[]~
+		+ResetClient(string clientId) void
+		+GetUsageStats() Dictionary~string&#44&#32ClientStats~
+		-ShuffleList(IList~T~ list, Random random) void
+		-LoadAllTestCases() List~object[]~
+		-ExtractDatabaseFromLabel(string label) string
+		+Reset() void
+	}
+	class ClientTracker  {
+		+ UsedIndices : HashSet~int~
+		+ UsedCount : int
+		+ Iteration : int
+		+Reset() void
+	}
+	class ClientStats  {
+		+ UsedCount : int
+		+ TotalAvailable : int
+		+ PercentageUsed : double
+		+ Iterations : int
+	}
+	class CreateMachineTests  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+ShouldThrowExceptionWhenMachineExists() Task
+		+ShouldThrowExceptionWhenMachineIdExists() Task
+		+ShouldThrowExceptionWhenMachineNameExists() Task
+		-InitializeAsync() Task
+		-DisposeAsync() Task
+	}
+	class DatabaseConnectivityTest  {
+		-string QA46ConnectionString
+		+Should_Connect_To_QA46_Database_And_Retrieve_First_BarCode() Task
+		+Should_Test_IndTraceDbContext_IsConnectionActive_Property() Task
+	}
+	class ToggleEnableMachineCommandValidatorTests  {
+		-ToggleEnableMachineCommandValidator _validator
+		-CreateValidCommand() ToggleEnableMachineCommand
+		+Should_Have_Error_When_MachineId_Is_Zero() void
+		+Should_Have_Error_When_MachineId_Is_Negative() void
+		+Should_Not_Have_Error_When_MachineId_Is_Positive() void
+	}
+	class RepositoryCancellationAndNullGuardTests  {
+		-TestHostFixture _fixture
+		-string DbKey
+		+Cancelled_token_ReturnsFailure_ListAsync() Task
+		+Cancelled_token_ReturnsFailure_FirstOrDefaultAsync() Task
+		+Cancelled_token_ReturnsFailure_Count_List_Add_Update_Delete() Task
+		+Null_entity_ReturnsFailure_Add_Update_Delete_Detach() Task
+		+Null_spec_ReturnsFailure_List_First_Count() Task
+	}
+	class TestHostFixture  {
+		-IHost _host
+		+ Services : IServiceProvider
+		+InitializeAsync() ValueTask
+		+DisposeAsync() ValueTask
+	}
+	class TestContextLoggerProvider  {
+		+CreateLogger(string categoryName) ILogger
+		+Dispose() void
+	}
+	class TestContextLogger  {
+		-string _category
+		+BeginScope(TState state) IDisposable?
+		+IsEnabled(LogLevel logLevel) bool
+		+Log(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func~TState&#44&#32Exception?&#44&#32string~ formatter) void
+		+Dispose() void
+	}
+	class NullScope  {
+		+NullScope Instance
+		+Dispose() void
+	}
+	class DbContextIntegrationTests_QA46  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipQA46 : bool
+		+Should_Connect_And_Ping_QA46_DbContext() Task
+	}
+	class CommonServiceRegistrationTest  {
+		+AddCommonServicesTest(IServiceCollection services, IConfiguration configuration) IServiceCollection
+	}
+	class BarCodeTests_Db45  {
+		-IServiceProvider _services
+		-ITestOutputHelper _output
+		+ ShouldSkipDb45 : bool
+		+ Cases : IEnumerable~object[]~
+		+Should_Find_Label_On_DB45(string barCode, int machineId, int _) Task
+		+Should_Have_Valid_BarCodeId_On_DB45(string barCode, int machineId, int expectedBarCodeId) Task
+		-ExtractPartNumber(string barCode) string
+	}
+	class DbLogCategory  {
+	}
+	class DbLogging  {
+		+LogConnectionString(IServiceProvider sp, string dbKey, ITestOutputHelper output, string source) void
+	}
+	class SelfRegisteredExtensions  {
+		+AddSelfRegisteredExtensions(global::Microsoft.Testing.Platform.Builder.ITestApplicationBuilder builder, string[] args) void
+	}
+	class XunitAutoGeneratedEntryPoint  {
+		+Main(string[] args) int
+	}
+
+	PooledKeyedDbContextFactory --|> IIndTraceDbContextFactory
+	PooledKeyedDbContextFactory --|> IDisposable
+	ReadOnlyRepositoryCancellationAndNullGuardTests --|> IClassFixture
+	SimpleDiVerificationTests --|> IClassFixture
+	FortressStressTests --|> IClassFixture
+	CreateMachineTestsTheory --|> IClassFixture
+	DbProfileTheoryData --|> IEnumerable
+	SyncDbContextFactoryAdapter --|> IIndTraceDbContextFactory
+	SyncDbContextFactoryAdapter --|> IDisposable
+	DatabaseConnectivityDebugTests --|> IClassFixture
+	GetMachineDetailQueryHandlerTest --|> IClassFixture
+	CreateConfigAppIntegrationTests --|> IClassFixture
+	BarCodeTests_QA62_Debug --|> IClassFixture
+	KeyedDbContextFactory --|> IIndTraceDbContextFactory
+	KeyedDbContextFactory --|> IDisposable
+	BarCodeTests_QA46 --|> IClassFixture
+	SpResolution --|> IClassFixture
+	BarCodeTests_QA62 --|> IClassFixture
+	CyclesIntegrationTest --|> IClassFixture
+	GetBarCodeDetailGatewayQueryTests --|> IClassFixture
+	UpdateMachineCommandTest --|> IClassFixture
+	CreateMachineTests --|> IClassFixture
+	LoggerIntegrationTests --|> IClassFixture
+	DbContextIntegrationTestsQA45 --|> IClassFixture
+	CreateMachineTests --|> IClassFixture
+	RepositoryCancellationAndNullGuardTests --|> IClassFixture
+	TestHostFixture --|> IAsyncLifetime
+	TestHostFixture --|> IAsyncDisposable
+	TestContextLoggerProvider --|> ILoggerProvider
+	TestContextLogger --|> ILogger
+	NullScope --|> IDisposable
+	DbContextIntegrationTests_QA46 --|> IClassFixture
+	BarCodeTests_Db45 --|> IClassFixture

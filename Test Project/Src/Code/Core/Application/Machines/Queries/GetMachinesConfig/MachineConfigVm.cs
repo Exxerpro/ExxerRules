@@ -1,0 +1,30 @@
+// <copyright file="MachineConfigVm.cs" company="PlaceholderCompany">
+// Copyright (c) Exxerpro Solutions SA de CV. All rights reserved.
+// </copyright>
+
+namespace IndTrace.Application.Machines.Queries.GetMachinesConfig;
+
+/// <summary>
+/// Represents the MachineConfigVm.
+/// </summary>
+public class MachineConfigVm
+{
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MachineConfigVm"/> class.
+    /// Initializes a new instance of the class.
+    /// </summary>
+    public MachineConfigVm()
+    {
+        this.Machines = [];
+    }
+
+    /// <summary>
+    /// Gets or sets the Machines.
+    /// </summary>
+    public IList<MachineConfigDto> Machines { get; set; }
+
+    /// <summary>
+    /// Gets or sets the Count.
+    /// </summary>
+    public int Count { get; set; }
+}

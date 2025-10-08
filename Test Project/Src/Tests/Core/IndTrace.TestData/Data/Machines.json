@@ -1,0 +1,122 @@
+[
+  {
+    "MachineId": 0,
+    "Name": "End/Start Process",
+    "Description": "Dummy Machine",
+    "Location": "N/A",
+    "MachineType": 0,
+    "WorkFlowType": 0,
+    "EnableAppTraceability": 0,
+    "EnableBypassTraceability": 1,
+    "RuleId": 0,
+    "Retry": 3
+  },
+  {
+    "MachineId": 100,
+    "Name": "WS100",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 4,
+    "WorkFlowType": 1,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 100,
+    "Retry": 3
+  },
+  {
+    "MachineId": 200,
+    "Name": "WS200",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 8,
+    "WorkFlowType": 2,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 200,
+    "Retry": 3
+  },
+  {
+    "MachineId": 300,
+    "Name": "WS300",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 8,
+    "WorkFlowType": 2,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 300,
+    "Retry": 3
+  },
+  {
+    "MachineId": 400,
+    "Name": "WS400",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 8,
+    "WorkFlowType": 2,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 400,
+    "Retry": 3
+  },
+  {
+    "MachineId": 500,
+    "Name": "WS500",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 16,
+    "WorkFlowType": 4,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 500,
+    "Retry": 3
+  },
+  {
+    "MachineId": 600,
+    "Name": "WS600",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 16,
+    "WorkFlowType": 2,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 600,
+    "Retry": 3
+  },
+  {
+    "MachineId": 700,
+    "Name": "WS700",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 32,
+    "WorkFlowType": 2,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 700,
+    "Retry": 3
+  },
+  {
+    "MachineId": 800,
+    "Name": "WS800",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 64,
+    "WorkFlowType": 2,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 800,
+    "Retry": 3
+  },
+  {
+    "MachineId": 900,
+    "Name": "WS900",
+    "Description": "SPOILER",
+    "Location": "SPOILER",
+    "MachineType": 64,
+    "WorkFlowType": 4,
+    "EnableAppTraceability": 1,
+    "EnableBypassTraceability": 0,
+    "RuleId": 900,
+    "Retry": 3
+  }
+]

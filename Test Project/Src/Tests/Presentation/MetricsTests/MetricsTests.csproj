@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- Microsoft Testing Platform Configuration -->
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <TestingPlatformServer>true</TestingPlatformServer>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <RootNamespace>IndTrace.Application.UnitTests</RootNamespace>
+    <AssemblyName>IndTrace.Application.UnitTests</AssemblyName>
+    <IsPackable>false</IsPackable>
+    <LangVersion>latest</LangVersion>
+    <AssemblyVersion>2020.5.30.51</AssemblyVersion>
+    <FileVersion>2020.5.30.51</FileVersion>
+    <XunitStartupAssembly>IndTrace.Application.UnitTests</XunitStartupAssembly>
+    <XunitStartupFullName>Startup</XunitStartupFullName>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="Xunit.DependencyInjection" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="Chill" />
+  </ItemGroup>
+  <!-- Microsoft Testing Platform -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Testing.Platform" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+  </ItemGroup>
+  <!-- xUnit v3 -->
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.v3.core" />
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <!-- Microsoft Testing Platform Configuration -->
+  <ItemGroup>
+    <ProjectCapability Include="DiagnoseCapabilities" />
+    <ProjectCapability Include="TestingPlatformServer" />
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Code\Presentation\IndTrace.Models\IndTrace.UI.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+</Project>

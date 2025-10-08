@@ -1,0 +1,27 @@
+classDiagram
+
+	class IHubTestable  {
+		-PauseAsync(DateTime timeStamp, CancellationToken cancellationToken) Task
+		-TransientAsync(IEnumerable~DateTime~ timeStamps, CancellationToken cancellationToken) Task
+	}
+	class WorkerHubServer  {
+		-IHubConnection connection
+		-IHubContext<EventMonitorHub>? _
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		-ConnectToHubServer(CancellationToken stoppingToken) Task
+	}
+	class ProgramDashboardEndpoints  {
+		+MapHubMetricsEndpoints(WebApplication app) void
+	}
+	class EventMonitorHub  {
+		+BroadcastMessageToClients(string user, string message) Task
+		+BroadcastHeartbeatSignal(int plc, ControllerMonitor controller) Task
+		+BroadcastTaskGatewayRequest(int id, TaskGatewayRequest request) Task
+		+BroadcastTaskGatewayResponse(int id, TaskGatewayResponse response) Task
+	}
+	class Program  {
+		+Main(string[] args) Task
+	}
+
+	WorkerHubServer --|> BackgroundService
+	EventMonitorHub --|> Microsoft

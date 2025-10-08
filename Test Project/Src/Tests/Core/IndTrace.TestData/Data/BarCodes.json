@@ -1,0 +1,1892 @@
+[
+  {
+    "BarCodeId": 1,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372501",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T00:27:24",
+    "ModifiedOn": "2023-08-27T00:49:12"
+  },
+  {
+    "BarCodeId": 2,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372502",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T02:54:13",
+    "ModifiedOn": "2023-08-27T02:54:19"
+  },
+  {
+    "BarCodeId": 3,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372503",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T07:49:43",
+    "ModifiedOn": "2023-08-27T08:18:00"
+  },
+  {
+    "BarCodeId": 4,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372504",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T03:18:15",
+    "ModifiedOn": "2023-08-27T03:41:07"
+  },
+  {
+    "BarCodeId": 5,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372505",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:18:06",
+    "ModifiedOn": "2023-08-27T09:27:28"
+  },
+  {
+    "BarCodeId": 6,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372506",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:23:58",
+    "ModifiedOn": "2023-08-27T10:01:55"
+  },
+  {
+    "BarCodeId": 7,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372507",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T11:46:55",
+    "ModifiedOn": "2023-08-27T11:50:57"
+  },
+  {
+    "BarCodeId": 8,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372508",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:48:11",
+    "ModifiedOn": "2023-08-27T12:03:04"
+  },
+  {
+    "BarCodeId": 9,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372509",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:05:30",
+    "ModifiedOn": "2023-08-27T12:20:08"
+  },
+  {
+    "BarCodeId": 10,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372510",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T12:19:30",
+    "ModifiedOn": "2023-08-27T12:19:35"
+  },
+  {
+    "BarCodeId": 11,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372511",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T08:31:01",
+    "ModifiedOn": "2023-08-27T09:22:03"
+  },
+  {
+    "BarCodeId": 12,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372512",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T08:31:47",
+    "ModifiedOn": "2023-08-27T09:25:05"
+  },
+  {
+    "BarCodeId": 13,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372513",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T11:50:42",
+    "ModifiedOn": "2023-08-27T12:09:01"
+  },
+  {
+    "BarCodeId": 14,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372514",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:53:28",
+    "ModifiedOn": "2023-08-27T12:12:01"
+  },
+  {
+    "BarCodeId": 15,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372515",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:01:49",
+    "ModifiedOn": "2023-08-27T12:16:03"
+  },
+  {
+    "BarCodeId": 16,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372516",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:06:30",
+    "ModifiedOn": "2023-08-27T12:19:31"
+  },
+  {
+    "BarCodeId": 17,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372517",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:09:13",
+    "ModifiedOn": "2023-08-27T12:20:56"
+  },
+  {
+    "BarCodeId": 18,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372518",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:11:01",
+    "ModifiedOn": "2023-08-27T12:22:36"
+  },
+  {
+    "BarCodeId": 19,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372519",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:12:15",
+    "ModifiedOn": "2023-08-27T12:21:23"
+  },
+  {
+    "BarCodeId": 20,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372520",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:13:21",
+    "ModifiedOn": "2023-08-27T12:22:16"
+  },
+  {
+    "BarCodeId": 21,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372521",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:14:53",
+    "ModifiedOn": "2023-08-27T12:20:02"
+  },
+  {
+    "BarCodeId": 22,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372522",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:16:43",
+    "ModifiedOn": "2023-08-27T12:21:58"
+  },
+  {
+    "BarCodeId": 23,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372523",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:15:45",
+    "ModifiedOn": "2023-08-27T13:15:45"
+  },
+  {
+    "BarCodeId": 24,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372524",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:26:29",
+    "ModifiedOn": "2023-08-27T13:26:29"
+  },
+  {
+    "BarCodeId": 25,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372525",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:31:55",
+    "ModifiedOn": "2023-08-27T13:31:55"
+  },
+  {
+    "BarCodeId": 26,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372526",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:37:13",
+    "ModifiedOn": "2023-08-27T13:37:13"
+  },
+  {
+    "BarCodeId": 27,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372527",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:03:53",
+    "ModifiedOn": "2023-08-27T15:03:53"
+  },
+  {
+    "BarCodeId": 28,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372528",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:07:23",
+    "ModifiedOn": "2023-08-27T16:54:58"
+  },
+  {
+    "BarCodeId": 29,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372529",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:52:09",
+    "ModifiedOn": "2023-08-27T09:52:09"
+  },
+  {
+    "BarCodeId": 30,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372530",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:54:09",
+    "ModifiedOn": "2023-08-27T09:54:09"
+  },
+  {
+    "BarCodeId": 31,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372531",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:00:17",
+    "ModifiedOn": "2023-08-27T10:00:17"
+  },
+  {
+    "BarCodeId": 32,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372532",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:01:14",
+    "ModifiedOn": "2023-08-27T10:01:14"
+  },
+  {
+    "BarCodeId": 33,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372533",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T10:01:50",
+    "ModifiedOn": "2023-08-27T10:01:50"
+  },
+  {
+    "BarCodeId": 34,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372534",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:03:23",
+    "ModifiedOn": "2023-08-27T10:03:23"
+  },
+  {
+    "BarCodeId": 35,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372535",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:05:46",
+    "ModifiedOn": "2023-08-27T10:05:46"
+  },
+  {
+    "BarCodeId": 36,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372536",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T10:06:13",
+    "ModifiedOn": "2023-08-27T10:06:13"
+  },
+  {
+    "BarCodeId": 37,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372537",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:06:27",
+    "ModifiedOn": "2023-08-27T10:06:27"
+  },
+  {
+    "BarCodeId": 38,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372538",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:07:47",
+    "ModifiedOn": "2023-08-27T10:07:47"
+  },
+  {
+    "BarCodeId": 39,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372539",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T10:13:47",
+    "ModifiedOn": "2023-08-27T10:13:47"
+  },
+  {
+    "BarCodeId": 40,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372540",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:13:59",
+    "ModifiedOn": "2023-08-27T10:13:59"
+  },
+  {
+    "BarCodeId": 41,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372541",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:16:39",
+    "ModifiedOn": "2023-08-27T10:16:39"
+  },
+  {
+    "BarCodeId": 42,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372542",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T10:35:21",
+    "ModifiedOn": "2023-08-27T10:35:21"
+  },
+  {
+    "BarCodeId": 43,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372543",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:35:49",
+    "ModifiedOn": "2023-08-27T10:35:49"
+  },
+  {
+    "BarCodeId": 44,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372544",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:43:32",
+    "ModifiedOn": "2023-08-27T10:43:32"
+  },
+  {
+    "BarCodeId": 45,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372545",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T10:49:58",
+    "ModifiedOn": "2023-08-27T10:49:58"
+  },
+  {
+    "BarCodeId": 46,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372546",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T10:50:56",
+    "ModifiedOn": "2023-08-27T10:50:56"
+  },
+  {
+    "BarCodeId": 47,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372547",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:51:25",
+    "ModifiedOn": "2023-08-27T10:51:25"
+  },
+  {
+    "BarCodeId": 48,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372548",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:53:08",
+    "ModifiedOn": "2023-08-27T10:53:08"
+  },
+  {
+    "BarCodeId": 49,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372549",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T10:53:32",
+    "ModifiedOn": "2023-08-27T10:53:32"
+  },
+  {
+    "BarCodeId": 50,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372550",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:59:49",
+    "ModifiedOn": "2023-08-27T10:59:49"
+  },
+  {
+    "BarCodeId": 51,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372551",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:01:12",
+    "ModifiedOn": "2023-08-27T11:01:12"
+  },
+  {
+    "BarCodeId": 52,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372552",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T11:01:23",
+    "ModifiedOn": "2023-08-27T11:01:23"
+  },
+  {
+    "BarCodeId": 53,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372553",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:27:18",
+    "ModifiedOn": "2023-08-27T12:27:18"
+  },
+  {
+    "BarCodeId": 54,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372554",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:36:40",
+    "ModifiedOn": "2023-08-27T13:36:40"
+  },
+  {
+    "BarCodeId": 55,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372555",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T14:01:00",
+    "ModifiedOn": "2023-08-27T14:01:00"
+  },
+  {
+    "BarCodeId": 56,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372556",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:19:04",
+    "ModifiedOn": "2023-08-27T16:25:12"
+  },
+  {
+    "BarCodeId": 57,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372557",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:04:33",
+    "ModifiedOn": "2023-08-27T17:04:37"
+  },
+  {
+    "BarCodeId": 58,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372558",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T17:08:48",
+    "ModifiedOn": "2023-08-27T17:16:44"
+  },
+  {
+    "BarCodeId": 59,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372559",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T17:18:22",
+    "ModifiedOn": "2023-08-27T17:19:30"
+  },
+  {
+    "BarCodeId": 60,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372560",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 61,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372561",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:39:12",
+    "ModifiedOn": "2023-08-27T15:44:41"
+  },
+  {
+    "BarCodeId": 62,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372562",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:40:31",
+    "ModifiedOn": "2023-08-27T15:45:43"
+  },
+  {
+    "BarCodeId": 63,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372563",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:23:47",
+    "ModifiedOn": "2023-08-27T16:25:05"
+  },
+  {
+    "BarCodeId": 64,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372564",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:00:01",
+    "ModifiedOn": "2023-08-27T09:02:38"
+  },
+  {
+    "BarCodeId": 65,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372565",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:18:14",
+    "ModifiedOn": "2023-08-27T09:18:14"
+  },
+  {
+    "BarCodeId": 66,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372566",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:56:32",
+    "ModifiedOn": "2023-08-27T10:58:00"
+  },
+  {
+    "BarCodeId": 67,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372567",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:31:52",
+    "ModifiedOn": "2023-08-27T15:31:52"
+  },
+  {
+    "BarCodeId": 68,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372568",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:37:22",
+    "ModifiedOn": "2023-08-27T15:46:00"
+  },
+  {
+    "BarCodeId": 69,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372569",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:53:32",
+    "ModifiedOn": "2023-08-27T10:53:32"
+  },
+  {
+    "BarCodeId": 70,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372570",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:59:49",
+    "ModifiedOn": "2023-08-27T10:59:49"
+  },
+  {
+    "BarCodeId": 71,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372571",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:01:12",
+    "ModifiedOn": "2023-08-27T11:01:12"
+  },
+  {
+    "BarCodeId": 72,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372572",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:01:23",
+    "ModifiedOn": "2023-08-27T11:01:23"
+  },
+  {
+    "BarCodeId": 73,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372573",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:27:18",
+    "ModifiedOn": "2023-08-27T12:27:18"
+  },
+  {
+    "BarCodeId": 74,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372574",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:36:40",
+    "ModifiedOn": "2023-08-27T13:36:40"
+  },
+  {
+    "BarCodeId": 75,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372575",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:01:00",
+    "ModifiedOn": "2023-08-27T14:01:00"
+  },
+  {
+    "BarCodeId": 76,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372576",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:19:04",
+    "ModifiedOn": "2023-08-27T16:25:12"
+  },
+  {
+    "BarCodeId": 77,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372577",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:04:33",
+    "ModifiedOn": "2023-08-27T17:04:37"
+  },
+  {
+    "BarCodeId": 78,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372578",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T17:08:48",
+    "ModifiedOn": "2023-08-27T17:16:44"
+  },
+  {
+    "BarCodeId": 79,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372579",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T17:18:22",
+    "ModifiedOn": "2023-08-27T17:19:30"
+  },
+  {
+    "BarCodeId": 80,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372580",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 81,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372581",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T15:39:12",
+    "ModifiedOn": "2023-08-27T15:44:41"
+  },
+  {
+    "BarCodeId": 82,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372582",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:40:31",
+    "ModifiedOn": "2023-08-27T15:45:43"
+  },
+  {
+    "BarCodeId": 83,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372583",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:23:47",
+    "ModifiedOn": "2023-08-27T16:25:05"
+  },
+  {
+    "BarCodeId": 84,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372584",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T09:00:01",
+    "ModifiedOn": "2023-08-27T09:02:38"
+  },
+  {
+    "BarCodeId": 85,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372585",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:18:14",
+    "ModifiedOn": "2023-08-27T09:18:14"
+  },
+  {
+    "BarCodeId": 86,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372586",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:56:32",
+    "ModifiedOn": "2023-08-27T10:58:00"
+  },
+  {
+    "BarCodeId": 87,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372587",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T15:31:52",
+    "ModifiedOn": "2023-08-27T15:31:52"
+  },
+  {
+    "BarCodeId": 88,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372588",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:37:22",
+    "ModifiedOn": "2023-08-27T15:46:00"
+  },
+  {
+    "BarCodeId": 89,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372589",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:31:52",
+    "ModifiedOn": "2023-08-27T15:31:52"
+  },
+  {
+    "BarCodeId": 90,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372590",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T15:37:22",
+    "ModifiedOn": "2023-08-27T15:46:00"
+  },
+  {
+    "BarCodeId": 91,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372591",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T15:39:12",
+    "ModifiedOn": "2023-08-27T15:44:41"
+  },
+  {
+    "BarCodeId": 92,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372592",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:40:31",
+    "ModifiedOn": "2023-08-27T15:45:43"
+  },
+  {
+    "BarCodeId": 93,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372593",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:23:47",
+    "ModifiedOn": "2023-08-27T16:25:05"
+  },
+  {
+    "BarCodeId": 94,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372594",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T09:00:01",
+    "ModifiedOn": "2023-08-27T09:02:38"
+  },
+  {
+    "BarCodeId": 95,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372595",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:18:14",
+    "ModifiedOn": "2023-08-27T09:18:14"
+  },
+  {
+    "BarCodeId": 96,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372596",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:56:32",
+    "ModifiedOn": "2023-08-27T10:58:00"
+  },
+  {
+    "BarCodeId": 97,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372597",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T15:31:52",
+    "ModifiedOn": "2023-08-27T15:31:52"
+  },
+  {
+    "BarCodeId": 98,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372598",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:37:22",
+    "ModifiedOn": "2023-08-27T15:46:00"
+  },
+  {
+    "BarCodeId": 99,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372599",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:31:52",
+    "ModifiedOn": "2023-08-27T15:31:52"
+  },
+  {
+    "BarCodeId": 100,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372600",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T15:37:22",
+    "ModifiedOn": "2023-08-27T15:46:00"
+  },
+  {
+    "BarCodeId": 101,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372601",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T00:27:24",
+    "ModifiedOn": "2023-08-27T00:49:12"
+  },
+  {
+    "BarCodeId": 102,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372602",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T02:54:13",
+    "ModifiedOn": "2023-08-27T02:54:19"
+  },
+  {
+    "BarCodeId": 103,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372603",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T07:49:43",
+    "ModifiedOn": "2023-08-27T08:18:00"
+  },
+  {
+    "BarCodeId": 104,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372604",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T03:18:15",
+    "ModifiedOn": "2023-08-27T03:41:07"
+  },
+  {
+    "BarCodeId": 105,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372605",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:18:06",
+    "ModifiedOn": "2023-08-27T09:27:28"
+  },
+  {
+    "BarCodeId": 106,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372606",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:23:58",
+    "ModifiedOn": "2023-08-27T10:01:55"
+  },
+  {
+    "BarCodeId": 107,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372607",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:46:55",
+    "ModifiedOn": "2023-08-27T11:50:57"
+  },
+  {
+    "BarCodeId": 108,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372608",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:48:11",
+    "ModifiedOn": "2023-08-27T12:03:04"
+  },
+  {
+    "BarCodeId": 109,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372609",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:05:30",
+    "ModifiedOn": "2023-08-27T12:20:08"
+  },
+  {
+    "BarCodeId": 110,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372610",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:19:30",
+    "ModifiedOn": "2023-08-27T12:19:35"
+  },
+  {
+    "BarCodeId": 111,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372611",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T08:31:01",
+    "ModifiedOn": "2023-08-27T09:22:03"
+  },
+  {
+    "BarCodeId": 112,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372612",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T08:31:47",
+    "ModifiedOn": "2023-08-27T09:25:05"
+  },
+  {
+    "BarCodeId": 113,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372613",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:50:42",
+    "ModifiedOn": "2023-08-27T12:09:01"
+  },
+  {
+    "BarCodeId": 114,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372614",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:53:28",
+    "ModifiedOn": "2023-08-27T12:12:01"
+  },
+  {
+    "BarCodeId": 115,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372615",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:01:49",
+    "ModifiedOn": "2023-08-27T12:16:03"
+  },
+  {
+    "BarCodeId": 116,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372616",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:06:30",
+    "ModifiedOn": "2023-08-27T12:19:31"
+  },
+  {
+    "BarCodeId": 117,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372617",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:09:13",
+    "ModifiedOn": "2023-08-27T12:20:56"
+  },
+  {
+    "BarCodeId": 118,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372618",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:11:01",
+    "ModifiedOn": "2023-08-27T12:22:36"
+  },
+  {
+    "BarCodeId": 119,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372619",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:12:15",
+    "ModifiedOn": "2023-08-27T12:21:23"
+  },
+  {
+    "BarCodeId": 120,
+    "ProductId": 508,
+    "MachineId": 300,
+    "Label": "L1AL687508232372620",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:13:21",
+    "ModifiedOn": "2023-08-27T12:22:16"
+  },
+  {
+    "BarCodeId": 121,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372621",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:14:53",
+    "ModifiedOn": "2023-08-27T12:20:02"
+  },
+  {
+    "BarCodeId": 122,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372622",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:16:43",
+    "ModifiedOn": "2023-08-27T12:21:58"
+  },
+  {
+    "BarCodeId": 123,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372623",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T13:15:45",
+    "ModifiedOn": "2023-08-27T13:15:45"
+  },
+  {
+    "BarCodeId": 124,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372624",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:26:29",
+    "ModifiedOn": "2023-08-27T13:26:29"
+  },
+  {
+    "BarCodeId": 125,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372625",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:31:55",
+    "ModifiedOn": "2023-08-27T13:31:55"
+  },
+  {
+    "BarCodeId": 126,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372626",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T13:37:13",
+    "ModifiedOn": "2023-08-27T13:37:13"
+  },
+  {
+    "BarCodeId": 127,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372627",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:03:53",
+    "ModifiedOn": "2023-08-27T15:03:53"
+  },
+  {
+    "BarCodeId": 128,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372628",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:07:23",
+    "ModifiedOn": "2023-08-27T16:54:58"
+  },
+  {
+    "BarCodeId": 129,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372629",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T09:52:09",
+    "ModifiedOn": "2023-08-27T09:52:09"
+  },
+  {
+    "BarCodeId": 130,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372630",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:54:09",
+    "ModifiedOn": "2023-08-27T09:54:09"
+  },
+  {
+    "BarCodeId": 131,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372631",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:00:17",
+    "ModifiedOn": "2023-08-27T10:00:17"
+  },
+  {
+    "BarCodeId": 132,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372632",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T10:01:14",
+    "ModifiedOn": "2023-08-27T10:01:14"
+  },
+  {
+    "BarCodeId": 133,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372633",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:01:50",
+    "ModifiedOn": "2023-08-27T10:01:50"
+  },
+  {
+    "BarCodeId": 134,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372634",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:03:23",
+    "ModifiedOn": "2023-08-27T10:03:23"
+  },
+  {
+    "BarCodeId": 135,
+    "ProductId": 508,
+    "MachineId": 500,
+    "Label": "L1AL687508232372635",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T10:05:46",
+    "ModifiedOn": "2023-08-27T10:05:46"
+  },
+  {
+    "BarCodeId": 136,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372636",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T10:06:13",
+    "ModifiedOn": "2023-08-27T10:06:13"
+  },
+  {
+    "BarCodeId": 137,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372637",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:06:27",
+    "ModifiedOn": "2023-08-27T10:06:27"
+  },
+  {
+    "BarCodeId": 138,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372638",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:07:47",
+    "ModifiedOn": "2023-08-27T10:07:47"
+  },
+  {
+    "BarCodeId": 139,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372639",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T10:13:47",
+    "ModifiedOn": "2023-08-27T10:13:47"
+  },
+  {
+    "BarCodeId": 140,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372640",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:13:59",
+    "ModifiedOn": "2023-08-27T10:13:59"
+  },
+  {
+    "BarCodeId": 141,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372641",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:16:39",
+    "ModifiedOn": "2023-08-27T10:16:39"
+  },
+  {
+    "BarCodeId": 142,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372642",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T10:35:21",
+    "ModifiedOn": "2023-08-27T10:35:21"
+  },
+  {
+    "BarCodeId": 143,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372643",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:35:49",
+    "ModifiedOn": "2023-08-27T10:35:49"
+  },
+  {
+    "BarCodeId": 144,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372644",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:43:32",
+    "ModifiedOn": "2023-08-27T10:43:32"
+  },
+  {
+    "BarCodeId": 145,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL687508232372645",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T10:49:58",
+    "ModifiedOn": "2023-08-27T10:49:58"
+  },
+  {
+    "BarCodeId": 146,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372646",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:50:56",
+    "ModifiedOn": "2023-08-27T10:50:56"
+  },
+  {
+    "BarCodeId": 147,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372647",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:51:25",
+    "ModifiedOn": "2023-08-27T10:51:25"
+  },
+  {
+    "BarCodeId": 148,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372648",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T10:53:08",
+    "ModifiedOn": "2023-08-27T10:53:08"
+  },
+  {
+    "BarCodeId": 149,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372649",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:53:32",
+    "ModifiedOn": "2023-08-27T10:53:32"
+  },
+  {
+    "BarCodeId": 150,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372650",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:59:49",
+    "ModifiedOn": "2023-08-27T10:59:49"
+  },
+  {
+    "BarCodeId": 151,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372651",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:01:12",
+    "ModifiedOn": "2023-08-27T11:01:12"
+  },
+  {
+    "BarCodeId": 152,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372652",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:01:23",
+    "ModifiedOn": "2023-08-27T11:01:23"
+  },
+  {
+    "BarCodeId": 153,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372653",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:27:18",
+    "ModifiedOn": "2023-08-27T12:27:18"
+  },
+  {
+    "BarCodeId": 154,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372654",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T13:36:40",
+    "ModifiedOn": "2023-08-27T13:36:40"
+  },
+  {
+    "BarCodeId": 155,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372655",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:01:00",
+    "ModifiedOn": "2023-08-27T14:01:00"
+  },
+  {
+    "BarCodeId": 156,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372656",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:19:04",
+    "ModifiedOn": "2023-08-27T16:25:12"
+  },
+  {
+    "BarCodeId": 157,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372657",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:04:33",
+    "ModifiedOn": "2023-08-27T17:04:37"
+  },
+  {
+    "BarCodeId": 158,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372658",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T17:08:48",
+    "ModifiedOn": "2023-08-27T17:16:44"
+  },
+  {
+    "BarCodeId": 159,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372659",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T17:18:22",
+    "ModifiedOn": "2023-08-27T17:19:30"
+  },
+  {
+    "BarCodeId": 160,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372660",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 161,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372661",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:39:12",
+    "ModifiedOn": "2023-08-27T15:44:41"
+  },
+  {
+    "BarCodeId": 162,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372662",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:40:31",
+    "ModifiedOn": "2023-08-27T15:45:43"
+  },
+  {
+    "BarCodeId": 163,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372663",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:23:47",
+    "ModifiedOn": "2023-08-27T16:25:05"
+  },
+  {
+    "BarCodeId": 164,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372664",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:00:01",
+    "ModifiedOn": "2023-08-27T09:02:38"
+  },
+  {
+    "BarCodeId": 165,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372665",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T09:18:14",
+    "ModifiedOn": "2023-08-27T09:18:14"
+  },
+  {
+    "BarCodeId": 166,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372666",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:56:32",
+    "ModifiedOn": "2023-08-27T10:58:00"
+  },
+  {
+    "BarCodeId": 167,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372667",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T15:31:52",
+    "ModifiedOn": "2023-08-27T15:31:52"
+  },
+  {
+    "BarCodeId": 168,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372668",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T15:37:22",
+    "ModifiedOn": "2023-08-27T15:46:00"
+  },
+  {
+    "BarCodeId": 169,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372669",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:53:32",
+    "ModifiedOn": "2023-08-27T10:53:32"
+  },
+  {
+    "BarCodeId": 170,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372670",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T10:59:49",
+    "ModifiedOn": "2023-08-27T10:59:49"
+  },
+  {
+    "BarCodeId": 171,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372671",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T11:01:12",
+    "ModifiedOn": "2023-08-27T11:01:12"
+  },
+  {
+    "BarCodeId": 172,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372672",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T11:01:23",
+    "ModifiedOn": "2023-08-27T11:01:23"
+  },
+  {
+    "BarCodeId": 173,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372673",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T12:27:18",
+    "ModifiedOn": "2023-08-27T12:27:18"
+  },
+  {
+    "BarCodeId": 174,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372674",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T13:36:40",
+    "ModifiedOn": "2023-08-27T13:36:40"
+  },
+  {
+    "BarCodeId": 175,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372675",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:01:00",
+    "ModifiedOn": "2023-08-27T14:01:00"
+  },
+  {
+    "BarCodeId": 176,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372676",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:19:04",
+    "ModifiedOn": "2023-08-27T16:25:12"
+  },
+  {
+    "BarCodeId": 177,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372677",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T16:04:33",
+    "ModifiedOn": "2023-08-27T17:04:37"
+  },
+  {
+    "BarCodeId": 178,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372678",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T17:08:48",
+    "ModifiedOn": "2023-08-27T17:16:44"
+  },
+  {
+    "BarCodeId": 179,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372679",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T17:18:22",
+    "ModifiedOn": "2023-08-27T17:19:30"
+  },
+  {
+    "BarCodeId": 180,
+    "ProductId": 629,
+    "MachineId": 500,
+    "Label": "L1AL90164629232372680",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 181,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372681",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T16:19:04",
+    "ModifiedOn": "2023-08-27T16:25:12"
+  },
+  {
+    "BarCodeId": 182,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372682",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T16:04:33",
+    "ModifiedOn": "2023-08-27T17:04:37"
+  },
+  {
+    "BarCodeId": 183,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372683",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T17:08:48",
+    "ModifiedOn": "2023-08-27T17:16:44"
+  },
+  {
+    "BarCodeId": 184,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372684",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T17:18:22",
+    "ModifiedOn": "2023-08-27T17:19:30"
+  },
+  {
+    "BarCodeId": 185,
+    "ProductId": 508,
+    "MachineId": 100,
+    "Label": "L1AL687508232372685",
+    "PartStatus": 1,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 186,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372554",
+    "PartStatus": 1,
+    "FlowStatus": 1,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 187,
+    "ProductId": 629,
+    "MachineId": 100,
+    "Label": "L1AL90164629232372557",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 188,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372567",
+    "PartStatus": 1,
+    "FlowStatus": 4,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  },
+  {
+    "BarCodeId": 189,
+    "ProductId": 629,
+    "MachineId": 300,
+    "Label": "L1AL90164629232372569",
+    "PartStatus": 2,
+    "FlowStatus": 2,
+    "CreatedOn": "2023-08-27T14:22:17",
+    "ModifiedOn": "2023-08-27T15:06:56"
+  }
+]

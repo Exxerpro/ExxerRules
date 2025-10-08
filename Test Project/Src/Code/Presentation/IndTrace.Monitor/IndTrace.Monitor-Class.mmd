@@ -1,0 +1,1017 @@
+classDiagram
+
+	class IdentityRedirectManager  {
+		+string StatusCookieName
+		-CookieBuilder StatusCookieBuilder
+		- CurrentPath : string
+		+RedirectTo(string? uri) void
+		+RedirectTo(string uri, Dictionary~string&#44&#32object?~ queryParameters) void
+		+RedirectToWithStatus(string uri, string message, HttpContext context) void
+		+RedirectToCurrentPage() void
+		+RedirectToCurrentPageWithStatus(string message, HttpContext context) void
+	}
+	class IdentityUserAccessor  {
+		+GetRequiredUserAsync(HttpContext context) Task~ApplicationUser~
+	}
+	class ApplicationUser  {
+	}
+	class Monitor  {
+		-ApplicationConfiguration? applicationConfiguration
+		-IDisposable? unsubscriber
+		-bool firstRenderCompleted
+		+ IsInitialized : bool
+		- HasValidConfiguration : bool
+		- HasControllerMonitors : bool
+		- HasRequestEvents : bool
+		- HasStationMonitors : bool
+		- HasMessages : bool
+		- CanRender : bool
+		+ SelectedCustomer : string
+		-OnInitializedAsync() Task
+		-OnAfterRenderAsync(bool firstRender) Task
+		-InitializeApplicationAsync() Task~bool~
+		-InitializeParticles() Task
+		-OnInitialized() void
+		+OnCompleted() void
+		+OnError(Exception error) void
+		+OnNext(StateChange value) void
+		+Dispose() void
+		+DisposeAsync() ValueTask
+		-GetCustomerLogoUrl(string customerName) string
+	}
+	class Operations  {
+		-ApplicationConfiguration? applicationConfiguration
+		-IDisposable? unsubscriber
+		+ IsInitialized : bool
+		-OnInitializedAsync() Task
+		-OnAfterRenderAsync(bool firstRender) Task
+		-InitializeApplicationAsync() Task~bool~
+		-InitializeParticles() Task
+		-OnInitialized() void
+		+OnCompleted() void
+		+OnError(Exception error) void
+		+OnNext(StateChange value) void
+		+DisposeAsync() ValueTask
+	}
+	class IdentityRevalidatingAuthenticationStateProvider  {
+		- RevalidationInterval : TimeSpan
+		-ValidateAuthenticationStateAsync(AuthenticationState authenticationState, CancellationToken cancellationToken) Task~bool~
+		-ValidateSecurityStampAsync(UserManager~ApplicationUser~ userManager, ClaimsPrincipal principal) Task~bool~
+	}
+	class IdentityComponentsEndpointRouteBuilderExtensions  {
+		+MapAdditionalIdentityEndpoints(IEndpointRouteBuilder endpoints) IEndpointConventionBuilder
+	}
+	class HubMonitorWorker  {
+		-IHubConnection? hubConnection
+		+ IsHubConnected : bool
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		+StopAsync(CancellationToken stoppingToken) Task
+		+SetupAndStartHubConnectionAsync(CancellationToken cancellationToken) Task
+		-InitializeHubConnectionAsync(CancellationToken cancellationToken) Task
+		-RegisterHubEventHandlers(CancellationToken cancellationToken) void
+		-AddConnectionHandlers(CancellationToken cancellationToken) void
+		-LogConnectionStateAsync(string state, CancellationToken? cancellationToken) Task
+		+Dispose() void
+	}
+	class Metrics  {
+		+ DataSet : List~VariablesData~
+		+ IsComponentInitialized : bool
+		+ VariablesList : List~RegistersRecords~
+		+TransformDictionaryToDataSet(Dictionary~(int&#32MachineId&#44&#32string&#32Name)&#44&#32IEnumerable~TimeSeriesDataPoint~~ timeSeriesData) List~VariablesData~
+		-OnAfterRenderAsync(bool firstRender) Task
+		-PopulateDataFromLocalStorage() Task
+		-ClearLocalStorage() void
+		-OnInitializedAsync() Task
+		-OnTimerElapsed() Task
+		-SelectedValuesChanged(HashSet~RegistersRecords~ variables) Task
+		-PopulateData(IEnumerable~RegistersRecords~ variables) Task
+		-OnSeriesDeleted(VariablesData series) Task
+		-ParseValue(string value, string? valueType) double
+		-InitializeParticles() Task
+		-RefreshValues() Task
+		+DisposeAsync() ValueTask
+	}
+	class Reports  {
+		-int debounce
+		-BarCodeDetailMonitorVm? barCodeDetails
+		-int countBarCodes
+		-System.Timers.Timer? debounceTimer1
+		-EditContext? reportsListContext
+		-ReportsListQueryModel? reportsListQueryModel
+		-string? selectedBarCode
+		-ApplicationConfiguration? applicationConfiguration
+		-bool isJsReady
+		+ LastError : string
+		+ SelectedBarCode : string?
+		- BarCodesDtoList : List<BarCodeDto>?
+		- ReportDetails : ReportDetailMonitorVm
+		- Visible : bool
+		+ IsInitialized : bool
+		-OnAfterRenderAsync(bool firstRender) Task
+		-OnInitializedAsync() Task
+		-InitializeApplicationAsync() Task~bool~
+		-ExportReports(Dictionary~int&#44&#32string~ MachineNames) Task
+		-GetReportCodeListsAsync() Task
+		-OnButtonClicked(string barcode) Task
+	}
+	class IdentityNoOpEmailSender  {
+		-IEmailSender emailSender
+		+SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) Task
+		+SendPasswordResetLinkAsync(ApplicationUser user, string email, string resetLink) Task
+		+SendPasswordResetCodeAsync(ApplicationUser user, string email, string resetCode) Task
+	}
+	class Machines  {
+		-string message
+		-IEnumerable~MachineDto~ initialMachines
+		+ ErrorContent : RenderFragment?
+		+ MachineList : IEnumerable~MachineDto~
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		-OnInitializedAsync() Task
+		-LoadConfiguration() Task
+		-OnMachineEvent() Task
+		-OnAfterRenderAsync(bool firstRender) Task
+	}
+	class Products  {
+		-bool showAddProduct
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ ProductsViewState : ProductsViewState?
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ ListProductsDto : List~ProductDto~
+		+ ListWorkFlowsDto : List~WorkFlowDto~
+		- AuthProvider : AuthenticationStateProvider
+		+ IsInitialized : bool
+		- SelectedCustomer : string
+		+ SelectedProductDto : ProductDto?
+		- NewProduct : ProductDto?
+		+ SaveEnabled : bool
+		+ Result : Result?
+		-ShowAddProduct(MouseEventArgs obj) void
+		-CancelAddProduct() void
+		-OnInitializedAsync() Task
+		-OnAfterRenderAsync(bool firstRender) Task
+		-LoadConfigurationAsync() Task~bool~
+		-ReloadConfigurationAsync() Task~bool~
+		-LoadAndInitializeConfigurationAsync(bool forceRefresh) Task~bool~
+		-SaveNewModel(ProductDto NewProduct) Task
+		-GetCurrentUserNameAsync() Task~string~
+		-NewProductAdded(ProductDto newProduct) void
+		+HandleSelectedCustomerChanged(string selectedConsumer) Task
+		+ProductSelected(ProductDto selectedProduct) Task
+	}
+	class IndFusionWorker  {
+		-ExecuteAsync(CancellationToken stoppingToken) Task
+		-UpdateOeeData() void
+	}
+	class IndTraceDbIdentity  {
+	}
+	class Notifications  {
+		-SendEvent() Task
+	}
+	class TestEvent  {
+		+ EntityId : string
+		+ ImportantData : string
+	}
+	class Program  {
+		+Main(string[] args) Task
+	}
+	class WorkFlows  {
+		-MudDropContainer<ProductMachineItem>? dropContainer
+		-NewProductForm newProductSectionModel
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ ProductState : ProductsViewState?
+		+ IndexState : Dictionary<string&#44&#32Dictionary<ProductMachineItem&#44&#32int>>?
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ IsInitialized : bool
+		+ EnableSaveButton : bool
+		-OnInitializedAsync() Task
+		-OnAfterRenderAsync(bool firstRender) Task
+		-InitializeApplicationAsync() Task~bool~
+		-SaveNewModel(MouseEventArgs obj) void
+		-ProductUpdated(MudItemDropInfo~ProductMachineItem~ info) void
+		-NewProductAdded(ProductDto newProduct) void
+		+ProductSelected(ProductDto selectedProduct) void
+		-OnItemDroppedIntoProduct(MudItemDropInfo~ProductMachineItem~ info) void
+		-LogDropContainerState() void
+		-UpdateIndexStateAndRefreshUI() void
+		-OnItemDroppedIntoDiscard(MudItemDropInfo~ProductMachineItem~ info) void
+		-OnItemDroppedIntoCatalog(MudItemDropInfo~ProductMachineItem~ info) void
+		-OnValidSectionSubmit(EditContext context) void
+		-OpenAddNewProduct() void
+		-AddMachine(ProductDefinition section) void
+		-DeleteSection(ProductDefinition section) void
+		-CanDrop(ProductMachineItem item) bool
+	}
+	class EmbeddedAttribute  {
+	}
+	class ValidatableTypeAttribute  {
+	}
+	class _Imports  {
+		-Execute() void
+	}
+	class ResetPassword  {
+		-IEnumerable<IdentityError>? _identityErrors
+		- Input : InputModel
+		- Code : string?
+		- Message : string?
+		- UserManager : UserManager~ApplicationUser~
+		- RedirectManager : IdentityRedirectManager
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ Email : string
+		+ Password : string
+		+ ConfirmPassword : string
+		+ Code : string
+	}
+	class TypeInference  {
+		+CreateValidationMessage_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0, int __seq1, global::System.Object __arg1) void
+		+CreateValidationMessage_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0, int __seq1, global::System.Object __arg1) void
+		+CreateValidationMessage_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0, int __seq1, global::System.Object __arg1) void
+	}
+	class ConfirmEmail  {
+		-string? _statusMessage
+		- HttpContext : HttpContext
+		- UserId : string?
+		- Code : string?
+		- RedirectManager : IdentityRedirectManager
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class Index  {
+		-ApplicationUser _user
+		-string? _username
+		-string? _phoneNumber
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ PhoneNumber : string?
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::System.String __arg3) void
+		+CreateMudStaticTextField_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg3, int __seq4, T __arg4, int __seq5, global::System.Object __arg5, int __seq6, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg6) void
+	}
+	class Lockout  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class BarCode  {
+		-string SDefaultDragClass
+		-long MaxFileSize
+		-string _dragClass
+		-List~string~ _fileNames
+		-MudFileUpload<IReadOnlyList<IBrowserFile>>? _fileUpload
+		-string _decodedResult
+		-bool _loading
+		-string _imageData
+		-string _barCodeToSearch
+		+ BarCodeDetails : BarCodeDetailMonitorVm?
+		+ SelectedBarCode : string
+		+ Visible : bool
+		+ LastError : string
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		- Snackbar : ISnackbar
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-ClearAsync() Task
+		-OpenFilePickerAsync() Task
+		-OnInputFileChanged(InputFileChangeEventArgs e) void
+		-Upload() void
+		-SetDragClass() void
+		-ClearDragClass() void
+		-UploadFiles(IBrowserFile file) Task
+		-ResetDecodedValues() void
+		-ReadFileAsync(IBrowserFile file) Task~MemoryStream~
+		-SearchBarCode(string barcode) Task
+		+GetBarCodeInfo(string barcode) Task
+	}
+	class StatusMessage  {
+		-string? _messageFromCookie
+		+ Message : string?
+		- HttpContext : HttpContext
+		- DisplayMessage : string?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+	}
+	class RedirectToLogin  {
+		- NavigationManager : NavigationManager
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+	}
+	class DeletePersonalData  {
+		-string? _message
+		-ApplicationUser _user
+		-bool _requirePassword
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- Logger : ILogger~DeletePersonalData~
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ Password : string
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::MudBlazor.InputType __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.String __arg3, int __seq4, global::System.String __arg4, int __seq5, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg5, int __seq6, T __arg6, int __seq7, global::System.Object __arg7, int __seq8, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg8) void
+	}
+	class WorkFlows  {
+		- ProductService : IProductService
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		- ApplicationState : PersistentComponentState
+		- Logger : ILogger~Products~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Operations  {
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		- EventsService : IndTraceEventsService
+		- Logger : ILogger~Operations~
+		- JsRuntime : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Analyzer  {
+		- EventsService : EventsService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class ResendEmailConfirmation  {
+		-string? _message
+		- Input : InputModel
+		- RedirectManager : IdentityRedirectManager
+		- NavigationManager : NavigationManager
+		- EmailSender : IEmailSender~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ Email : string
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg3, int __seq4, T __arg4, int __seq5, global::System.Object __arg5, int __seq6, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg6) void
+	}
+	class Wifi  {
+		-string _wiFiSettings
+		-string _wiFiQroCode
+		-QRCodeGenerator _qrCodeGenerator
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+		+GetQrCode(string textToEncode) string
+	}
+	class App  {
+		- HttpContext : HttpContext
+		- RenderModeForPage : IComponentRenderMode?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class CreateBarCode  {
+		-string _wiFiSettings
+		-string _wiFiQroCode
+		-BarCodeModel _labelModel
+		-QRCodeGenerator _qrCodeGenerator
+		-string _textToEncode
+		-string _encodedText
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+		-HandleValidSubmit() void
+		+GetQrCode(string textToEncode) string
+	}
+	class NavMenu  {
+		-bool _open
+		-string? _currentUrl
+		- NavigationManager : NavigationManager
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+		-OnLocationChanged(object? sender, LocationChangedEventArgs e) void
+		+Dispose() void
+	}
+	class Final  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Machines  {
+		- ApplicationState : PersistentComponentState
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Metrics  {
+		- LocalStorage : ProtectedLocalStorage
+		- JsRuntime : IJSRuntime
+		- Logger : ILogger~Metrics~
+		- RegisterService : IRegisterInformationService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Auth  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Notifications  {
+		-string connectionString
+		- Data : List~MyData~
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		- EventsService : IndTraceEventsService
+		- Logger : ILogger~Notifications~
+		- JsRuntime : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+		-RequestPermission() Task
+		-SendNotification() Task
+	}
+	class MyData  {
+		+ Category : string
+		+ NetProfit : int
+		+ Revenue : int
+	}
+	class LoginWithRecoveryCode  {
+		-string? _message
+		-ApplicationUser _user
+		- Input : InputModel
+		- ReturnUrl : string?
+		- Logger : ILogger~LoginWithRecoveryCode~
+		- RedirectManager : IdentityRedirectManager
+		- UserManager : UserManager~ApplicationUser~
+		- SignInManager : SignInManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ RecoveryCode : string
+	}
+	class TypeInference  {
+		+CreateValidationMessage_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0, int __seq1, global::System.Object __arg1) void
+	}
+	class TwoFactorAuthentication  {
+		-bool _canTrack
+		-bool _hasAuthenticator
+		-int _recoveryCodesLeft
+		-bool _is2FaEnabled
+		-bool _isMachineRemembered
+		- HttpContext : HttpContext
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnSubmitForgetBrowserAsync() Task
+	}
+	class ResetAuthenticator  {
+		- HttpContext : HttpContext
+		- Logger : ILogger~ResetAuthenticator~
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnSubmitAsync() Task
+	}
+	class RegisterConfirmation  {
+		-string? _emailConfirmationLink
+		-string? _statusMessage
+		- HttpContext : HttpContext
+		- Email : string?
+		- ReturnUrl : string?
+		- RedirectManager : IdentityRedirectManager
+		- NavigationManager : NavigationManager
+		- EmailSender : IEmailSender~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class ExternalLogin  {
+		+string LoginCallbackAction
+		-string? _message
+		-ExternalLoginInfo _externalLoginInfo
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- RemoteError : string?
+		- ReturnUrl : string?
+		- Action : string?
+		- ProviderDisplayName : string?
+		- Logger : ILogger~ExternalLogin~
+		- RedirectManager : IdentityRedirectManager
+		- NavigationManager : NavigationManager
+		- EmailSender : IEmailSender~ApplicationUser~
+		- UserStore : IUserStore~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		- SignInManager : SignInManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnLoginCallbackAsync() Task
+		-OnValidSubmitAsync() Task
+		-CreateUser() ApplicationUser
+		-GetEmailStore() IUserEmailStore~ApplicationUser~
+	}
+	class InputModel  {
+		+ Email : string
+	}
+	class TypeInference  {
+		+CreateValidationMessage_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0) void
+	}
+	class Products  {
+		- ApplicationState : PersistentComponentState
+		- snackbar : ISnackbar
+		- productService : IProductService
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		- DialogService : IDialogService
+		- logger : ILogger~Products~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Email  {
+		-string? _message
+		-ApplicationUser _user
+		-string? _email
+		-bool _isEmailConfirmed
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- NavigationManager : NavigationManager
+		- UserAccessor : IdentityUserAccessor
+		- EmailSender : IEmailSender~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+		-OnSendEmailVerificationAsync() Task
+	}
+	class InputModel  {
+		+ NewEmail : string?
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.Boolean __arg3, int __seq4, global::System.String __arg4, int __seq5, global::MudBlazor.Color __arg5) void
+		+CreateMudStaticTextField_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.Boolean __arg3) void
+		+CreateMudStaticTextField_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, T __arg3, int __seq4, global::System.Object __arg4, int __seq5, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg5) void
+	}
+	class Monitor  {
+		-bool _processing
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		- EventsService : IndTraceEventsService
+		- Logger : ILogger~Monitor~
+		- JsRuntime : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-SelectCustomer() Task
+	}
+	class TypeInference  {
+		+CreateMudSelectItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudListItem_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::System.Boolean? __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+	class Error  {
+		- HttpContext : HttpContext?
+		- RequestId : string?
+		- ShowRequestId : bool
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+	}
+	class ResetPasswordConfirmation  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class PersonalData  {
+		- HttpContext : HttpContext
+		- UserAccessor : IdentityUserAccessor
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class ExternalLoginPicker  {
+		-AuthenticationScheme[] _externalLogins
+		- ReturnUrl : string?
+		- RedirectManager : IdentityRedirectManager
+		- SignInManager : SignInManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class Login  {
+		-string? _errorMessage
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- ReturnUrl : string?
+		- RedirectManager : IdentityRedirectManager
+		- NavigationManager : NavigationManager
+		- Logger : ILogger~Login~
+		- SignInManager : SignInManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		+LoginUser() Task
+	}
+	class InputModel  {
+		+ Email : string
+		+ Password : string
+		+ RememberMe : bool
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg3, int __seq4, T __arg4, int __seq5, global::System.Object __arg5, int __seq6, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg6) void
+		+CreateMudStaticTextField_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::MudBlazor.InputType __arg2, int __seq3, global::System.String __arg3, int __seq4, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg4, int __seq5, T __arg5, int __seq6, global::System.Object __arg6, int __seq7, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg7) void
+	}
+	class ForgotPasswordConfirmation  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class InvalidUser  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class ExternalLogins  {
+		+string LinkLoginCallbackAction
+		-ApplicationUser _user
+		-IList<UserLoginInfo>? _currentLogins
+		-IList<AuthenticationScheme>? _otherLogins
+		-bool _showRemoveButton
+		- HttpContext : HttpContext
+		- LoginProvider : string?
+		- ProviderKey : string?
+		- Action : string?
+		- RedirectManager : IdentityRedirectManager
+		- UserStore : IUserStore~ApplicationUser~
+		- UserAccessor : IdentityUserAccessor
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnSubmitAsync() Task
+		-OnGetLinkLoginCallbackAsync() Task
+	}
+	class ShowRecoveryCodes  {
+		+ RecoveryCodes : string[]
+		+ StatusMessage : string?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class ChangePassword  {
+		-string? _message
+		-ApplicationUser _user
+		-bool _hasPassword
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- Logger : ILogger~ChangePassword~
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ OldPassword : string
+		+ NewPassword : string
+		+ ConfirmPassword : string
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::MudBlazor.InputType __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.String __arg3, int __seq4, global::System.String __arg4, int __seq5, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg5, int __seq6, T __arg6, int __seq7, global::System.Object __arg7, int __seq8, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg8) void
+		+CreateMudStaticTextField_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::MudBlazor.InputType __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.String __arg3, int __seq4, global::System.String __arg4, int __seq5, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg5, int __seq6, T __arg6, int __seq7, global::System.Object __arg7, int __seq8, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg8) void
+		+CreateMudStaticTextField_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::MudBlazor.InputType __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.String __arg3, int __seq4, global::System.String __arg4, int __seq5, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg5, int __seq6, T __arg6, int __seq7, global::System.Object __arg7, int __seq8, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg8) void
+	}
+	class Shifts  {
+		-int _count
+		-MudForm? _form
+		- CurrentShiftModel : ShiftModel
+		- Snackbar : ISnackbar
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-HandleSubmit() Task
+		-HandleValidSubmit() Task
+	}
+	class TypeInference  {
+		+CreateMudTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, T __arg2, int __seq3, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg3) void
+	}
+	class Registers  {
+		+ VariablesList : List~string~
+		+ DataSet : List~VariablesData~
+		- ApplicationState : PersistentComponentState
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OptionsChanged(IEnumerable~string~ variables) Task
+		-PopulateData(IEnumerable~string~ variables) Task
+		-OnSeriesDeleted(VariablesData series) void
+	}
+	class LoginWith2fa  {
+		-string? _message
+		-ApplicationUser _user
+		- Input : InputModel
+		- ReturnUrl : string?
+		- RememberMe : bool
+		- Logger : ILogger~LoginWith2fa~
+		- RedirectManager : IdentityRedirectManager
+		- UserManager : UserManager~ApplicationUser~
+		- SignInManager : SignInManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ TwoFactorCode : string?
+		+ RememberMachine : bool
+	}
+	class TypeInference  {
+		+CreateValidationMessage_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0, int __seq1, global::System.Object __arg1) void
+	}
+	class InvalidPasswordReset  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Logout  {
+		-AuthorizeView? _authView
+		- SignInManager : SignInManager~ApplicationUser~
+		- AuthenticationStateProvider : AuthenticationStateProvider
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class Disable2fa  {
+		-ApplicationUser _user
+		- HttpContext : HttpContext
+		- Logger : ILogger~Disable2fa~
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnSubmitAsync() Task
+	}
+	class ManageLayout  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Configuration  {
+		-ApplicationConfiguration? _appDetails
+		-string _message
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class AccountLayout  {
+		- HttpContext : HttpContext?
+		- NavigationManager : NavigationManager
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnParametersSet() void
+	}
+	class ConfirmEmailChange  {
+		-string? _message
+		- HttpContext : HttpContext
+		- UserId : string?
+		- Email : string?
+		- Code : string?
+		- RedirectManager : IdentityRedirectManager
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class ManageNavMenu  {
+		-bool _hasExternalLogins
+		- SignInManager : SignInManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class Exxerpro  {
+		- ApplicationConfiguration : ApplicationConfiguration
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		- Navigation : NavigationManager
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class AccessDenied  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class EnableAuthenticator  {
+		-string SAuthenticatorUriFormat
+		-string? _message
+		-ApplicationUser _user
+		-string? _sharedKey
+		-string? _authenticatorUri
+		-IEnumerable<string>? _recoveryCodes
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- Logger : ILogger~EnableAuthenticator~
+		- RedirectManager : IdentityRedirectManager
+		- UrlEncoder : UrlEncoder
+		- UserAccessor : IdentityUserAccessor
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+		-LoadSharedKeyAndQrCodeUriAsync(ApplicationUser user) ValueTask
+		-FormatKey(string unformattedKey) string
+		-GenerateQrCodeUri(string email, string unformattedKey) string
+	}
+	class InputModel  {
+		+ Code : string
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, T __arg3, int __seq4, global::System.Object __arg4, int __seq5, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg5) void
+	}
+	class SystemMetrics  {
+		-float CpuUsage
+		-float MemoryUsage
+		-double BandwidthSent
+		-double BandwidthReceived
+		- MetricsService : SystemMetricsService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+	}
+	class ClaimsPrincipalData  {
+		-string? _authMessage
+		-string? _surname
+		-IEnumerable~Claim~ _claims
+		- HttpContext : HttpContext?
+		- AuthenticationStateProvider : AuthenticationStateProvider
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		+GetClaimsPrincipalData() Task
+	}
+	class Routes  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class _Imports  {
+		-Execute() void
+	}
+	class Reports  {
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		- Snackbar : ISnackbar
+		- DialogService : IDialogService
+		- Logger : ILogger~Reports~
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		- BlazorDownloadFileService : IBlazorDownloadFileService
+		- ApplicationState : PersistentComponentState
+		- JS : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Register  {
+		-IEnumerable<IdentityError>? _identityErrors
+		-string _challenge
+		- Input : UserInputModel
+		- ReturnUrl : string?
+		- Message : string?
+		- OfflineCreationService : IUserOfflineCreationService
+		- RedirectManager : IdentityRedirectManager
+		- NavigationManager : NavigationManager
+		- Logger : ILogger~Register~
+		- EmailSender : IEmailSender~ApplicationUser~
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserStore : IUserStore~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		+RegisterUser(EditContext editContext) Task
+		-CreateUser() ApplicationUser
+		-GetEmailStore() IUserEmailStore~ApplicationUser~
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg3, int __seq4, T __arg4, int __seq5, global::System.Object __arg5, int __seq6, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg6) void
+		+CreateMudStaticTextField_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::MudBlazor.InputType __arg2, int __seq3, global::System.String __arg3, int __seq4, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg4, int __seq5, T __arg5, int __seq6, global::System.Object __arg6, int __seq7, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg7) void
+		+CreateMudStaticTextField_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::MudBlazor.InputType __arg2, int __seq3, global::System.String __arg3, int __seq4, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg4, int __seq5, T __arg5, int __seq6, global::System.Object __arg6, int __seq7, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg7) void
+		+CreateMudStaticTextField_3(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, T __arg3, int __seq4, global::System.Object __arg4, int __seq5, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg5) void
+	}
+	class GenerateRecoveryCodes  {
+		-string? _message
+		-ApplicationUser _user
+		-IEnumerable<string>? _recoveryCodes
+		- HttpContext : HttpContext
+		- Logger : ILogger~GenerateRecoveryCodes~
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnSubmitAsync() Task
+	}
+	class _Imports  {
+		-Execute() void
+	}
+	class ForgotPassword  {
+		- Input : InputModel
+		- RedirectManager : IdentityRedirectManager
+		- NavigationManager : NavigationManager
+		- EmailSender : IEmailSender~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ Email : string
+	}
+	class TypeInference  {
+		+CreateMudStaticTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.String __arg2, int __seq3, global::System.Collections.Generic.Dictionary<global::System.String&#44&#32global::System.Object> __arg3, int __seq4, T __arg4, int __seq5, global::System.Object __arg5, int __seq6, global::System.Linq.Expressions.Expression<global::System.Func<global::System.String>> __arg6) void
+	}
+	class MainLayout  {
+		-bool _drawerOpen
+		-List~BreadcrumbItem~ _items
+		-MudTheme _theme
+		-bool _isDarkMode
+		-bool _menuOpen
+		-bool _login
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-DrawerToggle() void
+		-MenuToggle() void
+		-DarkToggle() void
+		-MenuLogIn() void
+	}
+	class SetPassword  {
+		-string? _message
+		-ApplicationUser _user
+		- HttpContext : HttpContext
+		- Input : InputModel
+		- RedirectManager : IdentityRedirectManager
+		- UserAccessor : IdentityUserAccessor
+		- SignInManager : SignInManager~ApplicationUser~
+		- UserManager : UserManager~ApplicationUser~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnValidSubmitAsync() Task
+	}
+	class InputModel  {
+		+ NewPassword : string?
+		+ ConfirmPassword : string?
+	}
+	class TypeInference  {
+		+CreateValidationMessage_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0, int __seq1, global::System.Object __arg1) void
+		+CreateValidationMessage_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Linq.Expressions.Expression<global::System.Func<TValue>> __arg0, int __seq1, global::System.Object __arg1) void
+	}
+	class OEEMonitor  {
+		- Machines : Dictionary~string&#44&#32PerformanceRecord~
+		- IndFusionWorker : IndFusionWorker
+		- OeeState : OeeState
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+
+	ApplicationUser --|> IdentityUser
+	Monitor --|> IObserver
+	Operations --|> IObserver
+	IdentityRevalidatingAuthenticationStateProvider --|> RevalidatingServerAuthenticationStateProvider
+	HubMonitorWorker --|> BackgroundService
+	IdentityNoOpEmailSender --|> IEmailSender
+	IndFusionWorker --|> BackgroundService
+	IndTraceDbIdentity --|> IdentityDbContext
+	Notifications --|> ComponentBase
+	EmbeddedAttribute --|> global
+	ValidatableTypeAttribute --|> global
+	_Imports --|> object
+	ResetPassword --|> global
+	ConfirmEmail --|> global
+	Index --|> global
+	Lockout --|> global
+	BarCode --|> global
+	StatusMessage --|> global
+	RedirectToLogin --|> global
+	DeletePersonalData --|> global
+	WorkFlows --|> global
+	Operations --|> global
+	Operations --|> IAsyncDisposable
+	Analyzer --|> global
+	ResendEmailConfirmation --|> global
+	Wifi --|> global
+	App --|> global
+	CreateBarCode --|> global
+	NavMenu --|> global
+	NavMenu --|> IDisposable
+	Final --|> global
+	Machines --|> global
+	Metrics --|> global
+	Metrics --|> IAsyncDisposable
+	Auth --|> global
+	Notifications --|> global
+	LoginWithRecoveryCode --|> global
+	TwoFactorAuthentication --|> global
+	ResetAuthenticator --|> global
+	RegisterConfirmation --|> global
+	ExternalLogin --|> global
+	Products --|> global
+	Email --|> global
+	Monitor --|> global
+	Monitor --|> IAsyncDisposable
+	Error --|> global
+	ResetPasswordConfirmation --|> global
+	PersonalData --|> global
+	ExternalLoginPicker --|> global
+	Login --|> global
+	ForgotPasswordConfirmation --|> global
+	InvalidUser --|> global
+	ExternalLogins --|> global
+	ShowRecoveryCodes --|> global
+	ChangePassword --|> global
+	Shifts --|> global
+	Registers --|> global
+	LoginWith2fa --|> global
+	InvalidPasswordReset --|> global
+	Logout --|> global
+	Disable2fa --|> global
+	ManageLayout --|> LayoutComponentBase
+	Configuration --|> global
+	AccountLayout --|> LayoutComponentBase
+	ConfirmEmailChange --|> global
+	ManageNavMenu --|> global
+	Exxerpro --|> global
+	AccessDenied --|> global
+	EnableAuthenticator --|> global
+	SystemMetrics --|> global
+	ClaimsPrincipalData --|> global
+	Routes --|> global
+	_Imports --|> object
+	Reports --|> global
+	Register --|> global
+	GenerateRecoveryCodes --|> global
+	_Imports --|> object
+	ForgotPassword --|> global
+	MainLayout --|> LayoutComponentBase
+	SetPassword --|> global
+	OEEMonitor --|> global

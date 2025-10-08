@@ -17,7 +17,7 @@ public class ErrorHandlingTests
     /// <summary>
     /// Tests that using Result pattern does not report diagnostic.
     /// </summary>
-    [Fact]
+    [Fact(Timeout = 10000)]
     public void Should_NotReportDiagnostic_When_UsingResultPattern()
     {
         const string testCode = @"
@@ -46,7 +46,7 @@ namespace TestProject
     /// <summary>
     /// Tests that throwing exceptions reports diagnostic.
     /// </summary>
-    [Fact]
+    [Fact(Timeout = 10000)]
     public void Should_ReportDiagnostic_When_ThrowingExceptions()
     {
         const string testCode = @"
@@ -76,7 +76,7 @@ namespace TestProject
     /// <summary>
     /// Tests that avoiding throw statements does not report diagnostic.
     /// </summary>
-    [Fact]
+    [Fact(Timeout = 10000)]
     public void Should_NotReportDiagnostic_When_AvoidingThrowStatements()
     {
         const string testCode = @"
@@ -105,7 +105,7 @@ namespace TestProject
     /// <summary>
     /// Tests that using throw statements reports diagnostic.
     /// </summary>
-    [Fact]
+    [Fact(Timeout = 10000)]
     public void Should_ReportDiagnostic_When_UsingThrowStatements()
     {
         const string testCode = @"
@@ -135,7 +135,7 @@ namespace TestProject
     /// <summary>
     /// Tests edge case: Different exception throwing patterns.
     /// </summary>
-    [Fact]
+    [Fact(Timeout = 10000)]
     public void Should_ReportDiagnostic_When_DifferentExceptionThrowingPatterns()
     {
         const string testCode = @"
@@ -186,7 +186,7 @@ namespace TestProject
     /// <summary>
     /// Tests edge case: Different Result pattern usage.
     /// </summary>
-    [Fact]
+    [Fact(Timeout = 10000)]
     public void Should_NotReportDiagnostic_When_DifferentResultPatternUsage()
     {
         const string testCode = @"

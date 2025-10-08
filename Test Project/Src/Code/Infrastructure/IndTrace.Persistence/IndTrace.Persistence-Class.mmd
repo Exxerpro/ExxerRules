@@ -1,0 +1,538 @@
+classDiagram
+
+	class VariablesGroupsConfiguration  {
+		+Configure(EntityTypeBuilder~VariablesGroup~ builder) void
+	}
+	class OrdersConfiguration  {
+		+Configure(EntityTypeBuilder~Order~ builder) void
+	}
+	class TagsGroupsConfiguration  {
+		+Configure(EntityTypeBuilder~TagsGroupEntity~ builder) void
+	}
+	class MachineStatusConfiguration  {
+		+Configure(EntityTypeBuilder~MachineStatus~ builder) void
+	}
+	class FlowTypeConfiguration  {
+		+Configure(EntityTypeBuilder~WorkFlowTypeEntity~ builder) void
+	}
+	class ConnectionStatusConfiguration  {
+		+Configure(EntityTypeBuilder~ConnectionStatus~ builder) void
+	}
+	class TaskGatewayResponseConfiguration  {
+		+Configure(EntityTypeBuilder~TaskGatewayResponse~ builder) void
+	}
+	class StoppegesConfiguration  {
+		+Configure(EntityTypeBuilder~Stoppage~ builder) void
+	}
+	class CacheToggleOptions  {
+		+ Enabled : bool
+	}
+	class VariablesConfiguration  {
+		+Configure(EntityTypeBuilder~Variable~ builder) void
+	}
+	class JsonCacheSerializer ~T~ {
+		-JsonSerializerOptions jsonOptions
+		+Deserialize(ReadOnlySequence~byte~ source) T
+		+Serialize(T value, IBufferWriter~byte~ target) void
+	}
+	class ModelBuilderExtensions  {
+		+UseValueConverterForType(ModelBuilder modelBuilder, ValueConverter converter) ModelBuilder
+		+UseValueConverterForType(ModelBuilder modelBuilder, Type type, ValueConverter converter) ModelBuilder
+	}
+	class CycleStatusConfiguration  {
+		+Configure(EntityTypeBuilder~CycleStatusEntity~ builder) void
+	}
+	class EnumModelJsonConverter  {
+		+CanConvert(Type typeToConvert) bool
+		+Read(Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options) EnumModel?
+		+Write(Utf8JsonWriter writer, EnumModel value, JsonSerializerOptions options) void
+		-CreateInvalidInstance(Type enumType) EnumModel
+	}
+	class TaskGatewayRequestConfiguration  {
+		+Configure(EntityTypeBuilder~TaskGatewayRequest~ builder) void
+	}
+	class StatusConfigurationsConfiguration  {
+		+Configure(EntityTypeBuilder~StatusConfiguration~ builder) void
+	}
+	class KpiOeeConfiguration  {
+		+Configure(EntityTypeBuilder~KpiOee~ builder) void
+	}
+	class IIndTraceDbContextFactory  {
+		-CreateEfDbContext() DbContext
+		-CreateDbContextAsync(CancellationToken cancellationToken) Task~IIndTraceDbContext~
+		-CreateDbContext() IIndTraceDbContext
+	}
+	class IIndTraceDbContext  {
+		- ChangeTracker : ChangeTracker
+		- IsConnectionActive : bool
+		+ IsConnectionInactive : bool
+		- Database : DatabaseFacade
+		- SupportsTransactions : bool
+		- Model : IModel
+		-SaveChanges() int
+		-Set() DbSet~TEntity~
+		-LookupSet() DbSet~TLookupEntity~
+		-SetState() DbSet~TState~
+		-SetAggregate() DbSet~TAggregate~
+		-SaveChangesAsync(CancellationToken cancellationToken) Task~int~
+		-SaveChangesAsync(string tableName, CancellationToken cancellationToken) Task~Result~int~~
+		-Entry(object entity) EntityEntry
+	}
+	class FusionCacheService  {
+		-IFusionCache _fusionCache
+		-ILogger~FusionCacheService~ _logger
+		-TimeSpan _defaultExpiration
+		+GetOrSetAsync(string key, Func~CancellationToken&#44&#32Task~T~~ factory, TimeSpan? expiration, CancellationToken cancellationToken) Task~T?~
+		+RemoveAsync(string key, CancellationToken cancellationToken) Task~bool~
+		+RemoveByPatternAsync(string pattern, CancellationToken cancellationToken) Task~int~
+		+SetAsync(string key, T value, TimeSpan? expiration, CancellationToken cancellationToken) Task
+		+GetAsync(string key, CancellationToken cancellationToken) Task~T?~
+		+ExistsAsync(string key, CancellationToken cancellationToken) Task~bool~
+	}
+	class MachineTypeConfiguration  {
+		+Configure(EntityTypeBuilder~MachineTypeEntity~ builder) void
+	}
+	class ProductsConfiguration  {
+		+Configure(EntityTypeBuilder~Product~ builder) void
+	}
+	class RulesConfiguration  {
+		+Configure(EntityTypeBuilder~Rule~ builder) void
+	}
+	class UsersConfiguration  {
+		+Configure(EntityTypeBuilder~IndTraceUser~ builder) void
+	}
+	class ShiftsCatalogConfiguration  {
+		+Configure(EntityTypeBuilder~ShiftsCatalog~ builder) void
+	}
+	class ShiftDefinitionConfiguration  {
+		+Configure(EntityTypeBuilder~ShiftDefinition~ builder) void
+	}
+	class BarCodeConfiguration  {
+		+Configure(EntityTypeBuilder~BarCode~ builder) void
+	}
+	class OeeRegistersConfigurator  {
+		+Configure(EntityTypeBuilder~OeeRegister~ builder) void
+	}
+	class ConfigAppConfiguration  {
+		+Configure(EntityTypeBuilder~ConfigApp~ builder) void
+	}
+	class ProductSpecsConfiguration  {
+		+Configure(EntityTypeBuilder~ProductSpec~ builder) void
+	}
+	class ProductionCachePartitionProvider  {
+		+GetPrefix() string
+	}
+	class InitialCreate  {
+		-Up(MigrationBuilder migrationBuilder) void
+		-Down(MigrationBuilder migrationBuilder) void
+	}
+	class PartStatusConfiguration  {
+		+Configure(EntityTypeBuilder~PartStatusEntity~ builder) void
+	}
+	class ResultValidationConfiguration  {
+		+Configure(EntityTypeBuilder~ResultValidationEntity~ builder) void
+	}
+	class MachinePlcsConfiguration  {
+		+Configure(EntityTypeBuilder~MachinePlc~ builder) void
+	}
+	class SettingsConfiguration  {
+		+Configure(EntityTypeBuilder~Setting~ builder) void
+	}
+	class PlcConfiguration  {
+		+Configure(EntityTypeBuilder~Plc~ builder) void
+	}
+	class MachinesConfiguration  {
+		+Configure(EntityTypeBuilder~Machine~ builder) void
+	}
+	class DistinctRegisterConfiguration  {
+		+Configure(EntityTypeBuilder~DistinctRegister~ builder) void
+	}
+	class ApplicationDbContextModelSnapshot  {
+		-BuildModel(ModelBuilder modelBuilder) void
+	}
+	class EntityUpdateHelper ~T~ {
+		+UpdateAsync(IIndTraceDbContext context, T entity, CancellationToken cancellationToken) Task~Result~
+		+UpdateAsync(IIndTraceDbContext context, T entity, CancellationToken cancellationToken, string[] propertiesToUpdate) Task~Result~
+		-ValidateInputs(IIndTraceDbContext? context, T? entity) Result
+		-TryUpdateEntity(IIndTraceDbContext context, T entity, object? keyValue, CancellationToken cancellationToken) Task~Result~
+		-FindTrackedEntity(IIndTraceDbContext context, object? keyValue) EntityEntry<T>?
+		-FindEntityToUpdate(IIndTraceDbContext context, object? keyValue, CancellationToken cancellationToken) Task~T?~
+		-ApplyUpdates(IIndTraceDbContext context, T entityToUpdate, T sourceEntity, UpdateMode mode, string[]? propertiesToUpdate) Result
+		-ApplyFullUpdate(EntityEntry entry, T sourceEntity) Result
+		-ApplyPartialUpdate(EntityEntry entry, T sourceEntity, string[] propertiesToUpdate) Result
+		-SaveChangesWithValidation(IIndTraceDbContext context, CancellationToken cancellationToken) Task~Result~
+	}
+	class EdgeConfiguration  {
+		+Configure(EntityTypeBuilder~Edge~ builder) void
+	}
+	class EnumerationEntityConfigurator ~TEnumeration, TLookUp~ {
+		+Configure(EntityTypeBuilder~TLookUp~ builder) void
+	}
+	class AuditableEntityConfiguration ~T~ {
+		+Configure(EntityTypeBuilder~T~ builder) void
+	}
+	class FlowStatusConfiguration  {
+		+Configure(EntityTypeBuilder~FlowStatusEntity~ builder) void
+	}
+	class ReadOnlyRepository ~T~ {
+		-IIndTraceDbContextFactory contextFactory
+		-ILogger~ReadOnlyRepository~T~~ logger
+		-ICacheService cache
+		-bool _cacheEnabled
+		-string _key
+		-IOptions<CacheToggleOptions>? _toggleOptions
+		- EffectiveCacheEnabled : bool
+		+GetByIdAsync(int id, CancellationToken cancellationToken) Task~Result~T?~~
+		-GetByIdFromDbAsync(int id, CancellationToken cancellationToken) Task~Result~T?~~
+		+ListAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		-ListFromDbAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		+FirstOrDefaultAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~T?~~
+		-FirstOrDefaultFromDbAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~T?~~
+		+ListAsync(CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		-ListAsyncFromDbAsync(CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		+FirstOrDefaultAsync(CancellationToken cancellationToken) Task~Result~T?~~
+		-FirstOrDefaultFromDbAsync(CancellationToken cancellationToken) Task~Result~T?~~
+		+CountAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~int~~
+		+GetByIdsAsync(CancellationToken cancellationToken, object[] ids) Task~Result~T?~~
+		-GetByIdsFromDbAsync(object[] ids, CancellationToken cancellationToken) Task~Result~T?~~
+		-CountAsyncFromDbAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~int~~
+		-ApplySpecification(ISpecification~T~ spec, IIndTraceDbContext context) IQueryable~T~
+	}
+	class DesignContextFactory  {
+		+CreateDbContext(string[] args) IndTraceDbContext
+	}
+	class PerformanceSpecsConfiguration  {
+		+Configure(EntityTypeBuilder~PerformanceSpec~ builder) void
+	}
+	class GatewayTaskConfiguration  {
+		+Configure(EntityTypeBuilder~GatewayTaskEntity~ builder) void
+	}
+	class CachePartitionInitializer  {
+	}
+	class SqlServerTestDatabaseHelper  {
+		-IndTraceDbContext context
+		-ILogger~SqlServerTestDatabaseHelper~ logger
+		+ResetDatabaseAsync(CancellationToken cancellationToken) Task
+		+SeedTestDataAsync(CancellationToken cancellationToken) Task
+		+EnsureDatabaseCreatedAsync(CancellationToken cancellationToken) Task
+		+ApplyMigrationAsync(string? migrationName, CancellationToken cancellationToken) Task
+		+RevertMigrationAsync(string? migrationName, CancellationToken cancellationToken) Task
+		+CreateSnapshotAsync(string snapshotName, string dbName, string filePath, CancellationToken cancellationToken) Task
+		+RestoreSnapshotAsync(string snapshotName, string dbName, CancellationToken cancellationToken) Task
+		+DropSnapshotAsync(string snapshotName, CancellationToken cancellationToken) Task
+		+IsSnapshotPresentAsync(string snapshotName, CancellationToken cancellationToken) Task~bool~
+		+GetDatabaseFilePathAsync(string dbName, CancellationToken cancellationToken) Task~string~
+		-IsValidSnapshotAsync(string snapshotName, CancellationToken cancellationToken) Task~bool~
+	}
+	class ShiftsConfiguration  {
+		+Configure(EntityTypeBuilder~Shift~ builder) void
+	}
+	class EnumModelHybridCacheSerializer ~T~ {
+		+Deserialize(ReadOnlySequence~byte~ source) T
+		+Serialize(T item, IBufferWriter~byte~ target) void
+	}
+	class InitialCreate  {
+		-BuildTargetModel(ModelBuilder modelBuilder) void
+	}
+	class CyclesConfiguration  {
+		+Configure(EntityTypeBuilder~Cycle~ builder) void
+	}
+	class ValueConverterLabel  {
+	}
+	class CacheKeyBuilderReadOnlyRepos  {
+		-ICachePartitionProvider? _partitionProvider
+		-bool _hashSpecKeys
+		-int _hashLength
+		-Dictionary~string&#44&#32string~ OperationMap
+		-Dictionary~string&#44&#32string~ EntityIdFieldMap
+		-Dictionary~string&#44&#32string[]~ CompositeEntityIdMap
+		+SetPartitionProvider(ICachePartitionProvider? provider) void
+		+SetOptions(CacheKeyOptions? options) void
+		+BuildKey(string operation, ISpecification~T~ spec) string
+		+BuildKey(string operation, int id) string
+		+BuildKey(string operation) string
+		+BuildKey(string operation, int id1, int id2) string
+		+BuildKey(string operation, object[] ids) string
+		-GetEntityIdFieldName() string
+		-GetCompositeIdFieldNames() string[]?
+		-ApplyPartition(string key) string
+		-NormalizeOperation(string operation) string
+		-ComputeHash(string value, int length) string
+	}
+	class ToolingConfiguration  {
+		+Configure(EntityTypeBuilder~Tooling~ builder) void
+	}
+	class CacheKeyOptions  {
+		+ HashSpecKeys : bool
+		+ HashLength : int
+	}
+	class TransactionBehavior ~TRequest, TResponse~ {
+		-IIndTraceDbContext context
+		-ILogger~TransactionBehavior~TRequest&#44&#32TResponse~~ logger
+		+HandleAsync(TRequest request, RequestFunctionalHandlerDelegate~TResponse~ next, CancellationToken cancellationToken) Task~TResponse~
+	}
+	class ConfigDatabaseLogConfiguration  {
+		+Configure(EntityTypeBuilder~ConfigDatabaseLog~ builder) void
+	}
+	class CacheToggleCacheService  {
+		-ICacheService inner
+		-CacheToggleOptions options
+		-ILogger~CacheToggleCacheService~ logger
+		- Disabled : bool
+		+GetOrSetAsync(string key, Func~CancellationToken&#44&#32Task~T~~ factory, TimeSpan? expiration, CancellationToken cancellationToken) Task~T?~
+		+RemoveAsync(string key, CancellationToken cancellationToken) Task~bool~
+		+RemoveByPatternAsync(string pattern, CancellationToken cancellationToken) Task~int~
+		+SetAsync(string key, T value, TimeSpan? expiration, CancellationToken cancellationToken) Task
+		+GetAsync(string key, CancellationToken cancellationToken) Task~T?~
+		+ExistsAsync(string key, CancellationToken cancellationToken) Task~bool~
+	}
+	class EntityKeyResolver  {
+		+GetPrimaryKeyValue(T entity, IIndTraceDbContext context) IndQuestResults.Result<object?>
+	}
+	class Repository ~T~ {
+		-string DatabaseContextIsNotActive
+		-IIndTraceDbContextFactory contextFactory
+		-ILogger~Repository~T~~ logger
+		-string key
+		-InvalidContext(IIndTraceDbContext? context, string methodName) bool
+		-ApplySpecification(ISpecification~T~ specification, IIndTraceDbContext context) IQueryable~T~
+		+GetByIdAsync(int id, CancellationToken cancellationToken) Task~Result~T?~~
+		+GetByIdsAsync(CancellationToken cancellationToken, object[] ids) Task~Result~T?~~
+		+ListAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		+ListAsync(CancellationToken cancellationToken) Task~Result~IEnumerable~T~~~
+		+FirstOrDefaultAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~T?~~
+		+FirstOrDefaultAsync(CancellationToken cancellationToken) Task~Result~T?~~
+		+AddAsync(T entity, CancellationToken cancellationToken) Task~Result~int~~
+		+AddRangeBulkAsync(IEnumerable~T~ entities, CancellationToken cancellationToken) Task~Result~int~~
+		+AddRangeAsync(IEnumerable~T~ entities, CancellationToken cancellationToken) Task~Result~int~~
+		+AddAsync(T entity, int id, string tableName, CancellationToken cancellationToken) Task~Result~int~~
+		+UpdateAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		+DeleteAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		+CommitAsync(CancellationToken cancellationToken) Task~Result~
+		+CountAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~int~~
+		+AsQueryableAsync(CancellationToken cancellationToken) Task~Result~IQueryable~T~~~
+		+AsQueryableAsync(ISpecification~T~ spec, CancellationToken cancellationToken) Task~Result~IQueryable~T~~~
+		+DetachAsync(T entity, CancellationToken cancellationToken) Task~Result~
+		+ApplyNoTrackingAsync(CancellationToken cancellationToken) Task~Result~
+		+ApplyTrackingAsync(CancellationToken cancellationToken) Task~Result~
+		+DisposeAsync() ValueTask
+	}
+	class ModelBuilderExtensions  {
+		+ApplyEnumerationConfiguration(ModelBuilder modelBuilder) void
+		+GetAll() IEnumerable~TEnumeration~
+	}
+	class RegistersConfiguration  {
+		+Configure(EntityTypeBuilder~Register~ builder) void
+	}
+	class WorkFlowConfiguration  {
+		+Configure(EntityTypeBuilder~WorkFlow~ builder) void
+	}
+	class DbContextModelValidationExtensions  {
+		+EnforceModelConfiguration(ModelBuilder modelBuilder) void
+		-ValidateDbSetRegistration(Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType, List~string~ failures) void
+		-ValidatePropertyConfiguration(Microsoft.EntityFrameworkCore.Metadata.IMutableEntityType entityType, List~string~ failures) void
+		-IsValidDateTime2(Microsoft.EntityFrameworkCore.Metadata.IMutableProperty property) bool
+		-HasValidBinaryConfiguration(Microsoft.EntityFrameworkCore.Metadata.IMutableProperty property) bool
+	}
+	class DatabaseHealthCheckService  {
+		-IServiceProvider serviceProvider
+		-ILogger~DatabaseHealthCheckService~ logger
+		+StartAsync(CancellationToken cancellationToken) Task
+		+StopAsync(CancellationToken cancellationToken) Task
+	}
+	class DefectsConfiguration  {
+		+Configure(EntityTypeBuilder~Defect~ builder) void
+	}
+	class IndTraceDbContextFactory  {
+		+CreateDbContext() IIndTraceDbContext
+		+CreateDbContextAsync(CancellationToken cancellationToken) Task~IIndTraceDbContext~
+		+CreateEfDbContext() DbContext
+		+DisposeAsync() ValueTask
+	}
+	class SqlScriptRunner  {
+		+ApplyScriptsFrom(string folderPath, DbContext context) void
+	}
+	class MasterLabelConfiguration  {
+		+Configure(EntityTypeBuilder~MasterLabel~ builder) void
+	}
+	class LineConfiguration  {
+		+Configure(EntityTypeBuilder~Line~ builder) void
+	}
+	class StoppagesRegisterConfiguration  {
+		+Configure(EntityTypeBuilder~StoppageRegister~ builder) void
+	}
+	class LocalDatabaseServiceStarter  {
+		-ILogger~LocalDatabaseServiceStarter~ logger
+		-string? connectionString
+		-IConfiguration configuration
+		+StartIfLocal() void
+		+IsDatabaseLocal() bool
+		+IsServiceRunning(string serviceName) bool
+		+IsWindowsServiceRunning(string serviceName) bool
+		+IsLinuxServiceRunning(string serviceName) bool
+		+StartService(string serviceName) Task
+		+StartWindowsServiceAsync(string serviceName) Task
+		+StartLinuxServiceAsync(string serviceName) Task
+		-ProcessStartAsync(string serviceName, ProcessStartInfo startInfo) Task
+	}
+	class CustomerConfiguration  {
+		+Configure(EntityTypeBuilder~Customer~ builder) void
+	}
+	class ITransactionRequired  {
+	}
+	class TaskRequestEventConfiguration  {
+		+Configure(EntityTypeBuilder~TaskGatewayRequest~ builder) void
+	}
+	class IndTraceDbContext  {
+		-IIndTraceUserService indTraceUserService
+		-IDateTimeMachine dateTimeMachine
+		+ ResultValidation : DbSet~ResultValidation~
+		+ CycleStatus : DbSet~CycleStatusEntity~
+		+ FlowStatus : DbSet~FlowStatusEntity~
+		+ PartStatus : DbSet~PartStatusEntity~
+		+ MachineTypes : DbSet~MachineTypeEntity~
+		+ TagsGroups : DbSet~TagsGroupEntity~
+		+ DistinctRegisters : DbSet~DistinctRegister~
+		+ WorkFlowTypes : DbSet~WorkFlowTypeEntity~
+		+ GatewayTask : DbSet~GatewayTaskEntity~
+		+ Requests : DbSet~TaskGatewayRequest~
+		+ Responses : DbSet~TaskGatewayResponse~
+		+ ConfigApps : DbSet~ConfigApp~
+		+ ShiftsCatalog : DbSet~ShiftsCatalog~
+		+ ConfigDatabaseLog : DbSet~ConfigDatabaseLog~
+		+ ConfigDb : DbSet~ConfigDb~
+		+ KpiOee : DbSet~KpiOee~
+		+ BarCodes : DbSet~BarCode~
+		+ Cycles : DbSet~Cycle~
+		+ Defects : DbSet~Defect~
+		+ MasterLabel : DbSet~MasterLabel~
+		+ WorkFlows : DbSet~WorkFlow~
+		+ Machines : DbSet~Machine~
+		+ Plcs : DbSet~Plc~
+		+ MachinePlcs : DbSet~MachinePlc~
+		+ Toolings : DbSet~Tooling~
+		+ Orders : DbSet~Order~
+		+ Stoppages : DbSet~Stoppage~
+		+ PerformanceSpecs : DbSet~PerformanceSpec~
+		+ ProductSpecs : DbSet~ProductSpec~
+		+ Products : DbSet~Product~
+		+ Customers : DbSet~Customer~
+		+ Shifts : DbSet~Shift~
+		+ Recipes : DbSet~Recipe~
+		+ DefectRegisters : DbSet~DefectRegister~
+		+ StoppageRegisters : DbSet~StoppageRegister~
+		+ Settings : DbSet~Setting~
+		+ ConnectionStatus : DbSet~ConnectionStatus~
+		+ StatusConfigurations : DbSet~StatusConfiguration~
+		+ MachineStatus : DbSet~MachineStatus~
+		+ VariablesGroups : DbSet~VariablesGroup~
+		+ Users : DbSet~IndTraceUser~
+		+ Registers : DbSet~Register~
+		+ Variables : DbSet~Variable~
+		+ PerformanceDatas : DbSet~Domain.Entities.PerformanceData~
+		+ OeeRegisters : DbSet~Domain.Entities.OeeRegister~
+		+ Rules : DbSet~Rule~
+		+ Model : IModel?
+		+ Lines : DbSet~Line~
+		+ SupportsTransactions : bool
+		+ IsConnectionActive : bool
+		+ IsConnectionInactive : bool
+		- Model : IModel
+		+SoundLike(string input) string
+		+SaveChangesAsync(string tableName, CancellationToken cancellationToken) Task~Result~int~~
+		+SetTestingInterfaces(IIndTraceUserService indTraceUserService, IDateTimeMachine dateTimeMachine) void
+		+SaveChangesAsync(CancellationToken cancellationToken) Task~int~
+		-OnModelCreating(ModelBuilder modelBuilder) void
+		+LookupSet() DbSet~TLookupEntity~
+		+SetState() DbSet~TState~
+		+SetAggregate() DbSet~TAggregate~
+	}
+	class RecipeConfiguration  {
+		+Configure(EntityTypeBuilder~Recipe~ builder) void
+	}
+	class PerformanceDatasConfiguration  {
+		+Configure(EntityTypeBuilder~PerformanceData~ builder) void
+	}
+	class ConfigDbConfiguration  {
+		+Configure(EntityTypeBuilder~ConfigDb~ builder) void
+	}
+	class DefectsRegisterConfiguration  {
+		+Configure(EntityTypeBuilder~DefectRegister~ builder) void
+	}
+
+	VariablesGroupsConfiguration --|> IEntityTypeConfiguration
+	OrdersConfiguration --|> IEntityTypeConfiguration
+	TagsGroupsConfiguration --|> IEntityTypeConfiguration
+	MachineStatusConfiguration --|> IEntityTypeConfiguration
+	FlowTypeConfiguration --|> IEntityTypeConfiguration
+	ConnectionStatusConfiguration --|> IEntityTypeConfiguration
+	TaskGatewayResponseConfiguration --|> IEntityTypeConfiguration
+	StoppegesConfiguration --|> IEntityTypeConfiguration
+	VariablesConfiguration --|> IEntityTypeConfiguration
+	JsonCacheSerializer --|> IHybridCacheSerializer
+	CycleStatusConfiguration --|> IEntityTypeConfiguration
+	EnumModelJsonConverter --|> JsonConverter
+	TaskGatewayRequestConfiguration --|> IEntityTypeConfiguration
+	StatusConfigurationsConfiguration --|> IEntityTypeConfiguration
+	KpiOeeConfiguration --|> IEntityTypeConfiguration
+	IIndTraceDbContextFactory --|> IAsyncDisposable
+	IIndTraceDbContext --|> IDisposable
+	IIndTraceDbContext --|> IAsyncDisposable
+	FusionCacheService --|> ICacheService
+	MachineTypeConfiguration --|> IEntityTypeConfiguration
+	ProductsConfiguration --|> IEntityTypeConfiguration
+	RulesConfiguration --|> IEntityTypeConfiguration
+	UsersConfiguration --|> IEntityTypeConfiguration
+	ShiftsCatalogConfiguration --|> IEntityTypeConfiguration
+	ShiftDefinitionConfiguration --|> IEntityTypeConfiguration
+	BarCodeConfiguration --|> IEntityTypeConfiguration
+	OeeRegistersConfigurator --|> IEntityTypeConfiguration
+	ConfigAppConfiguration --|> IEntityTypeConfiguration
+	ProductSpecsConfiguration --|> IEntityTypeConfiguration
+	ProductionCachePartitionProvider --|> ICachePartitionProvider
+	InitialCreate --|> Migration
+	PartStatusConfiguration --|> IEntityTypeConfiguration
+	ResultValidationConfiguration --|> IEntityTypeConfiguration
+	MachinePlcsConfiguration --|> IEntityTypeConfiguration
+	SettingsConfiguration --|> IEntityTypeConfiguration
+	PlcConfiguration --|> IEntityTypeConfiguration
+	MachinesConfiguration --|> IEntityTypeConfiguration
+	DistinctRegisterConfiguration --|> IEntityTypeConfiguration
+	ApplicationDbContextModelSnapshot --|> ModelSnapshot
+	EdgeConfiguration --|> IEntityTypeConfiguration
+	EnumerationEntityConfigurator --|> IEntityTypeConfiguration
+	AuditableEntityConfiguration --|> IEntityTypeConfiguration
+	FlowStatusConfiguration --|> IEntityTypeConfiguration
+	ReadOnlyRepository --|> IReadOnlyRepository
+	DesignContextFactory --|> IDesignTimeDbContextFactory
+	PerformanceSpecsConfiguration --|> IEntityTypeConfiguration
+	GatewayTaskConfiguration --|> IEntityTypeConfiguration
+	SqlServerTestDatabaseHelper --|> ITestDatabaseHelper
+	ShiftsConfiguration --|> IEntityTypeConfiguration
+	EnumModelHybridCacheSerializer --|> IHybridCacheSerializer
+	CyclesConfiguration --|> IEntityTypeConfiguration
+	ValueConverterLabel --|> ValueConverter
+	ToolingConfiguration --|> IEntityTypeConfiguration
+	TransactionBehavior --|> IPipelineBehavior
+	ConfigDatabaseLogConfiguration --|> IEntityTypeConfiguration
+	CacheToggleCacheService --|> ICacheService
+	Repository --|> IRepository
+	Repository --|> IReadOnlyRepository
+	RegistersConfiguration --|> IEntityTypeConfiguration
+	WorkFlowConfiguration --|> IEntityTypeConfiguration
+	DatabaseHealthCheckService --|> IHostedService
+	DefectsConfiguration --|> IEntityTypeConfiguration
+	IndTraceDbContextFactory --|> IIndTraceDbContextFactory
+	IndTraceDbContextFactory --|> IAsyncDisposable
+	MasterLabelConfiguration --|> IEntityTypeConfiguration
+	LineConfiguration --|> IEntityTypeConfiguration
+	StoppagesRegisterConfiguration --|> IEntityTypeConfiguration
+	CustomerConfiguration --|> IEntityTypeConfiguration
+	TaskRequestEventConfiguration --|> IEntityTypeConfiguration
+	IndTraceDbContext --|> DbContext
+	IndTraceDbContext --|> IIndTraceDbContext
+	IndTraceDbContext --|> IAsyncDisposable
+	RecipeConfiguration --|> IEntityTypeConfiguration
+	PerformanceDatasConfiguration --|> IEntityTypeConfiguration
+	ConfigDbConfiguration --|> IEntityTypeConfiguration
+	DefectsRegisterConfiguration --|> IEntityTypeConfiguration

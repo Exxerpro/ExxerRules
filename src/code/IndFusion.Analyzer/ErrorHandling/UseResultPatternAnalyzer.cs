@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using IndFusion.Analyzers.Common;
@@ -53,8 +54,21 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-        // Skip if this is a method that should be exempted
-        if (IsSkippableMethod(methodDeclaration))
+		// Opt-out via attributes on method or containing type
+		if (HasOptOutAttribute(methodDeclaration))
+		{
+			return;
+		}
+
+		// Skip if this is a method that should be exempted
+		if (IsSkippableMethod(methodDeclaration)
+			|| IsInTestType(methodDeclaration)
+			|| IsProgramOrStartup(methodDeclaration)
+			|| IsIdentityComponentsNamespace(methodDeclaration)
+			|| IsGuardTypeOrMethod(methodDeclaration)
+			|| IsValueObjectContext(methodDeclaration)
+			|| IsBackgroundTaskMethod(methodDeclaration)
+			|| IsDomainGuardBoolMethod(methodDeclaration))
         {
             return;
         }
@@ -65,9 +79,21 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			return;
 		}
 
-		// Check for throw statements and expressions using functional approach
-        var throwStatements = methodDeclaration.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
-        var throwExpressions = methodDeclaration.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
+
+		// Check for throw statements and expressions, excluding those inside local functions or lambdas
+		var throwStatements = methodDeclaration
+			.DescendantNodes()
+			.OfType<ThrowStatementSyntax>()
+			.Where(t => !t.Ancestors().OfType<LocalFunctionStatementSyntax>().Any()
+					&& !t.Ancestors().OfType<LambdaExpressionSyntax>().Any())
+			.ToList();
+
+		var throwExpressions = methodDeclaration
+			.DescendantNodes()
+			.OfType<ThrowExpressionSyntax>()
+			.Where(t => !t.Ancestors().OfType<LocalFunctionStatementSyntax>().Any()
+					&& !t.Ancestors().OfType<LambdaExpressionSyntax>().Any())
+			.ToList();
 
         if (throwStatements.Any() || throwExpressions.Any())
         {
@@ -79,7 +105,7 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static bool IsSkippableMethod(MethodDeclarationSyntax method)
+	private static bool IsSkippableMethod(MethodDeclarationSyntax method)
     {
         // Skip constructors, destructors, and event handlers
         if (method.Identifier.Text.StartsWith("On") && method.Modifiers.Any(SyntaxKind.ProtectedKeyword))
@@ -104,7 +130,7 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         var testAttributeNames = new[] { "Fact", "Theory", "Test", "TestMethod", "TestCase" };
 
         if (attributes.Any(attr =>
-            testAttributeNames.Any(name => attr.Name.ToString().Contains(name))))
+			testAttributeNames.Any(name => attr.Name.ToString().Contains(name, StringComparison.OrdinalIgnoreCase))))
         {
             return true;
         }
@@ -129,10 +155,16 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 		}
 
 		// Check accessors for throw statements using functional approach
-        var accessorThrows = CheckAccessorsForThrows(propertyDeclaration);
-        var expressionThrows = CheckExpressionBodyForThrows(propertyDeclaration);
+		var accessorThrows = CheckAccessorsForThrows(propertyDeclaration);
+		var expressionThrows = CheckExpressionBodyForThrows(propertyDeclaration);
 
-        if (accessorThrows || expressionThrows)
+		// Allow property-level null-coalescing guard: `get => _x ?? throw ...;`
+		if (IsNullCoalescingThrowGuard(propertyDeclaration))
+		{
+			return;
+		}
+
+		if (accessorThrows || expressionThrows)
         {
             var diagnostic = Diagnostic.Create(
                 Rule,
@@ -156,7 +188,7 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 
     private static bool CheckExpressionBodyForThrows(PropertyDeclarationSyntax property) => property.ExpressionBody?.DescendantNodes().OfType<ThrowExpressionSyntax>().Any() == true;
 
-    private static void AnalyzeLocalFunction(SyntaxNodeAnalysisContext context)
+	private static void AnalyzeLocalFunction(SyntaxNodeAnalysisContext context)
     {
         var localFunction = (LocalFunctionStatementSyntax)context.Node;
 
@@ -166,8 +198,22 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
             return;
         }
 
+		// Opt-out via containing type attributes
+		if (HasOptOutAttribute(localFunction))
+		{
+			return;
+		}
+
 		// Skip boundary layers
 		if (IsInBoundaryLayer(localFunction))
+		{
+			return;
+		}
+
+		// Skip typical validation helpers
+		if (localFunction.Identifier.Text.Contains("Validate", StringComparison.OrdinalIgnoreCase)
+			|| localFunction.Identifier.Text.Contains("Ensure", StringComparison.OrdinalIgnoreCase)
+			|| localFunction.Identifier.Text.Contains("Guard", StringComparison.OrdinalIgnoreCase))
 		{
 			return;
 		}
@@ -186,7 +232,7 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static void AnalyzeLambda(SyntaxNodeAnalysisContext context)
+	private static void AnalyzeLambda(SyntaxNodeAnalysisContext context)
     {
         LambdaExpressionSyntax? lambda = context.Node switch
         {
@@ -206,6 +252,12 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			return;
 		}
 
+		// Opt-out via containing type attributes
+		if (HasOptOutAttribute(lambda))
+		{
+			return;
+		}
+
 		// Check for throw statements and expressions
         var throwStatements = lambda.DescendantNodes().OfType<ThrowStatementSyntax>().ToList();
         var throwExpressions = lambda.DescendantNodes().OfType<ThrowExpressionSyntax>().ToList();
@@ -220,7 +272,7 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static bool IsResultReturnType(TypeSyntax? typeSyntax)
+	private static bool IsResultReturnType(TypeSyntax? typeSyntax)
     {
         if (typeSyntax == null)
         {
@@ -250,7 +302,7 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    private static bool IsInBoundaryLayer(SyntaxNode node)
+	private static bool IsInBoundaryLayer(SyntaxNode node)
     {
         var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
         if (containingClass != null)
@@ -265,7 +317,10 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
         if (!string.IsNullOrEmpty(ns))
         {
-            if (ns.Contains(".Web") || ns.Contains(".Api") || ns.Contains(".Endpoints") || ns.Contains(".Presentation"))
+			if (ns.Contains(".Web", StringComparison.OrdinalIgnoreCase)
+				|| ns.Contains(".Api", StringComparison.OrdinalIgnoreCase)
+				|| ns.Contains(".Endpoints", StringComparison.OrdinalIgnoreCase)
+				|| ns.Contains(".Presentation", StringComparison.OrdinalIgnoreCase))
             {
                 return true;
             }
@@ -273,4 +328,134 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 
         return false;
     }
+
+	private static bool HasOptOutAttribute(SyntaxNode node)
+	{
+		// Check attributes on method/local function parents and containing class
+		var member = node as MemberDeclarationSyntax
+			?? node.Ancestors().OfType<MemberDeclarationSyntax>().FirstOrDefault();
+		var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+
+		static bool HasAllowAttributes(SyntaxList<AttributeListSyntax> lists)
+		{
+			foreach (var attr in lists.SelectMany(a => a.Attributes))
+			{
+				var text = attr.Name.ToString();
+				if (text.Contains("AllowExceptions", StringComparison.OrdinalIgnoreCase)
+					|| text.Contains("AllowThrowing", StringComparison.OrdinalIgnoreCase)
+					|| text.Contains("AllowGuardThrows", StringComparison.OrdinalIgnoreCase))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
+		if (member is not null && HasAllowAttributes(member.AttributeLists)) return true;
+		if (cls is not null && HasAllowAttributes(cls.AttributeLists)) return true;
+		return false;
+	}
+
+	private static bool IsProgramOrStartup(SyntaxNode node)
+	{
+		var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		if (cls is null) return false;
+		var name = cls.Identifier.Text;
+		return name.Equals("Program", StringComparison.OrdinalIgnoreCase)
+			|| name.Equals("Startup", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private static bool IsIdentityComponentsNamespace(SyntaxNode node)
+	{
+		var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
+		return ns.Contains(".Components.Account", StringComparison.OrdinalIgnoreCase)
+			|| ns.Contains(".Identity.Components", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private static bool IsGuardTypeOrMethod(MethodDeclarationSyntax method)
+	{
+		var type = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		var typeName = type?.Identifier.Text ?? string.Empty;
+		if (typeName.Contains("Guard", StringComparison.OrdinalIgnoreCase)
+			|| typeName.Contains("ThrowHelper", StringComparison.OrdinalIgnoreCase)
+			|| typeName.Contains("Ensure", StringComparison.OrdinalIgnoreCase))
+		{
+			return true;
+		}
+		var name = method.Identifier.Text;
+		return name.Contains("Guard", StringComparison.OrdinalIgnoreCase)
+			|| name.Contains("ThrowHelper", StringComparison.OrdinalIgnoreCase)
+			|| name.Contains("Ensure", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private static bool IsValueObjectContext(MethodDeclarationSyntax method)
+	{
+		var type = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		var typeName = type?.Identifier.Text ?? string.Empty;
+		string[] hints = [
+			"Value", "Id", "Identifier", "Amount", "Money", "Metric", "Metrics", "Percentage", "Email", "Address"
+		];
+		return hints.Any(h => typeName.Contains(h, StringComparison.OrdinalIgnoreCase));
+	}
+
+	private static bool IsBackgroundTaskMethod(MethodDeclarationSyntax method)
+	{
+		var returnText = method.ReturnType.ToString();
+		if (!(returnText.Contains("Task", StringComparison.Ordinal) || returnText.Contains("ValueTask", StringComparison.Ordinal)))
+		{
+			return false;
+		}
+		var name = method.Identifier.Text;
+		if (name.EndsWith("Async", StringComparison.OrdinalIgnoreCase) &&
+			(name.StartsWith("Execute", StringComparison.OrdinalIgnoreCase)
+				|| name.StartsWith("Handle", StringComparison.OrdinalIgnoreCase)
+				|| name.StartsWith("Process", StringComparison.OrdinalIgnoreCase)))
+		{
+			return true;
+		}
+		// Attribute-based hint (e.g., HostedService) on method or type
+		if (method.AttributeLists.SelectMany(a => a.Attributes).Any(a => a.Name.ToString().Contains("HostedService", StringComparison.OrdinalIgnoreCase)))
+		{
+			return true;
+		}
+		var type = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		if (type != null && type.AttributeLists.SelectMany(a => a.Attributes).Any(a => a.Name.ToString().Contains("HostedService", StringComparison.OrdinalIgnoreCase)))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	private static bool IsDomainGuardBoolMethod(MethodDeclarationSyntax method)
+	{
+		// return type bool and name hints like Validate/AppliesTo/Ensure/IsValid
+		var returnText = method.ReturnType.ToString();
+		if (!returnText.Equals("bool", StringComparison.OrdinalIgnoreCase)) return false;
+		var name = method.Identifier.Text;
+		return name.Contains("Validate", StringComparison.OrdinalIgnoreCase)
+			|| name.Contains("AppliesTo", StringComparison.OrdinalIgnoreCase)
+			|| name.Contains("Ensure", StringComparison.OrdinalIgnoreCase)
+			|| name.Contains("IsValid", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private static bool IsInTestType(SyntaxNode node)
+	{
+		var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+		if (cls is null) return false;
+		var name = cls.Identifier.Text;
+		return name.EndsWith("Tests", StringComparison.OrdinalIgnoreCase)
+			|| name.EndsWith("Specs", StringComparison.OrdinalIgnoreCase)
+			|| name.EndsWith("Benchmarks", StringComparison.OrdinalIgnoreCase);
+	}
+
+	private static bool IsNullCoalescingThrowGuard(PropertyDeclarationSyntax property)
+	{
+		if (property.ExpressionBody?.Expression is BinaryExpressionSyntax binary
+			&& binary.IsKind(SyntaxKind.CoalesceExpression)
+			&& binary.Right is ThrowExpressionSyntax)
+		{
+			return true;
+		}
+		return false;
+	}
 }

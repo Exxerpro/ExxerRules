@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layerModel xmlns="http://schemas.microsoft.com/VisualStudio/TeamArchitect/LayerDesigner"
+            xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core"
+            xmlns:dm1="http://schemas.microsoft.com/dsltools/SimpleShapesModel"
+            dslVersion="1.0.0.0"
+            Id="{GENERATED_GUID}">
+  <layers>
+    <layer Name="Presentation">
+      <projects>
+        <project Path="Code/Presentation/IndTrace.Intelligence/IndTrace.Intelligence.csproj" />
+        <project Path="Code/Presentation/IndTrace.Models/IndTrace.UI.Models.csproj" />
+        <project Path="Code/Presentation/IndTrace.Components/IndTrace.Components.csproj" />
+        <project Path="Code/Presentation/IndTrace.Monitor/IndTrace.Monitor.csproj" />
+        <project Path="Code/Presentation/IndTrace.LogAnalyzer/IndTrace.LogAnalyzer.csproj" />
+        <project Path="Code/Presentation/IndTrace.OEE/IndTrace.OEE.csproj" />
+      </projects>
+    </layer>
+    <layer Name="Core">
+      <projects>
+        <project Path="Code/Core/Application/IndTrace.Application.csproj" />
+        <project Path="Code/Core/Domain/IndTrace.Domain.csproj" />
+      </projects>
+    </layer>
+    <layer Name="Infrastructure">
+      <projects>
+        <project Path="Code/Infrastructure/IndTrace.Gateway/IndTrace.Gateway.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.S7Rx/IndTrace.S7Rx.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.CognexComm/IndTrace.CognexComm.csproj" />
+        <project Path="Code/Infrastructure/Intrace.HubClient/IndTrace.Hub.Client.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.Dependencies/IndTrace.Dependencies.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.Persistence/IndTrace.Persistence.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.Hub/IndTrace.Hub.Server.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.VirtualNetwork/IndTrace.VirtualNetwork.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.S7Monitor/IndTrace.S7Monitor.csproj" />
+        <project Path="Code/Infrastructure/Sharp7.Rx/Sharp7.Rx.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.Simulator/IndTrace.Simulator.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.SeqTail/IndTrace.SeqTail.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.DataStore/IndTrace.DataStore.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.Communications/IndTrace.Communications.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.Generators/IndTrace.Generators.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.Identity/IndTrace.Identity.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.FilesTools/IndTrace.FilesTools.csproj" />
+        <project Path="Code/Infrastructure/IndTrace.HubConnection/IndTrace.HubConnection.csproj" />
+      </projects>
+    </layer>
+    <layer Name="Tests">
+      <projects>
+        <project Path="Tests/Core/Domain.UnitTests/Domain.UnitTests.csproj" />
+        <project Path="Tests/Presentation/MetricsTests/MetricsTests.csproj" />
+        <project Path="Tests/Core/Application.UnitTests/Application.UnitTests.csproj" />
+        <project Path="Tests/Architecture/Architecture.Tests.csproj" />
+        <project Path="Tests/Integration/IndTrace.Gateway.Tests/GateWay.Tests.csproj" />
+        <project Path="Tests/Core/HubConnection.Tests/HubConnection.Tests.csproj" />
+        <project Path="Tests/Core/Models.UnitTests/Models.UnitTests.csproj" />
+        <project Path="Tests/Core/Filters.Tests/Filters.Tests/Filters.Tests.csproj" />
+        <project Path="Tests/Presentation/IndTrace.Monitor.Tests/IndTrace.Monitor.Tests.csproj" />
+        <project Path="Tests/Integration/Indtrace.Integration.Tests/Integration.Tests.csproj" />
+        <project Path="Tests/Presentation/IndTrace.Oee.Tests/IndTrace.Oee.Tests/IndTrace.Oee.Tests.csproj" />
+        <project Path="Tests/Core/Aggregation.BoundedTests/Application.AgregationTests.csproj" />
+        <project Path="Tests/Core/IndTrace.TestData/IndTrace.TestData.csproj" />
+        <project Path="Tests/Integration/HubConnection.IntegrationTests/HubConnection.IntegrationTests.csproj" />
+        <project Path="Tests/Core/Agregation.Dependices/Agregation.Dependices/Agregation.Dependices.csproj" />
+      </projects>
+    </layer>
+    <layer Name="Build">
+      <projects>
+        <project Path="Build/build.csproj" />
+      </projects>
+    </layer>
+  </layers>
+</layerModel>

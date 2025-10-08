@@ -1,0 +1,210 @@
+﻿
+@using IndTrace.Application.Notifications
+@using IndTrace.Application.UI.Models
+@using IndTrace.Domain.Entities
+@using MudBlazor
+
+
+<MudGrid>
+    <MudItem>
+        <!-- Music Wave Visualizer -->
+        <MudProgressLinear Color="Color.Primary" Value="@Progress" BufferValue="100" Style="height:4px;" />
+        <Events @ref="Events" ></Events>
+    </MudItem>
+    <MudFlexBreak />
+
+    <MudItem>
+        <!-- Music Player Controls -->
+        <MudIconButton Icon="@Icons.Material.Filled.GetApp" Color="Color.Primary" OnClick="@GetMoreEvents" />
+        <MudIconButton Icon="@Icons.Material.Filled.SkipPrevious" Color="Color.Primary" OnClick="@PreviousEvent" />
+        <MudIconButton Icon="@PlayIcon" Color="Color.Primary" OnClick="@PlayPause" />
+        <MudIconButton Icon="@Icons.Material.Filled.SkipNext" Color="Color.Primary" OnClick="@NextEvent" />
+        <MudIconButton Icon="@Icons.Material.Filled.Repeat" Color="Color.Primary" OnClick="@Repeat" />
+    </MudItem>
+    <MudFlexBreak />
+
+    <MudItem>
+        <!-- Music Progress Slider -->
+        <MudSlider @bind-Value="@Progress" Min="0" Max="100" Color="Color.Primary" />
+    </MudItem>
+
+    <MudSwitch T="bool" @bind-Value="IsForward">
+        @(IsForward ?  "Reverse" :  "Forward")
+    </MudSwitch>
+</MudGrid>
+
+@code {
+    [Parameter]
+    public double Progress { get; set; } = 0;
+
+    [Parameter]
+    public EventsService? EventsService { get; set; }
+
+    public string PlayIcon = Icons.Material.Filled.PlayArrow;
+
+    private Events Events = new();
+
+
+    private LinkedList<StationMonitor> StationMonitors = new();
+    private LinkedListNode<StationMonitor>? CurrentNode;
+
+    private IEnumerable<TaskGatewayResponse> Responses { get; set; } = [];
+    private IEnumerable<TaskGatewayRequest> Requests { get; set; } = [];
+
+    private bool IsPlaying = false;
+    private bool IsRepeating = false;
+    private bool IsForward = true;
+
+
+    private async Task PreviousEvent()
+    {
+        if (CurrentNode?.Previous != null)
+        {
+            CurrentNode = CurrentNode.Previous;
+            if (CurrentNode is not null)
+            {
+                UpdateStation(CurrentNode.Value);
+            }
+        }
+        else
+        {
+            // If at the beginning, monitorRequest more data from the service
+            await GetMoreEvents(); // Fetch more events in reverse
+        }
+    }
+
+    private async Task NextEvent()
+    {
+        if (CurrentNode?.Next != null)
+        {
+            CurrentNode = CurrentNode.Next;
+            if (CurrentNode is not null)
+            {
+                UpdateStation(CurrentNode.Value);
+            }
+        }
+        else
+        {
+            // If at the end, monitorRequest more data from the service
+            await GetMoreEvents(); // Fetch more events in forward direction
+        }
+    }
+
+    private void PlayPause()
+    {
+        IsPlaying = !IsPlaying;
+        PlayIcon = IsPlaying ? Icons.Material.Filled.Pause : Icons.Material.Filled.PlayArrow;
+
+        if (IsPlaying)
+        {
+            // Start the replay logic
+            InvokeAsync(async () =>
+            {
+                while (IsPlaying && CurrentNode != null)
+                {
+                    await Task.Delay(1000); // Play each event every second
+                    await NextEvent();
+                }
+            });
+        }
+    }
+
+    private void Repeat()
+    {
+        IsRepeating = !IsRepeating;
+    }
+
+    private async Task GetMoreEvents()
+    {
+        if (EventsService is null) return;
+
+        var result = IsForward
+            ? await EventsService.GetNextEventsAsync(CancellationToken.None)
+            : await EventsService.GetPreviousEventsAsync(CancellationToken.None);
+
+        if (result.IsFailure) return;
+
+        Responses = result.Value?.Responses ?? Array.Empty<TaskGatewayResponse>();
+        Requests = result.Value?.Requests ?? Array.Empty<TaskGatewayRequest>();
+
+        var newMonitors = GetCombinedStationMonitors();
+
+        if (IsForward)
+        {
+            foreach (var monitor in newMonitors)
+            {
+                StationMonitors.AddLast(monitor);
+            }
+        }
+        else
+        {
+            foreach (var monitor in newMonitors.Reverse())
+            {
+                StationMonitors.AddFirst(monitor);
+            }
+        }
+
+        // Update the current node if it was null (initial load)
+        if (CurrentNode == null && StationMonitors.Count > 0)
+        {
+            CurrentNode = StationMonitors.First;
+            if (CurrentNode is not null)
+            {
+                UpdateStation(CurrentNode.Value);
+            }
+        }
+    }
+
+    private void UpdateStation(StationMonitor station)
+    {
+        station.EnsureIsValidToRenderAndPersist();
+        Events.SetStation(station);
+        StateHasChanged();
+    }
+
+
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (EventsService is null) return;
+
+        var result = await EventsService.GetNextEventsAsync(CancellationToken.None);
+        if (result.IsFailure) return;
+
+        Responses = result.Value?.Responses ?? Array.Empty<TaskGatewayResponse>();
+        Requests = result.Value?.Requests ?? Array.Empty<TaskGatewayRequest>();
+
+        var initialMonitors = GetCombinedStationMonitors();
+
+        StationMonitors = new LinkedList<StationMonitor>(initialMonitors);
+
+        if (StationMonitors.Count > 0)
+        {
+            CurrentNode = StationMonitors.First;
+            if (CurrentNode is null) return;
+
+            UpdateStation(CurrentNode.Value);
+        }
+    }
+
+    // Method to return a combined, mapped, and ordered collection of StationMonitor
+    private IEnumerable<StationMonitor> GetCombinedStationMonitors()
+    {
+
+
+
+        if (Responses is null || Requests is null) return [];
+
+        var mappedResponses = Responses.Select(response => StationMonitor.CreateStationFromGatewayResponse(response,response.TimeStamp));
+        var mappedRequests = Requests.Select(request => StationMonitor.CreateStationFromGatewayRequest(request,request.TimeStamp));
+
+        var combinedMonitors = mappedResponses
+            .Concat(mappedRequests)
+            .OrderBy(monitor => monitor.TimeStamp);
+
+        return combinedMonitors;
+    }
+
+
+
+}

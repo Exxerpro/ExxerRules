@@ -1,0 +1,19 @@
+@page "/machine-dashboard"
+@using System.Globalization
+@using IndTrace.Components.Area.OEE
+@using IndTrace.Domain.Entities
+@using MudBlazor
+@namespace IndTrace.Components.Area.Production
+
+<h3>OEE Dashboard</h3>
+
+<MudGrid Spacing="1">
+    @foreach (var machine in Machines)
+    {
+        <MudItem xs="12" sm="6" md="4" lg="3">
+            <div class="dashboard-grid">
+                <OeeWidget MachineData="machine" Theme="@SelectedTheme"/>
+            </div>
+        </MudItem>
+    }
+</MudGrid>

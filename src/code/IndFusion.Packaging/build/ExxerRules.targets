@@ -2,7 +2,7 @@
 
   <!-- ExxerRules Analyzer Package Targets -->
   <PropertyGroup>
-    <ExxerRulesVersion Condition="'$(ExxerRulesVersion)' == ''">1.0.2</ExxerRulesVersion>
+		<ExxerRulesVersion Condition="'$(ExxerRulesVersion)' == ''">1.0.5</ExxerRulesVersion>
   </PropertyGroup>
 
   <!-- Display package information -->

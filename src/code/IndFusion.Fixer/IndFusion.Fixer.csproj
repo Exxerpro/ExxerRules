@@ -6,6 +6,9 @@
 	<ImplicitUsings>enable</ImplicitUsings>
 	<IsPackable>true</IsPackable>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageId>IndFusion.Fixer</PackageId>
+	  <PackageVersion>1.0.5</PackageVersion>
 
 	  <IncludeBuildOutput>false</IncludeBuildOutput>
 	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
@@ -24,5 +27,11 @@
   </ItemGroup>
   <ItemGroup>
 	<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="lib\netstandard2.0\_._" Pack="true" PackagePath="lib/netstandard2.0/_._" />
   </ItemGroup>
 </Project>

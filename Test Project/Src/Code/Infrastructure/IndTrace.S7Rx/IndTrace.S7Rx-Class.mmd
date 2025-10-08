@@ -1,0 +1,246 @@
+classDiagram
+
+	class IsNullOrEmptyExtension  {
+		+IsNullOrEmpty(IEnumerable source) bool
+		+IsNullOrEmpty(IEnumerable~T~ source) bool
+	}
+	class IndTraceTagRx  {
+		-Type netType
+		-object value
+		+ Variable : Variable
+		+ EnableSimulation : bool
+		+ NetType : Type
+		+ Value : object
+		+ToString() string
+		+DownloadValueAsync(IPlc controller) Task~bool~
+		+UploadValueAsync(IPlc controller) Task~string~
+	}
+	class ControllerExtensions  {
+		+EnsureIsConnected(IPlc controller) Task~bool~
+	}
+	class S7Types  {
+		+string[] NetTypes
+		+Types() Dictionary~string&#44&#32AtomicTypes~
+	}
+	class AtomicTypes  {
+		+ Name : string
+		+ FullName : string
+		+ Type : Type
+		+ AtomicName : string
+		+ AtomicNumber : int
+	}
+	class S7ClientLocker  {
+		-Lock lock
+		-S7Client client
+		+ExecuteLocked(Func~S7Client&#44&#32TResult~ operation) TResult
+		+ExecuteLockedAsync(Func~S7Client&#44&#32Task~TResult~~ operation) Task~TResult~
+		+ExecuteLocked(Action~S7Client~ operation) void
+	}
+	class DuplicateTagException  {
+		+ VariableId : int
+		+ VariableName : string
+		+ VariableAddress : string
+	}
+	class IIndTraceTagRx  {
+		- NetType : Type
+		- Variable : Variable
+		- Value : object
+		- EnableSimulation : bool
+		-DownloadValueAsync(IPlc controller) Task~bool~
+		-UploadValueAsync(IPlc controller) Task~string~
+	}
+	class SimulatedCommand  {
+		-Regex CommandRegex
+		+ MachineId : int
+		+ PartNumber : string
+		+ BarCode : string
+		+ Command : short
+		+ CycleStatus : int
+		+ PartStatus : int
+		+ CycleStatusPlc : short
+		+ PartStatusPlc : short
+		+ SimulateReference : bool
+		+ WatchDog : int
+		+ParseCommands(IEnumerable~string~ lines, ILogger? logger) List~SimulatedCommand~
+	}
+	class NoOpSharp7Connector  {
+		-BehaviorSubject~ConnectionState~ _state
+		+ ConnectionState : IObservable~ConnectionState~
+		+ Logger : ILogger
+		+ ReconnectDelay : TimeSpan
+		+Connect() Task~bool~
+		+Disconnect() Task
+		+WriteBatchValuesPlcAsync(IEnumerable~PlcBatchWriteTag~ tags, CancellationToken token) Task~bool~
+		+ExecuteMultiVarRequestGateway(IReadOnlyList~string~ variableNames, CancellationToken token) Task~IReadOnlyDictionary~string&#44&#32byte[]~~
+		+ExecuteMultiVarRequest(IReadOnlyList~string~ variableNames, CancellationToken token) Task~IReadOnlyDictionary~string&#44&#32byte[]~~
+		+DisconnectS7Client() Task
+		+InitializeAsync() Task
+		+ReadBytes(Operand operand, ushort startByteAddress, ushort bytesToRead, ushort dbNo, CancellationToken token) Task~byte[]~
+		+ReadBytesS7Client(Operand operand, ushort startByteAddress, ushort bytesToRead, ushort dbNo, CancellationToken token) Task~byte[]~
+		+WriteBit(Operand operand, ushort startByteAddress, byte bitAdress, bool value, ushort dbNo, CancellationToken token) Task
+		+WriteBytes(Operand operand, ushort startByteAddress, byte[] data, ushort dbNo, ushort bytesToWrite, CancellationToken token) Task
+		+EnsureConnectionS7Valid() void
+		+Dispose() void
+	}
+	class NoOpPlc  {
+		+ Logger : ILogger
+		+ S7Connector : ISharp7Connector
+		+ s7Connector : ISharp7Connector
+		+ ConnectionState : IObservable~ConnectionState~
+		+GetBatchValuesPlcAsync(IEnumerable~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32StatusValueId)~ tags, CancellationToken token) Task~IEnumerable~PlcBatchReadResult~~
+		+SetValue(string variableName, TValue value, CancellationToken token) Task
+		+GetValue(string variableName, CancellationToken token) Task~TValue~
+		+GetValue(string variableName, CancellationToken token) Task~object~
+		+CreateNotification(string variableName, TransmissionMode transmissionMode) IObservable~TValue~
+		+CreateNotification(string variableName, TransmissionMode transmissionMode) IObservable~object~
+		+GetValueS7Client(string variableName, CancellationToken token) Task~TValue~
+		+InitializeConnection(CancellationToken token) Task
+		+Dispose() void
+	}
+	class IIndTraceControllerRx  {
+		- PlcDetails : PlcDto
+		- IsOeeEnabled : bool
+		- BarCode : string
+		- Command : short
+		- CommandChanged : IObservable~IIndTraceControllerRx~
+		- HeartBeatChanged : IObservable~IIndTraceControllerRx~
+		- IsConnected : bool
+		- IsInitialized : bool
+		- MachineId : int
+		- PartNumber : string
+		- Configured : bool
+		- HeartBeat : short
+		- PartStatus : PartStatus
+		- CycleStatus : CycleStatus
+		- Name : string
+		- PlcId : int
+		- CyclesOk : int
+		- References : IDictionary~string&#44&#32Register~
+		- Registers : IDictionary~string&#44&#32Register~
+		- Retry : bool
+		-Dispose() void
+		-ToString() string
+		-DownloadReferencesBulkAsync(CancellationToken cancellationToken) Task~Result~
+		-ValidateThatTheTagExistOnTheController(CancellationToken cancellationToken) Task~bool~
+		-GetPlcMonitorAsync(CancellationToken cancellationToken) Task~ControllerMonitor~
+		-SetFeedBackAsync(short value, CancellationToken cancellationToken) Task~string~
+		-SetPlcIdAsync(short value, CancellationToken cancellationToken) Task~int~
+		-GetPlcIdAsync(CancellationToken cancellationToken) Task~int~
+		-ReadShortTagAsync(string tagName, CancellationToken cancellationToken) Task~short~
+		-ReadStringTagAsync(string tagName, CancellationToken cancellationToken) Task~string~
+		-ResetCommandAsync(CancellationToken cancellationToken) Task~string~
+		-SimulateCommandAsync(SimulatedCommand command, CancellationToken cancellationToken) Task~string~
+		-SetBarCodeAsync(string value, CancellationToken cancellationToken) Task~string~
+		-SetUpAsync(CancellationToken cancellationToken) Task~bool~
+		-ReadStartUp(CancellationToken cancellationToken) Task~SimulatedCommand~
+		-ConnectAndCreateNotificationsAsync(CancellationToken cancellationToken) Task~bool~
+		-ReadRegistersBulkAsync(CancellationToken cancellationToken) Task~Result~
+		-UploadCommandDataFromController(CancellationToken cancellationToken) Task~Result~DataFromPlc~~
+		-ReadPerformanceDataFromPlcAsync(CancellationToken cancellationToken) Task~Result~PerformanceDataCommand~~
+	}
+	class IndTraceControllerRx  {
+		-int TimeOut
+		-ILogger logger
+		-Subject~IIndTraceControllerRx~ subCommand
+		-Subject~IIndTraceControllerRx~ subHeartBeat
+		-Dictionary~string&#44&#32Variable~ eventVariables
+		-DateTimeMachine dateTimeMachine
+		-int DisableTimeoutMagic
+		-List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId&#44&#32string&#32Key)~ preparedRegisterTagInfos
+		-List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId&#44&#32string&#32Key)~ preparedPerformancesTagInfos
+		-bool _readback
+		-Random Random
+		+ PlcDetails : PlcDto
+		+ IsOeeEnabled : bool
+		+ BarCode : string
+		+ Command : short
+		+ CommandFeedback : short
+		+ CommandChanged : IObservable~IIndTraceControllerRx~
+		+ Configured : bool
+		+ ConnectionTimeOut : bool
+		+ HeartBeat : short
+		+ HeartBeatChanged : IObservable~IIndTraceControllerRx~
+		+ IsConnected : bool
+		+ IsInitialized : bool
+		+ MachineId : int
+		+ PartNumber : string
+		+ Name : string
+		+ PlcId : int
+		+ PartStatus : PartStatus
+		+ CycleStatus : CycleStatus
+		+ CyclesOk : int
+		+ References : IDictionary~string&#44&#32Register~
+		+ Registers : IDictionary~string&#44&#32Register~
+		+ Perfomances : IDictionary~string&#44&#32Register~
+		+ Controller : IPlc
+		+ EnableSimulation : bool
+		+ IndTraceTags : IDictionary~string&#44&#32IIndTraceTagRx~
+		- IpAddress : string
+		+ AliasRegisterToKeyMap : Dictionary~string&#44&#32string~
+		+ AliasPerformancesToKeyMap : Dictionary~string&#44&#32string~
+		+ BatchReadRegister : List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId)~
+		+ BatchReadPerformances : List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId)~
+		+ Retry : bool
+		+ ErrorCounter : int
+		+ ThreesHold : int
+		+Dispose() void
+		+ToString() string
+		+ReferencesToString() string
+		+PerformancesToString() string
+		+RegistersToString() string
+		+DownloadReferencesAsync(CancellationToken cancellationToken) Task~bool~
+		+TryReadAllVariablesAsync(CancellationToken cancellationToken) Task~Dictionary~string&#44&#32string~~
+		-TryReadVariableOnPlc(Variable variable, CancellationToken cancellationToken) Task~string~
+		+DownloadReferencesBulkAsync(CancellationToken cancellationToken) Task~Result~
+		-IncrementErrorCounterAndFireDisconnect(CancellationToken cancellationToken) Task
+		+GetPlcMonitorAsync(CancellationToken cancellationToken) Task~ControllerMonitor~
+		+GetBarCodeAsync(CancellationToken cancellationToken) Task~(string&#44&#32string&#44&#32int)~
+		+SetPlcIdAsync(short value, CancellationToken cancellationToken) Task~int~
+		+GetPlcIdAsync(CancellationToken cancellationToken) Task~int~
+		+ResetCommandAsync(CancellationToken cancellationToken) Task~string~
+		+SetFeedBackAsync(short value, CancellationToken cancellationToken) Task~string~
+		+SetBarCodeAsync(string value, CancellationToken cancellationToken) Task~string~
+		+SetUpAsync(CancellationToken cancellationToken) Task~bool~
+		+ValidateThatTheTagExistOnTheController(CancellationToken cancellationToken) Task~bool~
+		+ConnectAndCreateNotificationsAsync(CancellationToken cancellationToken) Task~bool~
+		+ReadRegistersBulkAsync(CancellationToken cancellationToken) Task~Result~
+		-FallBackToBulkRead(CancellationToken cancellationToken, double failureRatio, List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId)~ batchBadRegister) Task~Result~
+		-CalculateFailureRate(int failureCount) double
+		+UploadRegistersAsync(List~(string&#32Alias&#44&#32Type&#32Type&#44&#32int&#32VariableId)~ batchBadRegister, CancellationToken cancellationToken) Task
+		-ReadRegisterAsync(CancellationToken cancellationToken, Register register, PlcBatchReadResult result) Task~string~
+		+SimulateCommandAsync(SimulatedCommand command, CancellationToken cancellationToken) Task~string~
+		+CheckIfNetworkInterfaceExists(string interfaceName, ILogger logger) bool
+		+SimulateAndDownloadRegistersAsync(CancellationToken cancellationToken) Task~Result~
+		-GenerateRandomStringValue(object? currentValue) string
+		-ParseStringToNetType(string value, string netType) object?
+		+UploadCommandDataFromController(CancellationToken cancellationToken) Task~Result~DataFromPlc~~
+		-CheckIfWatchDogIsEnabled(CancellationToken cancellationToken) Task~WatchDog~
+		+ReadPerformanceDataFromPlcAsync(CancellationToken cancellationToken) Task~Result~PerformanceDataCommand~~
+		-ReadBarCodePartNumberAsync(CancellationToken cancellationToken) Task~Dictionary~string&#44&#32string~~
+		-ConfigureRegisterTags(IDictionary~string&#44&#32Variable~ variables, TagsGroups tagGroup) IDictionary~string&#44&#32Register~
+		-ParseIpAddress(string ip) string
+		-ConfigureController() void
+		-PrepareRegisterForBatchReadTagInfos() void
+		-PreparePerformanceForBatchReadTagInfos() void
+		-ConfigureEventTags() void
+		-CreateNotifications(Dictionary~string&#44&#32Variable~ eventVariable) void
+		-CreateNotificationService(Dictionary~string&#44&#32Variable~ eventVariable, string nameVariable) IObservable~short~
+		-ConfigureTags(PlcDto plcDto) IDictionary~string&#44&#32IIndTraceTagRx~
+		-DisconnectWithOutNotificationAsync(CancellationToken cancellationToken) Task~bool~
+		-ConnectWithNotificationAsync(CancellationToken cancellationToken) Task~bool~
+		-RaiseCommandChangedEvent() void
+		+ReadShortTagAsync(string tagName, CancellationToken cancellationToken) Task~short~
+		+ReadIntTagAsync(string tagName, CancellationToken cancellationToken) Task~int~
+		+ReadStringTagAsync(IEnumerable~string~ tagNames, CancellationToken cancellationToken) Task~Dictionary~string&#44&#32string~~
+		+ReadStringTagAsync(string tagName, CancellationToken cancellationToken) Task~string~
+		-WriteIntTagAsync(string tagName, int value, CancellationToken cancellationToken) Task~int~
+		-WriteShortTagAsync(string tagName, short value, CancellationToken cancellationToken) Task~short~
+		-WriteStringTagAsync(string tagName, string value, CancellationToken cancellationToken) Task~string~
+		+ReadStartUp(CancellationToken cancellationToken) Task~SimulatedCommand~
+	}
+
+	IndTraceTagRx --|> IIndTraceTagRx
+	DuplicateTagException --|> Exception
+	NoOpSharp7Connector --|> ISharp7Connector
+	NoOpPlc --|> IPlc
+	IndTraceControllerRx --|> IIndTraceControllerRx

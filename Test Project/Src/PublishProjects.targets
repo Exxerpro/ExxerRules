@@ -1,0 +1,23 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<Target Name="PublishAllProjects">
+		<!-- Publish Project 1 -->
+		<MSBuild Projects="IndTrace.Communications.csproj"
+		         Targets="Publish"
+		         Properties="Configuration=Release;PublishProfile=FolderProfile.pubxml" />
+
+		<!-- Publish Project 2 -->
+		<MSBuild Projects="IndTrace.VirtualNetwork.csproj"
+		         Targets="Publish"
+		         Properties="Configuration=Release;PublishProfile=FolderProfile.pubxml" />
+
+		<MSBuild Projects="IndTrace.S7Monitor.csproj"
+		         Targets="Publish"
+		         Properties="Configuration=Release;PublishProfile=FolderProfile.pubxml" />
+
+		<MSBuild Projects="IndTrace.Monitor.csproj"
+		         Targets="Publish"
+		         Properties="Configuration=Release;PublishProfile=FolderProfile.pubxml" />
+
+		<!-- Add more projects as needed -->
+	</Target>
+</Project>

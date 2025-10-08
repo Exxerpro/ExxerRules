@@ -1,0 +1,299 @@
+[
+  {
+    "CustomerId": 1,
+    "Name": "Volkswagen",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 2,
+    "Name": "Audi",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 3,
+    "Name": "BMW",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 4,
+    "Name": "Mercedes-Benz",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 5,
+    "Name": "Toyota",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 6,
+    "Name": "Ford",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 7,
+    "Name": "Honda",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 8,
+    "Name": "Chevrolet",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 9,
+    "Name": "Nissan",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 10,
+    "Name": "Hyundai",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:38:43.513",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:38:43.513"
+  },
+  {
+    "CustomerId": 11,
+    "Name": "Kia",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 12,
+    "Name": "Mazda",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 13,
+    "Name": "Subaru",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 14,
+    "Name": "Tesla",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 15,
+    "Name": "Porsche",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 16,
+    "Name": "Jaguar",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 17,
+    "Name": "Land Rover",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 18,
+    "Name": "Volvo",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 19,
+    "Name": "Mitsubishi",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 20,
+    "Name": "Lexus",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 21,
+    "Name": "Infiniti",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 22,
+    "Name": "Acura",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 23,
+    "Name": "Cadillac",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 24,
+    "Name": "Chrysler",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 25,
+    "Name": "Dodge",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 26,
+    "Name": "Jeep",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 27,
+    "Name": "Ram",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 28,
+    "Name": "Buick",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 29,
+    "Name": "GMC",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 30,
+    "Name": "Alfa Romeo",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 31,
+    "Name": "Fiat",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 32,
+    "Name": "Peugeot",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  },
+  {
+    "CustomerId": 33,
+    "Name": "Renault",
+    "IsActive": true,
+    "CreatedBy": "Exxerpro",
+    "CreatedOn": "2024-07-22T15:45:31.163",
+    "ModifiedBy": "Exxerpro",
+    "ModifiedOn": "2024-07-22T15:45:31.163"
+  }
+]

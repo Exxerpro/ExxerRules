@@ -1,0 +1,1331 @@
+classDiagram
+
+	class ProductSpec  {
+		+ ProductSpecId : int
+		+ MachineId : int
+		+ ToolId : int
+		+ ProductId : int
+		+ RecipeType : string
+		+ RecipeId : int
+		+ PerformanceSpecsName : string
+		+ PerformanceSpecId : int
+		+ Machine : Machine
+		+ Tooling : Tooling
+		+ Product : Product
+		+ Recipe : Recipe
+		+ToString() string
+	}
+	class TaskGatewayResponse  {
+		-IDateTimeMachine dateTimeMachine
+		+ ExecutionTime : TimeSpan
+		+ ResponseId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ CyclesOk : int
+		+ ShiftId : int
+		+ CommandId : int
+		+ Name : string
+		+ PartNumber : string
+		+ Description : string
+		+ Label : string
+		+ Error : string
+		+ LastMachineId : int
+		+ NextMachineId : int
+		+ CycleStatus : CycleStatus
+		+ MachineType : MachineType
+		+ PartStatus : PartStatus
+		+ FlowStatus : FlowStatus
+		+ ResultValidation : ResultValidation
+		+ RequestTask : string
+		+ WorkFlowType : WorkFlowType
+		+ Recipe : Recipe
+		+ Cycle : Cycle
+		+ BarCode : BarCode
+		+ MasterLabel : MasterLabel
+		+ TimeStamp : DateTime
+		+ References : IDictionary~string&#44&#32Register~
+		+ Parameters : IDictionary~string&#44&#32string~
+		+ToDto(IBarCodeResult src) TaskGatewayResponse
+		+ToDto(TaskGatewayRequest src) TaskGatewayResponse
+		+EnsureIsValidToRenderAndPersist() bool
+		+WithMachineId(int machineId) TaskGatewayResponse
+		+WithBarCodeId(int barCodeId) TaskGatewayResponse
+		+WithCycleId(int cycleId) TaskGatewayResponse
+		+WithCyclesOk(int cyclesOk) TaskGatewayResponse
+		+WithResultValidation(ResultValidation resultValidation) TaskGatewayResponse
+		+WithPartNumber(string partNumber) TaskGatewayResponse
+		+WithLastMachineId(int lastMachineId) TaskGatewayResponse
+		+WithNextMachineId(int nextMachineId) TaskGatewayResponse
+		+WithCycleStatus(CycleStatus cycleStatus) TaskGatewayResponse
+		+WithFlowStatus(FlowStatus flowStatus) TaskGatewayResponse
+		+WithPartStatus(PartStatus partStatus) TaskGatewayResponse
+		+WithMachineType(MachineType machineType) TaskGatewayResponse
+		+WithWorkFlowType(WorkFlowType workFlowType) TaskGatewayResponse
+		+WithRecipe(Recipe recipe) TaskGatewayResponse
+		+WithCycle(Cycle cycle) TaskGatewayResponse
+		+WithBarCode(BarCode barCode) TaskGatewayResponse
+		+WithMasterLabel(MasterLabel masterLabel) TaskGatewayResponse
+		+WithName(string name) TaskGatewayResponse
+		+WithDescription(string description) TaskGatewayResponse
+		+WithReferences(IDictionary~string&#44&#32Register~ references) TaskGatewayResponse
+		+ApplyReferencesValues() TaskGatewayResponse
+		+ApplyReferencesValuesResult() Result
+		+MapFrom(IBarCodeResult source) void
+		+ToString() string
+	}
+	class ResultConstants  {
+		+string DefaultErrorMessage
+		+string NoErrorsFoundMessage
+		+string DefaultWarningMessage
+		+string SuccessPrefix
+		+string FailurePrefix
+		+string DefaultFailureString
+		+string RecoverWithTypeConversionError
+		+string NullValueInSuccessfulResult
+		+string InconsistentResultState
+		+string ConditionEvaluationWithNullValue
+	}
+	class Order  {
+		+ OrderId : int
+		+ MachineId : int
+		+ OperatorId : int
+		+ LeaderId : int
+		+ ProgrammerId : int
+		+ ProductId : int
+		+ ToolingId : int
+		+ TimeStamp : int
+		+ OrderSize : int
+		+ OrderTime : int
+		+ OrderStart : DateTime
+		+ OrderEnd : DateTime
+		+ ResultsId : int
+		+ToString() string
+	}
+	class MachineTypeEntity  {
+	}
+	class ConfigAppFromJson  {
+		+ Name : string
+		+ Service : string
+		+ GateWayWorker : bool
+		+ Reports : bool
+		+ Gp12 : bool
+		+ LogsPath : string
+	}
+	class IMonitorQueryHandler ~TQuery, TResponse~ {
+		-ProcessAsync(TQuery query, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class ConnectionStatus  {
+		+ MachineId : int
+		+ Status : int
+		+ Message : string
+		+ ModifiedOn : DateTime
+	}
+	class GatewayTaskEntity  {
+	}
+	class Variable  {
+		+ VariableId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ Name : string
+		+ Description : string
+		+ Alias : string
+		+ Address : string
+		+ NetType : string
+		+ Length : int
+		+ IsActive : int
+		+ Direction : int
+		+ VariableGroupId : int
+		+ VariableSpecId : int?
+		+ TagStatus : int
+		+ NativeType : string
+		+ Value : string
+		+ NativeAddress : string
+		+ Validated : bool?
+	}
+	class PlcSiemensOptions  {
+		+ Rack : int
+		+ Slot : int
+		+ Tsap : string
+	}
+	class KpiOee  {
+		+ KpiOeeId : int
+		+ OeeRegisterId : int
+		+ Oee : double
+		+ Availability : double
+		+ Performance : double
+		+ Quality : double
+		+ TimeStamp : DateTime
+		+ OeeRegister : OeeRegister
+		+ToString() string
+	}
+	class IShiftDetectionRule  {
+		- ShiftType : ShiftType
+		- StartHour : int
+		- DurationHours : int
+		- SpansMidnight : bool
+		-AppliesTo(int hour) bool
+	}
+	class IShiftDetectionService  {
+		-DetectShift(DateTime currentTime) (ShiftType&#32shiftType&#44&#32DateTime&#32startTime&#44&#32TimeSpan&#32duration)
+	}
+	class IMonitorFilter  {
+		- Name : string
+		- PartNumber : string
+		- TimeStamp : DateTime
+	}
+	class IPerformanceCommandHandler ~in TCommand~ {
+		-ProcessAsync(TCommand command, CancellationToken cancellationToken) Task
+	}
+	class ICommandHandler ~in TCommand, TResult~ {
+		-ProcessAsync(TCommand command, CancellationToken cancellationToken) Task~Result~TResult~~
+	}
+	class IIndTraceUserService  {
+		- CurrentUserId : Task~string~
+		- CurrentUserName : Task~string~
+		- IsAuthenticated : Task~bool~
+	}
+	class Cycle  {
+		+ CycleId : int
+		+ MachineId : int
+		+ BarCodeId : int
+		+ CycleStatus : CycleStatus
+		+ CyclesOk : int
+		+ PartStatus : PartStatus
+		+ CycleTime : int
+		+ TaktTime : int
+		+ StartedOn : DateTime
+		+ FinishedOn : DateTime
+		+ToString() string
+	}
+	class OeeRegister  {
+		+ OeeRegisterId : int
+		+ MachineId : int
+		+ PlcId : int
+		+ TimeStamp : DateTime
+		+ ApplicationFlag : int
+		+ EventCounter : int
+		+ CurrentTime : int
+		+ RunningTime : int
+		+ StoppedTime : int
+		+ FaultedTime : int
+		+ StatusFaultReason : int
+		+ ProductId : int
+		+ TotalProduction : double
+		+ StandardCycleTime : double
+		+ ActualCycleTime : double
+		+ PlanedProductionTime : double
+		+ RejectEventCounter : int
+		+ StatusReject : int
+		+ RejectQuantityUnits : double
+		+ ProductionOk : double
+		+ ProductionNoK : double
+		+ KpiOee : KpiOee
+		+ Oee : double
+		+ Availability : double
+		+ Performance : double
+		+ Quality : double
+		+ToString() string
+		+ToKpiOee(OeeRegister register, IDateTimeMachine? dateTimeMachine) KpiOee
+		+CalculateOee(OeeRegister register, PerformanceData data) Result~OeeRegister~
+		+ClampMetric(double value, double min, double max) double
+		+SafeRatio(double numerator, double denominator, double min, double max, double fallback) double
+	}
+	class IGatewayRequest  {
+	}
+	class IGatewayRequest ~TResponse~ {
+	}
+	class IBarCodeResult  {
+		- MachineId : int
+		- BarCodeId : int
+		- CycleId : int
+		- CyclesOk : int
+		- ShiftId : int
+		+ CommandId : int
+		- ResultValidation : ResultValidation
+		- Error : string?
+		- Label : string?
+		- PartNumber : string?
+		+ Description : string
+		- LastMachineId : int
+		- NextMachineId : int
+		- RegistersSaved : int
+		- CycleStatus : CycleStatus
+		- FlowStatus : FlowStatus
+		- PartStatus : PartStatus
+		- MachineType : MachineType
+		- WorkFlowType : WorkFlowType
+		- Recipe : Recipe
+		- Cycle : Cycle
+		- Cycles : IEnumerable~Cycle~
+		- BarCode : BarCode
+		- MasterLabel : MasterLabel
+		- References : IDictionary~string&#44&#32Register~
+		-GetBarCodeDetails(BarCodeDetailsRequest barCodeDetailsRequest, CancellationToken cancellationToken) Task~IBarCodeResult~
+		-UpdateBarCodeInformationOnCycle(FlowStatus flowStatus, PartStatus partStatus, CycleStatus cycleStatus) void
+		-SetCycle(Cycle cycle) void
+		-SetBarCode(BarCode barCode) void
+		-SetCyclesOk(int cyclesOk) void
+		-SetRegistersSaved(int registers) void
+	}
+	class VariablesGroup  {
+		+ VariableGroupId : int
+		+ VariableGroupName : string
+	}
+	class BarCodeValidationService  {
+		+ Result : Result?
+		+Validate(FlowStatus flowStatus, MachineType machineType, CycleStatus cycleStatus, PartStatus partStatus, int machineId, int nextMachineId) ResultValidation
+	}
+	class StatusConfiguration  {
+		+ MachineId : int
+		+ Status : int
+		+ Message : string
+		+ ModifiedOn : DateTime
+	}
+	class ConfigApp  {
+		+ ConfigAppId : string
+		+ MachineId : int
+		+ Machine : string
+		+ PlcId : int
+		+ Pc : string
+		+ AppId : int
+		+ Client : string
+		+ Factory : string
+		+ Line : string
+		+ Project : string
+		+ Version : string
+	}
+	class PartStatus  {
+		+PartStatus Invalid
+		+PartStatus None
+		+PartStatus Ok
+		+PartStatus NOk
+		+PartStatus Restored
+		+PartStatus Rejected
+		+PartStatus Scrap
+		+ HasValue : bool
+		+FromValue(int value) PartStatus
+	}
+	class EnumLookUpTable  {
+		+ Id : int
+		+ Name : string
+		+ DisplayName : string
+		+ToUpperClass(ILookUpTable lookUpTable) TLookUpTable
+		+Deconstruct(int value, string name, string displayName) void
+	}
+	class IMonitorRequestDispatcher  {
+		-ProcessAsync(IMonitorRequest command, CancellationToken cancellationToken) Task~Result~
+		-ProcessAsync(IMonitorRequest~TResponse~ monitorRequest, CancellationToken cancellationToken) Task~Result~TResponse~~
+		-QueryAsync(IMonitorRequest~TResponse~ monitorRequest, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class ICsvFileBuilder ~T~ {
+		-BuildProductsFile(IEnumerable~T~ records) byte[]
+	}
+	class Label  {
+		-string label
+		+ToString() string
+		+CompareTo(object? obj) int
+		+Equals(Label? other) bool
+		+Equals(object? obj) bool
+		+GetHashCode() int
+	}
+	class BarCode  {
+		+ BarCodeId : int
+		+ ProductId : int
+		+ MachineId : int
+		+ Label : string
+		+ PartStatus : PartStatus
+		+ FlowStatus : FlowStatus
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+		+ToString() string
+	}
+	class IOeeCalculationService  {
+		-CalculateOee(TimeSpan totalTime, TimeSpan downtime, TimeSpan idealCycleTime, int totalCount, int defectCount) Result~OeeMetrics~
+		-CalculateAvailability(TimeSpan totalTime, TimeSpan downtime) decimal
+		-CalculatePerformance(TimeSpan idealCycleTime, int totalCount, TimeSpan runTime) decimal
+		-CalculateQuality(int totalCount, int defectCount) decimal
+		-ValidateInputs(TimeSpan totalTime, TimeSpan downtime, TimeSpan idealCycleTime, int totalCount, int defectCount) bool
+	}
+	class Edge  {
+		+ EdgeId : int
+		+ FromMachine : Machine
+		+ ToMachine : Machine
+		+ FromMachineId : int
+		+ ToMachineId : int
+		+ Weight : int
+		+ToString() string
+		+Equals(object? obj) bool
+		+GetHashCode() int
+	}
+	class Line  {
+		+ LineId : int
+		+ Name : string
+		+ Description : string
+		+ Status : int
+		+ IsActive : bool
+		+ Products : List~Product~
+		+ Machines : List~Machine~
+		+ToString() string
+	}
+	class ResultExtensions  {
+		+Cancelled() Result
+		+Cancelled() Result~T~
+		+IsCancelled(Result result) bool
+		+IsCancelled(Result~T~ result) bool
+		+FailForNullArgument(string parameterName, string? message) Result~T~
+		+FailForNullArguments(string[] parameterNames) Result~T~
+		+FailForNullArgument(string parameterName, string? message) Result
+		+FailForNullArguments(string[] parameterNames) Result
+		+EnsureNotNull(T? value, string parameterName) Result~T~
+		+EnsureNotNull(T? value, string parameterName) Result~T~
+		+ValidateNotNull((object?&#32value&#44&#32string&#32parameterName)[] validations) Result
+		+CreateIfValid(Func~T~ factory, (object?&#32value&#44&#32string&#32parameterName)[] validations) Result~T~
+	}
+	class Result  {
+		+ IsFailure : bool
+		+ IsSuccess : bool
+		+ Errors : IEnumerable~string~
+		+ Error : string?
+		+ToString() string
+		+FormatErrorsString(IEnumerable~string~ errors, string prefix) string
+		-FormatErrorsStringSpan(ReadOnlySpan~string~ errorSpan, string prefix) string
+		-BuildStringInSpan(Span~char~ buffer, ReadOnlySpan~string~ errorSpan, string prefix) string
+		-FormatErrorsStringFallback(IEnumerable~string~ errors, string prefix) string
+		+Success() Result
+		+WithFailure(IEnumerable~string~ errors) Result
+		+WithFailure(string[] errors) Result
+		+WithFailure(string error) Result
+		+OnSuccess(Action action) Result
+		+OnFailure(Action~IEnumerable~string~~ action) Result
+		+Map(Func~T~ func) Result~T~
+		+Bind(Func~Result~T~~ func) Result~T~
+		+Ensure(Func~bool~ condition, string errorMessage) Result
+		+Tap(Action action) Result
+		+Combine(Result[] results) Result
+		+Match(Func~T~ onSuccess, Func~IEnumerable~string~&#44&#32T~ onFailure) T
+		+Recover(Func~Result~ recoverFunc) Result
+		+CombineErrors(IEnumerable<string>? primaryErrors, IEnumerable<string>? secondaryErrors) Result
+		-TryGetSmallCollectionCounts(IEnumerable~string~ primary, IEnumerable~string~ secondary, int primaryCount, int secondaryCount) bool
+		-CombineErrorsSpan(IEnumerable~string~ primaryErrors, IEnumerable~string~ secondaryErrors, int primaryCount, int secondaryCount, int totalCount) Result
+		-CombineErrorsFallback(IEnumerable~string~ primaryErrors, IEnumerable~string~ secondaryErrors) Result
+	}
+	class Result ~T~ {
+		-T? value
+		-bool isSuccess
+		-bool hasErrors
+		+ Value : T?
+		+ Data : T?
+		+ IsSuccess : bool
+		+ HasErrors : bool
+		+ Warnings : IEnumerable~string~
+		+ HasWarnings : bool
+		+ Confidence : double
+		+ MissingDataRatio : double
+		+ IsRecoverable : bool
+		+ IsFailure : bool
+		+ Errors : IEnumerable~string~
+		+ Error : string?
+		-ValidateInternalState() void
+		+Success(T data) Result~T~
+		+WithSuccess(T data) Result~T~
+		+ToString() string
+		+WithFailure(IEnumerable<string>? errors, T? value) Result~T~
+		+WithWarnings(IEnumerable~string~ warnings, T value) Result~T~
+		+WithWarnings(IEnumerable~string~ warnings, T value, double confidence, double missingDataRatio) Result~T~
+		+WithFailure(string[] errors, T? value) Result~T~
+		+WithFailure(string error, T? value) Result~T~
+		+Deconstruct(bool succeeded, T? data, IEnumerable~string~ errors) void
+		+OnSuccess(Action~T~ action) Result~T~
+		+OnFailure(Action~IEnumerable~string~~ action) Result~T~
+		+Map(Func~T&#44&#32TOut~ func) Result~TOut~
+		+Bind(Func~T&#44&#32Result~TOut~~ func) Result~TOut~
+		+Ensure(Func~T&#44&#32bool~ condition, string errorMessage) Result~T~
+		+Tap(Action~T~ action) Result~T~
+		+Combine(Result[] results) Result~T~
+		+Match(Func~T&#44&#32TOut~ onSuccess, Func~IEnumerable~string~&#44&#32TOut~ onFailure) Result~TOut~
+		+Recover(Func~Result~T~~ recoverFunc) Result~T~
+		+RecoverWith(Func~Result~TOut~~ recoverFunc) Result~TOut~
+		+CombineErrors(IEnumerable<string>? primaryErrors, IEnumerable<string>? secondaryErrors, TOut? value) Result~TOut~
+		-Clamp01(double v) double
+	}
+	class DateTimeMachineProvider  {
+	}
+	class DateTimeMachine  {
+		-TimeProvider timeProvider
+		+ Now : DateTime
+		+ UtcNow : DateTime
+		+ Today : DateTime
+		+ Hour : int
+		+ Minute : int
+		+ Second : int
+		+ Year : int
+		+ Month : int
+		+ Day : int
+		+ DayOfYear : int
+		+ TimeProvider : TimeProvider?
+		+GetLocalNow() DateTimeOffset
+		+GetUtcNow() DateTimeOffset
+		+AdvanceTime(TimeSpan timeSpan) Result
+		+SetDateTimeNow(DateTimeOffset dateTime) Result
+		+AddDays(DateTimeOffset dateTime, int days) DateTimeOffset
+		+AddHours(DateTimeOffset dateTime, int hours) DateTimeOffset
+		+AddMinutes(DateTimeOffset dateTime, int minutes) DateTimeOffset
+		+AddSeconds(DateTimeOffset dateTime, int seconds) DateTimeOffset
+		+AddMilliseconds(DateTimeOffset dateTime, double milliseconds) DateTimeOffset
+		+AddTicks(DateTimeOffset dateTime, long ticks) DateTimeOffset
+		+AddMonths(DateTimeOffset dateTime, int months) DateTimeOffset
+		+AddYears(DateTimeOffset dateTime, int years) DateTimeOffset
+		+GetTimeSpan(DateTimeOffset from, DateTimeOffset to) TimeSpan
+		+GetDay(DateTimeOffset dateTime) int
+		+GetMonth(DateTimeOffset dateTime) int
+		+GetYear(DateTimeOffset dateTime) int
+		+GetDayOfWeek(DateTimeOffset dateTime) DayOfWeek
+		+GetDayOfYear(DateTimeOffset dateTime) int
+	}
+	class EnumToString  {
+		+ConvertEnumToString(CycleStatus enumeration, int value) CycleStatus
+		+ConvertEnumToString(FlowStatus enumeration, int value) FlowStatus
+		+ConvertEnumToString(PartStatus enumeration, int value) PartStatus
+	}
+	class IGatewayCommandDispatcher  {
+		-ProcessAsync(IGatewayRequest~TResponse~ command, CancellationToken cancellationToken) Task~Result~TResponse~~
+		-QueryAsync(IGatewayRequest~TResponse~ request, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class PartStatusEntity  {
+	}
+	class EnumerableExtensions  {
+		+NotNullOrEmpty(IEnumerable~T~ source) bool
+	}
+	class ResultErrors  {
+		+string OperationCancelled
+		+string OperationTimedOut
+		+string OperationInvalidated
+	}
+	class Register  {
+		+ RegisterId : int
+		+ Name : string
+		+ Description : string
+		+ MachineId : int
+		+ VariableId : int
+		+ CycleId : int
+		+ Value : string
+		+ DataType : string
+		+ StatusValueId : int
+		+ TimeStamp : DateTime
+		+ToString() string
+	}
+	class WorkFlow  {
+		+ WorkFlowId : int
+		+ ProductId : int
+		+ NextMachineId : int
+		+ LastMachineId : int
+		+ Machine : List~Machine~
+		+ Edges : List~Edge~
+		+ RuleId : int
+		+AddNode(Machine node) void
+		+AddEdge(Edge edge) void
+	}
+	class CycleStatusEntity  {
+	}
+	class ShiftsCatalog  {
+		+ ShiftCatalogId : int
+		+ PlantId : int
+		+ ShiftName : string
+		+ StartBy : TimeSpan
+		+ Duration : TimeSpan
+		+ EndTime : TimeSpan
+	}
+	class ConfigDatabaseLog  {
+		+ DatabaseLogId : int
+		+ PostTime : DateTime
+		+ DatabaseUser : string
+		+ Event : string
+		+ Schema : string
+		+ Object : string
+		+ Tsql : string
+		+ XmlEvent : string
+		+ToString() string
+	}
+	class Customer  {
+		+ CustomerId : int
+		+ Name : string
+		+ IsActive : bool
+	}
+	class WorkFlowType  {
+		+WorkFlowType Invalid
+		+WorkFlowType None
+		+WorkFlowType Initial
+		+WorkFlowType Serial
+		+WorkFlowType Lateral
+		+WorkFlowType Diverter
+		+WorkFlowType Merger
+		+WorkFlowType Final
+	}
+	class IBarCodeValidationService  {
+		- Result : Result?
+		-Validate(FlowStatus flowStatus, MachineType machineType, CycleStatus cycleStatus, PartStatus partStatus, int machineId, int nextMachineId) ResultValidation
+	}
+	class DataFromPlc  {
+		+ MachineId : int
+		+ Command : int
+		+ BarCode : string
+		+ PartNumber : string
+		+ CycleStatus : CycleStatus
+		+ PartStatus : PartStatus
+		+ WatchDogTime : WatchDog
+	}
+	class ProductionData  {
+		+ Version : string
+		+ ClientNumber : string
+		+ LastShiftPartsOk : int
+		+ LastShiftPartsNok : int
+		+ JulianDate : DateTime
+		+ CustomerName : string
+		+ ShiftId : int
+		+ PartsOk : int
+		+ PartsNok : int
+		+ PartNumber : string
+		+ Customer : string
+		+ CustomerPartNumber : string
+		+ LastShift : ProductionData?
+		+CreateFromCalculatedProductionShift(ProductionData source) ProductionData
+		+SetPartInformation(Product product) IndQuestResults.Result
+		+CreateFromProductionData(ProductionData source) IndQuestResults.Result<ProductionData>
+		+AddLastShift(int lastShiftShiftId, int lastPartsOk, int lastPartsNok) void
+		+ToString() string
+		-Clone(ProductionData source) ProductionData
+	}
+	class IIndTraceApplicationUser  {
+		- UserName : string?
+		- NormalizedUserName : string?
+		- Email : string?
+		- NormalizedEmail : string?
+		- EmailConfirmed : bool
+		- PasswordHash : string?
+		- SecurityStamp : string?
+		- ConcurrencyStamp : string?
+		- PhoneNumber : string?
+		- PhoneNumberConfirmed : bool
+		- TwoFactorEnabled : bool
+		- LockoutEnd : DateTimeOffset?
+		- LockoutEnabled : bool
+		- AccessFailedCount : int
+		-ToString() string
+	}
+	class IAggregateRoot  {
+	}
+	class TagsGroups  {
+		+TagsGroups None
+		+TagsGroups EventTags
+		+TagsGroups ReadOnlyTags
+		+TagsGroups WriteOnlyTags
+		+TagsGroups WriteAndReadTags
+		+TagsGroups ReadCyclicTags
+		+TagsGroups WriteCyclicTags
+		+TagsGroups HeartbeatTags
+		+TagsGroups RegisterTags
+		+TagsGroups ReferenceTags
+		+TagsGroups CommandTags
+		+TagsGroups PerformanceTags
+	}
+	class IRequest  {
+	}
+	class IRequest ~TResponse~ {
+	}
+	class MachineType  {
+		+MachineType Invalid
+		+MachineType None
+		+MachineType Printer
+		+MachineType Initial
+		+MachineType InitialPrinter
+		+MachineType Process
+		+MachineType Final
+		+MachineType Inspection
+		+MachineType DashBoard
+		+MachineType Disposable
+	}
+	class GatewayTask  {
+		+GatewayTask Invalid
+		+GatewayTask None
+		+GatewayTask CreateBarCodeAsync
+		+GatewayTask ReadBarCodeAsync
+		+GatewayTask CreateCycleAsync
+		+GatewayTask UpdateCycleOkAsync
+		+GatewayTask UpdateCycleNotOkAsync
+		+GatewayTask EndOfProcessAsync
+		+GatewayTask RejectPartAsync
+	}
+	class IPerformanceQueryHandler ~in TQuery, TResult~ {
+		-HandleAsync(TQuery query, CancellationToken cancellationToken) Task~Result~TResult~~
+	}
+	class ErrorsExtensions  {
+	}
+	class StoppageRegister  {
+		+ StoppageRegisterId : int
+		+ ProductionOrderId : int
+		+ MachineId : int
+		+ StoppageId : int
+		+ Description : string
+		+ Comment : string
+		+ TimeStamp : byte[]
+		+ StoppedTime : decimal
+		+ StartedOn : DateTime
+		+ FinishedOn : DateTime?
+		+ RegistedOn : DateTime
+		+ ModifiedOn : DateTime?
+		+ToString() string
+	}
+	class ILookupEntity  {
+	}
+	class OeeConstants  {
+		+decimal WorldClassOeeThreshold
+		+decimal GoodOeeThreshold
+		+decimal FairOeeThreshold
+		+decimal PoorOeeThreshold
+		+decimal PercentageConversion
+		+decimal MinMetricValue
+		+decimal MaxMetricValue
+	}
+	class PerformanceThresholds  {
+		+double WorldClassOeeThreshold
+		+double GoodOeeThreshold
+		+double FairOeeThreshold
+		+double MaxOeeValue
+		+double MinOeeValue
+		+double VeryLowAvailabilityThreshold
+		+double VeryLowQualityThreshold
+	}
+	class MetricThresholds  {
+		+double MaxAvailability
+		+double MinAvailability
+		+double MaxNormalPerformance
+		+double MaxAllowablePerformance
+		+double MinPerformance
+		+double MaxQuality
+		+double MinQuality
+	}
+	class Calculation  {
+		+int DecimalPrecision
+		+double DefaultFallbackRatio
+		+int MaxCounterValue
+		+int CounterIncrementStep
+	}
+	class Validation  {
+		+double MaxAcceptableCycleTime
+		+double MaxAcceptableProductionTime
+		+int MinMeaningfulProduction
+		+int MaxReasonableProductionCount
+	}
+	class Time  {
+		+int SecondsPerHour
+		+int HoursPerDay
+		+int SecondsPerDay
+		+int DaysPerWeek
+		+int SecondsPerWeek
+	}
+	class CancellationAwareResult  {
+		+WrapCancellationAware(Func~CancellationToken&#44&#32Task~T~~ operation, CancellationToken cancellationToken) Task~Result~T~~
+		+WrapResultOperation(Func~CancellationToken&#44&#32Task~Result~T~~~ operation, CancellationToken cancellationToken) Task~Result~T~~
+		+WrapCancellationAware(Func~CancellationToken&#44&#32Task~ operation, CancellationToken cancellationToken) Task~Result~
+		+WrapWithTimeout(Func~CancellationToken&#44&#32Task~T~~ operation, TimeSpan timeout, CancellationToken cancellationToken) Task~Result~T~~
+	}
+	class ILookUpTable  {
+		+ Id : int
+		+ Name : string
+		+ DisplayName : string
+		+Deconstruct(int value, string name, string displayName) void
+	}
+	class MultipleNullArgumentsError  {
+		+ Errors : IReadOnlyList~NullArgumentError~
+		+ToString() string
+	}
+	class Recipe  {
+		+ RecipeId : int
+		+ ProductId : int
+		+ MachineId : int
+		+ CycleTimeMinimum : int
+		+ CycleTimeMaximum : int
+		+ MaxCyclesOk : int
+		+ MaxCyclesNOk : int
+		+ Retry : int
+		+ToString() string
+	}
+	class RuleFragment  {
+		+ Name : string
+		+ Action : string
+		+ Origin : string
+		+ Value : string
+		+ LengthMin : int?
+		+ LengthMax : int?
+		+ Length : int?
+		+ Incremental : bool
+		+ToString() string
+	}
+	class Tooling  {
+		+ ToolId : int
+		+ Code : int
+		+ Name : string
+	}
+	class TaskGatewayRequest  {
+		+ CommandId : int
+		+ MachineId : int
+		+ Name : string
+		+ TimeStamp : DateTime
+		+ PartNumber : string
+		+ Description : string
+		+ BarCodeId : int
+		+ CycleId : int
+		+ CycleStatus : CycleStatus
+		+ MachineType : MachineType
+		+ PartStatus : PartStatus
+		+ FlowStatus : FlowStatus
+		+ ResultValidation : ResultValidation
+		+ GatewayTask : GatewayTask
+		+ RequestTask : string
+		+ Registers : IDictionary~string&#44&#32Register~
+		+ Comment : string
+		+ WatchDogTime : WatchDog
+		+ BarCode : string
+		+ IsEnabled : bool
+		+ EventStatus : string
+		+ StatusColor : string
+		+ Error : string
+		+ Parameters : Dictionary~string&#44&#32string~
+		+SetCommandStatusFromTask(string taskName) void
+		+SetStatusReadBarCode() void
+		+SetStatusCreateBarCode() void
+		+SetStatusCreateCycle() void
+		+SetStatusUpdateCycleOk() void
+		+SetStatusUpdateCycleNotOk() void
+		+SetStatusRejectPart() void
+		+SetStatusEndOfProcess() void
+		+FromPlc(int machineId, string barCode, string partNumber, CycleStatus cycleStatus, PartStatus partStatus, GatewayTask gatewayTask, DateTime timeStamp) TaskGatewayRequest
+		+FromPlc(DataFromPlc dataPlc, string name, GatewayTask gatewayTask, DateTime timeStamp) TaskGatewayRequest
+		+Create(int machineId, string barcode, string partNumber, PartStatus partStatus, CycleStatus cycleStatus, Dictionary~string&#44&#32Register~ registers) TaskGatewayRequest
+		+CreateWithPartNumber(int machineId, string partNumber) TaskGatewayRequest
+		+CreateWithLabel(int machineId, string barCode) TaskGatewayRequest
+		+Create(int machineId, string barCode, string partNumber) TaskGatewayRequest
+		+Create(int machineId, string barCode, string partNumber, PartStatus partStatus) TaskGatewayRequest
+		+Create(int machineId, string barCode, string partNumber, PartStatus partStatus, CycleStatus cycleStatus) TaskGatewayRequest
+		+ToResponse(TaskGatewayRequest src) TaskGatewayResponse
+		+FromResponse(TaskGatewayResponse src) TaskGatewayRequest
+		+EnsureIsValidToRenderAndPersist() bool
+		+Success(string barCode) void
+		+Failure(string barCode) void
+		+ToString() string
+	}
+	class MasterLabel  {
+		+ MasterLabelId : int
+		+ MasterLabelCode : string
+		+ Description : string
+	}
+	class ResultValidation  {
+		+ResultValidation None
+		+ResultValidation Valid
+		+ResultValidation Invalid
+		+ResultValidation BarCodeNotFound
+		+ResultValidation WorkFlowNotFound
+		+ResultValidation MachineNotFound
+		+ResultValidation CycleNotFound
+		+ResultValidation WorkFlowNotValid
+		+ResultValidation PartNotValid
+		+ResultValidation DestinationNotValid
+		+ResultValidation PartNumberNotValid
+		+ResultValidation RecipeNotFound
+		+ResultValidation ReferencesNotFound
+		+ResultValidation PartRejected
+		+ResultValidation InvalidMachine
+		+ResultValidation RuleNotFound
+		+ResultValidation ProductNotFound
+		+ResultValidation ShiftInvalid
+		+ResultValidation OperationCancelled
+		+ResultValidation ExceptionResultValidation
+	}
+	class Stoppage  {
+		+ StoppageId : int
+		+ StoppageTypeId : int
+		+ StoppageName : string
+		+ Description : string
+		+ Description2 : string
+		+ ShortName : string
+		+ MinValue : decimal?
+		+ MaxValue : decimal?
+		+ ApplyForProduction : bool?
+		+ ItemProperty : int
+	}
+	class CycleStatus  {
+		+CycleStatus Invalid
+		+CycleStatus None
+		+CycleStatus NotStarted
+		+CycleStatus Started
+		+CycleStatus FinishedOk
+		+CycleStatus FinishedNok
+		+CycleStatus EndOfProcess
+		+CycleStatus Rejected
+		+CycleStatus Canceled
+		+FromValue(int value) CycleStatus
+	}
+	class MachineWidgetData  {
+		+ MachineId : string
+		+ Status : string
+		+ OEE : double
+		+ Availability : double
+		+ Performance : double
+		+ Quality : double
+		+ OeeTrend : List~double~
+		+ToString() string
+	}
+	class BarCodeDetailsRequest  {
+		+ MachineId : int
+		+ Label : string
+		+ PartNumber : string
+		+Build(int machineId, string? label, string? partNumber) Result~BarCodeDetailsRequest~
+	}
+	class ConfigStation  {
+		+ ConfigAppId : string
+		+ AppId : int
+		+ Client : string
+		+ Factory : string
+		+ Line : string
+		+ MachineId : int
+		+ Project : string
+		+ Version : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+		+ PlcId : int
+		+ Pc : int
+		+ToString() string
+	}
+	class FlowStatus  {
+		+FlowStatus None
+		+FlowStatus Created
+		+FlowStatus InProcess
+		+FlowStatus Finished
+		+FlowStatus Invalid
+		+FlowStatus Restored
+		+FlowStatus Rejected
+		+FromValue(int value) FlowStatus
+	}
+	class ConfigDb  {
+		+ SystemInformationId : int
+		+ DatabaseVersion : string
+		+ VersionDate : DateTime
+		+ ModifiedDate : DateTime
+		+ToString() string
+	}
+	class DistinctRegister  {
+		+ Name : string
+		+ VariableId : int
+		+ MachineId : int
+	}
+	class Plc  {
+		+ PlcId : int
+		+ MachineId : int
+		+ Enabled : int
+		+ Name : string
+		+ IpAddress : string
+		+ PlcType : string
+		+ PlcBrand : string
+		+ Options : string
+		+ CommLibrary : string
+		+ BrandOwner : string
+		+ToString() string
+	}
+	class Product  {
+		+ ProductId : int
+		+ PartNumber : string
+		+ ProductName : string
+		+ IsActive : int
+		+ Version : int
+		+ CustomerPartNumber : string
+		+ AliasPartNumber : string
+		+ Description : string
+		+ RuleId : int
+		+ CustomerId : int
+		+ LineId : int
+		+ Line : Line
+		+ Customer : Customer
+		+ CustomerName : string
+	}
+	class PerformanceData  {
+		+ PerformanceDataId : long
+		+ MachineId : int
+		+ PlcId : int
+		+ BarCodeId : int
+		+ CycleId : int
+		+ TimeStamp : DateTime
+		+ ApplicationFlag : int
+		+ EventCounter : int
+		+ CurrentTime : int
+		+ RunningTime : int
+		+ StoppedTime : int
+		+ FaultedTime : int
+		+ StatusFaultReason : int
+		+ TotalProduction : double
+		+ ProductionOk : double
+		+ ProductionNoK : double
+		+ StatusFaultReject : int
+		+ RejectEventCounter : int
+		+ StatusReject : int
+		+ RejectQuantityUnits : double
+		+ StandardCycleTime : double
+		+ ActualCycleTime : double
+		+ PlanedProductionTime : double
+		+ Command : TaskGatewayRequest
+		+FromPlc(IDictionary~string&#44&#32Register~ perf) PerformanceData
+		+ToString() string
+		+FromResult(Result~TaskGatewayResponse~ result) PerformanceData
+		-ParseInt(IDictionary~string&#44&#32Register~ dict, string key) int
+		-ParseDouble(IDictionary~string&#44&#32Register~ dict, string key) double
+	}
+	class IGatewayQueryHandler ~TQuery, TResponse~ {
+		-ProcessAsync(TQuery query, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class Defect  {
+		+ DefectId : int
+		+ DefectTypeId : int
+		+ Name : string
+		+ Description : string
+		+ ShortName : string
+	}
+	class ShiftDefinition  {
+		+ ShiftCatalogId : int
+		+ PlantId : int
+		+ ShiftName : string
+		+ StartBy : TimeSpan
+		+ Duration : TimeSpan
+		+ EndTime : TimeSpan
+	}
+	class CustomerProduct  {
+		+ CustomerId : int
+		+ Name : string
+		+ CustomerLogo : string
+		+ Products : List~Product~
+	}
+	class PerformanceSpec  {
+		+ Id : int
+	}
+	class Rule  {
+		+ RuleId : int
+		+ RuleJson : string
+		+ Name : string
+		+ Description : string
+		+ Version : int
+		+ IsActive : bool
+		+ MachineId : int
+		+ ProductId : int
+		+ Components : List~RuleFragment~
+		+ RuleFunction : List~string~
+	}
+	class Shift  {
+		-IDateTimeMachine dateTimeMachine
+		+ ShiftId : int
+		+ StartBy : DateTime
+		+ Duration : TimeSpan
+		+ EndTime : DateTime
+		+ ShiftType : string
+		+ MaxDuration : TimeSpan
+		+ MinDuration : TimeSpan
+		+ NormalDuration : TimeSpan
+		+ IsRunningNow : bool
+		+ CyclesOk : int
+		+ Type : ShiftType
+	}
+	class IIndTraceUser  {
+		- UserId : int
+		- UserName : string
+	}
+	class DefectRegister  {
+		+ DefectRegisterId : int
+		+ BarCodeId : int
+		+ MachineId : int
+		+ DefectId : int
+		+ Description : string
+		+ Comment : string
+		+ TimeStamp : byte[]
+		+ CreatedOn : DateTime
+		+ ModifiedOn : DateTime
+		+ PartsQuantity : decimal
+		+ToString() string
+	}
+	class NullArgumentError  {
+		+ ParameterName : string
+		+ Message : string?
+		+ToString() string
+	}
+	class TagsGroupEntity  {
+	}
+	class ResultValidationEntity  {
+	}
+	class IEntityRoot  {
+	}
+	class MachineStatus  {
+		+ MachineId : int
+		+ StatusMachineId : int
+		+ BreakDownTime : decimal
+		+ UpdatedOn : DateTime
+	}
+	class IGatewayRequestHandler ~TCommand~ {
+		-ProcessAsync(TCommand command, CancellationToken cancellationToken) Task~Result~
+	}
+	class IGatewayRequestHandler ~TCommand, TResponse~ {
+		-ProcessAsync(TCommand command, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class IMonitorRequest  {
+	}
+	class IMonitorRequest ~TResponse~ {
+	}
+	class IAppState  {
+	}
+	class WorkFlowTypeEntity  {
+	}
+	class IMonitorRequestHandler ~TCommand~ {
+		-ProcessAsync(TCommand command, CancellationToken cancellationToken) Task~Result~
+	}
+	class IMonitorRequestHandler ~TCommand, TResponse~ {
+		-ProcessAsync(TCommand request, CancellationToken cancellationToken) Task~Result~TResponse~~
+	}
+	class EnumModel  {
+		+EnumModel Invalid
+		-ConcurrentDictionary~Type&#44&#32Dictionary~int&#44&#32EnumModel~~ LookupCache
+		-string displayName
+		- Invalid : IEnumModel
+		+ Value : int
+		+ Name : string
+		+ DisplayName : string
+		- Value : int
+		- DisplayName : string
+		+Exists(int value) bool
+		+GetAll() IEnumerable~TEnumeration~
+		+AbsoluteDifference(EnumModel firstValue, EnumModel secondValue) int
+		+ToLookUpTable() IList~TLookUpTable~
+		+ToLookUpTable() IList~EnumLookUpTable~
+		+Equals(object? obj) bool
+		+GetHashCode() int
+		+FromValue(int value) TEnumeration
+		+FromDisplayName(string displayName) TEnumeration
+		+FromValue(int? value) TEnumeration
+		+FromName(string name) TEnumeration
+		+InvalidValue() TEnumeration
+		+CompareTo(object? other) int
+		+ToString() string
+		+Deconstruct(int value, string name, string displayName) void
+		-BuildLookupTable(Type enumType) Dictionary~int&#44&#32EnumModel~
+		-Parse(TU value, string description, Func~TEnumeration&#44&#32bool~ predicate) TEnumeration
+	}
+	class MachinePlc  {
+		+ MachineId : int
+		+ PlcId : int
+		+ IsActive : int
+	}
+	class Machine  {
+		+ MachineId : int
+		+ Name : string
+		+ Description : string
+		+ Location : string
+		+ MachineType : MachineType
+		+ WorkFlowType : WorkFlowType
+		+ EnableAppTraceability : int
+		+ EnableBypassTraceability : int
+		+ Retry : int
+		+ FromEdges : ICollection~Edge~
+		+ ToEdges : ICollection~Edge~
+		+ RuleId : int
+		+ IsEnabled : bool
+		+ Result : Result
+		+Enable() Result
+		+Disable() Result
+		+ToString() string
+	}
+	class Setting  {
+		+ SettingId : int
+		+ MachineId : int
+		+ Config : string
+		+ToString() string
+	}
+	class EnumLookupAttribute  {
+	}
+	class IEnumModel  {
+		- Value : int
+		- Name : string
+		- DisplayName : string
+		+ Invalid : IEnumModel
+	}
+	class ProductionMetadata  {
+		+ ProductionMetadataId : int
+		+ MachineId : int
+		+ TimeStamp : DateTime
+		+ ProductId : int
+		+ TotalProduction : double
+		+ StandardCycleTime : double
+		+ ActualCycleTime : double
+		+ PlanedProductionTime : double
+	}
+	class NullArgumentValidation  {
+		+Failure(string parameterName, string? message) Result~T~
+		+Failure(string[] parameterNames) Result~T~
+		+Failure(string parameterName, string? message) Result
+		+Failure(string[] parameterNames) Result
+	}
+	class ValueObject  {
+		+Equals(object? obj) bool
+		+GetHashCode() int
+		-EqualOperator(ValueObject left, ValueObject right) bool
+		-NotEqualOperator(ValueObject left, ValueObject right) bool
+		-GetAtomicValues() IEnumerable~object~
+	}
+	class FlowStatusEntity  {
+	}
+	class IDateTimeMachine  {
+		- Now : DateTime
+		- UtcNow : DateTime
+		- Today : DateTime
+		- Hour : int
+		- Minute : int
+		- Second : int
+		- Year : int
+		- Month : int
+		- Day : int
+		- DayOfYear : int
+		- TimeProvider : TimeProvider?
+		-AdvanceTime(TimeSpan timeSpan) IndQuestResults.Result
+		-GetLocalNow() DateTimeOffset
+		-GetUtcNow() DateTimeOffset
+		-AddDays(DateTimeOffset dateTime, int days) DateTimeOffset
+		-AddHours(DateTimeOffset dateTime, int hours) DateTimeOffset
+		-AddMinutes(DateTimeOffset dateTime, int minutes) DateTimeOffset
+		-AddSeconds(DateTimeOffset dateTime, int seconds) DateTimeOffset
+		-AddMilliseconds(DateTimeOffset dateTime, double milliseconds) DateTimeOffset
+		-AddTicks(DateTimeOffset dateTime, long ticks) DateTimeOffset
+		-AddMonths(DateTimeOffset dateTime, int months) DateTimeOffset
+		-AddYears(DateTimeOffset dateTime, int years) DateTimeOffset
+		-GetTimeSpan(DateTimeOffset from, DateTimeOffset to) TimeSpan
+		-GetDay(DateTimeOffset dateTime) int
+		-GetMonth(DateTimeOffset dateTime) int
+		-GetYear(DateTimeOffset dateTime) int
+		-GetDayOfWeek(DateTimeOffset dateTime) DayOfWeek
+		-GetDayOfYear(DateTimeOffset dateTime) int
+	}
+	class IndTraceUser  {
+		+ UserId : int
+		+ UserName : string
+	}
+	class ICommandData  {
+		- Command : TaskGatewayRequest
+		-Create(TaskGatewayRequest taskGatewayRequest) ICommandData
+		+WithData(TaskGatewayRequest taskGatewayRequest) ICommandData
+	}
+	class ShiftType  {
+		+ShiftType Invalid
+		+ShiftType None
+		+ShiftType First
+		+ShiftType Second
+		+ShiftType Third
+	}
+	class AuditableEntity  {
+		-IDateTimeMachine dateTimeMachine
+		-DateTime? createdOn
+		-DateTime? modifiedOn
+		+ CreatedBy : string
+		+ CreatedOn : DateTime?
+		+ ModifiedBy : string
+		+ ModifiedOn : DateTime?
+	}
+
+	ProductSpec --|> IEntityRoot
+	TaskGatewayResponse --|> IMonitorFilter
+	TaskGatewayResponse --|> IEntityRoot
+	Order --|> IEntityRoot
+	MachineTypeEntity --|> EnumLookUpTable
+	ConnectionStatus --|> AuditableEntity
+	ConnectionStatus --|> ILookupEntity
+	GatewayTaskEntity --|> EnumLookUpTable
+	Variable --|> AuditableEntity
+	Variable --|> IEntityRoot
+	KpiOee --|> IEntityRoot
+	Cycle --|> IEntityRoot
+	OeeRegister --|> IEntityRoot
+	IGatewayRequest --|> IRequest
+	IGatewayRequest --|> IRequest
+	VariablesGroup --|> ILookupEntity
+	BarCodeValidationService --|> IBarCodeValidationService
+	StatusConfiguration --|> ILookupEntity
+	ConfigApp --|> AuditableEntity
+	ConfigApp --|> IEntityRoot
+	PartStatus --|> EnumModel
+	EnumLookUpTable --|> ILookUpTable
+	EnumLookUpTable --|> ILookupEntity
+	Label --|> IEquatable
+	BarCode --|> IEntityRoot
+	Edge --|> IEntityRoot
+	Line --|> AuditableEntity
+	Line --|> IEntityRoot
+	DateTimeMachineProvider --|> TimeProvider
+	DateTimeMachine --|> IDateTimeMachine
+	PartStatusEntity --|> EnumLookUpTable
+	Register --|> IEntityRoot
+	WorkFlow --|> AuditableEntity
+	WorkFlow --|> IEntityRoot
+	CycleStatusEntity --|> EnumLookUpTable
+	CycleStatusEntity --|> ILookupEntity
+	ShiftsCatalog --|> AuditableEntity
+	ShiftsCatalog --|> ILookupEntity
+	ConfigDatabaseLog --|> IEntityRoot
+	Customer --|> AuditableEntity
+	Customer --|> IEntityRoot
+	WorkFlowType --|> EnumModel
+	IAggregateRoot --|> IEntityRoot
+	TagsGroups --|> EnumModel
+	MachineType --|> EnumModel
+	GatewayTask --|> EnumModel
+	StoppageRegister --|> IEntityRoot
+	Recipe --|> IEntityRoot
+	RuleFragment --|> IEntityRoot
+	Tooling --|> ILookupEntity
+	TaskGatewayRequest --|> IMonitorFilter
+	TaskGatewayRequest --|> IEntityRoot
+	MasterLabel --|> ILookupEntity
+	ResultValidation --|> EnumModel
+	Stoppage --|> ILookupEntity
+	CycleStatus --|> EnumModel
+	MachineWidgetData --|> IEntityRoot
+	ConfigStation --|> AuditableEntity
+	ConfigStation --|> IEntityRoot
+	FlowStatus --|> EnumModel
+	ConfigDb --|> IEntityRoot
+	DistinctRegister --|> IEntityRoot
+	Plc --|> IEntityRoot
+	Product --|> AuditableEntity
+	Product --|> IEntityRoot
+	PerformanceData --|> IEntityRoot
+	Defect --|> ILookupEntity
+	ShiftDefinition --|> AuditableEntity
+	ShiftDefinition --|> ILookupEntity
+	PerformanceSpec --|> ILookupEntity
+	Rule --|> AuditableEntity
+	Rule --|> IEntityRoot
+	Shift --|> AuditableEntity
+	Shift --|> IEntityRoot
+	DefectRegister --|> IEntityRoot
+	TagsGroupEntity --|> EnumLookUpTable
+	ResultValidationEntity --|> EnumLookUpTable
+	MachineStatus --|> ILookupEntity
+	IMonitorRequest --|> IRequest
+	IMonitorRequest --|> IRequest
+	WorkFlowTypeEntity --|> EnumLookUpTable
+	EnumModel --|> IComparable
+	EnumModel --|> IEnumModel
+	EnumModel --|> ILookupEntity
+	MachinePlc --|> AuditableEntity
+	MachinePlc --|> IEntityRoot
+	Machine --|> IEntityRoot
+	Setting --|> IEntityRoot
+	EnumLookupAttribute --|> Attribute
+	FlowStatusEntity --|> EnumLookUpTable
+	FlowStatusEntity --|> ILookupEntity
+	IndTraceUser --|> AuditableEntity
+	IndTraceUser --|> IEntityRoot
+	IndTraceUser --|> IIndTraceUser
+	ShiftType --|> EnumModel

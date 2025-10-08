@@ -1,0 +1,56 @@
+@page "/WorkFlows"
+@using IndTrace.Application.ConfigStations.Queries.GetConfigStationList
+@using IndTrace.Application.Configuration.Services
+@using IndTrace.Application.Models.Interfaces
+@using IndTrace.Application.WorkFlows.Queries.GetList
+@using MudBlazor
+@using IndTrace.Domain.Entities
+@using Microsoft.AspNetCore.Components.Forms
+@using IndTrace.Components.Area.Products
+@using IndTrace.Domain.Interfaces
+@using IndTrace.UI.Models.Products
+@inject ILogger<Products> Logger
+@inject PersistentComponentState ApplicationState
+
+@inject IndTraceConfigurationService IndTraceConfigurationService
+@inject IProductService ProductService
+
+
+@if (!IsInitialized) {
+    <MudProgressLinear Color="Color.Tertiary" Size="Size.Large" Rounded="true" Indeterminate="true" />
+}
+
+
+<MudPaper Elevation="0" Width="600px" MinHeight="200px" Class="pa-4 ma-4 d-flex flex-column mud-background-gray rounded-lg">
+    <MudButton OnClick="SaveNewModel">
+        Save
+    </MudButton>
+
+</MudPaper>
+
+
+<MudDropContainer T="ProductMachineItem" @ref="dropContainer" Items="@(ProductState?.MachineItems ?? new())" ItemsSelector="@((item, column) => item.Status == column)" ItemDropped="ProductUpdated" Class="d-flex flex-row">
+    <ChildContent>
+        @foreach (var item in ProductState?.ProductsView ?? new())
+        {
+            <MudPaper Elevation="0" Width="224px" MinHeight="400px" Class="pa-4 ma-4 d-flex flex-column mud-background-gray rounded-lg">
+                <MudToolBar Gutters="false">
+                    <MudText Typo="Typo.subtitle1"><b>@item.Name</b></MudText>
+                    <MudSpacer />
+                    <MudMenu Icon="@Icons.Material.Rounded.MoreHoriz" AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight" ListClass="pa-2 d-flex flex-column" PopoverClass="mud-elevation-25">
+                        <MudButton Size="Size.Small" Color="Color.Error" StartIcon="@Icons.Material.Outlined.Delete" OnClick="@( () => DeleteSection(item))">Delete Product</MudButton>
+                        <MudButton Size="Size.Small" Color="Color.Default" StartIcon="@Icons.Material.Rounded.Edit">Rename Product</MudButton>
+                    </MudMenu>
+                </MudToolBar>
+
+
+                <MudDropZone T="ProductMachineItem" Identifier="@item.Name" AllowReorder="true" CanDrop="CanDrop" Class="mud-height-full" />
+
+            </MudPaper>
+        }
+
+    </ChildContent>
+    <ItemRenderer>
+        <MudPaper Elevation="25" Class="pa-4 rounded-lg my-3">@context.Name</MudPaper>
+    </ItemRenderer>
+</MudDropContainer>

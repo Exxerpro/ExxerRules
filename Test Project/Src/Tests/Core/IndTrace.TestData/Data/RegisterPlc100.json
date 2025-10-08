@@ -1,0 +1,20 @@
+[
+  {
+    "RegisterId": 5512,
+    "Name": "PartStatusPlc",
+    "VariableId": 121,
+    "CycleId": 1184,
+    "Value": "1",
+    "DataType": "System.Int16",
+    "StatusValueId": 1
+  },
+  {
+    "RegisterId": 5554,
+    "Name": "CycleStatusPlc",
+    "VariableId": 122,
+    "CycleId": 1195,
+    "Value": "4",
+    "DataType": "System.Int16",
+    "StatusValueId": 1
+  }
+]

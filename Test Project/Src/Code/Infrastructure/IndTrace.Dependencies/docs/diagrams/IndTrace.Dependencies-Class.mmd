@@ -1,0 +1,317 @@
+classDiagram
+
+	class ResiliencePolicies  {
+		+GetRetryPolicy() IAsyncPolicy~HttpResponseMessage~
+	}
+	class LogTimerExtensions  {
+		-ConcurrentDictionary~string&#44&#32DateTime~ lastLogTimes
+		-object syncLock
+		+LogWarningRateLimited(ILogger~T~ logger, string message, TimeSpan minimumInterval) void
+		+LogWarningRateLimited(ILogger logger, string message, TimeSpan minimumInterval) void
+	}
+	class InstanceActivator  {
+		+TryActivateWindow(string processName) void
+	}
+	class ISimulationSettings  {
+		- TimeStep : int
+		- SpeedSimulation : double
+		- EnableSimulation : bool
+		- ApplicationFlagInt : int
+		- StatusFaultReasonInt : int
+		- EventCounter : int
+		- StatusFaultRejectInt : int
+		- TotalProduction : float
+		- ProductionOk : float
+		- ProductionNoK : float
+		- RunningTime : TimeSpan
+		- StoppedTime : TimeSpan
+		- FaultedTime : TimeSpan
+		- CurrentTime : DateTime
+		- StartTime : DateTime
+		- EndTime : DateTime
+		- CurrentTimeInt : int
+		- RunningTimeInt : int
+		- StoppedTimeInt : int
+		- FaultedTimeInt : int
+		- StartTimeInt : int
+		- EndTimeInt : int
+		- ApplicationFlag : string
+		- StatusFaultReason : string
+		- StatusFaultReject : string
+	}
+	class SimulationSnapshot  {
+		+int SimulatedTime
+		+ TotalProduction : float
+		+ ProductionOk : float
+		+ ProductionNoK : float
+		+ EventCounter : int
+		+ RunningTime : int
+		+ StoppedTime : int
+		+ FaultedTime : int
+		+ TimeStep : int
+		+ CurrentTime : int
+		- SimulatedTime : float
+		-CompareTo(SimulationSnapshot right) int
+		+Equals(ISimulationSnapshot? other) bool
+		+CompareTo(ISimulationSnapshot? other) int
+		+GetHashCode() int
+		+Equals(object? obj) bool
+		+Equals(SimulationSnapshot? other) bool
+		-CompareTo(SimulationSnapshot? other) int
+	}
+	class NativeLibLoader  {
+		-LoadLibrary(string lpFileName) IntPtr
+		-Dlopen(string fileName, int flags) IntPtr
+		+LoadNativeLibrary(string baseName, ILogger logger) void
+	}
+	class CommonPipelineConfiguration  {
+		+UseCommonPipeline(WebApplication app, IConfiguration configuration, ILogger logger) WebApplication
+	}
+	class CommonServiceRegistration  {
+		+AddIndTraceIdentity(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+	}
+	class LoggingInterceptor  {
+		+Intercept(IInvocation invocation) void
+	}
+	class Runners  {
+		+IsRunningAsAdministrator() bool
+		+RelaunchAsAdministrator() void
+		+EnsureProgramIsSingleton(ILogger logger) string
+		+EnsureProgramIsHighPriority(ILogger logger) void
+		+VerifyIfApplicationIsNotRunning(string name) void
+	}
+	class ConfigLoader  {
+		+Load() IConfiguration
+	}
+	class InterceptorServiceCollectionExtensions  {
+		-ProxyGenerator ProxyGenerator
+		+AddInterceptedScoped(IServiceCollection services) IServiceCollection
+		+AddInterceptedSingleton(IServiceCollection services) IServiceCollection
+		+AddInterceptedTransient(IServiceCollection services) IServiceCollection
+	}
+	class Extensions  {
+		-string HealthEndpointPath
+		-string AlivenessEndpointPath
+		+AddServiceDefaults(TBuilder builder) TBuilder
+		+ConfigureOpenTelemetry(TBuilder builder) TBuilder
+		-AddOpenTelemetryExporters(TBuilder builder) TBuilder
+		+AddDefaultHealthChecks(TBuilder builder) TBuilder
+		+MapDefaultHealthEndpoints(WebApplication app) WebApplication
+	}
+	class MethodTimeLogger  {
+		+ Logger : ILogger?
+		+Log(MethodBase methodBase, long milliseconds, string message) void
+	}
+	class MeasureExecutionTimeAttribute  {
+		+ Label : string
+	}
+	class ISimulationEngine  {
+		-Simulate() SimulationSnapshot
+	}
+	class DiagnosticsController  {
+		-IServiceProvider serviceProvider
+		+GetRegisteredServices() IActionResult
+	}
+	class OeeDependencyRegistration  {
+		+AddOeeServices(IServiceCollection services) IServiceCollection
+		+AddOeeRepositories(IServiceCollection services) IServiceCollection
+		+ValidateOeeServices(IServiceProvider serviceProvider) OeeServicesValidationResult
+	}
+	class ExecutionTimeInterceptor  {
+		-ILogger~ExecutionTimeInterceptor~ logger
+		+Intercept(IInvocation invocation) void
+	}
+	class ExtendedRepositoryServiceRegistration  {
+		+AddExtendedRepositoryServices(IServiceCollection services) IServiceCollection
+		+ValidateExtendedRepositoryServices(IServiceProvider serviceProvider) bool
+	}
+	class SystemMetricsService  {
+		-PerformanceCounter? cpuCounter
+		-PerformanceCounter? ramCounter
+		-long previousBytesSent
+		-long previousBytesReceived
+		-DateTime lastNetworkCheck
+		+GetCpuUsage() float
+		+GetMemoryUsage() float
+		+GetNetworkUtilization() (double&#32sent&#44&#32double&#32received)
+		-GetLinuxCpuUsage() float
+		-GetLinuxMemoryUsage() float
+		-GetTotalBytesSent() long
+		-GetTotalBytesReceived() long
+	}
+	class SimulationSettings  {
+		-Dictionary~string&#44&#32int~ FlagMap
+		-Dictionary~string&#44&#32int~ ReasonMap
+		+ TimeStep : int
+		+ SpeedSimulation : double
+		+ EnableSimulation : bool
+		+ ApplicationFlagInt : int
+		+ StatusFaultReasonInt : int
+		+ EventCounter : int
+		+ StatusFaultRejectInt : int
+		+ TotalProduction : float
+		+ ProductionOk : float
+		+ ProductionNoK : float
+		+ RunningTime : TimeSpan
+		+ StoppedTime : TimeSpan
+		+ FaultedTime : TimeSpan
+		+ CurrentTime : DateTime
+		+ StartTime : DateTime
+		+ EndTime : DateTime
+		+ CurrentTimeInt : int
+		+ RunningTimeInt : int
+		+ StoppedTimeInt : int
+		+ FaultedTimeInt : int
+		+ StartTimeInt : int
+		+ EndTimeInt : int
+		+ ApplicationFlag : string
+		+ StatusFaultReason : string
+		+ StatusFaultReject : string
+		+ConvertFrom(SimulationSettings raw) SimulationSettings
+	}
+	class ISimulationSnapshot  {
+		- TotalProduction : float
+		- ProductionOk : float
+		- ProductionNoK : float
+		- EventCounter : int
+		- RunningTime : int
+		- StoppedTime : int
+		- FaultedTime : int
+		- TimeStep : int
+		- CurrentTime : int
+		- SimulatedTime : float
+		+GetHashCode() int
+		+Equals(ISimulationSnapshot? other) bool
+		+CompareTo(ISimulationSnapshot? other) int
+	}
+	class SingleInstanceEnforcer  {
+		-int SwRestore
+		-SetForegroundWindow(IntPtr hWnd) bool
+		-ShowWindowAsync(IntPtr hWnd, int nCmdShow) bool
+		+EnsureSingleInstance(string processName, ILogger logger) bool
+	}
+	class GatewayConstants  {
+		+string BroadcastMessageToClients
+		+string BroadcastTaskGatewayRequest
+		+string BroadcastTaskGatewayResponse
+		+string BroadcastHeartbeatSignal
+		+string ErrorGettingBarCode
+		+string ErrorReadingPartNumber
+		+string ErrorReadingPartStatus
+		+string ErrorReadingCycleStatus
+		+string ErrorSendingTaskGatewayResponse
+		+string ErrorSendingMessageToHub
+		+string ErrorDownloadingReferences
+		+string ErrorSettingBarCode
+		+string ErrorClearReferences
+		+string ErrorExecutingCommand
+		+string ErrorGatewayExecution
+		+string ErrorPlcExecution
+		+string ErrorStartingSignalRConnection
+		+string ErrorWhileSendingHeartbeat
+		+string ErrorUploadingRegisters
+	}
+	class HttpClientInterceptor  {
+		-SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) Task~HttpResponseMessage~
+		-GetTokenAsync() Task~string~
+	}
+	class HttpClientExtensions  {
+		+EnableIntercept(HttpClient httpClient, IServiceProvider services) HttpClient
+	}
+	class CommonServiceRegistration  {
+		+AddCommonServices(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+		+AddEventsServices(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+		+AddRepositories(IServiceCollection services, ServiceLifetime lifeTime) IServiceCollection
+		+AddReadOnlyRepositories(IServiceCollection services, ServiceLifetime lifeTime) IServiceCollection
+		+AddLoggingCollection(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+		+AddCoreAdminWithOptions(IServiceCollection services) IServiceCollection
+		-AddSignalRHub(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+		+AddBlazorServices(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+		+AddCommandDispatchers(IServiceCollection services, ServiceLifetime lifetime) IServiceCollection
+		+AddMediatorAndMapper(IServiceCollection services) IServiceCollection
+		+AddIndTracePersistence(IServiceCollection services, IConfiguration configuration, ILogger logger) IServiceCollection
+		+CreateLogger(HostApplicationBuilder builder, IConfiguration configuration) ILogger
+		+CreateLogger(WebApplicationBuilder builder, IConfiguration configuration) ILogger
+	}
+	class RepositoryRegistration  {
+		+AddRepository(IServiceCollection services, ServiceLifetime lifetime) IServiceCollection
+		+AddReadOnlyRepository(IServiceCollection services, ServiceLifetime lifetime) IServiceCollection
+	}
+	class QuestDbConstants  {
+	}
+	class TableNames  {
+		+string KpiOee
+		+string PerformanceData
+		+string OeeResults
+	}
+	class ColumnNames  {
+		+string OeeDataId
+		+string Availability
+		+string Performance
+		+string Quality
+		+string Oee
+		+string Timestamp
+		+string MachineId
+		+string PlcId
+		+string PerformanceDataId
+		+string BarCodeId
+		+string CycleId
+		+string ApplicationFlag
+		+string EventCounter
+		+string CurrentTime
+		+string RunningTime
+		+string StoppedTime
+		+string FaultedTime
+		+string StatusFaultReason
+		+string TotalProduction
+		+string ProductionOk
+		+string ProductionNoK
+		+string StatusFaultReject
+		+string RejectEventCounter
+		+string StatusReject
+		+string RejectQuantityUnits
+		+string StandardCycleTime
+		+string ActualCycleTime
+		+string PlanedProductionTime
+	}
+	class Queries  {
+		+string SelectAllOeeResults
+		+string SelectOeeResultsByMachine
+		+string SelectOeeResultsByDateRange
+		+string SelectLatestOeeResults
+	}
+	class Connection  {
+		+string DefaultHttpAddress
+		+int DefaultTimeoutSeconds
+		+int MaxRetryAttempts
+		+int DefaultRetryDelayMs
+		+int DefaultBatchSize
+	}
+	class EndpointPaths  {
+		+string QueryExecution
+		+string Import
+		+string Health
+	}
+	class QueryParameters  {
+		+string Query
+		+string Limit
+		+string Count
+		+string Format
+	}
+	class ResponseFormats  {
+		+string Json
+		+string Csv
+		+string Tsv
+	}
+
+	SimulationSnapshot --|> ISimulationSnapshot
+	SimulationSnapshot --|> IEquatable
+	SimulationSnapshot --|> IComparable
+	LoggingInterceptor --|> IInterceptor
+	MeasureExecutionTimeAttribute --|> Attribute
+	DiagnosticsController --|> ControllerBase
+	ExecutionTimeInterceptor --|> IInterceptor
+	SimulationSettings --|> ISimulationSettings
+	ISimulationSnapshot --|> IEquatable
+	ISimulationSnapshot --|> IComparable
+	HttpClientInterceptor --|> DelegatingHandler

@@ -1,0 +1,829 @@
+classDiagram
+
+	class ProductsModal  {
+		-MudDropContainer~ProductMachineItem~ dropContainer
+		-NewProductForm newProductSectionModel
+		+ ProductService : IProductService
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ ProductState : ProductsViewState
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ Logger : ILogger
+		+ IndexState : Dictionary~string&#44&#32Dictionary~ProductMachineItem&#44&#32int~~
+		+ OnProductSaved : EventCallback~(string&#44&#32Dictionary~ProductMachineItem&#44&#32int~)~
+		- DropContainer : MudDropContainer~ProductMachineItem~
+		+ IsInitialized : bool
+		+ EnableSaveButton : bool
+		- SelectedCustomer : string
+		- NewProduct : ProductDto?
+		+ SaveEnabled : bool
+		+ Result : Result?
+		-ShowAddProduct(MouseEventArgs obj) void
+		-CancelAddProduct() void
+		-SaveNewModel(ProductDto newProduct) Task
+		-UpdateProductInformation() void
+		-ProductUpdated(MudItemDropInfo~ProductMachineItem~ info) void
+		-NewProductAdded(ProductDto newProduct) void
+		+ProductSelected(ProductDto selectedProduct) void
+		-OnItemDroppedIntoProduct(MudItemDropInfo~ProductMachineItem~ info) void
+		-GetMachineWorkflowForProduct(string productName) IEnumerable~ProductMachineItem~
+		-LogDropContainerState() void
+		-UpdateIndexStateAndRefreshUI() void
+		-OnItemDroppedIntoDiscard(MudItemDropInfo~ProductMachineItem~ info) void
+		-OnItemDroppedIntoCatalog(MudItemDropInfo~ProductMachineItem~ info) void
+		-OpenAddNewProduct() void
+		-DeleteSection(ProductDefinition section) void
+		-CanDrop(ProductMachineItem item) bool
+	}
+	class OeeGauge  {
+		+ Value : double
+		+ Theme : string
+		- GaugeColor : string
+		- NeedleX : double
+		- NeedleY : double
+		- ValueArc : string
+		- SafeValue : double
+		- NeedleAngle : double
+		-GetThemeColor() string
+		-DescribeArc(double cx, double cy, double r, double startAngle, double endAngle) string
+	}
+	class OeeWidget  {
+		+ Value : double
+		+ Data : List~double~
+		+ MachineData : MachineWidgetData
+		+ Theme : string
+	}
+	class ProductWorkflowEdit  {
+		-Dictionary~int&#44&#32string~ filteredMachines
+		-MudDropContainer~ProductMachineItem~ dropContainer
+		- MudDialog : IMudDialogInstance
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ ProductsViewState : ProductsViewState
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ IndexState : Dictionary~string&#44&#32Dictionary~ProductMachineItem&#44&#32int~~
+		+ ListProductsDto : List~ProductDto~
+		+ ListWorkFlowsDto : List~WorkFlowDto~
+		+ ProductDto : ProductDto
+		+ ProductService : IProductService
+		+ SelectedCustomer : string
+		+ OnConfigured : Func<List<MachineDto>&#44&#32Task>?
+		+ EnableSaveButton : bool
+		- AuthProvider : AuthenticationStateProvider
+		- NewProduct : ProductDto?
+		+ SaveEnabled : bool
+		+ Result : Result?
+		-OnInitializedAsync() Task
+		-HandleKeyDown(KeyboardEventArgs e) void
+		-UpdateProductInformation() void
+		-ProductUpdated(MudItemDropInfo~ProductMachineItem~ info) void
+		-OnItemDroppedIntoProduct(MudItemDropInfo~ProductMachineItem~ info) void
+		-GetMachineWorkflowForProduct(string productName) IEnumerable~ProductMachineItem~
+		-LogDropContainerState() void
+		-UpdateIndexStateAndRefreshUI() void
+		-OnItemDroppedIntoDiscard(MudItemDropInfo~ProductMachineItem~ info) void
+		-GetCurrentUserNameAsync() Task~string~
+		-OnItemDroppedIntoCatalog(MudItemDropInfo~ProductMachineItem~ info) void
+		-CanDrop(ProductMachineItem item) bool
+		-CancelDialog() void
+		-SubmitWorkflow() Task
+	}
+	class MachineDashboard  {
+		-MudTheme theme
+		-bool isDarkMode
+		+ OnThemeChanged : EventCallback~string~
+		+ SelectedTheme : string
+		+ Machines : List~MachineWidgetData~
+		-HandleThemeChange(string theme) void
+	}
+	class AddProduct  {
+		+ Result : Result?
+		+ OnProductAdded : Func<ProductDto&#44&#32Task>?
+		+ OnCancel : EventCallback
+		+ Message : string
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ ProductDto : ProductDto
+		+ WorkFlowsDto : List~WorkFlowDto~
+		+ OnConfigured : Func<List<MachineDto>&#44&#32Task>?
+		+ SelectedCustomer : string
+		+ SaveEnabled : bool
+		+ NewProduct : ProductDto?
+		+CancelAddProduct() void
+		+SaveNewModel() Task
+		-TriggerConfigureWorkflow() Task
+		+OnConfiguredCallBack(List~MachineDto~ machines) Task
+	}
+	class ProductsList  {
+		-MudTable<ProductDto>? mudTable
+		-string searchString
+		-int selectedRowNumber
+		-List~string~ clickedEvents
+		+ ChildContent : RenderFragment?
+		+ Products : IEnumerable~ProductDto~
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ SelectedProduct : ProductDto
+		+ OnProductSelected : EventCallback~ProductDto~
+		+ SelectedCustomer : string
+		+ CustomerFilterChanged : EventCallback~string~
+		+ OnSelectedCustomerChanged : EventCallback~string~
+		- SelectedProducts : IEnumerable~ProductDto~
+		-SelectedItemChanged(ProductDto product) Task
+		-RowClickEvent(TableRowClickEventArgs~ProductDto~ tableRowClickEventArgs) void
+		-SelectedRowClassFunc(ProductDto element, int rowNumber) string
+		-FilterFunc1(ProductDto element) bool
+		-FilterFunc(ProductDto element, string searchTerm) bool
+		-GetCustomerLogoUrl(string customerName) string
+		-OnCustomerChanged(string selectedCustomer) Task
+	}
+	class ProductWorkflowView  {
+		-MudDropContainer~ProductMachineItem~ dropContainer
+		- MudDialog : IMudDialogInstance
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ ProductState : ProductsViewState
+		+ MachineNames : Dictionary~int&#44&#32string~
+		+ IndexState : Dictionary~string&#44&#32Dictionary~ProductMachineItem&#44&#32int~~
+		+ ListProductsDto : List~ProductDto~
+		+ ProductDto : ProductDto
+		+ ProductService : IProductService
+		- SelectedCustomer : string
+		- FilteredProducts : IEnumerable~ProductDefinition~
+		- NewProduct : ProductDto?
+		+ SaveEnabled : bool
+		-OnInitialized() void
+		-HandleKeyDown(KeyboardEventArgs e) void
+		-UpdateProductInformation() void
+		-ProductUpdated(MudItemDropInfo~ProductMachineItem~ info) void
+		-OnItemDroppedIntoProduct(MudItemDropInfo~ProductMachineItem~ info) void
+		-GetMachineWorkflowForProduct(string productName) IEnumerable~ProductMachineItem~
+		-UpdateIndexStateAndRefreshUI() void
+		-OnItemDroppedIntoDiscard(MudItemDropInfo~ProductMachineItem~ info) void
+		-OnItemDroppedIntoCatalog(MudItemDropInfo~ProductMachineItem~ info) void
+		-CanDrop(ProductMachineItem item) bool
+	}
+	class FluentValueValidator ~T~ {
+		+ Validation : Func~T&#44&#32IEnumerable~string~~
+		-ValidateValue(T arg) IEnumerable~string~
+	}
+	class ModelBarCode  {
+		+ Label : string
+	}
+	class IndTraceComponents  {
+		+ LibraryName : string
+		+ Version : string
+	}
+	class CustomersFilter  {
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		+ SelectedCustomer : string
+		+ OnConsumerSelected : EventCallback~CustomerDto~
+		-GetCustomerLogoUrl(string customerName) string
+		-OnCustomerChanged(string newValue) Task
+	}
+	class ReportFinal  {
+		+string Visual
+		+BarCodeModel BarCodeModel
+		-int currentSelectedItem
+		+ BarCodeDetailResult : BarCodeDetailVm?
+		- Cycle : Cycle?
+		- CycleView : CycleViewModel
+		+ ResultBarCode : string
+		- ScannedBarCode : string
+		+ Status : string
+		+ ShowValues : bool
+		+GetQrCode() string
+		+HandleBarCodeReadAsync() Task
+		+OnValidSubmit() Task
+		+UpdateHeading(MouseEventArgs e) void
+		+FillQueryAsync(string? label) Task~bool~
+		+SendQueryAsync() Task
+		-OnInitialized() void
+		+SelectionChangedEvent(object row) void
+	}
+	class BarCodeDetailsViewOverlay  {
+		+ BarCodeDetail : BarCodeDetailVm?
+		+ IsVisible : bool
+		+ OnClose : EventCallback
+	}
+	class TrendSparkline  {
+		+ Data : List~double~
+		+ Theme : string
+		-GetPoints() IEnumerable~string~
+		-GetStroke() string
+	}
+	class ValidatableTypeAttribute  {
+	}
+	class EmbeddedAttribute  {
+	}
+	class Controls  {
+		+string PlayIcon
+		-Events Events
+		-LinkedList~StationMonitor~ StationMonitors
+		-LinkedListNode<StationMonitor>? CurrentNode
+		-bool IsPlaying
+		-bool IsRepeating
+		-bool IsForward
+		+ Progress : double
+		+ EventsService : EventsService?
+		- Responses : IEnumerable~TaskGatewayResponse~
+		- Requests : IEnumerable~TaskGatewayRequest~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-PreviousEvent() Task
+		-NextEvent() Task
+		-PlayPause() void
+		-Repeat() void
+		-GetMoreEvents() Task
+		-UpdateStation(StationMonitor station) void
+		-OnParametersSetAsync() Task
+		-GetCombinedStationMonitors() IEnumerable~StationMonitor~
+	}
+	class TypeInference  {
+		+CreateMudSlider_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, T __arg1, int __seq2, global::MudBlazor.Color __arg2, int __seq3, T __arg3, int __seq4, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg4) void
+	}
+	class MachineView  {
+		+ Machines : IEnumerable~MachineDto~
+		+ MachineEventCallback : EventCallback
+		+ ApplicationConfiguration : ApplicationConfiguration?
+		- SelectedCustomer : string
+		- FilteredMachines : IEnumerable~MachineDto~
+		- DialogService : IDialogService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OpenDialogAsync(MachineDto machine) Task
+		-Status(bool contextIsEnabled) string
+		-GetCustomerLogoUrl(string customerName) string
+	}
+	class TypeInference  {
+		+CreateMudSelectItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTable_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+	}
+	class ReportBarCodeView  {
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		+ BarCodesDtoList : List<BarCodeDto>?
+		+ SelectedBarCode : string
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::Microsoft.AspNetCore.Components.RenderFragment __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg4) void
+	}
+	class InputTextValidated  {
+		-ModelBarCode model
+		+ Label : string
+		+ ButtonText : string
+		+ OnSearchBarCode : EventCallback~string~
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitialized() void
+		-OnValidSubmit(EditContext context) void
+	}
+	class TypeInference  {
+		+CreateMudTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.String __arg1, int __seq2, global::System.Linq.Expressions.Expression<global::System.Func<T>> __arg2, int __seq3, T __arg3, int __seq4, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg4) void
+	}
+	class PlcsInformation  {
+		-bool _loading
+		-System.Threading.Timer? _timer
+		+ PlcConnections : IReadOnlyDictionary~int&#32&#44ControllerMonitor~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-GetICon(ControllerMonitor controllerMonitor) string
+		-GetColor(ControllerMonitor controllerMonitor) Color
+		-Refresh() Task
+		-OnParametersSet() void
+		-OnConnectionLost(object? sender, EventArgs args) void
+		-OnConnectionRecovered(object? sender, EventArgs args) void
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::MudBlazor.Breakpoint __arg3, int __seq4, global::System.Boolean __arg4, int __seq5, global::MudBlazor.Color __arg5, int __seq6, global::Microsoft.AspNetCore.Components.RenderFragment __arg6, int __seq7, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg7) void
+	}
+	class Home  {
+		- Logger : ILogger~Home~
+		- JsRuntime : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnAfterRenderAsync(bool firstRender) Task
+	}
+	class TypeInference  {
+		+CreateMudListItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::System.String __arg0, int __seq1, global::System.String __arg1) void
+		+CreateMudListItem_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::System.String __arg0, int __seq1, global::System.String __arg1) void
+		+CreateMudListItem_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::System.String __arg0, int __seq1, global::System.String __arg1) void
+		+CreateMudListItem_3(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::System.String __arg0, int __seq1, global::System.String __arg1) void
+		+CreateMudListItem_4(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::System.String __arg0, int __seq1, global::System.String __arg1) void
+	}
+	class ProductWorkflowEdit  {
+		- snackbar : ISnackbar
+		- Logger : ILogger~ProductWorkflowEdit~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class StationsTable  {
+		+ Stations : IEnumerable~StationMonitor~
+		+ MachineNames : Dictionary~int&#44string~
+		- JS : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-CopyToClipboard(string text) Task
+	}
+	class FilterCardComponent ~
+	#nullable restore
+	#line (2,12)-(2,17) "F:\Dynamic\IndTraceV2025\Src\Code\Presentation\IndTrace.Components\Area\Forms\FilterCardComponent.razor"
+	TItem
+
+	#line default
+	#line hidden
+	#nullable disable
+	    ~ {
+		+ Label : string
+		+ IsChecked : bool
+		+ Items : IEnumerable~TItem~
+		+ SelectedItem : TItem
+		+ For : RenderFragment?
+		+ FieldLabel : string
+		+ Image : string
+		+ AdornmentIcon : string
+		+ OnItemSelected : EventCallback~TItem~
+		+ OnCheckBoxChecked : EventCallback~bool~
+		- ListIsVisible : bool
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnItemSelectedEvent(TItem item) void
+		-OnAdornmentClick() void
+		-OnCheckBoxCheckedEvent(bool value) void
+	}
+	class TypeInference  {
+		+CreateMudListItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudListItem_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment __arg2) void
+	}
+	class _Imports  {
+		-Execute() void
+	}
+	class MachinesTable  {
+		+ Machines : Dictionary~string&#44&#32PerformanceRecord~
+		+ OnToggleOverlay : EventCallback~PerformanceRecord~
+		- DialogService : IDialogService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-GetColor(double value) Color
+		-ShowDetails(PerformanceRecord machine) Task
+		-HideDetails() Task
+	}
+	class ProductWorkflowView  {
+		- Logger : ILogger~ProductWorkflowView~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class MachineDashboard  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class MachineDetails  {
+		+ Machine : MachineDto
+		+ EnableChangedCallback : EventCallback
+		- MudDialog : IMudDialogInstance?
+		- Snackbar : ISnackbar
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-Submit() void
+		-Close() void
+		-IsEnabled(MachineDto machine) bool
+		-SetMachineState(int machineId, bool enable) Task
+	}
+	class BarCodeDetailsView  {
+		-IEnumerable~RegisterView~ Elements
+		-string searchString
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		+ SelectedBarCode : string
+		+ MachineNames : Dictionary~int&#44&#32string~
+		- HasCycleData : bool
+		+ BarCodeDetails : BarCodeDetailMonitorVm?
+		- DialogService : IDialogService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-FilterFunc(RegisterView element) bool
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::Microsoft.AspNetCore.Components.RenderFragment __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg4) void
+		+CreateMudTable_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::System.Boolean __arg3, int __seq4, global::System.Boolean __arg4, int __seq5, global::System.Func<T&#44&#32global::System.Boolean> __arg5, int __seq6, global::Microsoft.AspNetCore.Components.RenderFragment __arg6, int __seq7, global::Microsoft.AspNetCore.Components.RenderFragment __arg7, int __seq8, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg8, int __seq9, global::Microsoft.AspNetCore.Components.RenderFragment __arg9) void
+		+CreateMudTextField_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::MudBlazor.Adornment __arg1, int __seq2, global::System.String __arg2, int __seq3, global::MudBlazor.Size __arg3, int __seq4, global::System.String __arg4, int __seq5, T __arg5, int __seq6, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg6) void
+		+CreateMudTableSortLabel_3(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_4(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_5(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_6(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_7(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+	class OeeWidget  {
+		- JSRuntime : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class BarCodeFilterFormReport  {
+		-bool _success
+		+ model : ReportsListQueryModel
+		+ OnFilterChanged : EventCallback
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInvalidSubmit(EditContext context) void
+		-OnModelSelected(string selectedModel) void
+		-OnShiftSelected(string selectedShift) void
+		-OnStateSelected(string selectedState) void
+		-OnValidSubmit(EditContext context) Task
+	}
+	class TypeInference  {
+		+CreateMudListItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudListItem_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudListItem_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+	class ProductInformation  {
+		-int _index
+		-double[] _data
+		-string[] _labels
+		+ Product : ProductionData
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnParametersSetAsync() Task
+		+ConvertToJulianDate(DateTime date) string
+	}
+	class ReportsFilterForm  {
+		-bool _success
+		-List~string~ _products
+		-MudDatePicker _picker1
+		-MudDatePicker _picker2
+		+ model : ReportsListQueryModel
+		+ OnFilterChanged : EventCallback
+		+ FilterByState : bool
+		+ ProductIsVisible : bool
+		+ CustomerIsVisible : bool
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-OnInvalidSubmit(EditContext context) void
+		-OnCustomerSelected(string selectedCustomer) void
+		-OnProductSelected(string selectedProduct) void
+		-OnRegisterSelected(string selectedRegister) void
+		-OnStateSelected(string selectedState) void
+		-OnValidSubmit(EditContext context) Task
+		+Enter(KeyboardEventArgs e) void
+	}
+	class AppConfiguration  {
+		+ ConfigDetails : ApplicationConfiguration
+		+ MachineNames : Dictionary~int&#44&#32string~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+		+CreateMudTable_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+		+CreateMudTable_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+		+CreateMudTable_3(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+		+CreateMudTable_4(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+	}
+	class BarCodeRestore  {
+		-BarCodeRestoredView? BarCodeRestored
+		+ BarCode : string
+		+ Result : string
+		- Logger : ILogger~BarCodeRestore~
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-RestoreBarcode() Task
+	}
+	class ReportDetails  {
+		-IEnumerable~RegisterView~ Elements
+		-string searchString
+		+ InitialTip : RenderFragment?
+		+ SelectedBarCode : string
+		+ ChildContent : RenderFragment?
+		+ ReportDetailsView : ReportDetailMonitorVm?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-FilterFunc(RegisterView element) bool
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::Microsoft.AspNetCore.Components.RenderFragment __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg4) void
+		+CreateMudTable_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::System.Boolean __arg3, int __seq4, global::System.Boolean __arg4, int __seq5, global::System.Func<T&#44&#32global::System.Boolean> __arg5, int __seq6, global::Microsoft.AspNetCore.Components.RenderFragment __arg6, int __seq7, global::Microsoft.AspNetCore.Components.RenderFragment __arg7, int __seq8, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg8) void
+		+CreateMudTextField_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::MudBlazor.Adornment __arg1, int __seq2, global::System.String __arg2, int __seq3, global::MudBlazor.Size __arg3, int __seq4, global::System.String __arg4, int __seq5, T __arg5, int __seq6, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg6) void
+		+CreateMudTableSortLabel_3(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_4(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_5(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_6(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_7(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+	class ProducContainer  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class MetricsSelect  {
+		-MudTable<RegistersRecords>? _table
+		-bool _open
+		-bool _loading
+		+ SelectedItems : HashSet~RegistersRecords~
+		+ SaveChanges : bool
+		+ ShowTable : bool
+		+ ChildContent : RenderFragment?
+		+ Registers : List~RegistersRecords~
+		+ SelectedValuesSaved : EventCallback~HashSet~RegistersRecords~~
+		+ RefreshValues : EventCallback
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-ToggleOpen() void
+		-OnInitialized() void
+		-SelectedValuesChangedEvent() void
+		-RefreshValuesEvent() Task
+	}
+	class TypeInference  {
+		+CreateMudSwitch_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::MudBlazor.Color __arg0, int __seq1, T __arg1, int __seq2, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg2, int __seq3, global::Microsoft.AspNetCore.Components.RenderFragment __arg3) void
+	}
+	class AddProduct  {
+		- logger : ILogger~AddProduct~
+		- dialogService : IDialogService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class PlcMonitorTable  {
+		+ Plcs : IEnumerable~ControllerMonitor~
+		+ MachineNames : Dictionary~int&#44string~
+		- JS : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-CopyToClipboard(string text) Task
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::System.Boolean __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment __arg4, int __seq5, global::Microsoft.AspNetCore.Components.RenderFragment __arg5, int __seq6, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg6) void
+	}
+	class ProductsList  {
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		- IndTraceConfigurationService : IndTraceConfigurationService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class TypeInference  {
+		+CreateMudSelectItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTextField_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::MudBlazor.Adornment __arg1, int __seq2, global::System.String __arg2, int __seq3, global::MudBlazor.Size __arg3, int __seq4, global::System.String __arg4, int __seq5, T __arg5, int __seq6, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg6) void
+	}
+	class TrendSparkline  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class BarCodeFilterForm  {
+		-bool _success
+		+ model : BarCodesListQueryModel
+		+ OnFilterChanged : EventCallback
+		+ EditContext : EditContext?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnValidSubmit(EditContext context) Task
+		-OnInvalidSubmit(EditContext context) void
+	}
+	class DebugConsole  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class Events  {
+		+ Station : StationMonitor?
+		- Logger : ILogger~Events~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		+SetStation(StationMonitor input) void
+		-OnParametersSet() void
+		+GetStationColor(string result) Color
+		-GetStationIcon(string request) string
+		-GetResultIcon(string result) string
+	}
+	class OeeGauge  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class MetricsDetailsView  {
+		-int SelectedIndex
+		+ChartOptions Options
+		+List~ChartSeries~ Series
+		+string[] XAxisLabels
+		+ Machine : PerformanceRecord
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnParametersSet() void
+		-UpdateChartData(PerformanceRecord machine) void
+		-GetColor(double value) Color
+	}
+	class MachineInformation  {
+		+ Station : StationMonitor?
+		+ Monitor : ControllerMonitor?
+		+ MachineNames : Dictionary~int&#44&#32string~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnParametersSet() void
+		-OnConnectionLost(object? sender, EventArgs args) void
+		-OnConnectionRecovered(object? sender, EventArgs args) void
+		+GetStationColor(string result) Color
+		-GetStationIcon(string request) string
+		-GetResultIcon(string result) string
+		-GetControllerICon(ControllerMonitor controllerMonitor) string
+		-GetControllerColor(ControllerMonitor controllerMonitor) Color
+	}
+	class Product  {
+		-ProductDto product
+		-List~CustomerDto~ customers
+		-List~LineDto~ lines
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnSubmit() void
+	}
+	class TypeInference  {
+		+CreateMudTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, T __arg2, int __seq3, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg3) void
+		+CreateMudTextField_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, T __arg2, int __seq3, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg3) void
+		+CreateMudTextField_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, T __arg1, int __seq2, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg2) void
+		+CreateMudTextField_3(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, T __arg1, int __seq2, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg2) void
+		+CreateMudTextField_4(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.Int32 __arg1, int __seq2, T __arg2, int __seq3, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg3) void
+		+CreateMudSelect_5(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, T __arg2, int __seq3, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment __arg4) void
+		+CreateMudSelectItem_6(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudSelect_7(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, T __arg2, int __seq3, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment __arg4) void
+		+CreateMudSelectItem_8(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudSwitch_9(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, T __arg1, int __seq2, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg2) void
+		+CreateMudTextField_10(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, T __arg2, int __seq3, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg3) void
+	}
+	class ProductsModal  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class ReportDetailsViewModal  {
+		-MudDialog? dialogRef
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		+ SelectedBarCode : string
+		+ ReportDetails : ReportDetailMonitorVm?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class ReportFinal  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+		+CreateMudTable_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1, int __seq2, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg2) void
+	}
+	class BarCodeDetailsViewOverlay  {
+		+ SelectedBarCode : string
+		+ Visible : bool
+		+ BarCodeDetails : BarCodeDetailMonitorVm?
+		- Logger : ILogger~BarCodeDetailsViewModal~
+		- DialogService : IDialogService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-Close(MouseEventArgs obj) void
+	}
+	class MetricsView  {
+		-int _selectedIndex
+		-VariablesData? _selectedData
+		-MudText? _anchorRef
+		-Dictionary~string&#44&#32MudText~ refs
+		-bool _isPopoverOpen
+		+ Variables : List~VariablesData~
+		+ OnSeriesDeleted : EventCallback~VariablesData~
+		+ ShowSelectedVariables : bool
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		+ Options : ChartOptions
+		+ Series : List~ChartSeries~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnParametersSet() void
+		-UpdateChartData(List~VariablesData~ variables) void
+		-TogglePopover(string name) void
+		-HandleMenuAction(string option) void
+	}
+	class TypeInference  {
+		+CreateMudListItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::Microsoft.AspNetCore.Components.EventCallback<global::Microsoft.AspNetCore.Components.Web.MouseEventArgs> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudListItem_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::Microsoft.AspNetCore.Components.EventCallback<global::Microsoft.AspNetCore.Components.Web.MouseEventArgs> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudListItem_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, T __syntheticArg0, int __seq0, global::Microsoft.AspNetCore.Components.EventCallback<global::Microsoft.AspNetCore.Components.Web.MouseEventArgs> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+	class BarCodeDetailsViewModal  {
+		- MudDialog : IMudDialogInstance
+		+ SelectedBarCode : string
+		+ BarCodeDetails : BarCodeDetailMonitorVm?
+		+ MachineNames : Dictionary<int&#44&#32string>?
+		- Logger : ILogger~BarCodeDetailsViewModal~
+		- DialogService : IDialogService
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-Submit() void
+		-Cancel() void
+		-Restore(MouseEventArgs obj) Task
+		-Reject(MouseEventArgs obj) Task
+	}
+	class MachinesList  {
+		-IEnumerable<MachineDto>? _machines
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnInitializedAsync() Task
+		-GetRowClass(MachineDto machine) string
+		-GetTextClass(bool isEnabled) string
+		-GetEnableText(bool isEnabled) string
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::System.Boolean __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment __arg4, int __seq5, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg5) void
+	}
+	class BarCodeDetailFilter  {
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		+ BarCodeDetailQueryModel : BarCodeModel
+		+ OnButtonClickedCallback : EventCallback~Task~
+		+ OnButtonClickedUpdateHeading : EventCallback
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-UpdateHeading(MouseEventArgs e) Task
+		-HandleButtonClick() Task
+	}
+	class BarCodeListView  {
+		-string searchString
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		+ BarCodesDtoList : List<BarCodeDto>?
+		+ SelectedBarCode : string
+		+ OnButtonClickedCallback : EventCallback~string~
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-FilterFunc(BarCodeDto element) bool
+		-HandleButtonClick(string barcode) Task
+	}
+	class TypeInference  {
+		+CreateMudTextField_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.String __arg0, int __seq1, global::MudBlazor.Adornment __arg1, int __seq2, global::System.String __arg2, int __seq3, global::MudBlazor.Size __arg3, int __seq4, global::System.String __arg4, int __seq5, T __arg5, int __seq6, global::Microsoft.AspNetCore.Components.EventCallback<T> __arg6) void
+		+CreateMudTableSortLabel_1(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_2(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_3(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_4(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+		+CreateMudTableSortLabel_5(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Func<T&#44&#32global::System.Object> __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+	class BarCodeReject  {
+		-BarCodeRejectedView? BarCodeRejected
+		+ BarCode : string
+		+ Result : string
+		- Logger : ILogger~BarCodeReject~
+		- MonitorRequestDispatcher : IMonitorRequestDispatcher
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-RejectBarcode() Task
+	}
+	class RequestsTable  {
+		+ GatewayRequests : IEnumerable~TaskGatewayRequest~
+		+ MachineNames : Dictionary~int&#44&#32string~
+		- Logger : ILogger~RequestsTable~
+		- JS : IJSRuntime
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-CopyToClipboard(string text) Task
+	}
+	class TypeInference  {
+		+CreateMudTable_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, global::System.Collections.Generic.IEnumerable<T> __arg0, int __seq1, global::System.Boolean __arg1, int __seq2, global::System.Boolean __arg2, int __seq3, global::System.Boolean __arg3, int __seq4, global::Microsoft.AspNetCore.Components.RenderFragment __arg4, int __seq5, global::Microsoft.AspNetCore.Components.RenderFragment __arg5, int __seq6, global::Microsoft.AspNetCore.Components.RenderFragment<T> __arg6) void
+	}
+	class ProductsForm  {
+		-bool success
+		-ProductModel _newProduct
+		+ OnProductAdded : EventCallback~ProductDto~
+		+ Customers : IEnumerable~CustomerDto~
+		+ SelectedCustomer : string
+		- CustomerFiltered : IEnumerable~CustomerDto~
+		+ CustomerId : int
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-OnParametersSet() void
+		-Submit() Task
+		-OnCustomerNameChanged(string newCustomerName) Task
+		-OnProductNameChanged(string newName) Task
+		-ErrorForm(EditContext obj) void
+	}
+	class TypeInference  {
+		+CreateMudSelectItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+	class MetricsDetailsModal  {
+		+ Machine : PerformanceRecord
+		+ MudDialog : IMudDialogInstance
+		+ InitialTip : RenderFragment?
+		+ ChildContent : RenderFragment?
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+		-Cancel() void
+	}
+	class CustomersFilter  {
+		-BuildRenderTree(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder) void
+	}
+	class TypeInference  {
+		+CreateMudSelectItem_0(global::Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder, int seq, int __seq0, T __arg0, int __seq1, global::Microsoft.AspNetCore.Components.RenderFragment __arg1) void
+	}
+
+	FluentValueValidator --|> AbstractValidator
+	ValidatableTypeAttribute --|> global
+	EmbeddedAttribute --|> global
+	Controls --|> global
+	MachineView --|> global
+	ReportBarCodeView --|> global
+	InputTextValidated --|> global
+	PlcsInformation --|> global
+	Home --|> global
+	ProductWorkflowEdit --|> global
+	StationsTable --|> global
+	FilterCardComponent --|> global
+	_Imports --|> object
+	MachinesTable --|> global
+	ProductWorkflowView --|> global
+	MachineDashboard --|> global
+	MachineDetails --|> global
+	BarCodeDetailsView --|> global
+	OeeWidget --|> global
+	BarCodeFilterFormReport --|> global
+	ProductInformation --|> global
+	ReportsFilterForm --|> global
+	AppConfiguration --|> global
+	BarCodeRestore --|> global
+	ReportDetails --|> global
+	ProducContainer --|> global
+	MetricsSelect --|> global
+	AddProduct --|> global
+	PlcMonitorTable --|> global
+	ProductsList --|> global
+	TrendSparkline --|> global
+	BarCodeFilterForm --|> global
+	DebugConsole --|> global
+	Events --|> LayoutComponentBase
+	OeeGauge --|> global
+	MetricsDetailsView --|> global
+	MachineInformation --|> LayoutComponentBase
+	Product --|> global
+	ProductsModal --|> global
+	ReportDetailsViewModal --|> global
+	ReportFinal --|> global
+	BarCodeDetailsViewOverlay --|> global
+	MetricsView --|> global
+	BarCodeDetailsViewModal --|> global
+	MachinesList --|> global
+	BarCodeDetailFilter --|> global
+	BarCodeListView --|> global
+	BarCodeReject --|> global
+	RequestsTable --|> global
+	ProductsForm --|> global
+	MetricsDetailsModal --|> global
+	CustomersFilter --|> global

@@ -12,11 +12,12 @@
 
 	  <!-- Package Information -->
 	<PackageId>IndFusion.Mcp.Server</PackageId>
-	<PackageVersion>1.0.0-rc.1</PackageVersion>
+	<PackageVersion>1.0.5-rc.1</PackageVersion>
 	<Authors>IndFusion</Authors>
 	<Description>MCP server library for IndFusion - Model Context Protocol integration</Description>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<RootNamespace>IndFusion.Mcp.Server</RootNamespace>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <!-- ===================================================================== -->
   <!-- Package Dependencies                                                   -->
@@ -31,6 +32,9 @@
 	<!-- System & JSON (included in shared framework) -->
 	<!-- Protocol & Communication -->
 	<PackageReference Include="ModelContextProtocol" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->

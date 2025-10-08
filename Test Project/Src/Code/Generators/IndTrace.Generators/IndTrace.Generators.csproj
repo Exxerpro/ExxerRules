@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <!-- ========================================================================= -->
+    <!-- CORE CONFIGURATION -->
+    <!-- ========================================================================= -->
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <RootNamespace>IndTrace.Generators</RootNamespace>
+    <AssemblyName>IndTrace.Generators</AssemblyName>
+    <OutputType>Library</OutputType>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <PackageId>IndTrace.EnumLookup.Generator</PackageId>
+    <Version>2025.6.0</Version>
+    <Authors>IndTrace Development</Authors>
+    <Company>IndTrace Inc.</Company>
+    <Description>Generates EnumModel-to-EnumLookUpTable mappings for IndTrace domain enums.</Description>
+    <PackageTags>roslyn analyzer source-generator enum lookup EFCore</PackageTags>
+    <RepositoryUrl>https://github.com/Exxerpro/IndTraceV2025</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <!-- Output outside the repo tree (custom path, update if needed) -->
+    <BaseOutputPath>$(SolutionDir)..\IndTraceV2024\build\</BaseOutputPath>
+    <OutputPath>$(BaseOutputPath)IndTrace.Generators\Debug\netstandard2.0\</OutputPath>
+    <!-- Source generators must be Roslyn analyzers -->
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <CompilerGeneratedFilesOutputPath>$(BaseOutputPath)obj\$(MSBuildProjectName)\Generated</CompilerGeneratedFilesOutputPath>
+    <!-- Avoid central package management -->
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+    <!-- Enable extended analyzer rules for source generators -->
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Fobiden to add global scoped NoWarn  violator to this rule will be prosecuted -->
+  </PropertyGroup>
+  <!-- ========================================================================= -->
+  <!-- NuGet Dependencies -->
+  <!-- ========================================================================= -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="5.0.0-1.25277.114" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.14.0" PrivateAssets="all" />
+  </ItemGroup>
+  <!-- ========================================================================= -->
+  <!--
+  -->
+  <!-- Generator Exposure -->
+  <!--
+  -->
+  <!-- ========================================================================= -->
+  <!--
+  <ItemGroup>
+	-->
+  <!-- Output analyzer for consuming projects -->
+  <!--
+	<Analyzer Include="$(OutputPath)$(AssemblyName).dll" />
+  </ItemGroup>-->
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0" />
+    <PackageReference Update="StyleCop.Analyzers" Version="1.1.118" />
+  </ItemGroup>
+</Project>

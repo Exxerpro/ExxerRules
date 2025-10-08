@@ -12,6 +12,14 @@
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
 	  <RootNamespace>IndFusion.Mcp.Web</RootNamespace>
+	  <!-- MCP Server NuGet packaging -->
+	  <IsPackable>true</IsPackable>
+	  <PackageId>IndFusion.Mcp.Web</PackageId>
+	  <PackageVersion>1.0.5-rc.1</PackageVersion>
+	  <PackageReadmeFile>README.md</PackageReadmeFile>
+	  <PackageType>McpServer;DotnetTool</PackageType>
+	  <PackAsTool>true</PackAsTool>
+	  <ToolCommandName>indfusion-mcp</ToolCommandName>
   </PropertyGroup>
   <!-- ===================================================================== -->
   <!-- Package Dependencies                                                   -->
@@ -44,5 +52,9 @@
   <ItemGroup>
 	<ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
 	<ProjectReference Include="..\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include=".mcp\server.json" Pack="true" PackagePath=".mcp/server.json" />
+	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
 </Project>

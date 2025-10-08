@@ -5,7 +5,7 @@
     {
       "registry_name": "nuget",
       "name": "IndFusion.Mcp.Web",
-      "version": "1.0.5-rc.1",
+      "version": "1.0.6",
       "package_arguments": [],
       "environment_variables": [
         {
@@ -22,6 +22,6 @@
     "source": "github"
   },
   "version_detail": {
-    "version": "1.0.5-rc.1"
+    "version": "1.0.6"
   }
 }

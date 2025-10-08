@@ -26,3 +26,4 @@ EXXER003 | IndFusion.Analyzers.FunctionalPatterns | Error | DoNotThrowExceptions
 Rule ID | Notes
 --------|------
 EXXER100 | Relaxed test naming: allow prefixes before Should, alternate connectors (When/For/With/If/On), behavior-only names, compound conditions, async suffixes, nested context classes, DisplayName/Description overrides, and opt-out attribute.
+EXXER101 | Mitigations: skip auto-generated/obj/bin; allow Microsoft.Testing.Platform; ignore analyzer test assets via options; support ignore_projects and project_name; respect severity from editorconfig; deduplicate global using reports; allow local wrapper attributes; honor [assembly: SuppressTestFrameworkConversion].

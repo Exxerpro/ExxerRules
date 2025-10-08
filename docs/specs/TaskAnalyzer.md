@@ -4,20 +4,38 @@
 The IndFusion solution includes:
 
 Analyzer projects: IndFusion.Analyzer
-
 Fixer projects: IndFusion.Fixer
 
 Test projects: reference both analyzer and fixer assemblies
 
 Analyzer source code: ExxerRules/src within the IndFusion solution
 
-Tests that exercise analyzers:
-F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src
+Tests solution  that exercise analyzers:
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\TestProject\Src
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\TestProject\Src\Code\Core\Application
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\TestProject\Src\Code\Core\Domain
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\TestProject\Src\Tests\Core\Domain.nitTests
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\TestProject\Src\Tests\Core\Domain.UnitTests
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\TestProject\Src\Tests\Core\Application.UnitTests
+
 
 Existing analyzer specifications:
 docs/specs/Analyzer{number}Specs.md
 
-📝 Assignment Steps
+?? Search Boundaries
+
+Limit all repository searches and file scans to the following roots only:
+
+- docs/specs
+- src/code/IndFusion.Mcp.Core/
+- src/test/IndFusion.Analyzer.Tests/
+- TestProject\Src\Code\Core\Application
+- TestProject\Src\Code\Core\Domain
+- TestProject\Src\Tests\Core\Domain.UnitTests
+- TestProject\Src\Tests\Core\Domain.UnitTests
+- TestProject\Src\Tests\Core\Application.UnitTests- 
+
+-  Assignment Steps
 Pre-Step: Create a Git Commit Checkpoint
 
 Before beginning any analysis, run `git status` and commit the current workspace state so the task starts from a clean baseline.
@@ -36,12 +54,27 @@ For the selected analyzer:
 
 Investigate test failures, assertion mismatches, or diagnostic outputs in the test directory:
 F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src
+for the projects on 
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Code\Core\Application
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Code\Core\Domain
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Tests\Core\Domain.UnitTestsF:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Tests\Core\Domain.UnitTests
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Tests\Core\Application.UnitTests
+
+Focus all searches on test assets within src/test/IndFusion.Mcp.Core.Tests/ and src/test/IndFusion.Mcp.Server.Tests/.
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Code\Core\Application
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Code\Core\Domain
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Tests\Core\Domain.UnitTestsF:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Tests\Core\Domain.UnitTests
+F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\Test Project\Src\Tests\Core\Application.UnitTests
+
 
 Document the most significant false positives affecting this analyzer.
 
 Capture supporting evidence: e.g., test names, line numbers, assertion logs.
 
 Before moving on, re-confirm that the analyzer still lacks an aspect/spec file after your investigation.
+
+If the analyzer produces no reproducible false positives within these directories, log that outcome briefly and advance to the next lowest-numbered analyzer without an aspect/spec file.
+
 
 🔍 Analysis and Spec Documentation
 Step 3: Perform a Deep Source Review
@@ -109,6 +142,8 @@ It must contain:
 ✔️ Acceptance Criteria
 
 The analyzer is chosen correctly: it is the lowest-numbered analyzer without an aspect/spec file
+
+If an analyzer yields no substantiated false positives after focused review, document the finding and proceed to the next eligible analyzer.
 
 The spec document:
 

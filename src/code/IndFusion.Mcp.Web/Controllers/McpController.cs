@@ -119,7 +119,7 @@ public class McpController : ControllerBase
         return Ok(new McpServerInfo
         {
             Name = "ExxerFactor.Mcp",
-            Version = "1.0.0",
+            Version = "1.0.6",
             ProtocolVersion = "2024-11-05",
             Capabilities = new McpCapabilities
             {

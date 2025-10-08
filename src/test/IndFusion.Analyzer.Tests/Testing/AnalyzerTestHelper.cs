@@ -19,6 +19,41 @@ public static class AnalyzerTestHelper
     /// <returns>The diagnostics reported by the analyzer.</returns>
     public static ImmutableArray<Diagnostic> RunAnalyzer(string sourceCode, DiagnosticAnalyzer analyzer) => RunAnalyzer(sourceCode, analyzer, includeHidden: false);
 
+    /// <summary>
+    /// Runs analyzer with support for passing a file path and analyzer options.
+    /// </summary>
+    public static ImmutableArray<Diagnostic> RunAnalyzer(
+        string sourceCode,
+        DiagnosticAnalyzer analyzer,
+        string? filePath = null,
+        AnalyzerOptions? analyzerOptions = null,
+        bool includeHidden = false)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode, path: filePath ?? "TestFile.cs");
+        var references = GetMetadataReferences();
+
+        var compilation = CSharpCompilation.Create(
+            "TestAssembly",
+            [syntaxTree],
+            references,
+            new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+        var compilationWithAnalyzers = analyzerOptions is null
+            ? compilation.WithAnalyzers([analyzer])
+            : compilation.WithAnalyzers([analyzer], new CompilationWithAnalyzersOptions(
+                analyzerOptions,
+                onAnalyzerException: null,
+                concurrentAnalysis: true,
+                logAnalyzerExecutionTime: false,
+                reportSuppressedDiagnostics: includeHidden));
+
+        var token = TryGetTestCancellationToken();
+        var diagnostics = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(token).GetAwaiter().GetResult();
+        return includeHidden
+            ? [.. diagnostics]
+            : [.. diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden)];
+    }
+
 
     /// <summary>
     /// Runs a diagnostic analyzer on given source and returns diagnostics.

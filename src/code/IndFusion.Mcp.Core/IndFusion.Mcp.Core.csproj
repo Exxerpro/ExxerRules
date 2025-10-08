@@ -9,7 +9,7 @@
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<!-- Package Information -->
 	<PackageId>IndFusion.Mcp.Core</PackageId>
-	<PackageVersion>1.0.5-rc.1</PackageVersion>
+	<PackageVersion>1.0.6</PackageVersion>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 

@@ -16,7 +16,7 @@
 	  <PackAsTool>true</PackAsTool>
 	  <ToolCommandName>indfusion</ToolCommandName>
 	  <PackageId>IndFusion.Tools.Cli</PackageId>
-	  <PackageVersion>1.0.5-rc.1</PackageVersion>
+	  <PackageVersion>1.0.6</PackageVersion>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 
   </PropertyGroup>

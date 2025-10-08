@@ -15,7 +15,7 @@
 	  <!-- MCP Server NuGet packaging -->
 	  <IsPackable>true</IsPackable>
 	  <PackageId>IndFusion.Mcp.Web</PackageId>
-	  <PackageVersion>1.0.5-rc.1</PackageVersion>
+	  <PackageVersion>1.0.6</PackageVersion>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageType>McpServer;DotnetTool</PackageType>
 	  <PackAsTool>true</PackAsTool>

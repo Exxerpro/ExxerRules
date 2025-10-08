@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>IndFusion.Analyzers</PackageId>
-		<PackageVersion>1.0.5</PackageVersion>
+		<PackageVersion>1.0.6</PackageVersion>
     <Title>IndFusion Analyzers + Code Fixes</Title>
     <Description>IndFusion Roslyn analyzers and code fixes for modern C# development: Clean Architecture, Result pattern, async best practices, testing standards, and performance tuning. Updated for latest Roslyn and .NET.</Description>
     <Authors>IndFusion</Authors>

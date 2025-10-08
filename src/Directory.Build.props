@@ -5,7 +5,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<WarningsNotAsErrors>NU1903</WarningsNotAsErrors>
+		<WarningsNotAsErrors>NU1903;NU5104</WarningsNotAsErrors>
 		<NoWarn>$(NoWarn);NU1903</NoWarn>
 
 		<!--

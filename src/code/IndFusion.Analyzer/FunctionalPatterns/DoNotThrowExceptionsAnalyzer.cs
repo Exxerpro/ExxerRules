@@ -58,7 +58,7 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             return;
         }
 
-		// Get exception type name for reporting
+        // Get exception type name for reporting
         var exceptionType = GetExceptionTypeName(throwStatement.Expression);
 
         // Report diagnostic for exception throwing
@@ -117,19 +117,26 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         _ => "Exception"
     };
 
-	private static bool IsInBoundaryLayer(SyntaxNode node)
-	{
-		var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-		if (containingClass != null)
-		{
-			var name = containingClass.Identifier.Text;
-			if (name.EndsWith("Controller") || name.EndsWith("Controllers"))
-			{
-				return true;
-			}
+    private static bool IsInBoundaryLayer(SyntaxNode node)
+    {
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass != null)
+        {
+            var name = containingClass.Identifier.Text;
+            if (name.EndsWith("Controller") || name.EndsWith("Controllers"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private static bool ShouldSkipThrow(SyntaxNode node, SemanticModel semanticModel)
     {
+        // Ensure typeName is always assigned
+        var typeName = GetThrownTypeName(node);
+
         // Boundary layers
         if (IsInBoundaryLayer(node)) return true;
 
@@ -149,7 +156,7 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         }
 
         // NotSupported/NotImplemented defensive throws
-        if (GetThrownTypeName(node) is string typeName &&
+        if (!string.IsNullOrEmpty(typeName) &&
             (typeName.Contains("NotSupportedException") || typeName.Contains("NotImplementedException")))
         {
             return true;
@@ -243,17 +250,4 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         }
         return false;
     }
-		}
-
-		var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
-		if (!string.IsNullOrEmpty(ns))
-		{
-			if (ns.Contains(".Web") || ns.Contains(".Api") || ns.Contains(".Endpoints") || ns.Contains(".Presentation"))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
 }

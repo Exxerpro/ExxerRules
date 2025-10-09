@@ -19,5 +19,4 @@ EXXER700 | IndFusion.Analyzers.Performance | Warning | Use efficient LINQ operat
 EXXER702 | IndFusion.Analyzers.CodeQuality | Info | Use modern pattern matching with declaration patterns
 EXXER900 | IndFusion.Analyzers.CodeQuality | Hidden | Format project using dotnet format command
 EXXER901 | IndFusion.Analyzers.CodeQuality | Info | Code formatting inconsistency detected
-EXXER100 | IndFusion.Analyzers.Testing | Warning | TestNamingConventionAnalyzer
 

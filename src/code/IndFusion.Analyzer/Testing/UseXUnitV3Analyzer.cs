@@ -52,9 +52,33 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 
         // Allow Microsoft Testing Platform attributes and local wrappers
         var attributeSymbol = context.SemanticModel.GetSymbolInfo(attribute).Symbol as IMethodSymbol;
-        var attrTypeName = attributeSymbol?.ContainingType?.ToDisplayString() ?? attributeName;
+        var attrType = attributeSymbol?.ContainingType;
+        var attrTypeName = attrType?.ToDisplayString() ?? attributeName;
         if (IsTestingPlatform(attrTypeName)) return;
-        if (attributeSymbol?.ContainingType != null && attributeSymbol.ContainingType.Locations.Any(l => l.IsInSource)) return;
+        
+        // Check if this is a locally defined attribute (wrapper) - must check BEFORE name matching
+        // If the attribute type is from the current compilation (defined in source), skip it
+        if (attrType != null)
+        {
+            // Check if it's defined in the current source code
+            if (attrType.Locations.Any(l => l.IsInSource))
+            {
+                return;
+            }
+            
+            // Also check if it's NOT from a known test framework namespace
+            var ns = attrType.ContainingNamespace?.ToDisplayString() ?? string.Empty;
+            var isKnownFramework = ns.StartsWith("Microsoft.VisualStudio.TestTools", StringComparison.Ordinal) ||
+                                  ns.StartsWith("NUnit", StringComparison.Ordinal) ||
+                                  ns == "Xunit" ||
+                                  ns == "Xunit.Abstractions";
+            
+            if (!isKnownFramework)
+            {
+                // It's a custom attribute not from a known test framework, so skip it
+                return;
+            }
+        }
 
         // Check for forbidden testing framework attributes
         var forbiddenAttributes = new[]

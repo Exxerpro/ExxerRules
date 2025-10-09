@@ -27,7 +27,7 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
         Title,
         MessageFormat,
         DiagnosticCategories.Testing,
-        DiagnosticSeverity.Warning,  // Downgraded from Warning to Info (suggestion)
+        DiagnosticSeverity.Info,  // Changed from Warning to Info (suggestion)
         isEnabledByDefault: true,
         description: Description);
 

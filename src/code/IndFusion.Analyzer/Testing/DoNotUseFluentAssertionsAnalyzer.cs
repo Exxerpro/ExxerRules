@@ -39,9 +39,8 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
         context.EnableConcurrentExecution();
 
-        // TDD Green phase: Focus only on using directive detection for now
+        // Register for using directive detection only
         context.RegisterSyntaxNodeAction(AnalyzeUsingDirective, SyntaxKind.UsingDirective);
-        // TODO: Add member access detection in refactor phase
     }
 
 
@@ -82,7 +81,9 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
         var fluentAssertionsMethods = new[]
         {
             "Be", "BeEquivalentTo", "BeNull", "BeEmpty", "Contain",
-            "HaveCount", "Match", "Satisfy", "BeOfType"
+            "HaveCount", "Match", "Satisfy", "BeOfType",
+            "BeTrue", "BeFalse", "BeGreaterThan", "BeLessThan",
+            "BePositive", "BeNegative", "BeSameAs", "NotBe", "NotBeNull"
         };
 
         if (fluentAssertionsMethods.Contains(memberAccess.Name.Identifier.ValueText))

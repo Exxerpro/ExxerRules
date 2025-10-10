@@ -13,6 +13,30 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 public class UseShouldlyAnalyzerFalsePositiveTests
 {
     /// <summary>
+    /// Tests that FluentAssertions usage reports diagnostic.
+    /// </summary>
+    [Fact]
+    public void Should_Report_For_FluentAssertions_Usage()
+    {
+        const string testCode = @"
+using FluentAssertions;
+using Xunit;
+
+public class TestClass
+{
+    [Fact]
+    public void TestMethod()
+    {
+        true.Should().BeTrue();
+    }
+}";
+
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
+        diagnostics.Length.ShouldBe(1);
+        diagnostics[0].Id.ShouldBe(DiagnosticIds.UseShouldly);
+    }
+
+    /// <summary>
     /// Tests that Shouldly usage does not report diagnostic.
     /// </summary>
     [Fact]
@@ -33,29 +57,5 @@ public class TestClass
 
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
         diagnostics.ShouldBeEmpty();
-    }
-
-    /// <summary>
-    /// Tests that FluentAssertions usage reports diagnostic.
-    /// </summary>
-    [Fact]
-    public void Should_Report_For_FluentAssertions_Usage()
-    {
-        const string testCode = @"
-using FluentAssertions;
-using Xunit;
-
-public class TestClass
-{
-    [Fact]
-    public void TestMethod()
-    {
-        true.Should().BeTrue();
-    }
-}";
-
-        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-        diagnostics.ShouldNotBeEmpty();
-        diagnostics.Single().Id.ShouldBe(DiagnosticIds.UseShouldly);
     }
 }

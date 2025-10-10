@@ -82,6 +82,41 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         {
             if (attributeName == forbidden || attributeName.EndsWith("." + forbidden))
             {
+                // Check namespace if attribute has a qualifier (e.g., "Compat.TestMethod")
+                if (attributeName.Contains("."))
+                {
+                    // If we have semantic info, use it for accurate checking
+                    if (attributeSymbol?.ContainingType != null)
+                    {
+                        var namespaceName = attributeSymbol.ContainingType.ContainingNamespace?.ToDisplayString();
+                        if (namespaceName != null)
+                        {
+                            var isKnownFramework = 
+                                namespaceName.StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting") ||
+                                namespaceName.StartsWith("NUnit.Framework");
+                            
+                            if (!isKnownFramework)
+                            {
+                                // This is a local/custom attribute with a similar name, skip it
+                                continue;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Fallback: check if the attribute name starts with a known framework namespace prefix
+                        var isKnownFramework = 
+                            attributeName.StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting.") ||
+                            attributeName.StartsWith("NUnit.Framework.");
+                        
+                        if (!isKnownFramework)
+                        {
+                            // Likely a local/custom attribute, skip it
+                            continue;
+                        }
+                    }
+                }
+                
                 var framework = GetFrameworkName(forbidden);
                 var descriptor = GetDescriptorWithSeverity(context) ?? Rule;
                 var diagnostic = Diagnostic.Create(

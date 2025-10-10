@@ -67,7 +67,7 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
             memberAccess.Name.Identifier.ValueText == "Of" &&
             memberAccess.Expression?.ToString() == "Mock")
         {
-            if (invocation.Expression is GenericNameSyntax genericName)
+            if (memberAccess.Name is GenericNameSyntax genericName)
             {
                 var typeArgument = genericName.TypeArgumentList.Arguments.FirstOrDefault();
                 if (typeArgument != null && IsDbContextType(typeArgument, context.SemanticModel))
@@ -87,7 +87,7 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
             substituteMemberAccess.Name.Identifier.ValueText == "For" &&
             substituteMemberAccess.Expression?.ToString() == "Substitute")
         {
-            if (invocation.Expression is GenericNameSyntax substituteGenericName)
+            if (substituteMemberAccess.Name is GenericNameSyntax substituteGenericName)
             {
                 var typeArgument = substituteGenericName.TypeArgumentList.Arguments.FirstOrDefault();
                 if (typeArgument != null && IsDbContextType(typeArgument, context.SemanticModel))

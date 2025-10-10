@@ -132,7 +132,9 @@ public static class AnalyzerTestHelper
 	"netstandard",
 	"mscorlib",
 	"Microsoft.Extensions.Logging",
-	"Microsoft.Extensions.Logging.Abstractions"
+	"Microsoft.Extensions.Logging.Abstractions",
+	"Microsoft.EntityFrameworkCore",
+	"Microsoft.EntityFrameworkCore.Abstractions"
 };
 
         var references = trustedAssembliesPaths
@@ -149,10 +151,24 @@ public static class AnalyzerTestHelper
             {
                 references.Add(MetadataReference.CreateFromFile(xunitPath));
             }
+
+            // Try to add Moq reference if available
+            var moqPath = Path.Combine(AppContext.BaseDirectory, "Moq.dll");
+            if (File.Exists(moqPath))
+            {
+                references.Add(MetadataReference.CreateFromFile(moqPath));
+            }
+
+            // Try to add NSubstitute reference if available
+            var nsubstitutePath = Path.Combine(AppContext.BaseDirectory, "NSubstitute.dll");
+            if (File.Exists(nsubstitutePath))
+            {
+                references.Add(MetadataReference.CreateFromFile(nsubstitutePath));
+            }
         }
         catch
         {
-            // If XUnit isn't available, continue without it
+            // If references aren't available, continue without them
         }
 
         return [.. references];

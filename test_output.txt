@@ -1,0 +1,6 @@
+MSBUILD : error MSB1008: Only one project can be specified.
+    Full command line: 'C:\Program Files\dotnet\sdk\10.0.100-rc.1.25451.107\MSBuild.dll -maxcpucount --verbosity:m -tlp:default=auto --property:VSTestLogger="trx" --property:Configuration=Release --property:NuGetInteractive=false --property:VSTestArtifactsProcessingMode=collect --property:VSTestSessionCorrelationId=58660_ce7f468f-690b-4c4f-8c85-83ad1cecd39d --restoreProperty:VSTestLogger="trx" --restoreProperty:Configuration=Release --restoreProperty:NuGetInteractive=false --restoreProperty:VSTestArtifactsProcessingMode=collect --restoreProperty:VSTestSessionCorrelationId=58660_ce7f468f-690b-4c4f-8c85-83ad1cecd39d --restoreProperty:EnableDefaultCompileItems=false --restoreProperty:EnableDefaultEmbeddedResourceItems=false --restoreProperty:EnableDefaultNoneItems=false --target:VSTest -nodereuse:false -nologo src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj ; cat test_output.txt -restore -distributedlogger:Microsoft.DotNet.Cli.Commands.MSBuild.MSBuildLogger,C:\Program Files\dotnet\sdk\10.0.100-rc.1.25451.107\dotnet.dll*Microsoft.DotNet.Cli.Commands.MSBuild.MSBuildForwardingLogger,C:\Program Files\dotnet\sdk\10.0.100-rc.1.25451.107\dotnet.dll'
+  Switches appended by response files:
+Switch: ;
+
+For switch syntax, type "MSBuild -help"

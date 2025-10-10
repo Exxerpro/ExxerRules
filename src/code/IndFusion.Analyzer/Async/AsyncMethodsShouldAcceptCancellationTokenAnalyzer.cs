@@ -65,8 +65,74 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
             return;
         }
 
+        // Skip overridden methods (Story 1.1)
+        if (IsOverriddenMethod(methodDeclaration))
+        {
+            return;
+        }
+
+        // Skip explicitly implemented interface methods (Story 1.1)
+        if (IsExplicitInterfaceImplementation(methodDeclaration))
+        {
+            return;
+        }
+
+        // Skip Blazor lifecycle methods (Story 1.2)
+        if (IsBlazorLifecycleMethod(methodDeclaration, context.SemanticModel))
+        {
+            return;
+        }
+
+        // Skip SignalR hub lifecycle methods (Story 1.3)
+        if (IsSignalRHubLifecycleMethod(methodDeclaration, context.SemanticModel))
+        {
+            return;
+        }
+
+        // Skip test methods (Story 1.4)
+        if (IsTestMethod(methodDeclaration))
+        {
+            return;
+        }
+
+        // Skip test class helper methods (Story 1.5)
+        if (IsTestClassHelperMethod(methodDeclaration))
+        {
+            return;
+        }
+
+        // Skip IAsyncLifetime methods (Story 1.6)
+        if (IsIAsyncLifetimeMethod(methodDeclaration, context.SemanticModel))
+        {
+            return;
+        }
+
+        // Skip test fixture methods (Story 1.7)
+        if (IsTestFixtureMethod(methodDeclaration))
+        {
+            return;
+        }
+
+        // Skip Blazor event handlers (Story 1.8)
+        if (IsBlazorEventHandler(methodDeclaration))
+        {
+            return;
+        }
+
         // Check if method already has CancellationToken parameter
         if (HasCancellationTokenParameter(methodDeclaration, context.SemanticModel))
+        {
+            return;
+        }
+
+        // Check if method has captured token (Story 1.10)
+        if (HasCapturedToken(methodDeclaration, context.SemanticModel))
+        {
+            return;
+        }
+
+        // Check if cancellation is not available for awaited calls (Story 1.9)
+        if (!HasCancellationAvailable(methodDeclaration, context.SemanticModel))
         {
             return;
         }
@@ -243,4 +309,410 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
 
         return false;
     }
+
+    #region Story 1.1: Exempt Overridden and Explicitly Implemented Methods
+
+    /// <summary>
+    /// Checks if the method is an override method.
+    /// </summary>
+    private static bool IsOverriddenMethod(MethodDeclarationSyntax method)
+    {
+        return method.Modifiers.Any(SyntaxKind.OverrideKeyword);
+    }
+
+    /// <summary>
+    /// Checks if the method is an explicit interface implementation.
+    /// </summary>
+    private static bool IsExplicitInterfaceImplementation(MethodDeclarationSyntax method)
+    {
+        // Explicit interface implementations have the form: InterfaceName.MethodName
+        return method.ExplicitInterfaceSpecifier != null;
+    }
+
+    #endregion
+
+    #region Story 1.2: Exempt Blazor Lifecycle Methods
+
+    /// <summary>
+    /// Checks if the method is a Blazor lifecycle method.
+    /// </summary>
+    private static bool IsBlazorLifecycleMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
+    {
+        // Check if the containing class inherits from ComponentBase
+        var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null)
+        {
+            return false;
+        }
+
+        var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
+        if (classSymbol == null)
+        {
+            return false;
+        }
+
+        // Check if class inherits from ComponentBase
+        if (!InheritsFromComponentBase(classSymbol))
+        {
+            return false;
+        }
+
+        // Check if method is a Blazor lifecycle method
+        var methodName = method.Identifier.Text;
+        return methodName == "OnInitializedAsync" ||
+               methodName == "OnParametersSetAsync" ||
+               methodName == "OnAfterRenderAsync" ||
+               methodName == "OnParametersSetAsync";
+    }
+
+    /// <summary>
+    /// Checks if the class inherits from ComponentBase.
+    /// </summary>
+    private static bool InheritsFromComponentBase(INamedTypeSymbol classSymbol)
+    {
+        var current = classSymbol.BaseType;
+        while (current != null)
+        {
+            if (current.Name == "ComponentBase" &&
+                current.ContainingNamespace?.Name == "Components" &&
+                current.ContainingNamespace.ContainingNamespace?.Name == "AspNetCore")
+            {
+                return true;
+            }
+            current = current.BaseType;
+        }
+        return false;
+    }
+
+    #endregion
+
+    #region Story 1.3: Exempt SignalR Hub Lifecycle Methods
+
+    /// <summary>
+    /// Checks if the method is a SignalR hub lifecycle method.
+    /// </summary>
+    private static bool IsSignalRHubLifecycleMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
+    {
+        // Check if the containing class inherits from Hub
+        var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null)
+        {
+            return false;
+        }
+
+        var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
+        if (classSymbol == null)
+        {
+            return false;
+        }
+
+        // Check if class inherits from Hub
+        if (!InheritsFromHub(classSymbol))
+        {
+            return false;
+        }
+
+        // Check if method is a SignalR hub lifecycle method
+        var methodName = method.Identifier.Text;
+        return methodName == "OnConnectedAsync" ||
+               methodName == "OnDisconnectedAsync";
+    }
+
+    /// <summary>
+    /// Checks if the class inherits from Hub.
+    /// </summary>
+    private static bool InheritsFromHub(INamedTypeSymbol classSymbol)
+    {
+        var current = classSymbol.BaseType;
+        while (current != null)
+        {
+            if (current.Name == "Hub" &&
+                current.ContainingNamespace?.Name == "SignalR" &&
+                current.ContainingNamespace.ContainingNamespace?.Name == "AspNetCore")
+            {
+                return true;
+            }
+            current = current.BaseType;
+        }
+        return false;
+    }
+
+    #endregion
+
+    #region Story 1.4: Exempt Test Methods
+
+    /// <summary>
+    /// Checks if the method is a test method.
+    /// </summary>
+    private static bool IsTestMethod(MethodDeclarationSyntax method)
+    {
+        // Check for test attributes
+        var attributes = method.AttributeLists.SelectMany(al => al.Attributes);
+        foreach (var attribute in attributes)
+        {
+            var attributeName = attribute.Name.ToString();
+            if (attributeName.Contains("Fact") ||
+                attributeName.Contains("Theory") ||
+                attributeName.Contains("Test") ||
+                attributeName.Contains("TestMethod"))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    #endregion
+
+    #region Story 1.5: Exempt Test Class Helper Methods
+
+    /// <summary>
+    /// Checks if the method is a helper method in a test class.
+    /// </summary>
+    private static bool IsTestClassHelperMethod(MethodDeclarationSyntax method)
+    {
+        var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null)
+        {
+            return false;
+        }
+
+        var className = containingClass.Identifier.Text;
+        
+        // Check if class name indicates it's a test class
+        return className.EndsWith("Tests") ||
+               className.EndsWith("Specs") ||
+               className.EndsWith("TestFixture");
+    }
+
+    #endregion
+
+    #region Story 1.6: Exempt IAsyncLifetime Contract Methods
+
+    /// <summary>
+    /// Checks if the method is an IAsyncLifetime method.
+    /// </summary>
+    private static bool IsIAsyncLifetimeMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
+    {
+        var methodName = method.Identifier.Text;
+        
+        // Check if method is InitializeAsync or DisposeAsync
+        if (methodName != "InitializeAsync" && methodName != "DisposeAsync")
+        {
+            return false;
+        }
+
+        // Check if the containing class implements IAsyncLifetime
+        var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null)
+        {
+            return false;
+        }
+
+        var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
+        if (classSymbol == null)
+        {
+            return false;
+        }
+
+        // Check if class implements IAsyncLifetime
+        return ImplementsIAsyncLifetime(classSymbol);
+    }
+
+    /// <summary>
+    /// Checks if the class implements IAsyncLifetime.
+    /// </summary>
+    private static bool ImplementsIAsyncLifetime(INamedTypeSymbol classSymbol)
+    {
+        foreach (var interfaceSymbol in classSymbol.AllInterfaces)
+        {
+            if (interfaceSymbol.Name == "IAsyncLifetime" &&
+                interfaceSymbol.ContainingNamespace?.Name == "Xunit")
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    #endregion
+
+    #region Story 1.7: Exempt Test Fixture Methods
+
+    /// <summary>
+    /// Checks if the method is in a test fixture class.
+    /// </summary>
+    private static bool IsTestFixtureMethod(MethodDeclarationSyntax method)
+    {
+        var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null)
+        {
+            return false;
+        }
+
+        var className = containingClass.Identifier.Text;
+        
+        // Check if class name ends with Fixture
+        if (!className.EndsWith("Fixture"))
+        {
+            return false;
+        }
+
+        // Check for CollectionDefinition attribute
+        var attributes = containingClass.AttributeLists.SelectMany(al => al.Attributes);
+        foreach (var attribute in attributes)
+        {
+            var attributeName = attribute.Name.ToString();
+            if (attributeName.Contains("CollectionDefinition"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    #endregion
+
+    #region Story 1.8: Exempt Blazor EventCallback Handlers
+
+    /// <summary>
+    /// Checks if the method is a Blazor event handler.
+    /// </summary>
+    private static bool IsBlazorEventHandler(MethodDeclarationSyntax method)
+    {
+        // Check if method is private (typical for event handlers)
+        if (!method.Modifiers.Any(SyntaxKind.PrivateKeyword))
+        {
+            return false;
+        }
+
+        var methodName = method.Identifier.Text;
+        
+        // Check for common Blazor event handler patterns
+        return methodName.StartsWith("On") && methodName.EndsWith("Async") ||
+               methodName.Contains("Click") ||
+               methodName.Contains("Submit") ||
+               methodName.Contains("Change");
+    }
+
+    #endregion
+
+    #region Story 1.9: Analyze Cancellation Availability
+
+    /// <summary>
+    /// Checks if cancellation is available for awaited calls in the method.
+    /// </summary>
+    private static bool HasCancellationAvailable(MethodDeclarationSyntax method, SemanticModel semanticModel)
+    {
+        // Check if the method actually awaits anything
+        var methodBody = method.Body;
+        if (methodBody == null)
+        {
+            return true; // No body, no awaited calls
+        }
+
+        // Look for await expressions
+        var awaitExpressions = methodBody.DescendantNodes()
+            .OfType<AwaitExpressionSyntax>();
+
+        // If no await expressions, cancellation is not needed
+        if (!awaitExpressions.Any())
+        {
+            return false;
+        }
+
+        // Check if all awaited calls are methods that don't support cancellation
+        foreach (var awaitExpr in awaitExpressions)
+        {
+            if (awaitExpr.Expression is InvocationExpressionSyntax invocation)
+            {
+                var methodName = GetMethodName(invocation);
+                
+                // Check for methods that don't have CancellationToken overloads
+                if (IsMethodWithoutCancellationSupport(methodName))
+                {
+                    continue; // This method doesn't support cancellation
+                }
+                
+                // If we find any method that supports cancellation, we need a token
+                return true;
+            }
+        }
+
+        // If all awaited methods don't support cancellation, we don't need a token
+        return false;
+    }
+
+    /// <summary>
+    /// Gets the method name from an invocation expression.
+    /// </summary>
+    private static string GetMethodName(InvocationExpressionSyntax invocation)
+    {
+        if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            return memberAccess.Name.Identifier.Text;
+        }
+        
+        if (invocation.Expression is IdentifierNameSyntax identifier)
+        {
+            return identifier.Identifier.Text;
+        }
+
+        return string.Empty;
+    }
+
+    /// <summary>
+    /// Checks if a method doesn't support cancellation.
+    /// </summary>
+    private static bool IsMethodWithoutCancellationSupport(string methodName)
+    {
+        // Common methods that don't have CancellationToken overloads
+        var methodsWithoutCancellation = new[]
+        {
+            "Yield",
+            "FromResult",
+            "FromException",
+            "FromCanceled",
+            "Run",
+            "RunSynchronously"
+        };
+
+        return methodsWithoutCancellation.Contains(methodName);
+    }
+
+    #endregion
+
+    #region Story 1.10: Be Aware of Captured Tokens
+
+    /// <summary>
+    /// Checks if the method has access to a captured CancellationToken.
+    /// </summary>
+    private static bool HasCapturedToken(MethodDeclarationSyntax method, SemanticModel semanticModel)
+    {
+        // Check if method uses a CancellationToken from a field or property
+        var methodBody = method.Body;
+        if (methodBody == null)
+        {
+            return false;
+        }
+
+        // Look for CancellationToken usage in the method body
+        var cancellationTokenUsages = methodBody.DescendantNodes()
+            .OfType<IdentifierNameSyntax>()
+            .Where(id => id.Identifier.Text.Contains("CancellationToken") || 
+                        id.Identifier.Text.Contains("cancellationToken") ||
+                        id.Identifier.Text.Contains("_cancellationToken") ||
+                        id.Identifier.Text.Contains("token"));
+
+        // Also check for field access patterns like _cancellationToken
+        var memberAccessUsages = methodBody.DescendantNodes()
+            .OfType<MemberAccessExpressionSyntax>()
+            .Where(ma => ma.Name.Identifier.Text.Contains("cancellationToken") ||
+                        ma.Name.Identifier.Text.Contains("CancellationToken"));
+
+        return cancellationTokenUsages.Any() || memberAccessUsages.Any();
+    }
+
+    #endregion
 }

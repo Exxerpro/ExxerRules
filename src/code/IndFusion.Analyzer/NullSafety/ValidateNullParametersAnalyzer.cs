@@ -102,6 +102,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     {
         var referenceParams = new List<string>();
 
+        // Skip guard methods - they are designed to validate parameters
+        if (IsGuardMethod(method))
+        {
+            return referenceParams;
+        }
+
         foreach (var parameter in method.ParameterList.Parameters)
         {
             if (parameter.Type == null)
@@ -123,13 +129,13 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 
             var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
             var typeName = parameter.Type.ToString();
-            
+
             // Always check string-based detection first for common types
             if (IsValueTypeByName(typeName))
             {
                 continue;
             }
-            
+
             if (parameterType == null)
             {
                 // If we can't determine the type from semantic model, be conservative and include it
@@ -157,6 +163,45 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         }
 
         return referenceParams;
+    }
+
+    /// <summary>
+    /// Checks if the method is a guard method that should be exempt from null validation.
+    /// </summary>
+    private static bool IsGuardMethod(MethodDeclarationSyntax method)
+    {
+        var methodName = method.Identifier.ValueText;
+        
+        // Only exempt specific guard method names that are clearly guard methods
+        if (methodName == "ThrowIfNull" || methodName == "Guard" || methodName == "Validate" || 
+            methodName == "Require" || methodName == "Ensure" || methodName == "Check")
+        {
+            return true;
+        }
+
+        // Check if method is an extension method with guard-like behavior
+        if (method.Modifiers.Any(SyntaxKind.StaticKeyword) && 
+            method.ParameterList.Parameters.Count > 0 &&
+            method.ParameterList.Parameters[0].Modifiers.Any(SyntaxKind.ThisKeyword))
+        {
+            // Extension methods that throw exceptions for null validation
+            if (methodName.Contains("Throw") || methodName.Contains("Guard") || 
+                methodName.Contains("Validate") || methodName.Contains("Require"))
+            {
+                return true;
+            }
+        }
+
+        // Check if method is a static factory method that creates failure results
+        // Only exempt if it's clearly a Result type factory method
+        if (method.Modifiers.Any(SyntaxKind.StaticKeyword) && 
+            (methodName == "Failure" || methodName == "WithFailure") && 
+            method.ReturnType.ToString().Contains("Result"))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     /// <summary>
@@ -345,19 +390,33 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
                 }
             }
 
-            // Handle "is" patterns like "parameter is null"
-            if (condition is IsPatternExpressionSyntax isPattern)
-            {
-                var identifier = GetIdentifierFromExpression(isPattern.Expression);
-                if (referenceParameters.Contains(identifier) && IsNullPattern(isPattern.Pattern))
+                // Handle "is" patterns like "parameter is null"
+                if (condition is IsPatternExpressionSyntax isPattern)
                 {
-                    // Check if the if statement body contains appropriate validation
-                    if (HasAppropriateValidation(ifStatement))
+                    var identifier = GetIdentifierFromExpression(isPattern.Expression);
+                    if (referenceParameters.Contains(identifier) && IsNullPattern(isPattern.Pattern))
                     {
-                        return identifier;
+                        // Check if the if statement body contains appropriate validation
+                        if (HasAppropriateValidation(ifStatement))
+                        {
+                            return identifier;
+                        }
                     }
                 }
-            }
+
+                // Handle "is null" patterns more broadly
+                if (condition.ToString().Contains(" is null"))
+                {
+                    var identifier = GetIdentifierFromExpression(condition);
+                    if (referenceParameters.Contains(identifier))
+                    {
+                        // Check if the if statement body contains appropriate validation
+                        if (HasAppropriateValidation(ifStatement))
+                        {
+                            return identifier;
+                        }
+                    }
+                }
         }
 
         // Look for expression statements like ArgumentNullException.ThrowIfNull(parameter)
@@ -492,11 +551,35 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             }
         }
 
+        // Check for null-conditional operators in binary expressions (e.g., text?.Length ?? 0)
+        if (expression is BinaryExpressionSyntax binaryExpr2 && binaryExpr2.OperatorToken.IsKind(SyntaxKind.QuestionQuestionToken))
+        {
+            // Check if the left side contains a null-conditional operator
+            if (binaryExpr2.Left is ConditionalAccessExpressionSyntax leftConditional)
+            {
+                var identifier = GetIdentifierFromExpression(leftConditional.Expression);
+                if (referenceParameters.Contains(identifier))
+                {
+                    validated.Add(identifier);
+                }
+            }
+        }
+
         // Check for guard helper invocations in expressions
         if (expression is InvocationExpressionSyntax invocation)
         {
             var validatedInInvocation = FindValidatedParametersInInvocation(invocation, referenceParameters);
             validated.AddRange(validatedInInvocation);
+        }
+
+        // Recursively check nested expressions for guard patterns
+        foreach (var childExpression in expression.DescendantNodes().OfType<ExpressionSyntax>())
+        {
+            if (childExpression != expression) // Avoid infinite recursion
+            {
+                var validatedInChild = FindValidatedParametersInExpression(childExpression, referenceParameters);
+                validated.AddRange(validatedInChild);
+            }
         }
 
         return validated;
@@ -509,11 +592,16 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     {
         var validated = new List<string>();
 
+        // Get local function parameters
+        var localFunctionParameters = localFunction.ParameterList.Parameters
+            .Select(p => p.Identifier.ValueText)
+            .ToList();
+
         if (localFunction.Body != null)
         {
             foreach (var statement in localFunction.Body.Statements)
             {
-                var validatedParameter = FindValidatedParameter(statement, referenceParameters);
+                var validatedParameter = FindValidatedParameter(statement, localFunctionParameters);
                 if (!string.IsNullOrEmpty(validatedParameter))
                 {
                     validated.Add(validatedParameter!);
@@ -560,6 +648,22 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             }
         }
 
+        // Check for other common guard method patterns
+        if (invocation.Expression is MemberAccessExpressionSyntax guardMemberAccess)
+        {
+            var methodName = guardMemberAccess.Name.Identifier.ValueText;
+            // Common guard method names
+            if (methodName == "ThrowIfNull" || methodName == "Guard" || methodName == "Validate" || 
+                methodName == "Require" || methodName == "Ensure")
+            {
+                var identifier = GetIdentifierFromExpression(guardMemberAccess.Expression);
+                if (!string.IsNullOrEmpty(identifier) && referenceParameters.Contains(identifier))
+                {
+                    validated.Add(identifier);
+                }
+            }
+        }
+
         // Check for ArgumentNullException.ThrowIfNull patterns
         if (invocation.Expression is MemberAccessExpressionSyntax throwIfNullAccess &&
             throwIfNullAccess.Name.Identifier.ValueText == "ThrowIfNull" &&
@@ -574,6 +678,15 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
                     validated.Add(identifier);
                 }
             }
+        }
+
+        // Check for Result.Failure and Result.WithFailure patterns
+        if (invocation.Expression.ToString().Contains("Result.Failure") ||
+            invocation.Expression.ToString().Contains("Result.WithFailure"))
+        {
+            // For Result.Failure patterns, we need to check if this is within a null check context
+            // For now, we'll be conservative and not mark this as validation
+            // unless it's clearly within a null check
         }
 
         return validated;

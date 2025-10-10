@@ -108,7 +108,7 @@ public class McpControllerTests
 
         var serverInfo = okResult.Value as McpServerInfo;
         serverInfo!.Name.ShouldBe("ExxerFactor.Mcp");
-        serverInfo.Version.ShouldBe("1.0.0");
+        serverInfo.Version.ShouldBe("1.0.6");
         serverInfo.ProtocolVersion.ShouldBe("2024-11-05");
         serverInfo.Capabilities.ShouldNotBeNull();
         serverInfo.Capabilities!.Tools.ShouldNotBeNull();

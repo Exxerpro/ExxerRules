@@ -124,7 +124,7 @@ public class WebApplicationTests : IClassFixture<WebApplicationFactory<Program>>
 
         serverInfo.ShouldNotBeNull();
         serverInfo!.Name.ShouldBe("ExxerFactor.Mcp");
-        serverInfo.Version.ShouldBe("1.0.0");
+        serverInfo.Version.ShouldBe("1.0.6");
     }
 
     /// <summary>

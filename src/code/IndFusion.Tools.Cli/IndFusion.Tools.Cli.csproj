@@ -16,7 +16,7 @@
 	  <PackAsTool>true</PackAsTool>
 	  <ToolCommandName>indfusion</ToolCommandName>
 	  <PackageId>IndFusion.Tools.Cli</PackageId>
-	  <PackageVersion>1.0.6</PackageVersion>
+	  <PackageVersion>1.0.7</PackageVersion>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 
   </PropertyGroup>
@@ -33,6 +33,9 @@
 	<!-- Microsoft Extensions & Hosting -->
 	<PackageReference Include="Microsoft.Extensions.Hosting" />
 	<PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+	<!-- Command Line Interface -->
+	<PackageReference Include="System.CommandLine" />
+	<PackageReference Include="System.CommandLine.DragonFruit" />
 	<!-- Protocol & Communication -->
 	<PackageReference Include="ModelContextProtocol" />
   </ItemGroup>

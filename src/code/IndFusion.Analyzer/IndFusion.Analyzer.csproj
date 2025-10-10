@@ -19,7 +19,7 @@
   </PropertyGroup>
   <PropertyGroup>
 	<PackageId>IndFusion.Analyzer</PackageId>
-		<PackageVersion>1.0.6</PackageVersion>
+		<PackageVersion>1.0.7</PackageVersion>
 	<Authors>IndFusion</Authors>
 	<Company>IndFusion</Company>
 	<Product>IndFusion Analyzer</Product>

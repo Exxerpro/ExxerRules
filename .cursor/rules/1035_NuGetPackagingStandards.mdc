@@ -1,0 +1,158 @@
+# NuGet Packaging Standards
+
+## Meta
+
+**Title**: NuGet Packaging Standards
+**Description**: Establishes mandatory standards for building, packaging, and distributing NuGet packages in the IndFusion project
+**Created-at**: 2025-01-15T00:00:00Z
+**Last-updated-at**: 2025-01-15T00:00:00Z
+**Applies-to**: All NuGet package creation, versioning, and distribution
+**File-matcher**: *.csproj files with IsPackable=true
+
+## Requirements
+
+### <requirement priority="critical">
+**Description**: All NuGet packages must be created in the artifacts/nuget/ directory
+**Examples**:
+<correct-example>
+```bash
+# Correct: Package to artifacts/nuget/
+dotnet pack src/code/IndFusion.Analyzer/IndFusion.Analyzer.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Fixer/IndFusion.Fixer.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Mcp.Core/IndFusion.Mcp.Core.csproj -c Release -o artifacts/nuget
+```
+</correct-example>
+<incorrect-example>
+```bash
+# WRONG: Packages in individual project bin/Release/ folders
+dotnet pack src/code/IndFusion.Analyzer/IndFusion.Analyzer.csproj -c Release
+# This creates packages in src/code/IndFusion.Analyzer/bin/Release/
+```
+</incorrect-example>
+</requirement>
+
+### <requirement priority="critical">
+**Description**: Version updates must be synchronized across all projects before packaging
+**Examples**:
+<correct-example>
+```bash
+# 1. Update all PackageVersion properties to same version
+# 2. Build solution
+dotnet build src/IndFusion.sln -c Release
+# 3. Pack all packages to artifacts/nuget/
+dotnet pack src/code/IndFusion.Analyzer/IndFusion.Analyzer.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Fixer/IndFusion.Fixer.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Mcp.Core/IndFusion.Mcp.Core.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Mcp.Server/IndFusion.Mcp.Server.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Mcp.Web/IndFusion.Mcp.Web.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Tools.Cli/IndFusion.Tools.Cli.csproj -c Release -o artifacts/nuget
+dotnet pack src/code/IndFusion.Packaging/ExxerRules.NuGet.csproj -c Release -o artifacts/nuget
+```
+</correct-example>
+<incorrect-example>
+```bash
+# WRONG: Inconsistent versioning or packaging to wrong location
+dotnet pack src/code/IndFusion.Analyzer/IndFusion.Analyzer.csproj -c Release
+# Creates package with wrong version or in wrong location
+```
+</incorrect-example>
+</requirement>
+
+### <requirement priority="high">
+**Description**: All packages must include symbol packages (.snupkg) for debugging support
+**Examples**:
+<correct-example>
+```bash
+# Symbol packages are automatically created when IncludeSymbols=true
+# Check that .snupkg files are created alongside .nupkg files
+ls artifacts/nuget/*.snupkg
+```
+</correct-example>
+<incorrect-example>
+```bash
+# WRONG: Missing symbol packages
+# If no .snupkg files are created, check IncludeSymbols property
+```
+</incorrect-example>
+</requirement>
+
+### <requirement priority="high">
+**Description**: Package metadata must be consistent and complete
+**Examples**:
+<correct-example>
+```xml
+<PropertyGroup>
+  <PackageId>IndFusion.Analyzer</PackageId>
+  <PackageVersion>1.0.7</PackageVersion>
+  <Authors>IndFusion</Authors>
+  <Company>IndFusion</Company>
+  <Product>IndFusion Analyzer</Product>
+  <Description>Comprehensive Roslyn analyzer suite...</Description>
+  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  <PackageProjectUrl>https://github.com/indfusion/indfusion</PackageProjectUrl>
+  <RepositoryUrl>https://github.com/indfusion/indfusion</RepositoryUrl>
+  <RepositoryType>git</RepositoryType>
+  <PackageTags>analyzers;roslyn;csharp;dotnet</PackageTags>
+  <PackageReleaseNotes>v1.0.7: EXXER700 improvements...</PackageReleaseNotes>
+</PropertyGroup>
+```
+</correct-example>
+<incorrect-example>
+```xml
+<!-- WRONG: Missing or inconsistent metadata -->
+<PropertyGroup>
+  <PackageId>IndFusion.Analyzer</PackageId>
+  <PackageVersion>1.0.7</PackageVersion>
+  <!-- Missing Authors, Company, Description, etc. -->
+</PropertyGroup>
+```
+</incorrect-example>
+</requirement>
+
+### <requirement priority="medium">
+**Description**: Build must succeed with warnings treated as errors before packaging
+**Examples**:
+<correct-example>
+```bash
+# Build with warnings as errors
+dotnet build src/IndFusion.sln -c Release
+# Only proceed with packaging if build succeeds
+dotnet pack src/code/IndFusion.Analyzer/IndFusion.Analyzer.csproj -c Release -o artifacts/nuget
+```
+</correct-example>
+<incorrect-example>
+```bash
+# WRONG: Packaging with build errors
+dotnet build src/IndFusion.sln -c Release
+# Build fails but packaging continues
+dotnet pack src/code/IndFusion.Analyzer/IndFusion.Analyzer.csproj -c Release -o artifacts/nuget
+```
+</incorrect-example>
+</requirement>
+
+## Context
+
+This rule ensures that all NuGet packages are:
+- Created in the centralized `artifacts/nuget/` directory
+- Versioned consistently across all projects
+- Include proper metadata and symbol packages
+- Built only after successful compilation
+- Ready for distribution and deployment
+
+## Package Structure
+
+The `artifacts/nuget/` directory should contain:
+- `IndFusion.Analyzer.{version}.nupkg` - Main analyzer package
+- `IndFusion.Fixer.{version}.nupkg` - Code fixer package
+- `IndFusion.Mcp.Core.{version}.nupkg` - MCP Core library
+- `IndFusion.Mcp.Server.{version}.nupkg` - MCP Server
+- `IndFusion.Mcp.Web.{version}.nupkg` - MCP Web interface
+- `IndFusion.Tools.Cli.{version}.nupkg` - CLI tools
+- `IndFusion.Analyzers.{version}.nupkg` - Combined analyzers package
+- Corresponding `.snupkg` symbol packages for debugging
+
+## References
+
+<reference as="dependency" href=".cursor/rules/0000_RuleToWriteRules.mdc" reason="Defines rule structure standards">Rule Writing Standards</reference>
+<reference as="context" href="docs/Priority-Implementation-Plan.md" reason="Contains packaging examples">Priority Implementation Plan</reference>
+<reference as="context" href="AGENTS.md" reason="Documents artifacts directory structure">Project Structure Documentation</reference>

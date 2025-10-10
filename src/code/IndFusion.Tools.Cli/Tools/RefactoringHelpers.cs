@@ -1,5 +1,3 @@
-using Microsoft.Extensions.Caching.Memory;
-
 namespace IndFusion.Tools.Mcp.App.Tools;
 
 /// <summary>

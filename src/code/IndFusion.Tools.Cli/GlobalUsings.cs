@@ -1,9 +1,14 @@
 // Global using directives
 
+global using System.CommandLine;
 global using System.ComponentModel;
 global using System.Reflection;
 global using System.Text;
 global using System.Text.Json;
+global using IndFusion.Mcp.Core.Abstractions;
+global using IndFusion.Tools.Cli.Commands;
+global using IndFusion.Tools.Cli.Models;
+global using IndFusion.Tools.Cli.Services;
 global using IndFusion.Tools.Mcp.App.Move;
 global using IndFusion.Tools.Mcp.App.SyntaxRewriters;
 global using IndFusion.Tools.Mcp.App.SyntaxWalkers;
@@ -23,3 +28,4 @@ global using Microsoft.Extensions.Caching.Memory;
 global using Microsoft.CodeAnalysis.Editing;
 global using Microsoft.CodeAnalysis.FindSymbols;
 global using Microsoft.CodeAnalysis.Rename;
+global using Microsoft.Extensions.Logging;

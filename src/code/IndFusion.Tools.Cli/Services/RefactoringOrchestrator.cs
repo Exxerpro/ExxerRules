@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using IndFusion.Tools.Cli.Commands;
+using IndFusion.Tools.Cli.Models;
 
 namespace IndFusion.Tools.Cli.Services;
 
@@ -59,7 +59,7 @@ public class RefactoringOrchestrator
             // Execute the refactoring
             var result = await _refactoringService.ExecuteRefactoringAsync(request, cancellationToken);
 
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 _logger.LogInformation("Refactoring completed successfully: {ToolName}", request.ToolName);
                 return RefactoringResult.Success(result.Summary, result.Preview);
@@ -139,9 +139,9 @@ public class RefactoringOrchestrator
 public class RefactoringResult
 {
     /// <summary>
-    /// Gets whether the refactoring was successful
+    /// Gets whether the Refactoring was successful
     /// </summary>
-    public bool Success { get; private set; }
+    public bool IsSuccess => string.IsNullOrEmpty(ErrorMessage) && (!string.IsNullOrEmpty(Summary) || !string.IsNullOrEmpty(Preview));
 
     /// <summary>
     /// Gets the error message if the refactoring failed
@@ -158,8 +158,6 @@ public class RefactoringResult
     /// </summary>
     public string? Preview { get; private set; }
 
-
-
     /// <summary>
     /// Creates a successful refactoring result
     /// </summary>
@@ -168,7 +166,7 @@ public class RefactoringResult
     /// <returns>Successful refactoring result</returns>
     public static RefactoringResult Success(string? summary = null, string? preview = null)
     {
-        return new RefactoringResult { Success = true, Summary = summary, Preview = preview };
+        return new RefactoringResult { Summary = summary, Preview = preview };
     }
 
     /// <summary>
@@ -178,7 +176,7 @@ public class RefactoringResult
     /// <returns>Failed refactoring result</returns>
     public static RefactoringResult Failure(string errorMessage)
     {
-        return new RefactoringResult { Success = false, ErrorMessage = errorMessage };
+        return new RefactoringResult { ErrorMessage = errorMessage };
     }
 }
 
@@ -295,7 +293,6 @@ public class ToolRegistry
         _tools["converttofor"] = new ToolInfo("ConvertToFor", "Convert foreach to for loop");
         _tools["converttoif"] = new ToolInfo("ConvertToIf", "Convert ternary operator to if statement");
         _tools["converttoternary"] = new ToolInfo("ConvertToTernary", "Convert if statement to ternary operator");
-        _tools["converttoexpression"] = new ToolInfo("ConvertToExpression", "Convert statement to expression");
         _tools["converttoexpressionbody"] = new ToolInfo("ConvertToExpressionBody", "Convert method to expression body");
         _tools["convertfromexpressionbody"] = new ToolInfo("ConvertFromExpressionBody", "Convert expression body to block");
         _tools["converttoinitializer"] = new ToolInfo("ConvertToInitializer", "Convert to object initializer");
@@ -303,7 +300,6 @@ public class ToolRegistry
         _tools["converttoverbatim"] = new ToolInfo("ConvertToVerbatim", "Convert string to verbatim string");
         _tools["converttointerpolatedverbatim"] = new ToolInfo("ConvertToInterpolatedVerbatim", "Convert to interpolated verbatim string");
         _tools["converttointerpolatedraw"] = new ToolInfo("ConvertToInterpolatedRaw", "Convert to raw interpolated string");
-        _tools["converttointerpolatedrawverbatim"] = new ToolInfo("ConvertToInterpolatedRawVerbatim", "Convert to raw interpolated verbatim string");
         _tools["converttointerpolatedrawverbatim"] = new ToolInfo("ConvertToInterpolatedRawVerbatim", "Convert to raw interpolated verbatim string");
     }
 }

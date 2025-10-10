@@ -1,6 +1,3 @@
-using System.CommandLine;
-using IndFusion.Tools.Cli.Commands;
-
 namespace IndFusion.Tools.Cli;
 
 /// <summary>

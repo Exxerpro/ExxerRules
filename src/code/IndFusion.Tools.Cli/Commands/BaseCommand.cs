@@ -1,6 +1,3 @@
-using System.CommandLine;
-using Microsoft.Extensions.Logging;
-
 namespace IndFusion.Tools.Cli.Commands;
 
 /// <summary>

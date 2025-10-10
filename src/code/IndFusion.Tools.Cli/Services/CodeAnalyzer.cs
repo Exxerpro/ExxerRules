@@ -1,11 +1,6 @@
-using Microsoft.Extensions.Logging;
-using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.MSBuild;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using IndFusion.Tools.Cli.Commands;
-
 namespace IndFusion.Tools.Cli.Services;
+
+using IndFusion.Mcp.Core.Abstractions;
 
 /// <summary>
 /// Analyzes code for metrics, complexity, and refactoring opportunities
@@ -24,12 +19,13 @@ public class CodeAnalyzer
     }
 
     /// <summary>
-    /// Analyzes code based on the analysis request
+    /// Analyzes code for quality metrics and refactoring opportunities
     /// </summary>
-    /// <param name="request">The analysis request</param>
+    /// <param name="solutionPath">Path to the solution file</param>
     /// <param name="cancellationToken">Cancellation token</param>
+    /// <param name="request">Analysis request parameters</param>
     /// <returns>Analysis result</returns>
-    public async Task<AnalysisResult> AnalyzeAsync(AnalysisRequest request, CancellationToken cancellationToken)
+    public async Task<AnalysisResult> AnalyzeAsync(string solutionPath, AnalysisRequest request, CancellationToken cancellationToken)
     {
         try
         {
@@ -37,8 +33,11 @@ public class CodeAnalyzer
 
             // Load solution
             using var workspace = MSBuildWorkspace.Create();
+
+            if (request.SolutionPath is null) return AnalysisResult.Failure($"Solution Null path: {request.AnalysisType}");
+
             var solution = await workspace.OpenSolutionAsync(request.SolutionPath, progress: null, cancellationToken);
-            
+
             var analysisData = new AnalysisData();
 
             // Perform analysis based on type
@@ -47,24 +46,28 @@ public class CodeAnalyzer
                 case "metrics":
                     await AnalyzeMetricsAsync(solution, analysisData, request, cancellationToken);
                     break;
+
                 case "complexity":
                     await AnalyzeComplexityAsync(solution, analysisData, request, cancellationToken);
                     break;
+
                 case "opportunities":
                     await AnalyzeOpportunitiesAsync(solution, analysisData, request, cancellationToken);
                     break;
+
                 case "all":
                     await AnalyzeMetricsAsync(solution, analysisData, request, cancellationToken);
                     await AnalyzeComplexityAsync(solution, analysisData, request, cancellationToken);
                     await AnalyzeOpportunitiesAsync(solution, analysisData, request, cancellationToken);
                     break;
+
                 default:
                     return AnalysisResult.Failure($"Unknown analysis type: {request.AnalysisType}");
             }
 
             // Generate output based on format
             var result = GenerateOutput(analysisData, request.OutputFormat);
-            
+
             _logger.LogInformation("Code analysis completed successfully");
             return AnalysisResult.Success(result);
         }
@@ -183,7 +186,7 @@ public class CodeAnalyzer
     private static CodeMetrics CalculateMetrics(SyntaxNode root, SemanticModel semanticModel)
     {
         var metrics = new CodeMetrics();
-        
+
         // Count lines of code (excluding comments and whitespace)
         var lines = root.SyntaxTree.GetText().Lines;
         metrics.LinesOfCode = lines.Count(line => !string.IsNullOrWhiteSpace(line.ToString()) && !line.ToString().TrimStart().StartsWith("//"));
@@ -255,7 +258,7 @@ public class CodeAnalyzer
     private static AnalysisOutput GenerateCsvOutput(AnalysisData data)
     {
         var csv = new System.Text.StringBuilder();
-        
+
         // Metrics CSV
         csv.AppendLine("Type,FilePath,LinesOfCode,CyclomaticComplexity,MethodCount,ClassCount,InterfaceCount,PropertyCount,FieldCount");
         foreach (var metric in data.Metrics)
@@ -286,7 +289,7 @@ public class CodeAnalyzer
     private static AnalysisOutput GenerateMarkdownOutput(AnalysisData data)
     {
         var markdown = new System.Text.StringBuilder();
-        
+
         markdown.AppendLine("# Code Analysis Report");
         markdown.AppendLine();
 
@@ -295,7 +298,7 @@ public class CodeAnalyzer
         markdown.AppendLine();
         markdown.AppendLine("| File | Lines of Code | Complexity | Methods | Classes | Interfaces | Properties | Fields |");
         markdown.AppendLine("|------|---------------|------------|---------|---------|------------|------------|--------|");
-        
+
         foreach (var metric in data.Metrics)
         {
             markdown.AppendLine($"| {metric.FilePath} | {metric.LinesOfCode} | {metric.CyclomaticComplexity} | {metric.MethodCount} | {metric.ClassCount} | {metric.InterfaceCount} | {metric.PropertyCount} | {metric.FieldCount} |");
@@ -309,7 +312,7 @@ public class CodeAnalyzer
             markdown.AppendLine();
             markdown.AppendLine("| File | Method | Line | Complexity | Issue |");
             markdown.AppendLine("|------|--------|------|------------|-------|");
-            
+
             foreach (var issue in data.ComplexityIssues)
             {
                 markdown.AppendLine($"| {issue.FilePath} | {issue.MethodName} | {issue.Line} | {issue.Complexity} | {issue.Issue} |");
@@ -324,7 +327,7 @@ public class CodeAnalyzer
             markdown.AppendLine();
             markdown.AppendLine("| File | Line | Type | Description |");
             markdown.AppendLine("|------|------|------|-------------|");
-            
+
             foreach (var opportunity in data.Opportunities)
             {
                 markdown.AppendLine($"| {opportunity.File} | {opportunity.Line} | {opportunity.Type} | {opportunity.Description} |");
@@ -340,7 +343,7 @@ public class CodeAnalyzer
     private static AnalysisOutput GenerateConsoleOutput(AnalysisData data)
     {
         var console = new System.Text.StringBuilder();
-        
+
         console.AppendLine("📊 Code Analysis Report");
         console.AppendLine("======================");
         console.AppendLine();
@@ -411,9 +414,9 @@ public class CodeAnalyzer
 public class AnalysisResult
 {
     /// <summary>
-    /// Gets whether the analysis was successful
+    /// Gets whether the Analysis was successful
     /// </summary>
-    public bool Success { get; private set; }
+    private bool isSuccess => string.IsNullOrEmpty(ErrorMessage) && Output is not null;
 
     /// <summary>
     /// Gets the error message if the analysis failed
@@ -432,7 +435,7 @@ public class AnalysisResult
     /// <returns>Successful analysis result</returns>
     public static AnalysisResult Success(AnalysisOutput output)
     {
-        return new AnalysisResult { Success = true, Output = output };
+        return new AnalysisResult { Output = output };
     }
 
     /// <summary>
@@ -442,7 +445,7 @@ public class AnalysisResult
     /// <returns>Failed analysis result</returns>
     public static AnalysisResult Failure(string errorMessage)
     {
-        return new AnalysisResult { Success = false, ErrorMessage = errorMessage };
+        return new AnalysisResult { ErrorMessage = errorMessage };
     }
 }
 

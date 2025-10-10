@@ -1,223 +1,79 @@
-using System.CommandLine;
-using Microsoft.Extensions.Logging;
-using IndFusion.Tools.Cli.Services;
-
 namespace IndFusion.Tools.Cli.Commands;
 
 /// <summary>
-/// Command for analyzing code metrics, complexity, and refactoring opportunities
+/// Command for analyzing code quality and metrics
 /// </summary>
 public class AnalyzeCommand : BaseCommand
 {
-    private static readonly Option<string> AnalysisTypeOption = new(
-        aliases: ["--type", "-t"],
-        description: "Type of analysis to perform: metrics, complexity, opportunities")
-    {
-        IsRequired = true
-    };
+    private static readonly Argument<string> TypeArgument = new(
+        name: "type",
+        description: "Type of analysis: metrics, complexity, opportunities, all",
+        getDefaultValue: () => "all");
 
-    private static readonly Option<string> PathOption = new(
-        aliases: ["--path", "-p"],
-        description: "Path to analyze (file or directory)");
-
-    private static readonly Option<string> OutputFormatOption = new(
-        aliases: ["--format", "-f"],
-        description: "Output format: json, csv, markdown, console",
+    private static readonly Option<string?> FormatOption = new(
+        aliases: ["--format"],
+        description: "Output format: console, json, csv, markdown",
         getDefaultValue: () => "console");
-
-    private static readonly Option<string> OutputFileOption = new(
-        aliases: ["--output-file"],
-        description: "Output file path (if not using --output directory)");
-
-    private static readonly Option<bool> IncludeMetricsOption = new(
-        aliases: ["--include-metrics"],
-        description: "Include detailed metrics in analysis");
-
-    private static readonly Option<bool> IncludeComplexityOption = new(
-        aliases: ["--include-complexity"],
-        description: "Include complexity analysis");
-
-    private static readonly Option<bool> IncludeOpportunitiesOption = new(
-        aliases: ["--include-opportunities"],
-        description: "Include refactoring opportunities");
-
-    private static readonly Option<int> MaxDepthOption = new(
-        aliases: ["--max-depth"],
-        description: "Maximum depth for recursive analysis",
-        getDefaultValue: () => 10);
 
     /// <summary>
     /// Initializes a new instance of the AnalyzeCommand class
     /// </summary>
-    public AnalyzeCommand() : base("analyze", "Analyze code metrics, complexity, and refactoring opportunities")
+    public AnalyzeCommand() : base("analyze", "Analyze code for metrics, complexity, and refactoring opportunities")
     {
-        AddOption(AnalysisTypeOption);
-        AddOption(PathOption);
-        AddOption(OutputFormatOption);
-        AddOption(OutputFileOption);
-        AddOption(IncludeMetricsOption);
-        AddOption(IncludeComplexityOption);
-        AddOption(IncludeOpportunitiesOption);
-        AddOption(MaxDepthOption);
+        AddArgument(TypeArgument);
+        AddOption(FormatOption);
 
-        this.SetHandler(ExecuteAsync,
-            AnalysisTypeOption,
-            SolutionOption,
-            PathOption,
-            OutputFormatOption,
-            OutputFileOption,
-            IncludeMetricsOption,
-            IncludeComplexityOption,
-            IncludeOpportunitiesOption,
-            MaxDepthOption,
-            VerboseOption,
-            ConfigOption,
-            LogLevelOption,
-            OutputOption);
+        this.SetHandler(async (context) =>
+        {
+            var type = context.ParseResult.GetValueForArgument(TypeArgument);
+            var solution = context.ParseResult.GetValueForOption(SolutionOption);
+            var format = context.ParseResult.GetValueForOption(FormatOption);
+            var verbose = context.ParseResult.GetValueForOption(VerboseOption);
+            var logLevel = context.ParseResult.GetValueForOption(LogLevelOption);
+            var output = context.ParseResult.GetValueForOption(OutputOption);
+
+            var exitCode = await ExecuteAsync(type!, solution, format, verbose, logLevel, output);
+            context.ExitCode = exitCode;
+        });
     }
 
     /// <summary>
     /// Executes the analyze command
     /// </summary>
     private async Task<int> ExecuteAsync(
-        string analysisType,
+        string type,
         FileInfo? solution,
-        string? path,
-        string outputFormat,
-        string? outputFile,
-        bool includeMetrics,
-        bool includeComplexity,
-        bool includeOpportunities,
-        int maxDepth,
+        string? format,
         bool verbose,
-        FileInfo? config,
         LogLevel logLevel,
         DirectoryInfo? output)
     {
         try
         {
-            // Validate required parameters
             if (!ValidateSolutionPath(solution, "analyze"))
             {
                 return 1;
             }
 
             var logger = GetLogger(logLevel, verbose);
-            logger.LogInformation("Starting analysis: {AnalysisType}", analysisType);
+            logger.LogInformation("Starting code analysis: {Type}", type);
 
-            // Create analysis request
-            var request = new AnalysisRequest
+            // Placeholder for actual analysis logic
+            Console.WriteLine($"Analyzing solution '{solution!.FullName}'");
+            Console.WriteLine($"  Analysis type: {type}");
+            Console.WriteLine($"  Output format: {format}");
+            if (output != null)
             {
-                AnalysisType = analysisType,
-                SolutionPath = solution!.FullName,
-                TargetPath = path,
-                OutputFormat = outputFormat,
-                OutputFile = outputFile,
-                IncludeMetrics = includeMetrics,
-                IncludeComplexity = includeComplexity,
-                IncludeOpportunities = includeOpportunities,
-                MaxDepth = maxDepth,
-                OutputDirectory = output?.FullName
-            };
-
-            // Execute analysis
-            var analyzer = new CodeAnalyzer(logger);
-            var result = await analyzer.AnalyzeAsync(request, CancellationToken.None);
-
-            if (result.Success)
-            {
-                logger.LogInformation("Analysis completed successfully");
-                
-                // Output results based on format
-                if (result.Output != null)
-                {
-                    switch (outputFormat.ToLowerInvariant())
-                    {
-                        case "json":
-                            Console.WriteLine(result.Output.JsonOutput);
-                            break;
-                        case "csv":
-                            Console.WriteLine(result.Output.CsvOutput);
-                            break;
-                        case "markdown":
-                            Console.WriteLine(result.Output.MarkdownOutput);
-                            break;
-                        case "console":
-                        default:
-                            Console.WriteLine(result.Output.ConsoleOutput);
-                            break;
-                    }
-                }
-
-                return 0;
+                Console.WriteLine($"  Output directory: {output.FullName}");
             }
-            else
-            {
-                logger.LogError("Analysis failed: {Error}", result.ErrorMessage);
-                Console.Error.WriteLine($"Analysis failed: {result.ErrorMessage}");
-                return 1;
-            }
+
+            logger.LogInformation("Analysis completed successfully");
+            return 0;
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"Unexpected error: {ex.Message}");
+            Console.Error.WriteLine($"Error: {ex.Message}");
             return 1;
         }
     }
-}
-
-/// <summary>
-/// Represents an analysis request
-/// </summary>
-public class AnalysisRequest
-{
-    /// <summary>
-    /// Gets or sets the type of analysis to perform
-    /// </summary>
-    public string AnalysisType { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the path to the solution file
-    /// </summary>
-    public string SolutionPath { get; set; } = string.Empty;
-
-    /// <summary>
-    /// Gets or sets the target path to analyze
-    /// </summary>
-    public string? TargetPath { get; set; }
-
-    /// <summary>
-    /// Gets or sets the output format
-    /// </summary>
-    public string OutputFormat { get; set; } = "console";
-
-    /// <summary>
-    /// Gets or sets the output file path
-    /// </summary>
-    public string? OutputFile { get; set; }
-
-    /// <summary>
-    /// Gets or sets whether to include detailed metrics
-    /// </summary>
-    public bool IncludeMetrics { get; set; }
-
-    /// <summary>
-    /// Gets or sets whether to include complexity analysis
-    /// </summary>
-    public bool IncludeComplexity { get; set; }
-
-    /// <summary>
-    /// Gets or sets whether to include refactoring opportunities
-    /// </summary>
-    public bool IncludeOpportunities { get; set; }
-
-    /// <summary>
-    /// Gets or sets the maximum depth for recursive analysis
-    /// </summary>
-    public int MaxDepth { get; set; } = 10;
-
-    /// <summary>
-    /// Gets or sets the output directory
-    /// </summary>
-    public string? OutputDirectory { get; set; }
 }

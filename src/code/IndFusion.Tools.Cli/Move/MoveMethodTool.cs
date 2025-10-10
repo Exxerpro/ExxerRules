@@ -1,7 +1,5 @@
 namespace IndFusion.Tools.Mcp.App.Move;
 
-using Microsoft.CodeAnalysis.Formatting;
-
 /// <summary>
 /// MCP tool for moving methods between classes at the file/solution level,
 /// leaving stubs to preserve public interfaces.

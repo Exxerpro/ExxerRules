@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Logging;
-using IndFusion.Tools.Cli.Commands;
+using IndFusion.Tools.Cli.Models;
 
 namespace IndFusion.Tools.Cli.Services;
 

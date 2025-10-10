@@ -1,7 +1,3 @@
-using System.CommandLine;
-using Microsoft.Extensions.Logging;
-using IndFusion.Tools.Cli.Services;
-
 namespace IndFusion.Tools.Cli.Commands;
 
 /// <summary>
@@ -78,7 +74,7 @@ public class InteractiveCommand : BaseCommand
             // Start interactive session
             var result = await session.StartAsync(CancellationToken.None);
 
-            if (result.Success)
+            if (result.IsSuccess)
             {
                 logger.LogInformation("Interactive session completed successfully");
                 Console.WriteLine("Interactive refactoring session completed successfully!");
@@ -208,7 +204,7 @@ public class InteractiveSession
         // This would integrate with the actual refactoring tools
         // For now, return a placeholder
         await Task.Delay(100, cancellationToken); // Simulate async work
-        
+
         return new List<RefactoringOpportunity>
         {
             new() { Type = "ExtractMethod", File = "Sample.cs", Line = 10, Description = "Extract method from long function" },
@@ -237,7 +233,7 @@ public class InteractiveSession
         Console.Write("Choose an option: ");
 
         var choice = Console.ReadLine()?.ToUpperInvariant();
-        
+
         switch (choice)
         {
             case "P":
@@ -245,12 +241,15 @@ public class InteractiveSession
                 return await ProcessOpportunityAsync(opportunity, cancellationToken); // Show options again
             case "A":
                 return await ApplyRefactoringAsync(opportunity, cancellationToken);
+
             case "S":
                 Console.WriteLine("Skipped.");
                 return true;
+
             case "Q":
                 Console.WriteLine("Quitting session.");
                 return false;
+
             default:
                 Console.WriteLine("Invalid option. Please try again.");
                 return await ProcessOpportunityAsync(opportunity, cancellationToken);
@@ -287,8 +286,6 @@ public class InteractiveSession
     }
 }
 
-
-
 /// <summary>
 /// Represents the result of an interactive session
 /// </summary>
@@ -297,7 +294,7 @@ public class SessionResult
     /// <summary>
     /// Gets whether the session was successful
     /// </summary>
-    public bool Success { get; private set; }
+    public bool IsSuccess => string.IsNullOrEmpty(ErrorMessage) && !string.IsNullOrEmpty(SuccessMessage);
 
     /// <summary>
     /// Gets the error message if the session failed
@@ -309,8 +306,6 @@ public class SessionResult
     /// </summary>
     public string? SuccessMessage { get; private set; }
 
-
-
     /// <summary>
     /// Creates a successful session result
     /// </summary>
@@ -318,7 +313,7 @@ public class SessionResult
     /// <returns>Successful session result</returns>
     public static SessionResult Success(string message)
     {
-        return new SessionResult { Success = true, SuccessMessage = message };
+        return new SessionResult { SuccessMessage = message };
     }
 
     /// <summary>
@@ -328,6 +323,6 @@ public class SessionResult
     /// <returns>Failed session result</returns>
     public static SessionResult Failure(string errorMessage)
     {
-        return new SessionResult { Success = false, ErrorMessage = errorMessage };
+        return new SessionResult { ErrorMessage = errorMessage };
     }
 }

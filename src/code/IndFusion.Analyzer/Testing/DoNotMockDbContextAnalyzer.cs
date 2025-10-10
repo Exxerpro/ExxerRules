@@ -46,7 +46,7 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
         var typeName = objectCreation.Type.ToString();
 
         // Check for Mock<DbContext> or Mock<CustomDbContext>
-        if (typeName.StartsWith("Mock<") && IsDbContextType(typeName, context.SemanticModel, objectCreation))
+        if (typeName.StartsWith("Mock<") && IsDbContextType(typeName, context.SemanticModel, objectCreation.Type))
         {
             var dbContextType = ExtractGenericTypeArgument(typeName);
             var diagnostic = Diagnostic.Create(
@@ -123,7 +123,7 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    private static bool IsDbContextType(string typeName, SemanticModel semanticModel, SyntaxNode node)
+    private static bool IsDbContextType(string typeName, SemanticModel semanticModel, TypeSyntax typeSyntax)
     {
         // Extract the generic type argument from Mock<T>
         var genericArg = ExtractGenericTypeArgument(typeName);
@@ -132,17 +132,11 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Check if it's a known DbContext type name
-        if (genericArg == "DbContext" || genericArg.EndsWith("DbContext") || genericArg.EndsWith("Context"))
-        {
-            return true;
-        }
-
         // Use semantic model to check if the type inherits from DbContext
-        var typeInfo = semanticModel.GetTypeInfo(node);
+        var typeInfo = semanticModel.GetTypeInfo(typeSyntax);
         if (typeInfo.Type is INamedTypeSymbol namedType)
         {
-            return InheritsFromDbContext(namedType);
+            return IsActualDbContext(namedType);
         }
 
         return false;
@@ -153,14 +147,62 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
         var typeInfo = semanticModel.GetTypeInfo(typeSyntax);
         if (typeInfo.Type is INamedTypeSymbol namedType)
         {
-            return InheritsFromDbContext(namedType);
+            return IsActualDbContext(namedType);
         }
 
-        // Fallback to name-based check
-        var typeName = typeSyntax.ToString();
-        return typeName == "DbContext" || typeName.EndsWith("DbContext") || typeName.EndsWith("Context");
+        return false;
     }
 
+    /// <summary>
+    /// Determines if a type is an actual EF Core DbContext that should not be mocked.
+    /// </summary>
+    private static bool IsActualDbContext(INamedTypeSymbol type)
+    {
+        if (type == null)
+            return false;
+
+        // Check if it's a record (domain context records should not be flagged)
+        if (type.IsRecord)
+            return false;
+
+        // Check if it's an interface (interfaces should not be flagged unless they inherit from DbContext)
+        if (type.TypeKind == TypeKind.Interface)
+        {
+            // Only flag if the interface actually inherits from DbContext
+            return InheritsFromDbContext(type);
+        }
+
+        // Check for framework-provided contexts that should be allowed
+        if (IsFrameworkContext(type))
+            return false;
+
+        // Check for test framework contexts
+        if (IsTestFrameworkContext(type))
+            return false;
+
+        // Check for ASP.NET Core HTTP contexts
+        if (IsAspNetHttpContext(type))
+            return false;
+
+        // Check for DataAnnotations validation contexts
+        if (IsDataAnnotationsValidationContext(type))
+            return false;
+
+        // Check for test helper contexts in specific namespaces
+        if (IsTestHelperContext(type))
+            return false;
+
+        // Check for IDbContextFactory (should be allowed)
+        if (IsDbContextFactory(type))
+            return false;
+
+        // Finally, check if it actually inherits from EF Core DbContext
+        return InheritsFromDbContext(type);
+    }
+
+    /// <summary>
+    /// Checks if the type inherits from Microsoft.EntityFrameworkCore.DbContext.
+    /// </summary>
     private static bool InheritsFromDbContext(INamedTypeSymbol type)
     {
         var baseType = type.BaseType;
@@ -175,6 +217,80 @@ public class DoNotMockDbContextAnalyzer : DiagnosticAnalyzer
         }
 
         return false;
+    }
+
+    /// <summary>
+    /// Checks if the type is a framework-provided context that should be allowed.
+    /// </summary>
+    private static bool IsFrameworkContext(INamedTypeSymbol type)
+    {
+        var fullName = type.ToDisplayString();
+        
+        // Allow framework contexts
+        return fullName == "System.ComponentModel.DataAnnotations.ValidationContext" ||
+               fullName.StartsWith("Microsoft.AspNetCore.Http.") ||
+               fullName == "Microsoft.AspNetCore.Http.HttpContext" ||
+               fullName == "Microsoft.AspNetCore.Http.HttpRequest" ||
+               fullName == "Microsoft.AspNetCore.Http.HttpResponse";
+    }
+
+    /// <summary>
+    /// Checks if the type is a test framework context that should be allowed.
+    /// </summary>
+    private static bool IsTestFrameworkContext(INamedTypeSymbol type)
+    {
+        var fullName = type.ToDisplayString();
+        
+        // Allow test framework contexts
+        return fullName == "Microsoft.VisualStudio.TestTools.UnitTesting.TestContext" ||
+               fullName == "NUnit.Framework.TestContext" ||
+               fullName == "Xunit.TestContext" ||
+               fullName == "TestContext"; // Generic test context
+    }
+
+    /// <summary>
+    /// Checks if the type is an ASP.NET Core HTTP context that should be allowed.
+    /// </summary>
+    private static bool IsAspNetHttpContext(INamedTypeSymbol type)
+    {
+        var fullName = type.ToDisplayString();
+        return fullName.StartsWith("Microsoft.AspNetCore.Http.") ||
+               fullName == "HttpContext" ||
+               fullName == "HttpRequest" ||
+               fullName == "HttpResponse";
+    }
+
+    /// <summary>
+    /// Checks if the type is a DataAnnotations validation context that should be allowed.
+    /// </summary>
+    private static bool IsDataAnnotationsValidationContext(INamedTypeSymbol type)
+    {
+        var fullName = type.ToDisplayString();
+        return fullName == "System.ComponentModel.DataAnnotations.ValidationContext" ||
+               fullName == "ValidationContext";
+    }
+
+    /// <summary>
+    /// Checks if the type is a test helper context in specific namespaces that should be allowed.
+    /// </summary>
+    private static bool IsTestHelperContext(INamedTypeSymbol type)
+    {
+        var containingNamespace = type.ContainingNamespace?.ToDisplayString();
+        
+        // Allow test helper contexts in specific namespaces
+        return containingNamespace?.StartsWith("Integration.Tests.Infrastructure") == true ||
+               containingNamespace?.Contains("Test") == true && 
+               (type.Name.EndsWith("Context") || type.Name.EndsWith("Logger"));
+    }
+
+    /// <summary>
+    /// Checks if the type is an IDbContextFactory that should be allowed.
+    /// </summary>
+    private static bool IsDbContextFactory(INamedTypeSymbol type)
+    {
+        var fullName = type.ToDisplayString();
+        return fullName.StartsWith("Microsoft.EntityFrameworkCore.IDbContextFactory") ||
+               fullName.StartsWith("IDbContextFactory");
     }
 
     private static string ExtractGenericTypeArgument(string typeName)

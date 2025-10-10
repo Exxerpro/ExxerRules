@@ -284,8 +284,8 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
     /// </summary>
     private static bool IsBlazorPartialComponent(SyntaxNode node)
     {
-        // Check if the node is inside a partial class that inherits from ComponentBase
-        var classDeclaration = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        // Check if the node is a class declaration or inside a partial class that inherits from ComponentBase
+        var classDeclaration = node as ClassDeclarationSyntax ?? node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
         if (classDeclaration == null)
         {
             return false;

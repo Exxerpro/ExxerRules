@@ -134,7 +134,9 @@ public static class AnalyzerTestHelper
 	"Microsoft.Extensions.Logging",
 	"Microsoft.Extensions.Logging.Abstractions",
 	"Microsoft.EntityFrameworkCore",
-	"Microsoft.EntityFrameworkCore.Abstractions"
+	"Microsoft.EntityFrameworkCore.Abstractions",
+	"Microsoft.AspNetCore.Components",
+	"Microsoft.AspNetCore.Components.Web"
 };
 
         var references = trustedAssembliesPaths

@@ -90,6 +90,12 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
         var className = classDeclaration.Identifier.ValueText;
         var foundDirectAccess = false;
 
+        // Check for various exemption scenarios first
+        if (IsExemptFromRepositoryPatternRule(classDeclaration, context))
+        {
+            return;
+        }
+
         // Look for DbContext fields/properties
         foreach (var member in classDeclaration.Members)
         {
@@ -197,4 +203,255 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
 
         return dataAccessTypes.Any(t => typeName.Contains(t));
     }
+
+    #region False-Positive Mitigation Methods
+
+    /// <summary>
+    /// Determines if a class is exempt from the repository pattern rule.
+    /// </summary>
+    private static bool IsExemptFromRepositoryPatternRule(ClassDeclarationSyntax classDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        var className = classDeclaration.Identifier.ValueText;
+
+        // Story 1.1: Exempt Application Layer Handlers
+        if (IsApplicationLayerHandler(classDeclaration, context))
+        {
+            return true;
+        }
+
+        // Story 1.2: Exempt Infrastructure Layer
+        if (IsInfrastructureLayer(classDeclaration, context))
+        {
+            return true;
+        }
+
+        // Story 1.3: Exempt Test and Fixture Classes
+        if (IsTestOrFixtureClass(classDeclaration, context))
+        {
+            return true;
+        }
+
+        // Story 1.4: Exempt Connection Wrapper Classes
+        if (IsConnectionWrapperClass(className))
+        {
+            return true;
+        }
+
+        // Story 1.5: Exempt DbContextOptions and EF Services
+        if (IsDbContextOptionsOrEFService(classDeclaration))
+        {
+            return true;
+        }
+
+        // Story 1.6: Exempt Minimal APIs and Program.cs
+        if (IsMinimalAPIOrProgramCs(classDeclaration, context))
+        {
+            return true;
+        }
+
+        // Story 1.7: Exempt Generic Infrastructure Services
+        if (IsGenericInfrastructureService(className))
+        {
+            return true;
+        }
+
+        // Story 1.8: Exempt Generic Repository Base Classes
+        if (IsGenericRepositoryBaseClass(classDeclaration))
+        {
+            return true;
+        }
+
+        // Story 1.9: Exempt Domain-Specific EF Extensions
+        if (IsDomainSpecificEFExtension(classDeclaration, context))
+        {
+            return true;
+        }
+
+        // Story 1.10: Provide an Opt-Out Attribute
+        if (HasAllowDirectDataAccessAttribute(classDeclaration))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.1: Exempt Application Layer Handlers
+    /// </summary>
+    private static bool IsApplicationLayerHandler(ClassDeclarationSyntax classDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        // Check if we're in an Application namespace
+        if (!IsInApplicationNamespace(classDeclaration))
+        {
+            return false;
+        }
+
+        // Check if class implements a handler interface
+        var implementsHandler = classDeclaration.BaseList?.Types
+            .Any(t => t.Type.ToString().Contains("IRequestHandler") || 
+                     t.Type.ToString().Contains("ICommandHandler") ||
+                     t.Type.ToString().Contains("IQueryHandler")) == true;
+
+        return implementsHandler;
+    }
+
+    /// <summary>
+    /// Story 1.2: Exempt Infrastructure Layer
+    /// </summary>
+    private static bool IsInfrastructureLayer(ClassDeclarationSyntax classDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        return IsInInfrastructureLayer(context, classDeclaration);
+    }
+
+    /// <summary>
+    /// Story 1.3: Exempt Test and Fixture Classes
+    /// </summary>
+    private static bool IsTestOrFixtureClass(ClassDeclarationSyntax classDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        var className = classDeclaration.Identifier.ValueText;
+        
+        // Check if class name suggests it's a test or fixture
+        return className.EndsWith("Tests") || 
+               className.EndsWith("Test") ||
+               className.EndsWith("Fixture") ||
+               className.EndsWith("TestBase");
+    }
+
+    /// <summary>
+    /// Story 1.4: Exempt Connection Wrapper Classes
+    /// </summary>
+    private static bool IsConnectionWrapperClass(string className)
+    {
+        // Check if class name suggests it's a connection wrapper
+        return className.EndsWith("Connection") || 
+               className.EndsWith("Connector") ||
+               className.EndsWith("Factory") ||
+               className.Contains("Connection");
+    }
+
+    /// <summary>
+    /// Story 1.5: Exempt DbContextOptions and EF Services
+    /// </summary>
+    private static bool IsDbContextOptionsOrEFService(ClassDeclarationSyntax classDeclaration)
+    {
+        // Check if class name suggests it's an EF service
+        var className = classDeclaration.Identifier.ValueText;
+        return className.Contains("DbContextFactory") ||
+               className.Contains("DbContextManager") ||
+               className.Contains("ServiceScope") ||
+               className.Contains("EFService");
+    }
+
+    /// <summary>
+    /// Story 1.6: Exempt Minimal APIs and Program.cs
+    /// </summary>
+    private static bool IsMinimalAPIOrProgramCs(ClassDeclarationSyntax classDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        // Check if we're in a file with top-level statements or Program.cs
+        var filePath = context.Node.SyntaxTree.FilePath;
+        return filePath.EndsWith("Program.cs") ||
+               filePath.Contains("Program") ||
+               HasTopLevelStatements(context.Node.SyntaxTree);
+    }
+
+    /// <summary>
+    /// Story 1.7: Exempt Generic Infrastructure Services
+    /// </summary>
+    private static bool IsGenericInfrastructureService(string className)
+    {
+        // Check if class name suggests it's a generic infrastructure service
+        return className.Contains("UnitOfWork") ||
+               className.Contains("Transaction") ||
+               className.Contains("Migration") ||
+               className.Contains("Seeder") ||
+               className.Contains("InfrastructureService");
+    }
+
+    /// <summary>
+    /// Story 1.8: Exempt Generic Repository Base Classes
+    /// </summary>
+    /// <summary>
+    /// Story 1.8: Exempt Generic Repository Base Classes
+    /// </summary>
+    private static bool IsGenericRepositoryBaseClass(ClassDeclarationSyntax classDeclaration)
+    {
+        // Check if class inherits from a generic repository base
+        var baseTypes = classDeclaration.BaseList?.Types;
+        if (baseTypes == null)
+        {
+            return false;
+        }
+
+        return baseTypes.Value.Any(t => t.Type.ToString().Contains("RepositoryBase") ||
+                                       t.Type.ToString().Contains("Repository<T"));
+    }
+
+    /// <summary>
+    /// Story 1.9: Exempt Domain-Specific EF Extensions
+    /// </summary>
+    private static bool IsDomainSpecificEFExtension(ClassDeclarationSyntax classDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        // Check if it's a static class in a persistence-related namespace
+        var isStatic = classDeclaration.Modifiers.Any(SyntaxKind.StaticKeyword);
+        if (!isStatic)
+        {
+            return false;
+        }
+
+        // Check if we're in a persistence-related namespace
+        var namespaceDeclaration = classDeclaration.FirstAncestorOrSelf<BaseNamespaceDeclarationSyntax>();
+        if (namespaceDeclaration == null)
+        {
+            return false;
+        }
+
+        var namespaceName = namespaceDeclaration.Name.ToString();
+        return namespaceName.Contains("Persistence") ||
+               namespaceName.Contains("Extensions") ||
+               namespaceName.Contains("EF");
+    }
+
+    /// <summary>
+    /// Story 1.10: Provide an Opt-Out Attribute
+    /// </summary>
+    private static bool HasAllowDirectDataAccessAttribute(ClassDeclarationSyntax classDeclaration)
+    {
+        // Check for [AllowDirectDataAccess] attribute
+        var attributes = classDeclaration.AttributeLists
+            .SelectMany(al => al.Attributes)
+            .Select(a => a.Name.ToString());
+
+        return attributes.Any(attr => attr == "AllowDirectDataAccess" || 
+                                     attr.EndsWith(".AllowDirectDataAccess"));
+    }
+
+    /// <summary>
+    /// Helper method to check if we're in an Application namespace.
+    /// </summary>
+    private static bool IsInApplicationNamespace(ClassDeclarationSyntax classDeclaration)
+    {
+        var namespaceDeclaration = classDeclaration.FirstAncestorOrSelf<BaseNamespaceDeclarationSyntax>();
+        if (namespaceDeclaration == null)
+        {
+            return false;
+        }
+
+        var namespaceName = namespaceDeclaration.Name.ToString();
+        return namespaceName.Contains(".Application.") ||
+               namespaceName.StartsWith("Application.") ||
+               namespaceName.EndsWith(".Application") ||
+               namespaceName == "Application";
+    }
+
+    /// <summary>
+    /// Helper method to check if a file has top-level statements.
+    /// </summary>
+    private static bool HasTopLevelStatements(SyntaxTree syntaxTree)
+    {
+        var root = syntaxTree.GetRoot();
+        return root.DescendantNodes().OfType<GlobalStatementSyntax>().Any();
+    }
+
+    #endregion
 }

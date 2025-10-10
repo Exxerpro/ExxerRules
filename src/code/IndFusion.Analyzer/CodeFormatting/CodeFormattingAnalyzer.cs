@@ -91,6 +91,12 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
     {
         var variableDeclaration = (VariableDeclarationSyntax)context.Node;
 
+        // Check if this should be exempted from formatting checks
+        if (IsExemptFromCodeFormattingCheck(variableDeclaration, context))
+        {
+            return;
+        }
+
         // Check for inconsistent variable initialization formatting
         if (HasInconsistentVariableFormatting(variableDeclaration))
         {
@@ -220,4 +226,191 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
                PropertyDeclarationSyntax or
                ClassDeclarationSyntax or
                ConstructorDeclarationSyntax;
+
+    #region False-Positive Mitigation
+
+    /// <summary>
+    /// Central method to check if a variable declaration should be exempted from code formatting checks.
+    /// </summary>
+    private static bool IsExemptFromCodeFormattingCheck(VariableDeclarationSyntax variableDeclaration, SyntaxNodeAnalysisContext context)
+    {
+        return IsLinqProjection(variableDeclaration) ||
+               IsInDebugGuardClause(variableDeclaration) ||
+               IsDictionaryInitialization(variableDeclaration) ||
+               IsAwaitedRepositoryCall(variableDeclaration) ||
+               IsProjectionToDto(variableDeclaration) ||
+               IsGroupByToDictionaryPipeline(variableDeclaration) ||
+               IsFluentResultPipeline(variableDeclaration) ||
+               IsSpecificationBuilderAssignment(variableDeclaration) ||
+               IsDictionaryMaterialization(variableDeclaration);
+    }
+
+    /// <summary>
+    /// Story 1.1: Correctly Handle LINQ Projections
+    /// </summary>
+    private static bool IsLinqProjection(VariableDeclarationSyntax variableDeclaration)
+    {
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        // Check if the initializer contains LINQ methods
+        var initializerText = initializer.ToString();
+        return initializerText.Contains(".Select(") ||
+               initializerText.Contains(".Where(") ||
+               initializerText.Contains(".ToList()") ||
+               initializerText.Contains(".ToArray()");
+    }
+
+    /// <summary>
+    /// Story 1.2: Correctly Handle Guard Clause Mock Data Assignments
+    /// </summary>
+    private static bool IsInDebugGuardClause(VariableDeclarationSyntax variableDeclaration)
+    {
+        // Check if the variable declaration is within a #if DEBUG block
+        var trivia = variableDeclaration.GetLeadingTrivia();
+        foreach (var trivium in trivia)
+        {
+            if (trivium.IsKind(SyntaxKind.IfDirectiveTrivia))
+            {
+                var directive = trivium.ToString();
+                if (directive.Contains("#if DEBUG"))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.3: Correctly Handle Dictionary Initializations
+    /// </summary>
+    private static bool IsDictionaryInitialization(VariableDeclarationSyntax variableDeclaration)
+    {
+        var type = variableDeclaration.Type.ToString();
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        // Check if it's a dictionary initialization
+        return type.Contains("Dictionary") && 
+               (initializer.ToString().Contains("{") && initializer.ToString().Contains("}"));
+    }
+
+    /// <summary>
+    /// Story 1.4: Correctly Handle Awaited Repository Calls
+    /// </summary>
+    private static bool IsAwaitedRepositoryCall(VariableDeclarationSyntax variableDeclaration)
+    {
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        var initializerText = initializer.ToString();
+        return initializerText.Contains("await") && 
+               (initializerText.Contains("Repository") || 
+                initializerText.Contains("GetByIdAsync") ||
+                initializerText.Contains("GetAllAsync") ||
+                initializerText.Contains("SaveAsync"));
+    }
+
+    /// <summary>
+    /// Story 1.5: Correctly Handle Projections to DTOs
+    /// </summary>
+    private static bool IsProjectionToDto(VariableDeclarationSyntax variableDeclaration)
+    {
+        var type = variableDeclaration.Type.ToString();
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        // Check if it's a projection to a DTO
+        return (type.Contains("Dto") || type.Contains("DTO")) && 
+               initializer.ToString().Contains(".Select(");
+    }
+
+    /// <summary>
+    /// Story 1.6: Correctly Handle GroupBy/ToDictionary Pipelines
+    /// </summary>
+    private static bool IsGroupByToDictionaryPipeline(VariableDeclarationSyntax variableDeclaration)
+    {
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        var initializerText = initializer.ToString();
+        return initializerText.Contains(".GroupBy(") && 
+               initializerText.Contains(".ToDictionary(");
+    }
+
+    /// <summary>
+    /// Story 1.7: Correctly Handle Fluent Result Pipelines
+    /// </summary>
+    private static bool IsFluentResultPipeline(VariableDeclarationSyntax variableDeclaration)
+    {
+        var type = variableDeclaration.Type.ToString();
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        var initializerText = initializer.ToString();
+        return type.Contains("Result") && 
+               (initializerText.Contains("await") && 
+                (initializerText.Contains(".Map(") || initializerText.Contains(".Bind(")));
+    }
+
+    /// <summary>
+    /// Story 1.8: Correctly Handle Specification Builder Assignments
+    /// </summary>
+    private static bool IsSpecificationBuilderAssignment(VariableDeclarationSyntax variableDeclaration)
+    {
+        var type = variableDeclaration.Type.ToString();
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        var initializerText = initializer.ToString();
+        return type.Contains("Specification") && 
+               initializerText.Contains("new Specification<");
+    }
+
+    /// <summary>
+    /// Story 1.9: Correctly Handle Dictionary Materialization from Collections
+    /// </summary>
+    private static bool IsDictionaryMaterialization(VariableDeclarationSyntax variableDeclaration)
+    {
+        var type = variableDeclaration.Type.ToString();
+        var initializer = variableDeclaration.Variables.FirstOrDefault()?.Initializer?.Value;
+        
+        if (initializer == null)
+        {
+            return false;
+        }
+
+        var initializerText = initializer.ToString();
+        return type.Contains("Dictionary") && 
+               initializerText.Contains(".ToDictionary(");
+    }
+
+    #endregion
 }

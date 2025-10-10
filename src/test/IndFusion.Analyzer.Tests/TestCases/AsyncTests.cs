@@ -107,8 +107,9 @@ using System.Threading.Tasks;
 
 namespace TestProject
 {
-	public string mystrinc =\""AsyncService\""
+	public class TestClass
 	{
+		public string mystrinc = ""AsyncService"";
 	}
 }";
 
@@ -129,8 +130,9 @@ using System.Threading.Tasks;
 
 namespace TestProject
 {
-	public static read only string mystrinc =\""AsyncService\""
+	public class TestClass
 	{
+		public static readonly string mystrinc = ""AsyncService"";
 	}
 }";
 

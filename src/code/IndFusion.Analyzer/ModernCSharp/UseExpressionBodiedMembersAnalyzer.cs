@@ -111,9 +111,175 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
+        // Check for various exemption scenarios
+        if (IsExemptFromExpressionBodied(body))
+        {
+            return false;
+        }
+
         // Simple heuristic: expression should be reasonably simple
         // Avoid very complex expressions that would hurt readability
         var expressionText = returnStatement.Expression.ToString();
         return expressionText.Length < 100; // Arbitrary threshold for simplicity
     }
+
+    #region False-Positive Mitigation Methods
+
+    /// <summary>
+    /// Determines if a method body is exempt from expression-bodied member suggestions.
+    /// </summary>
+    private static bool IsExemptFromExpressionBodied(BlockSyntax body)
+    {
+        // Story 1.1: Exempt ICommandData Factory Methods
+        if (IsICommandDataFactoryMethod(body))
+        {
+            return true;
+        }
+
+        // Story 1.2: Exempt Fluent TODO Stubs
+        if (IsFluentTodoStub(body))
+        {
+            return true;
+        }
+
+        // Story 1.3: Exempt IResettable.TryReset Methods
+        if (IsIResettableTryResetMethod(body))
+        {
+            return true;
+        }
+
+        // Story 1.4: Exempt Fluent WithData Methods
+        if (IsFluentWithDataMethod(body))
+        {
+            return true;
+        }
+
+        // Story 1.5: Exempt Domain Entity Resetters
+        if (IsDomainEntityResetter(body))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.1: Exempt ICommandData Factory Methods
+    /// </summary>
+    private static bool IsICommandDataFactoryMethod(BlockSyntax body)
+    {
+        // Check if we're in a method named "Create" that implements ICommandData.Create
+        var methodDeclaration = body.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+        if (methodDeclaration == null || methodDeclaration.Identifier.Text != "Create")
+        {
+            return false;
+        }
+
+        // Check if the method returns a type that could be a command/query
+        var returnType = methodDeclaration.ReturnType.ToString();
+        if (returnType.Contains("Command") || returnType.Contains("Query") || returnType.Contains("ICommandData"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.2: Exempt Fluent TODO Stubs
+    /// </summary>
+    private static bool IsFluentTodoStub(BlockSyntax body)
+    {
+        // Check if the body contains TODO or FIXME comments
+        var bodyText = body.ToString();
+        return bodyText.Contains("// TODO") || bodyText.Contains("// FIXME");
+    }
+
+    /// <summary>
+    /// Story 1.3: Exempt IResettable.TryReset Methods
+    /// </summary>
+    private static bool IsIResettableTryResetMethod(BlockSyntax body)
+    {
+        // Check if we're in a method named "TryReset"
+        var methodDeclaration = body.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+        if (methodDeclaration == null || methodDeclaration.Identifier.Text != "TryReset")
+        {
+            return false;
+        }
+
+        // Check if the method returns bool
+        var returnType = methodDeclaration.ReturnType.ToString();
+        if (returnType == "bool")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.4: Exempt Fluent WithData Methods
+    /// </summary>
+    private static bool IsFluentWithDataMethod(BlockSyntax body)
+    {
+        // Check if we're in a method that starts with "With" or "Set"
+        var methodDeclaration = body.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+        if (methodDeclaration == null)
+        {
+            return false;
+        }
+
+        var methodName = methodDeclaration.Identifier.Text;
+        if (methodName.StartsWith("With") || methodName.StartsWith("Set"))
+        {
+            // Check if the body contains comments indicating future extension
+            var bodyText = body.ToString();
+            if (bodyText.Contains("// Future") || bodyText.Contains("// TODO") || bodyText.Contains("// FIXME"))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.5: Exempt Domain Entity Resetters
+    /// </summary>
+    private static bool IsDomainEntityResetter(BlockSyntax body)
+    {
+        // Check if we're in a method with "Reset" in the name
+        var methodDeclaration = body.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+        if (methodDeclaration == null)
+        {
+            return false;
+        }
+
+        var methodName = methodDeclaration.Identifier.Text;
+        if (methodName.Contains("Reset"))
+        {
+            // Check if the method returns bool
+            var returnType = methodDeclaration.ReturnType.ToString();
+            if (returnType == "bool")
+            {
+                return true;
+            }
+        }
+
+        // Check if the method has XML documentation containing "reset"
+        var xmlComments = methodDeclaration.GetLeadingTrivia()
+            .Where(t => t.IsKind(SyntaxKind.SingleLineDocumentationCommentTrivia) ||
+                       t.IsKind(SyntaxKind.MultiLineDocumentationCommentTrivia))
+            .Select(t => t.ToString())
+            .FirstOrDefault();
+
+        if (xmlComments != null && xmlComments.ToLowerInvariant().Contains("reset"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    #endregion
 }

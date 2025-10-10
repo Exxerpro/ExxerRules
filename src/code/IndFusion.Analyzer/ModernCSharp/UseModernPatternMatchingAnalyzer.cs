@@ -43,6 +43,12 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     {
         var ifStatement = (IfStatementSyntax)context.Node;
 
+        // Check for various exemption scenarios first
+        if (IsExemptFromPatternMatchingRule(ifStatement, context))
+        {
+            return;
+        }
+
         // Check if condition is a simple 'is' expression without declaration pattern
         if (ifStatement.Condition is BinaryExpressionSyntax binaryExpression &&
             binaryExpression.IsKind(SyntaxKind.IsExpression) &&
@@ -181,4 +187,201 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 
         return false;
     }
+
+    #region False-Positive Mitigation Methods
+
+    /// <summary>
+    /// Determines if an if statement is exempt from the pattern matching rule.
+    /// </summary>
+    private static bool IsExemptFromPatternMatchingRule(IfStatementSyntax ifStatement, SyntaxNodeAnalysisContext context)
+    {
+        // Story 1.1: Exempt Conditional Operator Guards
+        if (IsConditionalOperatorGuard(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.2: Exempt Reflection Property Access
+        if (IsReflectionPropertyAccess(ifStatement, context))
+        {
+            return true;
+        }
+
+        // Story 1.3: Exempt Type-Switched Casts
+        if (IsTypeSwitchedCast(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.4: Exempt Local Function Closures
+        if (IsLocalFunctionClosure(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.5: Support is not null Guard Clauses
+        if (IsIsNotNullGuard(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.6: Exempt Nullable Unwrap Patterns
+        if (IsNullableUnwrapPattern(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.7: Exempt Type Equality Guards
+        if (IsTypeEqualityGuard(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.8: Exempt Tuple Pattern Extraction
+        if (IsTuplePatternExtraction(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.9: Exempt Pattern-Matched Exception Handling
+        if (IsPatternMatchedExceptionHandling(ifStatement))
+        {
+            return true;
+        }
+
+        // Story 1.10: Exempt Temporary Variable Reassignment
+        if (IsTemporaryVariableReassignment(ifStatement))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.1: Exempt Conditional Operator Guards
+    /// </summary>
+    private static bool IsConditionalOperatorGuard(IfStatementSyntax ifStatement)
+    {
+        // Check if the if statement contains a conditional operator with is check and cast
+        var statementText = ifStatement.ToString();
+        return statementText.Contains("?") && statementText.Contains(":") && 
+               statementText.Contains("is ") && statementText.Contains("(");
+    }
+
+    /// <summary>
+    /// Story 1.2: Exempt Reflection Property Access
+    /// </summary>
+    private static bool IsReflectionPropertyAccess(IfStatementSyntax ifStatement, SyntaxNodeAnalysisContext context)
+    {
+        // Check if we're in a reflection helper method
+        var methodDeclaration = ifStatement.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+        if (methodDeclaration != null)
+        {
+            var methodName = methodDeclaration.Identifier.ValueText;
+            var methodText = methodDeclaration.ToString();
+            
+            return methodName.Contains("Property") || 
+                   methodName.Contains("Reflection") ||
+                   methodText.Contains("GetProperty") ||
+                   methodText.Contains("GetValue");
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.3: Exempt Type-Switched Casts
+    /// </summary>
+    private static bool IsTypeSwitchedCast(IfStatementSyntax ifStatement)
+    {
+        // Check if the if statement contains a type switch expression
+        var statementText = ifStatement.ToString();
+        return statementText.Contains("switch") && statementText.Contains("typeof");
+    }
+
+    /// <summary>
+    /// Story 1.4: Exempt Local Function Closures
+    /// </summary>
+    private static bool IsLocalFunctionClosure(IfStatementSyntax ifStatement)
+    {
+        // Check if the if statement contains local functions or lambdas
+        var statementText = ifStatement.ToString();
+        return statementText.Contains("Func<") || 
+               statementText.Contains("Action<") ||
+               statementText.Contains("() =>") ||
+               statementText.Contains("local function");
+    }
+
+    /// <summary>
+    /// Story 1.5: Support is not null Guard Clauses
+    /// </summary>
+    private static bool IsIsNotNullGuard(IfStatementSyntax ifStatement)
+    {
+        // Check if the condition uses "is not null"
+        var conditionText = ifStatement.Condition.ToString();
+        return conditionText.Contains("is not null") || conditionText.Contains("is not");
+    }
+
+    /// <summary>
+    /// Story 1.6: Exempt Nullable Unwrap Patterns
+    /// </summary>
+    private static bool IsNullableUnwrapPattern(IfStatementSyntax ifStatement)
+    {
+        // Check if the condition checks for value types
+        var conditionText = ifStatement.Condition.ToString();
+        var valueTypes = new[] { "int", "bool", "DateTime", "decimal", "double", "float", "long", "short" };
+        
+        return valueTypes.Any(vt => conditionText.Contains($"is {vt}"));
+    }
+
+    /// <summary>
+    /// Story 1.7: Exempt Type Equality Guards
+    /// </summary>
+    private static bool IsTypeEqualityGuard(IfStatementSyntax ifStatement)
+    {
+        // Check if the condition uses typeof equality
+        var conditionText = ifStatement.Condition.ToString();
+        return conditionText.Contains("typeof") && conditionText.Contains("==");
+    }
+
+    /// <summary>
+    /// Story 1.8: Exempt Tuple Pattern Extraction
+    /// </summary>
+    private static bool IsTuplePatternExtraction(IfStatementSyntax ifStatement)
+    {
+        // Check if the if statement contains tuple patterns
+        var statementText = ifStatement.ToString();
+        return statementText.Contains("(") && statementText.Contains(",") && 
+               statementText.Contains(")") && statementText.Contains("var");
+    }
+
+    /// <summary>
+    /// Story 1.9: Exempt Pattern-Matched Exception Handling
+    /// </summary>
+    private static bool IsPatternMatchedExceptionHandling(IfStatementSyntax ifStatement)
+    {
+        // Check if we're in a catch block with when clause
+        var catchClause = ifStatement.FirstAncestorOrSelf<CatchClauseSyntax>();
+        if (catchClause != null)
+        {
+            var catchText = catchClause.ToString();
+            return catchText.Contains("when") && catchText.Contains("is ");
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.10: Exempt Temporary Variable Reassignment
+    /// </summary>
+    private static bool IsTemporaryVariableReassignment(IfStatementSyntax ifStatement)
+    {
+        // Check if the if statement contains variable reassignment
+        var statementText = ifStatement.ToString();
+        return statementText.Contains("=") && statementText.Contains("(") && 
+               statementText.Contains(")") && statementText.Contains(";");
+    }
+
+    #endregion
 }

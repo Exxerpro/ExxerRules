@@ -1,12 +1,18 @@
-using FluentAssertions;
+using System;
 
-public class TestClass
+namespace TestProject
 {
-    public void TestMethod()
+    public class IncompleteValidationService
     {
-        var result = GetResult();
-        result.Should().Be(42);
+        public void ProcessData(string input, object config, int? value)
+        {
+            // Only validate input
+            ArgumentNullException.ThrowIfNull(input);
+            
+            // Use all parameters
+            var length = input.Length;
+            var type = config.GetType();
+            var hasValue = value.HasValue;
+        }
     }
-    
-    private int GetResult() => 42;
 }

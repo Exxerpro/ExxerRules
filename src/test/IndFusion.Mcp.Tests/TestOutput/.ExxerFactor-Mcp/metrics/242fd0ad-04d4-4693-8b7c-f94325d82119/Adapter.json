@@ -1,0 +1,34 @@
+{
+  "linesOfCode": 16,
+  "numberOfClasses": 2,
+  "numberOfPublicMethods": 2,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "LegacyLogger",
+      "linesOfCode": 1,
+      "methods": [
+        {
+          "name": "Write",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    },
+    {
+      "name": "LoggerAdapter",
+      "linesOfCode": 14,
+      "methods": [
+        {
+          "name": "Adapt",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

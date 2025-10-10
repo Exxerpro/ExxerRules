@@ -247,6 +247,12 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 
     private static void AnalyzeExpressionForLinqInefficiencies(SyntaxNodeAnalysisContext context, ExpressionSyntax expression)
     {
+        // Check for various exemption scenarios first
+        if (IsExemptFromLinqEfficiencyRule(expression, context))
+        {
+            return;
+        }
+
         // Detect pattern: data.Any() && data.First() > 0 (multiple enumerations)
         if (expression is BinaryExpressionSyntax binaryExpression &&
             binaryExpression.OperatorToken.IsKind(SyntaxKind.AmpersandAmpersandToken))
@@ -310,4 +316,282 @@ public class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
 
         return materializedMethods.Contains(methodName);
     }
+
+    #region False-Positive Mitigation Methods
+
+    /// <summary>
+    /// Determines if an expression is exempt from the LINQ efficiency rule.
+    /// </summary>
+    private static bool IsExemptFromLinqEfficiencyRule(ExpressionSyntax expression, SyntaxNodeAnalysisContext context)
+    {
+        // Story 1.1: Exempt Guard Patterns on ICollection and Arrays
+        if (IsGuardPatternOnCollectionOrArray(expression, context))
+        {
+            return true;
+        }
+
+        // Story 1.2: Recognize Materialized Queries
+        if (IsMaterializedQuery(expression))
+        {
+            return true;
+        }
+
+        // Story 1.3: Exempt IQueryable
+        if (IsIQueryableOperation(expression, context))
+        {
+            return true;
+        }
+
+        // Story 1.4: Exempt Set Operations
+        if (IsSetOperation(expression))
+        {
+            return true;
+        }
+
+        // Story 1.5: Exempt Any() Guard Followed by First() on Lists
+        if (IsAnyGuardFollowedByFirst(expression))
+        {
+            return true;
+        }
+
+        // Story 1.6: Exempt Async LINQ
+        if (IsAsyncLinqOperation(expression))
+        {
+            return true;
+        }
+
+        // Story 1.7: Exempt Null-Coalesced Enumerables
+        if (IsNullCoalescedEnumerable(expression))
+        {
+            return true;
+        }
+
+        // Story 1.8: Exempt Expression-Bodied Properties
+        if (IsExpressionBodiedProperty(expression, context))
+        {
+            return true;
+        }
+
+        // Story 1.9: Differentiate Query Variables Semantically
+        if (IsDifferentQueryVariable(expression, context))
+        {
+            return true;
+        }
+
+        // Story 1.10: Provide an Opt-Out Attribute
+        if (HasAllowMultipleEnumerationAttribute(expression, context))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.1: Exempt Guard Patterns on ICollection and Arrays
+    /// </summary>
+    private static bool IsGuardPatternOnCollectionOrArray(ExpressionSyntax expression, SyntaxNodeAnalysisContext context)
+    {
+        // Check if the expression involves ICollection, IReadOnlyCollection, or arrays
+        if (expression is BinaryExpressionSyntax binaryExpr &&
+            binaryExpr.OperatorToken.IsKind(SyntaxKind.AmpersandAmpersandToken))
+        {
+            var leftCollection = ExtractCollectionFromLinqCall(binaryExpr.Left);
+            var rightCollection = ExtractCollectionFromLinqCall(binaryExpr.Right);
+
+            if (leftCollection != null && rightCollection != null && leftCollection == rightCollection)
+            {
+                // Check if the collection is a List, Array, or ICollection
+                return IsCollectionOrArrayType(leftCollection, context);
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.2: Recognize Materialized Queries
+    /// </summary>
+    private static bool IsMaterializedQuery(ExpressionSyntax expression)
+    {
+        // Check if the expression contains materialization operations
+        if (expression is InvocationExpressionSyntax invocation &&
+            invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            var methodName = memberAccess.Name.Identifier.ValueText;
+            return IsMaterializedOperation(methodName);
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.3: Exempt IQueryable
+    /// </summary>
+    private static bool IsIQueryableOperation(ExpressionSyntax expression, SyntaxNodeAnalysisContext context)
+    {
+        // Check if the expression involves IQueryable operations
+        if (expression is InvocationExpressionSyntax invocation &&
+            invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            var semanticModel = context.SemanticModel;
+            var symbol = semanticModel.GetSymbolInfo(memberAccess.Expression).Symbol;
+            
+            if (symbol != null)
+            {
+                var type = symbol.GetType();
+                return type.Name.Contains("IQueryable") || 
+                       type.GetInterfaces().Any(i => i.Name.Contains("IQueryable"));
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.4: Exempt Set Operations
+    /// </summary>
+    private static bool IsSetOperation(ExpressionSyntax expression)
+    {
+        if (expression is InvocationExpressionSyntax invocation &&
+            invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            var methodName = memberAccess.Name.Identifier.ValueText;
+            var setOperations = new[] { "Union", "Except", "Concat", "Distinct", "Intersect" };
+            return setOperations.Contains(methodName);
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.5: Exempt Any() Guard Followed by First() on Lists
+    /// </summary>
+    private static bool IsAnyGuardFollowedByFirst(ExpressionSyntax expression)
+    {
+        if (expression is BinaryExpressionSyntax binaryExpr &&
+            binaryExpr.OperatorToken.IsKind(SyntaxKind.AmpersandAmpersandToken))
+        {
+            var leftMethod = ExtractLinqMethodFromExpression(binaryExpr.Left);
+            var rightMethod = ExtractLinqMethodFromExpression(binaryExpr.Right);
+
+            return leftMethod == "Any" && (rightMethod == "First" || rightMethod == "FirstOrDefault");
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.6: Exempt Async LINQ
+    /// </summary>
+    private static bool IsAsyncLinqOperation(ExpressionSyntax expression)
+    {
+        if (expression is InvocationExpressionSyntax invocation &&
+            invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            var methodName = memberAccess.Name.Identifier.ValueText;
+            var asyncLinqMethods = new[] { "AnyAsync", "FirstAsync", "FirstOrDefaultAsync", "CountAsync" };
+            return asyncLinqMethods.Contains(methodName);
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.7: Exempt Null-Coalesced Enumerables
+    /// </summary>
+    private static bool IsNullCoalescedEnumerable(ExpressionSyntax expression)
+    {
+        // Check for null-coalescing operator with Enumerable.Empty
+        if (expression is BinaryExpressionSyntax binaryExpr &&
+            binaryExpr.OperatorToken.IsKind(SyntaxKind.QuestionQuestionToken))
+        {
+            var rightSide = binaryExpr.Right.ToString();
+            return rightSide.Contains("Enumerable.Empty") || rightSide.Contains("new List");
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.8: Exempt Expression-Bodied Properties
+    /// </summary>
+    private static bool IsExpressionBodiedProperty(ExpressionSyntax expression, SyntaxNodeAnalysisContext context)
+    {
+        // Check if we're in an expression-bodied property
+        var propertyDeclaration = expression.FirstAncestorOrSelf<PropertyDeclarationSyntax>();
+        return propertyDeclaration?.ExpressionBody != null;
+    }
+
+    /// <summary>
+    /// Story 1.9: Differentiate Query Variables Semantically
+    /// </summary>
+    private static bool IsDifferentQueryVariable(ExpressionSyntax expression, SyntaxNodeAnalysisContext context)
+    {
+        // This is a simplified check - in a real implementation, you'd need more sophisticated semantic analysis
+        // For now, we'll check if the expressions involve different variable names
+        if (expression is BinaryExpressionSyntax binaryExpr &&
+            binaryExpr.OperatorToken.IsKind(SyntaxKind.AmpersandAmpersandToken))
+        {
+            var leftCollection = ExtractCollectionFromLinqCall(binaryExpr.Left);
+            var rightCollection = ExtractCollectionFromLinqCall(binaryExpr.Right);
+
+            return leftCollection != null && rightCollection != null && leftCollection != rightCollection;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.10: Provide an Opt-Out Attribute
+    /// </summary>
+    private static bool HasAllowMultipleEnumerationAttribute(ExpressionSyntax expression, SyntaxNodeAnalysisContext context)
+    {
+        // Check if the containing method has the AllowMultipleEnumeration attribute
+        var methodDeclaration = expression.FirstAncestorOrSelf<MethodDeclarationSyntax>();
+        if (methodDeclaration != null)
+        {
+            var attributes = methodDeclaration.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .Select(a => a.Name.ToString());
+
+            return attributes.Any(attr => attr == "AllowMultipleEnumeration" || 
+                                         attr.EndsWith(".AllowMultipleEnumeration"));
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Helper method to check if a collection is a List, Array, or ICollection type.
+    /// </summary>
+    private static bool IsCollectionOrArrayType(string collectionName, SyntaxNodeAnalysisContext context)
+    {
+        // This is a simplified check - in a real implementation, you'd use semantic analysis
+        // For now, we'll check common patterns
+        return collectionName.Contains("List") || 
+               collectionName.Contains("Array") || 
+               collectionName.Contains("Collection") ||
+               collectionName.StartsWith("_") && (collectionName.Contains("List") || collectionName.Contains("Array"));
+    }
+
+    /// <summary>
+    /// Helper method to extract LINQ method name from an expression.
+    /// </summary>
+    private static string? ExtractLinqMethodFromExpression(ExpressionSyntax expression)
+    {
+        if (expression is InvocationExpressionSyntax invocation &&
+            invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            var methodName = memberAccess.Name.Identifier.ValueText;
+            if (IsLinqMethod(methodName))
+            {
+                return methodName;
+            }
+        }
+
+        return null;
+    }
+
+    #endregion
 }

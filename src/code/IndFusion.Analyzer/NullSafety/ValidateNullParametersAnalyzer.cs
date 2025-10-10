@@ -109,44 +109,87 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
                 continue;
             }
 
-            var typeName = parameter.Type.ToString();
-
-            // Explicitly check for reference types by name
-            if (typeName == "string" || typeName == "object" ||
-                typeName.Contains("String") || typeName.Contains("Object") ||
-                typeName.Contains("Exception") || typeName.Contains("Collection") ||
-                typeName.Contains("List") || typeName.Contains("Dictionary") ||
-                typeName.Contains("Array") || typeName.Contains("Enumerable"))
+            // Skip parameters with default values (optional parameters)
+            if (parameter.Default != null)
             {
-                referenceParams.Add(parameter.Identifier.ValueText);
-            }
-            // Explicitly exclude common value types
-            else if (typeName is "int" or "long" or "short" or
-                     "byte" or "uint" or "ulong" or
-                     "ushort" or "sbyte" or "float" or
-                     "double" or "decimal" or "bool" or
-                     "char" or "DateTime" or "Guid")
-            {
-                // Skip value types
                 continue;
             }
-            // For other types, try semantic model as fallback
-            else
+
+            // Skip params arrays
+            if (parameter.Modifiers.Any(SyntaxKind.ParamsKeyword))
             {
-                var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
-                if (parameterType != null && parameterType.IsReferenceType)
-                {
-                    referenceParams.Add(parameter.Identifier.ValueText);
-                }
+                continue;
+            }
+
+            var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
+            if (parameterType == null)
+            {
+                continue;
+            }
+
+            // Skip value types (including nullable value types)
+            if (parameterType.IsValueType)
+            {
+                continue;
+            }
+
+            // Skip infrastructure types that are typically injected and null-checked by DI
+            if (IsInfrastructureType(parameterType))
+            {
+                continue;
+            }
+
+            // Only include reference types that need validation
+            if (parameterType.IsReferenceType)
+            {
+                referenceParams.Add(parameter.Identifier.ValueText);
             }
         }
 
         return referenceParams;
     }
 
+    /// <summary>
+    /// Checks if the type is an infrastructure type that should be exempt from null validation.
+    /// </summary>
+    private static bool IsInfrastructureType(ITypeSymbol type)
+    {
+        if (type == null)
+            return false;
+
+        var typeName = type.Name;
+        var namespaceName = type.ContainingNamespace?.ToDisplayString();
+
+        // CancellationToken is a value type but check for completeness
+        if (typeName == "CancellationToken" && namespaceName == "System.Threading")
+            return true;
+
+        // Service provider and logging infrastructure
+        if (typeName == "IServiceProvider" || 
+            (typeName == "ILogger" && namespaceName?.Contains("Microsoft.Extensions.Logging") == true))
+            return true;
+
+        // Common DI interfaces
+        if (namespaceName?.Contains("Microsoft.Extensions") == true && 
+            (typeName.Contains("Service") || typeName.Contains("Provider")))
+            return true;
+
+        return false;
+    }
+
     private static List<string> GetUnvalidatedReferenceParameters(MethodDeclarationSyntax method, List<string> referenceParameters)
     {
         var unvalidated = new List<string>(referenceParameters);
+
+        // Check expression-bodied members for guard patterns
+        if (method.ExpressionBody != null)
+        {
+            var validatedInExpression = FindValidatedParametersInExpression(method.ExpressionBody.Expression, referenceParameters);
+            foreach (var validated in validatedInExpression)
+            {
+                unvalidated.Remove(validated);
+            }
+        }
 
         // Get method body statements
         var statements = GetMethodStatements(method);
@@ -162,6 +205,17 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             if (!string.IsNullOrEmpty(validatedParameter))
             {
                 unvalidated.Remove(validatedParameter!);
+            }
+        }
+
+        // Check for local functions with guards
+        var localFunctions = method.DescendantNodes().OfType<LocalFunctionStatementSyntax>();
+        foreach (var localFunction in localFunctions)
+        {
+            var validatedInLocalFunction = FindValidatedParametersInLocalFunction(localFunction, referenceParameters);
+            foreach (var validated in validatedInLocalFunction)
+            {
+                unvalidated.Remove(validated);
             }
         }
 
@@ -237,17 +291,26 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         if (statement is ExpressionStatementSyntax exprStatement &&
             exprStatement.Expression is InvocationExpressionSyntax invocation)
         {
-            // Check for ThrowIfNull patterns
-            var memberAccess = invocation.Expression as MemberAccessExpressionSyntax;
-            if (memberAccess?.Name.Identifier.ValueText == "ThrowIfNull" &&
-                invocation.ArgumentList.Arguments.Count > 0)
+            // Check for guard helper invocations
+            var validatedInInvocation = FindValidatedParametersInInvocation(invocation, referenceParameters);
+            if (validatedInInvocation.Any())
             {
-                var argument = invocation.ArgumentList.Arguments[0].Expression;
-                var identifier = GetIdentifierFromExpression(argument);
-                if (referenceParameters.Contains(identifier))
-                {
-                    return identifier;
-                }
+                return validatedInInvocation.First();
+            }
+        }
+
+        // Look for return statements with Result.Failure patterns
+        if (statement is ReturnStatementSyntax returnStatement &&
+            returnStatement.Expression is InvocationExpressionSyntax returnInvocation)
+        {
+            // Check for Result.Failure patterns
+            if (returnInvocation.Expression.ToString().Contains("Result.Failure") ||
+                returnInvocation.Expression.ToString().Contains("Result.WithFailure"))
+            {
+                // This indicates the method is handling null cases by returning failure
+                // We need to check if this is within a null check context
+                // For now, we'll be conservative and not mark this as validation
+                // unless it's clearly within a null check
             }
         }
 
@@ -289,10 +352,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             return true;
         }
 
-        // Check for return Result.WithFailure(...)
+        // Check for return Result.WithFailure(...) or Result.Failure(...)
         if (statement is ReturnStatementSyntax returnStatement &&
             returnStatement.Expression is InvocationExpressionSyntax invocation &&
-            invocation.Expression.ToString().Contains("Result.WithFailure"))
+            (invocation.Expression.ToString().Contains("Result.WithFailure") ||
+             invocation.Expression.ToString().Contains("Result.Failure")))
         {
             return true;
         }
@@ -326,4 +390,118 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     private static bool IsNullPattern(PatternSyntax pattern) => pattern is ConstantPatternSyntax constantPattern &&
                constantPattern.Expression is LiteralExpressionSyntax literal &&
                literal.Token.IsKind(SyntaxKind.NullKeyword);
+
+    /// <summary>
+    /// Finds validated parameters in expression-bodied members.
+    /// </summary>
+    private static List<string> FindValidatedParametersInExpression(ExpressionSyntax expression, List<string> referenceParameters)
+    {
+        var validated = new List<string>();
+
+        // Check for null-coalescing operators (handles nulls)
+        if (expression is BinaryExpressionSyntax binaryExpr && binaryExpr.OperatorToken.IsKind(SyntaxKind.QuestionQuestionToken))
+        {
+            var leftIdentifier = GetIdentifierFromExpression(binaryExpr.Left);
+            if (referenceParameters.Contains(leftIdentifier))
+            {
+                validated.Add(leftIdentifier);
+            }
+        }
+
+        // Check for null-conditional operators (handles nulls)
+        if (expression is ConditionalAccessExpressionSyntax conditionalAccess)
+        {
+            var identifier = GetIdentifierFromExpression(conditionalAccess.Expression);
+            if (referenceParameters.Contains(identifier))
+            {
+                validated.Add(identifier);
+            }
+        }
+
+        // Check for guard helper invocations in expressions
+        if (expression is InvocationExpressionSyntax invocation)
+        {
+            var validatedInInvocation = FindValidatedParametersInInvocation(invocation, referenceParameters);
+            validated.AddRange(validatedInInvocation);
+        }
+
+        return validated;
+    }
+
+    /// <summary>
+    /// Finds validated parameters in local functions.
+    /// </summary>
+    private static List<string> FindValidatedParametersInLocalFunction(LocalFunctionStatementSyntax localFunction, List<string> referenceParameters)
+    {
+        var validated = new List<string>();
+
+        if (localFunction.Body != null)
+        {
+            foreach (var statement in localFunction.Body.Statements)
+            {
+                var validatedParameter = FindValidatedParameter(statement, referenceParameters);
+                if (!string.IsNullOrEmpty(validatedParameter))
+                {
+                    validated.Add(validatedParameter);
+                }
+            }
+        }
+
+        return validated;
+    }
+
+    /// <summary>
+    /// Finds validated parameters in invocation expressions (guard helpers, etc.).
+    /// </summary>
+    private static List<string> FindValidatedParametersInInvocation(InvocationExpressionSyntax invocation, List<string> referenceParameters)
+    {
+        var validated = new List<string>();
+
+        // Check for Guard.Against.Null patterns
+        if (invocation.Expression is MemberAccessExpressionSyntax memberAccess &&
+            memberAccess.Expression is MemberAccessExpressionSyntax guardAccess &&
+            guardAccess.Expression.ToString() == "Guard" &&
+            guardAccess.Name.Identifier.ValueText == "Against" &&
+            memberAccess.Name.Identifier.ValueText == "Null")
+        {
+            if (invocation.ArgumentList.Arguments.Count > 0)
+            {
+                var argument = invocation.ArgumentList.Arguments[0].Expression;
+                var identifier = GetIdentifierFromExpression(argument);
+                if (!string.IsNullOrEmpty(identifier) && referenceParameters.Contains(identifier))
+                {
+                    validated.Add(identifier);
+                }
+            }
+        }
+
+        // Check for extension method guard patterns (parameter.ThrowIfNull())
+        if (invocation.Expression is MemberAccessExpressionSyntax extensionMemberAccess &&
+            extensionMemberAccess.Name.Identifier.ValueText == "ThrowIfNull")
+        {
+            var identifier = GetIdentifierFromExpression(extensionMemberAccess.Expression);
+            if (!string.IsNullOrEmpty(identifier) && referenceParameters.Contains(identifier))
+            {
+                validated.Add(identifier);
+            }
+        }
+
+        // Check for ArgumentNullException.ThrowIfNull patterns
+        if (invocation.Expression is MemberAccessExpressionSyntax throwIfNullAccess &&
+            throwIfNullAccess.Name.Identifier.ValueText == "ThrowIfNull" &&
+            throwIfNullAccess.Expression.ToString().Contains("ArgumentNullException"))
+        {
+            if (invocation.ArgumentList.Arguments.Count > 0)
+            {
+                var argument = invocation.ArgumentList.Arguments[0].Expression;
+                var identifier = GetIdentifierFromExpression(argument);
+                if (!string.IsNullOrEmpty(identifier) && referenceParameters.Contains(identifier))
+                {
+                    validated.Add(identifier);
+                }
+            }
+        }
+
+        return validated;
+    }
 }

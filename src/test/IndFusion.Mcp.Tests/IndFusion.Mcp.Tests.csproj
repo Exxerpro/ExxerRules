@@ -16,7 +16,8 @@
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <RootNamespace>IndFusion.Mcp.Tests</RootNamespace>
-
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <UseVSTestForDiscovery>true</UseVSTestForDiscovery>
   </PropertyGroup>
   <Import Project="..\TestingPlatform.props" />
   <!-- ===================================================================== -->

@@ -1,325 +1,297 @@
-# ValidateNullParameters Analyzer – False-Positive Mitigation Spec
+# Epic: EXXER200 - ValidateNullParameters Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER200`  
 **Source**: `src/code/IndFusion.Analyzer/NullSafety/ValidateNullParametersAnalyzer.cs`  
-**Prepared by**: Codex agent (2025-10-07)
-
-## 0. Selection Rationale
-
-- Existing specs cover analyzers 003, 300, and 301; EXXER200 currently has no specification document.  
-- `ValidateNullParametersAnalyzer` is one of the most intrusive rules in the IndTrace codebase: it inspects every method and frequently misclassifies parameters, leading to hundreds of warnings in the test project.  
-- Evidence from `Test Project\Src`:
-  - Methods with value-type parameters (`int`, `bool`) still trigger diagnostics due to string-based heuristics (`Contains("Enumerable")`, `Contains("List")`).  
-  - Cancellation tokens and `IServiceProvider` parameters still receive false positives, especially in constructors.  
-  - Expression-bodied members and secondary guard patterns are not recognised, generating noise across domain and application layers.  
-- Because the rule remains undocumented and is responsible for substantial false positives, EXXER200 is the next candidate for deep review.
-
-## 1. Specification
-
-- **Intent**  
-  Ensure reference-type parameters are validated for null at method entry to support defensive programming and fail-safe defaults.
-
-- **Scope**  
-  Visits `MethodDeclarationSyntax` nodes. It collects parameters by checking strings such as `Type.ToString().Contains("String")` or semantic fallbacks, then verifies statements/expressions in the method body for null checks (`if (param == null)`, `ArgumentNullException.ThrowIfNull(param)`, etc.). It also synthesises statements for expression-bodied members.
-
-- **Validation Plan**  
-  1. Expand `IndFusion.Analyzer.Tests` with a dedicated `ValidateNullParametersAnalyzerFalsePositiveTests` suite.  
-  2. Introduce regression tests covering constructors, expression-bodied members, lambdas, extension methods, and guard helper usage.  
-  3. Run `dotnet test` against the analyzer test project and representative IndTrace projects (`Test Project\Src\Tests\...`) before/after implementing mitigations to confirm the warning count drop.  
-  4. Maintain positive coverage by keeping existing true-positive tests in `AsyncTests` and `EdgeCaseTests`.
-
-## 2. Enhancement Opportunities (>=10 Items)
-
-Each enhancement describes an observed false-positive, proposes a mitigation, and provides a minimal xUnit/Shouldly test sketch.
-
-### 1. Value-Type Parameters Misclassified
-
-- **Problem**: The analyzer uses string heuristics (`Type.ToString().Contains("Enumerable")`) and often treats value types or structs as reference types, resulting in diagnostics for parameters like `int id`.  
-- **Mitigation**: Use semantic model (`ITypeSymbol.IsReferenceType`) exclusively; skip types where `IsValueType` is true, including nullable value types (`Nullable<T>`).  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Value_Types()
-{
-    const string testCode = @"
-public static class Calculator
-{
-    public static int Add(int left, int right) => left + right;
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 2. CancellationToken Parameters
-
-- **Problem**: Methods accepting `CancellationToken` are marked unvalidated, even though tokens are value types and should be exempt.  
-- **Mitigation**: Recognise tokens via semantic check (`SpecialType.System_Threading_CancellationToken`) and skip them entirely.  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_CancellationToken()
-{
-    const string testCode = @"
-using System.Threading;
-using System.Threading.Tasks;
-
-public static class Worker
-{
-    public static Task RunAsync(CancellationToken cancellationToken) => Task.CompletedTask;
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 3. Services Resolved via DI (`IServiceProvider`)
-
-- **Problem**: Constructors taking `IServiceProvider` and immediately storing it (null-checked by DI container) are flagged.  
-- **Mitigation**: Allow interface-type parameters decorated with `[ServiceDescriptor]` patterns or when `[ActivatorUtilitiesConstructor]` is used. At minimum, skip `IServiceProvider` and `ILogger` dependencies.  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_ServiceProvider()
-{
-    const string testCode = @"
-using System;
-using Microsoft.Extensions.Logging;
-
-public sealed class Handler
-{
-    private readonly IServiceProvider _services;
-    private readonly ILogger<Handler> _logger;
-
-    public Handler(IServiceProvider services, ILogger<Handler> logger)
-    {
-        _services = services;
-        _logger = logger;
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 4. Expression-Bodied Members with Guard Helpers
-
-- **Problem**: Expression-bodied methods delegating to guard helpers (`Guard.Against.Null(param, nameof(param));`) are still flagged because the analyzer only inspects statements.  
-- **Mitigation**: When `method.ExpressionBody` contains a guard invocation or throws, treat it as validation.  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Expression_Bodied_Guard()
-{
-    const string testCode = @"
-using Ardalis.GuardClauses;
-
-public static class Guarded
-{
-    public static string Echo(string value) => Guard.Against.Null(value, nameof(value));
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 5. Guard Helper Methods (`ThrowIfNull`)
-
-- **Problem**: Methods that immediately call `ArgumentNullException.ThrowIfNull(parameter, nameof(parameter));` in expression form are missed when the argument order differs or is invoked via extension (`parameter.ThrowIfNull();`).  
-- **Mitigation**: Enhance detection to include extension-method guard patterns and variations in argument lists.  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Extension_Guard()
-{
-    const string testCode = @"
-using System;
-
-public static class GuardExtensions
-{
-    public static void ThrowIfNull<T>(this T instance, string name)
-        where T : class
-    {
-        if (instance is null) throw new ArgumentNullException(name);
-    }
-}
-
-public sealed class Consumer
-{
-    public void Execute(object dependency)
-    {
-        dependency.ThrowIfNull(nameof(dependency));
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 6. Optional Parameters with Default Values
-
-- **Problem**: Parameters with default values (e.g., `string? name = null`) are flagged even though null is an expected input.  
-- **Mitigation**: Skip nullable reference parameters with default value `null` or optional parameters using `[Optional]`.  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Optional_String()
-{
-    const string testCode = @"
-public static class Formatter
-{
-    public static string ToDisplay(string? label = null) => label ?? ""(none)"";
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 7. Params Arrays
-
-- **Problem**: `params string[] segments` are considered reference-type parameters and raise diagnostics, even though `Array.Empty<T>()` is a valid default.  
-- **Mitigation**: Treat `params` arrays as exempt or require only a null-check when the method uses the array directly (most call sites pass zero arguments).  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Params_Array()
-{
-    const string testCode = @"
-public static class PathBuilder
-{
-    public static string Combine(params string[] segments) =>
-        string.Join('/', segments);
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 8. Record Primary Constructors
-
-- **Problem**: Record primary constructors performing inline validation (`record User(string Name) { ... }`) are ignored by the analyzer's statement scan, causing false positives when property initialisers already guard the values.  
-- **Mitigation**: Recognise `RecordDeclarationSyntax` with parameter property initialisers that include guard expressions (`Name = name ?? throw ...`).  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Record_Primary_Constructor_Guard()
-{
-    const string testCode = @"
-using System;
-
-public sealed record User(string Name)
-{
-    public string Email { get; init; } = string.Empty;
-    public User(string name, string email) : this(name ?? throw new ArgumentNullException(nameof(name)))
-    {
-        Email = email ?? throw new ArgumentNullException(nameof(email));
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 9. Local Functions and Lambdas
-
-- **Problem**: Methods containing local functions or lambdas with guards still trigger diagnostics because the analyzer only inspects the top-level method body.  
-- **Mitigation**: When guard logic lives in a local function called at the start of the method, recognise it as validation.  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Local_Function_Guard()
-{
-    const string testCode = @"
-using System;
-
-public sealed class GuardedService
-{
-    public void Process(string command)
-    {
-        Guard(command);
-
-        void Guard(string value)
-        {
-            if (value is null) throw new ArgumentNullException(nameof(value));
-        }
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 10. Methods Returning `Result<T>` Already Encapsulating Guards
-
-- **Problem**: Methods that immediately return `Result.Failure(...)` when parameters are null are flagged because the analyzer only looks for explicit throws.  
-- **Mitigation**: Detect guard patterns that return failure results (e.g., `return Result.Failure("name cannot be null");`) or call into a guard helper before other logic.  
-- **Test Sketch**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Result_Failure_Guard()
-{
-    const string testCode = @"
-using System;
-
-public readonly record struct Result(bool Success, string? Error = null)
-{
-    public static Result Failure(string error) => new(false, error);
-}
-
-public static class Processor
-{
-    public static Result Validate(string name)
-    {
-        if (name is null)
-        {
-            return Result.Failure(""Name required"");
-        }
-
-        return new Result(true);
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-## 3. Test-Driven Fix Strategy
-
-1. Create `ValidateNullParametersAnalyzerFalsePositiveTests` under `src/test/IndFusion.Analyzer.Tests/TestCases`.  
-2. Add the ten scenarios above as `[Fact]` methods asserting `ShouldBeEmpty()`.  
-3. Retain/extend positive coverage to ensure EXXER200 still reports when no guard exists on true reference-type parameters.  
-4. Update the analyzer:
-   - Replace string-based parameter classification with semantic `ITypeSymbol` checks.  
-   - Add exemption logic for known infrastructure types (`CancellationToken`, `ILogger<>`, `IServiceProvider`, etc.).  
-   - Extend guard detection to expression bodies, null-coalescing throws, extension guards, record constructors, local functions, and `Result<T>` failure paths.  
-5. Run the analyzer test suite and confirm new tests fail before implementation and pass afterward.  
-6. Execute `dotnet test` against `Test Project\Src\Tests` to measure reduction in EXXER200 diagnostics.  
-7. Update `AnalyzerReleases.Unshipped.md` documenting the refined guard detection.
-
-## 4. Acceptance Checklist
-
-- [ ] Analyzer heuristics enhanced for all ten scenarios.  
-- [ ] Ten new regression tests added and passing.  
-- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`).  
-- [ ] Diagnostic volume in IndTrace projects is materially reduced.  
+**Prepared by**: Codex agent (2025-10-07)  
+**Last Updated**: 2025-10-10
+
+## Definition of Ready
+
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
+
+## Definition of Done
+
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
+
+---
+
+## Stories
+
+### 1.1. Story: Semantic Type Detection Foundation
+
+**As a** developer using the analyzer  
+**I want** value-type parameters to be correctly identified  
+**So that** I don't receive false-positive warnings for non-nullable types
+
+#### 1.1.1. Acceptance Criteria
+
+**Given** a method with value-type parameters (`int`, `bool`, `DateTime`, `Guid`, `decimal`, etc.)  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method with nullable value-type parameters (`int?`, `bool?`, `DateTime?`)  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method with reference-type parameters without validation  
+**When** the analyzer processes the method  
+**Then** EXXER200 diagnostic should be reported (positive control)
+
+#### 1.1.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.2. Story: Infrastructure Type Exemptions
+
+**As a** developer using dependency injection  
+**I want** infrastructure parameters to be exempt from validation  
+**So that** I don't receive false warnings for DI-managed dependencies
+
+#### 1.2.1. Acceptance Criteria
+
+**Given** a method with a `CancellationToken` parameter  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a constructor with `IServiceProvider` and `ILogger<T>` parameters  
+**When** the analyzer processes the constructor  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method with `IServiceProvider` parameter in a non-DI context  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported (conservative approach)
+
+#### 1.2.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.3. Story: Expression-Bodied Member Guard Detection
+
+**As a** developer using modern C# features  
+**I want** expression-bodied members with guards to be recognized  
+**So that** I don't receive false warnings for concise guard implementations
+
+#### 1.3.1. Acceptance Criteria
+
+**Given** an expression-bodied method calling `Guard.Against.Null`  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** an expression-bodied method using null-coalescing operator  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** an expression-bodied method using null-conditional operator  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+#### 1.3.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.4. Story: Extension Method Guard Pattern Support
+
+**As a** developer using extension method guards  
+**I want** `parameter.ThrowIfNull()` patterns to be recognized  
+**So that** I don't receive warnings for idiomatic null checks
+
+#### 1.4.1. Acceptance Criteria
+
+**Given** a method calling `ArgumentNullException.ThrowIfNull(param)`  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method calling `param.ThrowIfNull()` extension method  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method calling custom guard extension methods  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+#### 1.4.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.5. Story: Optional Parameter Support
+
+**As a** developer using optional parameters  
+**I want** parameters with default values to be exempt  
+**So that** I don't receive warnings for intentionally nullable parameters
+
+#### 1.5.1. Acceptance Criteria
+
+**Given** a method with optional string parameter (`string? name = null`)  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method with multiple optional reference parameters  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method with required reference parameter (no default)  
+**When** the analyzer processes the method without validation  
+**Then** EXXER200 diagnostic should be reported
+
+#### 1.5.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.6. Story: Params Array Exemption
+
+**As a** developer using params arrays  
+**I want** params array parameters to be exempt  
+**So that** I don't receive warnings for variadic methods
+
+#### 1.6.1. Acceptance Criteria
+
+**Given** a method with a params array parameter  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method with multiple params variations  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+#### 1.6.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.7. Story: Record Primary Constructor Support
+
+**As a** developer using modern record types  
+**I want** record primary constructors with inline validation to be recognized  
+**So that** I don't receive warnings for validated record parameters
+
+#### 1.7.1. Acceptance Criteria
+
+**Given** a record with primary constructor and inline validation  
+**When** the analyzer processes the record  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a record with secondary constructor containing guards  
+**When** the analyzer processes the record  
+**Then** no EXXER200 diagnostic should be reported
+
+#### 1.7.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.8. Story: Local Function Guard Detection
+
+**As a** developer organizing validation logic  
+**I want** local functions containing guards to be recognized  
+**So that** I don't receive warnings when I delegate validation to helper functions
+
+#### 1.8.1. Acceptance Criteria
+
+**Given** a method with a local function performing validation  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method calling a local guard function  
+**When** the analyzer processes the method  
+**Then** the parameters validated by the local function should be recognized
+
+#### 1.8.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.9. Story: Result<T> Failure Pattern Support
+
+**As a** developer using functional error handling  
+**I want** methods returning `Result.Failure` for null parameters to be recognized  
+**So that** I don't receive warnings for functional validation patterns
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a method returning `Result.Failure` for null parameter  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+**Given** a method using `Result.WithFailure` pattern  
+**When** the analyzer processes the method  
+**Then** no EXXER200 diagnostic should be reported
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.10. Story: Comprehensive Integration Testing
+
+**As a** project maintainer  
+**I want** comprehensive integration tests validating all scenarios  
+**So that** I can ensure the analyzer works correctly in real-world codebases
+
+#### 1.10.1. Acceptance Criteria
+
+**Given** the complete analyzer implementation  
+**When** all tests are run  
+**Then** all 577 tests should pass with 0 failures
+
+**Given** a representative production codebase  
+**When** the analyzer is applied  
+**Then** false-positive rate should be < 5%
+
+**Given** the analyzer test suite  
+**When** tests are run with code coverage  
+**Then** coverage should be >= 90%
+
+#### 1.10.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
 - [ ] Documentation updated (this spec + release notes).

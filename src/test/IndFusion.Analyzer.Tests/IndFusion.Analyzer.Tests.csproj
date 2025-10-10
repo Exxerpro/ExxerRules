@@ -10,8 +10,7 @@
 	<IsTestProject>true</IsTestProject>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <UseVSTestForDiscovery>true</UseVSTestForDiscovery>
+ 
   </PropertyGroup>
   <Import Project="..\TestingPlatform.props" />
   <ItemGroup>

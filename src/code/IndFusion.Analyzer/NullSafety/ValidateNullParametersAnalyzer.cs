@@ -257,9 +257,26 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             if (correspondingFunction != null)
             {
                 var validatedInFunction = FindValidatedParametersInLocalFunction(correspondingFunction, referenceParameters);
-                foreach (var validated in validatedInFunction)
+                
+                // Map local function parameters to main method parameters
+                if (call.ArgumentList.Arguments.Count > 0 && correspondingFunction.ParameterList.Parameters.Count > 0)
                 {
-                    unvalidated.Remove(validated);
+                    for (int i = 0; i < Math.Min(call.ArgumentList.Arguments.Count, correspondingFunction.ParameterList.Parameters.Count); i++)
+                    {
+                        var argument = call.ArgumentList.Arguments[i].Expression;
+                        var localParam = correspondingFunction.ParameterList.Parameters[i];
+                        var localParamName = localParam.Identifier.ValueText;
+                        
+                        // If the local function validates this parameter, mark the corresponding argument as validated
+                        if (validatedInFunction.Contains(localParamName))
+                        {
+                            var argumentIdentifier = GetIdentifierFromExpression(argument);
+                            if (!string.IsNullOrEmpty(argumentIdentifier) && referenceParameters.Contains(argumentIdentifier))
+                            {
+                                unvalidated.Remove(argumentIdentifier);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -287,6 +304,17 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         // if (parameter == null) throw new ArgumentNullException(nameof(parameter));
         // if (parameter is null) throw new ArgumentNullException(nameof(parameter));
         // ArgumentNullException.ThrowIfNull(parameter);
+        // return parameter?.SomeProperty ?? defaultValue; (null-conditional handling)
+
+        // Check for return statements with null-conditional operators
+        if (statement is ReturnStatementSyntax returnStmt && returnStmt.Expression != null)
+        {
+            var validatedInReturn = FindValidatedParametersInExpression(returnStmt.Expression, referenceParameters);
+            if (validatedInReturn.Any())
+            {
+                return validatedInReturn.First();
+            }
+        }
 
         if (statement is IfStatementSyntax ifStatement)
         {
@@ -426,6 +454,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     private static string GetIdentifierFromExpression(ExpressionSyntax expression) => expression switch
     {
         IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
+        MemberAccessExpressionSyntax memberAccess => GetIdentifierFromExpression(memberAccess.Expression),
         _ => string.Empty
     };
 

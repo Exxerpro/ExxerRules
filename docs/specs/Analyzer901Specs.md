@@ -1,308 +1,211 @@
-# CodeFormatting Analyzer - False-Positive Mitigation Spec
+# Epic: EXXER901 - CodeFormatting Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER901`  
 **Source**: `src/code/IndFusion.Analyzer/CodeFormatting/CodeFormattingAnalyzer.cs`  
 **Prepared by**: Codex agent (2025-10-08)
 
-## 0. Selection Rationale
+## Definition of Ready
 
-- No spec existed for EXXER901 even though `AnalyzerReleases.Unshipped.md:19` ships it as an Info diagnostic alongside EXXER900.  
-- While researching EXXER900 we observed the formatting heuristics shared by EXXER901 generate numerous false positives through simple string matching. Real examples appear in production code such as `Test Project/Src/Code/Core/Application/Registers/Services/RegisterInformationService.cs` (lines 24, 61, 82, 103, 118, 221) and `Test Project/Src/Code/Core/Application/BarCodes/Commands/Create/CreateBarCodeCommandHandler.cs` (lines 63, 95, 103, 183). Developers cannot act on these diagnostics; they are either already well-formatted or express intentional pipelines.  
-- Because EXXER901 fires as Info, it clutters solution-error lists and IDE light bulbs, prompting teams to ignore EXXER900/901 instead of using the intended formatting flow.
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
 
-## 1. Specification
+## Definition of Done
 
-- **Intent**  
-  Highlight common formatting issues (spacing, brace placement, accessor style) so developers can invoke quick fixes or run `dotnet format` locally.
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
 
-- **Scope**  
-  Registers syntax node actions for `ClassDeclaration`, `MethodDeclaration`, `PropertyDeclaration`, and `VariableDeclaration`. Each handler inspects the node’s text via `ToString()`/`Contains` heuristics (e.g., looking for `" ="`, `"= "`, multi-line parameter lists, or missing blank lines). No semantic model checks or trivia inspection occurs.
+---
 
-## 2. Validation Plan
+## Stories
 
-1. Introduce `CodeFormattingAnalyzerFalsePositiveTests` next to `ModernCSharpTests.cs`, carrying the ten scenarios below plus the existing positive coverage.  
-2. Update `AnalyzerTestHelper.RunAnalyzer` to surface EXXER901 diagnostics explicitly for formatter assertions.  
-3. Execute `dotnet test src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj -c Release` after each mitigation.  
-4. Run `dotnet build "Test Project/Src/Code/Core/Application/Core.Application.csproj" -c Release` to verify EXXER901 no longer flags the cited files.
+### 1.1. Story: Correctly Handle LINQ Projections
 
-## 3. Enhancement Opportunities (≥10 Items)
+**As a** developer  
+**I want** the code formatting analyzer to correctly handle LINQ projection assignments  
+**So that** I don't get false "inconsistent variable formatting" warnings.
 
-Each entry lists the current false-positive, mitigation idea, and a regression snippet that fails today (EXXER901 produced) but should pass after the fix.
+#### 1.1.1. Acceptance Criteria
 
-### 1. LINQ Projections Flagged as “Inconsistent Variable Formatting”
+**Given** a variable is assigned the result of a LINQ projection (e.g., `.Select(...)`) with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
 
-- **Problem**: `Test Project/Src/Code/Core/Application/Registers/Services/RegisterInformationService.cs:24` assigns `availableRegisters = availableRecords.Select(...)`. The analyzer flags the line because `Declaration.ToString()` contains `" ="`.  
-- **Mitigation**: Use `VariableDeclarationSyntax` tokens (`EqualsToken.HasLeadingTrivia/HasTrailingTrivia`) to ensure actual spacing issues exist before reporting.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Linq_Projection_Assignments()
-  {
-      const string code = @"
-using System.Linq;
-namespace Samples;
-public static class Target
-{
-    public static void Build()
-    {
-        var availableRegisters = Enumerable.Range(1, 3)
-            .Select(i => new { Id = i, Name = $""PLC{i:D3}"" });
-    }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+#### 1.1.2. Acceptance Checklist
 
-### 2. Guard Clause Mock Data Assignments
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-- **Problem**: `RegisterInformationService.cs:61` assigns `var mockData = this.GenerateMockData(maxItems);` inside a debug guard. EXXER901 flags it despite perfect spacing.  
-- **Mitigation**: Recognize single-expression assignments without embedded operators as compliant when `EqualsToken` already has surrounding trivia.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Debug_Guard_Assignments()
-  {
-      const string code = @"
-namespace Samples;
-public class Target
-{
-    public object Create(bool debug)
-    {
-        if (debug)
-        {
-            var mockData = GenerateMockData();
-            return mockData;
-        }
+---
 
-        return new object();
-    }
+### 1.2. Story: Correctly Handle Guard Clause Mock Data Assignments
 
-    private static int[] GenerateMockData() => new[] { 1, 2, 3 };
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+**As a** developer  
+**I want** the formatting analyzer to correctly handle assignments within debug guard clauses  
+**So that** my diagnostic code is not flagged.
 
-### 3. Dictionary Initializations in Result Pipelines
+#### 1.2.1. Acceptance Criteria
 
-- **Problem**: `RegisterInformationService.cs:82` declares `var totalItems = new Dictionary<(int MachineId, string Name), List<TimeSeriesDataPoint>>();` which EXXER901 marks as inconsistent.  
-- **Mitigation**: When the initializer is a single `ObjectCreationExpressionSyntax` and the equals token is surrounded by whitespace, skip diagnostics.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Dictionary_ObjectCreation()
-  {
-      const string code = @"
-using System.Collections.Generic;
-namespace Samples;
-public class Target
-{
-    public Dictionary<(int, string), List<int>> Build()
-    {
-        var totalItems = new Dictionary<(int, string), List<int>>();
-        return totalItems;
-    }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+**Given** a variable is assigned within a debug guard clause (e.g., `#if DEBUG`) with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
 
-### 4. Awaited Repository Calls
+#### 1.2.2. Acceptance Checklist
 
-- **Problem**: `RegisterInformationService.cs:103` (`var registerResult = await registerRepository.ListAsync(...)`) is flagged because the analyzer’s string search sees `" = `".  
-- **Mitigation**: Detect `await` expressions and ensure the equals token plus subsequent trivia already conforms before reporting.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Awaited_Assignments()
-  {
-      const string code = @"
-using System.Threading.Tasks;
-namespace Samples;
-public class Target
-{
-    public async Task Execute(IRepository repo)
-    {
-        var registerResult = await repo.ListAsync();
-    }
-}
-public interface IRepository { Task<int> ListAsync(); }";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-### 5. Projection to DTOs
+---
 
-- **Problem**: `RegisterInformationService.cs:118` maps repository results to DTOs with `var registerDtos = registerResult.Value.Select(...)`. EXXER901 labels this as inconsistent spacing.  
-- **Mitigation**: Ignore assignments whose initializer is an `InvocationExpressionSyntax` starting on the same line with correct trivia.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Select_Projection_Assignments()
-  {
-      const string code = @"
-using System.Linq;
-namespace Samples;
-public class Target
-{
-    public void Map(int[] values)
-    {
-        var registerDtos = values.Select(v => new { Value = v });
-    }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+### 1.3. Story: Correctly Handle Dictionary Initializations
 
-### 6. GroupBy/ToDictionary Pipelines
+**As a** developer  
+**I want** the formatting analyzer to correctly handle dictionary initializations, especially in result pipelines  
+**So that** I don't get false positives on complex data structures.
 
-- **Problem**: `RegisterInformationService.cs:221-225` sets `var result = registerDtos.GroupBy(...).ToDictionary(...)`; EXXER901 flags each assignment within `MapToTimeSeries`.  
-- **Mitigation**: Treat fluent chains as safe when each invocation already uses proper whitespace, especially when the initializer begins on a new indented line.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_GroupBy_ToDictionary_Chains()
-  {
-      const string code = @"
-using System.Collections.Generic;
-using System.Linq;
-namespace Samples;
-public static class Target
-{
-    public static Dictionary<(int, string), IEnumerable<int>> Map(IEnumerable<Entry> source)
-    {
-        var result = source
-            .GroupBy(e => (e.Id, e.Name))
-            .ToDictionary(group => group.Key, group => group.AsEnumerable());
-        return result;
-    }
-}
-public sealed record Entry(int Id, string Name);";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+#### 1.3.1. Acceptance Criteria
 
-### 7. Fluent Result Pipelines
+**Given** a dictionary is initialized with a complex type with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
 
-- **Problem**: `CreateBarCodeCommandHandler.cs:63` composes `var result = await Result.Success(cmd.Command)...`, but EXXER901 flags the initial assignment.  
-- **Mitigation**: Detect chained invocations following an assignment (`InvocationExpressionSyntax` with `MemberBindingExpression`) and skip diagnostics when tokens already include whitespace.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Result_Pipelines()
-  {
-      const string code = @"
-using System.Threading.Tasks;
-namespace Samples;
-public class Target
-{
-    public async Task<int> Execute()
-    {
-        var result = await Result.Success(5)
-            .ThenAsync(Task.FromResult);
-        return result;
-    }
-}
-public static class Result
-{
-    public static Task<int> Success(int value) => Task.FromResult(value);
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+#### 1.3.2. Acceptance Checklist
 
-### 8. Specification Builders (Machine)
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-- **Problem**: `CreateBarCodeCommandHandler.cs:95` defines `var spec = new Specification<Machine>(...)`; EXXER901 reports it despite idiomatic formatting.  
-- **Mitigation**: Only flag assignments lacking spaces around the equals token. For generic `new` expressions with initializer spanning multiple lines, suppress.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Generic_Specification_Assignments()
-  {
-      const string code = @"
-namespace Samples;
-public static class Target
-{
-    public static void Build()
-    {
-        var spec = new Specification<int>(n => n > 0);
-    }
-}
-public sealed class Specification<T>
-{
-    public Specification(System.Func<T, bool> predicate) { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+---
 
-### 9. Specification Builders (Product)
+### 1.4. Story: Correctly Handle Awaited Repository Calls
 
-- **Problem**: Identical noise occurs at `CreateBarCodeCommandHandler.cs:103` for product specifications.  
-- **Mitigation**: Same as above; ensure analyzer pairs with trivia rather than string search.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_Product_Specification_Assignments()
-  {
-      const string code = @"
-namespace Samples;
-public static class Target
-{
-    public static void Build()
-    {
-        var spec = new Specification<string>(part => part.StartsWith(""PN-""));
-    }
-}
-public sealed class Specification<T>
-{
-    public Specification(System.Func<T, bool> predicate) { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+**As a** developer  
+**I want** the formatting analyzer to correctly handle assignments from awaited repository calls  
+**So that** my asynchronous data access code is not flagged.
 
-### 10. Dictionary Materialization from Variables Collection
+#### 1.4.1. Acceptance Criteria
 
-- **Problem**: `CreateBarCodeCommandHandler.cs:183` calls `var references = variables.ToDictionary(...)`. The analyzer marks it despite consistent formatting.  
-- **Mitigation**: Recognize `InvocationExpressionSyntax` returning dictionaries and skip when tokens already have surrounding whitespace.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Not_Report_For_ToDictionary_Assignments()
-  {
-      const string code = @"
-using System.Collections.Generic;
-using System.Linq;
-namespace Samples;
-public static class Target
-{
-    public static Dictionary<string, int> Build(IEnumerable<Item> variables)
-    {
-        var references = variables.ToDictionary(v => v.Name, v => v.Value);
-        return references;
-    }
-}
-public sealed record Item(string Name, int Value);";
-      AnalyzerTestHelper.RunAnalyzer(code, new CodeFormattingAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+**Given** a variable is assigned the result of an awaited repository call with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
 
-## 4. Test-Driven Fix Strategy
+#### 1.4.2. Acceptance Checklist
 
-- Extend `CodeFormattingAnalyzer` to rely on syntax tokens and trivia (e.g., `EqualsToken.TrailingTrivia.Any(SyntaxKind.WhitespaceTrivia)`) rather than raw `string.Contains`.  
-- Specifically guard against cases where the initializer is an `InvocationExpressionSyntax`, `ObjectCreationExpressionSyntax`, or `AwaitExpressionSyntax` with proper trivia.  
-- Add helper utilities in the analyzer to check for real spacing differences (e.g., missing spaces around binary operators) using `SyntaxToken.GetPreviousToken()` comparisons.  
-- Update analyzer tests with the ten regression scenarios plus existing positive cases.  
-- After the refactor, run `dotnet test src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj -c Release` and rebuild representative projects to ensure EXXER901 only flags genuine formatting defects.
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.5. Story: Correctly Handle Projections to DTOs
+
+**As a** developer  
+**I want** the formatting analyzer to correctly handle LINQ projections to DTOs  
+**So that** my mapping code is not flagged.
+
+#### 1.5.1. Acceptance Criteria
+
+**Given** a variable is assigned the result of a LINQ `.Select()` call that projects to a DTO, with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
+
+#### 1.5.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.6. Story: Correctly Handle GroupBy/ToDictionary Pipelines
+
+**As a** developer  
+**I want** the formatting analyzer to correctly handle complex LINQ pipelines involving `GroupBy` and `ToDictionary`  
+**So that** my data aggregation code is not flagged.
+
+#### 1.6.1. Acceptance Criteria
+
+**Given** a variable is assigned the result of a LINQ pipeline using `GroupBy` and `ToDictionary` with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
+
+#### 1.6.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.7. Story: Correctly Handle Fluent Result Pipelines
+
+**As a** developer using a fluent `Result` pattern  
+**I want** the formatting analyzer to correctly handle assignments from awaited `Result` pipelines  
+**So that** my functional-style code is not flagged.
+
+#### 1.7.1. Acceptance Criteria
+
+**Given** a variable is assigned the result of an awaited fluent `Result` pipeline with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
+
+#### 1.7.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.8. Story: Correctly Handle Specification Builder Assignments
+
+**As a** developer using the specification pattern  
+**I want** the formatting analyzer to correctly handle the instantiation of specification objects  
+**So that** my specification builder code is not flagged.
+
+#### 1.8.1. Acceptance Criteria
+
+**Given** a variable is assigned a `new Specification<T>(...)` with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
+
+#### 1.8.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.9. Story: Correctly Handle Dictionary Materialization from Collections
+
+**As a** developer  
+**I want** the formatting analyzer to correctly handle the materialization of a dictionary from a collection using `ToDictionary`  
+**So that** my data transformation code is not flagged.
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a variable is assigned the result of a `ToDictionary` call on a collection with correct spacing  
+**When** the `CodeFormattingAnalyzer` runs  
+**Then** no EXXER901 diagnostic should be reported.
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).

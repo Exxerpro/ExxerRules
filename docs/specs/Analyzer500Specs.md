@@ -1,320 +1,232 @@
-# AvoidMagicNumbersAndStrings Analyzer – False-Positive Mitigation Spec
+# Epic: EXXER500 - AvoidMagicNumbersAndStrings Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER500`  
 **Source**: `src/code/IndFusion.Analyzer/CodeQuality/AvoidMagicNumbersAndStringsAnalyzer.cs`  
 **Prepared by**: Codex agent (2025-10-07)
 
-## 0. Selection Rationale
+## Definition of Ready
 
-- Specs now exist for analyzers 003, 200, 300, 301, and 302, but EXXER500 remains undocumented.  
-- The IndTrace solution contains numerous legitimate numeric thresholds and domain messages (e.g., `ProductValidator`, `ShiftDetectionRule`, `OeePerformanceLevel`) that surface EXXER500 warnings because the analyzer relies on string heuristics and treats nearly every literal as “magic.”  
-- Examples from `Test Project\Src`:
-  - `OeePerformanceLevel` enum (`Poor = 0`, `WorldClass = 3`) – values are not “magic” but part of the domain model.  
-  - `ProductValidator` uses business rules like `partNumber.Length < 3`, `> 80`, and descriptive error strings (lines 27-64).  
-  - `ShiftDetectionRule` enforces hours between 0 and 23 (`ShiftDetectionRule.cs:29-47`).  
-  - Regex validation `Regex.IsMatch(partNumber, @"^[A-Za-z0-9\-]+$")` (line 53) and other pattern strings are flagged.  
-- Because EXXER500 drives widespread noise without a spec, it is the next target for mitigation.
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
 
-## 1. Specification
+## Definition of Done
 
-- **Intent**  
-  Encourage developers to avoid unexplained literals by nudging them toward named constants.
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
 
-- **Scope**  
-  Registers syntax node actions for numeric and string literal expressions. It skips const/static readonly declarations, attribute arguments, switch labels, and a fixed list of “common” numbers/strings. Every other literal produces a diagnostic regardless of context.
+---
 
-- **Validation Plan**  
-  1. Add `AvoidMagicNumbersAndStringsAnalyzerFalsePositiveTests` covering the ten scenarios listed below.  
-  2. Introduce regression cases (enums, validators, regex patterns, time spans) in analyzer tests.  
-  3. Run `dotnet test` for analyzer/test projects and sample IndTrace projects to ensure warning count drops.  
-  4. Maintain positive cases ensuring actual magic literals (e.g., `if (x == 17)` in domain code) still trigger warnings.
+## Stories
 
-## 2. Enhancement Opportunities (>=10 Items)
+### 1.1. Story: Exempt Enum Member Values
 
-Each item identifies an existing false-positive, proposes analyzer improvements, and includes an xUnit/Shouldly test snippet.
+**As a** developer  
+**I want** the analyzer to ignore literal values assigned to enum members  
+**So that** I can define enums with explicit underlying values without getting warnings.
 
-### 1. Enum Member Values
+#### 1.1.1. Acceptance Criteria
 
-- **Issue**: Enum declarations such as `WorldClass = 3` are flagged even though explicit values are part of the contract.  
-- **Proposal**: When the literal belongs to an `EnumMemberDeclarationSyntax`, skip diagnostics.  
-- **Test**:
+**Given** a numeric literal is used to define the value of an enum member  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Enum_Members()
-{
-    const string testCode = @"
-public enum PerformanceLevel
-{
-    Poor = 0,
-    Fair = 1,
-    Good = 2,
-    WorldClass = 3
-}";
+#### 1.1.2. Acceptance Checklist
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-### 2. Bit-Flag Enums (`1 << n`)
+---
 
-- **Issue**: `[Flags]` enums using bit shifts (e.g., `Read = 1 << 0`) are reported.  
-- **Proposal**: Recognize enum member assignments that use bit-shift expressions or power-of-two literals.  
-- **Test**:
+### 1.2. Story: Exempt Bit-Flag Enum Values
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Flag_Enum_Shifts()
-{
-    const string testCode = @"
-using System;
+**As a** developer  
+**I want** the analyzer to ignore bit-shift operations used to define flag enum members  
+**So that** I can create `[Flags]` enums using standard bitwise patterns.
 
-[Flags]
-public enum Permissions
-{
-    None = 0,
-    Read = 1 << 0,
-    Write = 1 << 1,
-    Execute = 1 << 2
-}";
+#### 1.2.1. Acceptance Criteria
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+**Given** a `[Flags]` enum uses bit-shift expressions (e.g., `1 << 0`) to define its members  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-### 3. Domain Range Guards
+#### 1.2.2. Acceptance Checklist
 
-- **Issue**: Guard clauses like `if (hour < 0 || hour > 23)` (ShiftDetectionRule) are flagged despite being explicit domain requirements.  
-- **Proposal**: Detect numeric literals used exclusively within comparison operators tied to `ArgumentOutOfRangeException` or validation logic and skip them.  
-- **Test**:
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Domain_Range_Checks()
-{
-    const string testCode = @"
-using System;
+---
 
-public static class ShiftRules
-{
-    public static void ValidateHour(int hour)
-    {
-        if (hour < 0 || hour > 23)
-        {
-            throw new ArgumentOutOfRangeException(nameof(hour));
-        }
-    }
-}";
+### 1.3. Story: Exempt Domain Range Guards
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+**As a** developer  
+**I want** the analyzer to allow numeric literals in domain range guard clauses  
+**So that** I can implement clear and explicit validation for domain rules.
 
-### 4. Business Rule Thresholds
+#### 1.3.1. Acceptance Criteria
 
-- **Issue**: Validation logic like `partNumber.Length < 3` and `> 80` (ProductValidator) is flagged.  
-- **Proposal**: Skip numeric literals when they appear in string-length or collection-count comparisons within validation methods.  
-- **Test**:
+**Given** a numeric literal is used in a comparison within a guard clause that throws an `ArgumentOutOfRangeException`  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Length_Thresholds()
-{
-    const string testCode = @"
-using System.Collections.Generic;
+#### 1.3.2. Acceptance Checklist
 
-public static class Validator
-{
-    public static List<string> Validate(string value)
-    {
-        var errors = new List<string>();
-        if (value.Length < 3) errors.Add(""Too short"");
-        if (value.Length > 80) errors.Add(""Too long"");
-        return errors;
-    }
-}";
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+---
 
-### 5. Exception Messages
+### 1.4. Story: Exempt Business Rule Thresholds
 
-- **Issue**: Strings passed to exceptions (e.g., `"Hour must be between 0 and 23"`) are flagged though they provide crucial diagnostics.  
-- **Proposal**: Whitelist strings passed as the message argument to `Exception` subclasses.  
-- **Test**:
+**As a** developer  
+**I want** the analyzer to allow numeric literals for business rule thresholds, like string length validation  
+**So that** I can define validation logic without unnecessary constants.
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Exception_Message()
-{
-    const string testCode = @"
-using System;
+#### 1.4.1. Acceptance Criteria
 
-public static class Hours
-{
-    public static void Validate(int hour)
-    {
-        if (hour < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(hour), ""Hour must be between 0 and 23"");
-        }
-    }
-}";
+**Given** a numeric literal is used in a comparison against a property like `Length` or `Count` inside a validation method  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+#### 1.4.2. Acceptance Checklist
 
-### 6. Result/Validation Messages
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-- **Issue**: Domain validation uses descriptive messages stored in `List<string>` or returned via `Result.WithFailure(...)`; EXXER500 flags them as magic.  
-- **Proposal**: When a string literal is added to a collection named `errors`/`warnings` or passed to `Result.WithFailure`, consider it intentional.  
-- **Test**:
+---
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Validation_Message_Collections()
-{
-    const string testCode = @"
-using System.Collections.Generic;
+### 1.5. Story: Exempt Exception Messages
 
-public static class ProductValidator
-{
-    public static List<string> Validate()
-    {
-        var errors = new List<string>();
-        errors.Add(""CustomerId must be greater than 0."");
-        return errors;
-    }
-}";
+**As a** developer  
+**I want** the analyzer to allow string literals used as exception messages  
+**So that** I can provide clear and descriptive error information.
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+#### 1.5.1. Acceptance Criteria
 
-### 7. Regex and Pattern Literals
+**Given** a string literal is passed as the message argument to an `Exception` constructor  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-- **Issue**: Regex patterns (`@"^[A-Za-z0-9\-]+$"`) or SQL fragments are reported.  
-- **Proposal**: Detect strings containing regex metacharacters or common SQL keywords and exempt them.  
-- **Test**:
+#### 1.5.2. Acceptance Checklist
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Regex_Patterns()
-{
-    const string testCode = @"
-using System.Text.RegularExpressions;
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-public static class PartNumberRules
-{
-    private static readonly Regex Pattern = new(@""^[A-Za-z0-9\\-]+$"");
-}";
+---
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+### 1.6. Story: Exempt Result/Validation Messages
 
-### 8. Culture and Locale Codes
+**As a** developer  
+**I want** the analyzer to allow string literals for validation messages in collections or `Result` objects  
+**So that** I can return descriptive error messages from validation logic.
 
-- **Issue**: Strings like `"en-US"` passed to `CultureInfo.GetCultureInfo` or `new CultureInfo` are flagged.  
-- **Proposal**: When the literal matches the `xx-XX` culture code pattern or is used with `CultureInfo`, `RegionInfo`, etc., skip diagnostics.  
-- **Test**:
+#### 1.6.1. Acceptance Criteria
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_CultureCodes()
-{
-    const string testCode = @"
-using System.Globalization;
+**Given** a string literal is added to a collection named `errors` or `warnings`, or passed to a `Result.WithFailure` method  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-public static class Localization
-{
-    public static CultureInfo DefaultCulture => CultureInfo.GetCultureInfo(""en-US"");
-}";
+#### 1.6.2. Acceptance Checklist
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-### 9. TimeSpan and DateTime Construction
+---
 
-- **Issue**: Literals used inside `TimeSpan.FromSeconds(30)` or `new TimeSpan(0, 0, 30)` are flagged even though they express durations.  
-- **Proposal**: When numeric literals are arguments to `TimeSpan`/`DateTime` factory APIs, exempt them.  
-- **Test**:
+### 1.7. Story: Exempt Regex and Pattern Literals
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_TimeSpan_Factory_Values()
-{
-    const string testCode = @"
-using System;
+**As a** developer  
+**I want** the analyzer to ignore string literals that are regular expressions or other pattern-based strings  
+**So that** I can use patterns without getting warnings.
 
-public static class Scheduler
-{
-    public static TimeSpan DefaultBackoff => TimeSpan.FromSeconds(30);
-}";
+#### 1.7.1. Acceptance Criteria
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+**Given** a string literal contains regex metacharacters or is passed to a `Regex` constructor or method  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-### 10. Logging Message Templates
+#### 1.7.2. Acceptance Checklist
 
-- **Issue**: Structured logging still requires literal templates (`""Processing {OrderId}""`); the analyzer flags them.  
-- **Proposal**: When a string literal is the first argument to `ILogger.Log` methods, skip diagnostics.  
-- **Test**:
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Logging_Templates()
-{
-    const string testCode = @"
-using Microsoft.Extensions.Logging;
+---
 
-public sealed class Handler
-{
-    private readonly ILogger<Handler> _logger;
+### 1.8. Story: Exempt Culture and Locale Codes
 
-    public Handler(ILogger<Handler> logger) => _logger = logger;
+**As a** developer  
+**I want** the analyzer to allow string literals for culture and locale codes  
+**So that** I can specify cultures without creating unnecessary constants.
 
-    public void Handle(int orderId)
-    {
-        _logger.LogInformation(""Processing order {OrderId}"", orderId);
-    }
-}";
+#### 1.8.1. Acceptance Criteria
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidMagicNumbersAndStringsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+**Given** a string literal matches a culture code pattern (e.g., "en-US") and is used with `CultureInfo` or `RegionInfo`  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-## 3. Test-Driven Fix Strategy
+#### 1.8.2. Acceptance Checklist
 
-1. Add the ten cases above as `[Fact]` tests under `AvoidMagicNumbersAndStringsAnalyzerFalsePositiveTests`.  
-2. Keep existing positive coverage ensuring arbitrary literals still trigger EXXER500.  
-3. Update the analyzer logic:
-   - Detect enum contexts (`EnumMemberDeclarationSyntax`) and bit-shift patterns.  
-   - Use `SemanticModel` to classify validation guards, logging calls, exception constructors, regex/culture APIs, and time factories.  
-   - Extend string heuristics to recognise validation/error collection usage.  
-   - Cache expensive semantic lookups for performance.  
-4. Run analyzer tests before and after changes to confirm the new cases fail first and pass after mitigation.  
-5. Execute `dotnet test` on representative IndTrace projects to observe the reduction in EXXER500 warnings.  
-6. Update `AnalyzerReleases.Unshipped.md` summarising the improved literal classification.
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-## 4. Acceptance Checklist
+---
 
-- [ ] Analyzer updated with guardrails for enums, validation thresholds, exception/log messages, regex patterns, culture codes, and time factories.  
-- [ ] Ten regression tests added/passing.  
-- [ ] Solution builds/tests succeed.  
-- [ ] Diagnostic noise from EXXER500 materially reduced across IndTrace projects.  
-- [ ] Release notes updated accordingly.
+### 1.9. Story: Exempt TimeSpan and DateTime Construction
+
+**As a** developer  
+**I want** the analyzer to allow numeric literals when constructing `TimeSpan` or `DateTime` objects  
+**So that** I can clearly express durations and specific dates.
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a numeric literal is used as an argument to a `TimeSpan` or `DateTime` factory method or constructor  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.10. Story: Exempt Logging Message Templates
+
+**As a** developer  
+**I want** the analyzer to allow string literals for structured logging message templates  
+**So that** I can use `ILogger` effectively.
+
+#### 1.10.1. Acceptance Criteria
+
+**Given** a string literal is the first argument to an `ILogger.Log` method  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.10.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).

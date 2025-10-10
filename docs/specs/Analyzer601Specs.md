@@ -1,306 +1,232 @@
-# UseRepositoryPattern Analyzer – False-Positive Mitigation Spec
+# Epic: EXXER601 - UseRepositoryPattern Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER601`  
 **Source**: `src/code/IndFusion.Analyzer/Architecture/UseRepositoryPatternAnalyzer.cs`  
 **Prepared by**: Codex agent (2025-10-07)
 
-## 0. Selection Rationale
+## Definition of Ready
 
-- No spec exists for EXXER601.  
-- The analyzer flags every constructor parameter, field, or property whose type name contains `DbContext`, `SqlConnection`, `IDbConnection`, etc., unless the class name itself looks like a repository.  
-- In real projects, application-layer handlers, background workers, and infrastructure services legitimately depend on EF Core `DbContext` or Dapper connections. Forcing the repository pattern everywhere creates excessive false positives.  
-- Notable examples:
-  - `Test Project\Src\Code\Core\Application\Machines\Commands\Update\MachineUpdateCommandHandler.cs:23` comments about `DbContext` usage cause diagnostics even when the handler only touches repositories.  
-  - `Test Project\Src\Code\Infrastructure\Sharp7.Rx` types manipulate hardware connections (not EF contexts) yet the analyzer flags their fields because type names contain `Connection`.  
-  - Integration tests with `DbContext` fixtures (e.g., `HybridTestDataManager`) receive warnings despite being part of test infrastructure.
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
 
-Given the breadth of legitimate direct data access in the solution, EXXER601 is the next highest-impact analyzer requiring mitigation.
+## Definition of Done
 
-## 1. Specification
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
 
-- **Intent**  
-  Encourage clean architecture by steering domain/application layers toward repository abstractions instead of binding directly to data access implementations.
+---
 
-- **Scope**  
-  Scans every class declaration. If the class name does not resemble a repository (`*Repository`, `*Dal`, `*DataAccess`), it reports a diagnostic whenever:
-  - A field or property type name contains one of the hardcoded tokens (e.g., `DbContext`, `SqlConnection`).  
-  - A constructor parameter names one of those types.
+## Stories
 
-## 2. Validation Plan
+### 1.1. Story: Exempt Application Layer Handlers
 
-1. Add `UseRepositoryPatternAnalyzerFalsePositiveTests` covering the ten scenarios below plus positive controls.  
-2. Include integration cases from Infrastructure/test projects to prove the heuristics no longer fire.  
-3. Run `dotnet test` for analyzer suites and selected solutions to confirm EXXER601 warning counts drop meaningfully.  
-4. Maintain positive coverage to ensure genuine misuse (e.g., domain service instantiating `SqlConnection`) still surfaces.
+**As a** developer  
+**I want** the analyzer to allow application-layer handlers to use `DbContext` directly for performance-critical queries  
+**So that** I can optimize data access without being forced to create a repository for every query.
 
-## 3. Enhancement Opportunities (>=10 Items)
+#### 1.1.1. Acceptance Criteria
 
-Each entry presents a false-positive scenario, mitigation idea, and xUnit/Shouldly snippet.
+**Given** a class is in an `*.Application.*` namespace and implements a handler interface (e.g., `IRequestHandler`)  
+**When** it takes a `DbContext` as a dependency  
+**Then** no diagnostic should be reported.
 
-### 1. Application Layer Handlers Using `DbContext`
+#### 1.1.2. Acceptance Checklist
 
-- **Problem**: Command/query handlers occasionally require direct EF Core queries for performance; analyzer treats all of them as violations.  
-- **Mitigation**: Allow classes located in `*.Application.*` namespaces to depend on `DbContext` if they’re input-bound (e.g., decorated with `IRequestHandler`, `IMonitorRequestHandler`) or if they call `.AsNoTracking()`/`Set<T>()` as part of read-only operations.  
-- **Test**:
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Handler_With_DbContext()
-{
-    const string testCode = @"
-using Microsoft.EntityFrameworkCore;
+---
 
-namespace Sample.Application.Orders;
+### 1.2. Story: Exempt Infrastructure Layer
 
-public sealed class GetOrderHandler
-{
-    private readonly DbContext _context;
+**As a** developer  
+**I want** the analyzer to ignore classes in the infrastructure layer  
+**So that** I can write data access and other infrastructure-specific code without warnings.
 
-    public GetOrderHandler(DbContext context) => _context = context;
+#### 1.2.1. Acceptance Criteria
 
-    public Task<int> HandleAsync() => _context.Set<int>().CountAsync();
-}";
+**Given** a class is in a namespace or project that contains `.Infrastructure`  
+**When** it uses `DbContext` or other data access types  
+**Then** no diagnostic should be reported.
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+#### 1.2.2. Acceptance Checklist
 
-### 2. Infrastructure Layer (Namespace contains `.Infrastructure`)
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-- **Problem**: Infrastructure projects purposely wrap low-level data access (e.g., `ShardDbContext`, `Sharp7Connector`). Analyzer still emits warnings.  
-- **Mitigation**: Automatically skip diagnostics when the containing namespace or project path includes `.Infrastructure`.  
-- **Test**:
+---
 
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Infrastructure_Namespace()
-{
-    const string testCode = @"
-namespace Sample.Infrastructure.Persistence;
-
-public sealed class ReportingDbContext : Microsoft.EntityFrameworkCore.DbContext";
+### 1.3. Story: Exempt Test and Fixture Classes
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 3. Test/Fixture Classes
+**As a** developer writing tests  
+**I want** the analyzer to ignore test and fixture classes that use `DbContext`  
+**So that** I can set up and seed data for my integration tests.
 
-- **Problem**: Integration tests (`HybridTestDataManager`) rely on `DbContext` for seeding data, yet the analyzer flags them.  
-- **Mitigation**: Skip classes whose namespace or name ends with `Tests`, `Fixture`, `Integration`, or located under `Tests\`.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Test_Fixtures()
-{
-    const string testCode = @"
-using Microsoft.EntityFrameworkCore;
-
-namespace Sample.Tests.Infrastructure;
-
-public sealed class DbFixture
-{
-    public DbFixture(DbContext context) { }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 4. Connection Wrapper Classes (e.g., Dapper)
-
-- **Problem**: Types like `SqlConnectionFactory`, `ConnectionManager` or hardware connectors (Sharp7) are expected to expose raw connections.  
-- **Mitigation**: Allow classes whose name ends with `Connection`, `Connector`, `Factory`, `Scheduler`, etc., to hold connection objects.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Connection_Factory()
-{
-    const string testCode = @"
-using System.Data;
-
-public sealed class SqlConnectionFactory
-{
-    public IDbConnection Create() => new System.Data.SqlClient.SqlConnection();
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 5. `DbContextOptions` or EF Services
-
-- **Problem**: Constructors injecting `DbContextOptions<T>` or `IDbContextFactory<T>` are flagged even though they’re DI infrastructure.  
-- **Mitigation**: Skip types whose names contain `DbContextOptions`, `IDbContextFactory`, `IServiceScopeFactory`.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_DbContextOptions()
-{
-    const string testCode = @"
-using Microsoft.EntityFrameworkCore;
-
-public sealed class TenantFactory
-{
-    public TenantFactory(DbContextOptions options) { }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 6. Minimal APIs / Program.cs
-
-- **Problem**: `Program` classes or top-level statements legitimately create `DbContext`/`SqlConnection` instances.  
-- **Mitigation**: Skip diagnostics when the containing type is `Program` or file contains top-level statements.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Program_Class()
-{
-    const string testCode = @"
-using Microsoft.EntityFrameworkCore;
-
-public static class Program
-{
-    public static void Main(DbContext context) { }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 7. Multi-Tenant or Generic Infrastructure Services
-
-- **Problem**: Services such as `DbContextTransactionBehavior` or `UnitOfWork` legitimately depend on `DbContext` to provide shared transaction scopes.  
-- **Mitigation**: Allow classes whose names include `Transaction`, `UnitOfWork`, `Migration`, `Seeder`, `Seeder`, or are decorated with `[InfrastructureService]`.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_UnitOfWork()
-{
-    const string testCode = @"
-using Microsoft.EntityFrameworkCore;
-
-public sealed class UnitOfWork
-{
-    private readonly DbContext _context;
-    public UnitOfWork(DbContext context) => _context = context;
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 8. Repositories Already Implemented via Generics
-
-- **Problem**: Generic repository base classes (`RepositoryBase<TContext>`) contain `DbContext` fields by design but should be considered part of the pattern.  
-- **Mitigation**: If a class inherits from or contains `RepositoryBase`, `ReadOnlyRepository`, or similar, suppress diagnostics.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Generic_Repository_Base()
-{
-    const string testCode = @"
-using Microsoft.EntityFrameworkCore;
-
-public abstract class RepositoryBase<TContext>
-{
-    protected RepositoryBase(TContext context) { }
-}
-
-public sealed class CustomerRepository : RepositoryBase<DbContext>
-{
-    public CustomerRepository(DbContext context) : base(context) { }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 9. Domain-Specific EF Extensions
-
-- **Problem**: Methods that accept `DbContext` as parameters (e.g., extension methods `AwaitDbContext`) are flagged even though they are infrastructure utilities.  
-- **Mitigation**: Skip static classes in namespaces ending with `.Persistence`, `.EntityFramework`, or decorated with `[DbContextFactory]`.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Persistence_Extensions()
-{
-    const string testCode = @"
-using Microsoft.EntityFrameworkCore;
-
-namespace Sample.Infrastructure.Persistence;
-
-public static class DbContextExtensions
-{
-    public static TEntity FindCached<TEntity>(this DbContext context, object key) where TEntity : class =>
-        context.Set<TEntity>().Find(key);
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 10. Opt-Out Attribute (`AllowDirectDataAccess`)
-
-- **Problem**: There are legitimate cases (batch jobs, data migrations) where direct `DbContext` access is intended.  
-- **Mitigation**: Introduce `[AllowDirectDataAccess]` attribute respected at class or method level.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_OptOut_Attribute()
-{
-    const string testCode = @"
-using System;
-using Microsoft.EntityFrameworkCore;
-
-[AttributeUsage(AttributeTargets.Class)]
-public sealed class AllowDirectDataAccessAttribute : Attribute { }
-
-[AllowDirectDataAccess]
-public sealed class DataMigration
-{
-    public DataMigration(DbContext context) { }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseRepositoryPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-## 4. Test-Driven Fix Strategy
-
-1. Encode the ten regression tests above (plus existing true positives) in the analyzer test suite.  
-2. Update `UseRepositoryPatternAnalyzer` to:
-   - Use semantic information (`INamedTypeSymbol`) instead of plain `string.Contains`.  
-   - Respect namespace/project context (Infrastructure, Tests) and pattern-based exclusions (ConnectionFactory, UnitOfWork).  
-   - Honour opt-out attributes and known EF constructs (`DbContextOptions`, `IDbContextFactory`).  
-3. Run analyzer tests to ensure new cases fail before changes and pass after.  
-4. Execute `dotnet test` on target solutions to observe EXXER601 warning reductions, particularly in Infrastructure and Test projects.  
-5. Update `AnalyzerReleases.Unshipped.md` summarising the refined heuristics and attribute opt-outs.
-
-## 5. Acceptance Checklist
-
-- [ ] Analyzer enhanced with contextual detection and opt-outs.  
-- [ ] Ten regression tests added/passing.  
-- [ ] Solution builds/tests succeed.  
-- [ ] Documented drop in EXXER601 warnings across application/infrastructure/test layers.  
-- [ ] Release notes updated.
+#### 1.3.1. Acceptance Criteria
+
+**Given** a class is a test class or a test fixture (e.g., name ends with `Tests` or `Fixture`)  
+**When** it uses `DbContext`  
+**Then** no diagnostic should be reported.
+
+#### 1.3.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.4. Story: Exempt Connection Wrapper Classes
+
+**As a** developer  
+**I want** the analyzer to allow connection wrapper classes (e.g., for Dapper or hardware connections) to hold connection objects  
+**So that** I can create factories and managers for my connections.
+
+#### 1.4.1. Acceptance Criteria
+
+**Given** a class name suggests it is a connection wrapper (e.g., ends with `Connection`, `Connector`, `Factory`)  
+**When** it holds a connection object (e.g., `IDbConnection`)  
+**Then** no diagnostic should be reported.
+
+#### 1.4.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.5. Story: Exempt `DbContextOptions` and EF Services
+
+**As a** developer  
+**I want** the analyzer to ignore `DbContextOptions` and other EF Core services injected into constructors  
+**So that** I can configure and use EF Core services without warnings.
+
+#### 1.5.1. Acceptance Criteria
+
+**Given** a constructor injects `DbContextOptions<T>`, `IDbContextFactory<T>`, or `IServiceScopeFactory`  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.5.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.6. Story: Exempt Minimal APIs and Program.cs
+
+**As a** developer creating a minimal API or console application  
+**I want** the analyzer to ignore `Program.cs` and files with top-level statements  
+**So that** I can configure my application's entry point without warnings.
+
+#### 1.6.1. Acceptance Criteria
+
+**Given** a `DbContext` or `SqlConnection` is used in `Program.cs` or a file with top-level statements  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.6.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.7. Story: Exempt Generic Infrastructure Services
+
+**As a** developer  
+**I want** the analyzer to allow generic infrastructure services like `UnitOfWork` or `DbContextTransactionBehavior` to use `DbContext`  
+**So that** I can create reusable infrastructure components.
+
+#### 1.7.1. Acceptance Criteria
+
+**Given** a class name suggests it is a generic infrastructure service (e.g., contains `Transaction`, `UnitOfWork`, `Migration`, `Seeder`)  
+**When** it uses `DbContext`  
+**Then** no diagnostic should be reported.
+
+#### 1.7.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.8. Story: Exempt Generic Repository Base Classes
+
+**As a** developer  
+**I want** the analyzer to allow generic repository base classes to have `DbContext` fields  
+**So that** I can create a reusable base for my repositories.
+
+#### 1.8.1. Acceptance Criteria
+
+**Given** a class inherits from a generic repository base class (e.g., `RepositoryBase<TContext>`)  
+**When** it has a `DbContext` dependency  
+**Then** no diagnostic should be reported.
+
+#### 1.8.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.9. Story: Exempt Domain-Specific EF Extensions
+
+**As a** developer  
+**I want** to be able to create domain-specific EF Core extension methods  
+**So that** I can create reusable query logic.
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a static class in a persistence-related namespace provides EF Core extension methods  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.10. Story: Provide an Opt-Out Attribute
+
+**As a** developer  
+**I want** a way to opt-out of the repository pattern rule for specific classes  
+**So that** I can handle legitimate cases of direct data access.
+
+#### 1.10.1. Acceptance Criteria
+
+**Given** a class is decorated with an `[AllowDirectDataAccess]` attribute  
+**When** it uses `DbContext` or other data access types directly  
+**Then** no diagnostic should be reported.
+
+#### 1.10.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).

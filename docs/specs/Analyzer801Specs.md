@@ -1,327 +1,232 @@
-# DoNotUseConsoleWriteLine Analyzer – False-Positive Mitigation Spec
+# Epic: EXXER801 - DoNotUseConsoleWriteLine Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER801`  
 **Source**: `src/code/IndFusion.Analyzer/Logging/DoNotUseConsoleWriteLineAnalyzer.cs`  
 **Prepared by**: Codex agent (2025-10-07)
 
-## 0. Selection Rationale
-
-- Specs already exist for analyzers 003, 200, 300, 301, 302, 500, and 800. EXXER801 remains undocumented.  
-- The analyzer currently bans *all* usages of `Console.WriteLine/Write`, even in developer tooling, conditional debug blocks, or test harnesses.  
-- Real-world occurrences include the build orchestration script (`Test Project\Src\Build\Build.cs:258-287`), where writing to console is necessary for CLI feedback. Safely suppressing those warnings is currently impossible without disabling the rule project-wide.  
-- Given its broad scope and lack of guardrails, EXXER801 is a major source of false positives in tooling and test code.
-
-## 1. Specification
-
-- **Intent**  
-  Encourage teams to use structured logging (`ILogger`) instead of writing directly to the console in production services.
-
-- **Scope**  
-  The analyzer inspects every `InvocationExpressionSyntax` and reports when it detects `Console.WriteLine`, `Console.Write`, `Console.Error`, or `Console.Out`—based purely on name matching. It does not check compilation context, conditional compilation symbols, or whether the code belongs to tooling/test projects.
-
-- **Validation Plan**  
-  1. Create `DoNotUseConsoleWriteLineAnalyzerFalsePositiveTests` containing the scenarios below.  
-  2. Cover CLI build scripts, debug-only code, unit tests, global `Program.cs` console apps, and console wrappers.  
-  3. Run `dotnet test` for analyzer/tests projects pre/post change to confirm warning reduction.  
-  4. Retain positive coverage verifying that production services writing to console are still flagged.
-
-## 2. Enhancement Opportunities (>=10 Items)
-
-Each item records the observed pattern, proposes a guardrail, and includes an xUnit/Shouldly test sketch.
-
-### 1. Console Applications & Tooling (`Main` Methods)
-
-- **Problem**: Console apps (like build/CLI utilities) legitimately use `Console.WriteLine`, yet the analyzer flags them.  
-- **Mitigation**: If the enclosing type is `Program` with `Main` entry point or project is marked as exe/tooling (namespace contains `.Build`, `.Tools`), skip diagnostics.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Console_Main()
-{
-    const string testCode = @"
-using System;
-
-public static class Program
-{
-    public static void Main()
-    {
-        Console.WriteLine(""Preparing build..."");
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 2. Build/Deployment Scripts
-
-- **Problem**: Scripts under `Build.cs` (e.g., `Test Project\Src\Build\Build.cs:258`) print status information; these should be exempt.  
-- **Mitigation**: When namespace or file path contains `Build`, `Deployment`, or `Scripts`, allow console usage.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Build_Script()
-{
-    const string testCode = @"
-using System;
-
-namespace Company.Build;
-
-public static class Status
-{
-    public static void Notify(string message) => Console.WriteLine(message);
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 3. Conditional Compilation (`#if DEBUG`)
-
-- **Problem**: Debug-only diagnostics guarded by `#if DEBUG` still raise warnings.  
-- **Mitigation**: If the invocation is inside a conditional compilation region limited to `DEBUG` (or `TRACE`), suppress.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Debug_Only_Code()
-{
-    const string testCode = @"
-using System;
-
-public static class DebugProbe
-{
-    public static void Emit()
-    {
-#if DEBUG
-        Console.WriteLine(""Debug info"");
-#endif
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 4. `ConditionalAttribute` Methods
-
-- **Problem**: Methods decorated with `[Conditional("DEBUG")]` or `[Conditional("TRACE")]` should be allowed to write to console, but the analyzer still reports.  
-- **Mitigation**: When the enclosing method has `ConditionalAttribute`, skip diagnostics.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Conditional_Method()
-{
-    const string testCode = @"
-using System;
-using System.Diagnostics;
-
-public static class DebugLogger
-{
-    [Conditional(""DEBUG"")]
-    public static void Trace(string message) => Console.WriteLine(message);
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 5. Unit Tests / Integration Tests
-
-- **Problem**: Tests sometimes write to console for temporary diagnostics (when `ITestOutputHelper` is unavailable). The analyzer should not block these scenarios.  
-- **Mitigation**: If the containing namespace or class ends with `Tests`, skip diagnostics.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Test_Code()
-{
-    const string testCode = @"
-using System;
-using Xunit;
-
-public sealed class DiagnosticTests
-{
-    [Fact]
-    public void Should_Log()
-    {
-        Console.WriteLine(""Running test..."");
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 6. Redirected Console Output
-
-- **Problem**: Some tooling temporarily redirects `Console.Out` to capture output, requiring legitimate `Console.WriteLine` calls.  
-- **Mitigation**: When `Console.SetOut` or `Console.SetError` is invoked in the same type, allow subsequent writes.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_When_Console_Is_Redirected()
-{
-    const string testCode = @"
-using System;
-using System.IO;
-
-public sealed class Capture
-{
-    public string Run()
-    {
-        using var writer = new StringWriter();
-        Console.SetOut(writer);
-        Console.WriteLine(""Captured output"");
-        return writer.ToString();
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 7. CLI Prompting (`Console.ReadLine` / `Write`)
-
-- **Problem**: Interactive prompts (`Console.Write("Enter value: ")`) are mandatory for CLI tools.  
-- **Mitigation**: If the same method also reads from `Console.ReadLine/ReadKey`, treat the writes as acceptable.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_CLI_Prompt()
-{
-    const string testCode = @"
-using System;
-
-public static class Prompt
-{
-    public static string Ask()
-    {
-        Console.Write(""Enter value: "");
-        return Console.ReadLine() ?? string.Empty;
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 8. Exception Reporting During Startup
-
-- **Problem**: Minimal apps might log fatal startup exceptions to console before `ILogger` is available. The analyzer should allow `Console.Error.WriteLine` inside top-level `Program`.  
-- **Mitigation**: When the call occurs inside a `try/catch` that immediately exits the process (`Environment.Exit`), allow it.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Fatal_Startup_Reporting()
-{
-    const string testCode = @"
-using System;
-
-public static class Bootstrapper
-{
-    public static void Run()
-    {
-        try
-        {
-            Start();
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine(ex);
-            Environment.Exit(-1);
-        }
-    }
-
-    private static void Start() => throw new InvalidOperationException();
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 9. `Console.WriteLine` Wrapped in Logging Adapter
-
-- **Problem**: Some adapters implement temporary logging by delegating to console inside classes named `ConsoleLogger`. These should be allowed if they adapt to `ILogger`.  
-- **Mitigation**: If the containing type name ends with `ConsoleLogger` or `[AllowConsoleLogging]` attribute is present, skip diagnostics.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Console_Logger_Adapter()
-{
-    const string testCode = @"
-using System;
-
-[AttributeUsage(AttributeTargets.Class)]
-public sealed class AllowConsoleLoggingAttribute : Attribute { }
-
-[AllowConsoleLogging]
-public sealed class ConsoleLogger
-{
-    public void Log(string message) => Console.WriteLine(message);
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 10. Output in Generated/Tool-Generated Code
-
-- **Problem**: Source generators or T4 templates may produce code with console writes for tracing.  
-- **Mitigation**: Skip diagnostics for nodes marked with `[GeneratedCode]`, `[DebuggerNonUserCode]`, or located in `Generated` folders.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Should_Not_Report_For_Generated_Code()
-{
-    const string testCode = @"
-using System;
-using System.CodeDom.Compiler;
-
-[GeneratedCode(""Tool"", ""1.0"")]
-public sealed class GeneratedRunner
-{
-    public void Execute() => Console.WriteLine(""Generated output"");
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseConsoleWriteLineAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-## 3. Test-Driven Fix Strategy
-
-1. Add the ten scenarios above under `DoNotUseConsoleWriteLineAnalyzerFalsePositiveTests`.  
-2. Keep positive coverage ensuring production services with console writes still trigger EXXER801.  
-3. Update analyzer to:
-   - Inspect semantic context (project type, namespace patterns, conditional compilation) before reporting.  
-   - Honor attributes (`Conditional`, `GeneratedCode`, custom opt-outs).  
-   - Detect when console output is redirected, used for prompts, or occurs in fatal-error handlers.  
-4. Run analyzer tests to confirm new cases fail before changes and pass after.  
-5. Execute `dotnet test` on representative IndTrace projects (build scripts, CLI tools) to measure warning reduction.  
-6. Update `AnalyzerReleases.Unshipped.md` summarizing the relaxed enforcement.
-
-## 4. Acceptance Checklist
-
-- [ ] Analyzer updated with CLI/test/debug exemptions and context awareness.  
-- [ ] Ten regression tests added and passing.  
-- [ ] Builds/tests succeed for analyzer and consumer projects.  
-- [ ] EXXER801 warning count reduced in build/test code.  
-- [ ] Release notes updated with the new behaviour.
+## Definition of Ready
+
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
+
+## Definition of Done
+
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
+
+---
+
+## Stories
+
+### 1.1. Story: Exempt Console Applications and Tooling
+
+**As a** developer creating a console application or a command-line tool  
+**I want** the analyzer to allow the use of `Console.WriteLine` in my application's entry point  
+**So that** I can provide output to the user.
+
+#### 1.1.1. Acceptance Criteria
+
+**Given** a `Console.WriteLine` or `Console.Write` call is inside a `Main` method or a class named `Program`  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.1.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.2. Story: Exempt Build and Deployment Scripts
+
+**As a** developer writing build or deployment scripts  
+**I want** to be able to write status information to the console  
+**So that** I can monitor the progress of my scripts.
+
+#### 1.2.1. Acceptance Criteria
+
+**Given** a `Console.WriteLine` call is in a file or namespace related to build, deployment, or scripts  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.2.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.3. Story: Exempt Conditional Compilation Blocks
+
+**As a** developer  
+**I want** to use `Console.WriteLine` inside `#if DEBUG` blocks for diagnostic purposes  
+**So that** I can debug my code without getting warnings.
+
+#### 1.3.1. Acceptance Criteria
+
+**Given** a `Console.WriteLine` call is within a `#if DEBUG` or `#if TRACE` conditional compilation block  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.3.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.4. Story: Exempt `ConditionalAttribute` Methods
+
+**As a** developer  
+**I want** the analyzer to ignore methods decorated with the `[Conditional]` attribute  
+**So that** I can create debug-only helper methods that write to the console.
+
+#### 1.4.1. Acceptance Criteria
+
+**Given** a method containing a `Console.WriteLine` call is decorated with `[Conditional("DEBUG")]` or `[Conditional("TRACE")]`  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.4.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.5. Story: Exempt Unit and Integration Tests
+
+**As a** developer writing tests  
+**I want** to be able to use `Console.WriteLine` for temporary diagnostics in my tests  
+**So that** I can debug my tests without interference.
+
+#### 1.5.1. Acceptance Criteria
+
+**Given** a `Console.WriteLine` call is inside a test class (e.g., a class with a name ending in `Tests`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.5.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.6. Story: Exempt Redirected Console Output
+
+**As a** developer  
+**I want** to be able to redirect the console output and write to it  
+**So that** I can capture console output for testing or logging purposes.
+
+#### 1.6.1. Acceptance Criteria
+
+**Given** `Console.SetOut` or `Console.SetError` is called in a method  
+**When** `Console.WriteLine` is called subsequently in the same method  
+**Then** no diagnostic should be reported.
+
+#### 1.6.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.7. Story: Exempt CLI Prompting
+
+**As a** developer creating a command-line tool  
+**I want** to be able to prompt the user for input using `Console.Write`  
+**So that** I can create interactive CLI experiences.
+
+#### 1.7.1. Acceptance Criteria
+
+**Given** a `Console.Write` call is followed by a `Console.ReadLine` or `Console.ReadKey` call in the same method  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for the `Console.Write` call.
+
+#### 1.7.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.8. Story: Exempt Exception Reporting During Startup
+
+**As a** developer  
+**I want** to be able to log fatal startup exceptions to the console before a logger is available  
+**So that** I can diagnose application startup failures.
+
+#### 1.8.1. Acceptance Criteria
+
+**Given** a `Console.Error.WriteLine` call is inside a `catch` block that is followed by `Environment.Exit`  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.8.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.9. Story: Exempt Console Logger Adapters
+
+**As a** developer  
+**I want** to be able to create a simple console logger adapter  
+**So that** I can have a fallback logging mechanism during development.
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a class is named `ConsoleLogger` or is decorated with `[AllowConsoleLogging]`  
+**When** it uses `Console.WriteLine`  
+**Then** no diagnostic should be reported.
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.10. Story: Exempt Generated Code
+
+**As a** developer  
+**I want** the analyzer to ignore generated code  
+**So that** I don't get warnings for code that I don't own.
+
+#### 1.10.1. Acceptance Criteria
+
+**Given** a `Console.WriteLine` call is in a file marked with `[GeneratedCode]` or in a `Generated` folder  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.10.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).

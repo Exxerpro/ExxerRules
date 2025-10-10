@@ -15,8 +15,6 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <RootNamespace>IndFusion.Mcp.Web.Tests</RootNamespace>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
-    <UseVSTestForDiscovery>true</UseVSTestForDiscovery>
   </PropertyGroup>
   <Import Project="..\TestingPlatform.props" />
   <!-- ===================================================================== -->

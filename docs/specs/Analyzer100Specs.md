@@ -1,257 +1,232 @@
-# TestNamingConvention Analyzer - False-Positive Mitigation Spec
+# Epic: EXXER100 - TestNamingConvention Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER100`  
 **Source**: `src/code/IndFusion.Analyzer/Testing/TestNamingConventionAnalyzer.cs`  
 **Prepared by**: Codex agent (2025-10-08)
 
-## 0. Selection Rationale
+## Definition of Ready
 
-- `docs/specs` contained no entry for EXXER100 even though the analyzer remains enabled (warning severity) in the IndFusion suite.  
-- Repository tests show many legitimate naming patterns that deviate from the canonical `Should_Action_When_Condition` shape, causing noise in the IndTrace sample solution:
-  - `Test Project/Src/Tests/Core/Domain.UnitTests/CommonTests/FixedSizedStackSequentialTests.cs` prefixes method names with alphabetical ordering (e.g., `AEnqueue_Should_Add_Item_To_Stack`). These exist to force xUnit execution ordering; the analyzer flags the leading `A/ B/ C` segments.
-  - `Test Project/Src/Tests/Core/Application.UnitTests/Domain/Events/EventBusTests.cs:10` uses `Constructor_WithValidParameters_ShouldCreateInstance` style naming (common in domain unit tests to highlight the subject under test). EXXER100 raises warnings despite the method being descriptive.
-- Teams rely on `AllowTestNamingVariationsAttribute`, nested `Given_/When_` classes, and xUnit `DisplayName` overrides to suppress noise. Documenting the heuristics and mitigation strategies enables tightening the analyzer while respecting valid naming variants.
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
 
-## 1. Specification
+## Definition of Done
 
-- **Intent**  
-  Encourage descriptive test method names that communicate scenario and expectation, roughly following `Should_Action_When_Condition`.
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
 
-- **Scope**  
-  - Analyzer inspects `MethodDeclarationSyntax` nodes flagged as tests by `PatternDetector.DetectTestAttributes`.  
-  - Before matching, it evaluates opt-outs: `[AllowTestNamingVariations]` on method or containing type, explicit `[Fact(DisplayName=…)]`/`[Theory(Description=…)]`, or nested classes whose names start with `Given_`/`When_`.  
-  - Remaining methods are validated against a flexible regular expression (`flexiblePattern`) supporting optional prefixes, alternate connectors (`When|For|With|If|On`), compound conditions, lowercase tokens, and optional `Async` suffixes. The regex is still strict enough to reject behavior-first names such as `Constructor_WithValidParameters_ShouldCreateInstance`.
+---
 
-## 2. Validation Plan
+## Stories
 
-1. Expand `TestNamingConventionAnalyzerFalsePositiveTests` with the ten scenarios listed below plus existing coverage.  
-2. Add integration-style tests that run the analyzer against real IndTrace files (e.g., `FixedSizedStackSequentialTests`) using `AnalyzerTestHelper.RunAnalyzer` and verify zero diagnostics once mitigations land.  
-3. Execute `dotnet test src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj -c Release`.  
-4. Run `dotnet build Test Project/Src/Tests/Core/Application.UnitTests/Core.Application.UnitTests.csproj -c Release` to ensure the IndTrace sample suite builds without EXXER100 noise.
+### 1.1. Story: Allow Ordered Test Prefixes
 
-## 3. Enhancement Opportunities (≥10 Items)
+**As a** developer  
+**I want** the analyzer to allow alphabetical or numeric prefixes in test names  
+**So that** I can control the execution order of my tests without getting naming convention warnings.
 
-Each item documents a current false-positive, mitigation, and a regression snippet that fails today but passes once the analyzer is refined.
+#### 1.1.1. Acceptance Criteria
 
-### 1. Ordered Test Prefixes (A/B/C…)
-- **Problem**: Methods such as `AEnqueue_Should_Add_Item_To_Stack` (`FixedSizedStackSequentialTests.cs:34`) include leading alphabetical prefixes to control ordering. The regex rejects the prefix unless it exactly matches `Should_…`.  
-- **Mitigation**: Permit single-letter or numeric prefixes before `Should_` when they’re separated by `_`.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Allow_Alpha_Prefixes()
-  {
-      const string code = @"
-using Xunit;
-public class OrderedTests
-{
-    [Fact]
-    public void AEnqueue_Should_Add_Item_To_Stack() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+**Given** a test method name is prefixed with a single letter or number followed by an underscore (e.g., `A_Should_Do_Something`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-### 2. SubjectFirst Naming (`Constructor_WithValidParameters_ShouldCreateInstance`)
-- **Problem**: EventBus tests (`EventBusTests.cs:10`) express subject-first names (MethodUnderTest `_` Should `_`). The regex expects names to start with optional prefixes *followed by `Should_`*.  
-- **Mitigation**: Accept patterns like `Target_Should_…` and `Member_With…_Should_…` by tolerating subject segments before `Should_`.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Allow_SubjectFirst_Names()
-  {
-      const string code = @"
-using Xunit;
-public class ConstructorTests
-{
-    [Fact]
-    public void Constructor_WithValidParameters_ShouldCreateInstance() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+#### 1.1.2. Acceptance Checklist
 
-### 3. DisplayName Overrides Should Suppress Diagnostics
-- **Problem**: Methods using `[Fact(DisplayName = "Scenario: user requests data")]` still hit the regex because the analyzer doesn’t short-circuit after detecting a `DisplayName`.  
-- **Mitigation**: After detecting `DisplayName`/`Description` arguments, exit before regex validation.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Respect_DisplayName_Overrides()
-  {
-      const string code = @"
-using Xunit;
-public class DisplayNameTests
-{
-    [Fact(DisplayName = ""Scenario: user requests data"")]
-    public void AnyNameIsFine() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-### 4. Nested Context Classes (Given_/When_)
-- **Problem**: Under nested `Given_/When_` context classes, methods such as `ReturnsEmptyResult()` intentionally drop the `Should_…` pattern (`TestNamingConventionAnalyzerFalsePositiveTests.cs:62`). The analyzer currently skips nested contexts, but we rely on fragile string comparisons.  
-- **Mitigation**: Strengthen detection for nested context classes (case-insensitive, allow suffixes like `_Context`).  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Skip_When_Inside_Given_Class()
-  {
-      const string code = @"
-using Xunit;
-public class Given_UserContext
-{
-    public class When_NoData
-    {
-        [Fact]
-        public void ReturnsEmptyResult() { }
-    }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+---
 
-### 5. Domain-Descriptive Names Without “Should”
-- **Problem**: Tests like `ProcessAsync_Completes_When_NoErrors` or `Service_ReturnsExpectedResponse` appear in IndTrace suites to match domain documentation.  
-- **Mitigation**: Allow verbs like `Process_`, `Execute_` followed by `_Should_` or treat names with `_When_` connectors as acceptable even if the initial segment lacks `Should`.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Allow_Domain_Descriptive_Names()
-  {
-      const string code = @"
-using Xunit;
-public class DomainTests
-{
-    [Fact]
-    public void ProcessAsync_Should_Return_Response_When_Valid() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+### 1.2. Story: Allow Subject-First Naming
 
-### 6. Async Suffix Placement
-- **Problem**: Methods like `ProcessAsync_Should_Return_Result_When_Success()` are flagged if the suffix appears before the first underscore or at the end. Current regex only handles trailing `Async`.  
-- **Mitigation**: Normalize method names by stripping trailing `_Async` or `Async_` segments before regex evaluation.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Allow_Async_Suffixes()
-  {
-      const string code = @"
-using Xunit;
-public class AsyncTests
-{
-    [Fact]
-    public void ProcessAsync_Should_Return_Result_When_Success() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+**As a** developer  
+**I want** the analyzer to allow test names that start with the subject under test (e.g., `Constructor_Should_Do_Something`)  
+**So that** I can clearly indicate what is being tested.
 
-### 7. Subject Prefixes Using PascalCase (Machine_Should_Start_InIdle)
-- **Problem**: Many tests in `Test Project/Src/Tests/Core/Domain.UnitTests/…` use PascalCase object names before `Should`, e.g., `Machine_Should_Start_InIdle`. The existing regex handles lowercase `Should_` but is brittle when the subject segment contains uppercase words without underscores.  
-- **Mitigation**: Expand prefix handling to cover PascalCase tokens before `Should_`.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Allow_PascalCase_Subjects()
-  {
-      const string code = @"
-using Xunit;
-public class MachineTests
-{
-    [Fact]
-    public void Machine_Should_Start_InIdle() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+#### 1.2.1. Acceptance Criteria
 
-### 8. Tests Describing Negative Scenarios Without Condition Clause
-- **Problem**: Methods like `Service_Should_Not_Depend_On_UI` or `Metrics_Should_Track_Reconnection_Count` lack an explicit `_When_` clause but remain descriptive.  
-- **Mitigation**: Treat names with `Should_Not_` or `Should_Track_` as well-formed even without a condition suffix.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Allow_Behavior_Only_Names()
-  {
-      const string code = @"
-using Xunit;
-public class ArchitectureTests
-{
-    [Fact]
-    public void Services_Should_Not_Depend_On_UI() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+**Given** a test method name follows a `Subject_Should_Action_When_Condition` pattern  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-### 9. Lowercase Condition Tokens
-- **Problem**: Some tests use lowercase condition fragments (`_When_cancelled`). The regex currently expects uppercase or camel-case tokens.  
-- **Mitigation**: Normalize tokens to ignore casing before applying the pattern.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Allow_Lowercase_Conditions()
-  {
-      const string code = @"
-using Xunit;
-public class CancellationTests
-{
-    [Fact]
-    public void Process_Should_Return_Failure_When_cancelled() { }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+#### 1.2.2. Acceptance Checklist
 
-### 10. Opt-Out Attribute Recognition in Nested Types
-- **Problem**: `AllowTestNamingVariationsAttribute` defined at class level should suppress analyzer results for child methods, but the current check only looks at the immediate parent class.  
-- **Mitigation**: Walk up the syntax tree to honor opt-out attributes applied at any ancestor level.  
-- **Test**:
-  ```csharp
-  [Fact]
-  public void Should_Respect_OptOut_Attribute_On_Ancestor()
-  {
-      const string code = @"
-using System;
-using Xunit;
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public sealed class AllowTestNamingVariationsAttribute : Attribute { }
+---
 
-[AllowTestNamingVariations]
-public class SampleSpecs
-{
-    public class Nested
-    {
-        [Fact]
-        public void GivenUser_WhenAuthenticated_ThenShowsDashboard() { }
-    }
-}";
-      AnalyzerTestHelper.RunAnalyzer(code, new TestNamingConventionAnalyzer())
-                         .ShouldBeEmpty();
-  }
-  ```
+### 1.3. Story: Respect DisplayName Overrides
 
-## 4. Test-Driven Fix Strategy
+**As a** developer  
+**I want** the analyzer to suppress warnings when a test has a `DisplayName` attribute  
+**So that** I can use custom test names without being forced to follow a specific convention.
 
-- Update `flexiblePattern` (and/or preprocess method names) to tolerate:
-  - Optional alphabetical/numeric prefixes before `Should_`
-  - Subject-first naming segments (`Constructor_WithValidParameters_…`)
-  - Lowercase condition tokens and `_Async` segments  
-- Enhance opt-out detection by checking ancestor classes for `[AllowTestNamingVariations]`.  
-- Short-circuit when display names or descriptions exist; the current helper should return immediately after detection.  
-- Normalize nested context class detection to be case-insensitive and cover suffixes.  
-- After implementing, expand `TestNamingConventionAnalyzerFalsePositiveTests` with the snippets above, re-run analyzer tests, and ensure sample projects compile without EXXER100 warnings.
+#### 1.3.1. Acceptance Criteria
+
+**Given** a test method is decorated with a `[Fact(DisplayName = "...")]` or `[Theory(DisplayName = "...")]` attribute  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for that method's name.
+
+#### 1.3.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.4. Story: Allow Nested Context Classes
+
+**As a** developer  
+**I want** the analyzer to allow different naming conventions within nested context classes (e.g., `Given_...`, `When_...`)  
+**So that** I can structure my tests using BDD-style nested classes.
+
+#### 1.4.1. Acceptance Criteria
+
+**Given** a test method is inside a nested class whose name starts with `Given_` or `When_`  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for the test method's name.
+
+#### 1.4.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.5. Story: Allow Domain-Descriptive Names Without "Should"
+
+**As a** developer  
+**I want** the analyzer to be more flexible with test names that are descriptive but don't start with "Should"  
+**So that** I can write test names that align with my domain language.
+
+#### 1.5.1. Acceptance Criteria
+
+**Given** a test name is descriptive and contains verbs other than "Should" at the beginning (e.g., `Process_Returns_Response_When_Valid`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.5.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.6. Story: Handle Async Suffix Placement
+
+**As a** developer  
+**I want** the analyzer to correctly handle `Async` suffixes in test names  
+**So that** my asynchronous tests are not flagged incorrectly.
+
+#### 1.6.1. Acceptance Criteria
+
+**Given** a test method name includes an `Async` suffix (e.g., `ProcessAsync_Should_Return_Result`)  
+**When** the analyzer runs  
+**Then** the `Async` suffix should be ignored during validation and no diagnostic should be reported.
+
+#### 1.6.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.7. Story: Allow Subject Prefixes Using PascalCase
+
+**As a** developer  
+**I want** the analyzer to allow PascalCase subjects in test names  
+**So that** I can follow my team's naming conventions.
+
+#### 1.7.1. Acceptance Criteria
+
+**Given** a test method name starts with a PascalCase subject (e.g., `Machine_Should_Start_InIdle`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.7.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.8. Story: Allow Tests Describing Negative Scenarios Without a Condition
+
+**As a** developer  
+**I want** the analyzer to allow test names for negative scenarios that don't have a `_When_` clause  
+**So that** I can write clear and concise names for architectural or behavior-only tests.
+
+#### 1.8.1. Acceptance Criteria
+
+**Given** a test method name describes a negative scenario or behavior without a `_When_` clause (e.g., `Services_Should_Not_Depend_On_UI`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.8.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.9. Story: Allow Lowercase Condition Tokens
+
+**As a** developer  
+**I want** the analyzer to allow lowercase tokens in the condition part of a test name  
+**So that** I have more flexibility in naming my tests.
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a test method name contains lowercase tokens in the condition part (e.g., `_When_cancelled`)  
+**When** the analyzer runs  
+**Then** the casing should be ignored during validation and no diagnostic should be reported.
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.10. Story: Recognize Opt-Out Attribute in Nested Types
+
+**As a** developer  
+**I want** the analyzer to respect the `AllowTestNamingVariations` attribute on ancestor classes  
+**So that** I can opt-out an entire group of nested tests from the naming convention rule.
+
+#### 1.10.1. Acceptance Criteria
+
+**Given** an ancestor class of a test method is decorated with the `[AllowTestNamingVariations]` attribute  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for the test method's name.
+
+#### 1.10.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).

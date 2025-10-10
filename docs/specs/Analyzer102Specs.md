@@ -1,319 +1,239 @@
-# UseShouldly Analyzer - False-Positive Mitigation Spec
+# Epic: EXXER102 - UseShouldly Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER102`  
 **Source**: `src/code/IndFusion.Analyzer/Testing/DoNotUseFluentAssertionsAnalyzer.cs`  
 **Prepared by**: Codex agent (2025-10-07)
 
-## 0. Selection Rationale
+## Definition of Ready
 
-- The analyzer currently only detects `using FluentAssertions;` directives but misses many common FluentAssertions usage patterns in actual test code.
-- Member access analysis is implemented but not registered, leading to false negatives where FluentAssertions is used without explicit using statements.
-- The analyzer needs to distinguish between legitimate Shouldly usage and FluentAssertions patterns to avoid false positives.
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
 
-## 1. Specification
+## Definition of Done
 
-- **Intent**  
-  Enforce using Shouldly instead of FluentAssertions for test assertions to maintain consistent testing patterns across the project.
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
 
-- **Scope**  
-  Registers `SyntaxKind.UsingDirective` and should register `SyntaxKind.MemberAccessExpression`. It raises warnings when it detects FluentAssertions usage patterns.
+---
 
-## 2. Validation Plan
+## Stories
 
-1. Create a new `UseShouldlyAnalyzerFalsePositiveTests` class with the mitigation scenarios below plus existing positive cases.
-2. Update the analyzer to properly register member access analysis and implement robust pattern detection.
-3. Run `dotnet test src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj -c Release` to confirm all analyzer tests pass.
-4. Test with real-world FluentAssertions usage patterns to ensure comprehensive coverage.
+### 1.1. Story: Enable Member Access Analysis
 
-## 3. Enhancement Opportunities (≥10 Items)
+**As a** developer  
+**I want** the analyzer to inspect member access expressions  
+**So that** FluentAssertions usage is detected even without an explicit `using` directive.
 
-Each item records an observed or reported false positive, the proposed mitigation, and a regression test snippet (xUnit + Shouldly) that currently fails and will pass after the fix.
+#### 1.1.1. Acceptance Criteria
 
-### 1. Enable Member Access Analysis
+**Given** a test method uses FluentAssertions via a member access expression (e.g., `result.Should().Be(42)`)  
+**When** the analyzer runs without a `using FluentAssertions;` directive in the file  
+**Then** a diagnostic with ID `EXXER102` should be reported.
 
-- **Problem**: The analyzer has `AnalyzeMemberAccess` method but doesn't register it, missing FluentAssertions usage without explicit using statements.
-- **Mitigation**: Register `SyntaxKind.MemberAccessExpression` in the `Initialize` method.
-- **Test**:
+#### 1.1.2. Acceptance Checklist
 
-```csharp
-[Fact]
-public void Should_Report_FluentAssertions_MemberAccess_Without_Using()
-{
-    const string testCode = @"
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var result = GetResult();
-        result.Should().Be(42);
-    }
-}";
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-    var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-    diagnostics.ShouldNotBeEmpty();
-    diagnostics.Single().Id.ShouldBe(DiagnosticIds.UseShouldly);
-}
-```
+---
 
-### 2. Distinguish Shouldly from FluentAssertions
+### 1.2. Story: Distinguish Shouldly from FluentAssertions
 
-- **Problem**: Both frameworks use `.Should()` method, causing false positives when Shouldly is used correctly.
-- **Mitigation**: Check the namespace context to determine if `.Should()` belongs to Shouldly or FluentAssertions.
-- **Test**:
+**As a** developer  
+**I want** the analyzer to differentiate between Shouldly and FluentAssertions  
+**So that** I do not get false positives when correctly using Shouldly.
 
-```csharp
-[Fact]
-public void Should_Not_Report_For_Shouldly_Usage()
-{
-    const string testCode = @"
-using Shouldly;
+#### 1.2.1. Acceptance Criteria
 
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var result = GetResult();
-        result.ShouldBe(42);
-    }
-}";
+**Given** a test method is using Shouldly assertions (e.g., `result.ShouldBe(42)`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+**Given** a test method is using FluentAssertions (e.g., `result.Should().Be(42)`)  
+**When** the analyzer runs  
+**Then** a diagnostic with ID `EXXER102` should be reported.
 
-### 3. Handle Global Using Statements
+#### 1.2.2. Acceptance Checklist
 
-- **Problem**: `global using FluentAssertions;` in GlobalUsings.cs is not detected by the current analyzer.
-- **Mitigation**: Check for global using statements and report them appropriately.
-- **Test**:
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-```csharp
-[Fact]
-public void Should_Report_Global_Using_FluentAssertions()
-{
-    const string testCode = @"
-global using FluentAssertions;
+---
 
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var result = GetResult();
-        result.Should().Be(42);
-    }
-}";
+### 1.3. Story: Handle Global Using Statements
 
-    var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-    diagnostics.ShouldNotBeEmpty();
-}
-```
+**As a** developer  
+**I want** the analyzer to detect `global using FluentAssertions`  
+**So that** all forms of FluentAssertions usage are identified.
 
-### 4. Ignore FluentAssertions in Documentation Comments
+#### 1.3.1. Acceptance Criteria
 
-- **Problem**: Documentation samples mentioning FluentAssertions trigger false positives.
-- **Mitigation**: Skip analysis of using directives and member access within documentation comments.
-- **Test**:
+**Given** a project contains a `global using FluentAssertions;` statement  
+**And** a test method uses FluentAssertions  
+**When** the analyzer runs  
+**Then** a diagnostic with ID `EXXER102` should be reported.
 
-```csharp
-[Fact]
-public void Should_Not_Report_For_FluentAssertions_In_Documentation()
-{
-    const string testCode = @"
-/// <summary>
-/// Example using FluentAssertions: result.Should().Be(42)
-/// </summary>
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var result = GetResult();
-        result.ShouldBe(42); // Using Shouldly
-    }
-}";
+#### 1.3.2. Acceptance Checklist
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-### 5. Handle FluentAssertions in String Literals
+---
 
-- **Problem**: String literals containing FluentAssertions code samples trigger false positives.
-- **Mitigation**: Skip analysis of member access within string literals.
-- **Test**:
+### 1.4. Story: Ignore FluentAssertions in Documentation Comments
 
-```csharp
-[Fact]
-public void Should_Not_Report_For_FluentAssertions_In_Strings()
-{
-    const string testCode = @"
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var sample = ""result.Should().Be(42)"";
-        var result = GetResult();
-        result.ShouldBe(42); // Using Shouldly
-    }
-}";
+**As a** developer  
+**I want** the analyzer to ignore code examples in documentation  
+**So that** I don't get false positives from comments.
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer())
-        .ShouldBeEmpty();
-}
-```
+#### 1.4.1. Acceptance Criteria
 
-### 6. Support Configuration for Legacy Projects
+**Given** a file contains FluentAssertions usage examples within XML documentation comments  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for the commented code.
 
-- **Problem**: Projects in migration phase need to gradually transition from FluentAssertions to Shouldly.
-- **Mitigation**: Support analyzer configuration to allow specific files or projects to use FluentAssertions temporarily.
-- **Test**:
+#### 1.4.2. Acceptance Checklist
 
-```csharp
-[Fact]
-public void Should_Respect_Configuration_To_Allow_FluentAssertions()
-{
-    const string testCode = @"
-using FluentAssertions;
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var result = GetResult();
-        result.Should().Be(42);
-    }
-}";
+---
 
-    var options = AnalyzerOptionsFactory.Create(
-        ("dotnet_diagnostic.EXXER102.allow_fluent_assertions", "true"));
+### 1.5. Story: Handle FluentAssertions in String Literals
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer(),
-        analyzerOptions: options)
-        .ShouldBeEmpty();
-}
-```
+**As a** developer  
+**I want** the analyzer to ignore code examples in string literals  
+**So that** I don't get false positives from string content.
 
-### 7. Detect FluentAssertions Extension Methods
+#### 1.5.1. Acceptance Criteria
 
-- **Problem**: FluentAssertions extension methods like `BeEquivalentTo`, `Contain`, etc. are not detected.
-- **Mitigation**: Expand the list of FluentAssertions methods and improve chain detection.
-- **Test**:
+**Given** a file contains string literals with FluentAssertions code examples  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for the string literals.
 
-```csharp
-[Fact]
-public void Should_Report_FluentAssertions_Extension_Methods()
-{
-    const string testCode = @"
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var list = new[] { 1, 2, 3 };
-        list.Should().Contain(2);
-    }
-}";
+#### 1.5.2. Acceptance Checklist
 
-    var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-    diagnostics.ShouldNotBeEmpty();
-}
-```
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-### 8. Handle FluentAssertions in Conditional Compilation
+---
 
-- **Problem**: FluentAssertions usage in `#if DEBUG` blocks may be legitimate for debugging purposes.
-- **Mitigation**: Allow FluentAssertions in conditional compilation blocks with appropriate configuration.
-- **Test**:
+### 1.6. Story: Support Configuration for Legacy Projects
 
-```csharp
-[Fact]
-public void Should_Allow_FluentAssertions_In_Debug_Blocks_When_Configured()
-{
-    const string testCode = @"
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var result = GetResult();
-#if DEBUG
-        result.Should().Be(42);
-#endif
-        result.ShouldBe(42); // Using Shouldly
-    }
-}";
+**As a** developer working on a migrating project  
+**I want** to be able to temporarily allow FluentAssertions  
+**So that** I can gradually transition to Shouldly without being blocked.
 
-    var options = AnalyzerOptionsFactory.Create(
-        ("dotnet_diagnostic.EXXER102.allow_in_debug", "true"));
+#### 1.6.1. Acceptance Criteria
 
-    AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer(),
-        analyzerOptions: options)
-        .ShouldBeEmpty();
-}
-```
+**Given** the analyzer configuration `dotnet_diagnostic.EXXER102.allow_fluent_assertions` is set to `true`  
+**And** a test method uses FluentAssertions  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
 
-### 9. Improve Chain Detection Logic
+#### 1.6.2. Acceptance Checklist
 
-- **Problem**: Current `IsPartOfFluentAssertionsChain` method is too simplistic and may miss complex FluentAssertions chains.
-- **Mitigation**: Implement more robust chain detection that follows the full FluentAssertions API patterns.
-- **Test**:
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-```csharp
-[Fact]
-public void Should_Detect_Complex_FluentAssertions_Chains()
-{
-    const string testCode = @"
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var person = GetPerson();
-        person.Name.Should().NotBeNullOrEmpty().And.Be(""John"");
-    }
-}";
+---
 
-    var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-    diagnostics.ShouldNotBeEmpty();
-}
-```
+### 1.7. Story: Detect FluentAssertions Extension Methods
 
-### 10. Provide Better Error Messages
+**As a** developer  
+**I want** the analyzer to detect various FluentAssertions extension methods  
+**So that** coverage of the rule is comprehensive.
 
-- **Problem**: Current error messages don't provide clear guidance on how to migrate from FluentAssertions to Shouldly.
-- **Mitigation**: Include specific migration suggestions in diagnostic messages.
-- **Test**:
+#### 1.7.1. Acceptance Criteria
 
-```csharp
-[Fact]
-public void Should_Provide_Helpful_Migration_Message()
-{
-    const string testCode = @"
-using FluentAssertions;
+**Given** a test method uses FluentAssertions extension methods like `BeEquivalentTo`, `Contain`, etc.  
+**When** the analyzer runs  
+**Then** a diagnostic with ID `EXXER102` should be reported.
 
-public class TestClass
-{
-    public void TestMethod()
-    {
-        var result = GetResult();
-        result.Should().Be(42);
-    }
-}";
+#### 1.7.2. Acceptance Checklist
 
-    var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotUseFluentAssertionsAnalyzer());
-    diagnostics.ShouldNotBeEmpty();
-    diagnostics.Single().GetMessage().ShouldContain("use Shouldly");
-}
-```
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
 
-## 4. Test-Driven Fix Strategy
+---
 
-- Add `UseShouldlyAnalyzerFalsePositiveTests` with the ten scenarios above plus existing positive-control tests.
-- Extend `DoNotUseFluentAssertionsAnalyzer` to:
-  - Register member access analysis properly.
-  - Distinguish between Shouldly and FluentAssertions usage.
-  - Handle global using statements.
-  - Skip analysis in documentation and string literals.
-  - Support configuration options for migration scenarios.
-  - Improve chain detection logic.
-  - Provide better error messages with migration guidance.
-- Wire configuration helpers into `AnalyzerTestHelper` to support the new configuration options.
-- Run analyzer tests to confirm all scenarios pass and false positives are eliminated.
+### 1.8. Story: Handle FluentAssertions in Conditional Compilation
+
+**As a** developer  
+**I want** to allow FluentAssertions in debug builds for diagnostic purposes  
+**So that** I can use it for debugging without getting warnings.
+
+#### 1.8.1. Acceptance Criteria
+
+**Given** the analyzer configuration `dotnet_diagnostic.EXXER102.allow_in_debug` is set to `true`  
+**And** FluentAssertions is used within a `#if DEBUG` block  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for that usage.
+
+#### 1.8.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [- ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.9. Story: Improve Chain Detection Logic
+
+**As a** developer  
+**I want** the analyzer to detect complex FluentAssertions chains  
+**So that** more advanced usage patterns are covered.
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a test method uses a complex FluentAssertions chain (e.g., `person.Name.Should().NotBeNullOrEmpty().And.Be("John")`)  
+**When** the analyzer runs  
+**Then** a diagnostic with ID `EXXER102` should be reported.
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.10. Story: Provide Better Error Messages
+
+**As a** developer  
+**I want** the analyzer to provide helpful migration guidance  
+**So that** I can easily refactor my code to use Shouldly.
+
+#### 1.10.1. Acceptance Criteria
+
+**Given** the analyzer reports a diagnostic for FluentAssertions usage  
+**When** I view the diagnostic message  
+**Then** the message should contain a clear suggestion to use Shouldly and provide a simple example.
+
+#### 1.10.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).

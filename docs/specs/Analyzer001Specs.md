@@ -1,347 +1,232 @@
-# UseResultPattern Analyzer – False-Positive Mitigation Spec
+# Epic: EXXER001 - UseResultPattern Analyzer False-Positive Mitigation
 
 **Analyzer ID**: `EXXER001`  
 **Source**: `src/code/IndFusion.Analyzer/ErrorHandling/UseResultPatternAnalyzer.cs`  
 **Prepared by**: Codex agent (2025-10-07)
 
-## 0. Selection Rationale
-
-- EXXER001 has no existing mitigation spec.  
-- The analyzer reports an error whenever it encounters a `throw` inside a method/property/local function/lambda whose return type is not `Result<T>` (or `Task<Result<T>>`), aside from a few coarse exclusions.  
-- In the IndTrace solution the vast majority of guard clauses, startup validation, Identity scaffolding, and infrastructure helpers still use exceptions appropriately. Examples include:
-  - `ShiftDetectionRule.AppliesTo(int hour)` (`Test Project\Src\Code\Core\Domain\Services\ShiftDetectionRule.cs:21-40`) – returns `bool` and throws `ArgumentOutOfRangeException` for illegal hours.  
-  - Connection-string guards inside `Program.cs` (`Test Project\Src\Code\Presentation\IndTrace.OEE\Program.cs:123-190`).  
-  - Identity UI method `Register.razor` forcing email support (`Test Project\Src\Code\Presentation\IndTrace.OEE\Components\Account\Pages\Register.razor:123`).  
-  - Guard helpers such as `Guard.ThrowIfNull` patterns across application services.  
-- Because EXXER001 fires on nearly every legitimate exception outside the strict Result<T> pattern, it is one of the loudest analyzers still lacking a remediation plan.
-
-## 1. Specification
-
-- **Intent**  
-  Encourage functional error handling via `Result<T>` rather than throwing exceptions across application/business logic, improving composability and testability.
-
-- **Scope**  
-  Visits methods, properties, local functions, and lambdas. Any discovered `throw`/`throw new` yields a diagnostic unless the member already returns `Result<T>` (with or without `Task/ValueTask`), or matches a small set of name-based exclusions (methods containing “Throw”, test attributes, controller namespaces).
-
-## 2. Validation Plan
-
-1. Add `UseResultPatternAnalyzerFalsePositiveTests` covering all scenarios below, plus positive control cases (e.g., domain service throwing `Exception`).  
-2. Include integration fixtures referencing actual IndTrace files mentioned above to ensure diagnostics disappear.  
-3. Run `dotnet test` for analyzer tests and for selected solution projects to confirm EXXER001 warning counts drop substantially.  
-4. Keep positive coverage verifying that genuine misuse (e.g., core domain method throwing `Exception` when Result<T> is expected) still triggers the rule.
-
-## 3. Enhancement Opportunities (>=10 Items)
-
-Each subsection records an observed false positive, outlines mitigation, and includes an xUnit/Shouldly sample.
-
-### 1. Domain Guard Method Returning `bool`
-
-- **Problem**: `ShiftDetectionRule.AppliesTo` returns `bool` yet throws `ArgumentOutOfRangeException` for invalid hours, which is desirable domain validation.  
-- **Mitigation**: Detect guard patterns in value objects/domain services (method names containing `Validate`, `AppliesTo`, `Ensure`, returning `bool`) and skip diagnostics.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Domain_Guard()
-{
-    const string testCode = @"
-using System;
-
-public static class ShiftRules
-{
-    public static bool AppliesTo(int hour)
-    {
-        if (hour < 0 || hour > 23)
-        {
-            throw new ArgumentOutOfRangeException(nameof(hour));
-        }
-
-        return hour >= 7 && hour < 15;
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 2. Startup/Configuration Guard
-
-- **Problem**: Minimal-host `Program` files throw `InvalidOperationException` when configuration is missing.  
-- **Mitigation**: Skip methods inside classes named `Program`, `Startup`, or files with top-level statements.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Program_Config_Guard()
-{
-    const string testCode = @"
-using System;
-
-public static class Program
-{
-    public static string ResolveConnection(string? connectionString) =>
-        connectionString ?? throw new InvalidOperationException(""Connection string not found."");
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 3. Identity UI Scaffold (Enforce Email Support)
-
-- **Problem**: Identity `.razor` code throws `NotSupportedException` when features are disabled (framework requirement).  
-- **Mitigation**: Automatically skip components in namespaces containing `.Components.Account` or classes decorated with `[AllowThrowing]` (new attribute).  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Identity_Scaffolding()
-{
-    const string testCode = @"
-using System;
-
-namespace Sample.Identity.Components;
-
-public sealed class RegisterHandler
-{
-    public void EnsureEmailSupport(bool enabled)
-    {
-        if (!enabled)
-        {
-            throw new NotSupportedException(""Email support required."");
-        }
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 4. Guard Helper/ThrowHelper Methods
-
-- **Problem**: Centralized guard helpers intentionally throw (e.g., `Guard.ThrowIfNull`).  
-- **Mitigation**: Skip methods/types whose names contain `Guard`, `ThrowHelper`, `Ensure`, or annotated with `[AllowGuardThrows]`.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Guard_Helper()
-{
-    const string testCode = @"
-using System;
-
-public static class Guard
-{
-    public static void ThrowIfNull(object? value, string name)
-    {
-        if (value is null)
-        {
-            throw new ArgumentNullException(name);
-        }
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 5. Value Object Factory Allowing Exceptions
-
-- **Problem**: Static factory methods returning primitive/bool values still throw when invariants fail (e.g., `Percentage.Clamp`).  
-- **Mitigation**: Allow methods inside types named `Value`, `Metrics`, `Id`, `Amount`, etc., to throw guard exceptions (`ArgumentNullException`, `ArgumentOutOfRangeException`).  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_ValueObject_Invariant()
-{
-    const string testCode = @"
-using System;
-
-public static class Percentage
-{
-    public static decimal Clamp(decimal value)
-    {
-        if (value is < 0 or > 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(value));
-        }
-
-        return value;
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 6. `?? throw` Guards in Properties
-
-- **Problem**: Expression-bodied properties with inline null guards (`get => _service ?? throw ...`) are flagged.  
-- **Mitigation**: Recognize `ThrowExpressionSyntax` used in property getters for lazy initialization/DI and skip.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Property_Null_Guard()
-{
-    const string testCode = @"
-using System;
-
-public sealed class LazyService
-{
-    private IService? _service;
-    public IService Service => _service ?? throw new InvalidOperationException(""Service not configured."");
-}
-
-public interface IService { }
-";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 7. Test Helper Methods Inside Test Classes
-
-- **Problem**: Analyzer already skips attributed test methods but still flags private helper methods within `*Tests` classes that throw intentionally.  
-- **Mitigation**: If the containing type name ends with `Tests`, `Specs`, or `Benchmarks`, treat all nested members as test context.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Helper_In_Test_Class()
-{
-    const string testCode = @"
-using System;
-using Xunit;
-
-public class CalculationTests
-{
-    [Fact]
-    public void Should_Throw() => Assert.Throws<InvalidOperationException>(() => Helper());
-
-    private static void Helper()
-    {
-        throw new InvalidOperationException();
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 8. Async Handlers Returning `Task`
-
-- **Problem**: Asynchronous event handlers or background jobs (`Task` return type) may throw to surface fatal errors; analyzer still demands `Task<Result>`.  
-- **Mitigation**: Permit throws within methods returning `Task`/`ValueTask` if they are background workers (`ExecuteAsync`, `HandleAsync`, etc.) or decorated with `[HostedService]`.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Background_Task_Throws()
-{
-    const string testCode = @"
-using System;
-using System.Threading.Tasks;
-
-public sealed class Worker
-{
-    public async Task ExecuteAsync()
-    {
-        await Task.Delay(10);
-        throw new InvalidOperationException(""Fatal background failure"");
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 9. Local Functions Performing Validation
-
-- **Problem**: Local helper functions within a method might throw for validation; analyzer currently inspects them individually and raises diagnostics.  
-- **Mitigation**: When a local function is called immediately for guarding (identified via data flow or naming), suppress diagnostics.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_Local_Function_Guard()
-{
-    const string testCode = @"
-using System;
-
-public sealed class Processor
-{
-    public void Process(string command)
-    {
-        EnsureValid(command);
-
-        void EnsureValid(string value)
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                throw new ArgumentException(""Command required"", nameof(value));
-            }
-        }
-    }
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-### 10. Opt-Out Attribute (`[AllowExceptions]`)
-
-- **Problem**: Certain modules (migration scripts, telemetry adapters) deliberately use exceptions and should opt out.  
-- **Mitigation**: Introduce/recognize `[AllowExceptions]` attribute at class/method/lambda scope.  
-- **Test**:
-
-```csharp
-[Fact]
-public async Task Analyzer_Allows_OptOut_Attribute()
-{
-    const string testCode = @"
-using System;
-
-[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public sealed class AllowExceptionsAttribute : Attribute { }
-
-[AllowExceptions]
-public sealed class MigrationScript
-{
-    public void Run() => throw new NotSupportedException(""Legacy migration"");
-}";
-
-    AnalyzerTestHelper.RunAnalyzer(testCode, new UseResultPatternAnalyzer())
-        .ShouldBeEmpty();
-}
-```
-
-## 4. Test-Driven Fix Strategy
-
-1. Implement the ten regression tests plus positive control cases in the analyzer test suite.  
-2. Enhance `UseResultPatternAnalyzer` to:
-   - Incorporate semantic information (method return types, class/namespace context).  
-   - Recognize guards, helper conventions, background tasks, and Identity/UI scaffolding.  
-   - Honour opt-out attributes and test contexts.  
-   - Share heuristics with EXXER002 (AvoidThrowingExceptions) to avoid duplication.  
-3. Re-run analyzer tests ensuring new cases fail before the implementation and pass after.  
-4. Execute `dotnet test` for affected solution projects (Domain, Application, Presentation) to confirm EXXER001 warnings fall to an acceptable level.  
-5. Update `AnalyzerReleases.Unshipped.md` documenting the relaxed enforcement and opt-out support.
-
-## 5. Acceptance Checklist
-
-- [ ] Analyzer updated with guard/context recognition and opt-out attribute.  
-- [ ] Ten regression tests added/passing.  
-- [ ] Solution builds/tests succeed.  
-- [ ] Documented reduction in EXXER001 warnings across domain/application/presentation code.  
-- [ ] Release notes refreshed accordingly.
+## Definition of Ready
+
+- [ ] Sufficient context about the implementation has been collected.
+- [ ] The document has been updated with a detailed plan.
+- [ ] All dependencies and potential blockers have been identified.
+- [ ] The team has reviewed and agreed upon the plan.
+
+## Definition of Done
+
+- [ ] All stories are complete and meet their acceptance criteria.
+- [ ] All new regression tests are added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build warnings treated as errors, and 0 failing tests on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+- [ ] The project builds successfully without any new warnings or errors.
+
+---
+
+## Stories
+
+### 1.1. Story: Allow Domain Guard Methods Returning `bool`
+
+**As a** developer  
+**I want** the analyzer to allow domain guard methods that return `bool` and throw exceptions  
+**So that** I can perform desirable domain validation without false positives.
+
+#### 1.1.1. Acceptance Criteria
+
+**Given** a domain guard method (e.g., `AppliesTo`, `Validate`) returns `bool` and throws a validation exception (e.g., `ArgumentOutOfRangeException`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.1.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.2. Story: Allow Startup/Configuration Guards
+
+**As a** developer  
+**I want** the analyzer to allow guards in startup and configuration code  
+**So that** I can validate essential configuration at application startup.
+
+#### 1.2.1. Acceptance Criteria
+
+**Given** a method inside a `Program` or `Startup` class throws an `InvalidOperationException` for missing configuration  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.2.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.3. Story: Allow Identity UI Scaffolding Exceptions
+
+**As a** developer  
+**I want** the analyzer to allow exceptions required by the Identity UI framework  
+**So that** I can use the default Identity scaffolding without modification.
+
+#### 1.3.1. Acceptance Criteria
+
+**Given** a method in an Identity UI component (e.g., in a `.Components.Account` namespace) throws a `NotSupportedException` as required by the framework  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.3.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.4. Story: Allow Guard Helper/ThrowHelper Methods
+
+**As a** developer  
+**I want** the analyzer to allow centralized guard helper methods that intentionally throw exceptions  
+**So that** I can reuse validation logic across the application.
+
+#### 1.4.1. Acceptance Criteria
+
+**Given** a method or type is named with a guard-like pattern (e.g., `Guard`, `ThrowHelper`, `Ensure`) and intentionally throws exceptions  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.4.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.5. Story: Allow Value Object Factories to Throw Exceptions
+
+**As a** developer  
+**I want** value object factory methods to be able to throw exceptions when invariants fail  
+**So that** I can enforce the correctness of value objects at creation.
+
+#### 1.5.1. Acceptance Criteria
+
+**Given** a static factory method in a value object-like type (e.g., `Percentage`, `Amount`) throws a guard exception (`ArgumentNullException`, `ArgumentOutOfRangeException`)  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.5.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.6. Story: Allow `?? throw` Guards in Properties
+
+**As a** developer  
+**I want** to use null-coalescing throw expressions in expression-bodied properties for lazy initialization  
+**So that** I can write concise and clear property guards.
+
+#### 1.6.1. Acceptance Criteria
+
+**Given** an expression-bodied property uses a null-coalescing throw expression (`get => _service ?? throw ...`) for a guard  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.6.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.7. Story: Allow Test Helper Methods Inside Test Classes
+
+**As a** developer  
+**I want** the analyzer to allow helper methods within test classes to throw exceptions  
+**So that** I can create intentional failure scenarios for my tests.
+
+#### 1.7.1. Acceptance Criteria
+
+**Given** a private helper method inside a test class (e.g., a class ending with `Tests`) throws an exception  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.7.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.8. Story: Allow Async Handlers Returning `Task` to Throw
+
+**As a** developer  
+**I want** asynchronous event handlers or background jobs that return a non-generic `Task` to be able to throw exceptions  
+**So that** I can surface fatal errors in background processes.
+
+#### 1.8.1. Acceptance Criteria
+
+**Given** an async method that returns `Task` or `ValueTask` (and is identified as a background worker or event handler) throws an exception  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.8.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.9. Story: Allow Local Functions Performing Validation
+
+**As a** developer  
+**I want** to use local functions to encapsulate validation logic that throws exceptions  
+**So that** I can structure my validation code cleanly within a method.
+
+#### 1.9.1. Acceptance Criteria
+
+**Given** a local function is used for immediate validation and throws an exception  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported.
+
+#### 1.9.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).
+
+---
+
+### 1.10. Story: Provide an Opt-Out Attribute
+
+**As a** developer  
+**I want** a way to explicitly opt-out of the `UseResultPattern` rule for specific modules or methods  
+**So that** I can handle legacy code or specific scenarios where exceptions are required.
+
+#### 1.10.1. Acceptance Criteria
+
+**Given** a class or method is decorated with an `[AllowExceptions]` attribute  
+**When** the analyzer runs  
+**Then** no diagnostic should be reported for any `throw` statements within that scope.
+
+#### 1.10.2. Acceptance Checklist
+
+- [ ] Analyzer heuristics enhanced for all scenarios.
+- [ ] All new regression tests added and passing.
+- [ ] Build/test pipelines succeed (`dotnet build`, `dotnet test`). Zero build test with warning as error treated, 0 failing test on all the test suite.
+- [ ] Documentation updated (this spec + release notes).

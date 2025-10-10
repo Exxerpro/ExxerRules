@@ -45,6 +45,57 @@ Deliver a semantic-first “Code Standards as a Service” capability inside the
 
 ---
 
+## Implemented Patterns and Rules
+
+The following tables summarize the diagnostic analyzers and code fixes that have been implemented as part of this initiative. These components form the core of the semantic pattern enforcement platform.
+
+### EXXER Diagnostics and Fixers
+
+These rules are defined in the `ExxerAI.Rules.Analyzer` and `IndFusion.Fixer` projects.
+
+| Category | Analyzer | Corresponding Code Fix |
+| --- | --- | --- |
+| **Code Style** | `RuleForRegionUsage` | `DoNotUseRegionsCodeFixProvider` |
+| | `RuleForClassFileLength` | - |
+| **Asynchronous Programming** | `RuleForConfigureAwaitUsage` | `ConfigureAwaitFalseCodeFixProvider` |
+| **Testing** | `RuleForMigrationXUnitV3` | `XUnitV3MigrationCodeFixProvider` |
+| **Error Handling** | `RuleForResultCancellationHandling` | - |
+
+<br>
+
+### IndFusion Standard Diagnostics and Fixers
+
+These rules are defined in the `IndFusion.Analyzer` and `IndFusion.Fixer` projects and enforce broader coding standards.
+
+| Category | Analyzer | Corresponding Code Fix |
+| --- | --- | --- |
+| **Architecture** | `DomainShouldNotReferenceInfrastructureAnalyzer` | `DomainShouldNotReferenceInfrastructureCodeFixProvider` |
+| | `UseRepositoryPatternAnalyzer` | `UseRepositoryPatternCodeFixProvider` |
+| **Async** | `AsyncMethodsShouldAcceptCancellationTokenAnalyzer` | `CancellationTokenCodeFixProvider` |
+| | `AvoidAsyncVoidAnalyzer` | `AvoidAsyncVoidCodeFixProvider` |
+| | `UseConfigureAwaitFalseAnalyzer` | `ConfigureAwaitFalseCodeFixProvider` |
+| **Code Formatting**| `CodeFormattingAnalyzer` | `CodeFormattingCodeFixProvider` |
+| | `ProjectFormattingAnalyzer` | `ProjectFormattingCodeFixProvider` |
+| **Code Quality** | `AvoidMagicNumbersAndStringsAnalyzer` | `MagicNumbersAndStringsCodeFixProvider` |
+| | `DoNotUseRegionsAnalyzer` | `DoNotUseRegionsCodeFixProvider` |
+| **Documentation** | `PublicMembersShouldHaveXmlDocumentationAnalyzer` | `XmlDocumentationCodeFixProvider` |
+| **Error Handling**| `AvoidThrowingExceptionsAnalyzer` | - |
+| | `UseResultPatternAnalyzer` | `UseResultPatternCodeFixProvider` |
+| **Functional Patterns**| `DoNotThrowExceptionsAnalyzer` | - |
+| **Logging** | `DoNotUseConsoleWriteLineAnalyzer` | `ConsoleWriteLineCodeFixProvider` |
+| | `UseStructuredLoggingAnalyzer` | `StructuredLoggingCodeFixProvider` |
+| **Modern C#** | `UseExpressionBodiedMembersAnalyzer` | `ExpressionBodiedMembersCodeFixProvider` |
+| | `UseModernPatternMatchingAnalyzer` | `ModernPatternMatchingCodeFixProvider` |
+| **Null Safety** | `ValidateNullParametersAnalyzer` | `NullParameterValidationCodeFixProvider` |
+| **Performance** | `UseEfficientLinqAnalyzer` | `UseEfficientLinqCodeFixProvider` |
+| **Testing** | `DoNotMockDbContextAnalyzer` | `DbContextTestingCodeFixProvider` |
+| | `DoNotUseFluentAssertionsAnalyzer` | `ShouldlyAssertionCodeFixProvider` |
+| | `DoNotUseMoqAnalyzer` | `NSubstituteMockingCodeFixProvider` |
+| | `TestNamingConventionAnalyzer` | `TestNamingConventionCodeFixProvider` |
+| | `UseXUnitV3Analyzer` | `XUnitV3MigrationCodeFixProvider` |
+
+---
+
 ## Epics & Backlog
 
 ### Epic 1 – Semantic Core & Knowledge Base
@@ -93,7 +144,7 @@ Deliver a semantic-first “Code Standards as a Service” capability inside the
 
 #### User Stories
 - *As an autonomous agent*, I want a safe regex replace tool that previews diffs and validates builds so that I avoid breaking files.
-- *As a developer*, I want Fixer001 diagnostics to surface as MCP repair actions so that I can remediate EXXER issues automatically.
+- *As a developer*, I want Fixer001 diagnostics, such as `UseResultPatternAnalyzer` or `AvoidAsyncVoidAnalyzer`, to surface as MCP repair actions so that I can remediate EXXER issues automatically.
 - *As QA*, I need telemetry on fix success and failure modes so that I can monitor platform reliability.
 
 #### Acceptance Criteria
@@ -143,7 +194,7 @@ Deliver a semantic-first “Code Standards as a Service” capability inside the
 
 ## Open Questions
 - Preferred long-term storage for embeddings (in-repo vs. external cache)?
-- Which Fixer001 diagnostics to prioritise in initial release?
+- Which of the remaining diagnostics should be prioritized for new Fixer001 implementations? (see "Implemented Patterns and Rules" for current coverage)
 - Do we require multi-repo semantic queries in future sprints?
 - What telemetry stack (Serilog, Application Insights, etc.) will consume the new metrics?
 

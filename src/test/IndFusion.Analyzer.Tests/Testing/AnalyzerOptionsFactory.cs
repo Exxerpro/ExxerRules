@@ -14,7 +14,7 @@ public static class AnalyzerOptionsFactory
     /// Creates AnalyzerOptions with specified global options.
     /// </summary>
     /// <param name="globalOptions"></param>
-    /// <returns></returns>
+    /// <returns> </returns>
     public static AnalyzerOptions Create(params (string key, string value)[] globalOptions)
     {
         var provider = new InMemoryAnalyzerConfigOptionsProvider(globalOptions);

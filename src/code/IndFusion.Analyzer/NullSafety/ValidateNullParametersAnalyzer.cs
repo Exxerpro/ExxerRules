@@ -122,8 +122,18 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             }
 
             var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
+            var typeName = parameter.Type.ToString();
+            
+            // Always check string-based detection first for common types
+            if (IsValueTypeByName(typeName))
+            {
+                continue;
+            }
+            
             if (parameterType == null)
             {
+                // If we can't determine the type from semantic model, be conservative and include it
+                referenceParams.Add(parameter.Identifier.ValueText);
                 continue;
             }
 
@@ -161,7 +171,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         var namespaceName = type.ContainingNamespace?.ToDisplayString();
 
         // CancellationToken is a value type but check for completeness
-        if (typeName == "CancellationToken" && namespaceName == "System.Threading")
+        if (typeName == "CancellationToken" && (namespaceName == "System.Threading" || namespaceName == null))
             return true;
 
         // Service provider and logging infrastructure
@@ -175,6 +185,21 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             return true;
 
         return false;
+    }
+
+    /// <summary>
+    /// Checks if a type name represents a value type (fallback for when semantic model is unavailable).
+    /// </summary>
+    private static bool IsValueTypeByName(string typeName)
+    {
+        // Remove nullable indicator for checking
+        var cleanTypeName = typeName.TrimEnd('?');
+        
+        // Common value types
+        return cleanTypeName is "int" or "long" or "short" or "byte" or "uint" or "ulong" or
+                     "ushort" or "sbyte" or "float" or "double" or "decimal" or "bool" or
+                     "char" or "DateTime" or "Guid" or "TimeSpan" or "DateTimeOffset" or
+                     "CancellationToken" or "IntPtr" or "UIntPtr";
     }
 
     private static List<string> GetUnvalidatedReferenceParameters(MethodDeclarationSyntax method, List<string> referenceParameters)
@@ -216,6 +241,26 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             foreach (var validated in validatedInLocalFunction)
             {
                 unvalidated.Remove(validated);
+            }
+        }
+
+        // Check for local function calls that might perform validation
+        var localFunctionCalls = method.DescendantNodes().OfType<InvocationExpressionSyntax>()
+            .Where(inv => inv.Expression is IdentifierNameSyntax identifier && 
+                         localFunctions.Any(lf => lf.Identifier.ValueText == identifier.Identifier.ValueText));
+        
+        foreach (var call in localFunctionCalls)
+        {
+            // If a local function is called and it has guard logic, consider parameters validated
+            var functionName = ((IdentifierNameSyntax)call.Expression).Identifier.ValueText;
+            var correspondingFunction = localFunctions.FirstOrDefault(lf => lf.Identifier.ValueText == functionName);
+            if (correspondingFunction != null)
+            {
+                var validatedInFunction = FindValidatedParametersInLocalFunction(correspondingFunction, referenceParameters);
+                foreach (var validated in validatedInFunction)
+                {
+                    unvalidated.Remove(validated);
+                }
             }
         }
 
@@ -442,7 +487,7 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
                 var validatedParameter = FindValidatedParameter(statement, referenceParameters);
                 if (!string.IsNullOrEmpty(validatedParameter))
                 {
-                    validated.Add(validatedParameter);
+                    validated.Add(validatedParameter!);
                 }
             }
         }

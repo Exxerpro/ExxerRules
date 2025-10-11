@@ -2,6 +2,7 @@ using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace IndFusion.Analyzers.CodeFormatting;
 
@@ -22,7 +23,7 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
         Title,
         MessageFormat,
         DiagnosticCategories.CodeQuality,
-        DiagnosticSeverity.Hidden, // Hidden so it doesn't show as warning/error but can still trigger code actions
+        DiagnosticSeverity.Info,
         isEnabledByDefault: true,
         description: Description);
 
@@ -53,19 +54,20 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
 
         // Only report on the first line of the file to provide a consistent location
         var root = context.Tree.GetRoot(context.CancellationToken);
-        if (root.HasLeadingTrivia || root.ChildNodes().Any())
+        if (!(root.HasLeadingTrivia || root.ChildNodes().Any()))
         {
-            var location = root.ChildNodes().FirstOrDefault()?.GetLocation() ??
-                          Location.Create(context.Tree, new Microsoft.CodeAnalysis.Text.TextSpan(0, 0));
-
-            // Report a hidden diagnostic that can be used to trigger formatting
-            var diagnostic = Diagnostic.Create(
-                Rule,
-                location,
-                context.Tree.FilePath ?? "Current Project");
-
-            context.ReportDiagnostic(diagnostic);
+            return;
         }
+
+        var location = Location.Create(context.Tree, new Microsoft.CodeAnalysis.Text.TextSpan(0, 0));
+
+        // Report a diagnostic that can be used to trigger formatting
+        var diagnostic = Diagnostic.Create(
+            Rule,
+            location,
+            context.Tree.FilePath ?? "Current Project");
+
+        context.ReportDiagnostic(diagnostic);
     }
 
     #region False-Positive Mitigation
@@ -115,27 +117,19 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
     private static bool IsEmptyOrWhitespaceOnlyFile(SyntaxTreeAnalysisContext context)
     {
         var root = context.Tree.GetRoot(context.CancellationToken);
-        
-        // Check if the file has no meaningful content
-        var childNodes = root.ChildNodes().ToList();
-        if (childNodes.Count == 0)
+
+        // Whitespace-only file (no tokens besides EOF)
+        var tokens = root.DescendantTokens(descendIntoTrivia: true);
+        if (!tokens.Any(static token => !token.IsKind(SyntaxKind.EndOfFileToken)))
         {
             return true;
         }
 
-        // Check if all content is just comments and whitespace
-        var hasOnlyCommentsAndWhitespace = true;
-        foreach (var node in childNodes)
-        {
-            if (node is not Microsoft.CodeAnalysis.CSharp.Syntax.UsingDirectiveSyntax &&
-                node is not Microsoft.CodeAnalysis.CSharp.Syntax.NamespaceDeclarationSyntax)
-            {
-                hasOnlyCommentsAndWhitespace = false;
-                break;
-            }
-        }
+        // Comment-only file (no member declarations or global statements)
+        var hasContent = root.DescendantNodes()
+            .Any(node => node is MemberDeclarationSyntax or GlobalStatementSyntax);
 
-        return hasOnlyCommentsAndWhitespace;
+        return !hasContent;
     }
 
     #endregion

@@ -231,33 +231,22 @@ public sealed class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
         }
 
         var targetExpression = memberAccess.Expression;
-        var symbolInfo = semanticModel.GetSymbolInfo(targetExpression, cancellationToken);
-        var targetSymbol = symbolInfo.Symbol ?? symbolInfo.CandidateSymbols.FirstOrDefault();
-        if (targetSymbol is null && targetExpression is IdentifierNameSyntax identifierName)
-        {
-            targetSymbol = semanticModel.LookupSymbols(invocation.SpanStart, name: identifierName.Identifier.ValueText)
-                .FirstOrDefault();
-        }
-        var typeInfo = semanticModel.GetTypeInfo(targetExpression, cancellationToken);
-        var targetType = typeInfo.Type;
-        var convertedType = typeInfo.ConvertedType;
-        var symbolType = targetSymbol switch
-        {
-            ILocalSymbol local => local.Type,
-            IParameterSymbol parameter => parameter.Type,
-            IPropertySymbol property => property.Type,
-            IFieldSymbol field => field.Type,
-            _ => null
-        };
+        var targetSymbol = semanticModel.GetSymbolInfo(targetExpression, cancellationToken).Symbol;
+        var targetType = semanticModel.GetTypeInfo(targetExpression, cancellationToken).Type;
 
         if (targetSymbol is not null && materialisedSymbols is not null && materialisedSymbols.Contains(targetSymbol))
         {
             return;
         }
 
-        if (!IsDeferredSource(targetSymbol, symbolType, targetType, convertedType, querySymbols))
+        if (IsCollectionLike(targetType))
         {
-            return;
+            // Permit guard patterns and repeated enumerations on already materialised collections,
+            // unless we explicitly tracked the symbol as a deferred query.
+            if (targetSymbol is null || querySymbols is null || !querySymbols.Contains(targetSymbol))
+            {
+                return;
+            }
         }
 
         var key = new EnumerationTarget(targetSymbol, targetExpression.ToString());
@@ -344,32 +333,6 @@ public sealed class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
                name.EndsWith(".AllowMultipleEnumeration", StringComparison.Ordinal);
     }
 
-    private static bool IsDeferredSource(
-        ISymbol? symbol,
-        ITypeSymbol? symbolType,
-        ITypeSymbol? targetType,
-        ITypeSymbol? convertedType,
-        HashSet<ISymbol>? querySymbols)
-    {
-        if (symbol is not null && querySymbols is not null && querySymbols.Contains(symbol))
-        {
-            return true;
-        }
-
-        var effectiveType = symbolType ?? targetType ?? convertedType;
-        if (effectiveType is null)
-        {
-            return false;
-        }
-
-        if (IsCollectionLike(effectiveType))
-        {
-            return false;
-        }
-
-        return ImplementsEnumerable(effectiveType);
-    }
-
     private static bool IsCollectionLike(ITypeSymbol? type)
     {
         if (type is null)
@@ -414,17 +377,6 @@ public sealed class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
             }
             return false;
         }
-    }
-
-    private static bool ImplementsEnumerable(ITypeSymbol type)
-    {
-        if (type.SpecialType is SpecialType.System_Collections_Generic_IEnumerable_T or SpecialType.System_Collections_IEnumerable)
-        {
-            return true;
-        }
-
-        return type.AllInterfaces.Any(iface =>
-            iface.SpecialType is SpecialType.System_Collections_Generic_IEnumerable_T or SpecialType.System_Collections_IEnumerable);
     }
 
     private readonly struct EnumerationTarget

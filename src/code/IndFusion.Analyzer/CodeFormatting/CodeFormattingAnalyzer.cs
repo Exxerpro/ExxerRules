@@ -212,12 +212,43 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
 
     private static bool HasInconsistentVariableFormatting(VariableDeclarationSyntax variableDeclaration)
     {
-        // Check for inconsistent spacing around assignment operators
-        var declarationText = variableDeclaration.ToString();
+        foreach (var variable in variableDeclaration.Variables)
+        {
+            if (variable.Initializer is not { } initializer)
+            {
+                continue;
+            }
 
-        // Look for patterns like "var x=5" vs "var y = 10" in the same context
-        return declarationText.Contains("=") &&
-               (!declarationText.Contains(" = ") || declarationText.Contains(" =") || declarationText.Contains("= "));
+            // Ignore complex initialisers (multi-line, object/dictionary/await projections, fluent pipelines, etc.)
+            var valueText = initializer.Value.ToString();
+            if (valueText.Contains("\n") ||
+                valueText.Contains("{") ||
+                valueText.Contains("}") ||
+                valueText.Contains("await") ||
+                valueText.Contains("(") ||
+                valueText.Contains(".") ||
+                valueText.Contains("new "))
+            {
+                continue;
+            }
+
+            var equalsToken = initializer.EqualsToken;
+            var previousToken = equalsToken.GetPreviousToken();
+            var nextToken = equalsToken.GetNextToken();
+
+            var hasSpaceBefore = equalsToken.LeadingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia)) ||
+                                 previousToken.TrailingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia));
+
+            var hasSpaceAfter = equalsToken.TrailingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia)) ||
+                                nextToken.LeadingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia));
+
+            if (!hasSpaceBefore || !hasSpaceAfter)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static bool IsSubstantialMember(MemberDeclarationSyntax member) =>

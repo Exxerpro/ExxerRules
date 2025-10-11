@@ -406,6 +406,12 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
+        // Debug: Always report that we're checking for generated code
+        var className = classDeclaration.Identifier.ValueText;
+        var debugDescriptor = new DiagnosticDescriptor("DEBUG002", "Debug", $"Checking generated code for class: {className}", "Debug", DiagnosticSeverity.Warning, true);
+        var debugDiagnostic = Diagnostic.Create(debugDescriptor, classDeclaration.GetLocation());
+        context.ReportDiagnostic(debugDiagnostic);
+
         // Check if the class has GeneratedCode attribute using semantic model
         var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
         if (classSymbol != null)
@@ -434,7 +440,6 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         var namespaceName = namespaceDeclaration?.Name.ToString() ?? "";
         
         // Also check if the class name contains "Generated"
-        var className = classDeclaration.Identifier.ValueText;
         
         // More permissive check for generated code patterns
         return namespaceName.Contains("Generated") || 

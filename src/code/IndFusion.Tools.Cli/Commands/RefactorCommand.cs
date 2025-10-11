@@ -81,6 +81,7 @@ public class RefactorCommand : BaseCommand
             Console.WriteLine($"  Dry run: {dryRun}");
 
             logger.LogInformation("Refactoring completed successfully");
+            await Task.CompletedTask;
             return 0;
         }
         catch (Exception ex)

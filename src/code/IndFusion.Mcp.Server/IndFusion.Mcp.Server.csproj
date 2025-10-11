@@ -12,7 +12,7 @@
 
 	  <!-- Package Information -->
 	<PackageId>IndFusion.Mcp.Server</PackageId>
-	<PackageVersion>1.0.7</PackageVersion>
+    <PackageVersion>1.0.8</PackageVersion>
 	<Authors>IndFusion</Authors>
 	<Description>MCP server library for IndFusion - Model Context Protocol integration</Description>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>

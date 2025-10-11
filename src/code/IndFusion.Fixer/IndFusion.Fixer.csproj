@@ -8,7 +8,7 @@
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageId>IndFusion.Fixer</PackageId>
-	  <PackageVersion>1.0.7</PackageVersion>
+    <PackageVersion>1.0.8</PackageVersion>
 
 	  <IncludeBuildOutput>false</IncludeBuildOutput>
 	<GeneratePackageOnBuild>false</GeneratePackageOnBuild>

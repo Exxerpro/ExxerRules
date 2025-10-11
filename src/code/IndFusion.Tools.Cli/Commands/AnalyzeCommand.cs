@@ -68,6 +68,7 @@ public class AnalyzeCommand : BaseCommand
             }
 
             logger.LogInformation("Analysis completed successfully");
+            await Task.CompletedTask;
             return 0;
         }
         catch (Exception ex)

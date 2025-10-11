@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Immutable;
 using System.Linq;
 using Microsoft.CodeAnalysis;
@@ -229,19 +230,13 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Check if we're in a value object (class with [Owned] attribute)
-        var containingClass = usingDirective.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-        if (containingClass == null)
-        {
-            return false;
-        }
-
-        // Check for [Owned] attribute
-        var attributes = containingClass.AttributeLists
-            .SelectMany(al => al.Attributes)
-            .Select(a => a.Name.ToString());
-
-        return attributes.Any(attr => attr == "Owned" || attr.EndsWith(".Owned"));
+        var root = usingDirective.SyntaxTree.GetRoot(context.CancellationToken);
+        return root.DescendantNodes()
+            .OfType<ClassDeclarationSyntax>()
+            .Any(cls => cls.AttributeLists
+                .SelectMany(static al => al.Attributes)
+                .Select(static attr => attr.Name.ToString())
+                .Any(attr => attr == "Owned" || attr.EndsWith(".Owned")));
     }
 
     /// <summary>
@@ -255,20 +250,28 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Check if we're in a static extension method that uses ModelBuilder
-        var containingMethod = usingDirective.FirstAncestorOrSelf<MethodDeclarationSyntax>();
-        if (containingMethod == null)
-        {
-            return false;
-        }
+        var root = usingDirective.SyntaxTree.GetRoot(context.CancellationToken);
+        return root.DescendantNodes()
+            .OfType<MethodDeclarationSyntax>()
+            .Any(method =>
+            {
+                if (!method.Modifiers.Any(SyntaxKind.StaticKeyword))
+                {
+                    return false;
+                }
 
-        // Check if it's a static method with "Seed" in the name
-        var isStatic = containingMethod.Modifiers.Any(SyntaxKind.StaticKeyword);
-        var hasSeedInName = containingMethod.Identifier.Text.Contains("Seed");
-        var usesModelBuilder = containingMethod.ParameterList.Parameters
-            .Any(p => p.Type?.ToString().Contains("ModelBuilder") == true);
+                if (!method.Identifier.Text.Contains("Seed", StringComparison.Ordinal))
+                {
+                    return false;
+                }
 
-        return isStatic && hasSeedInName && usesModelBuilder;
+                if (!method.ParameterList.Parameters.Any(p => p.Type?.ToString().Contains("ModelBuilder") == true))
+                {
+                    return false;
+                }
+
+                return method.FirstAncestorOrSelf<ClassDeclarationSyntax>()?.Modifiers.Any(SyntaxKind.StaticKeyword) == true;
+            });
     }
 
     /// <summary>
@@ -282,22 +285,19 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Check if we're in a nested class that implements IEntityTypeConfiguration
-        var containingClass = usingDirective.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-        if (containingClass == null)
-        {
-            return false;
-        }
+        var root = usingDirective.SyntaxTree.GetRoot(context.CancellationToken);
+        return root.DescendantNodes()
+            .OfType<ClassDeclarationSyntax>()
+            .Any(inner =>
+            {
+                var parent = inner.Parent?.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+                if (parent is null || parent == inner)
+                {
+                    return false;
+                }
 
-        // Check if it's a nested class (has a parent class)
-        var parentClass = containingClass.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-        var isNested = parentClass != null && parentClass != containingClass;
-
-        // Check if it implements IEntityTypeConfiguration
-        var implementsIEntityTypeConfiguration = containingClass.BaseList?.Types
-            .Any(t => t.Type.ToString().Contains("IEntityTypeConfiguration")) == true;
-
-        return isNested && implementsIEntityTypeConfiguration;
+                return inner.BaseList?.Types.Any(t => t.Type.ToString().Contains("IEntityTypeConfiguration")) == true;
+            });
     }
 
     /// <summary>
@@ -424,15 +424,16 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Check if we're in a utility class for synchronization
-        var containingClass = usingDirective.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-        if (containingClass == null)
-        {
-            return false;
-        }
-
-        var className = containingClass.Identifier.Text;
-        return className.Contains("Synchronizer") || className.Contains("Sync") || className.Contains("Utility");
+        var root = usingDirective.SyntaxTree.GetRoot(context.CancellationToken);
+        return root.DescendantNodes()
+            .OfType<ClassDeclarationSyntax>()
+            .Any(cls =>
+            {
+                var name = cls.Identifier.Text;
+                return name.Contains("Synchronizer", StringComparison.Ordinal) ||
+                       name.Contains("Sync", StringComparison.Ordinal) ||
+                       name.Contains("Utility", StringComparison.Ordinal);
+            });
     }
 
     /// <summary>

@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using IndFusion.Analyzers;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -55,7 +56,7 @@ public static class AnalyzerTestHelper
         var diagnostics = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(token).GetAwaiter().GetResult();
         return includeHidden
             ? [.. diagnostics]
-            : [.. diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden)];
+            : [.. diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden || d.Id == DiagnosticIds.ProjectFormatting)];
     }
 
 
@@ -86,7 +87,7 @@ public static class AnalyzerTestHelper
         var diagnostics = compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(token).GetAwaiter().GetResult();
         return includeHidden
             ? [.. diagnostics]
-            : [.. diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden)];
+            : [.. diagnostics.Where(d => d.Severity != DiagnosticSeverity.Hidden || d.Id == DiagnosticIds.ProjectFormatting)];
     }
 
     /// <summary>

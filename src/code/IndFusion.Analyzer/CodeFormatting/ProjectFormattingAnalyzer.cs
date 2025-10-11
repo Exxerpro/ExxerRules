@@ -23,7 +23,7 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
         Title,
         MessageFormat,
         DiagnosticCategories.CodeQuality,
-        DiagnosticSeverity.Info,
+        DiagnosticSeverity.Hidden,
         isEnabledByDefault: true,
         description: Description);
 

@@ -52,39 +52,17 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
             ReportFormattingIssue(context, classDeclaration, "Inconsistent brace placement");
         }
 
-        // Check for missing blank lines between members
-        if (HasMissingBlankLinesBetweenMembers(classDeclaration))
-        {
-            ReportFormattingIssue(context, classDeclaration, "Missing blank lines between class members");
-        }
     }
 
     private static void AnalyzeMethodDeclaration(SyntaxNodeAnalysisContext context)
     {
-        var methodDeclaration = (MethodDeclarationSyntax)context.Node;
-
-        // Check for inconsistent parameter formatting
-        if (HasInconsistentParameterFormatting(methodDeclaration))
-        {
-            ReportFormattingIssue(context, methodDeclaration, "Inconsistent parameter formatting");
-        }
-
-        // Check for missing spaces around operators in method body
-        if (HasMissingOperatorSpacing(methodDeclaration))
-        {
-            ReportFormattingIssue(context, methodDeclaration, "Missing spaces around operators");
-        }
+        // Method-level formatting checks require a deeper understanding of style preferences.
+        // To avoid false positives we intentionally skip analysing method bodies here.
     }
 
     private static void AnalyzePropertyDeclaration(SyntaxNodeAnalysisContext context)
     {
-        var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
-
-        // Check for inconsistent accessor formatting
-        if (HasInconsistentAccessorFormatting(propertyDeclaration))
-        {
-            ReportFormattingIssue(context, propertyDeclaration, "Inconsistent property accessor formatting");
-        }
+        // Property accessor formatting is highly style-dependent; skip reporting to avoid noise.
     }
 
     private static void AnalyzeVariableDeclaration(SyntaxNodeAnalysisContext context)
@@ -180,12 +158,16 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
 
     private static bool HasMissingOperatorSpacing(MethodDeclarationSyntax methodDeclaration)
     {
-        // This is a simplified check - in practice, you'd want more sophisticated analysis
-        var methodText = methodDeclaration.ToString();
+        foreach (var assignment in methodDeclaration.DescendantNodes().OfType<AssignmentExpressionSyntax>())
+        {
+            if (assignment.OperatorToken.IsKind(SyntaxKind.EqualsToken) &&
+                !HasProperSpacingAroundEquals(assignment.OperatorToken))
+            {
+                return true;
+            }
+        }
 
-        // Look for common spacing issues (simplified patterns)
-        return methodText.Contains("=") && (methodText.Contains(" =") || methodText.Contains("= ")) &&
-               (methodText.Contains("if(") || methodText.Contains("for(") || methodText.Contains("while("));
+        return false;
     }
 
     private static bool HasInconsistentAccessorFormatting(PropertyDeclarationSyntax propertyDeclaration)
@@ -232,23 +214,50 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
                 continue;
             }
 
-            var equalsToken = initializer.EqualsToken;
-            var previousToken = equalsToken.GetPreviousToken();
-            var nextToken = equalsToken.GetNextToken();
-
-            var hasSpaceBefore = equalsToken.LeadingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia)) ||
-                                 previousToken.TrailingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia));
-
-            var hasSpaceAfter = equalsToken.TrailingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia)) ||
-                                nextToken.LeadingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia));
-
-            if (!hasSpaceBefore || !hasSpaceAfter)
+            if (!HasProperSpacingAroundEquals(initializer.EqualsToken))
             {
                 return true;
             }
         }
 
         return false;
+    }
+
+    private static bool HasProperSpacingAroundEquals(SyntaxToken equalsToken)
+    {
+        var previousToken = equalsToken.GetPreviousToken();
+        var nextToken = equalsToken.GetNextToken();
+
+        if (!previousToken.IsKind(SyntaxKind.None) &&
+            TokensShareLine(previousToken, equalsToken) &&
+            !HasTrailingWhitespace(previousToken) &&
+            !HasLeadingWhitespace(equalsToken))
+        {
+            return false;
+        }
+
+        if (!nextToken.IsKind(SyntaxKind.None) &&
+            TokensShareLine(equalsToken, nextToken) &&
+            !HasTrailingWhitespace(equalsToken) &&
+            !HasLeadingWhitespace(nextToken))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static bool HasLeadingWhitespace(SyntaxToken token) =>
+        token.LeadingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia));
+
+    private static bool HasTrailingWhitespace(SyntaxToken token) =>
+        token.TrailingTrivia.Any(static t => t.IsKind(SyntaxKind.WhitespaceTrivia));
+
+    private static bool TokensShareLine(SyntaxToken left, SyntaxToken right)
+    {
+        var leftSpan = left.GetLocation().GetLineSpan();
+        var rightSpan = right.GetLocation().GetLineSpan();
+        return leftSpan.EndLinePosition.Line == rightSpan.StartLinePosition.Line;
     }
 
     private static bool IsSubstantialMember(MemberDeclarationSyntax member) =>

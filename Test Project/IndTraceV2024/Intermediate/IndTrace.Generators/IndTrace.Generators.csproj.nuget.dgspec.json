@@ -1,0 +1,112 @@
+{
+  "format": 1,
+  "restore": {
+    "F:\\Dynamic\\IndFusion\\IndFusion.Mcp\\ExxerRules\\Test Project\\Src\\Code\\Generators\\IndTrace.Generators\\IndTrace.Generators.csproj": {}
+  },
+  "projects": {
+    "F:\\Dynamic\\IndFusion\\IndFusion.Mcp\\ExxerRules\\Test Project\\Src\\Code\\Generators\\IndTrace.Generators\\IndTrace.Generators.csproj": {
+      "version": "2025.6.0",
+      "restore": {
+        "projectUniqueName": "F:\\Dynamic\\IndFusion\\IndFusion.Mcp\\ExxerRules\\Test Project\\Src\\Code\\Generators\\IndTrace.Generators\\IndTrace.Generators.csproj",
+        "projectName": "IndTrace.EnumLookup.Generator",
+        "projectPath": "F:\\Dynamic\\IndFusion\\IndFusion.Mcp\\ExxerRules\\Test Project\\Src\\Code\\Generators\\IndTrace.Generators\\IndTrace.Generators.csproj",
+        "packagesPath": "C:\\Users\\Abel Briones\\.nuget\\packages\\",
+        "outputPath": "F:\\Dynamic\\IndFusion\\IndFusion.Mcp\\ExxerRules\\Test Project\\Src\\Code\\Generators\\IndTrace.Generators\\..\\..\\..\\..\\IndTraceV2024\\Intermediate\\IndTrace.Generators\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Abel Briones\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Nuggets": {},
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "targetAlias": "netstandard2.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "allWarningsAsErrors": true,
+          "noWarn": [
+            "NU1605",
+            "NU1902"
+          ],
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "10.0.100"
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "targetAlias": "netstandard2.0",
+          "dependencies": {
+            "Microsoft.CodeAnalysis.Analyzers": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[5.0.0-1.25277.114, )"
+            },
+            "Microsoft.CodeAnalysis.CSharp": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[4.14.0, )"
+            },
+            "Microsoft.CodeAnalysis.Common": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[4.14.0, )"
+            },
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.100-rc.1.25451.107\\RuntimeIdentifierGraph.json"
+        }
+      },
+      "runtimes": {
+        "linux-arm": {
+          "#import": []
+        },
+        "linux-arm64": {
+          "#import": []
+        },
+        "linux-x64": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

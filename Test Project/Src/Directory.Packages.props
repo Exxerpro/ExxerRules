@@ -288,7 +288,7 @@
 
 	<!-- ========================= IndFusion Analyzer & Fixer ========================= -->
 	<ItemGroup>
-		<PackageVersion Include="IndFusion.Analyzer" Version="1.0.5" />
-		<PackageVersion Include="IndFusion.Fixer" Version="1.0.5" />
+		<PackageVersion Include="IndFusion.Analyzer" Version="1.0.7" />
+		<PackageVersion Include="IndFusion.Fixer" Version="1.0.7" />
 	</ItemGroup>
 </Project>

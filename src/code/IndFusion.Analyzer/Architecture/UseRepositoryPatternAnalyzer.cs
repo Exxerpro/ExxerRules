@@ -60,30 +60,36 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
         CheckForDirectDataAccessUsage(context, classDeclaration);
     }
 
-    private static void CheckRepositoryHasInterface(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax classDeclaration)
+private static void CheckRepositoryHasInterface(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax classDeclaration)
+{
+    var className = classDeclaration.Identifier.ValueText;
+
+    // Exempt repository base classes and their implementations
+    if (IsRepositoryBaseClass(classDeclaration, context.SemanticModel))
     {
-        var className = classDeclaration.Identifier.ValueText;
-
-        // Check if class implements an interface
-        if (classDeclaration.BaseList?.Types.Count > 0)
-        {
-            var implementsInterface = classDeclaration.BaseList.Types
-                .Any(t => t.Type.ToString().StartsWith("I") && t.Type.ToString().Contains("Repository"));
-
-            if (implementsInterface)
-            {
-                return; // Has interface, good!
-            }
-        }
-
-        // Repository class without interface
-        var diagnostic = Diagnostic.Create(
-            Rule,
-            classDeclaration.Identifier.GetLocation(),
-            className,
-            "Repository implementation should implement a focused interface");
-        context.ReportDiagnostic(diagnostic);
+        return;
     }
+
+    // Check if class implements an interface
+    if (classDeclaration.BaseList?.Types.Count > 0)
+    {
+        var implementsInterface = classDeclaration.BaseList.Types
+            .Any(t => t.Type.ToString().StartsWith("I") && t.Type.ToString().Contains("Repository"));
+
+        if (implementsInterface)
+        {
+            return; // Has interface, good!
+        }
+    }
+
+    // Repository class without interface
+    var diagnostic = Diagnostic.Create(
+        Rule,
+        classDeclaration.Identifier.GetLocation(),
+        className,
+        "Repository implementation should implement a focused interface");
+    context.ReportDiagnostic(diagnostic);
+}
 
     private static void CheckForDirectDataAccessUsage(SyntaxNodeAnalysisContext context, ClassDeclarationSyntax classDeclaration)
     {
@@ -279,6 +285,12 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
             return true;
         }
 
+    // Story 1.12: Exempt Repository Base Classes and Their Implementations
+    if (IsRepositoryBaseClass(classDeclaration, context.SemanticModel))
+    {
+        return true;
+    }
+
         return false;
     }
 
@@ -473,6 +485,27 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
 
         return baseTypes.Value.Any(t => t.Type.ToString().Contains("DbContext"));
     }
+
+    /// <summary>
+    /// Story 1.12: Exempt Repository Base Classes and Their Implementations
+    /// </summary>
+private static bool IsRepositoryBaseClass(ClassDeclarationSyntax classDeclaration, SemanticModel semanticModel)
+{
+    // Only exempt classes that inherit from a repository base class
+    // NOT classes that just have "Repository" in their name
+    var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
+    if (classSymbol?.BaseType != null)
+    {
+        var baseTypeName = classSymbol.BaseType.Name;
+        // Check if base type contains "Repository" (e.g., RepositoryBase, GenericRepository)
+        if (baseTypeName.Contains("Repository"))
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
 
     #endregion
 }

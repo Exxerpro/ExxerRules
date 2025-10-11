@@ -153,17 +153,6 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        var expressionText = expression.ToString();
-
-        // Look for cast patterns like ((string)value) or (string)value or ((int)value)
-        var castPattern1 = $"(({targetType}){variableName})";
-        var castPattern2 = $"({targetType}){variableName}";
-
-        if (expressionText.Contains(castPattern1) || expressionText.Contains(castPattern2))
-        {
-            return true;
-        }
-
         // Look for cast expressions like ((string)value) or (string)value
         if (expression is CastExpressionSyntax castExpression)
         {
@@ -185,7 +174,12 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
             return ExpressionContainsCast(invocation.Expression, variableName, targetType);
         }
 
-        return false;
+        // Fallback: Check string representation for cast patterns
+        var expressionText = expression.ToString();
+        var castPattern1 = $"(({targetType}){variableName})";
+        var castPattern2 = $"({targetType}){variableName}";
+
+        return expressionText.Contains(castPattern1) || expressionText.Contains(castPattern2);
     }
 
     #region False-Positive Mitigation Methods

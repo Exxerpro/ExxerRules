@@ -380,7 +380,8 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
 
         // Check if the class name suggests it's for validation/parsing
         var className = containingClass.Identifier.Text;
-        return className.Contains("Validator") || className.Contains("Parser") || className.Contains("Builder");
+        return className.Contains("Validator") || className.Contains("Parser") || className.Contains("Builder") ||
+               className.Contains("ConnectionString"); // Also exempt connection string related classes
     }
 
     /// <summary>

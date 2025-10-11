@@ -265,8 +265,8 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     /// </summary>
     private static bool IsPrivateHelpersInStaticUtilities(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
-        // Check if region name contains "Private" or "Helpers"
-        if (regionName.Contains("Private") || regionName.Contains("Helpers"))
+        // Check if region name contains "Helpers" (more specific than just "Private")
+        if (regionName.Contains("Helpers"))
         {
             return true;
         }

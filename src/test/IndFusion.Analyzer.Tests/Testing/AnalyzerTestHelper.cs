@@ -131,6 +131,13 @@ public static class AnalyzerTestHelper
 	"System.Linq",
 	"System.Console",
 	"System.CodeDom",
+	"System.ComponentModel",
+	"System.ComponentModel.Primitives",
+	"System.ComponentModel.TypeConverter",
+	"System.Runtime.Extensions",
+	"System.Runtime.InteropServices",
+	"System.Threading",
+	"System.Threading.Tasks",
 	"netstandard",
 	"mscorlib",
 	"Microsoft.Extensions.Logging",
@@ -138,7 +145,9 @@ public static class AnalyzerTestHelper
 	"Microsoft.EntityFrameworkCore",
 	"Microsoft.EntityFrameworkCore.Abstractions",
 	"Microsoft.AspNetCore.Components",
-	"Microsoft.AspNetCore.Components.Web"
+	"Microsoft.AspNetCore.Components.Web",
+	"Microsoft.Data.SqlClient",
+	"System.Data.SqlClient"
 };
 
         var references = trustedAssembliesPaths

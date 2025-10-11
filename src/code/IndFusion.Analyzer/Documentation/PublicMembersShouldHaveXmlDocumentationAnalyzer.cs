@@ -234,14 +234,15 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
             return true;
         }
 
-        // Story 1.4: Exempt DTO/ViewModel Properties
-        if (IsDtoOrViewModelProperty(node))
+        // Story 1.4: Exempt DTO/ViewModel Properties and Classes
+        if (IsDtoOrViewModelProperty(node) || IsDtoOrViewModelClass(node))
         {
             return true;
         }
 
         // Story 1.5: Inherit Documentation from Interface Members
-        if (IsInterfaceImplementationWithInterfaceDocumentation(node, semanticModel))
+        if (IsInterfaceImplementationWithInterfaceDocumentation(node, semanticModel) || 
+            IsClassImplementingDocumentedInterface(node, semanticModel))
         {
             return true;
         }
@@ -411,6 +412,28 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
     }
 
     /// <summary>
+    /// Story 1.4: Exempt DTO/ViewModel Classes
+    /// </summary>
+    private static bool IsDtoOrViewModelClass(SyntaxNode node)
+    {
+        if (node is ClassDeclarationSyntax classDeclaration)
+        {
+            var className = classDeclaration.Identifier.Text;
+            var namespaceName = GetNamespaceName(classDeclaration);
+
+            // Check if it's a DTO or ViewModel class
+            return className.EndsWith("Dto") || 
+                   className.EndsWith("ViewModel") ||
+                   className.EndsWith("Model") ||
+                   namespaceName?.Contains(".Dto") == true ||
+                   namespaceName?.Contains(".ViewModel") == true ||
+                   namespaceName?.Contains(".Models") == true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
     /// Story 1.5: Inherit Documentation from Interface Members
     /// </summary>
     private static bool IsInterfaceImplementationWithInterfaceDocumentation(SyntaxNode node, SemanticModel semanticModel)
@@ -427,13 +450,50 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
             return false;
         }
 
-        // Check if the interface member has documentation
+        // Check explicit interface implementations
         var interfaceMembers = symbol.ExplicitInterfaceImplementations;
         foreach (var interfaceMember in interfaceMembers)
         {
             if (HasSymbolXmlDocumentation(interfaceMember))
             {
                 return true;
+            }
+        }
+
+        // Check implicit interface implementations
+        var containingType = symbol.ContainingType;
+        if (containingType != null)
+        {
+            foreach (var interfaceType in containingType.AllInterfaces)
+            {
+                var interfaceMember = interfaceType.GetMembers(symbol.Name).FirstOrDefault();
+                if (interfaceMember != null && HasSymbolXmlDocumentation(interfaceMember))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.5: Exempt Classes Implementing Documented Interfaces
+    /// </summary>
+    private static bool IsClassImplementingDocumentedInterface(SyntaxNode node, SemanticModel semanticModel)
+    {
+        if (node is ClassDeclarationSyntax classDeclaration)
+        {
+            var classSymbol = semanticModel.GetDeclaredSymbol(classDeclaration);
+            if (classSymbol != null)
+            {
+                foreach (var interfaceType in classSymbol.AllInterfaces)
+                {
+                    if (HasSymbolXmlDocumentation(interfaceType))
+                    {
+                        return true;
+                    }
+                }
             }
         }
 
@@ -486,8 +546,13 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
             return true;
         }
 
-        // Check if we're inside a partial class
+        // Check if we're inside a partial class or if the node itself is a partial class
         var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null && node is ClassDeclarationSyntax nodeClass)
+        {
+            containingClass = nodeClass;
+        }
+
         if (containingClass == null || !containingClass.Modifiers.Any(SyntaxKind.PartialKeyword))
         {
             return false;

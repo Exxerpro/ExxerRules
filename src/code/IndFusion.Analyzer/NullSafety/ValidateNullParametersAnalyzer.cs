@@ -127,39 +127,43 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
                 continue;
             }
 
-            var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
-            var typeName = parameter.Type.ToString();
+        var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
+        var typeName = parameter.Type.ToString();
 
-            // Always check string-based detection first for common types
-            if (IsValueTypeByName(typeName))
-            {
-                continue;
-            }
+        // Check string-based detection for non-nullable value types only
+        // Nullable value types (int?, DateTime?, etc.) should NOT be skipped here
+        // because IsValueTypeByName removes the '?' and treats them as value types
+        if (!typeName.EndsWith("?") && IsValueTypeByName(typeName))
+        {
+            continue;
+        }
 
-            if (parameterType == null)
-            {
-                // If we can't determine the type from semantic model, be conservative and include it
-                referenceParams.Add(parameter.Identifier.ValueText);
-                continue;
-            }
+        if (parameterType == null)
+        {
+            // If we can't determine the type from semantic model, be conservative and include it
+            referenceParams.Add(parameter.Identifier.ValueText);
+            continue;
+        }
 
-            // Skip value types (including nullable value types)
-            if (parameterType.IsValueType)
-            {
-                continue;
-            }
+        // Skip non-nullable value types
+        // For nullable value types, IsValueType will be true (since Nullable<T> is a struct)
+        // but we should skip them too since they can be null by design
+        if (parameterType.IsValueType)
+        {
+            continue;
+        }
 
-            // Skip infrastructure types that are typically injected and null-checked by DI
-            if (IsInfrastructureType(parameterType))
-            {
-                continue;
-            }
+        // Skip infrastructure types that are typically injected and null-checked by DI
+        if (IsInfrastructureType(parameterType))
+        {
+            continue;
+        }
 
-            // Only include reference types that need validation
-            if (parameterType.IsReferenceType)
-            {
-                referenceParams.Add(parameter.Identifier.ValueText);
-            }
+        // Only include reference types that need validation
+        if (parameterType.IsReferenceType)
+        {
+            referenceParams.Add(parameter.Identifier.ValueText);
+        }
         }
 
         return referenceParams;

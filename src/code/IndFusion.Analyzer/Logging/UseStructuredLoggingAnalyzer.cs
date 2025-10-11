@@ -373,12 +373,15 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
         {
             var methodName = memberAccess.Name.Identifier.ValueText;
-            var receiver = memberAccess.Expression.ToString();
             
-            // Check if it's an ILogger method with interpolated string
-            if (IsILoggerMethod(methodSymbol) && HasInterpolatedStringArgument(invocation))
+            // Check if it's a logging method with interpolated string
+            if (IsLoggingMethodName(methodName) && HasInterpolatedStringArgument(invocation))
             {
-                return true;
+                // Additional check: verify it's actually an ILogger method
+                if (IsILoggerMethod(methodSymbol))
+                {
+                    return true;
+                }
             }
         }
 

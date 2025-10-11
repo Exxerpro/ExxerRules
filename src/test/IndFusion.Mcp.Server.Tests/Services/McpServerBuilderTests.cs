@@ -1,4 +1,6 @@
 using IndFusion.Mcp.Server.Services;
+using IndFusion.Mcp.Server.Tools;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace IndFusion.Mcp.Server.Tests.Services;
@@ -9,117 +11,145 @@ namespace IndFusion.Mcp.Server.Tests.Services;
 public class McpServerBuilderTests
 {
     /// <summary>
-    /// Ensures the builder can be constructed with a HostBuilder.
+    /// Ensures the constructor returns a builder instance.
     /// </summary>
     [Fact]
     public void Constructor_ShouldReturnNonNull_McpServerBuilder()
     {
-        // Arrange
         var hostBuilder = Host.CreateDefaultBuilder();
 
-        // Act
         var builder = new McpServerBuilder(hostBuilder);
 
-        // Assert
         builder.ShouldNotBeNull();
         builder.ShouldBeOfType<McpServerBuilder>();
     }
 
     /// <summary>
-    /// Verifies the extension method returns a builder instance.
+    /// Verifies the extension helper returns a builder.
     /// </summary>
     [Fact]
     public void CreateMcpServerBuilder_Extension_ShouldReturnBuilder()
     {
-        // Arrange
         var hostBuilder = Host.CreateDefaultBuilder();
 
-        // Act
         var builder = hostBuilder.CreateMcpServerBuilder();
 
-        // Assert
         builder.ShouldNotBeNull();
         builder.ShouldBeOfType<McpServerBuilder>();
     }
 
     /// <summary>
-    /// Ensures WithStdioTransport can be invoked without errors.
+    /// Ensures the stdio transport path remains fluent.
     /// </summary>
     [Fact]
     public void WithStdioTransport_ShouldConfigureStdioTransport()
     {
-        // Arrange
         var hostBuilder = Host.CreateDefaultBuilder();
         var builder = new McpServerBuilder(hostBuilder);
 
-        // Act
         var result = builder.WithStdioTransport();
 
-        // Assert
-        result.ShouldBeSameAs(builder); // Should return same instance for fluent interface
+        result.ShouldBeSameAs(builder);
     }
 
     /// <summary>
-    /// Ensures WithWebSocketTransport can be invoked without errors.
+    /// Ensures the HTTP/WebSocket transport path remains fluent and buildable.
     /// </summary>
     [Fact]
-    public void WithWebSocketTransport_ShouldConfigureWebSocketTransport()
+    public void WithWebSocketTransport_ShouldConfigureHttpTransport()
     {
-        // Arrange
         var hostBuilder = Host.CreateDefaultBuilder();
         var builder = new McpServerBuilder(hostBuilder);
 
-        // Act
-        var result = builder.WithWebSocketTransport(7042);
+        var result = builder.WithWebSocketTransport(0);
 
-        // Assert
-        result.ShouldBeSameAs(builder); // Should return same instance for fluent interface
+        result.ShouldBeSameAs(builder);
+
+        using var host = builder.Build();
+        host.ShouldNotBeNull();
     }
 
     /// <summary>
-    /// Confirms fluent chaining returns the same builder instance.
+    /// Confirms the fluent interface allows chaining all configuration helpers.
     /// </summary>
     [Fact]
     public void FluentInterface_ShouldAllowChaining()
     {
-        // Arrange
         var hostBuilder = Host.CreateDefaultBuilder();
 
-        // Act & Assert - Should not throw
         var action = () => hostBuilder.CreateMcpServerBuilder()
             .WithExxerFactoringTools()
             .WithStdioTransport()
-            .WithWebSocketTransport(7042);
+            .WithWebSocketTransport(0);
 
         Should.NotThrow(action);
     }
 
     /// <summary>
-    /// Ensures Build returns an IHost instance.
+    /// Verifies Build returns an IHost implementation.
     /// </summary>
     [Fact]
     public void Build_ShouldReturnIHost()
     {
-        // Arrange
         var hostBuilder = Host.CreateDefaultBuilder();
         var builder = new McpServerBuilder(hostBuilder);
 
-        // Act
         var host = builder.Build();
 
-        // Assert
         host.ShouldNotBeNull();
         host.ShouldBeAssignableTo<IHost>();
     }
 
     /// <summary>
-    /// Verifies the constructor throws when given a null host builder.
+    /// Ensures the constructor validates null host builders.
     /// </summary>
     [Fact]
     public void Constructor_WithNullHostBuilder_ShouldThrowArgumentNullException()
     {
-        // Act & Assert
         var action = () => new McpServerBuilder(null!);
+
         Should.Throw<ArgumentNullException>(action);
+    }
+
+    /// <summary>
+    /// Ensures stdio transport wiring can resolve tool dependencies.
+    /// </summary>
+    [Fact]
+    public async Task Build_WithStdioTransport_ShouldResolve_ListToolsMcp()
+    {
+        using var host = Host.CreateDefaultBuilder()
+            .CreateMcpServerBuilder()
+            .WithExxerFactoringTools()
+            .WithStdioTransport()
+            .Build();
+
+        using var scope = host.Services.CreateScope();
+        var tool = scope.ServiceProvider.GetRequiredService<ListToolsMcp>();
+
+        var result = await tool.ListToolsCommand();
+
+        result.ShouldNotBeNull();
+        result.ShouldContain("extract-method");
+    }
+
+    /// <summary>
+    /// Ensures HTTP/WebSocket transport wiring can resolve tool dependencies.
+    /// </summary>
+    [Fact]
+    public async Task Build_WithWebSocketTransport_ShouldResolve_ListToolsMcp()
+    {
+        using var host = Host.CreateDefaultBuilder()
+            .CreateMcpServerBuilder()
+            .WithWebSocketTransport(0)
+            .WithExxerFactoringTools()
+            .Build();
+
+        using var scope = host.Services.CreateScope();
+        var tool = scope.ServiceProvider.GetRequiredService<ListToolsMcp>();
+
+        var result = await tool.ListToolsCommand();
+
+        result.ShouldNotBeNull();
+        result.ShouldContain("extract-method");
     }
 }

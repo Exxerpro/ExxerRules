@@ -92,8 +92,20 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 		var secondType = second.TrimEnd('?');
 
 		// Check for standard event handler pattern
-		return (firstType == "object" || firstType.EndsWith("Object")) && 
-		       (secondType.EndsWith("EventArgs") || secondType.EndsWith("EventArgs"));
+		if ((firstType == "object" || firstType.EndsWith("Object")) && 
+		    (secondType.EndsWith("EventArgs") || secondType.EndsWith("EventArgs")))
+		{
+			return true;
+		}
+
+		// Story 1.7: Allow custom event handler delegate patterns
+		// Pattern: object sender, [any type] - common for custom event handlers
+		if (firstType == "object" || firstType.EndsWith("Object"))
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	private static bool IsBoundaryOrSkippable(SyntaxNode node)
@@ -171,26 +183,46 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 	/// </summary>
 	private static bool IsICommandExecuteMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
 	{
-		var methodSymbol = semanticModel.GetDeclaredSymbol(method);
-		if (methodSymbol == null)
-		{
-			return false;
-		}
-
 		// Check if method name is Execute
-		if (methodSymbol.Name != "Execute")
+		if (method.Identifier.Text != "Execute")
 		{
 			return false;
 		}
 
-		// Check if the containing type implements ICommand
-		foreach (var interfaceSymbol in methodSymbol.ContainingType.AllInterfaces)
+		// Check if the containing class implements ICommand by looking at the syntax
+		var classDeclaration = method.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+		if (classDeclaration?.BaseList?.Types != null)
 		{
-			if (interfaceSymbol.Name == "ICommand" &&
-				interfaceSymbol.ContainingNamespace?.Name == "Input" &&
-				interfaceSymbol.ContainingNamespace.ContainingNamespace?.Name == "Windows")
+			foreach (var baseType in classDeclaration.BaseList.Types)
 			{
-				return true;
+				var typeName = baseType.Type.ToString();
+				if (typeName == "ICommand" || typeName.EndsWith(".ICommand"))
+				{
+					return true;
+				}
+			}
+		}
+
+		// Fallback: Check using semantic model if available
+		var methodSymbol = semanticModel.GetDeclaredSymbol(method);
+		if (methodSymbol != null)
+		{
+			// Check if the containing type implements ICommand
+			foreach (var interfaceSymbol in methodSymbol.ContainingType.AllInterfaces)
+			{
+				if (interfaceSymbol.Name == "ICommand")
+				{
+					// Check if it's from System.Windows.Input namespace (handles both explicit and global usings)
+					var containingNamespace = interfaceSymbol.ContainingNamespace;
+					var namespaceDisplayString = containingNamespace?.ToDisplayString();
+
+					if (containingNamespace?.Name == "Input" ||
+						namespaceDisplayString == "System.Windows.Input" ||
+						namespaceDisplayString == "global::System.Windows.Input")
+					{
+						return true;
+					}
+				}
 			}
 		}
 

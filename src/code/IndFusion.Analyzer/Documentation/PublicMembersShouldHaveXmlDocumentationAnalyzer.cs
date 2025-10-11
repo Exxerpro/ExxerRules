@@ -276,6 +276,12 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
             return true;
         }
 
+        // Story 1.11: Exempt Attribute Classes
+        if (IsAttributeClass(node))
+        {
+            return true;
+        }
+
         return false;
     }
 
@@ -439,7 +445,19 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
     /// </summary>
     private static bool IsUnitTestClass(SyntaxNode node)
     {
-        var classDeclaration = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        ClassDeclarationSyntax classDeclaration;
+        
+        // If the node itself is a class declaration, use it directly
+        if (node is ClassDeclarationSyntax directClass)
+        {
+            classDeclaration = directClass;
+        }
+        else
+        {
+            // Otherwise, look for the class declaration in ancestors
+            classDeclaration = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        }
+        
         if (classDeclaration == null)
         {
             return false;
@@ -460,14 +478,23 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
     /// </summary>
     private static bool IsPartialTypeWithDocumentationOnOtherPart(SyntaxNode node, SemanticModel semanticModel)
     {
-        var classDeclaration = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-        if (classDeclaration == null || !classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword))
+        // Check if the current node is a partial class with documentation
+        if (node is ClassDeclarationSyntax classDeclaration && 
+            classDeclaration.Modifiers.Any(SyntaxKind.PartialKeyword) &&
+            HasXmlDocumentation(classDeclaration))
+        {
+            return true;
+        }
+
+        // Check if we're inside a partial class
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass == null || !containingClass.Modifiers.Any(SyntaxKind.PartialKeyword))
         {
             return false;
         }
 
-        // Check if any other part of the partial class has documentation
-        var symbol = semanticModel.GetDeclaredSymbol(classDeclaration);
+        // Check if any part of the partial class has documentation
+        var symbol = semanticModel.GetDeclaredSymbol(containingClass);
         if (symbol == null)
         {
             return false;
@@ -476,13 +503,10 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
         // Check all syntax references for documentation
         foreach (var reference in symbol.DeclaringSyntaxReferences)
         {
-            if (reference.SyntaxTree != node.SyntaxTree)
+            var otherPart = reference.GetSyntax();
+            if (HasXmlDocumentation(otherPart))
             {
-                var otherPart = reference.GetSyntax();
-                if (HasXmlDocumentation(otherPart))
-                {
-                    return true;
-                }
+                return true;
             }
         }
 
@@ -511,7 +535,7 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
     /// </summary>
     private static bool IsSerializedFieldOrProperty(SyntaxNode node)
     {
-        // Check for serialization attributes
+        // Check for serialization attributes on the current node
         var attributeLists = node switch
         {
             PropertyDeclarationSyntax prop => prop.AttributeLists,
@@ -519,22 +543,45 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
             _ => default
         };
 
-        if (attributeLists == default)
+        if (attributeLists != default)
         {
-            return false;
+            foreach (var attributeList in attributeLists)
+            {
+                foreach (var attribute in attributeList.Attributes)
+                {
+                    var attributeName = attribute.Name.ToString();
+                    if (attributeName.Contains("JsonPropertyName") ||
+                        attributeName.Contains("DataMember") ||
+                        attributeName.Contains("Required") ||
+                        attributeName.Contains("Serializable"))
+                    {
+                        return true;
+                    }
+                }
+            }
         }
 
-        foreach (var attributeList in attributeLists)
+        // If the current node is a class, check if it contains serialized properties
+        if (node is ClassDeclarationSyntax classDeclaration)
         {
-            foreach (var attribute in attributeList.Attributes)
+            foreach (var member in classDeclaration.Members)
             {
-                var attributeName = attribute.Name.ToString();
-                if (attributeName.Contains("JsonPropertyName") ||
-                    attributeName.Contains("DataMember") ||
-                    attributeName.Contains("Required") ||
-                    attributeName.Contains("Serializable"))
+                if (member is PropertyDeclarationSyntax prop)
                 {
-                    return true;
+                    foreach (var attributeList in prop.AttributeLists)
+                    {
+                        foreach (var attribute in attributeList.Attributes)
+                        {
+                            var attributeName = attribute.Name.ToString();
+                            if (attributeName.Contains("JsonPropertyName") ||
+                                attributeName.Contains("DataMember") ||
+                                attributeName.Contains("Required") ||
+                                attributeName.Contains("Serializable"))
+                            {
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -547,6 +594,7 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
     /// </summary>
     private static bool HasAllowUndocumentedMembersAttribute(SyntaxNode node)
     {
+        // Check attributes on the current node
         var attributeLists = node switch
         {
             ClassDeclarationSyntax cls => cls.AttributeLists,
@@ -556,24 +604,53 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
             _ => default
         };
 
-        if (attributeLists == default)
+        if (attributeLists != default)
         {
-            return false;
-        }
-
-        foreach (var attributeList in attributeLists)
-        {
-            foreach (var attribute in attributeList.Attributes)
+            foreach (var attributeList in attributeLists)
             {
-                var attributeName = attribute.Name.ToString();
-                if (attributeName == "AllowUndocumentedMembers" ||
-                    attributeName.EndsWith(".AllowUndocumentedMembers"))
+                foreach (var attribute in attributeList.Attributes)
                 {
-                    return true;
+                    var attributeName = attribute.Name.ToString();
+                    if (attributeName == "AllowUndocumentedMembers" ||
+                        attributeName.EndsWith(".AllowUndocumentedMembers"))
+                    {
+                        return true;
+                    }
                 }
             }
         }
 
+        // If the current node doesn't have the attribute, check the containing class
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        if (containingClass != null)
+        {
+            foreach (var attributeList in containingClass.AttributeLists)
+            {
+                foreach (var attribute in attributeList.Attributes)
+                {
+                    var attributeName = attribute.Name.ToString();
+                    if (attributeName == "AllowUndocumentedMembers" ||
+                        attributeName.EndsWith(".AllowUndocumentedMembers"))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.11: Exempt Attribute Classes
+    /// </summary>
+    private static bool IsAttributeClass(SyntaxNode node)
+    {
+        if (node is ClassDeclarationSyntax classDeclaration)
+        {
+            var className = classDeclaration.Identifier.Text;
+            return className.EndsWith("Attribute");
+        }
         return false;
     }
 

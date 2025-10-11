@@ -35,7 +35,7 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
     {
-        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+        context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze);
         context.EnableConcurrentExecution();
 
         context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
@@ -406,7 +406,20 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        // Check if the class has GeneratedCode attribute
+        // Check if the class has GeneratedCode attribute using semantic model
+        var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+        if (classSymbol != null)
+        {
+            var generatedCodeAttribute = classSymbol.GetAttributes()
+                .FirstOrDefault(attr => attr.AttributeClass?.Name == "GeneratedCodeAttribute");
+            
+            if (generatedCodeAttribute != null)
+            {
+                return true;
+            }
+        }
+
+        // Fallback: Check if the class has GeneratedCode attribute using syntax
         var attributes = classDeclaration.AttributeLists
             .SelectMany(al => al.Attributes)
             .Select(a => a.Name.ToString());

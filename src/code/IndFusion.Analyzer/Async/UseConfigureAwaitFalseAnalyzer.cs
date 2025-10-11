@@ -322,10 +322,18 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     {
         foreach (var interfaceSymbol in classSymbol.AllInterfaces)
         {
-            if (interfaceSymbol.Name == "IAsyncLifetime" &&
-                interfaceSymbol.ContainingNamespace?.Name == "Xunit")
+            if (interfaceSymbol.Name == "IAsyncLifetime")
             {
-                return true;
+                // Check if it's from Xunit namespace (handles both explicit and global usings)
+                var containingNamespace = interfaceSymbol.ContainingNamespace;
+                var namespaceDisplayString = containingNamespace?.ToDisplayString();
+                
+                if (containingNamespace?.Name == "Xunit" || 
+                    namespaceDisplayString == "Xunit" ||
+                    namespaceDisplayString == "global::Xunit")
+                {
+                    return true;
+                }
             }
         }
         return false;

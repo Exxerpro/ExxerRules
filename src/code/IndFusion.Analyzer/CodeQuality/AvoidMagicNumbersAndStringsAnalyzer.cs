@@ -213,7 +213,7 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 		// - Common network ports
 		var commonNumbers = new[]
 		{
-			"0", "1", "-1", "2", "3", "4",
+			"0", "1", "-1", "4",
 			"8", "16", "32", "64", "128", "256",
 			"512", "1024", "2048", "4096",
 			"80", "443"
@@ -305,6 +305,12 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
             return true;
         }
 
+        // Story 1.11: Exempt Logging Method Parameters
+        if (IsLoggingMethodParameter(literal))
+        {
+            return true;
+        }
+
         return false;
     }
 
@@ -368,6 +374,42 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         var throwStatement = binaryExpression.FirstAncestorOrSelf<ThrowStatementSyntax>();
         if (throwStatement == null)
         {
+            // Check if we're in an if statement that has a throw statement in the same block
+            var ifStatement = binaryExpression.FirstAncestorOrSelf<IfStatementSyntax>();
+            if (ifStatement != null)
+            {
+                // Check if the if statement's body contains a throw statement
+                if (ifStatement.Statement is BlockSyntax block)
+                {
+                    foreach (var statement in block.Statements)
+                    {
+                        if (statement is ThrowStatementSyntax blockThrow)
+                        {
+                            var blockObjectCreation = blockThrow.Expression as ObjectCreationExpressionSyntax;
+                            if (blockObjectCreation != null)
+                            {
+                                var blockTypeName = blockObjectCreation.Type.ToString();
+                                if (blockTypeName.Contains("ArgumentOutOfRangeException"))
+                                {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+                else if (ifStatement.Statement is ThrowStatementSyntax directThrow)
+                {
+                    var directObjectCreation = directThrow.Expression as ObjectCreationExpressionSyntax;
+                    if (directObjectCreation != null)
+                    {
+                        var directTypeName = directObjectCreation.Type.ToString();
+                        if (directTypeName.Contains("ArgumentOutOfRangeException"))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
             return false;
         }
 
@@ -612,6 +654,41 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
                         if (firstArgument.Expression == literal)
                         {
                             return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Story 1.11: Exempt Logging Method Parameters
+    /// </summary>
+    private static bool IsLoggingMethodParameter(LiteralExpressionSyntax literal)
+    {
+        // Check if we're in an ILogger.Log method call
+        var invocationExpression = literal.FirstAncestorOrSelf<InvocationExpressionSyntax>();
+        if (invocationExpression != null)
+        {
+            var memberAccess = invocationExpression.Expression as MemberAccessExpressionSyntax;
+            if (memberAccess != null)
+            {
+                var methodName = memberAccess.Name.Identifier.Text;
+                if (methodName.StartsWith("Log"))
+                {
+                    // Check if this literal is a parameter in the logging method call
+                    var argumentList = invocationExpression.ArgumentList;
+                    if (argumentList != null && argumentList.Arguments.Count > 1)
+                    {
+                        // Check if this literal is in any of the arguments (not the first one which is the message template)
+                        foreach (var argument in argumentList.Arguments)
+                        {
+                            if (argument.Expression == literal)
+                            {
+                                return true;
+                            }
                         }
                     }
                 }

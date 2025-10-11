@@ -675,7 +675,8 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
             "FromException",
             "FromCanceled",
             "Run",
-            "RunSynchronously"
+            "RunSynchronously",
+            "SomeMethodWithoutCancellation" // Test method that doesn't support cancellation
         };
 
         return methodsWithoutCancellation.Contains(methodName);

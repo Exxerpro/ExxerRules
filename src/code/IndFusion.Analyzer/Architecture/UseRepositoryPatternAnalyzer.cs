@@ -273,6 +273,12 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
             return true;
         }
 
+        // Story 1.11: Exempt DbContext Classes
+        if (IsDbContextClass(classDeclaration))
+        {
+            return true;
+        }
+
         return false;
     }
 
@@ -451,6 +457,21 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
     {
         var root = syntaxTree.GetRoot();
         return root.DescendantNodes().OfType<GlobalStatementSyntax>().Any();
+    }
+
+    /// <summary>
+    /// Story 1.11: Exempt DbContext Classes
+    /// </summary>
+    private static bool IsDbContextClass(ClassDeclarationSyntax classDeclaration)
+    {
+        // Check if class inherits from DbContext
+        var baseTypes = classDeclaration.BaseList?.Types;
+        if (baseTypes == null)
+        {
+            return false;
+        }
+
+        return baseTypes.Value.Any(t => t.Type.ToString().Contains("DbContext"));
     }
 
     #endregion

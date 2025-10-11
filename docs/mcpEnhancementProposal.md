@@ -56,24 +56,28 @@ public async Task Build_ShouldResolve_ListToolsMcpDependencies()
 - **Location:** `src/code/IndFusion.Mcp.Server/Services/McpServerBuilder.cs:55`
 - **Classes/Methods:** `McpServerBuilder.WithWebSocketTransport`
 - **Reasoning:** The method signature and default parameter imply full WebSocket support, yet the implementation returns immediately with a TODO comment. Consumers enabling WebSocket transport expect a running listener; instead, the host starts without one, creating a silent failure that is hard to diagnose.
-- **Recommendation:** Either implement the WebSocket transport wiring or throw a descriptive exception until the feature is ready. This prevents misleading success states.
-- **Code Suggestion (guard until implemented):**
+- **Recommendation:** Wire the MCP HTTP transport (which provides WebSocket compatibility) by delegating to the SDK's `WithHttpTransport()` helper and hosting ASP.NET Core endpoints via `MapMcp`.
+- **Code Suggestion:**
 
 ```csharp
-// before
 public McpServerBuilder WithWebSocketTransport(int port = 8080)
 {
-    // TODO: Implement WebSocket transport for web integration
+    var builder = _services.AddMcpServer();
+    builder.WithHttpTransport();
+
+    _hostBuilder.ConfigureServices((_, services) => services.AddRouting());
+
+    _hostBuilder.ConfigureWebHostDefaults(webHost =>
+    {
+        webHost.ConfigureKestrel(options => options.ListenAnyIP(port));
+        webHost.Configure(app =>
+        {
+            app.UseRouting();
+            app.UseEndpoints(endpoints => endpoints.MapMcp());
+        });
+    });
+
     return this;
-}
-```
-
-```csharp
-// after
-public McpServerBuilder WithWebSocketTransport(int port = 8080)
-{
-    throw new NotSupportedException(
-        "WebSocket transport is not implemented yet. Enable this method once the transport pipeline is in place.");
 }
 ```
 
@@ -81,11 +85,20 @@ public McpServerBuilder WithWebSocketTransport(int port = 8080)
 
 ```csharp
 [Fact]
-public void WithWebSocketTransport_WhenNotImplemented_ShouldThrow()
+public async Task Build_WithWebSocketTransport_ShouldResolve_ListToolsMcp()
 {
-    var builder = new McpServerBuilder(Host.CreateDefaultBuilder());
+    using var host = Host.CreateDefaultBuilder()
+        .CreateMcpServerBuilder()
+        .WithWebSocketTransport(0)
+        .WithExxerFactoringTools()
+        .Build();
 
-    Should.Throw<NotSupportedException>(() => builder.WithWebSocketTransport());
+    using var scope = host.Services.CreateScope();
+    var tool = scope.ServiceProvider.GetRequiredService<ListToolsMcp>();
+
+    var result = await tool.ListToolsCommand();
+
+    result.ShouldContain("extract-method");
 }
 ```
 

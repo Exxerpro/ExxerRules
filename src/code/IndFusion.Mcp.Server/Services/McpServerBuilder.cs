@@ -1,6 +1,13 @@
+using IndFusion.Mcp.Server.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using ModelContextProtocol;
+using ModelContextProtocol.AspNetCore;
+using ModelContextProtocol.Server;
 
 namespace IndFusion.Mcp.Server.Services;
 
@@ -11,6 +18,8 @@ public class McpServerBuilder
 {
     private readonly IServiceCollection _services;
     private readonly IHostBuilder _hostBuilder;
+    private bool _exxerServicesConfigured;
+    private IMcpServerBuilder? _mcpBuilder;
 
     /// <summary>
     /// Initializes a new builder using the supplied <see cref="IHostBuilder"/>.
@@ -28,8 +37,9 @@ public class McpServerBuilder
     /// <returns>The current builder.</returns>
     public McpServerBuilder WithExxerFactoringTools()
     {
-        _services
-            .AddMcpServer()
+        var builder = EnsureMcpBuilder();
+
+        builder
             .WithToolsFromAssembly()
             .WithResourcesFromAssembly()
             .WithPromptsFromAssembly();
@@ -43,18 +53,41 @@ public class McpServerBuilder
     /// <returns>The current builder.</returns>
     public McpServerBuilder WithStdioTransport()
     {
-        _services.AddMcpServer().WithStdioServerTransport();
+        EnsureMcpBuilder().WithStdioServerTransport();
         return this;
     }
 
     /// <summary>
-    /// Configures the server to use WebSocket transport.
+    /// Configures the server to use WebSocket transport via the MCP HTTP transport.
     /// </summary>
-    /// <param name="port">Port for the WebSocket server. Default is 8080.</param>
+    /// <param name="port">Port for the HTTP/WebSocket server. Default is 8080.</param>
     /// <returns>The current builder.</returns>
     public McpServerBuilder WithWebSocketTransport(int port = 8080)
     {
-        // TODO: Implement WebSocket transport for web integration
+        EnsureMcpBuilder().WithHttpTransport();
+
+        _hostBuilder.ConfigureServices((context, services) =>
+        {
+            services.AddRouting();
+        });
+
+        _hostBuilder.ConfigureWebHostDefaults(webBuilder =>
+        {
+            webBuilder.ConfigureKestrel(options =>
+            {
+                options.ListenAnyIP(port);
+            });
+
+            webBuilder.Configure(app =>
+            {
+                app.UseRouting();
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapMcp();
+                });
+            });
+        });
+
         return this;
     }
 
@@ -87,5 +120,22 @@ public class McpServerBuilder
         });
 
         return _hostBuilder.Build();
+    }
+
+    private IMcpServerBuilder EnsureMcpBuilder()
+    {
+        if (_mcpBuilder is not null)
+        {
+            return _mcpBuilder;
+        }
+
+        if (!_exxerServicesConfigured)
+        {
+            _services.AddExxerFactorMcpServer();
+            _exxerServicesConfigured = true;
+        }
+
+        _mcpBuilder = _services.AddMcpServer();
+        return _mcpBuilder;
     }
 }

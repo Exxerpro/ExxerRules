@@ -22,11 +22,12 @@
   <!-- ===================================================================== -->
   <!-- Package Dependencies                                                   -->
   <!-- ===================================================================== -->
-  <ItemGroup>
+ <ItemGroup>
 	<!-- Microsoft Extensions & Hosting -->
 	<PackageReference Include="Microsoft.Extensions.Hosting" />
 	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
 	<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+	<PackageReference Include="ModelContextProtocol.AspNetCore" />
 	<!-- UI Framework & Components -->
 	<PackageReference Include="MudBlazor" />
 	<!-- System & JSON (included in shared framework) -->

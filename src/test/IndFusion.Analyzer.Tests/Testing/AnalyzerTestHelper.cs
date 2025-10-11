@@ -130,6 +130,7 @@ public static class AnalyzerTestHelper
 	"System.Collections",
 	"System.Linq",
 	"System.Console",
+	"System.CodeDom",
 	"netstandard",
 	"mscorlib",
 	"Microsoft.Extensions.Logging",
@@ -149,7 +150,7 @@ public static class AnalyzerTestHelper
         try
         {
             // Try to add XUnit reference if available
-            var xunitPath = Path.Combine(AppContext.BaseDirectory, "xunit.core.dll");
+            var xunitPath = Path.Combine(AppContext.BaseDirectory, "xunit.v3.core.dll");
             if (File.Exists(xunitPath))
             {
                 references.Add(MetadataReference.CreateFromFile(xunitPath));

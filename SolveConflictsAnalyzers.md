@@ -196,3 +196,32 @@ namespace TestProject
   ```
 
   **Rationale**: Demonstrates the expected “railway” behaviour for async methods that return `Result<T>`—the token is honoured, cancellation is surfaced as `Result.WithFailure`, `ConfigureAwait(false)` is used because the code models a library scenario, and no analyzer should emit diagnostics when those requirements are met.
+
+- **New Test Suggestion**: add to `TestCases/Async/AsyncTests.cs`
+
+  ```csharp
+  [Fact]
+  public void Should_ReportDiagnostic_When_ResultBasedAsyncOmitsCancellationToken()
+  {
+      const string testCode = @"
+using System.Threading.Tasks;
+using IndFusion.Analyzers.Operations;
+
+namespace TestProject
+{
+    public sealed class Service
+    {
+        public async Task<Result<string>> LoadAsync()
+        {
+            await Task.Delay(25).ConfigureAwait(false);
+            return Result.Ok(""data"");
+        }
+    }
+}";
+
+      var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+      diagnostics.Select(d => d.Id).ShouldContain(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken);
+  }
+  ```
+
+  **Rationale**: Guards against regressions where Task-returning railway code forgets to surface `CancellationToken`. The analyzer should treat Result-based methods the same as other asynchronous operations—if the token is missing, a diagnostic must fire.

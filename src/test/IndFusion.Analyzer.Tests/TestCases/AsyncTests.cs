@@ -270,6 +270,33 @@ namespace TestProject
     }
 
     /// <summary>
+    /// Tests that Result-based async methods without CancellationToken support are flagged.
+    /// </summary>
+    [Fact]
+    public void Should_ReportDiagnostic_When_ResultBasedAsyncOmitsCancellationToken()
+    {
+        const string testCode = @"
+using System.Threading.Tasks;
+using IndFusion.Analyzers.Operations;
+
+namespace TestProject
+{
+	public sealed class Service
+	{
+		public async Task<Result<string>> LoadAsync()
+		{
+			await Task.Delay(25).ConfigureAwait(false);
+			return Result.Ok(""data"");
+		}
+	}
+}";
+
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        diagnostics.ShouldNotBeEmpty();
+        diagnostics.Select(d => d.Id).ShouldContain(DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken);
+    }
+
+    /// <summary>
     /// Tests edge case: ConfigureAwait usage in different contexts.
     /// </summary>
     [Fact]

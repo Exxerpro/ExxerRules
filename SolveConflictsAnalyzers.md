@@ -156,16 +156,17 @@
 
   ```csharp
   [Fact]
-  public void Should_ReturnCancellationResult_When_TokenCanceled()
+  public void Should_Not_Report_When_ResultBased_Async_Propagates_Cancellation()
   {
       const string testCode = @"
 using System.Threading;
 using System.Threading.Tasks;
 using IndFusion.Analyzers.Operations;
+using Xunit.Sdk;
 
 namespace TestProject
 {
-    public class Service
+    public sealed class Service
     {
         public async Task<Result<string>> LoadAsync(CancellationToken cancellationToken)
         {
@@ -174,15 +175,24 @@ namespace TestProject
                 return Result.WithFailure(""Canceled"");
             }
 
-            await Task.Delay(100, cancellationToken);
+            await Task.Delay(50, cancellationToken).ConfigureAwait(false);
             return Result.Ok(""data"");
         }
     }
+
+    public static class Consumer
+    {
+        public static Task<Result<string>> ExecuteAsync()
+            => new Service().LoadAsync(TestContext.Current.CancellationToken);
+    }
 }";
 
-      var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-      diagnostics.ShouldBeEmpty();
+      var tokenDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+      tokenDiagnostics.ShouldBeEmpty();
+
+      var configureDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+      configureDiagnostics.ShouldBeEmpty();
   }
   ```
 
-  **Rationale**: Ensures async methods that adopt railway-style `Result<T>` still propagate cancellation via `Result.WithFailure` rather than throwing, matching the stated cancellation contract.
+  **Rationale**: Demonstrates the expected “railway” behaviour for async methods that return `Result<T>`—the token is honoured, cancellation is surfaced as `Result.WithFailure`, `ConfigureAwait(false)` is used because the code models a library scenario, and no analyzer should emit diagnostics when those requirements are met.

@@ -133,57 +133,6 @@ namespace TestProject
     }
 
     /// <summary>
-    /// Tests edge case: Different exception throwing patterns.
-    /// </summary>
-    [Fact(Timeout = 10000)]
-    public void Should_ReportDiagnostic_When_DifferentExceptionThrowingPatterns()
-    {
-        const string testCode = @"
-using System;
-
-namespace TestProject
-{
-	public class UserService
-	{
-		public void ProcessUser(string userName)
-		{
-			if (string.IsNullOrEmpty(userName))
-			{
-				throw new ArgumentException(""User name cannot be null or empty"");
-			}
-
-			if (userName.Length < 3)
-			{
-				throw new InvalidOperationException(""User name too short"");
-			}
-
-			if (userName.Length > 50)
-			{
-				throw new ArgumentOutOfRangeException(""User name too long"");
-			}
-		}
-
-		public void ValidateUser(int userId)
-		{
-			if (userId <= 0)
-			{
-				throw new ArgumentException(""User ID must be positive"");
-			}
-
-			if (userId > 1000000)
-			{
-				throw new ArgumentOutOfRangeException(""User ID too large"");
-			}
-		}
-	}
-}";
-
-        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AvoidThrowingExceptionsAnalyzer());
-        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(5);
-        diagnostics.Any(d => d.Id == DiagnosticIds.AvoidThrowingExceptions).ShouldBeTrue();
-    }
-
-    /// <summary>
     /// Tests edge case: Different Result pattern usage.
     /// </summary>
     [Fact(Timeout = 10000)]

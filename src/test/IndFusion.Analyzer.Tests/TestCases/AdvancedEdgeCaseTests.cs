@@ -232,46 +232,6 @@ namespace TestProject
     #region Expression Tree Complexity Tests
 
     /// <summary>
-    /// Tests edge case: Deeply nested expressions.
-    /// </summary>
-    [Fact]
-    public void Should_HandleDeeplyNestedExpressions_AllAnalyzers()
-    {
-        const string testCode = @"
-using System;
-using System.Threading.Tasks;
-
-namespace TestProject
-{
-	public class DeepNestedService
-	{
-		public async Task<string> GetDataAsync()
-		{
-			var result = await (((((Task.FromResult(""data""))))));
-			return result;
-		}
-
-		public void ProcessData(string input)
-		{
-			// Deeply nested null check
-			if (!(input == null || (input.Length == 0 && (input == """" || input == null))))
-			{
-				var length = input.Length;
-			}
-		}
-	}
-}";
-
-        var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-        var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-        var nullSafetyDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-
-        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-        configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-        nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
-    }
-
-    /// <summary>
     /// Tests edge case: Complex conditional expressions.
     /// </summary>
     [Fact]

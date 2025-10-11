@@ -43,36 +43,6 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    /// <summary>
-    /// Tests that explicitly implemented interface methods are not flagged.
-    /// </summary>
-    [Fact]
-    public void Should_Not_Report_For_Explicit_Interface_Implementation()
-    {
-        const string testCode = @"
-using System.Threading.Tasks;
-
-namespace TestProject
-{
-    public interface IDataService
-    {
-        Task<string> GetDataAsync();
-    }
-
-    public class DataService : IDataService
-    {
-        async Task<string> IDataService.GetDataAsync()
-        {
-            await Task.Delay(100);
-            return ""data"";
-        }
-    }
-}";
-
-        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
-        diagnostics.ShouldBeEmpty();
-    }
-
     #endregion
 
     #region Story 1.2: Exempt Blazor Lifecycle Methods

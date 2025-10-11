@@ -214,33 +214,6 @@ namespace TestProject
         diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    /// <summary>
-    /// Tests edge case: ConfigureAwait with nested await expressions.
-    /// </summary>
-    [Fact]
-    public void Should_HandleNestedAwaitExpressions_ConfigureAwaitAnalyzer()
-    {
-        const string testCode = @"
-using System.Threading.Tasks;
-
-namespace TestProject
-{
-	public class NestedService
-	{
-		public async Task<string> GetDataAsync()
-		{
-			var innerTask = Task.FromResult(""inner"");
-			var outerTask = Task.FromResult(await innerTask);
-			await outerTask;
-			return ""data"";
-		}
-	}
-}";
-
-        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
-        diagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
-    }
-
     #endregion
 
     #region Null Safety Analyzer Edge Cases

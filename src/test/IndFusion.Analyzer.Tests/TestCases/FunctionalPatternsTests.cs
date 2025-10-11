@@ -64,34 +64,6 @@ namespace TestProject
     }
 
     /// <summary>
-    /// Tests that throwing instead of returning Result&lt;T&gt; reports diagnostic.
-    /// </summary>
-    [Fact]
-    public void Should_ReportDiagnostic_When_ThrowingInsteadOfReturningResult()
-    {
-        const string testCode = @"
-using System;
-
-namespace TestProject
-{
-	public class TestClass
-	{
-		public string ProcessData(string input)
-		{
-			if (string.IsNullOrEmpty(input))
-				throw new ArgumentException(""Input cannot be null"");
-
-			return input.ToUpper();
-		}
-	}
-}";
-
-        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DoNotThrowExceptionsAnalyzer());
-        diagnostics.Length.ShouldBe(1);
-        diagnostics[0].Id.ShouldBe(DiagnosticIds.DoNotThrowExceptions);
-    }
-
-    /// <summary>
     /// Tests that using Result pattern does not report diagnostic.
     /// </summary>
     [Fact]

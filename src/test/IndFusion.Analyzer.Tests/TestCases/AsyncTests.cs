@@ -228,6 +228,48 @@ namespace TestProject
     }
 
     /// <summary>
+    /// Tests that Result-based async methods honor cancellation tokens and ConfigureAwait.
+    /// </summary>
+    [Fact]
+    public void Should_NotReportDiagnostic_When_ResultBasedAsyncPropagatesCancellation()
+    {
+        const string testCode = @"
+using System.Threading;
+using System.Threading.Tasks;
+using IndFusion.Analyzers.Operations;
+using Xunit.Sdk;
+
+namespace TestProject
+{
+	public sealed class Service
+	{
+		public async Task<Result<string>> LoadAsync(CancellationToken cancellationToken)
+		{
+			if (cancellationToken.IsCancellationRequested)
+			{
+				return Result.WithFailure(""Canceled"");
+			}
+
+			await Task.Delay(50, cancellationToken).ConfigureAwait(false);
+			return Result.Ok(""data"");
+		}
+	}
+
+	public static class Consumer
+	{
+		public static Task<Result<string>> ExecuteAsync()
+			=> new Service().LoadAsync(TestContext.Current.CancellationToken);
+	}
+}";
+
+        var tokenDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
+        tokenDiagnostics.ShouldBeEmpty();
+
+        var configureDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
+        configureDiagnostics.ShouldBeEmpty();
+    }
+
+    /// <summary>
     /// Tests edge case: ConfigureAwait usage in different contexts.
     /// </summary>
     [Fact]

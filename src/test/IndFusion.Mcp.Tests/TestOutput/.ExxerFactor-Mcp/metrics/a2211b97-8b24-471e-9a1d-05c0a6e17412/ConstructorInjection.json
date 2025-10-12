@@ -1,0 +1,28 @@
+{
+  "linesOfCode": 12,
+  "numberOfClasses": 1,
+  "numberOfPublicMethods": 0,
+  "numberOfPrivateMethods": 2,
+  "classes": [
+    {
+      "name": "C",
+      "linesOfCode": 12,
+      "methods": [
+        {
+          "name": "M",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "Call",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

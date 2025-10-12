@@ -80,7 +80,7 @@ namespace TestProject
 	public class User { public string Name { get; set; } = """"; }
 }";
 
-        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseModernPatternMatchingAnalyzer());
+        var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new IndFusionAnalyzer());
         diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
         diagnostics.Any(d => d.Id == DiagnosticIds.UseModernPatternMatching).ShouldBeTrue();
     }

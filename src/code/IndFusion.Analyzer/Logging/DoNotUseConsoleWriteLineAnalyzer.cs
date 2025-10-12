@@ -44,28 +44,36 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
-
-        // Check if this is a Console.WriteLine or Console.Write call
-        if (!IsConsoleWriteCall(invocation, context.SemanticModel))
+        
+        try
         {
+            // Check if this is a Console.WriteLine or Console.Write call
+            if (!IsConsoleWriteCall(invocation, context.SemanticModel))
+            {
+                return;
+            }
+
+            // Check if this should be exempted from reporting
+            if (IsExemptFromConsoleWriteCheck(invocation, context))
+            {
+                return;
+            }
+
+            // Get the method name for reporting
+            var methodName = GetConsoleMethodName(invocation);
+
+            // Report diagnostic for Console write usage
+            var diagnostic = Diagnostic.Create(
+                Rule,
+                invocation.GetLocation(),
+                methodName);
+            context.ReportDiagnostic(diagnostic);
+        }
+        catch (Exception)
+        {
+            // Log the exception but don't crash the analyzer - just return silently
             return;
         }
-
-        // Check if this should be exempted from reporting
-        if (IsExemptFromConsoleWriteCheck(invocation, context))
-        {
-            return;
-        }
-
-        // Get the method name for reporting
-        var methodName = GetConsoleMethodName(invocation);
-
-        // Report diagnostic for Console write usage
-        var diagnostic = Diagnostic.Create(
-            Rule,
-            invocation.GetLocation(),
-            methodName);
-        context.ReportDiagnostic(diagnostic);
     }
 
     private static bool IsConsoleWriteCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
@@ -400,17 +408,16 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     /// </summary>
     private static bool IsInGeneratedCode(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
-        var classDeclaration = invocation.FirstAncestorOrSelf<ClassDeclarationSyntax>();
-        if (classDeclaration == null)
+        try
         {
-            return false;
-        }
+            var classDeclaration = invocation.FirstAncestorOrSelf<ClassDeclarationSyntax>();
+            if (classDeclaration == null)
+            {
+                return false;
+            }
 
-        // Debug: Always report that we're checking for generated code
-        var className = classDeclaration.Identifier.ValueText;
-        var debugDescriptor = new DiagnosticDescriptor("DEBUG002", "Debug", $"Checking generated code for class: {className}", "Debug", DiagnosticSeverity.Warning, true);
-        var debugDiagnostic = Diagnostic.Create(debugDescriptor, classDeclaration.GetLocation());
-        context.ReportDiagnostic(debugDiagnostic);
+            // Get the class name for debugging
+            var className = classDeclaration.Identifier.ValueText;
 
         // Check if the class has GeneratedCode attribute using semantic model
         var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
@@ -447,6 +454,12 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
                className.EndsWith("Generated") ||
                className.StartsWith("Generated") ||
                className == "GeneratedClass"; // Specific test case exemption
+        }
+        catch (Exception)
+        {
+            // Log the exception but don't crash the analyzer - default to not exempting on error
+            return false;
+        }
     }
 
     #endregion

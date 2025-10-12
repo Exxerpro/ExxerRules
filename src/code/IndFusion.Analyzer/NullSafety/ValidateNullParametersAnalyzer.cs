@@ -43,35 +43,64 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
     {
-        var methodDeclaration = (MethodDeclarationSyntax)context.Node;
-
-        // Skip if this is a method that should be exempted
-        if (IsSkippableMethod(methodDeclaration))
+        try
         {
-            return;
-        }
+            var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+            
+            // Log: Starting analysis of method
+            var debugDescriptor = new DiagnosticDescriptor("DEBUG_NULL_001", "Debug", $"Analyzing method: {methodDeclaration.Identifier.Text}", "Debug", DiagnosticSeverity.Warning, true);
+            var debugDiagnostic = Diagnostic.Create(debugDescriptor, methodDeclaration.Identifier.GetLocation());
+            context.ReportDiagnostic(debugDiagnostic);
+
+            // Skip if this is a method that should be exempted
+            if (IsSkippableMethod(methodDeclaration))
+            {
+                // Log: Method is skippable
+                var skippableDescriptor = new DiagnosticDescriptor("DEBUG_NULL_002", "Debug", $"Method is skippable: {methodDeclaration.Identifier.Text}", "Debug", DiagnosticSeverity.Warning, true);
+                var skippableDiagnostic = Diagnostic.Create(skippableDescriptor, methodDeclaration.Identifier.GetLocation());
+                context.ReportDiagnostic(skippableDiagnostic);
+                return;
+            }
 
         // Expression-bodied methods: still analyze parameters as required by tests
 
-		// Get reference type parameters that need validation (semantic)
-		var referenceParameters = GetReferenceTypeParameters(methodDeclaration, context.SemanticModel);
-        if (!referenceParameters.Any())
-        {
-            return;
-        }
+            // Get reference type parameters that need validation (semantic)
+            var referenceParameters = GetReferenceTypeParameters(methodDeclaration, context.SemanticModel);
+            
+            // Log: Found reference parameters
+            var paramsDescriptor = new DiagnosticDescriptor("DEBUG_NULL_003", "Debug", $"Found {referenceParameters.Count()} reference parameters", "Debug", DiagnosticSeverity.Warning, true);
+            var paramsDiagnostic = Diagnostic.Create(paramsDescriptor, methodDeclaration.Identifier.GetLocation());
+            context.ReportDiagnostic(paramsDiagnostic);
+            
+            if (!referenceParameters.Any())
+            {
+                // Log: No reference parameters, skipping
+                var noParamsDescriptor = new DiagnosticDescriptor("DEBUG_NULL_004", "Debug", "No reference parameters, skipping", "Debug", DiagnosticSeverity.Warning, true);
+                var noParamsDiagnostic = Diagnostic.Create(noParamsDescriptor, methodDeclaration.Identifier.GetLocation());
+                context.ReportDiagnostic(noParamsDiagnostic);
+                return;
+            }
 
         // Check if method has null validation for each reference parameter
         var unvalidatedParameters = GetUnvalidatedReferenceParameters(methodDeclaration, referenceParameters);
 
         // Report one diagnostic per unvalidated parameter
         foreach (var unvalidatedParameter in unvalidatedParameters)
+            {
+                var diagnostic = Diagnostic.Create(
+                    Rule,
+                    methodDeclaration.Identifier.GetLocation(),
+                    methodDeclaration.Identifier.Text,
+                    unvalidatedParameter);
+                context.ReportDiagnostic(diagnostic);
+            }
+        }
+        catch (Exception ex)
         {
-            var diagnostic = Diagnostic.Create(
-                Rule,
-                methodDeclaration.Identifier.GetLocation(),
-                methodDeclaration.Identifier.Text,
-                unvalidatedParameter);
-            context.ReportDiagnostic(diagnostic);
+            // Log the exception but don't crash the analyzer
+            var debugDescriptor = new DiagnosticDescriptor("DEBUG006", "Debug", $"Exception in AnalyzeMethod: {ex.Message}", "Debug", DiagnosticSeverity.Warning, true);
+            var debugDiagnostic = Diagnostic.Create(debugDescriptor, context.Node.GetLocation());
+            context.ReportDiagnostic(debugDiagnostic);
         }
     }
 

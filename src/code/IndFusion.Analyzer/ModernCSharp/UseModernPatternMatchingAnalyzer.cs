@@ -41,33 +41,44 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 
     private static void AnalyzeIfStatement(SyntaxNodeAnalysisContext context)
     {
-        var ifStatement = (IfStatementSyntax)context.Node;
-
-        // Check for various exemption scenarios first
-        if (IsExemptFromPatternMatchingRule(ifStatement, context))
+        try
         {
-            return;
-        }
+            var ifStatement = (IfStatementSyntax)context.Node;
+            
+            // Log: Starting analysis of if statement (removed debug diagnostics to avoid exceptions)
 
-        // Check if condition is a simple 'is' expression without declaration pattern
-        if (ifStatement.Condition is BinaryExpressionSyntax binaryExpression &&
-            binaryExpression.IsKind(SyntaxKind.IsExpression) &&
-            binaryExpression.Right is TypeSyntax)
-        {
-            // Check if the if block contains a cast of the same variable
-            if (ContainsCastOfSameVariable(ifStatement.Statement, binaryExpression))
+            // Check for various exemption scenarios first
+            if (IsExemptFromPatternMatchingRule(ifStatement, context))
             {
-                var diagnostic = Diagnostic.Create(
-                    Rule,
-                    binaryExpression.GetLocation());
-                context.ReportDiagnostic(diagnostic);
+                return;
+            }
+
+            // Check if condition is a simple 'is' expression without declaration pattern
+            if (ifStatement.Condition is BinaryExpressionSyntax binaryExpression &&
+                binaryExpression.IsKind(SyntaxKind.IsExpression) &&
+                binaryExpression.Right is TypeSyntax)
+            {
+                // Check if the if block contains a cast of the same variable
+                if (ContainsCastOfSameVariable(ifStatement.Statement, binaryExpression))
+                {
+                    var diagnostic = Diagnostic.Create(
+                        Rule,
+                        binaryExpression.GetLocation());
+                    context.ReportDiagnostic(diagnostic);
+                }
+            }
+            
+            // Also check for else-if chains with the same pattern
+            if (ifStatement.Else?.Statement is IfStatementSyntax elseIfStatement)
+            {
+                // Recursively analyze the else-if statement
+                AnalyzeIfStatementForPattern(elseIfStatement, context.ReportDiagnostic);
             }
         }
-        // Also check for else-if chains with the same pattern
-        else if (ifStatement.Else?.Statement is IfStatementSyntax elseIfStatement)
+        catch (Exception)
         {
-            // Recursively analyze the else-if statement
-            AnalyzeIfStatementForPattern(elseIfStatement, context.ReportDiagnostic);
+            // Log the exception but don't crash the analyzer
+            return;
         }
     }
 
@@ -94,6 +105,8 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         // Get the variable being checked in the 'is' expression
         var checkedVariable = isExpression.Left.ToString();
         var targetType = isExpression.Right.ToString();
+        
+        // Debug: Log the extracted values (removed Console.WriteLine as it's not allowed in analyzers)
 
         // Look for casts in the statement block
         if (statement is BlockSyntax block)

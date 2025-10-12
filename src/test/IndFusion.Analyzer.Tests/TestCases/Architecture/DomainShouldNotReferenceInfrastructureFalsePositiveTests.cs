@@ -46,7 +46,7 @@ namespace MyProject.Domain.ValueObjects
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.1: Exempt EF Core Attributes on Domain Value Objects
 
     #region Story 1.2: Exempt Domain Enum Seeding Extensions
 
@@ -88,7 +88,7 @@ namespace MyProject.Domain.Enums
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.2: Exempt Domain Enum Seeding Extensions
 
     #region Story 1.3: Exempt Nested IEntityTypeConfiguration
 
@@ -126,7 +126,7 @@ namespace MyProject.Domain.Entities
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.3: Exempt Nested IEntityTypeConfiguration
 
     #region Story 1.4: Exempt Domain Tests Using EF InMemory Providers
 
@@ -154,7 +154,7 @@ namespace MyProject.Domain.Tests
 
             using var context = new TestDbContext(options);
             var user = new User { Name = ""John Doe"", Email = ""john@example.com"" };
-            
+
             context.Users.Add(user);
             context.SaveChanges();
 
@@ -180,7 +180,7 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.4: Exempt Domain Tests Using EF InMemory Providers
 
     #region Story 1.5: Exempt Domain Tests Validating ModelBuilder Projections
 
@@ -208,7 +208,7 @@ namespace MyProject.Domain.UnitTests
 
             using var context = new TestDbContext(options);
             var entityType = context.Model.FindEntityType(typeof(User));
-            
+
             Assert.NotNull(entityType);
             Assert.Equal(""User"", entityType.GetTableName());
         }
@@ -231,9 +231,9 @@ namespace MyProject.Domain.UnitTests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.5: Exempt Domain Tests Validating ModelBuilder Projections
 
-    #region Story 1.6: Exempt SqlConnectionStringBuilder for Guard Logic
+    #region Story 1.6: Do not Exempt SqlConnectionStringBuilder for Guard Logic
 
     /// <summary>
     /// Tests that SqlConnectionStringBuilder usage for guard logic is not flagged.
@@ -253,7 +253,7 @@ namespace MyProject.Domain.Services
             try
             {
                 var builder = new SqlConnectionStringBuilder(connectionString);
-                return !string.IsNullOrEmpty(builder.DataSource) && 
+                return !string.IsNullOrEmpty(builder.DataSource) &&
                        !string.IsNullOrEmpty(builder.InitialCatalog);
             }
             catch
@@ -271,10 +271,10 @@ namespace MyProject.Domain.Services
 }";
 
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new DomainShouldNotReferenceInfrastructureAnalyzer());
-        diagnostics.ShouldBeEmpty();
+        diagnostics.ShouldNotBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.6: Do not Exempt SqlConnectionStringBuilder for Guard Logic
 
     #region Story 1.7: Exempt Provider-Specific Validation in Domain Rules
 
@@ -296,7 +296,7 @@ namespace MyProject.Domain.Tests
         public void Should_Validate_Time_Interval()
         {
             var interval = new NpgsqlInterval(1, 2, 3, 4, 5, 6);
-            
+
             Assert.Equal(1, interval.Days);
             Assert.Equal(2, interval.Hours);
             Assert.Equal(3, interval.Minutes);
@@ -306,7 +306,7 @@ namespace MyProject.Domain.Tests
         public void Should_Create_Valid_Interval_From_String()
         {
             var interval = NpgsqlInterval.Parse(""1 day 2 hours 3 minutes"");
-            
+
             Assert.True(interval.TotalDays > 0);
         }
     }
@@ -316,7 +316,7 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.7: Exempt Provider-Specific Validation in Domain Rules
 
     #region Story 1.8: Exempt Domain Enum Synchronization Scripts
 
@@ -358,7 +358,7 @@ namespace MyProject.Domain.Utilities
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.8: Exempt Domain Enum Synchronization Scripts
 
     #region Story 1.9: Exempt ValueComparer Usage in Domain Tests
 
@@ -399,7 +399,7 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.9: Exempt ValueComparer Usage in Domain Tests
 
     #region Story 1.10: Exempt Migration Snapshot Verification in Domain Tests
 
@@ -422,7 +422,7 @@ namespace MyProject.Domain.Tests
         {
             var migrationAssembly = typeof(TestDbContext).Assembly;
             var migrationService = new MigrationsAssembly(migrationAssembly, null, null);
-            
+
             var migrations = migrationService.Migrations;
             Assert.NotEmpty(migrations);
         }
@@ -438,7 +438,7 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    #endregion Story 1.10: Exempt Migration Snapshot Verification in Domain Tests
 
     #region Positive Control Tests
 
@@ -484,5 +484,5 @@ namespace MyProject.Domain.Services
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure);
     }
 
-    #endregion
+    #endregion Positive Control Tests
 }

@@ -1,0 +1,2 @@
+WorkItemId,AgentName,Date,BriefChecksum,GuardrailVersion,Notes
+PLAN-0001,AgentOrion,2025-10-13,57a23fc1264925a934ab70faf837d94525bf84b30155798e1618e40090fb6c64,1.1.0,Brief refreshed for governance automation launch

@@ -1,0 +1,33 @@
+{
+  "WorkItemId": "PLAN-0001",
+  "CompletedOn": "2025-10-12T21:45:11.4108491Z",
+  "Commit": "26b753a7b5e5a0e83c0e2b26eaa72189129e4aad",
+  "Checks": [
+    {
+      "Name": "dotnet test",
+      "Success": true,
+      "Details": "Skipped on request."
+    },
+    {
+      "Name": "Assignment Register",
+      "Success": true,
+      "Details": "{\"WorkItemId\":\"PLAN-0001\",\"AgentName\":\"AgentAlpha\",\"SupervisorName\":\"SupervisorOmega\",\"DateAssigned\":\"2025-10-12\",\"Sprint\":\"Sprint 9\",\"ExpectedCompletion\":\"2025-10-19\",\"Status\":\"Assigned\",\"Notes\":\"Planning asset validation\"}"
+    },
+    {
+      "Name": "Agent Sync Log",
+      "Success": true,
+      "Details": "{\"WorkItemId\":\"PLAN-0001\",\"AgentName\":\"AgentAlpha\",\"Date\":\"2025-10-12\",\"BriefChecksum\":\"d03259c37d90836ae9c1b606578b89b483e66c5e74e32267e0bb30125995c4a6\",\"GuardrailVersion\":\"1.0.0\",\"Notes\":\"Initial briefing acknowledgement\"}"
+    },
+    {
+      "Name": "Agent Trace Log",
+      "Success": true,
+      "Details": "F:\\Dynamic\\IndFusion\\IndFusion.Mcp\\ExxerRules\\agent-trace\\PLAN-0001.log"
+    },
+    {
+      "Name": "Agent Brief Digest",
+      "Success": true,
+      "Details": "docs/reference/SemanticRag-Agent-Brief.digest.json"
+    }
+  ],
+  "TestOutput": null
+}

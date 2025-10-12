@@ -134,31 +134,28 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
 
     private static bool ShouldSkipThrow(SyntaxNode node, SemanticModel semanticModel)
     {
-        // Ensure typeName is always assigned
+        // === Refactored: Get ancestors once at the top ===
+        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
+        var containingMethod = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
+        var containingNamespace = containingClass?.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
+
+        var className = containingClass?.Identifier.Text ?? string.Empty;
+        var methodName = containingMethod?.Identifier.Text ?? string.Empty;
+        var namespaceName = containingNamespace?.Name.ToString() ?? string.Empty;
+        // === End Refactored ===
+
         var typeName = GetThrownTypeName(node);
 
-        // Enhanced boundary detection
-        if (IsInFrameworkBoundary(node)) return true;  // NEW
-        if (IsDomainValidation(node)) return true;     // NEW
-        if (IsConfigurationContext(node)) return true; // NEW
+        // Use the pre-calculated names instead of traversing the tree again in helpers
+        if (IsInFrameworkBoundary(className, namespaceName)) return true;
+        if (IsDomainValidation(className, methodName, namespaceName)) return true;
+        if (IsConfigurationContext(className, namespaceName)) return true;
 
-        // Boundary layers
-        if (IsInBoundaryLayer(node)) return true;
-
-        // Test/benchmark/spec contexts (class name hints)
-        var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-        if (cls != null)
-        {
-            var cn = cls.Identifier.Text;
-            if (cn.EndsWith("Tests") || cn.EndsWith("Specs") || cn.EndsWith("Benchmarks")) return true;
-        }
+        // Test/benchmark/spec contexts
+        if (className.EndsWith("Tests") || className.EndsWith("Specs") || className.EndsWith("Benchmarks")) return true;
 
         // Program/Startup/Bootstrap contexts
-        if (cls != null)
-        {
-            var n = cls.Identifier.Text;
-            if (n == "Program" || n == "Startup" || n == "Bootstrap") return true;
-        }
+        if (className == "Program" || className == "Startup" || className == "Bootstrap") return true;
 
         // NotSupported/NotImplemented defensive throws
         if (!string.IsNullOrEmpty(typeName) &&
@@ -167,20 +164,14 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             return true;
         }
 
-        // ArgumentNullException guard: if-statement with null check or coalesce throw expression
+        // ArgumentNullException guard
         if (IsArgumentNullGuard(node)) return true;
 
-        // ArgumentOutOfRangeException/ArgumentException range guards
+        // Range guards
         if (IsRangeGuard(node)) return true;
 
         // Switch expression default arm throw
         if (node.Ancestors().OfType<SwitchExpressionArmSyntax>().Any()) return true;
-
-        // Domain validation exception types inside Parser/Validator classes
-        if (cls != null && (cls.Identifier.Text.Contains("Parser") || cls.Identifier.Text.Contains("Validator")))
-        {
-            if (!string.IsNullOrEmpty(typeName) && typeName.EndsWith("Exception")) return true;
-        }
 
         // Constructor invariants
         if (node.Ancestors().OfType<ConstructorDeclarationSyntax>().Any())
@@ -188,26 +179,21 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             if (!string.IsNullOrEmpty(typeName) && (typeName.Contains("Argument") || typeName.Contains("InvalidOperationException"))) return true;
         }
 
-        // Factory methods Create/Build/Factory performing validation
-        var method = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-        if (method != null)
+        // Factory methods
+        if ((methodName.StartsWith("Create") || methodName.StartsWith("Build") || methodName.Contains("Factory"))
+            && !string.IsNullOrEmpty(typeName)
+            && (typeName.Contains("ArgumentException") || typeName.Contains("ArgumentOutOfRangeException")))
         {
-            var mn = method.Identifier.Text;
-            if ((mn.StartsWith("Create") || mn.StartsWith("Build") || mn.Contains("Factory"))
-                && !string.IsNullOrEmpty(typeName)
-                && (typeName.Contains("ArgumentException") || typeName.Contains("ArgumentOutOfRangeException")))
-            {
-                return true;
-            }
+            return true;
         }
 
-        // Expression-bodied guard with conditional operator (?:) using throw expression
+        // Expression-bodied guard
         if (node is ThrowExpressionSyntax te && te.Parent is ConditionalExpressionSyntax)
         {
             return true;
         }
 
-        // Catch wrapping already handled in IsInCatchBlockRethrow; still allow here if pattern matches
+        // Catch wrapping
         if (node is ThrowStatementSyntax ts && IsInCatchBlockRethrow(ts)) return true;
 
         return false;
@@ -256,16 +242,8 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    /// <summary>
-    /// Detects if the throw is in a framework boundary (Controllers, Repositories, etc.)
-    /// </summary>
-    private static bool IsInFrameworkBoundary(SyntaxNode node)
+    private static bool IsInFrameworkBoundary(string className, string namespaceName)
     {
-        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-        if (containingClass == null) return false;
-        
-        var className = containingClass.Identifier.Text;
-        
         // ASP.NET Core patterns
         if (className.EndsWith("Controller") || 
             className.EndsWith("Middleware") ||
@@ -281,59 +259,40 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             return true;
         
         // Infrastructure namespaces
-        var namespaceName = GetNamespace(node);
-        if (namespaceName?.Contains("Infrastructure") == true ||
-            namespaceName?.Contains("Persistence") == true ||
-            namespaceName?.Contains("DataAccess") == true)
+        if (namespaceName.Contains("Infrastructure") ||
+            namespaceName.Contains("Persistence") ||
+            namespaceName.Contains("DataAccess"))
             return true;
         
         return false;
     }
 
-    /// <summary>
-    /// Detects if the throw is in domain validation context
-    /// </summary>
-    private static bool IsDomainValidation(SyntaxNode node)
+    private static bool IsDomainValidation(string className, string methodName, string namespaceName)
     {
-        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-        if (containingClass == null) return false;
-        
-        var className = containingClass.Identifier.Text;
-        var method = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
-        var namespaceName = GetNamespace(node);
-        
         // Domain validation patterns
         if (className.EndsWith("Validator") ||
+            className.EndsWith("Parser") || // Added this line to fix the regression
             className.EndsWith("Rule") ||
             className.EndsWith("Policy") ||
             className.EndsWith("Specification"))
             return true;
         
         // Domain factory patterns
-        if (method?.Identifier.Text.StartsWith("Create") == true ||
-            method?.Identifier.Text.StartsWith("Build") == true ||
-            method?.Identifier.Text.Contains("Factory") == true)
+        if (methodName.StartsWith("Create") ||
+            methodName.StartsWith("Build") ||
+            methodName.Contains("Factory"))
             return true;
         
         // Domain namespace patterns
-        if (namespaceName?.Contains("Domain") == true ||
-            namespaceName?.Contains("Business") == true)
+        if (namespaceName.Contains("Domain") ||
+            namespaceName.Contains("Business"))
             return true;
         
         return false;
     }
 
-    /// <summary>
-    /// Detects if the throw is in configuration context
-    /// </summary>
-    private static bool IsConfigurationContext(SyntaxNode node)
+    private static bool IsConfigurationContext(string className, string namespaceName)
     {
-        var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
-        if (containingClass == null) return false;
-        
-        var className = containingClass.Identifier.Text;
-        var namespaceName = GetNamespace(node);
-        
         // Configuration classes
         if (className.EndsWith("Settings") ||
             className.EndsWith("Config") ||
@@ -342,19 +301,10 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
             return true;
         
         // Configuration namespaces
-        if (namespaceName?.Contains("Configuration") == true ||
-            namespaceName?.Contains("Settings") == true)
+        if (namespaceName.Contains("Configuration") ||
+            namespaceName.Contains("Settings"))
             return true;
         
         return false;
-    }
-
-    /// <summary>
-    /// Gets the namespace name for the given node
-    /// </summary>
-    private static string? GetNamespace(SyntaxNode node)
-    {
-        var namespaceDeclaration = node.Ancestors().OfType<NamespaceDeclarationSyntax>().FirstOrDefault();
-        return namespaceDeclaration?.Name.ToString();
     }
 }

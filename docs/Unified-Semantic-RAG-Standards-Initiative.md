@@ -53,6 +53,168 @@ Transform the MCP server into a **Semantic RAG Fabric** that:
 
 ---
 
+## Delivery Framework
+
+### Epics & Stories
+
+| Epic | Key Outcomes | Code Anchors | Representative Stories |
+| --- | --- | --- | --- |
+| **E1: Semantic RAG Fabric Foundations** | MCP server indexes and retrieves standards knowledge with provenance. | `src/code/IndFusion.Mcp.Server/`, `src/code/IndFusion.Mcp.Core/Knowledge` | - As a platform engineer, I can schedule repository ingestion so that `IngestionPipelineJob` produces vector + graph payloads.<br>- As an autonomous agent, I can call `knowledge_rag` and receive snippets with `sourcePath` + commit hash metadata. |
+| **E2: Pattern Enforcement Surface** | Deterministic analyzers/fixers exposed as MCP tools with safe apply flows. | `src/ExxerRules/ExxerAI.Rules.Analyzer/`, `src/code/IndFusion.Mcp.Tools/Fixer001` | - As an analyzer maintainer, I can register a new EXXER rule and have it appear in the MCP `lint_run` manifest within one CI cycle.<br>- As an agent, I can dry-run `fixer001_apply_cs` and receive build + analyzer validation output. |
+| **E3: Agentic Governance & Telemetry** | Policy-aware linting, dashboards, and audit trails across repos. | `src/code/IndFusion.Mcp.AgentGovernance/`, `src/code/IndFusion.Telemetry/` | - As a DevEx lead, I can subscribe to EXXER error regressions through the governance feed.<br>- As an agent, I can query `policy_decision_trace` and view the rule, context, and remediation guidance. |
+| **E4: Cross-Repository Insights & Drift Control** | Consistency checks, drift detection, and prioritised remediation backlog. | `src/code/IndFusion.Mcp.Analytics/`, `src/test/IndFusion.Analyzer.Tests/TestCases/` | - As a standards steward, I get a ranked backlog of drifted repositories with supporting metrics.<br>- As a team, we can generate remediation tasks with links to offending files and EXXER diagnostics. |
+
+### Milestones & Timeline
+
+| Milestone | Target Sprint | Exit Criteria | Dependencies |
+| --- | --- | --- | --- |
+| **M1: Charter Ratification & Kickoff** | Sprint 0 | Charter approved, backlog seeded in Azure Boards, kickoff deck signed off. | Cross-team buy-in (Analyzer, MCP, DevEx). |
+| **M2: Ingestion MVP (E1)** | Sprint 2 | `IngestionPipelineJob` ingests IndFusion.sln nightly, vector + graph stores deployed with sample queries. | Build pipeline access, embedding model availability. |
+| **M3: MCP Tooling Surface (E2)** | Sprint 4 | `lint_run`, `pattern_suggest`, `fixer001_apply_*` exposed through MCP with integration tests. | M2 complete, analyzer metadata contract versioned. |
+| **M4: Governance Telemetry (E3)** | Sprint 6 | Telemetry dashboards showing EXXER compliance, policy gates active in CI (`dotnet build` + analyzer enforcement). | M2 + M3, telemetry pipeline capacity. |
+| **M5: Drift & Remediation Insights (E4)** | Sprint 8 | Drift detection jobs producing backlog items; remediation SLA tracking live. | Knowledge graph enriched with repo metadata, governance APIs stable. |
+| **M6: End-to-End Pilot Release** | Sprint 9 | Pilot repos (IndFusion + IndTrace) passing Definition of Done, due diligence sign-offs complete. | All epics feature-complete, pilot feedback loop staffed. |
+
+### Guardrails & Governance
+
+- **Code Traceability**: Every automated remediation must link to analyzer ID, fixer version, and source commit (`docs/automation/changelog.md`).
+- **Safety Tiers**: Classify automation scripts (informational, dry-run, apply) before exposing through `script_bridge`.
+- **Schema Compatibility**: Knowledge graph schema changes gated behind feature flags and contract tests (`GraphSchemaContractTests`).
+- **Offline First**: All RAG components must operate against `artifacts/nuget/offline/` and cached embedding models; network calls flagged in CI.
+- **Change Control**: Pattern or rule changes require architecture guild approval recorded in `docs/standards/ChangeLog.md`.
+
+### Deliverables & Artifacts
+
+| Deliverable | Description | Owner | Storage |
+| --- | --- | --- | --- |
+| **Architecture Decision Records** | ADRs covering ingestion, vector store, graph schema, MCP tool contracts. | Platform Architecture | `docs/adr/` |
+| **Analyzer & Fixer Catalog** | Living index of EXXER rules, severities, MCP tool bindings. | Analyzer Guild | `docs/reference/ExxerRuleMatrix.md` |
+| **Automation Playbooks** | Step-by-step remediation guides with code samples. | Agent Ops | `docs/playbooks/` |
+| **Telemetry Dashboards** | PowerBI dashboards tracking KPIs (latency, compliance, adoption). | DevEx Insights | `docs/dashboards/README.md` + PowerBI workspace |
+| **Test Case Repository** | Curated IITDD scenarios and golden files. | QA Chapter | `src/test/IndFusion.Analyzer.Tests/TestCases/UnifiedSemanticRag/` |
+
+### Tracking & Reporting
+
+- **Backlog**: Azure Boards portfolio hierarchy (Programme > Epic > Feature > Story) with tags `SemanticRAG`, `EXXER`.
+- **Standups**: Twice-weekly cross-team sync; blockers tracked in shared Teams channel `#semantic-rag`.
+- **Burndown & Velocity**: Sprint burndown auto-published; guard KPI trending vs. baseline.
+- **Compliance Dashboards**: CI pipeline posts EXXER pass/fail metrics and RAG latency to `GovernanceTelemetry` stream.
+- **Retrospectives**: End-of-sprint retro must review guardrail breaches, due-diligence outcomes, and test coverage deltas.
+
+### Agent Development Operating Model
+
+- **Roles**
+  - *Tech Lead*: curates backlog, owns Definition of Done interpretation, reviews agent output daily.
+  - *Agent Supervisor*: assigns work packages, monitors telemetry, runs validation scripts before human review.
+  - *Dev Agent*: executes work package scripts, updates trace log, proposes patches via MCP tooling only.
+  - *QA Partner*: owns regression validation and IITDD upkeep.
+- **Supervision Cadence**
+  - Daily 15-minute standup focused on status, blockers, telemetry anomalies.
+  - Mid-sprint alignment review ensuring agents still operate within updated guardrails.
+  - End-of-day supervisor checkpoint validating each agent submission against acceptance checklist.
+- **Context Refresh**
+  - Maintain `docs/reference/SemanticRag-Agent-Brief.md` as the authoritative context packet (digest generated by `src/scripts/Update-Agent-Brief.ps1`).
+  - Agents must sync the brief before each work session; supervisors confirm via `docs/operations/AgentSyncLog.csv`.
+  - Any analyzer/fixer contract change triggers immediate briefing update and broadcast in `#semantic-rag`.
+
+### Agent Work Package Template
+
+Every delegated unit of work must include (use `docs/templates/AgentWorkPackage.md`):
+
+1. **Objective** – single sentence referencing Azure Boards work item.
+2. **Code Surface** – explicit paths/projects (e.g., `src/ExxerRules/...`).
+3. **Guardrails** – required analyzers, forbidden APIs, dependency rules.
+4. **Inputs** – links to knowledge base entries, ADRs, existing tests.
+5. **Expected Outputs** – code artifacts, test updates, documentation edits.
+6. **Verification Steps** – commands/tests the agent must run with expected outcomes.
+7. **Telemetry Hooks** – metrics or logs to emit (e.g., `SemanticRag.Metrics.WorkItemId`).
+
+Template stored at `docs/templates/AgentWorkPackage.md` and referenced in Azure Boards via copy link.
+
+### Agent Execution Loop
+
+1. Supervisor assigns work package and logs assignment in `docs/operations/AgentAssignmentRegister.csv`.
+2. Agent refreshes context packet, acknowledges guardrails, and records checksum in `docs/operations/AgentSyncLog.csv`.
+3. Agent executes work package, capturing each command in `agent-trace/<workItemId>.log`.
+4. Agent runs verification steps verbatim; attaches outputs to work item.
+5. Supervisor reviews logs, reruns spot-check commands, and initiates human code review.
+6. QA partner triggers regression suite or targeted IITDD scenarios before merge.
+
+### Validation & Review Gates
+
+- **Pre-Commit**: `dotnet format --verify-no-changes`, analyzer suite, performance smoke (`Measure-RagLatency.ps1` sample run).
+- **Pre-PR**: Supervisor validates telemetry fields, ensures documentation updates committed, confirms no guardrail violations via `src/scripts/GuardrailCheck.ps1`.
+- **PR Review**: Tech Lead confirms alignment with epics/stories, verifies traceability links, checks agent log attachments.
+- **Post-Merge**: QA partner ensures pipeline green, archives agent artifacts, updates knowledge base with learnings.
+
+### Context Refresh Mechanisms
+
+- Nightly job `src/scripts/Update-Agent-Brief.ps1` aggregates latest ADRs, rule changes, telemetry trends.
+- Supervisors receive digest summarising deltas; agents must sign off within 12 hours.
+- Context packet includes quick links to the EXXER rule matrix, open due diligence findings, guardrail overrides, and the false-positive catalog.
+
+### Reporting & Escalation
+
+- **Daily Report**: Supervisor posts summary in `#semantic-rag` with completed work items, pending reviews, guardrail exceptions (attach digest from `docs/operations/due-diligence/` when relevant).
+- **Escalation Triggers**:
+  - Agent output failing verification twice in a sprint.
+  - Telemetry anomaly >10% deviation from latency/compliance targets.
+  - Knowledge graph schema change without corresponding contract tests.
+- **Escalation Path**: Supervisor > Tech Lead > Programme Steering (weekly meeting).
+
+### Quality Engineering Strategy
+
+- **Unit Tests**: All new analyzers/fixers require xUnit v3 tests in `IndFusion.Analyzer.Tests`; use `AnalyzerTestHelper` and Shouldly assertions.
+- **Integration Tests**: Add MCP end-to-end tests under `src/test/IndFusion.Mcp.Tests/` covering `lint_run`, `pattern_suggest`, and `fixer001_apply_*` flows with stub repositories.
+- **Regression Suites**: Nightly pipeline executes `dotnet test src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj -c Release --collect:"XPlat Code Coverage"` and publishes coverage trend.
+- **Contract Tests**: Schema/version compatibility validated via `GraphSchemaContractTests` and `ToolManifestContractTests`.
+- **Performance Harness**: Maintain scripted load tests for RAG queries (P95 latency target) using `src/scripts/Measure-RagLatency.ps1`.
+- **Build Gates**: `dotnet build IndFusion.sln -c Release` with warnings as errors + `dotnet format --verify-no-changes` enforced in CI.
+
+### Code Style & Standards Alignment
+
+- Adhere to `.editorconfig` (tabs, CRLF, no trailing whitespace); include analyzer IDs in suppression justifications (`SUPPRESSIONS.md`).
+- Document all public/protected APIs with XML comments; failing CS1591 blocks merges.
+- Ensure new MCP tools expose deterministic JSON contracts documented under `docs/reference/mcp/`.
+- Prefer deterministic identifiers (`RuleIds.SemanticRag###`) and maintain central registration in `SemanticRagRuleRegistry.cs`.
+
+### Definition of Done
+
+- Story acceptance criteria met with automated verification (unit + integration tests covering the change).
+- No analyzer regressions; EXXER rule suite passes locally and in CI.
+- Documentation updated (playbooks, reference pages, changelog) with links to commits and tooling outputs.
+- Telemetry/metrics hooks implemented and validated in lower environments.
+- Security/offline review complete; dependencies resolved from offline feeds.
+- All code reviewed, approvals recorded, and work item moved to `Done` with evidence (test logs, dashboard screenshots).
+
+### Kickoff Preparation Checklist
+
+- Charter and scope validated with stakeholders; agenda distributed 3 days prior.
+- Programme backlog initialised with epics E1–E4 and seed stories.
+- Environment baselining: confirm access to IndFusion/IndTrace repos, offline feeds, embedding models.
+- Tooling readiness: ensure build/test pipelines green on current main branch; create pilot branch protection rules.
+- Communication plan drafted (cadence, channels, decision log templates).
+
+### Due Diligence Gates
+
+#### Initiation Gate (Pre-Development)
+
+- Verify problem statement, constraints, and KPIs signed off.
+- Confirm legal/compliance approval for data ingestion scope.
+- Run `src/scripts/DueDiligence-PreStart.ps1` to validate repo access, secrets rotation, and telemetry opt-ins (outputs stored in `docs/operations/due-diligence/`).
+- Assess resource allocation (SME coverage for analyzers, MCP, DevEx).
+- Capture baseline metrics (current EXXER compliance, RAG latency, agent adoption).
+
+#### Closeout Gate (Post-Delivery)
+
+- Execute `src/scripts/DueDiligence-PostFinish.ps1` to capture final metrics, ensure data retention policies met, and archive telemetry (`docs/operations/due-diligence/`).
+- Validate Definition of Done artifacts: test reports, documentation updates, ADR decisions.
+- Confirm operational ownership: runbooks handed to DevEx, alerting configured, training completed.
+- Conduct final risk review, document residual debt, and schedule follow-up audits.
+- Publish programme retrospective with lessons learned and improvement backlog items.
+
+---
+
 ## Unified Architecture
 
 ```

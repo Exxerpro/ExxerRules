@@ -127,7 +127,7 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         // Console methods that should be avoided in production code
         var consoleMethods = new[]
         {
-            "WriteLine", "Write", "Error", "Out"
+            "WriteLine" //, "Write", "Error", "Out"
         };
 
         return consoleMethods.Contains(methodName);

@@ -101,7 +101,6 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     {
         var referenceParams = new List<string>();
 
-        // Skip guard methods - they are designed to validate parameters
         if (IsGuardMethod(method))
         {
             return referenceParams;
@@ -109,71 +108,41 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 
         foreach (var parameter in method.ParameterList.Parameters)
         {
-            if (parameter.Type == null)
+            if (parameter.Type == null || parameter.Default != null || parameter.Modifiers.Any(SyntaxKind.ParamsKeyword))
             {
                 continue;
             }
 
-            // Skip parameters with default values (optional parameters)
-            if (parameter.Default != null)
+            var typeName = parameter.Type.ToString();
+
+            // Per Option B, skip nullable value types using a string check.
+            if (typeName.EndsWith("?"))
             {
                 continue;
             }
 
-            // Skip params arrays
-            if (parameter.Modifiers.Any(SyntaxKind.ParamsKeyword))
+            // Skip other known value types like CancellationToken by name.
+            if (IsValueTypeByName(typeName))
             {
                 continue;
             }
+            
+            var typeSymbol = semanticModel.GetTypeInfo(parameter.Type).Type;
 
-        var parameterType = semanticModel.GetTypeInfo(parameter.Type).Type;
-        var typeName = parameter.Type.ToString();
-
-        // Check for nullable value types first (int?, DateTime?, etc.)
-        // These should be skipped entirely since they can be null by design
-        if (typeName.EndsWith("?"))
-        {
-            continue;
-        }
-
-        // Check string-based detection for non-nullable value types
-        if (IsValueTypeByName(typeName))
-        {
-            continue;
-        }
-
-        if (parameterType == null)
-        {
-            // If we can't determine the type from semantic model and it's not clearly a value type,
-            // we still need to check if it looks like a nullable value type
-            if (typeName.Contains("?") || IsValueTypeByName(typeName.TrimEnd('?')))
+            // If it's not a value type by name, and it's a reference type, it needs validation.
+            // We also check for infrastructure types to exclude them.
+            if (typeSymbol != null && typeSymbol.IsReferenceType)
             {
-                continue;
+                 if (!IsInfrastructureType(typeSymbol))
+                 {
+                    referenceParams.Add(parameter.Identifier.ValueText);
+                 }
             }
-            // If we can't determine the type from semantic model, be conservative and include it
-            referenceParams.Add(parameter.Identifier.ValueText);
-            continue;
-        }
-
-        // Skip non-nullable value types
-        // For nullable value types, IsValueType will be true (since Nullable<T> is a struct)
-        // but we should skip them too since they can be null by design
-        if (parameterType.IsValueType)
-        {
-            continue;
-        }
-
-        // Skip infrastructure types that are typically injected and null-checked by DI
-        if (IsInfrastructureType(parameterType))
-        {
-            continue;
-        }
-
-        // Only include reference types that need validation
-        if (parameterType.IsReferenceType)
-        {
-            referenceParams.Add(parameter.Identifier.ValueText);
-        }
+            // Fallback for when semantic model fails: if we haven't skipped it by name, assume it's a reference type.
+            else if (typeSymbol == null)
+            {
+                referenceParams.Add(parameter.Identifier.ValueText);
+            }
         }
 
         return referenceParams;
@@ -357,14 +326,61 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return [];
     }
 
+    private static string? FindNullCheckInCondition(ExpressionSyntax condition, List<string> referenceParameters)
+    {
+        if (condition is BinaryExpressionSyntax binaryExpr)
+        {
+            // Handle 'param == null'
+            if (binaryExpr.IsKind(SyntaxKind.EqualsExpression))
+            {
+                var leftIdentifier = GetIdentifierFromExpression(binaryExpr.Left);
+                var rightIdentifier = GetIdentifierFromExpression(binaryExpr.Right);
+
+                if (IsNullLiteral(binaryExpr.Right) && referenceParameters.Contains(leftIdentifier)) return leftIdentifier;
+                if (IsNullLiteral(binaryExpr.Left) && referenceParameters.Contains(rightIdentifier)) return rightIdentifier;
+            }
+            // Recurse for '||'
+            else if (binaryExpr.IsKind(SyntaxKind.LogicalOrExpression))
+            {
+                return FindNullCheckInCondition(binaryExpr.Left, referenceParameters) ??
+                       FindNullCheckInCondition(binaryExpr.Right, referenceParameters);
+            }
+        }
+        // Handle 'param is null'
+        else if (condition is IsPatternExpressionSyntax isPattern)
+        {
+            var identifier = GetIdentifierFromExpression(isPattern.Expression);
+            if (referenceParameters.Contains(identifier) && IsNullPattern(isPattern.Pattern))
+            {
+                return identifier;
+            }
+        }
+        return null;
+    }
+
     private static string? FindValidatedParameter(StatementSyntax statement, List<string> referenceParameters)
     {
-        // Look for patterns like:
-        // if (parameter == null) throw new ArgumentNullException(nameof(parameter));
-        // if (parameter is null) throw new ArgumentNullException(nameof(parameter));
-        // ArgumentNullException.ThrowIfNull(parameter);
-        // return parameter?.SomeProperty ?? defaultValue; (null-conditional handling)
+        // Check for if statements with null checks
+        if (statement is IfStatementSyntax ifStatement)
+        {
+            var validatedParam = FindNullCheckInCondition(ifStatement.Condition, referenceParameters);
+            if (validatedParam != null && HasAppropriateValidation(ifStatement))
+            {
+                return validatedParam;
+            }
+        }
 
+        // Look for expression statements like ArgumentNullException.ThrowIfNull(parameter)
+        if (statement is ExpressionStatementSyntax exprStatement &&
+            exprStatement.Expression is InvocationExpressionSyntax invocation)
+        {
+            var validatedInInvocation = FindValidatedParametersInInvocation(invocation, referenceParameters);
+            if (validatedInInvocation.Any())
+            {
+                return validatedInInvocation.First();
+            }
+        }
+        
         // Check for return statements with null-conditional operators
         if (statement is ReturnStatementSyntax returnStmt && returnStmt.Expression != null)
         {
@@ -372,91 +388,6 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
             if (validatedInReturn.Any())
             {
                 return validatedInReturn.First();
-            }
-        }
-
-        if (statement is IfStatementSyntax ifStatement)
-        {
-            var condition = ifStatement.Condition;
-
-            // Handle binary expressions like "parameter == null" or "parameter is null"
-            if (condition is BinaryExpressionSyntax binaryExpr)
-            {
-                var leftIdentifier = GetIdentifierFromExpression(binaryExpr.Left);
-                var rightIdentifier = GetIdentifierFromExpression(binaryExpr.Right);
-
-                // Check if one side is a parameter and the other is null
-                if (IsNullLiteral(binaryExpr.Right) && referenceParameters.Contains(leftIdentifier))
-                {
-                    // Check if the if statement body contains appropriate validation
-                    if (HasAppropriateValidation(ifStatement))
-                    {
-                        return leftIdentifier;
-                    }
-                }
-                if (IsNullLiteral(binaryExpr.Left) && referenceParameters.Contains(rightIdentifier))
-                {
-                    // Check if the if statement body contains appropriate validation
-                    if (HasAppropriateValidation(ifStatement))
-                    {
-                        return rightIdentifier;
-                    }
-                }
-            }
-
-                // Handle "is" patterns like "parameter is null"
-                if (condition is IsPatternExpressionSyntax isPattern)
-                {
-                    var identifier = GetIdentifierFromExpression(isPattern.Expression);
-                    if (referenceParameters.Contains(identifier) && IsNullPattern(isPattern.Pattern))
-                    {
-                        // Check if the if statement body contains appropriate validation
-                        if (HasAppropriateValidation(ifStatement))
-                        {
-                            return identifier;
-                        }
-                    }
-                }
-
-                // Handle "is null" patterns more broadly
-                if (condition.ToString().Contains(" is null"))
-                {
-                    var identifier = GetIdentifierFromExpression(condition);
-                    if (referenceParameters.Contains(identifier))
-                    {
-                        // Check if the if statement body contains appropriate validation
-                        if (HasAppropriateValidation(ifStatement))
-                        {
-                            return identifier;
-                        }
-                    }
-                }
-        }
-
-        // Look for expression statements like ArgumentNullException.ThrowIfNull(parameter)
-        if (statement is ExpressionStatementSyntax exprStatement &&
-            exprStatement.Expression is InvocationExpressionSyntax invocation)
-        {
-            // Check for guard helper invocations
-            var validatedInInvocation = FindValidatedParametersInInvocation(invocation, referenceParameters);
-            if (validatedInInvocation.Any())
-            {
-                return validatedInInvocation.First();
-            }
-        }
-
-        // Look for return statements with Result.Failure patterns
-        if (statement is ReturnStatementSyntax returnStatement &&
-            returnStatement.Expression is InvocationExpressionSyntax returnInvocation)
-        {
-            // Check for Result.Failure patterns
-            if (returnInvocation.Expression.ToString().Contains("Result.Failure") ||
-                returnInvocation.Expression.ToString().Contains("Result.WithFailure"))
-            {
-                // This indicates the method is handling null cases by returning failure
-                // We need to check if this is within a null check context
-                // For now, we'll be conservative and not mark this as validation
-                // unless it's clearly within a null check
             }
         }
 

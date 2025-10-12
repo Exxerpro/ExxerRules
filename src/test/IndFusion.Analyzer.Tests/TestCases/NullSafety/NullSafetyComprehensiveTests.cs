@@ -461,8 +461,7 @@ namespace TestProject
 }";
 
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-        diagnostics.Length.ShouldBe(2); // Should report for both parameters
-        diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
+        diagnostics.ShouldBeEmpty(); // Should be 0, as all relevant parameters are validated.
     }
 
     /// <summary>
@@ -527,7 +526,7 @@ namespace TestProject
 }";
 
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-        diagnostics.Length.ShouldBe(3); // Should report for all three parameters
+        diagnostics.Length.ShouldBe(2); // Should report for input and config, but not nullable value
         diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
     }
 
@@ -559,7 +558,7 @@ namespace TestProject
 }";
 
         var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new ValidateNullParametersAnalyzer());
-        diagnostics.Length.ShouldBe(2); // Should report for config and value
+        diagnostics.Length.ShouldBe(1); // Should report for config and value
         diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
     }
 

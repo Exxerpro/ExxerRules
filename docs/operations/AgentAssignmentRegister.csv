@@ -1,0 +1,2 @@
+WorkItemId,AgentName,SupervisorName,DateAssigned,Sprint,ExpectedCompletion,Status,Notes
+PLAN-0001,AgentOrion,SupervisorVega,2025-10-13,"Sprint 9 (Oct 13-26)",2025-10-26,In Progress,Agent enablement & governance asset rollout

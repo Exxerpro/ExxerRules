@@ -1,0 +1,41 @@
+{
+  "GeneratedOnUtc": "2025-10-12T21:53:07.5912186Z",
+  "AggregateHash": "57a23fc1264925a934ab70faf837d94525bf84b30155798e1618e40090fb6c64",
+  "Files": [
+    {
+      "Path": ".\\docs\\reference\\SemanticRag-Agent-Brief.md",
+      "HashAlgorithm": "SHA256",
+      "Hash": "777D8B02B73B1AEC86EAFB1001B924CE225D8F6F080E24431B04541C297C1F05",
+      "Length": 3207,
+      "LastWriteTimeUtc": "2025-10-12T21:09:22.260642Z"
+    },
+    {
+      "Path": ".\\docs\\templates\\AgentWorkPackage.md",
+      "HashAlgorithm": "SHA256",
+      "Hash": "0B50E2351890B779AF13E03B791FF68D61FD678909C2C3F741F3BF2FCBF97D94",
+      "Length": 1739,
+      "LastWriteTimeUtc": "2025-10-12T21:09:31.3157482Z"
+    },
+    {
+      "Path": ".\\docs\\Unified-Semantic-RAG-Standards-Initiative.md",
+      "HashAlgorithm": "SHA256",
+      "Hash": "BB7F5C9AE32D28A1898A855630C8B4F84FDB3B78EC03D5E3D46B9A7934F33FC2",
+      "Length": 30467,
+      "LastWriteTimeUtc": "2025-10-12T21:11:55.4833518Z"
+    },
+    {
+      "Path": ".\\docs\\operations\\AgentAssignmentRegister.csv",
+      "HashAlgorithm": "SHA256",
+      "Hash": "7C46C599D250D30B0679BF65A24BA3053E7F3B01EB60636E19F9347EC08E105F",
+      "Length": 225,
+      "LastWriteTimeUtc": "2025-10-12T21:52:40.639149Z"
+    },
+    {
+      "Path": ".\\docs\\operations\\AgentSyncLog.csv",
+      "HashAlgorithm": "SHA256",
+      "Hash": "CAC5AF7FD13BAA7932A4EC1B00EEA2F16C997EFBF60AE2811D47BC2A4BCFD42D",
+      "Length": 215,
+      "LastWriteTimeUtc": "2025-10-12T21:52:44.0572705Z"
+    }
+  ]
+}

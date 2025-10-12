@@ -16,6 +16,8 @@ namespace IndFusion.Analyzer.Tests.Testing;
 /// </summary>
 public static class AnalyzerTestHelper
 {
+    private static readonly Lazy<MetadataReference[]> ReferenceCache = new(BuildMetadataReferences);
+
     /// <summary>
     /// Runs a diagnostic analyzer on the given source code and returns the diagnostics.
     /// </summary>
@@ -118,7 +120,9 @@ public static class AnalyzerTestHelper
     /// Gets the metadata references required for compilation.
     /// </summary>
     /// <returns>An array of metadata references.</returns>
-    private static MetadataReference[] GetMetadataReferences()
+    private static MetadataReference[] GetMetadataReferences() => ReferenceCache.Value;
+
+    private static MetadataReference[] BuildMetadataReferences()
     {
         // Get basic .NET references
         var trustedAssembliesPaths = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")!)

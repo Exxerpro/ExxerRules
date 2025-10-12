@@ -1,6 +1,6 @@
 {
-  "GeneratedOnUtc": "2025-10-12T21:53:07.5912186Z",
-  "AggregateHash": "57a23fc1264925a934ab70faf837d94525bf84b30155798e1618e40090fb6c64",
+  "GeneratedOnUtc": "2025-10-12T22:23:14.1631369Z",
+  "AggregateHash": "4a8b2586143d41670c89efd87684143c5e2f21fd851dc95265cfa7deb18dc3d6",
   "Files": [
     {
       "Path": ".\\docs\\reference\\SemanticRag-Agent-Brief.md",
@@ -33,9 +33,9 @@
     {
       "Path": ".\\docs\\operations\\AgentSyncLog.csv",
       "HashAlgorithm": "SHA256",
-      "Hash": "CAC5AF7FD13BAA7932A4EC1B00EEA2F16C997EFBF60AE2811D47BC2A4BCFD42D",
+      "Hash": "779E5CA7BD2F943CCFB52C3CAA8472B8EBE01218E191A893C6B64F8F4721E9C0",
       "Length": 215,
-      "LastWriteTimeUtc": "2025-10-12T21:52:44.0572705Z"
+      "LastWriteTimeUtc": "2025-10-12T21:53:18.6026244Z"
     }
   ]
 }

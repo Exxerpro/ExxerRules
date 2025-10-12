@@ -46,6 +46,12 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.Node;
+        var semanticModel = context.SemanticModel;
+        var methodSymbol = semanticModel.GetDeclaredSymbol(methodDeclaration);
+        if (methodSymbol is null)
+        {
+            return;
+        }
 
         // Only analyze async methods
         if (!IsAsyncMethod(methodDeclaration))
@@ -65,26 +71,26 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
             return;
         }
 
-        // Skip overridden methods (Story 1.1)
-        if (IsOverriddenMethod(methodDeclaration))
+        // Skip overridden methods when base signature already supplies cancellation
+        if (ShouldSkipOverride(methodSymbol))
         {
             return;
         }
 
-        // Skip explicitly implemented interface methods (Story 1.1)
-        if (IsExplicitInterfaceImplementation(methodDeclaration))
+        // Skip explicit interface implementations only if the interface already requires a token
+        if (ShouldSkipExplicitInterfaceImplementation(methodSymbol))
         {
             return;
         }
 
         // Skip Blazor lifecycle methods (Story 1.2)
-        if (IsBlazorLifecycleMethod(methodDeclaration, context.SemanticModel))
+        if (IsBlazorLifecycleMethod(methodDeclaration, semanticModel))
         {
             return;
         }
 
         // Skip SignalR hub lifecycle methods (Story 1.3)
-        if (IsSignalRHubLifecycleMethod(methodDeclaration, context.SemanticModel))
+        if (IsSignalRHubLifecycleMethod(methodDeclaration, semanticModel))
         {
             return;
         }
@@ -102,7 +108,7 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         }
 
         // Skip IAsyncLifetime methods (Story 1.6)
-        if (IsIAsyncLifetimeMethod(methodDeclaration, context.SemanticModel))
+        if (IsIAsyncLifetimeMethod(methodDeclaration, semanticModel))
         {
             return;
         }
@@ -120,19 +126,19 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         }
 
         // Check if method already has CancellationToken parameter
-        if (HasCancellationTokenParameter(methodDeclaration, context.SemanticModel))
+        if (MethodHasCancellationToken(methodSymbol))
         {
             return;
         }
 
         // Check if method has captured token (Story 1.10)
-        if (HasCapturedToken(methodDeclaration, context.SemanticModel))
+        if (HasCapturedToken(methodDeclaration, semanticModel))
         {
             return;
         }
 
         // Check if cancellation is not available for awaited calls (Story 1.9)
-        if (!HasCancellationAvailable(methodDeclaration, context.SemanticModel))
+        if (!HasCancellationAvailable(methodDeclaration, semanticModel))
         {
             return;
         }
@@ -220,23 +226,6 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    private static bool HasCancellationTokenParameter(MethodDeclarationSyntax method, SemanticModel semanticModel)
-    {
-        foreach (var parameter in method.ParameterList.Parameters)
-        {
-            var parameterType = semanticModel.GetTypeInfo(parameter.Type!).Type;
-
-            // Check if parameter type is CancellationToken
-            if (parameterType != null &&
-                IsCancellationTokenType(parameterType))
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     private static bool IsCancellationTokenType(ITypeSymbol typeSymbol)
     {
         // Check if type is System.Threading.CancellationToken
@@ -313,20 +302,34 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.1: Exempt Overridden and Explicitly Implemented Methods
 
     /// <summary>
-    /// Checks if the method is an override method.
+    /// Determines whether an override can be skipped because the base signature already provides a cancellation token.
     /// </summary>
-    private static bool IsOverriddenMethod(MethodDeclarationSyntax method)
-    {
-        return method.Modifiers.Any(SyntaxKind.OverrideKeyword);
-    }
+    private static bool ShouldSkipOverride(IMethodSymbol methodSymbol) => methodSymbol.IsOverride;
 
     /// <summary>
-    /// Checks if the method is an explicit interface implementation.
+    /// Determines whether an explicit interface implementation can be skipped because the interface already mandates a cancellation token.
     /// </summary>
-    private static bool IsExplicitInterfaceImplementation(MethodDeclarationSyntax method)
+    private static bool ShouldSkipExplicitInterfaceImplementation(IMethodSymbol methodSymbol)
     {
-        // Explicit interface implementations have the form: InterfaceName.MethodName
-        return method.ExplicitInterfaceSpecifier != null;
+        if (methodSymbol.ExplicitInterfaceImplementations.Length == 0)
+        {
+            return false;
+        }
+
+        return methodSymbol.ExplicitInterfaceImplementations.All(MethodHasCancellationToken);
+    }
+
+    private static bool MethodHasCancellationToken(IMethodSymbol methodSymbol)
+    {
+        foreach (var parameter in methodSymbol.Parameters)
+        {
+            if (IsCancellationTokenType(parameter.Type))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     #endregion

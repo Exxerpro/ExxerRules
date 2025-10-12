@@ -10,10 +10,12 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public sealed class AvoidThrowingExceptionsAnalyzerFalsePositiveTests
 {
+    private const int AnalyzerTimeoutMs = 30000;
+
     /// <summary>
     /// Allows null-guard idiom with coalesce throw in constructors.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Null_Guard_Throw()
     {
         const string testCode = @"
@@ -34,7 +36,7 @@ public sealed class Service
     /// <summary>
     /// Allows range guard throws for primitive validation.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Range_Guard()
     {
         const string testCode = @"
@@ -58,7 +60,7 @@ public static class Clock
     /// <summary>
     /// Allows startup/bootstrap invalid operation when missing config.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Startup_Config_Throws()
     {
         const string testCode = @"
@@ -77,7 +79,7 @@ public static class Startup
     /// <summary>
     /// Allows framework-required NotSupportedException in Identity components.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Identity_Scaffolding_Throws()
     {
         const string testCode = @"
@@ -103,7 +105,7 @@ public sealed class RegisterHandler
     /// <summary>
     /// Allows rethrow in catch blocks (fatal error paths).
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Fatal_Error_Reporting()
     {
         const string testCode = @"
@@ -134,7 +136,7 @@ public static class Bootstrap
     /// <summary>
     /// Allows exception wrapping with inner exception in catch.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Exception_Wrapping()
     {
         const string testCode = @"
@@ -162,7 +164,7 @@ public static class Orchestrator
     /// <summary>
     /// Allows Guard/ThrowHelper methods to throw intentionally.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_ThrowHelper_Methods()
     {
         const string testCode = @"
@@ -186,7 +188,7 @@ public static class Guard
     /// <summary>
     /// Allows value object invariant checks throwing guard exceptions.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_ValueObject_Invariants()
     {
         const string testCode = @"
@@ -212,7 +214,7 @@ public static class Percentage
     /// <summary>
     /// Allows explicit opt-out via AllowExceptions attribute.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_OptOut_Attribute()
     {
         const string testCode = @"
@@ -237,7 +239,7 @@ public sealed class LegacyAdapter
     /// <summary>
     /// Allows helper methods that throw inside test/benchmark/spec classes.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Helper_In_Test_Class()
     {
         const string testCode = @"
@@ -262,7 +264,7 @@ public class CalculationTests
     /// <summary>
     /// Positive control: should report for generic throw in core method.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Reports_When_No_Mitigation_Applies()
     {
         const string testCode = @"

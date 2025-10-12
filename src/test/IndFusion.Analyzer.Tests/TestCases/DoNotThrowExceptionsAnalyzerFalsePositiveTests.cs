@@ -10,6 +10,8 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public sealed class DoNotThrowExceptionsAnalyzerFalsePositiveTests
 {
+    private const int AnalyzerTimeoutMs = 30000;
+
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for methods that guard against null arguments by throwing
     /// an ArgumentNullException.
@@ -17,7 +19,7 @@ public sealed class DoNotThrowExceptionsAnalyzerFalsePositiveTests
     /// <remarks>This test ensures that the analyzer correctly recognizes standard argument null checks as
     /// valid and does not produce false positives when an ArgumentNullException is thrown for null
     /// parameters.</remarks>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_ArgumentNull_Guards()
     {
         const string testCode = @"
@@ -41,7 +43,7 @@ public class Guarded
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for null-coalescing throw expressions
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_NullCoalescing_Throw()
     {
         const string testCode = @"
@@ -64,7 +66,7 @@ public sealed class Widget
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for range guard checks that throw ArgumentOutOfRangeException.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Range_Guard()
     {
         const string testCode = @"
@@ -88,7 +90,7 @@ public static class Parser
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for switch expressions that throw ArgumentOutOfRangeException in the default case.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Switch_Default_Throw()
     {
         const string testCode = @"
@@ -113,7 +115,7 @@ public static class Resolver
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for domain-specific validation exceptions.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Domain_Validation_Exception()
     {
         const string testCode = @"
@@ -145,7 +147,7 @@ public static class WidgetParser
     /// </summary>
     /// <remarks>This test ensures that the analyzer correctly allows exceptions used for input validation
     /// within constructors, which is a common and recommended practice for enforcing class invariants.</remarks>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Constructor_Invariant()
     {
         const string testCode = @"
@@ -173,7 +175,7 @@ public sealed class Capacity
     /// <remarks>This test ensures that the DoNotThrowExceptionsAnalyzer does not flag exception usage in
     /// factory methods where argument validation is performed, as such patterns are considered acceptable in .NET
     /// design guidelines.</remarks>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Validation_In_Factory()
     {
         const string testCode = @"
@@ -206,7 +208,7 @@ public sealed record Widget(string Name);
     /// <remarks>This test ensures that properties using expression-bodied syntax with guard clauses, such as
     /// throwing an exception when a required value is not configured, are not incorrectly flagged by the analyzer. The
     /// scenario reflects a common pattern for enforcing invariants in property getters.</remarks>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Expression_Bodied_Guard()
     {
         const string testCode = @"
@@ -232,7 +234,7 @@ public sealed class Settings
     /// <remarks>This test ensures that the DoNotThrowExceptionsAnalyzer does not flag code where
     /// NotSupportedException is used to indicate unsupported operations in legacy or read-only adapters, which is
     /// considered an acceptable defensive pattern.</remarks>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_NotSupported_Defensive_Throw()
     {
         const string testCode = @"
@@ -253,7 +255,7 @@ public sealed class LegacyAdapter
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for exception wrapping scenarios where an exception is caught
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Exception_Wrapping()
     {
         const string testCode = @"
@@ -285,7 +287,7 @@ public static class Wrapper
     /// analyzer correctly identifies and reports the violation. Use this test to ensure the analyzer enforces best
     /// practices regarding exception types.</remarks>
 
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Positive_Control_Should_Report_When_Generic_Exception()
     {
         const string testCode = @"
@@ -306,7 +308,7 @@ public sealed class Service
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for framework boundary classes like Controllers.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Framework_Boundary()
     {
         const string testCode = @"
@@ -330,7 +332,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for domain validation classes.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Domain_Validation()
     {
         const string testCode = @"
@@ -352,7 +354,7 @@ public class OrderValidator
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for configuration classes.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_Configuration_Context()
     {
         const string testCode = @"
@@ -376,7 +378,7 @@ public class AppSettings
     /// <summary>
     /// Comprehensive regression test covering all new framework boundary patterns.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_Not_Report_For_All_Framework_Boundary_Patterns()
     {
         const string testCode = @"

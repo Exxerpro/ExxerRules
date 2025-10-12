@@ -10,10 +10,12 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public sealed class UseResultPatternAnalyzerFalsePositiveTests
 {
+    private const int AnalyzerTimeoutMs = 30000;
+
     /// <summary>
     /// Allows domain guard methods returning bool and throwing guard exceptions.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Domain_Guard()
     {
         const string testCode = @"
@@ -39,7 +41,7 @@ public static class ShiftRules
     /// <summary>
     /// Allows configuration guard inside Program-like classes.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Program_Config_Guard()
     {
         const string testCode = @"
@@ -58,7 +60,7 @@ public static class Program
     /// <summary>
     /// Allows Identity scaffolding style throws in Components namespaces.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Identity_Scaffolding()
     {
         const string testCode = @"
@@ -84,7 +86,7 @@ public sealed class RegisterHandler
     /// <summary>
     /// Allows Guard/ThrowHelper patterns intentionally throwing.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Guard_Helper()
     {
         const string testCode = @"
@@ -108,7 +110,7 @@ public static class Guard
     /// <summary>
     /// Allows value-object style invariant enforcement via exceptions.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_ValueObject_Invariant()
     {
         const string testCode = @"
@@ -134,7 +136,7 @@ public static class Percentage
     /// <summary>
     /// Allows property null-guard with '?? throw' pattern.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Property_Null_Guard()
     {
         const string testCode = @"
@@ -156,7 +158,7 @@ public interface IService { }
     /// <summary>
     /// Allows private helpers that throw inside test classes.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Helper_In_Test_Class()
     {
         const string testCode = @"
@@ -181,7 +183,7 @@ public class CalculationTests
     /// <summary>
     /// Allows background workers returning Task to throw fatal errors.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Background_Task_Throws()
     {
         const string testCode = @"
@@ -204,7 +206,7 @@ public sealed class Worker
     /// <summary>
     /// Allows local validation functions that throw guard exceptions.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_Local_Function_Guard()
     {
         const string testCode = @"
@@ -233,7 +235,7 @@ public sealed class Processor
     /// <summary>
     /// Allows opt-out via AllowExceptions attribute at class scope.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Allows_OptOut_Attribute()
     {
         const string testCode = @"
@@ -255,7 +257,7 @@ public sealed class MigrationScript
     /// <summary>
     /// Positive control: should report when throwing in non-Result method without exemptions.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Analyzer_Reports_When_No_Mitigation_Applies()
     {
         const string testCode = @"

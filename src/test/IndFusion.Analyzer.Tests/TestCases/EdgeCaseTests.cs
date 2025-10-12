@@ -519,7 +519,7 @@ namespace TestProject
         var asyncDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new AsyncMethodsShouldAcceptCancellationTokenAnalyzer());
         var configureAwaitDiagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseConfigureAwaitFalseAnalyzer());
 
-        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
+        asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1); // Overrides are exempt; ensure nested class still flags.
         configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
     }
 

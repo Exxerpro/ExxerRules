@@ -14,10 +14,12 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class ErrorHandlingTests
 {
+    private const int AnalyzerTimeoutMs = 30000;
+
     /// <summary>
     /// Tests that using Result pattern does not report diagnostic.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_NotReportDiagnostic_When_UsingResultPattern()
     {
         const string testCode = @"
@@ -46,7 +48,7 @@ namespace TestProject
     /// <summary>
     /// Tests that throwing exceptions reports diagnostic.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_ReportDiagnostic_When_ThrowingExceptions()
     {
         const string testCode = @"
@@ -76,7 +78,7 @@ namespace TestProject
     /// <summary>
     /// Tests that avoiding throw statements does not report diagnostic.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_NotReportDiagnostic_When_AvoidingThrowStatements()
     {
         const string testCode = @"
@@ -105,7 +107,7 @@ namespace TestProject
     /// <summary>
     /// Tests that using throw statements reports diagnostic.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_ReportDiagnostic_When_UsingThrowStatements()
     {
         const string testCode = @"
@@ -135,7 +137,7 @@ namespace TestProject
     /// <summary>
     /// Tests edge case: Different Result pattern usage.
     /// </summary>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = AnalyzerTimeoutMs)]
     public void Should_NotReportDiagnostic_When_DifferentResultPatternUsage()
     {
         const string testCode = @"

@@ -1,9 +1,5 @@
 # Unified Semantic RAG Code-Standards Initiative
 
-## Executive Summary
-
-Unify the **Agentic Development Linting Strategy**, the **Semantic Pattern Enforcement Initiative**, and the **Semantic Pattern Enforcement Platform** into a single cross-repository programme that delivers “Code Standards as a Service” powered by modern Retrieval-Augmented Generation (RAG). The enhanced platform will expose linting, semantic pattern validation, repair tooling, and guidance knowledge through an MCP-first interface, enabling autonomous agents and engineers to reason about, enforce, and evolve IndFusion/IndTrace coding standards safely across every repository.
-
 ---
 
 ## Vision
@@ -401,3 +397,88 @@ To align with the ExxerAI initiative without blocking their delivery milestones,
 6. **Publish roadmap + metrics dashboard scaffolding** to stakeholders; plan pilot repositories.
 
 This initiative delivers the connective tissue between linting, semantic pattern enforcement, and modern RAG so every IndFusion repository benefits from consistent, intelligent, and safe code standards enforcement. Autonomous agents gain the context and tooling they need to reason about code like seasoned maintainers, while human engineers retain confidence through verifiable, test-backed pipelines.
+
+---
+
+## Execution Backlog & Ordered Histories
+
+The programme progresses through the following ordered histories. Each history is self-contained, references the required code surface, and is written so that an agent or human teammate can execute it with minimal supervision. Move to the next history only when the exit criteria are satisfied.
+
+### History 1: Charter, Access, and Operating Foundations
+- **Context**: Establish governance, access, and due-diligence instrumentation so delivery can proceed safely.
+- **Key Tasks**
+  - Finalise charter sign-offs and capture stakeholder approvals in `docs/operations/governance/CharterApprovals.md`.
+  - Populate `docs/operations/AgentAssignmentRegister.csv` and `docs/operations/AgentSyncLog.csv` with real programme owners; verify `src/scripts/Update-Agent-Brief.ps1 -CheckOnly`.
+  - Run `src/scripts/DueDiligence-PreStart.ps1 -WorkItemId <id>` to record baseline environment state in `docs/operations/due-diligence/`.
+  - Confirm build health: `dotnet restore IndFusion.sln`, `dotnet build IndFusion.sln -c Release`, `dotnet test src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj -c Release`.
+- **Exit Criteria**
+  - Due-diligence JSON and findings log committed.
+  - Agent brief digest current; guardrail scripts pass with clean working tree.
+  - Communication cadence confirmed in Teams `#semantic-rag`.
+
+### History 2: Semantic RAG Fabric Foundations (Epic E1)
+- **Context**: Deliver ingestion, embeddings, and knowledge graph scaffolding supporting RAG queries.
+- **Plan of Action**
+  1. Layout & configuration: repo manifest (`docs/operations/ingestion/RepoManifest.json`), Qdrant/Neo4j/SQL Server 2025/Ollama settings in `appsettings.SemanticRag.json`.
+  2. Domain ports: ingestion/vector/graph/ledger interfaces and entities under `src/code/IndFusion.Mcp.Core/Knowledge`.
+  3. Adapters: Qdrant, Neo4j, SQL Server, Ollama clients in `src/code/IndFusion.Mcp.Infrastructure/`.
+  4. Application services: Roslyn ingestion orchestrators coordinating embeddings, graph updates, ledger writes.
+  5. API/DI wiring: expose `knowledge_rag`, register adapters in server composition root.
+  6. Testing: contract/integration suites (`GraphSchemaContractTests`, `VectorStoreSmokeTests`, `IngestionLedgerTests`).
+  7. Automation: `Sync-KnowledgeFabric.ps1` runbook.
+- **Exit Criteria**
+  - `knowledge_rag` endpoint returns indexed snippets with provenance metadata sourced via Qdrant + Neo4j, and ingestion ledger entries persisted to SQL Server 2025.
+  - Graph schema contract tests pass in CI against local Neo4j instance; vector integration smoke tests validate Qdrant connectivity.
+  - Operational dashboards note ingestion latency and success metrics.
+
+### History 3: MCP Tooling Surface & Analyzer Integration (Epic E2)
+- **Context**: Expose analyzers/fixers through MCP tools with deterministic validation workflows.
+- **Plan of Action**
+  1. Extend MCP tools (`src/code/IndFusion.Mcp.Tools`) with `lint_run`, `pattern_suggest`, `fixer001_apply_*`.
+  2. Implement validation pipeline (`src/code/IndFusion.Mcp.Core/Validation/`) leveraging Roslyn + safe regex.
+  3. Update analyzer manifests (`src/ExxerRules/ExxerAI.Rules.Analyzer/RuleRegistry.cs`) for MCP exposure.
+  4. Add integration tests in `src/test/IndFusion.Mcp.Tests/` covering success/failure paths.
+  5. Document request/response shapes in `docs/reference/mcp/`.
+- **Exit Criteria**
+  - MCP manifest lists EXXER analyzers/fixers with correct rule IDs.
+  - Integration tests validate both successful and failure scenarios.
+  - Documentation refreshed in `docs/reference/mcp/` with request/response samples.
+
+### History 4: Agent Governance, Telemetry, and Guardrails (Epic E3)
+- **Context**: Stand up supervision, guardrail enforcement, and telemetry required for agent-led changes.
+- **Plan of Action**
+  1. Enhance guardrail tooling (`GuardrailCheck.ps1`, CI hooks, JSON output).
+  2. Emit telemetry via `SemanticRagTelemetry` (latency, adoption, guardrail breaches).
+  3. Stand up dashboards per `docs/dashboards/README.md`; publish baseline KPIs.
+  4. Schedule nightly context refresh (`Update-Agent-Brief.ps1`) and integrate with supervisor processes.
+  5. Update governance docs/PR templates to enforce guardrail checks.
+- **Exit Criteria**
+  - Guardrail check required in PR template; failure blocks merges on scope breaches.
+  - Telemetry dashboards show live data for at least one sprint.
+  - Agent supervisors acknowledge daily digest in `docs/operations/AgentSyncLog.csv`.
+
+### History 5: Cross-Repository Insights & Drift Remediation (Epic E4)
+- **Context**: Detect standards drift across repos and generate actionable remediation backlogs.
+- **Plan of Action**
+  1. Build drift detection services (`src/code/IndFusion.Mcp.Analytics/Drift/`) feeding Neo4j/Qdrant.
+  2. Automate backlog creation via `src/scripts/automation/New-DriftBacklog.ps1` and Azure Boards API.
+  3. Expand analyzer drift tests (`src/test/IndFusion.Analyzer.Tests/TestCases/UnifiedSemanticRag/`).
+  4. Publish quarterly drift reports (`docs/insights/UnifiedRagDriftReports.md`).
+  5. Configure SLA dashboards tracking remediation velocity.
+- **Exit Criteria**
+  - Nightly drift job produces backlog entries tagged `SemanticRAG`.
+  - Analytics dashboards highlight drift trends; remediation SLA tracking live.
+  - Documentation references current drift algorithm and remediation playbooks.
+
+### History 6: Pilot Enablement & Programme Close-Out
+- **Context**: Validate end-to-end flow with pilot repositories, capture learnings, and transition to steady state.
+- **Plan of Action**
+  1. Enable pilot repos (IndFusion, IndTrace) with branch policies, guardrail checks, telemetry.
+  2. Execute pilot due diligence, archive artefacts in `docs/operations/due-diligence/`.
+  3. Run retrospectives, document outcomes (`docs/operations/retros/PLAN-0001.md`), and share lessons.
+  4. Transition ownership to DevEx/analyzer guild with runbooks and support docs.
+  5. Refresh roadmap with post-pilot improvements.
+- **Exit Criteria**
+  - Pilot repos meet Definition of Done, telemetry confirms adoption goals.
+  - Operational ownership transferred to DevEx/Analyzer guild with runbooks.
+  - Close-out findings communicated to stakeholders; backlog groomed for steady-state improvements.

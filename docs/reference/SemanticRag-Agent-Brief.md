@@ -34,7 +34,7 @@ Logs from every command go to `agent-trace/<workItemId>.log`.
 ## Communication
 - Announce start/stop of each work session in Teams channel `#semantic-rag`.
 - Raise blockers immediately to the Agent Supervisor; include work item ID and last successful command.
-- Update `docs/reference/SemanticRag-Agent-Brief.md` only via supervisor request or change request referencing an ADR.
+- Update `docs/reference/SemanticRag-Agent-Brief.md` only via supervisor request or change request referencing an ADR; log behavioural policy updates in `docs/operations/governance/CHANGELOG.md`.
 
 ## Escalation Triggers (Agent Perspective)
 - Verification script fails twice.
@@ -44,7 +44,7 @@ Logs from every command go to `agent-trace/<workItemId>.log`.
 Escalate via Teams `#semantic-rag` tagging the Tech Lead, then log the event in the work item.
 
 ## Daily Sync Requirements
-- Prior to coding, run `pwsh src/scripts/Update-Agent-Brief.ps1 -CheckOnly` and record the reported checksum in the Agent Sync Log.
+- Prior to coding, run `pwsh src/scripts/Update-Agent-Brief.ps1 -CheckOnly` and record the reported checksum in the Agent Sync Log; review `docs/reference/Agent-Behavior-Guidelines.md` if the digest has changed since the last session.
 - Confirm receipt of any broadcast guardrail updates before committing.
 
 ## Deliverable Checklist
@@ -53,4 +53,4 @@ Escalate via Teams `#semantic-rag` tagging the Tech Lead, then log the event in 
 - Documentation links maintained (include file + line references where applicable).
 - Telemetry hooks (if required) emitting `SemanticRag.*` metrics.
 - Work item comment summarising changes, commands executed, and log location.
-
+- Behavioural compliance logged referencing `docs/reference/Agent-Behavior-Guidelines.md`.

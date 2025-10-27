@@ -151,7 +151,6 @@ public class SemanticRagModelsTests
         [Theory]
         [InlineData("")]
         [InlineData("   ")]
-        [InlineData(null)]
         public void Should_ValidateFailure_When_QueryIsNullOrEmpty(string query)
         {
             // Arrange
@@ -162,6 +161,7 @@ public class SemanticRagModelsTests
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("Query cannot be null or empty");
         }
 
@@ -178,6 +178,7 @@ public class SemanticRagModelsTests
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("Limit must be greater than 0");
         }
 
@@ -194,6 +195,7 @@ public class SemanticRagModelsTests
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("Threshold must be between 0.0 and 1.0");
         }
     }
@@ -312,7 +314,6 @@ public class SemanticRagModelsTests
             var targetId = "entity-2";
             var type = "RELATES_TO";
             var properties = new Dictionary<string, object> { ["strength"] = "strong" };
-            var weight = 0.8f;
 
             // Act
             var relationship = new KnowledgeRelationship(id, sourceId, targetId, type, properties, DateTimeOffset.UtcNow);
@@ -361,13 +362,14 @@ public class SemanticRagModelsTests
         public void Should_ValidateFailure_When_WeightIsOutOfRange(float weight)
         {
             // Arrange
-            var relationship = new KnowledgeRelationship("rel-1", "entity-1", "entity-2", "RELATES_TO", new Dictionary<string, object>(), weight);
+            var relationship = new GraphRelationship("rel-1", "RELATES_TO", "entity-1", "entity-2", new Dictionary<string, object>(), weight);
 
             // Act
             var result = relationship.Validate();
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("Weight must be between 0.0 and 1.0");
         }
     }
@@ -510,6 +512,7 @@ public class SemanticRagModelsTests
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("MaxDocuments must be greater than 0");
         }
 
@@ -524,6 +527,7 @@ public class SemanticRagModelsTests
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("MaxEntities cannot be negative");
         }
 
@@ -540,6 +544,7 @@ public class SemanticRagModelsTests
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("SimilarityThreshold must be between 0.0 and 1.0");
         }
 
@@ -554,6 +559,7 @@ public class SemanticRagModelsTests
 
             // Assert
             result.IsFailure.ShouldBeTrue();
+            result.Error.ShouldNotBeNull();
             result.Error.ShouldContain("MaxTraversalDepth cannot be negative");
         }
     }

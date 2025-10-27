@@ -59,11 +59,11 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord>());
 
         // Act
-        var result = await _adapter.StoreNodeAsync(node);
+        var result = await _adapter.StoreNodeAsync(node, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        _mockSession.Received(1).RunAsync(
+        await _mockSession.Received(1).RunAsync(
             Arg.Is<string>(s => s.Contains("MERGE (n:KnowledgeNode {id: $id})")),
             Arg.Any<Dictionary<string, object>>());
     }
@@ -75,12 +75,12 @@ public class Neo4jKnowledgeGraphAdapterTests
         var invalidNode = CreateValidKnowledgeNode() with { Id = string.Empty };
 
         // Act
-        var result = await _adapter.StoreNodeAsync(invalidNode);
+        var result = await _adapter.StoreNodeAsync(invalidNode, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
         result.Error!.ShouldContain("KnowledgeNode ID cannot be empty or whitespace");
-        _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
+        await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
     [Fact]
@@ -92,7 +92,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             .Returns(Task.FromException<IResultCursor>(new Exception("Neo4j connection failed")));
 
         // Act
-        var result = await _adapter.StoreNodeAsync(node);
+        var result = await _adapter.StoreNodeAsync(node, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
@@ -112,11 +112,11 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord>());
 
         // Act
-        var result = await _adapter.StoreNodesAsync(nodes);
+        var result = await _adapter.StoreNodesAsync(nodes, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        _mockSession.Received(1).RunAsync(
+        await _mockSession.Received(1).RunAsync(
             Arg.Is<string>(s => s.Contains("UNWIND $nodes AS node")),
             Arg.Any<Dictionary<string, object>>());
     }
@@ -128,11 +128,11 @@ public class Neo4jKnowledgeGraphAdapterTests
         var emptyNodes = new List<KnowledgeNode>();
 
         // Act
-        var result = await _adapter.StoreNodesAsync(emptyNodes);
+        var result = await _adapter.StoreNodesAsync(emptyNodes, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
+        await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
     [Fact]
@@ -146,12 +146,12 @@ public class Neo4jKnowledgeGraphAdapterTests
         };
 
         // Act
-        var result = await _adapter.StoreNodesAsync(nodes);
+        var result = await _adapter.StoreNodesAsync(nodes, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
         result.Error!.ShouldContain("KnowledgeNode ID cannot be empty or whitespace");
-        _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
+        await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
     [Fact]
@@ -162,11 +162,11 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord>());
 
         // Act
-        var result = await _adapter.StoreRelationshipAsync(relationship);
+        var result = await _adapter.StoreRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        _mockSession.Received(1).RunAsync(
+        await _mockSession.Received(1).RunAsync(
             Arg.Is<string>(s => s.Contains("MATCH (source:KnowledgeNode {id: $sourceId})")),
             Arg.Any<Dictionary<string, object>>());
     }
@@ -178,12 +178,12 @@ public class Neo4jKnowledgeGraphAdapterTests
         var invalidRelationship = CreateValidKnowledgeRelationship() with { Id = string.Empty };
 
         // Act
-        var result = await _adapter.StoreRelationshipAsync(invalidRelationship);
+        var result = await _adapter.StoreRelationshipAsync(invalidRelationship, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
         result.Error!.ShouldContain("KnowledgeRelationship ID cannot be empty or whitespace");
-        _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
+        await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns(record);
 
         // Act
-        var result = await _adapter.GetNodeByIdAsync(nodeId);
+        var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -217,7 +217,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns((IRecord?)null);
 
         // Act
-        var result = await _adapter.GetNodeByIdAsync(nodeId);
+        var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
@@ -230,10 +230,10 @@ public class Neo4jKnowledgeGraphAdapterTests
         // Arrange
         var nodeId = "test-node-id";
         _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>())
-            .Returns(Task.FromException<IResultCursor>(new Exception("Neo4j query failed")));
+            .Returns(ValueTask.FromException<IRecord?>(new Exception("Neo4j query failed")));
 
         // Act
-        var result = await _adapter.GetNodeByIdAsync(nodeId);
+        var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
@@ -257,7 +257,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord> { record });
 
         // Act
-        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId);
+        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -274,7 +274,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord>());
 
         // Act
-        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId);
+        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -291,7 +291,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord> { record });
 
         // Act
-        var result = await _adapter.ExecuteGraphQueryAsync(query);
+        var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -305,10 +305,10 @@ public class Neo4jKnowledgeGraphAdapterTests
         // Arrange
         var query = "INVALID CYPHER QUERY";
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>())
-            .Returns(Task.FromException<IResultCursor>(new Exception("Invalid syntax")));
+            .Returns(Task.FromException<List<IRecord>>(new Exception("Invalid syntax")));
 
         // Act
-        var result = await _adapter.ExecuteGraphQueryAsync(query);
+        var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
@@ -324,11 +324,11 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord>());
 
         // Act
-        var result = await _adapter.DeleteNodeAsync(nodeId);
+        var result = await _adapter.DeleteNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        _mockSession.Received(1).RunAsync(
+        await _mockSession.Received(1).RunAsync(
             Arg.Is<string>(s => s.Contains("MATCH (n:KnowledgeNode {id: $id})") && s.Contains("DETACH DELETE n")),
             Arg.Any<Dictionary<string, object>>());
     }
@@ -342,7 +342,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             .Returns(Task.FromException<IResultCursor>(new Exception("Delete failed")));
 
         // Act
-        var result = await _adapter.DeleteNodeAsync(nodeId);
+        var result = await _adapter.DeleteNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();
@@ -358,11 +358,11 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockResultCursor.ToListAsync(Arg.Any<CancellationToken>()).Returns(new List<IRecord>());
 
         // Act
-        var result = await _adapter.DeleteRelationshipAsync(relationshipId);
+        var result = await _adapter.DeleteRelationshipAsync(relationshipId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        _mockSession.Received(1).RunAsync(
+        await _mockSession.Received(1).RunAsync(
             Arg.Is<string>(s => s.Contains("MATCH ()-[r:RELATIONSHIP {id: $id}]-()") && s.Contains("DELETE r")),
             Arg.Any<Dictionary<string, object>>());
     }
@@ -376,7 +376,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             .Returns(Task.FromException<IResultCursor>(new Exception("Delete failed")));
 
         // Act
-        var result = await _adapter.DeleteRelationshipAsync(relationshipId);
+        var result = await _adapter.DeleteRelationshipAsync(relationshipId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert
         result.IsFailure.ShouldBeTrue();

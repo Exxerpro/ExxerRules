@@ -72,7 +72,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result<SemanticContext>.Success(context));
 
             // Act
-            var result = await orchestrationService.ComprehensiveSearchAsync(query, options);
+            var result = await orchestrationService.ComprehensiveSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -106,7 +106,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result<SemanticSearchResponse>.WithFailure(errorMessage));
 
             // Act
-            var result = await orchestrationService.ComprehensiveSearchAsync(query, options);
+            var result = await orchestrationService.ComprehensiveSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -202,7 +202,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result.Success());
 
             // Act
-            var result = await orchestrationService.IngestRepositoryAsync(repositoryPath, config);
+            var result = await orchestrationService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -235,7 +235,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result<IReadOnlyList<SemanticDocument>>.WithFailure(errorMessage));
 
             // Act
-            var result = await orchestrationService.IngestRepositoryAsync(repositoryPath, config);
+            var result = await orchestrationService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -352,7 +352,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result<SemanticSearchResponse>.Success(searchResponse));
 
             // Act
-            var result = await orchestrationService.AnswerQuestionAsync(question, options);
+            var result = await orchestrationService.AnswerQuestionAsync(question, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -388,7 +388,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result<SemanticContext>.WithFailure(errorMessage));
 
             // Act
-            var result = await orchestrationService.AnswerQuestionAsync(question, options);
+            var result = await orchestrationService.AnswerQuestionAsync(question, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -473,7 +473,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result<SemanticRagStats>.Success(stats));
 
             // Act
-            var result = await orchestrationService.GetSystemHealthAsync();
+            var result = await orchestrationService.GetSystemHealthAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -506,7 +506,7 @@ public class SemanticRagOrchestrationServiceTests
                 .Returns(Result<SemanticRagStats>.WithFailure(errorMessage));
 
             // Act
-            var result = await orchestrationService.GetSystemHealthAsync();
+            var result = await orchestrationService.GetSystemHealthAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();

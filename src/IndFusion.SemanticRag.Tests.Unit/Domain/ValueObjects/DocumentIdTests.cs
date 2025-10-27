@@ -120,6 +120,7 @@ public class DocumentIdTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
         result.Value.Value.ShouldBe(value);
     }
 

@@ -45,10 +45,11 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeEntity>>.Success(expectedEntities));
 
             // Act
-            var result = await extractionService.ExtractEntitiesAsync(document, options);
+            var result = await extractionService.ExtractEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedEntities);
             result.Value.Count.ShouldBe(2);
         }
@@ -66,7 +67,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeEntity>>.WithFailure(errorMessage));
 
             // Act
-            var result = await extractionService.ExtractEntitiesAsync(document, options);
+            var result = await extractionService.ExtractEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -115,10 +116,11 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(expectedRelationships));
 
             // Act
-            var result = await extractionService.ExtractRelationshipsAsync(document, entities, options);
+            var result = await extractionService.ExtractRelationshipsAsync(document, entities, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedRelationships);
             result.Value.Count.ShouldBe(1);
         }
@@ -137,7 +139,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure(errorMessage));
 
             // Act
-            var result = await extractionService.ExtractRelationshipsAsync(document, entities, options);
+            var result = await extractionService.ExtractRelationshipsAsync(document, entities, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -197,10 +199,11 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<CodeEntity>>.Success(expectedCodeEntities));
 
             // Act
-            var result = await extractionService.ExtractCodeEntitiesAsync(document, options);
+            var result = await extractionService.ExtractCodeEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedCodeEntities);
             result.Value.Count.ShouldBe(2);
         }
@@ -218,7 +221,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<CodeEntity>>.WithFailure(errorMessage));
 
             // Act
-            var result = await extractionService.ExtractCodeEntitiesAsync(document, options);
+            var result = await extractionService.ExtractCodeEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -271,10 +274,11 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<SemanticConcept>>.Success(expectedConcepts));
 
             // Act
-            var result = await extractionService.ExtractConceptsAsync(document, options);
+            var result = await extractionService.ExtractConceptsAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedConcepts);
             result.Value.Count.ShouldBe(2);
         }
@@ -292,7 +296,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<IReadOnlyList<SemanticConcept>>.WithFailure(errorMessage));
 
             // Act
-            var result = await extractionService.ExtractConceptsAsync(document, options);
+            var result = await extractionService.ExtractConceptsAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -338,7 +342,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<KnowledgeExtractionResult>.Success(expectedResult));
 
             // Act
-            var result = await extractionService.ExtractKnowledgeAsync(document, options);
+            var result = await extractionService.ExtractKnowledgeAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -359,7 +363,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<KnowledgeExtractionResult>.WithFailure(errorMessage));
 
             // Act
-            var result = await extractionService.ExtractKnowledgeAsync(document, options);
+            var result = await extractionService.ExtractKnowledgeAsync(document, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -461,7 +465,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<EntityValidationResult>.Success(expectedResult));
 
             // Act
-            var result = await extractionService.ValidateEntitiesAsync(entities);
+            var result = await extractionService.ValidateEntitiesAsync(entities, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -482,7 +486,7 @@ public class KnowledgeExtractionServiceTests
                 .Returns(Result<EntityValidationResult>.WithFailure(errorMessage));
 
             // Act
-            var result = await extractionService.ValidateEntitiesAsync(entities);
+            var result = await extractionService.ValidateEntitiesAsync(entities, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -688,6 +692,7 @@ public class ConceptExtractionOptionsTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("MinFrequency must be at least 1");
     }
 
@@ -704,6 +709,7 @@ public class ConceptExtractionOptionsTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("MaxConcepts must be greater than 0");
     }
 
@@ -720,6 +726,7 @@ public class ConceptExtractionOptionsTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("MinLength must be at least 1");
     }
 
@@ -734,6 +741,7 @@ public class ConceptExtractionOptionsTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("MaxLength must be greater than or equal to MinLength");
     }
 }

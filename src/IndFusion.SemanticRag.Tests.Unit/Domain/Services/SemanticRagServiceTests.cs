@@ -45,10 +45,11 @@ public class SemanticRagServiceTests
                 .Returns(Result<IReadOnlyList<SemanticSearchResult>>.Success(expectedResults));
 
             // Act
-            var result = await semanticRagService.SearchAsync(query, config);
+            var result = await semanticRagService.SearchAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedResults);
             result.Value.Count.ShouldBe(2);
         }
@@ -66,7 +67,7 @@ public class SemanticRagServiceTests
                 .Returns(Result<IReadOnlyList<SemanticSearchResult>>.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.SearchAsync(query, config);
+            var result = await semanticRagService.SearchAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -102,7 +103,7 @@ public class SemanticRagServiceTests
                 .Returns(Result<SemanticContext>.Success(expectedContext));
 
             // Act
-            var result = await semanticRagService.GetContextAsync(query, config);
+            var result = await semanticRagService.GetContextAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -123,7 +124,7 @@ public class SemanticRagServiceTests
                 .Returns(Result<SemanticContext>.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.GetContextAsync(query, config);
+            var result = await semanticRagService.GetContextAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -162,7 +163,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.Success());
 
             // Act
-            var result = await semanticRagService.IndexDocumentAsync(document);
+            var result = await semanticRagService.IndexDocumentAsync(document, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -180,7 +181,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.IndexDocumentAsync(document);
+            var result = await semanticRagService.IndexDocumentAsync(document, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -212,7 +213,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.Success());
 
             // Act
-            var result = await semanticRagService.AddEntityAsync(entity);
+            var result = await semanticRagService.AddEntityAsync(entity, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -230,7 +231,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.AddEntityAsync(entity);
+            var result = await semanticRagService.AddEntityAsync(entity, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -262,7 +263,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.Success());
 
             // Act
-            var result = await semanticRagService.CreateRelationshipAsync(relationship);
+            var result = await semanticRagService.CreateRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -280,7 +281,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.CreateRelationshipAsync(relationship);
+            var result = await semanticRagService.CreateRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -319,10 +320,11 @@ public class SemanticRagServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeEntity>>.Success(expectedEntities));
 
             // Act
-            var result = await semanticRagService.FindSimilarEntitiesAsync(entity, limit, threshold);
+            var result = await semanticRagService.FindSimilarEntitiesAsync(entity, limit, threshold, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedEntities);
             result.Value.Count.ShouldBe(2);
         }
@@ -339,7 +341,7 @@ public class SemanticRagServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeEntity>>.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.FindSimilarEntitiesAsync(entity, 5, 0.7f);
+            var result = await semanticRagService.FindSimilarEntitiesAsync(entity, 5, 0.7f, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -377,7 +379,7 @@ public class SemanticRagServiceTests
                 .Returns(Result<SemanticRagStats>.Success(expectedStats));
 
             // Act
-            var result = await semanticRagService.GetStatsAsync();
+            var result = await semanticRagService.GetStatsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -398,7 +400,7 @@ public class SemanticRagServiceTests
                 .Returns(Result<SemanticRagStats>.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.GetStatsAsync();
+            var result = await semanticRagService.GetStatsAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -418,7 +420,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.Success());
 
             // Act
-            var result = await semanticRagService.ClearAllAsync();
+            var result = await semanticRagService.ClearAllAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -435,7 +437,7 @@ public class SemanticRagServiceTests
                 .Returns(Result.WithFailure(errorMessage));
 
             // Act
-            var result = await semanticRagService.ClearAllAsync();
+            var result = await semanticRagService.ClearAllAsync(cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();

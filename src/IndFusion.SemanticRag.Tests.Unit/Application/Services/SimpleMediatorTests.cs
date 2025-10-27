@@ -44,7 +44,7 @@ public class SimpleMediatorTests
         _serviceProvider.GetService<ICommandHandler<ProcessDocumentCommand>>().Returns(handler);
 
         // Act
-        await _mediator.Send(command);
+        await _mediator.Send(command, TestContext.Current.CancellationToken);
 
         // Assert
         await handler.Received(1).Handle(command, Arg.Any<CancellationToken>());
@@ -58,7 +58,7 @@ public class SimpleMediatorTests
     public async Task Send_WithNullCommand_ShouldThrowArgumentNullException()
     {
         // Act & Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send<ProcessDocumentCommand>(null!));
+        await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send<ProcessDocumentCommand>(null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -73,6 +73,6 @@ public class SimpleMediatorTests
         _serviceProvider.GetService<ICommandHandler<ProcessDocumentCommand>>().Returns((ICommandHandler<ProcessDocumentCommand>?)null);
 
         // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _mediator.Send(command));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => _mediator.Send(command, TestContext.Current.CancellationToken));
     }
 }

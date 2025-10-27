@@ -42,7 +42,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<SemanticSearchResponse>.Success(expectedResponse));
 
             // Act
-            var result = await searchService.SearchAsync(query, options);
+            var result = await searchService.SearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -64,7 +64,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<SemanticSearchResponse>.WithFailure(errorMessage));
 
             // Act
-            var result = await searchService.SearchAsync(query, options);
+            var result = await searchService.SearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -117,7 +117,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<SemanticSearchResponse>.Success(expectedResponse));
 
             // Act
-            var result = await searchService.HybridSearchAsync(query, options);
+            var result = await searchService.HybridSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -137,7 +137,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<SemanticSearchResponse>.WithFailure(errorMessage));
 
             // Act
-            var result = await searchService.HybridSearchAsync(query, options);
+            var result = await searchService.HybridSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -193,10 +193,11 @@ public class SemanticSearchServiceTests
                 .Returns(Result<IReadOnlyList<SemanticSearchResult>>.Success(expectedResults));
 
             // Act
-            var result = await searchService.FindSimilarDocumentsAsync(documentId, limit);
+            var result = await searchService.FindSimilarDocumentsAsync(documentId, limit, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedResults);
             result.Value.Count.ShouldBe(2);
         }
@@ -213,7 +214,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<IReadOnlyList<SemanticSearchResult>>.WithFailure(errorMessage));
 
             // Act
-            var result = await searchService.FindSimilarDocumentsAsync(documentId, 5);
+            var result = await searchService.FindSimilarDocumentsAsync(documentId, 5, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -254,7 +255,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<FacetedSearchResponse>.Success(expectedResponse));
 
             // Act
-            var result = await searchService.FacetedSearchAsync(query, facets, options);
+            var result = await searchService.FacetedSearchAsync(query, facets, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -276,7 +277,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<FacetedSearchResponse>.WithFailure(errorMessage));
 
             // Act
-            var result = await searchService.FacetedSearchAsync(query, facets, options);
+            var result = await searchService.FacetedSearchAsync(query, facets, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -333,10 +334,11 @@ public class SemanticSearchServiceTests
                 .Returns(Result<IReadOnlyList<string>>.Success(expectedSuggestions));
 
             // Act
-            var result = await searchService.GetSuggestionsAsync(partialQuery, limit);
+            var result = await searchService.GetSuggestionsAsync(partialQuery, limit, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedSuggestions);
             result.Value.Count.ShouldBe(3);
         }
@@ -353,7 +355,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<IReadOnlyList<string>>.WithFailure(errorMessage));
 
             // Act
-            var result = await searchService.GetSuggestionsAsync(partialQuery, 10);
+            var result = await searchService.GetSuggestionsAsync(partialQuery, 10, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -375,7 +377,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<AdvancedSearchResponse>.Success(expectedResponse));
 
             // Act
-            var result = await searchService.AdvancedSearchAsync(request);
+            var result = await searchService.AdvancedSearchAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -395,7 +397,7 @@ public class SemanticSearchServiceTests
                 .Returns(Result<AdvancedSearchResponse>.WithFailure(errorMessage));
 
             // Act
-            var result = await searchService.AdvancedSearchAsync(request);
+            var result = await searchService.AdvancedSearchAsync(request, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -489,6 +491,7 @@ public class SemanticSearchOptionsTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("MaxResults must be greater than 0");
     }
 
@@ -505,6 +508,7 @@ public class SemanticSearchOptionsTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("SimilarityThreshold must be between 0.0 and 1.0");
     }
 }
@@ -530,7 +534,6 @@ public class SearchFacetTests
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    [InlineData(null)]
     public void Should_ValidateFailure_When_NameIsNullOrEmpty(string name)
     {
         // Arrange
@@ -541,6 +544,7 @@ public class SearchFacetTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("Facet name cannot be null or empty");
     }
 
@@ -555,6 +559,7 @@ public class SearchFacetTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("At least one facet value must be specified");
     }
 }

@@ -1,0 +1,129 @@
+[2025-10-26 23:58:50] INFO: === Starting xUnit1051 V3 SURGICAL PRECISION Fix Process ===
+[2025-10-26 23:58:50] INFO: Building solution to identify xUnit1051 errors...
+[2025-10-26 23:59:03] INFO: Found 160 xUnit1051 errors
+[2025-10-26 23:59:03] INFO: Found errors in 7 files
+[2025-10-26 23:59:03] INFO: Processing with V3 SURGICAL PRECISION: SimpleMediatorTests.cs
+[2025-10-26 23:59:03] INFO:   No V3 surgical fixes needed for SimpleMediatorTests.cs
+[2025-10-26 23:59:03] INFO: Processing with V3 SURGICAL PRECISION: SemanticRagOrchestrationServiceTests.cs
+[2025-10-26 23:59:03] INFO:   V3 No Parameter Methods: await orchestrationService.GetSystemHealthAsync() -> await orchestrationService.GetSystemHealthAsync(cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   V3 No Parameter Methods: await orchestrationService.GetSystemHealthAsync() -> await orchestrationService.GetSystemHealthAsync(cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   Applied 2 V3 No Parameter Methods fixes
+[2025-10-26 23:59:03] INFO:   V3 Multi-Parameter Methods: await orchestrationService.ComprehensiveSearchAsync(query, options) -> await orchestrationService.ComprehensiveSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   V3 Multi-Parameter Methods: await orchestrationService.ComprehensiveSearchAsync(query, options) -> await orchestrationService.ComprehensiveSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   V3 Multi-Parameter Methods: await orchestrationService.IngestRepositoryAsync(repositoryPath, config) -> await orchestrationService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   V3 Multi-Parameter Methods: await orchestrationService.IngestRepositoryAsync(repositoryPath, config) -> await orchestrationService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   V3 Multi-Parameter Methods: await orchestrationService.AnswerQuestionAsync(question, options) -> await orchestrationService.AnswerQuestionAsync(question, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   V3 Multi-Parameter Methods: await orchestrationService.AnswerQuestionAsync(question, options) -> await orchestrationService.AnswerQuestionAsync(question, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:03] INFO:   Applied 8 V3 Multi-Parameter Methods fixes
+[2025-10-26 23:59:13] INFO:   Applied 10 V3 surgical fixes to SemanticRagOrchestrationServiceTests.cs
+[2025-10-26 23:59:22] INFO: Build validation passed: 270 -> 254 errors
+[2025-10-26 23:59:22] INFO:   V3 surgical validation passed - precision achieved
+[2025-10-26 23:59:22] INFO: Processing with V3 SURGICAL PRECISION: SemanticSearchServiceTests.cs
+[2025-10-26 23:59:22] INFO:   V3 Single Parameter Methods: await searchService.AdvancedSearchAsync(request) -> await searchService.AdvancedSearchAsync(request, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Single Parameter Methods: await searchService.AdvancedSearchAsync(request) -> await searchService.AdvancedSearchAsync(request, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   Applied 2 V3 Single Parameter Methods fixes
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.SearchAsync(query, options) -> await searchService.SearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.SearchAsync(query, options) -> await searchService.SearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.HybridSearchAsync(query, options) -> await searchService.HybridSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.HybridSearchAsync(query, options) -> await searchService.HybridSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.FindSimilarDocumentsAsync(documentId, limit) -> await searchService.FindSimilarDocumentsAsync(documentId, limit, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.FindSimilarDocumentsAsync(documentId, 5) -> await searchService.FindSimilarDocumentsAsync(documentId, 5, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.FacetedSearchAsync(query, facets, options) -> await searchService.FacetedSearchAsync(query, facets, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.FacetedSearchAsync(query, facets, options) -> await searchService.FacetedSearchAsync(query, facets, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.GetSuggestionsAsync(partialQuery, limit) -> await searchService.GetSuggestionsAsync(partialQuery, limit, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   V3 Multi-Parameter Methods: await searchService.GetSuggestionsAsync(partialQuery, 10) -> await searchService.GetSuggestionsAsync(partialQuery, 10, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:22] INFO:   Applied 12 V3 Multi-Parameter Methods fixes
+[2025-10-26 23:59:30] INFO:   Applied 14 V3 surgical fixes to SemanticSearchServiceTests.cs
+[2025-10-26 23:59:38] INFO: Build validation passed: 254 -> 230 errors
+[2025-10-26 23:59:38] INFO:   V3 surgical validation passed - precision achieved
+[2025-10-26 23:59:38] INFO: Processing with V3 SURGICAL PRECISION: DocumentIngestionServiceTests.cs
+[2025-10-26 23:59:38] INFO:   V3 Single Parameter Methods: await ingestionService.IngestDocumentsAsync(sources) -> await ingestionService.IngestDocumentsAsync(sources, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Single Parameter Methods: await ingestionService.IngestDocumentsAsync(sources) -> await ingestionService.IngestDocumentsAsync(sources, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Single Parameter Methods: await ingestionService.ExtractEntitiesAsync(document) -> await ingestionService.ExtractEntitiesAsync(document, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Single Parameter Methods: await ingestionService.ExtractEntitiesAsync(document) -> await ingestionService.ExtractEntitiesAsync(document, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   Applied 4 V3 Single Parameter Methods fixes
+[2025-10-26 23:59:38] INFO:   V3 Multi-Parameter Methods: await ingestionService.IngestDocumentAsync(source, content, metadata) -> await ingestionService.IngestDocumentAsync(source, content, metadata, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Multi-Parameter Methods: await ingestionService.IngestDocumentAsync(source, content) -> await ingestionService.IngestDocumentAsync(source, content, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Multi-Parameter Methods: await ingestionService.IngestRepositoryAsync(repositoryPath, config) -> await ingestionService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Multi-Parameter Methods: await ingestionService.IngestRepositoryAsync(repositoryPath, config) -> await ingestionService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Multi-Parameter Methods: await ingestionService.ExtractRelationshipsAsync(document, entities) -> await ingestionService.ExtractRelationshipsAsync(document, entities, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   V3 Multi-Parameter Methods: await ingestionService.ExtractRelationshipsAsync(document, entities) -> await ingestionService.ExtractRelationshipsAsync(document, entities, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:38] INFO:   Applied 10 V3 Multi-Parameter Methods fixes
+[2025-10-26 23:59:46] INFO:   Applied 14 V3 surgical fixes to DocumentIngestionServiceTests.cs
+[2025-10-26 23:59:55] INFO: Build validation passed: 230 -> 210 errors
+[2025-10-26 23:59:55] INFO:   V3 surgical validation passed - precision achieved
+[2025-10-26 23:59:55] INFO: Processing with V3 SURGICAL PRECISION: Neo4jKnowledgeGraphAdapterTests.cs
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreNodeAsync(node) -> await _adapter.StoreNodeAsync(node, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreNodeAsync(invalidNode) -> await _adapter.StoreNodeAsync(invalidNode, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreNodeAsync(node) -> await _adapter.StoreNodeAsync(node, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreNodesAsync(nodes) -> await _adapter.StoreNodesAsync(nodes, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreNodesAsync(emptyNodes) -> await _adapter.StoreNodesAsync(emptyNodes, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreNodesAsync(nodes) -> await _adapter.StoreNodesAsync(nodes, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreRelationshipAsync(relationship) -> await _adapter.StoreRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.StoreRelationshipAsync(invalidRelationship) -> await _adapter.StoreRelationshipAsync(invalidRelationship, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.GetNodeByIdAsync(nodeId) -> await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.GetNodeByIdAsync(nodeId) -> await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.GetNodeByIdAsync(nodeId) -> await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.GetRelationshipsForNodeAsync(nodeId) -> await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.GetRelationshipsForNodeAsync(nodeId) -> await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.ExecuteGraphQueryAsync(query) -> await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.ExecuteGraphQueryAsync(query) -> await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.DeleteNodeAsync(nodeId) -> await _adapter.DeleteNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.DeleteNodeAsync(nodeId) -> await _adapter.DeleteNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.DeleteRelationshipAsync(relationshipId) -> await _adapter.DeleteRelationshipAsync(relationshipId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   V3 Single Parameter Methods: await _adapter.DeleteRelationshipAsync(relationshipId) -> await _adapter.DeleteRelationshipAsync(relationshipId, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-26 23:59:55] INFO:   Applied 19 V3 Single Parameter Methods fixes
+[2025-10-26 23:59:55] INFO:   Applied 19 V3 Multi-Parameter Methods fixes
+[2025-10-27 00:00:05] INFO:   Applied 38 V3 surgical fixes to Neo4jKnowledgeGraphAdapterTests.cs
+[2025-10-27 00:00:12] INFO: Build validation passed: 208 -> 170 errors
+[2025-10-27 00:00:12] INFO:   V3 surgical validation passed - precision achieved
+[2025-10-27 00:00:12] INFO: Processing with V3 SURGICAL PRECISION: KnowledgeExtractionServiceTests.cs
+[2025-10-27 00:00:12] INFO:   V3 Single Parameter Methods: await extractionService.ValidateEntitiesAsync(entities) -> await extractionService.ValidateEntitiesAsync(entities, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Single Parameter Methods: await extractionService.ValidateEntitiesAsync(entities) -> await extractionService.ValidateEntitiesAsync(entities, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   Applied 2 V3 Single Parameter Methods fixes
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractEntitiesAsync(document, options) -> await extractionService.ExtractEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractEntitiesAsync(document, options) -> await extractionService.ExtractEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractRelationshipsAsync(document, entities, options) -> await extractionService.ExtractRelationshipsAsync(document, entities, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractRelationshipsAsync(document, entities, options) -> await extractionService.ExtractRelationshipsAsync(document, entities, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractCodeEntitiesAsync(document, options) -> await extractionService.ExtractCodeEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractCodeEntitiesAsync(document, options) -> await extractionService.ExtractCodeEntitiesAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractConceptsAsync(document, options) -> await extractionService.ExtractConceptsAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractConceptsAsync(document, options) -> await extractionService.ExtractConceptsAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractKnowledgeAsync(document, options) -> await extractionService.ExtractKnowledgeAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   V3 Multi-Parameter Methods: await extractionService.ExtractKnowledgeAsync(document, options) -> await extractionService.ExtractKnowledgeAsync(document, options, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:12] INFO:   Applied 12 V3 Multi-Parameter Methods fixes
+[2025-10-27 00:00:20] INFO:   Applied 14 V3 surgical fixes to KnowledgeExtractionServiceTests.cs
+[2025-10-27 00:00:29] INFO: Build validation passed: 170 -> 146 errors
+[2025-10-27 00:00:29] INFO:   V3 surgical validation passed - precision achieved
+[2025-10-27 00:00:29] INFO: Processing with V3 SURGICAL PRECISION: SemanticRagServiceTests.cs
+[2025-10-27 00:00:29] INFO:   V3 Single Parameter Methods: await semanticRagService.IndexDocumentAsync(document) -> await semanticRagService.IndexDocumentAsync(document, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Single Parameter Methods: await semanticRagService.IndexDocumentAsync(document) -> await semanticRagService.IndexDocumentAsync(document, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Single Parameter Methods: await semanticRagService.AddEntityAsync(entity) -> await semanticRagService.AddEntityAsync(entity, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Single Parameter Methods: await semanticRagService.AddEntityAsync(entity) -> await semanticRagService.AddEntityAsync(entity, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Single Parameter Methods: await semanticRagService.CreateRelationshipAsync(relationship) -> await semanticRagService.CreateRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Single Parameter Methods: await semanticRagService.CreateRelationshipAsync(relationship) -> await semanticRagService.CreateRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   Applied 6 V3 Single Parameter Methods fixes
+[2025-10-27 00:00:29] INFO:   V3 No Parameter Methods: await semanticRagService.GetStatsAsync() -> await semanticRagService.GetStatsAsync(cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 No Parameter Methods: await semanticRagService.GetStatsAsync() -> await semanticRagService.GetStatsAsync(cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 No Parameter Methods: await semanticRagService.ClearAllAsync() -> await semanticRagService.ClearAllAsync(cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 No Parameter Methods: await semanticRagService.ClearAllAsync() -> await semanticRagService.ClearAllAsync(cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   Applied 4 V3 No Parameter Methods fixes
+[2025-10-27 00:00:29] INFO:   V3 Multi-Parameter Methods: await semanticRagService.SearchAsync(query, config) -> await semanticRagService.SearchAsync(query, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Multi-Parameter Methods: await semanticRagService.SearchAsync(query, config) -> await semanticRagService.SearchAsync(query, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Multi-Parameter Methods: await semanticRagService.GetContextAsync(query, config) -> await semanticRagService.GetContextAsync(query, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Multi-Parameter Methods: await semanticRagService.GetContextAsync(query, config) -> await semanticRagService.GetContextAsync(query, config, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Multi-Parameter Methods: await semanticRagService.FindSimilarEntitiesAsync(entity, limit, threshold) -> await semanticRagService.FindSimilarEntitiesAsync(entity, limit, threshold, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   V3 Multi-Parameter Methods: await semanticRagService.FindSimilarEntitiesAsync(entity, 5, 0.7f) -> await semanticRagService.FindSimilarEntitiesAsync(entity, 5, 0.7f, cancellationToken: TestContext.Current.CancellationToken)
+[2025-10-27 00:00:29] INFO:   Applied 16 V3 Multi-Parameter Methods fixes
+[2025-10-27 00:00:39] INFO:   Applied 26 V3 surgical fixes to SemanticRagServiceTests.cs
+[2025-10-27 00:00:49] INFO: Build validation passed: 146 -> 114 errors
+[2025-10-27 00:00:49] INFO:   V3 surgical validation passed - precision achieved
+[2025-10-27 00:00:49] INFO: === V3 SURGICAL PRECISION Summary ===
+[2025-10-27 00:00:49] INFO: Files surgically processed: 7
+[2025-10-27 00:00:49] INFO: Files successfully fixed: 7
+[2025-10-27 00:00:49] INFO: Total V3 surgical fixes applied: 116
+[2025-10-27 00:00:49] INFO: Original errors found: 160
+[2025-10-27 00:00:49] INFO: Building solution to identify xUnit1051 errors...
+[2025-10-27 00:01:04] INFO: Found 4 xUnit1051 errors
+[2025-10-27 00:01:04] INFO: Remaining xUnit1051 errors: 4
+[2025-10-27 00:01:04] WARNING: No surgical error reduction achieved

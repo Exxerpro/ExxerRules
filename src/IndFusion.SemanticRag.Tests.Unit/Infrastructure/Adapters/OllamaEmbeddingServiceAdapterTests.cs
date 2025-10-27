@@ -202,6 +202,7 @@ public class OllamaEmbeddingServiceAdapterTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("exceeds maximum");
     }
 

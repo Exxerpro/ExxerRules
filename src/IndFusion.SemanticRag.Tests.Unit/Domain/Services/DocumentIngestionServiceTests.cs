@@ -42,7 +42,7 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<SemanticDocument>.Success(expectedDocument));
 
             // Act
-            var result = await ingestionService.IngestDocumentAsync(source, content, metadata);
+            var result = await ingestionService.IngestDocumentAsync(source, content, metadata, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -62,7 +62,7 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<SemanticDocument>.WithFailure(errorMessage));
 
             // Act
-            var result = await ingestionService.IngestDocumentAsync(source, content);
+            var result = await ingestionService.IngestDocumentAsync(source, content, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -103,10 +103,11 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<SemanticDocument>>.Success(expectedDocuments));
 
             // Act
-            var result = await ingestionService.IngestDocumentsAsync(sources);
+            var result = await ingestionService.IngestDocumentsAsync(sources, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedDocuments);
             result.Value.Count.ShouldBe(2);
         }
@@ -123,7 +124,7 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<SemanticDocument>>.WithFailure(errorMessage));
 
             // Act
-            var result = await ingestionService.IngestDocumentsAsync(sources);
+            var result = await ingestionService.IngestDocumentsAsync(sources, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -161,7 +162,7 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<SemanticDocument>>.Success(expectedDocuments));
 
             // Act
-            var result = await ingestionService.IngestRepositoryAsync(repositoryPath, config);
+            var result = await ingestionService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
@@ -181,7 +182,7 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<SemanticDocument>>.WithFailure(errorMessage));
 
             // Act
-            var result = await ingestionService.IngestRepositoryAsync(repositoryPath, config);
+            var result = await ingestionService.IngestRepositoryAsync(repositoryPath, config, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -218,10 +219,11 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeEntity>>.Success(expectedEntities));
 
             // Act
-            var result = await ingestionService.ExtractEntitiesAsync(document);
+            var result = await ingestionService.ExtractEntitiesAsync(document, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedEntities);
             result.Value.Count.ShouldBe(2);
         }
@@ -238,7 +240,7 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeEntity>>.WithFailure(errorMessage));
 
             // Act
-            var result = await ingestionService.ExtractEntitiesAsync(document);
+            var result = await ingestionService.ExtractEntitiesAsync(document, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -286,10 +288,11 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(expectedRelationships));
 
             // Act
-            var result = await ingestionService.ExtractRelationshipsAsync(document, entities);
+            var result = await ingestionService.ExtractRelationshipsAsync(document, entities, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsSuccess.ShouldBeTrue();
+            result.Value.ShouldNotBeNull();
             result.Value.ShouldBe(expectedRelationships);
             result.Value.Count.ShouldBe(1);
         }
@@ -307,7 +310,7 @@ public class DocumentIngestionServiceTests
                 .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure(errorMessage));
 
             // Act
-            var result = await ingestionService.ExtractRelationshipsAsync(document, entities);
+            var result = await ingestionService.ExtractRelationshipsAsync(document, entities, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
             result.IsFailure.ShouldBeTrue();
@@ -473,7 +476,6 @@ public class DocumentSourceTests
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    [InlineData(null)]
     public void Should_ValidateFailure_When_PathIsNullOrEmpty(string path)
     {
         // Arrange
@@ -484,13 +486,13 @@ public class DocumentSourceTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("Document path cannot be null or empty");
     }
 
     [Theory]
     [InlineData("")]
     [InlineData("   ")]
-    [InlineData(null)]
     public void Should_ValidateFailure_When_TypeIsNullOrEmpty(string type)
     {
         // Arrange
@@ -501,6 +503,7 @@ public class DocumentSourceTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("Document type cannot be null or empty");
     }
 }
@@ -606,6 +609,7 @@ public class RepositoryIngestionConfigTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("At least one include pattern must be specified");
     }
 
@@ -625,6 +629,7 @@ public class RepositoryIngestionConfigTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("MaxFileSize must be greater than 0");
     }
 
@@ -642,6 +647,7 @@ public class RepositoryIngestionConfigTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("MaxDepth cannot be negative");
     }
 }

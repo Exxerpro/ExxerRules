@@ -91,9 +91,9 @@ Transform the MCP server into a **Semantic RAG Fabric** that:
 
 ### Tracking & Reporting
 
-- **Backlog**: Azure Boards portfolio hierarchy (Programme > Epic > Feature > Story) with tags `SemanticRAG`, `EXXER`.
+- **Backlog**: Markdown-based project management in `docs/project-management/` with epic and story tracking files.
 - **Standups**: Twice-weekly cross-team sync; blockers tracked in shared Teams channel `#semantic-rag`.
-- **Burndown & Velocity**: Sprint burndown auto-published; guard KPI trending vs. baseline.
+- **Burndown & Velocity**: Sprint progress tracked in markdown files with automated validation scripts.
 - **Compliance Dashboards**: CI pipeline posts EXXER pass/fail metrics and RAG latency to `GovernanceTelemetry` stream.
 - **Retrospectives**: End-of-sprint retro must review guardrail breaches, due-diligence outcomes, and test coverage deltas.
 
@@ -115,9 +115,9 @@ Transform the MCP server into a **Semantic RAG Fabric** that:
 
 ### Agent Work Package Template
 
-Every delegated unit of work must include (use `docs/templates/AgentWorkPackage.md`):
+Every delegated unit of work must include (use `docs/project-management/templates/AgentWorkPackage.md`):
 
-1. **Objective** – single sentence referencing Azure Boards work item.
+1. **Objective** – single sentence referencing markdown work item.
 2. **Code Surface** – explicit paths/projects (e.g., `src/ExxerRules/...`).
 3. **Guardrails** – required analyzers, forbidden APIs, dependency rules.
 4. **Inputs** – links to knowledge base entries, ADRs, existing tests.
@@ -125,22 +125,22 @@ Every delegated unit of work must include (use `docs/templates/AgentWorkPackage.
 6. **Verification Steps** – commands/tests the agent must run with expected outcomes.
 7. **Telemetry Hooks** – metrics or logs to emit (e.g., `SemanticRag.Metrics.WorkItemId`).
 
-Template stored at `docs/templates/AgentWorkPackage.md` and referenced in Azure Boards via copy link.
+Template stored at `docs/project-management/templates/AgentWorkPackage.md` and referenced in markdown tracking files.
 
 ### Agent Execution Loop
 
 1. Supervisor assigns work package and logs assignment in `docs/operations/AgentAssignmentRegister.csv`.
 2. Agent refreshes context packet, acknowledges guardrails, and records checksum in `docs/operations/AgentSyncLog.csv`.
 3. Agent executes work package, capturing each command in `agent-trace/<workItemId>.log`.
-4. Agent runs verification steps verbatim; attaches outputs to work item.
+4. Agent runs verification steps verbatim; updates markdown tracking files with evidence.
 5. Supervisor reviews logs, reruns spot-check commands, and initiates human code review.
-6. QA partner triggers regression suite or targeted IITDD scenarios before merge.
+6. QA partner triggers regression suite or targeted test scenarios before merge.
 
 ### Validation & Review Gates
 
 - **Pre-Commit**: `dotnet format --verify-no-changes`, analyzer suite, performance smoke (`Measure-RagLatency.ps1` sample run).
 - **Pre-PR**: Supervisor validates telemetry fields, ensures documentation updates committed, confirms no guardrail violations via `src/scripts/GuardrailCheck.ps1`.
-- **PR Review**: Tech Lead confirms alignment with epics/stories, verifies traceability links, checks agent log attachments.
+- **PR Review**: Tech Lead confirms alignment with epics/stories, verifies traceability links, checks markdown tracking file updates.
 - **Post-Merge**: QA partner ensures pipeline green, archives agent artifacts, updates knowledge base with learnings.
 
 ### Context Refresh Mechanisms
@@ -156,6 +156,7 @@ Template stored at `docs/templates/AgentWorkPackage.md` and referenced in Azure 
   - Agent output failing verification twice in a sprint.
   - Telemetry anomaly >10% deviation from latency/compliance targets.
   - Knowledge graph schema change without corresponding contract tests.
+  - Due diligence gate validation failures.
 - **Escalation Path**: Supervisor > Tech Lead > Programme Steering (weekly meeting).
 
 ### Quality Engineering Strategy
@@ -197,13 +198,13 @@ Template stored at `docs/templates/AgentWorkPackage.md` and referenced in Azure 
 
 - Verify problem statement, constraints, and KPIs signed off.
 - Confirm legal/compliance approval for data ingestion scope.
-- Run `src/scripts/DueDiligence-PreStart.ps1` to validate repo access, secrets rotation, and telemetry opt-ins (outputs stored in `docs/operations/due-diligence/`).
+- Run `src/scripts/Validate-PreDevelopmentGate.ps1` to validate project management setup and tracking artifacts (outputs stored in `docs/operations/due-diligence/`).
 - Assess resource allocation (SME coverage for analyzers, MCP, DevEx).
 - Capture baseline metrics (current EXXER compliance, RAG latency, agent adoption).
 
 #### Closeout Gate (Post-Delivery)
 
-- Execute `src/scripts/DueDiligence-PostFinish.ps1` to capture final metrics, ensure data retention policies met, and archive telemetry (`docs/operations/due-diligence/`).
+- Execute `src/scripts/Validate-PostDeliveryGate.ps1` to validate completion of all epics, stories, and tracking artifacts (outputs stored in `docs/operations/due-diligence/`).
 - Validate Definition of Done artifacts: test reports, documentation updates, ADR decisions.
 - Confirm operational ownership: runbooks handed to DevEx, alerting configured, training completed.
 - Conduct final risk review, document residual debt, and schedule follow-up audits.
@@ -274,10 +275,60 @@ Template stored at `docs/templates/AgentWorkPackage.md` and referenced in Azure 
 | **cross_repo_consistency** | Report drift or pattern adoption variance across repos | Pattern ID, time window | Multi-repo graph traversal + aggregated stats via RAG |
 | **dependency_api_lookup** | Return API surfaces, usage examples, and syntactic changes for referenced packages | Package id, version, target framework | Embed package docs/release notes, build graph linking repos → package versions → API symbols; RAG returns version-correct syntax and breaking-change notes |
 | **script_bridge / script_catalog** | Discover and execute vetted Python/PowerShell automation with personalised parameters | Script identifier, arguments, safety policy | Script metadata + usage guides embedded; MCP wrapper orchestrates dry-run/validation and returns contextual guidance |
+| **document_processing** | Process documents using Tesseract OCR and Ollama LLM services | Document input, processing options | OCR, entity extraction, relationship mapping through hexagonal architecture adapters |
+| **vector_search** | Search vector embeddings using Qdrant with semantic similarity | Query text, search options | Vector similarity search with metadata filtering and confidence scoring |
+| **knowledge_graph_query** | Query Neo4j knowledge graph for relationships and patterns | Graph query, node/edge filters | Graph traversal with relationship analysis and pattern detection |
 
 ---
 
-## Implementation Plan (6 Sprints)
+## Implementation Status
+
+### ✅ **COMPLETED: Foundation Architecture (Sprint 0)**
+**Status**: Architecture foundation implemented with critical issues identified  
+**Completion Date**: January 2025
+
+| Component | Status | Implementation Quality | Key Achievements |
+| --- | --- | --- | --- |
+| **Domain Layer** | ✅ Complete | High | Pure domain with custom `Result<T>`, no external dependencies |
+| **Application Layer** | ✅ Complete | High | CQRS with MediatR, FluentValidation, structured logging |
+| **Infrastructure Layer** | ⚠️ Partial | Medium | Repository pattern with hexagonal architecture, placeholder implementations |
+| **Web API Layer** | ⚠️ Partial | Medium | ASP.NET Core with clean controller design, build issues |
+| **Unit Tests** | ❌ Blocked | Low | Tests exist but cannot execute due to build failures |
+| **Integration Tests** | ❌ Blocked | Low | Tests skipped due to infrastructure issues |
+
+**Architecture Highlights**:
+- ✅ Hexagonal Architecture (Ports & Adapters) - Well implemented
+- ✅ Functional Programming with `Result<T>` pattern - Excellent implementation
+- ✅ Modern C# patterns (Records, Expression-bodied members) - Properly applied
+- ✅ Clean Architecture & SOLID principles - Correctly structured
+- ❌ TDD/ITDD methodology - Blocked by build issues
+- ✅ Comprehensive error handling without exceptions - Well implemented
+
+### ❌ **CRITICAL ISSUES IDENTIFIED**
+
+#### Build System Failures
+- **Central Package Management**: Missing package versions causing restore failures
+- **Dependency Resolution**: Multiple projects cannot build due to package conflicts
+- **Test Execution**: Cannot run tests due to build infrastructure problems
+
+#### RAG Implementation Status
+- **All RAG Services**: Contain placeholder implementations with `TODO` comments
+- **Vector Search**: Qdrant integration not implemented (placeholder only)
+- **Knowledge Graph**: Neo4j integration not implemented (placeholder only)
+- **LLM Integration**: Ollama integration not implemented (placeholder only)
+- **Core Functionality**: No actual RAG capabilities functional
+
+#### Test Infrastructure Issues
+- **Test Coverage Claims**: Cannot be verified due to build failures
+- **Skipped Tests**: Multiple tests marked as `[Fact(Skip = "Hanging")]`
+- **Integration Tests**: Cannot execute due to infrastructure problems
+
+### 📋 **CURRENT PHASE: Critical Infrastructure Fixes Required**
+**Target**: Fix build system, implement actual RAG functionality, enable test execution
+
+---
+
+## Implementation Plan (Updated - Blocked Sprint Timeline)
 
 | Sprint | Focus | Key Deliverables | Exit Criteria |
 | --- | --- | --- | --- |
@@ -289,6 +340,12 @@ Template stored at `docs/templates/AgentWorkPackage.md` and referenced in Azure 
 | 6 | **Hardening & Autonomy** | Telemetry dashboards, agent cookbook, TDD coverage, resilience testing | Telemetry exported, docs published, agent pilot adoption ≥70 %, tests green |
 
   ---
+
+## Hexagonal Architecture & IITDD Integration Strategy
+
+**See detailed architecture document**: [`docs/architecture/Hexagonal-Architecture-IITDD-Strategy.md`](docs/architecture/Hexagonal-Architecture-IITDD-Strategy.md)
+
+This section provides a comprehensive overview of the hexagonal architecture approach with IITDD (Integration Interface Test-Driven Development) that will be used for the IndFusion Semantic RAG platform.
 
 ## Borrowed Interface & IITDD Integration Strategy
 
@@ -335,11 +392,14 @@ To align with the ExxerAI initiative without blocking their delivery milestones,
 ## Data & Knowledge Management
 
 - **Embeddings**: Support on-prem models (e.g., text-embedding-3-large cached offline) with periodic refresh (full weekly, incremental nightly).
-- **Vector Store**: Partition by repo; include metadata (path, project, analyzer ID, fixer ID, commit, rule severity, package id/version, target framework).
-- **Graph Storage**: Use lightweight property graph (LiteDB/Neo4j) or in-memory persisted graph with incremental updates keyed by project hash; add nodes/edges for NuGet packages, versions, API symbols, and consuming repos/files.
+- **Vector Store**: Use Qdrant for vector storage with partitioning by repo; include metadata (path, project, analyzer ID, fixer ID, commit, rule severity, package id/version, target framework).
+- **Graph Storage**: Use Neo4j for knowledge graph with incremental updates keyed by project hash; add nodes/edges for NuGet packages, versions, API symbols, and consuming repos/files.
+- **Document Processing**: Use Tesseract OCR (FOSS) for document text extraction and analysis.
+- **LLM Integration**: Use Ollama with open-weight models (e.g., Llama 2, Mistral, CodeLlama) for entity extraction, relationship mapping, and semantic analysis.
 - **Automation Catalog**: Index approved Python/PowerShell scripts with purpose, parameters, required tools, safety tier, and sample invocations; embed guides so agents can query usage and execution instructions.
 - **Provenance**: Every retrieval includes source file, line, commit, analyzer/fixer references for traceability.
 - **Curation Workflow**: Knowledge base updates require human approval; incorporate reviewer metadata for trust scores.
+- **Architecture**: All external services accessed through hexagonal architecture ports and adapters with IITDD testing.
 
 ---
 
@@ -389,49 +449,164 @@ To align with the ExxerAI initiative without blocking their delivery milestones,
 
 ## Next Actions
 
-1. **Approve initiative charter** and secure cross-team alignment (Analyzer, Fixer, MCP, DevEx).
-2. **Stand up RAG fabric foundations** (vector store, ingestion, knowledge base scaffolding).
-3. **Catalog and tier existing Python/PowerShell automation**, defining safety policies, parameter templates, and MCP wrapping priorities (`script_catalog`, `script_bridge`).
-4. **Document ExxerAI interface + IITDD snapshots** (`docs/reference/ExxerAI-Interface-Snapshots.md`, `docs/reference/IITDD-Harness-Plan.md`) and review with ExxerAI maintainers.
-5. **Deliver Sprint 1**: `knowledge_rag` MVP, sample embeddings, baseline latency metrics.
-6. **Publish roadmap + metrics dashboard scaffolding** to stakeholders; plan pilot repositories.
+1. **CRITICAL: Fix Build System** - Resolve Central Package Management issues and missing package versions
+2. **CRITICAL: Implement Actual RAG Functionality** - Replace all placeholder implementations with real Qdrant, Neo4j, and Ollama integration
+3. **CRITICAL: Fix Test Infrastructure** - Resolve test hanging issues and enable test execution
+4. **Update Documentation** - Correct misleading claims about implementation status and test coverage
+5. **Reassess Sprint 2 Readiness** - Project cannot proceed without completing critical infrastructure fixes
+6. **Provide Realistic Timeline** - Estimate 5-8 weeks additional work before Sprint 2 can begin
 
-This initiative delivers the connective tissue between linting, semantic pattern enforcement, and modern RAG so every IndFusion repository benefits from consistent, intelligent, and safe code standards enforcement. Autonomous agents gain the context and tooling they need to reason about code like seasoned maintainers, while human engineers retain confidence through verifiable, test-backed pipelines.
+**Note**: The current implementation status does not support the documented claims. Significant additional work is required before the project can proceed to Sprint 2.
 
 ---
 
 ## Execution Backlog & Ordered Histories
 
-The programme progresses through the following ordered histories. Each history is self-contained, references the required code surface, and is written so that an agent or human teammate can execute it with minimal supervision. Move to the next history only when the exit criteria are satisfied.
+The programme progresses through the following ordered histories. Each history follows the **Agentic Execution Framework** to prevent developers from going off-rails by ensuring:
+
+1. **Code-First Validation**: Every step verifies against existing code
+2. **Pattern Recognition**: Identifies existing patterns before creating new ones
+3. **Incremental Verification**: Stops and validates at each checkpoint
+4. **Real-World Constraints**: Grounds all decisions in actual codebase capabilities
+
+**See detailed framework**: [`docs/architecture/Agentic-Execution-Framework.md`](docs/architecture/Agentic-Execution-Framework.md)
+
+Each history is self-contained, references the required code surface, and is written so that an agent or human teammate can execute it with minimal supervision. Move to the next history only when the exit criteria are satisfied.
 
 ### History 1: Charter, Access, and Operating Foundations
 - **Context**: Establish governance, access, and due-diligence instrumentation so delivery can proceed safely.
 - **Key Tasks**
   - Finalise charter sign-offs and capture stakeholder approvals in `docs/operations/governance/CharterApprovals.md`.
   - Populate `docs/operations/AgentAssignmentRegister.csv` and `docs/operations/AgentSyncLog.csv` with real programme owners; verify `src/scripts/Update-Agent-Brief.ps1 -CheckOnly`.
-  - Run `src/scripts/DueDiligence-PreStart.ps1 -WorkItemId <id>` to record baseline environment state in `docs/operations/due-diligence/`.
+  - Run `src/scripts/Validate-PreDevelopmentGate.ps1` to validate project management setup and record baseline environment state in `docs/operations/due-diligence/`.
   - Confirm build health: `dotnet restore IndFusion.sln`, `dotnet build IndFusion.sln -c Release`, `dotnet test src/test/IndFusion.Analyzer.Tests/IndFusion.Analyzer.Tests.csproj -c Release`.
 - **Exit Criteria**
-  - Due-diligence JSON and findings log committed.
+  - Pre-development gate validation passed with all tracking artifacts created.
   - Agent brief digest current; guardrail scripts pass with clean working tree.
   - Communication cadence confirmed in Teams `#semantic-rag`.
 
-### History 2: Semantic RAG Fabric Foundations (Epic E1)
-- **Context**: Deliver ingestion, embeddings, and knowledge graph scaffolding supporting RAG queries.
-- **Plan of Action**
-  1. Layout & configuration: repo manifest (`docs/operations/ingestion/RepoManifest.json`), Qdrant/Neo4j/SQL Server 2025/Ollama settings in `appsettings.SemanticRag.json`.
-  2. Domain ports: ingestion/vector/graph/ledger interfaces and entities under `src/code/IndFusion.Mcp.Core/Knowledge`.
-  3. Adapters: Qdrant, Neo4j, SQL Server, Ollama clients in `src/code/IndFusion.Mcp.Infrastructure/`.
-  4. Application services: Roslyn ingestion orchestrators coordinating embeddings, graph updates, ledger writes.
-  5. API/DI wiring: expose `knowledge_rag`, register adapters in server composition root.
-  6. Testing: contract/integration suites (`GraphSchemaContractTests`, `VectorStoreSmokeTests`, `IngestionLedgerTests`).
-  7. Automation: `Sync-KnowledgeFabric.ps1` runbook.
+### ⚠️ History 2: Foundation Architecture Implementation (PARTIAL)
+- **Context**: Implement clean architecture foundation with hexagonal patterns, CQRS, and comprehensive testing
+- **Status**: ⚠️ **PARTIAL** - Architecture foundation implemented but critical issues identified
+- **Achievements**: 
+  - ✅ Domain layer with pure C# and custom `Result<T>` type
+  - ✅ Application layer with CQRS, MediatR, and FluentValidation
+  - ⚠️ Infrastructure layer with repository pattern and hexagonal architecture (placeholder implementations)
+  - ⚠️ Web API layer with ASP.NET Core and clean controllers (build issues)
+  - ❌ Unit tests exist but cannot execute due to build failures
+  - ❌ Integration tests skipped due to infrastructure problems
+  - ❌ Build system has critical package management issues
+
+### History 3: Critical Infrastructure Fixes (Epic E1 - BLOCKED)
+- **Context**: Fix build system failures and implement actual RAG functionality
+- **Current State**: Foundation architecture implemented but non-functional due to critical issues
+- **Target State**: Working build system with actual RAG capabilities
+
+#### **CRITICAL BLOCKERS IDENTIFIED**
+
+**Build System Issues**:
+- Central Package Management configuration errors
+- Missing package versions in `Directory.Packages.props`
+- Multiple projects cannot restore dependencies
+- Solution fails to build completely
+
+**RAG Implementation Status**:
+- All services contain placeholder implementations with `TODO` comments
+- No actual Qdrant, Neo4j, or Ollama integration
+- Core RAG functionality is not implemented
+- Services return empty results or mock data
+
+**Test Infrastructure Problems**:
+- Tests cannot execute due to build failures
+- Multiple tests skipped due to "hanging" issues
+- No actual test coverage measurement possible
+- Integration tests blocked by infrastructure problems
+
+#### **REQUIRED ACTIONS BEFORE PROCEEDING**
+
+1. **Fix Build System** (Estimated: 1-2 weeks)
+   - Resolve Central Package Management issues
+   - Add missing package versions to `Directory.Packages.props`
+   - Ensure all projects can build successfully
+   - Fix dependency resolution conflicts
+
+2. **Implement Actual RAG Functionality** (Estimated: 3-4 weeks)
+   - Replace all placeholder implementations with real functionality
+   - Implement actual Qdrant vector search integration
+   - Implement actual Neo4j knowledge graph operations
+   - Implement actual Ollama LLM integration
+   - Remove all `TODO` comments and placeholder code
+
+3. **Fix Test Infrastructure** (Estimated: 1-2 weeks)
+   - Resolve test hanging issues
+   - Enable skipped tests
+   - Implement proper test isolation
+   - Measure actual test coverage
+
+**Total Estimated Additional Work**: 5-8 weeks before Sprint 2 can begin
+
+#### **EXPLORE Phase - Code Discovery**
+```bash
+# Mandatory exploration commands
+find src/ -name "*.cs" -exec grep -l "Service" {} \; | head -20
+grep -r "interface.*Service" src/ | head -20
+grep -r "class.*Adapter" src/ | head -20
+codebase_search "How are services registered in the current codebase?"
+codebase_search "What are the existing configuration patterns?"
+```
+
+**Deliverables**:
+- [ ] Code exploration report in `docs/execution/History2-Exploration.md`
+- [ ] Existing service pattern analysis
+- [ ] Configuration pattern analysis
+- [ ] Adapter pattern analysis
+
+#### **ANALYZE Phase - Pattern Analysis**
+```bash
+# Analyze existing patterns
+grep -r "AddScoped.*Service" src/
+grep -r "IOptions" src/ | head -10
+grep -r "Configuration" src/ | head -10
+codebase_search "What are the existing service registration patterns?"
+```
+
+**Deliverables**:
+- [ ] Pattern analysis report
+- [ ] Convention documentation
+- [ ] Implementation strategy
+
+#### **IMPLEMENT Phase - Pattern-Following Implementation**
+**Checkpoints**:
+- [ ] **Checkpoint 1**: Verify service registration follows existing patterns
+- [ ] **Checkpoint 2**: Verify configuration follows existing patterns
+- [ ] **Checkpoint 3**: Verify adapters follow existing patterns
+- [ ] **Checkpoint 4**: Verify tests follow existing patterns
+
+**Plan of Action**
+1. Layout & configuration: repo manifest (`docs/operations/ingestion/RepoManifest.json`), Qdrant/Neo4j/Ollama settings in `appsettings.SemanticRag.json`.
+2. Domain ports: ingestion/vector/graph interfaces and entities under `src/code/IndFusion.Mcp.Core/Knowledge`.
+3. Adapters: Qdrant, Neo4j, Ollama clients in `src/code/IndFusion.Mcp.Infrastructure/`.
+4. Application services: Roslyn ingestion orchestrators coordinating embeddings, graph updates.
+5. API/DI wiring: expose `knowledge_rag`, register adapters in server composition root.
+6. Testing: contract/integration suites (`GraphSchemaContractTests`, `VectorStoreSmokeTests`, `IngestionLedgerTests`).
+7. Automation: `Sync-KnowledgeFabric.ps1` runbook.
+
+#### **VERIFY Phase - Real-World Validation**
+```bash
+# Mandatory verification commands
+dotnet build IndFusion.sln -c Release
+dotnet test src/test/IndFusion.Analyzer.Tests/ -c Release
+./src/scripts/Validate-Implementation.ps1 -History 2
+```
+
 - **Exit Criteria**
-  - `knowledge_rag` endpoint returns indexed snippets with provenance metadata sourced via Qdrant + Neo4j, and ingestion ledger entries persisted to SQL Server 2025.
+  - `knowledge_rag` endpoint returns indexed snippets with provenance metadata sourced via Qdrant + Neo4j.
   - Graph schema contract tests pass in CI against local Neo4j instance; vector integration smoke tests validate Qdrant connectivity.
   - Operational dashboards note ingestion latency and success metrics.
+  - All verification checkpoints passed.
+  - Implementation follows existing patterns.
 
-### History 3: MCP Tooling Surface & Analyzer Integration (Epic E2)
+### History 4: MCP Tooling Surface & Analyzer Integration (Epic E2)
 - **Context**: Expose analyzers/fixers through MCP tools with deterministic validation workflows.
 - **Plan of Action**
   1. Extend MCP tools (`src/code/IndFusion.Mcp.Tools`) with `lint_run`, `pattern_suggest`, `fixer001_apply_*`.
@@ -444,7 +619,7 @@ The programme progresses through the following ordered histories. Each history i
   - Integration tests validate both successful and failure scenarios.
   - Documentation refreshed in `docs/reference/mcp/` with request/response samples.
 
-### History 4: Agent Governance, Telemetry, and Guardrails (Epic E3)
+### History 5: Agent Governance, Telemetry, and Guardrails (Epic E3)
 - **Context**: Stand up supervision, guardrail enforcement, and telemetry required for agent-led changes.
 - **Plan of Action**
   1. Enhance guardrail tooling (`GuardrailCheck.ps1`, CI hooks, JSON output).
@@ -457,7 +632,7 @@ The programme progresses through the following ordered histories. Each history i
   - Telemetry dashboards show live data for at least one sprint.
   - Agent supervisors acknowledge daily digest in `docs/operations/AgentSyncLog.csv`.
 
-### History 5: Cross-Repository Insights & Drift Remediation (Epic E4)
+### History 6: Cross-Repository Insights & Drift Remediation (Epic E4)
 - **Context**: Detect standards drift across repos and generate actionable remediation backlogs.
 - **Plan of Action**
   1. Build drift detection services (`src/code/IndFusion.Mcp.Analytics/Drift/`) feeding Neo4j/Qdrant.
@@ -470,15 +645,172 @@ The programme progresses through the following ordered histories. Each history i
   - Analytics dashboards highlight drift trends; remediation SLA tracking live.
   - Documentation references current drift algorithm and remediation playbooks.
 
-### History 6: Pilot Enablement & Programme Close-Out
+### History 7: Pilot Enablement & Programme Close-Out
 - **Context**: Validate end-to-end flow with pilot repositories, capture learnings, and transition to steady state.
 - **Plan of Action**
   1. Enable pilot repos (IndFusion, IndTrace) with branch policies, guardrail checks, telemetry.
-  2. Execute pilot due diligence, archive artefacts in `docs/operations/due-diligence/`.
+  2. Execute `src/scripts/Validate-PostDeliveryGate.ps1` to validate completion, archive artefacts in `docs/operations/due-diligence/`.
   3. Run retrospectives, document outcomes (`docs/operations/retros/PLAN-0001.md`), and share lessons.
   4. Transition ownership to DevEx/analyzer guild with runbooks and support docs.
   5. Refresh roadmap with post-pilot improvements.
 - **Exit Criteria**
-  - Pilot repos meet Definition of Done, telemetry confirms adoption goals.
+  - Post-delivery gate validation passed with all epics and stories marked complete.
   - Operational ownership transferred to DevEx/Analyzer guild with runbooks.
   - Close-out findings communicated to stakeholders; backlog groomed for steady-state improvements.
+
+---
+
+## Open Questions & Future Considerations
+
+This section captures open questions and future considerations that don't need immediate decisions but should be tracked for future evaluation and decision-making.
+
+### Repository Indexing Strategy
+
+**Question**: How should we handle repository indexing to avoid server overload?
+
+**Context**: Need to determine the optimal approach for indexing repositories in the IndFusion Semantic RAG system without overwhelming the server resources.
+
+**Options Under Consideration**:
+1. **On-Demand Indexing**: Index repositories only when requested by the LLM
+2. **Selective Pre-Indexing**: Index only critical/active repositories  
+3. **Tiered Indexing**: Always indexed (Tier 1) vs On-demand (Tier 2) vs Never indexed (Tier 3)
+
+**Repository Selection Criteria** (To Be Determined):
+- LLM request-based indexing
+- Project importance ranking
+- Recent activity levels
+- Manual curation approach
+- Performance impact considerations
+
+**Related Considerations**:
+- Memory management for repository switching
+- Context persistence strategies
+- Cleanup mechanisms for inactive repositories
+- Performance monitoring and optimization
+
+### Serena MCP Server Integration
+
+**Question**: How should we integrate Serena MCP Server capabilities?
+
+**Context**: Serena MCP Server by oraios offers valuable code analysis tools (semantic search, regex search/replace, memory management, project activation) but has shown performance degradation.
+
+**Current Status**:
+- ✅ **Initial Performance**: Worked like a charm initially
+- ⚠️ **Performance Issues**: Noticed degradation over time
+- ❌ **Stats/Logging**: Stats functionality never worked well
+- 🔍 **Investigation Needed**: Need to analyze root cause of degradation
+
+**Integration Options**:
+1. **Adapt Serena's tools** into our MCP server
+2. **Use Serena as separate service** with IndFusion integration
+3. **Integrate Serena capabilities** into ExxerAI foundation
+4. **Selective tool adoption** - pick only working/stable tools
+
+**Investigation Required**:
+- Root cause analysis of performance degradation
+- Evaluation of stats/logging system issues
+- Assessment of current stability and reliability
+- Performance benchmarking against alternatives
+
+**Serena Tools of Interest**:
+- `FindSymbolTool` - Symbol-level code understanding
+- `FindReferencingSymbolsTool` - Reference tracking
+- `ReplaceSymbolBodyTool` - Code manipulation
+- Memory management (read/write memories)
+- Semantic search capabilities
+- Regex search and replace
+- Project activation and context management
+
+### Package Indexing Strategy
+
+**Question**: How should we handle package indexing to provide current, relevant information to LLMs?
+
+**Context**: LLMs suffer from outdated package information. Need to determine what packages and patterns to index to provide the most value.
+
+**Indexing Priorities**:
+1. **Breaking Changes**: API changes, method signatures, parameter changes, deprecations
+2. **New Patterns**: Emerging design patterns, framework updates, best practices
+3. **Atypical Patterns**: Creative solutions, performance optimizations, security patterns
+4. **Contextual Indexing**: Based on project type, framework, existing patterns
+
+**Key Considerations**:
+- What constitutes "atypical" vs "brand new" patterns
+- How to detect breaking API changes automatically
+- When to index new packages vs just breaking changes
+- How to prioritize indexing based on project context
+
+### Technology Stack Decisions
+
+**Question**: Final technology stack configuration and deployment strategy
+
+**Context**: While we have a strong foundation with ExxerAI adaptation, some technology choices remain open for future optimization.
+
+**Open Decisions**:
+- **Vector Database**: Qdrant vs PostgreSQL with pgvector (both supported)
+- **Graph Database**: Neo4j implementation details and optimization
+- **LLM Models**: Specific Ollama model selection for different use cases
+- **OCR Engine**: Tesseract configuration and language support
+- **Caching Strategy**: Redis vs in-memory vs hybrid approach
+- **Deployment**: Docker vs Kubernetes vs hybrid deployment
+
+### Performance and Scalability
+
+**Question**: Performance optimization and scalability strategies
+
+**Context**: Need to define performance targets and scalability approaches as the system grows.
+
+**Open Considerations**:
+- **Performance Targets**: Response time SLAs, throughput requirements
+- **Scalability Strategy**: Horizontal vs vertical scaling approaches
+- **Resource Management**: Memory usage optimization, CPU utilization
+- **Load Balancing**: Multi-instance deployment strategies
+- **Caching Strategy**: What to cache, cache invalidation policies
+- **Database Optimization**: Query optimization, indexing strategies
+
+### Security and Compliance
+
+**Question**: Security model and compliance requirements
+
+**Context**: Need to define security requirements and compliance standards for the IndFusion platform.
+
+**Open Considerations**:
+- **Authentication Strategy**: JWT vs OAuth vs other approaches
+- **Authorization Model**: Role-based access control implementation
+- **Data Privacy**: GDPR compliance, data retention policies
+- **Audit Logging**: What to log, retention periods, compliance requirements
+- **Encryption**: Data at rest vs in transit encryption strategies
+- **API Security**: Rate limiting, input validation, security headers
+
+### Monitoring and Observability
+
+**Question**: Comprehensive monitoring and observability strategy
+
+**Context**: Need to define monitoring, logging, and observability approaches for production deployment.
+
+**Open Considerations**:
+- **Metrics Collection**: What metrics to track, collection frequency
+- **Logging Strategy**: Log levels, structured logging, log aggregation
+- **Alerting**: Alert thresholds, notification channels, escalation procedures
+- **Health Checks**: Service health monitoring, dependency health
+- **Performance Monitoring**: APM tools, performance profiling
+- **Business Metrics**: User adoption, feature usage, success rates
+
+### Decision Framework
+
+**When to Revisit These Questions**:
+1. **Performance Issues**: When current approach shows limitations
+2. **Scalability Needs**: When system reaches capacity constraints
+3. **User Feedback**: When users request specific capabilities
+4. **Technology Changes**: When new technologies become available
+5. **Business Requirements**: When business needs evolve
+
+**Decision Criteria**:
+- **Performance Impact**: How does the decision affect system performance?
+- **Development Effort**: What's the implementation complexity?
+- **Maintenance Overhead**: What's the ongoing maintenance cost?
+- **User Value**: How does it improve user experience?
+- **Technical Risk**: What are the implementation risks?
+
+---
+
+**Note**: These open questions should be revisited as the project progresses and more information becomes available. Decisions should be made based on actual performance data, user feedback, and business requirements rather than theoretical considerations.

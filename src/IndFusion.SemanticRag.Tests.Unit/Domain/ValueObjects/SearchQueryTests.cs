@@ -169,6 +169,7 @@ public class SearchQueryTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
         result.Value.Text.ShouldBe(text);
         result.Value.Limit.ShouldBe(limit);
         result.Value.Threshold.ShouldBe(threshold);
@@ -186,6 +187,7 @@ public class SearchQueryTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
         result.Value.Text.ShouldBe(text);
         result.Value.Limit.ShouldBe(10);
         result.Value.Threshold.ShouldBe(0.0f);

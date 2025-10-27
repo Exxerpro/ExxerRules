@@ -121,6 +121,7 @@ public class EmbeddingVectorTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
         result.Value.Values.ShouldBe(values);
     }
 
@@ -135,6 +136,7 @@ public class EmbeddingVectorTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
         result.Value.Values.ShouldBe(values);
     }
 

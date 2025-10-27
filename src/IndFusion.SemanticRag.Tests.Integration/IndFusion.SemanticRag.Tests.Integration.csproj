@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../IndFusion.SemanticRag.Application/IndFusion.SemanticRag.Application.csproj" />
-    <ProjectReference Include="../IndFusion.SemanticRag.Infrastructure/IndFusion.SemanticRag.Infrastructure.csproj" />
+    <ProjectReference Include="../code/IndFusion.SemanticRag.Application/IndFusion.SemanticRag.Application.csproj" />
+    <ProjectReference Include="../code/IndFusion.SemanticRag.Infrastructure/IndFusion.SemanticRag.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

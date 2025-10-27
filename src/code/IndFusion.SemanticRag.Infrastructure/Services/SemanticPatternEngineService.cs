@@ -26,6 +26,12 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         string context, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(code))
+            throw new ArgumentException("Code cannot be null or empty", nameof(code));
+        
+        if (string.IsNullOrWhiteSpace(context))
+            throw new ArgumentException("Context cannot be null or empty", nameof(context));
+
         _logger.LogInformation("Analyzing code for semantic patterns in context: {Context}", context);
         
         // TODO: Implement semantic pattern analysis
@@ -40,6 +46,9 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         string[]? patternTypes = null, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(projectPath))
+            throw new ArgumentException("Project path cannot be null or empty", nameof(projectPath));
+
         _logger.LogInformation("Analyzing project for patterns: {PatternTypes}", 
             patternTypes != null ? string.Join(", ", patternTypes) : "all");
         
@@ -54,6 +63,9 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         PatternViolation violation, 
         CancellationToken cancellationToken = default)
     {
+        if (violation.Equals(default(PatternViolation)))
+            throw new ArgumentException("Violation cannot be default", nameof(violation));
+
         _logger.LogInformation("Suggesting alternatives for violation: {ViolationId}", violation.PatternId);
         
         // TODO: Implement pattern suggestion logic
@@ -68,10 +80,17 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         string patternFamily = "all", 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(projectPath))
+            throw new ArgumentException("Project path cannot be null or empty", nameof(projectPath));
+
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
         _logger.LogInformation("Analyzing consistency for pattern family: {PatternFamily}", patternFamily);
         
         // TODO: Implement consistency analysis
         await Task.Delay(100, cancellationToken); // Placeholder
+        
+        stopwatch.Stop();
         
         return new ConsistencyReport
         {
@@ -79,7 +98,7 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
             Inconsistencies = new List<Inconsistency>(),
             PatternFamily = patternFamily,
             FilesAnalyzed = 0,
-            ElapsedMilliseconds = 0
+            ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
         };
     }
 
@@ -89,10 +108,20 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         string[] patternTypes, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(projectPath))
+            throw new ArgumentException("Project path cannot be null or empty", nameof(projectPath));
+        
+        if (patternTypes == null || patternTypes.Length == 0)
+            throw new ArgumentException("Pattern types cannot be null or empty", nameof(patternTypes));
+
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
         _logger.LogInformation("Enforcing patterns: {PatternTypes}", string.Join(", ", patternTypes));
         
         // TODO: Implement pattern enforcement
         await Task.Delay(100, cancellationToken); // Placeholder
+        
+        stopwatch.Stop();
         
         return new EnforcementResult
         {
@@ -100,7 +129,7 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
             ViolationsFound = 0,
             ViolationsFixed = 0,
             RemainingViolations = new List<PatternViolation>(),
-            ElapsedMilliseconds = 0
+            ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
         };
     }
 
@@ -110,6 +139,9 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         string[]? patternTypes = null, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(context))
+            throw new ArgumentException("Context cannot be null or empty", nameof(context));
+
         _logger.LogInformation("Getting pattern guidance for context: {Context}", context);
         
         // TODO: Implement pattern guidance logic

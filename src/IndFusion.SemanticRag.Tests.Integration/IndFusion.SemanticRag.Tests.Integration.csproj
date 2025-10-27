@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -27,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../code/IndFusion.SemanticRag.Application/IndFusion.SemanticRag.Application.csproj" />
-    <ProjectReference Include="../code/IndFusion.SemanticRag.Infrastructure/IndFusion.SemanticRag.Infrastructure.csproj" />
+    <ProjectReference Include="../IndFusion.SemanticRag.Infrastructure/IndFusion.SemanticRag.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

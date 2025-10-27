@@ -1,7 +1,9 @@
 using IndFusion.SemanticRag.Application.Commands;
 using IndFusion.SemanticRag.Application.Commands.VectorSearch;
+using IndFusion.SemanticRag.Application.Queries.VectorSearch;
 using IndFusion.SemanticRag.Application.Services;
 using IndFusion.SemanticRag.Domain.Interfaces;
+using IndFusion.SemanticRag.Domain.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace IndFusion.SemanticRag.Application;
@@ -24,6 +26,9 @@ public static class DependencyInjection
         // Register command handlers
         services.AddScoped<ICommandHandler<ProcessDocumentCommand>, ProcessDocumentCommandHandler>();
         services.AddScoped<ICommandHandler<StoreVectorCommand>, StoreVectorCommandHandler>();
+
+        // Register query handlers
+        services.AddScoped<IQueryHandler<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>, SearchSimilarVectorsQueryHandler>();
 
         // Register application services
         services.AddScoped<SemanticRagOrchestrationService>();

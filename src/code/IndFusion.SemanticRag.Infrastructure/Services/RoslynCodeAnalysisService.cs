@@ -25,17 +25,24 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         string projectPath, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(projectPath))
+            throw new ArgumentException("Project path cannot be null or empty", nameof(projectPath));
+
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
         _logger.LogInformation("Analyzing project: {ProjectPath}", projectPath);
         
         // TODO: Implement Roslyn project analysis
         await Task.Delay(100, cancellationToken); // Placeholder
+        
+        stopwatch.Stop();
         
         return new CodeAnalysisResult
         {
             Violations = new List<PatternViolation>(),
             Suggestions = new List<PatternSuggestion>(),
             ComplianceScore = 1.0f,
-            ElapsedMilliseconds = 0,
+            ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
             FilesAnalyzed = 0,
             LinesOfCode = 0
         };
@@ -46,17 +53,24 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         string filePath, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(filePath))
+            throw new ArgumentException("File path cannot be null or empty", nameof(filePath));
+
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
         _logger.LogInformation("Analyzing file: {FilePath}", filePath);
         
         // TODO: Implement Roslyn file analysis
         await Task.Delay(100, cancellationToken); // Placeholder
+        
+        stopwatch.Stop();
         
         return new CodeAnalysisResult
         {
             Violations = new List<PatternViolation>(),
             Suggestions = new List<PatternSuggestion>(),
             ComplianceScore = 1.0f,
-            ElapsedMilliseconds = 0,
+            ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
             FilesAnalyzed = 1,
             LinesOfCode = 0
         };
@@ -68,17 +82,27 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         string language, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(code))
+            throw new ArgumentException("Code cannot be null or empty", nameof(code));
+        
+        if (string.IsNullOrWhiteSpace(language))
+            throw new ArgumentException("Language cannot be null or empty", nameof(language));
+
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+
         _logger.LogInformation("Analyzing code snippet in language: {Language}", language);
         
         // TODO: Implement Roslyn code analysis
         await Task.Delay(100, cancellationToken); // Placeholder
+        
+        stopwatch.Stop();
         
         return new CodeAnalysisResult
         {
             Violations = new List<PatternViolation>(),
             Suggestions = new List<PatternSuggestion>(),
             ComplianceScore = 1.0f,
-            ElapsedMilliseconds = 0,
+            ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
             FilesAnalyzed = 1,
             LinesOfCode = code.Split('\n').Length
         };

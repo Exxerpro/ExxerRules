@@ -133,7 +133,7 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
         // Assert
         storeResult.IsFailure.ShouldBeTrue();
         storeResult.Error.ShouldNotBeNull();
-        storeResult.Error.ShouldContain("Vector ID cannot be null or empty");
+        storeResult.Error.ShouldContain("Embedding ID cannot be null or empty");
     }
 
     /// <summary>
@@ -153,7 +153,7 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
 
         // Act
         var searchQuery = new SearchSimilarVectorsQuery(invalidQuery);
-        var searchResult = await _mediator.Send(searchQuery, TestContext.Current.CancellationToken);
+        var searchResult = await _mediator.SendQuery<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>(searchQuery, TestContext.Current.CancellationToken);
 
         // Assert
         searchResult.IsFailure.ShouldBeTrue();

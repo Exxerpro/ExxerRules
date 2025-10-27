@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using IndQuestResults;
 using IndFusion.SemanticRag.Domain.Models;
 
 namespace IndFusion.SemanticRag.Domain.Ports;

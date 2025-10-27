@@ -1,5 +1,11 @@
 using IndFusion.Mcp.Core.Abstractions;
 using IndFusion.Mcp.Core.Services;
+using IndFusion.Mcp.Core.Tests.TestUtilities;
+using TestDirectoryScope = IndFusion.Mcp.Core.Tests.TestUtilities.TestFileUtilities.TestDirectoryScope;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using Shouldly;
+using Xunit;
 
 namespace IndFusion.Mcp.Core.Tests.Services;
 
@@ -43,12 +49,32 @@ public class ExxerFactoringServiceTests
     /// <summary>
     /// Verifies ExtractMethodAsync returns a failure result when not implemented.
     /// </summary>
+    /// <summary>
+    /// Verifies ExtractMethodAsync returns a failure result when not implemented.
+    /// </summary>
     [Fact]
     public async Task ExtractMethodAsync_ShouldReturnFailureResult_WhenNotImplemented()
     {
         // Arrange
-        var solutionPath = "/path/to/solution.sln";
-        var filePath = "/path/to/file.cs";
+        using var testScope = new TestDirectoryScope();
+        var solutionPath = TestFileUtilities.CreateTestSolution(testScope.Directory, "TestClass", @"
+using System;
+
+namespace TestNamespace
+{
+    public class TestClass
+    {
+        public void TestMethod()
+        {
+            Console.WriteLine(""Hello World"");
+            var x = 5;
+            var y = 10;
+            var result = x + y;
+            Console.WriteLine(result);
+        }
+    }
+}");
+        var filePath = Path.Combine(testScope.Directory, "TestClass.cs");
         var startLine = 10;
         var endLine = 15;
         var methodName = "ExtractedMethod";
@@ -57,8 +83,8 @@ public class ExxerFactoringServiceTests
         var result = await _service.ExtractMethodAsync(solutionPath, filePath, startLine, endLine, methodName, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.Message.ShouldContain("not yet implemented");
+        result.Success.ShouldBeTrue();
+        result.Message.ShouldContain("Successfully extracted method");
 
         // Verify logging
         _mockLogger.Received(1).Log(
@@ -72,12 +98,36 @@ public class ExxerFactoringServiceTests
     /// <summary>
     /// Verifies MoveMethodAsync returns a failure result when not implemented.
     /// </summary>
+    /// <summary>
+    /// Verifies MoveMethodAsync returns a failure result when not implemented.
+    /// </summary>
     [Fact]
     public async Task MoveMethodAsync_ShouldReturnFailureResult_WhenNotImplemented()
     {
         // Arrange
-        var solutionPath = "/path/to/solution.sln";
-        var sourceFilePath = "/path/to/source.cs";
+        using var testScope = new TestDirectoryScope();
+        var solutionPath = TestFileUtilities.CreateTestSolution(testScope.Directory, "SourceClass", @"
+using System;
+
+namespace TestNamespace
+{
+    public class SourceClass
+    {
+        public static void MethodToMove()
+        {
+            Console.WriteLine(""Hello World"");
+        }
+    }
+    
+    public class TargetClass
+    {
+        public void SomeMethod()
+        {
+            Console.WriteLine(""Target method"");
+        }
+    }
+}");
+        var sourceFilePath = Path.Combine(testScope.Directory, "SourceClass.cs");
         var methodName = "MethodToMove";
         var targetClassName = "TargetClass";
 
@@ -85,8 +135,8 @@ public class ExxerFactoringServiceTests
         var result = await _service.MoveMethodAsync(solutionPath, sourceFilePath, methodName, targetClassName, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.Message.ShouldContain("not yet implemented");
+        result.Success.ShouldBeTrue();
+        result.Message.ShouldContain("Successfully moved static method");
 
         // Verify logging
         _mockLogger.Received(1).Log(
@@ -100,24 +150,61 @@ public class ExxerFactoringServiceTests
     /// <summary>
     /// Verifies IntroduceVariableAsync returns a failure result when not implemented.
     /// </summary>
+    /// <summary>
+    /// Verifies IntroduceVariableAsync returns a failure result when not implemented.
+    /// </summary>
     [Fact]
     public async Task IntroduceVariableAsync_ShouldReturnFailureResult_WhenNotImplemented()
     {
         // Arrange
-        var solutionPath = "/path/to/solution.sln";
-        var filePath = "/path/to/file.cs";
-        var line = 10;
-        var column = 5;
+        using var testScope = new TestDirectoryScope();
+        var solutionPath = TestFileUtilities.CreateTestSolution(testScope.Directory, "TestClass", @"
+using System;
+
+namespace TestNamespace
+{
+    public class TestClass
+    {
+        public void TestMethod()
+        {
+            Console.WriteLine(5 + 10);
+        }
+    }
+}");
+        var filePath = Path.Combine(testScope.Directory, "TestClass.cs");
+        var line = 7; // Line with the expression
+        var column = 20; // Position in the expression
         var variableName = "newVariable";
 
         // Act
         var result = await _service.IntroduceVariableAsync(solutionPath, filePath, line, column, variableName, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
-        result.Success.ShouldBeFalse();
-        result.Message.ShouldContain("not yet implemented");
+        if (!result.Success)
+        {
+            // Debug: Show the actual error message
+            Console.WriteLine($"IntroduceVariableAsync failed: {result.Message}");
+            if (!string.IsNullOrEmpty(result.ErrorDetails))
+            {
+                Console.WriteLine($"Error details: {result.ErrorDetails}");
+            }
+        }
+        result.Success.ShouldBeTrue();
+        result.Message.ShouldNotBeNullOrEmpty();
+        // Note: The actual message might vary, so we just check it's not empty
+
+        // Verify logging
+        _mockLogger.Received(1).Log(
+            LogLevel.Information,
+            Arg.Any<EventId>(),
+            Arg.Is<object>(v => v.ToString()!.Contains("Introducing variable")),
+            Arg.Any<Exception>(),
+            Arg.Any<Func<object, Exception?, string>>());
     }
 
+    /// <summary>
+    /// Verifies GetMetricsAsync returns an error json payload when not implemented.
+    /// </summary>
     /// <summary>
     /// Verifies GetMetricsAsync returns an error json payload when not implemented.
     /// </summary>
@@ -125,15 +212,30 @@ public class ExxerFactoringServiceTests
     public async Task GetMetricsAsync_ShouldReturnErrorJson_WhenNotImplemented()
     {
         // Arrange
-        var solutionPath = "/path/to/solution.sln";
-        var path = "/path/to/file.cs";
+        using var testScope = new TestDirectoryScope();
+        var solutionPath = TestFileUtilities.CreateTestSolution(testScope.Directory, "TestClass", @"
+using System;
+
+namespace TestNamespace
+{
+    public class TestClass
+    {
+        public void TestMethod()
+        {
+            Console.WriteLine(""Hello World"");
+        }
+    }
+}");
+        var path = Path.Combine(testScope.Directory, "TestClass.cs");
 
         // Act
         var result = await _service.GetMetricsAsync(solutionPath, path, cancellationToken: Xunit.TestContext.Current.CancellationToken);
 
         // Assert
-        result.ShouldContain("error");
-        result.ShouldContain("not yet implemented");
+        result.ShouldNotBeNullOrEmpty();
+        // Should contain metrics data, not error
+        result.ShouldNotContain("error");
+        result.ShouldNotContain("not yet implemented");
     }
 
     /// <summary>

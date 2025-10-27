@@ -1,0 +1,85 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ===================================================================== -->
+  <!-- Project Properties & Configuration                                      -->
+  <!-- ===================================================================== -->
+  <PropertyGroup>
+    <!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
+    <OutputType>Exe</OutputType>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <RootNamespace>IndFusion.Mcp.Tests.Integration</RootNamespace>
+  </PropertyGroup>
+  <Import Project="..\TestingPlatform.props" />
+  <!-- ===================================================================== -->
+  <!-- Package Dependencies                                                   -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+    <!-- Testing Framework & Tools -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Update="xunit.v3.runner.console">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="xunit.runner.visualstudio">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Update="xunit.v3.runner.msbuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <!-- Test Coverage -->
+    <PackageReference Include="coverlet.collector">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="NSubstitute" />
+    <!-- Integration Testing Dependencies -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Global Using Statements                                                -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Shouldly" />
+    <Using Include="Microsoft.Extensions.DependencyInjection" />
+    <Using Include="Microsoft.Extensions.Logging" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Project References                                                     -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\code\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\..\code\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
+    <ProjectReference Include="..\..\code\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
+    <ProjectReference Include="..\..\code\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
+    <ProjectReference Include="..\..\code\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Build Configuration                                                    -->
+  <!-- ===================================================================== -->
+  <!-- Exclude generated test files and fixtures from compilation -->
+  <ItemGroup>
+    <Compile Remove="TestOutput\**\*.cs" />
+    <None Include="TestOutput\**\*.cs" />
+    <!-- Exclude test fixtures -->
+    <Compile Remove="**\*Sample.cs" />
+    <Compile Remove="**\*Fixture.cs" />
+    <None Include="**\*Sample.cs" />
+    <None Include="**\*Fixture.cs" />
+  </ItemGroup>
+</Project>

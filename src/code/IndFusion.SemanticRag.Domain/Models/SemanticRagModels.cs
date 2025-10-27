@@ -1,204 +1,287 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using IndQuestResults;
-
 namespace IndFusion.SemanticRag.Domain.Models;
 
 /// <summary>
-/// Represents a semantic document in the RAG system.
+/// Represents a vector embedding with associated metadata.
+/// </summary>
+/// <param name="Id">Unique identifier for the vector.</param>
+/// <param name="Vector">The embedding vector values.</param>
+/// <param name="Metadata">Associated metadata including source information.</param>
+/// <param name="CreatedAt">When the vector was created.</param>
+/// <param name="UpdatedAt">When the vector was last updated.</param>
+public record VectorEmbedding(
+    string Id,
+    float[] Vector,
+    Dictionary<string, object> Metadata,
+    DateTime CreatedAt,
+    DateTime UpdatedAt
+);
+
+/// <summary>
+/// Options for vector similarity search.
+/// </summary>
+/// <param name="MaxResults">Maximum number of results to return.</param>
+/// <param name="SimilarityThreshold">Minimum similarity score threshold.</param>
+/// <param name="MetadataFilters">Filters to apply to metadata.</param>
+/// <param name="IncludeMetadata">Whether to include metadata in results.</param>
+public record VectorSearchOptions(
+    int MaxResults = 10,
+    double SimilarityThreshold = 0.7,
+    Dictionary<string, object>? MetadataFilters = null,
+    bool IncludeMetadata = true
+);
+
+/// <summary>
+/// Result of a vector similarity search.
+/// </summary>
+/// <param name="VectorId">ID of the similar vector.</param>
+/// <param name="SimilarityScore">Similarity score (0.0-1.0).</param>
+/// <param name="Metadata">Associated metadata.</param>
+public record VectorSearchResult(
+    string VectorId,
+    double SimilarityScore,
+    Dictionary<string, object> Metadata
+);
+
+/// <summary>
+/// Result of vector store operations.
+/// </summary>
+/// <param name="Success">Whether the operation succeeded.</param>
+/// <param name="Message">Success or error message.</param>
+/// <param name="AffectedCount">Number of vectors affected by the operation.</param>
+/// <param name="ErrorDetails">Detailed error information if operation failed.</param>
+public record VectorStoreResult(
+    bool Success,
+    string Message,
+    int AffectedCount = 0,
+    string? ErrorDetails = null
+);
+
+/// <summary>
+/// Statistics about the vector store.
+/// </summary>
+/// <param name="TotalVectors">Total number of vectors stored.</param>
+/// <param name="VectorDimensions">Dimension count of vectors.</param>
+/// <param name="StorageSizeBytes">Storage size in bytes.</param>
+/// <param name="LastUpdated">When statistics were last updated.</param>
+public record VectorStoreStatistics(
+    long TotalVectors,
+    int VectorDimensions,
+    long StorageSizeBytes,
+    DateTime LastUpdated
+);
+
+/// <summary>
+/// Represents a node in the knowledge graph.
+/// </summary>
+/// <param name="Id">Unique identifier for the node.</param>
+/// <param name="Label">Node label/type.</param>
+/// <param name="Properties">Node properties.</param>
+/// <param name="CreatedAt">When the node was created.</param>
+/// <param name="UpdatedAt">When the node was last updated.</param>
+public record GraphNode(
+    string Id,
+    string Label,
+    Dictionary<string, object> Properties,
+    DateTime CreatedAt,
+    DateTime UpdatedAt
+);
+
+/// <summary>
+/// Represents a relationship between nodes in the knowledge graph.
+/// </summary>
+/// <param name="Id">Unique identifier for the relationship.</param>
+/// <param name="StartNodeId">ID of the starting node.</param>
+/// <param name="EndNodeId">ID of the ending node.</param>
+/// <param name="RelationshipType">Type of the relationship.</param>
+/// <param name="Properties">Relationship properties.</param>
+/// <param name="CreatedAt">When the relationship was created.</param>
+public record GraphRelationship(
+    string Id,
+    string StartNodeId,
+    string EndNodeId,
+    string RelationshipType,
+    Dictionary<string, object> Properties,
+    DateTime CreatedAt
+);
+
+/// <summary>
+/// Result of knowledge graph operations.
+/// </summary>
+/// <param name="Success">Whether the operation succeeded.</param>
+/// <param name="Message">Success or error message.</param>
+/// <param name="AffectedCount">Number of nodes/relationships affected.</param>
+/// <param name="ErrorDetails">Detailed error information if operation failed.</param>
+public record KnowledgeGraphResult(
+    bool Success,
+    string Message,
+    int AffectedCount = 0,
+    string? ErrorDetails = null
+);
+
+/// <summary>
+/// Result of a graph query execution.
+/// </summary>
+/// <param name="Nodes">Nodes returned by the query.</param>
+/// <param name="Relationships">Relationships returned by the query.</param>
+/// <param name="ExecutionTimeMs">Query execution time in milliseconds.</param>
+/// <param name="ErrorDetails">Error details if query failed.</param>
+public record GraphQueryResult(
+    IEnumerable<GraphNode> Nodes,
+    IEnumerable<GraphRelationship> Relationships,
+    long ExecutionTimeMs,
+    string? ErrorDetails = null
+);
+
+/// <summary>
+/// Represents a path through the knowledge graph.
+/// </summary>
+/// <param name="Nodes">Nodes in the path.</param>
+/// <param name="Relationships">Relationships connecting the nodes.</param>
+/// <param name="TotalWeight">Total weight/cost of the path.</param>
+public record GraphPath(
+    IEnumerable<GraphNode> Nodes,
+    IEnumerable<GraphRelationship> Relationships,
+    double TotalWeight
+);
+
+/// <summary>
+/// Statistics about the knowledge graph.
+/// </summary>
+/// <param name="TotalNodes">Total number of nodes.</param>
+/// <param name="TotalRelationships">Total number of relationships.</param>
+/// <param name="NodeTypes">Count of nodes by type.</param>
+/// <param name="RelationshipTypes">Count of relationships by type.</param>
+/// <param name="LastUpdated">When statistics were last updated.</param>
+public record KnowledgeGraphStatistics(
+    long TotalNodes,
+    long TotalRelationships,
+    Dictionary<string, long> NodeTypes,
+    Dictionary<string, long> RelationshipTypes,
+    DateTime LastUpdated
+);
+
+/// <summary>
+/// Input document for processing.
 /// </summary>
 /// <param name="Id">Unique identifier for the document.</param>
-/// <param name="Content">The text content of the document.</param>
-/// <param name="Metadata">Additional metadata about the document.</param>
-/// <param name="Embedding">Vector embedding for semantic search.</param>
-/// <param name="CreatedAt">When the document was created.</param>
-/// <param name="UpdatedAt">When the document was last updated.</param>
-public readonly record struct SemanticDocument(
+/// <param name="Content">Document content (text or binary).</param>
+/// <param name="ContentType">MIME type of the content.</param>
+/// <param name="Metadata">Document metadata.</param>
+/// <param name="SourcePath">Path to the source document.</param>
+public record DocumentInput(
     string Id,
-    string Content,
-    IReadOnlyDictionary<string, object> Metadata,
-    float[]? Embedding,
-    DateTimeOffset CreatedAt,
-    DateTimeOffset UpdatedAt)
-{
-    /// <summary>
-    /// Gets the document type from metadata.
-    /// </summary>
-    public string DocumentType => Metadata.GetValueOrDefault("type", "unknown").ToString() ?? "unknown";
-
-    /// <summary>
-    /// Gets the source of the document from metadata.
-    /// </summary>
-    public string Source => Metadata.GetValueOrDefault("source", "unknown").ToString() ?? "unknown";
-
-    /// <summary>
-    /// Gets the language of the document from metadata.
-    /// </summary>
-    public string Language => Metadata.GetValueOrDefault("language", "en").ToString() ?? "en";
-
-    /// <summary>
-    /// Checks if the document has an embedding.
-    /// </summary>
-    public bool HasEmbedding => Embedding is not null && Embedding.Length > 0;
-}
+    byte[] Content,
+    string ContentType,
+    Dictionary<string, object> Metadata,
+    string? SourcePath = null
+);
 
 /// <summary>
-/// Represents a semantic search query.
+/// Options for document processing.
 /// </summary>
-/// <param name="Query">The search query text.</param>
-/// <param name="Filters">Optional filters to apply to the search.</param>
-/// <param name="Limit">Maximum number of results to return.</param>
-/// <param name="Threshold">Similarity threshold for results (0.0 to 1.0).</param>
-/// <param name="IncludeMetadata">Whether to include metadata in results.</param>
-public readonly record struct SemanticSearchQuery(
-    string Query,
-    IReadOnlyDictionary<string, object>? Filters = null,
-    int Limit = 10,
-    float Threshold = 0.7f,
-    bool IncludeMetadata = true)
-{
-    /// <summary>
-    /// Validates the search query parameters.
-    /// </summary>
-    public Result Validate()
-    {
-        if (string.IsNullOrWhiteSpace(Query))
-            return Result.WithFailure("Query cannot be null or empty");
-
-        if (Limit <= 0)
-            return Result.WithFailure("Limit must be greater than 0");
-
-        if (Threshold < 0.0f || Threshold > 1.0f)
-            return Result.WithFailure("Threshold must be between 0.0 and 1.0");
-
-        return Result.Success();
-    }
-}
+/// <param name="EnableOCR">Whether to enable OCR processing.</param>
+/// <param name="OcrLanguage">Language for OCR processing.</param>
+/// <param name="ExtractEntities">Whether to extract entities.</param>
+/// <param name="GenerateEmbeddings">Whether to generate embeddings.</param>
+/// <param name="QualityThreshold">Minimum quality threshold for processing.</param>
+public record DocumentProcessingOptions(
+    bool EnableOCR = true,
+    string OcrLanguage = "en",
+    bool ExtractEntities = true,
+    bool GenerateEmbeddings = true,
+    double QualityThreshold = 0.8
+);
 
 /// <summary>
-/// Represents a semantic search result.
+/// Processed document with extracted content and metadata.
 /// </summary>
-/// <param name="Document">The matching document.</param>
-/// <param name="Score">Similarity score (0.0 to 1.0).</param>
-/// <param name="Highlights">Text highlights showing why this result matched.</param>
-public readonly record struct SemanticSearchResult(
-    SemanticDocument Document,
-    float Score,
-    IReadOnlyList<string> Highlights)
-{
-    /// <summary>
-    /// Checks if this result meets the minimum threshold.
-    /// </summary>
-    /// <param name="threshold">The minimum score threshold.</param>
-    /// <returns>True if the score meets the threshold.</returns>
-    public bool MeetsThreshold(float threshold) => Score >= threshold;
-}
+/// <param name="DocumentId">ID of the original document.</param>
+/// <param name="ExtractedText">Text extracted from the document.</param>
+/// <param name="Entities">Entities extracted from the text.</param>
+/// <param name="Embeddings">Generated embeddings.</param>
+/// <param name="ProcessingMetadata">Metadata about the processing.</param>
+/// <param name="ProcessedAt">When the document was processed.</param>
+public record ProcessedDocument(
+    string DocumentId,
+    string ExtractedText,
+    IEnumerable<ExtractedEntity> Entities,
+    IEnumerable<VectorEmbedding> Embeddings,
+    Dictionary<string, object> ProcessingMetadata,
+    DateTime ProcessedAt
+);
 
 /// <summary>
-/// Represents a knowledge entity in the semantic graph.
+/// Entity extracted from text content.
 /// </summary>
 /// <param name="Id">Unique identifier for the entity.</param>
-/// <param name="Type">The type of the entity (e.g., "Person", "Concept", "Document").</param>
-/// <param name="Name">The name or title of the entity.</param>
-/// <param name="Description">Description of the entity.</param>
-/// <param name="Properties">Additional properties of the entity.</param>
-/// <param name="Embedding">Vector embedding for semantic similarity.</param>
-public readonly record struct KnowledgeEntity(
+/// <param name="Text">Text of the entity.</param>
+/// <param name="Type">Type/category of the entity.</param>
+/// <param name="Confidence">Confidence score (0.0-1.0).</param>
+/// <param name="StartPosition">Start position in the text.</param>
+/// <param name="EndPosition">End position in the text.</param>
+/// <param name="Properties">Additional entity properties.</param>
+public record ExtractedEntity(
     string Id,
+    string Text,
     string Type,
-    string Name,
-    string? Description,
-    IReadOnlyDictionary<string, object> Properties,
-    float[]? Embedding)
-{
-    /// <summary>
-    /// Gets the display name for the entity.
-    /// </summary>
-    public string DisplayName => !string.IsNullOrWhiteSpace(Description) 
-        ? $"{Name}: {Description}" 
-        : Name;
-
-    /// <summary>
-    /// Checks if the entity has an embedding.
-    /// </summary>
-    public bool HasEmbedding => Embedding is not null && Embedding.Length > 0;
-}
+    double Confidence,
+    int StartPosition,
+    int EndPosition,
+    Dictionary<string, object> Properties
+);
 
 /// <summary>
-/// Represents a semantic context for RAG operations.
+/// Options for entity extraction.
 /// </summary>
-/// <param name="Documents">Relevant documents for the context.</param>
-/// <param name="Entities">Relevant knowledge entities.</param>
-/// <param name="Relationships">Relevant relationships between entities.</param>
-/// <param name="Query">The original query that generated this context.</param>
-/// <param name="Confidence">Overall confidence score for the context (0.0 to 1.0).</param>
-public readonly record struct SemanticContext(
-    IReadOnlyList<SemanticDocument> Documents,
-    IReadOnlyList<KnowledgeEntity> Entities,
-    IReadOnlyList<KnowledgeRelationship> Relationships,
-    string Query,
-    float Confidence)
-{
-    /// <summary>
-    /// Gets the total number of context items.
-    /// </summary>
-    public int TotalItems => Documents.Count + Entities.Count + Relationships.Count;
-
-    /// <summary>
-    /// Checks if the context has sufficient information.
-    /// </summary>
-    /// <param name="minimumItems">Minimum number of items required.</param>
-    /// <returns>True if the context has sufficient items.</returns>
-    public bool HasSufficientContext(int minimumItems = 3) => TotalItems >= minimumItems;
-
-    /// <summary>
-    /// Gets a summary of the context for display purposes.
-    /// </summary>
-    public string GetSummary()
-    {
-        var docCount = Documents.Count;
-        var entityCount = Entities.Count;
-        var relCount = Relationships.Count;
-        
-        return $"Context: {docCount} documents, {entityCount} entities, {relCount} relationships (confidence: {Confidence:P1})";
-    }
-}
+/// <param name="EntityTypes">Types of entities to extract.</param>
+/// <param name="ConfidenceThreshold">Minimum confidence threshold.</param>
+/// <param name="MaxEntities">Maximum number of entities to extract.</param>
+/// <param name="IncludeProperties">Whether to include additional properties.</param>
+public record EntityExtractionOptions(
+    IEnumerable<string> EntityTypes,
+    double ConfidenceThreshold = 0.7,
+    int MaxEntities = 100,
+    bool IncludeProperties = true
+);
 
 /// <summary>
-/// Represents configuration for semantic RAG operations.
+/// Relationship between extracted entities.
 /// </summary>
-/// <param name="MaxDocuments">Maximum number of documents to retrieve.</param>
-/// <param name="MaxEntities">Maximum number of entities to retrieve.</param>
-/// <param name="SimilarityThreshold">Minimum similarity threshold for results.</param>
-/// <param name="EnableGraphTraversal">Whether to enable graph traversal for context.</param>
-/// <param name="MaxTraversalDepth">Maximum depth for graph traversal.</param>
-/// <param name="EnableHybridSearch">Whether to enable hybrid search (vector + keyword).</param>
-public readonly record struct SemanticRagConfig(
-    int MaxDocuments = 10,
-    int MaxEntities = 5,
-    float SimilarityThreshold = 0.7f,
-    bool EnableGraphTraversal = true,
-    int MaxTraversalDepth = 2,
-    bool EnableHybridSearch = true)
-{
-    /// <summary>
-    /// Validates the configuration parameters.
-    /// </summary>
-    public Result Validate()
-    {
-        if (MaxDocuments <= 0)
-            return Result.WithFailure("MaxDocuments must be greater than 0");
+/// <param name="Id">Unique identifier for the relationship.</param>
+/// <param name="SourceEntityId">ID of the source entity.</param>
+/// <param name="TargetEntityId">ID of the target entity.</param>
+/// <param name="RelationshipType">Type of the relationship.</param>
+/// <param name="Confidence">Confidence score (0.0-1.0).</param>
+/// <param name="Properties">Additional relationship properties.</param>
+public record EntityRelationship(
+    string Id,
+    string SourceEntityId,
+    string TargetEntityId,
+    string RelationshipType,
+    double Confidence,
+    Dictionary<string, object> Properties
+);
 
-        if (MaxEntities < 0)
-            return Result.WithFailure("MaxEntities cannot be negative");
+/// <summary>
+/// Options for relationship mapping.
+/// </summary>
+/// <param name="RelationshipTypes">Types of relationships to map.</param>
+/// <param name="ConfidenceThreshold">Minimum confidence threshold.</param>
+/// <param name="MaxRelationships">Maximum number of relationships to map.</param>
+public record RelationshipMappingOptions(
+    IEnumerable<string> RelationshipTypes,
+    double ConfidenceThreshold = 0.6,
+    int MaxRelationships = 50
+);
 
-        if (SimilarityThreshold < 0.0f || SimilarityThreshold > 1.0f)
-            return Result.WithFailure("SimilarityThreshold must be between 0.0 and 1.0");
-
-        if (MaxTraversalDepth < 0)
-            return Result.WithFailure("MaxTraversalDepth cannot be negative");
-
-        return Result.Success();
-    }
-}
+/// <summary>
+/// Options for embedding generation.
+/// </summary>
+/// <param name="Model">Embedding model to use.</param>
+/// <param name="Dimensions">Number of dimensions for the embedding.</param>
+/// <param name="Normalize">Whether to normalize the embedding.</param>
+public record EmbeddingOptions(
+    string Model = "text-embedding-3-large",
+    int Dimensions = 1536,
+    bool Normalize = true
+);

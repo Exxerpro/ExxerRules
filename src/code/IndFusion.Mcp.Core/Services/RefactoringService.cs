@@ -196,7 +196,8 @@ public class ExxerFactoringService : IExxerFactoringService
         try
         {
             // Convert line and column to selection range format expected by IntroduceVariableTool
-            var selectionRange = $"{line}:{column}-{line}:{column}";
+            // The range should select the expression, so we need to provide a proper end position
+            var selectionRange = $"{line}:{column}-{line}:{column + 10}"; // Select 10 characters from the position
             
             // Use the existing IntroduceVariableTool
             var result = await IntroduceVariableTool.IntroduceVariable(

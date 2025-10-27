@@ -20,7 +20,7 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics File ReturnsJson.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Flaky in CI")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task ReadMetrics_File_ReturnsJson()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -33,7 +33,7 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics Directory ReturnsAggregatedJson.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Flaky in CI")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task ReadMetrics_Directory_ReturnsAggregatedJson()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -49,7 +49,7 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics Class ReturnsClassMetrics.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Flaky in CI")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task ReadMetrics_Class_ReturnsClassMetrics()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -64,7 +64,7 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics Method ReturnsMethodMetrics.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Flaky in CI")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task ReadMetrics_Method_ReturnsMethodMetrics()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -79,7 +79,7 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics InvalidPath ReturnsError.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Flaky in CI")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task ReadMetrics_InvalidPath_ReturnsError()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);

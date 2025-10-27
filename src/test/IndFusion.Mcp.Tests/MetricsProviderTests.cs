@@ -20,7 +20,7 @@ public class MetricsProviderTests : TestBase
     /// GetFileMetrics CachesToDiskAndMemory.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Flaky in CI")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task GetFileMetrics_CachesToDiskAndMemory()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);

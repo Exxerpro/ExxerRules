@@ -10,6 +10,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Architecture;
 
 /// <summary>
 /// Tests for DomainShouldNotReferenceInfrastructureAnalyzer false-positive mitigation scenarios.
+/// Note: EntityFrameworkCore is allowed in Infrastructure layer, not Application layer
 /// </summary>
 public class DomainShouldNotReferenceInfrastructureFalsePositiveTests
 {
@@ -46,7 +47,7 @@ namespace MyProject.Domain.ValueObjects
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.1: Exempt EF Core Attributes on Domain Value Objects
+    #endregion
 
     #region Story 1.2: Exempt Domain Enum Seeding Extensions
 

@@ -1,0 +1,68 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ===================================================================== -->
+  <!-- Project Properties & Configuration                                      -->
+  <!-- ===================================================================== -->
+  <PropertyGroup>
+    <!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    
+    <!-- Package Information -->
+    <PackageId>IndFusion.SemanticRag.Application</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>IndFusion</Authors>
+    <Description>Application layer for IndFusion Semantic RAG Platform</Description>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>IndFusion.SemanticRag.Application</RootNamespace>
+  </PropertyGroup>
+
+  <!-- Global Usings -->
+  <ItemGroup>
+    <Using Include="IndQuestResults" />
+  </ItemGroup>
+
+  <!-- ===================================================================== -->
+  <!-- Package Dependencies                                                   -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+    <!-- Microsoft Extensions & Configuration -->
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    
+    <!-- Vector Search & Embeddings -->
+    <PackageReference Include="Qdrant.Client" />
+    <PackageReference Include="Microsoft.SemanticKernel" />
+    
+    <!-- Graph Database -->
+    <PackageReference Include="Neo4j.Driver" />
+    
+    <!-- JSON & Serialization -->
+    <PackageReference Include="Newtonsoft.Json" />
+    
+    <!-- Result Pattern -->
+    <PackageReference Include="CSharpFunctionalExtensions" />
+    <PackageReference Include="IndQuestResults" />
+  </ItemGroup>
+
+  <!-- ===================================================================== -->
+  <!-- Project References                                                     -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+    <ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
+  </ItemGroup>
+
+  <!-- ===================================================================== -->
+  <!-- InternalsVisibleTo Configuration                                       -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+    <InternalsVisibleTo Include="IndFusion.SemanticRag.Tests" />
+    <InternalsVisibleTo Include="IndFusion.SemanticRag.Infrastructure" />
+  </ItemGroup>
+</Project>

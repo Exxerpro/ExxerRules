@@ -9,7 +9,7 @@ public class LoadSolutionTests : TestBase
     /// LoadSolution ValidPath ReturnsSuccess.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Hanging - attempts to load real solution file")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task LoadSolution_ValidPath_ReturnsSuccess()
     {
         var result = await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
@@ -22,7 +22,7 @@ public class LoadSolutionTests : TestBase
     /// UnloadSolution RemovesCachedSolution.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Hanging - attempts to load real solution file")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task UnloadSolution_RemovesCachedSolution()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
@@ -34,7 +34,7 @@ public class LoadSolutionTests : TestBase
     /// LoadSolution InvalidPath ReturnsError.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Hanging - attempts to load real solution file")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task LoadSolution_InvalidPath_ReturnsError()
     {
         await Assert.ThrowsAsync<McpException>(async () =>
@@ -56,7 +56,7 @@ public class LoadSolutionTests : TestBase
     /// ClearSolutionCache RemovesAllCachedSolutions.
     /// </summary>
     /// <returns></returns>
-    [Fact(Skip = "Hanging - attempts to load real solution file")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task ClearSolutionCache_RemovesAllCachedSolutions()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);

@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    
+    <!-- Package Information -->
+    <PackageId>IndFusion.SemanticRag.Application</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>IndFusion</Authors>
+    <Description>Application layer for IndFusion Semantic RAG Platform</Description>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>IndFusion.SemanticRag.Application</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../code/IndFusion.SemanticRag.Domain/IndFusion.SemanticRag.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

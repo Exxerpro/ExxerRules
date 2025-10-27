@@ -193,7 +193,7 @@ public class ExxerFactoringHelpersTests : IDisposable
     /// <summary>
     /// FindClassInSolution WithExistingClass ShouldReturnDocument().
     /// </summary>
-    [Fact(Skip = "Hanging - attempts to load real solution file from temp directory")]
+    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
     public async Task FindClassInSolution_WithExistingClass_ShouldReturnDocument()
     {
         // Arrange

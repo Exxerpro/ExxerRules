@@ -5,12 +5,12 @@ using IndFusion.Analyzers.Architecture;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;
-using MediatR;
 
 namespace IndFusion.Analyzer.Tests.TestCases.Architecture;
 
 /// <summary>
 /// Tests for UseRepositoryPatternAnalyzer false-positive mitigation scenarios.
+/// Note: EntityFrameworkCore is allowed in Infrastructure layer, not Application layer
 /// </summary>
 public class UseRepositoryPatternFalsePositiveTests
 {
@@ -24,17 +24,16 @@ public class UseRepositoryPatternFalsePositiveTests
     {
         const string testCode = @"
 using Microsoft.EntityFrameworkCore;
-using MediatR;
 
 namespace MyProject.Application.Commands
 {
-    public class CreateUserCommand : IRequest<int>
+    public class CreateUserCommand
     {
         public string Name { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
     }
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, int>
+    public class CreateUserCommandHandler
     {
         private readonly ApplicationDbContext _context;
 

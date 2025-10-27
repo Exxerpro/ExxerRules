@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    
+    <!-- Package Information -->
+    <PackageId>IndFusion.SemanticRag.Web</PackageId>
+    <PackageVersion>1.0.0</PackageVersion>
+    <Authors>IndFusion</Authors>
+    <Description>Web API layer for IndFusion Semantic RAG Platform</Description>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <RootNamespace>IndFusion.SemanticRag.Web</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.File" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../IndFusion.SemanticRag.Application/IndFusion.SemanticRag.Application.csproj" />
+    <ProjectReference Include="../IndFusion.SemanticRag.Infrastructure/IndFusion.SemanticRag.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

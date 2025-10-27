@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Shouldly" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../code/IndFusion.SemanticRag.Domain/IndFusion.SemanticRag.Domain.csproj" />
+    <ProjectReference Include="../code/IndFusion.SemanticRag.Application/IndFusion.SemanticRag.Application.csproj" />
+    <!-- <ProjectReference Include="../code/IndFusion.SemanticRag.Infrastructure/IndFusion.SemanticRag.Infrastructure.csproj" /> - temporarily excluded due to compilation errors -->
+  </ItemGroup>
+
+</Project>

@@ -41,7 +41,7 @@ public class PatternGraphServiceTests
     {
         // Arrange
         var query = new PatternGraphQuery(
-            ProjectPath: TestUtilities.GetSolutionPath(),
+            ProjectPath: Path.Combine(TestUtilities.GetTestProjectDirectory(), "TestOutput", "TestProject", "TestProject.csproj"),
             NodeTypes: new[] { "Class", "Method" },
             MaxDepth: 5,
             IncludeMetadata: true);
@@ -98,7 +98,7 @@ public class PatternGraphServiceTests
     {
         // Arrange
         var query = new PatternGraphQuery(
-            ProjectPath: TestUtilities.GetSolutionPath(),
+            ProjectPath: Path.Combine(TestUtilities.GetTestProjectDirectory(), "TestOutput", "TestProject", "TestProject.csproj"),
             NodeTypes: new[] { "Class" },
             MaxDepth: 3,
             IncludeMetadata: false);
@@ -117,7 +117,7 @@ public class PatternGraphServiceTests
     public async Task GetNodesAsync_WithValidPath_ShouldReturnNodes()
     {
         // Arrange
-        var projectPath = TestUtilities.GetSolutionPath();
+        var projectPath = Path.Combine(TestUtilities.GetTestProjectDirectory(), "TestOutput", "TestProject", "TestProject.csproj");
         
         // Setup mocks
         var mockGraph = new SymbolGraph(
@@ -178,7 +178,7 @@ public class PatternGraphServiceTests
     public async Task GetEdgesAsync_WithValidPath_ShouldReturnEdges()
     {
         // Arrange
-        var projectPath = TestUtilities.GetSolutionPath();
+        var projectPath = Path.Combine(TestUtilities.GetTestProjectDirectory(), "TestOutput", "TestProject", "TestProject.csproj");
         
         // Setup mocks
         var mockGraph = new SymbolGraph(

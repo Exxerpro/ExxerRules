@@ -40,7 +40,7 @@ public class GraphCacheManagerTests
         var result = await _service.GetAsync(projectHash, CancellationToken.None);
         
         // Assert
-        result.IsSuccess.ShouldBeTrue();
+        result.IsSuccessValueNull.ShouldBeTrue();
         result.Value.ShouldBeNull();
     }
 
@@ -57,7 +57,7 @@ public class GraphCacheManagerTests
         var result = await _service.GetAsync(projectHash!, CancellationToken.None);
         
         // Assert
-        result.IsSuccess.ShouldBeTrue();
+        result.IsSuccessValueNull.ShouldBeTrue();
         result.Value.ShouldBeNull();
     }
 
@@ -74,7 +74,7 @@ public class GraphCacheManagerTests
         var result = await _service.GetAsync(projectHash, CancellationToken.None);
         
         // Assert
-        result.IsSuccess.ShouldBeTrue();
+        result.IsSuccessValueNull.ShouldBeTrue();
         result.Value.ShouldBeNull();
     }
 
@@ -204,7 +204,7 @@ public class GraphCacheManagerTests
         var getResult = await _service.GetAsync(projectHash, CancellationToken.None);
 
         // Assert
-        getResult.IsSuccess.ShouldBeTrue();
+        getResult.IsSuccessValueNull.ShouldBeTrue();
         getResult.Value.ShouldBeNull();
     }
 }

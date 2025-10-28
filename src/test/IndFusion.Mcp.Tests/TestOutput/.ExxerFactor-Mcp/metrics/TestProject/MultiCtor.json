@@ -1,12 +1,12 @@
 {
-  "linesOfCode": 9,
+  "linesOfCode": 2,
   "numberOfClasses": 2,
   "numberOfPublicMethods": 2,
   "numberOfPrivateMethods": 0,
   "classes": [
     {
       "name": "cA",
-      "linesOfCode": 8,
+      "linesOfCode": 1,
       "methods": [
         {
           "name": "Get",
@@ -17,7 +17,7 @@
         },
         {
           "name": "Add",
-          "linesOfCode": 4,
+          "linesOfCode": 1,
           "parameterCount": 1,
           "cyclomaticComplexity": 1,
           "maxNestingDepth": 0

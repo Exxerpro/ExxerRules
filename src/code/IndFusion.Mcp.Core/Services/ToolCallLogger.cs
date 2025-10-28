@@ -86,11 +86,11 @@ public static class ToolCallLogger
         }
     }
 
-    /// <summary>
-    /// Replays the tool invocations from a JSON lines log file, writing tool outputs to the console.
-    /// </summary>
-    /// <param name="logFilePath">Path to the JSONL log file.</param>
-    public static async Task Playback(string logFilePath)
+	/// <summary>
+	/// Replays the tool invocations from a JSON lines log file, writing tool outputs to the console.
+	/// </summary>
+	/// <param name="logFilePath">Path to the JSONL log file.</param>
+	public static async Task PlaybackAsync(string logFilePath)
     {
         if (!File.Exists(logFilePath))
         {

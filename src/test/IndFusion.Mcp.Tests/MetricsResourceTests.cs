@@ -57,7 +57,7 @@ public class MetricsResourceTests : TestBase
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         var solutionDir = Path.GetDirectoryName(SolutionPath)!;
         var testClassPath = Path.Combine(solutionDir, "TestProject", "TestClass.cs");
-        var classPath = testClassPath + Path.DirectorySeparatorChar + "TestClass";
+        var classPath = testClassPath + "/" + "TestClass";
         var result = await MetricsResource.ReadMetrics(classPath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.Equal("TestClass", doc.RootElement.GetProperty("name").GetString());
@@ -74,7 +74,7 @@ public class MetricsResourceTests : TestBase
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         var solutionDir = Path.GetDirectoryName(SolutionPath)!;
         var testClassPath = Path.Combine(solutionDir, "TestProject", "TestClass.cs");
-        var methodPath = testClassPath + Path.DirectorySeparatorChar + "TestClass.ProcessValue";
+        var methodPath = testClassPath + "/" + "TestClass.ProcessValue";
         var result = await MetricsResource.ReadMetrics(methodPath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         Console.WriteLine($"Actual JSON: {result.Text}");
         using var doc = JsonDocument.Parse(result.Text);

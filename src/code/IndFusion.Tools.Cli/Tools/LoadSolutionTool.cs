@@ -1,3 +1,5 @@
+using IndFusion.Mcp.Core.Services;
+
 namespace IndFusion.Tools.Mcp.App.Tools;
 
 /// <summary>

@@ -13,7 +13,7 @@ namespace IndFusion.Mcp.Core.Services;
 public class GraphCacheManager : IGraphCacheManager
 {
 	private readonly ILogger<GraphCacheManager> _logger;
-	private readonly ConcurrentDictionary<string, SymbolGraph> _cache = new();
+	private readonly ConcurrentDictionary<string, SymbolGraph> _cache;
 
 	/// <summary>
 	/// Initializes a new instance of the GraphCacheManager class.
@@ -22,6 +22,7 @@ public class GraphCacheManager : IGraphCacheManager
 	public GraphCacheManager(ILogger<GraphCacheManager> logger)
 	{
 		_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+		_cache = new ConcurrentDictionary<string, SymbolGraph>();
 	}
 
 	/// <summary>
@@ -34,38 +35,25 @@ public class GraphCacheManager : IGraphCacheManager
 		string projectHash, 
 		CancellationToken cancellationToken = default)
 	{
-		try
+		cancellationToken.ThrowIfCancellationRequested();
+		
+		_logger.LogInformation("Retrieving cached symbol graph for hash: {ProjectHash}", projectHash);
+		
+		if (string.IsNullOrEmpty(projectHash))
 		{
-			cancellationToken.ThrowIfCancellationRequested();
-			
-			_logger.LogInformation("Retrieving cached symbol graph for hash: {ProjectHash}", projectHash);
-			
-			if (string.IsNullOrEmpty(projectHash))
-			{
-				_logger.LogWarning("Project hash is null or empty");
-				return Task.FromResult(Result<SymbolGraph?>.Success(null));
-			}
-			
-			var found = _cache.TryGetValue(projectHash, out var graph);
-			if (found)
-			{
-				_logger.LogDebug("Found cached symbol graph for hash: {ProjectHash}", projectHash);
-				return Task.FromResult(Result<SymbolGraph?>.Success(graph));
-			}
-			
-			_logger.LogDebug("No cached symbol graph found for hash: {ProjectHash}", projectHash);
+			_logger.LogWarning("Project hash is null or empty");
 			return Task.FromResult(Result<SymbolGraph?>.Success(null));
 		}
-		catch (OperationCanceledException)
+		
+		var found = _cache.TryGetValue(projectHash, out var graph);
+		if (found)
 		{
-			_logger.LogInformation("Operation was cancelled while retrieving cached symbol graph for hash: {ProjectHash}", projectHash);
-			throw;
+			_logger.LogDebug("Found cached symbol graph for hash: {ProjectHash}", projectHash);
+			return Task.FromResult(Result<SymbolGraph?>.Success(graph));
 		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error retrieving cached symbol graph for hash: {ProjectHash}", projectHash);
-			return Task.FromResult(Result<SymbolGraph?>.WithFailure($"Failed to retrieve cached symbol graph: {ex.Message}"));
-		}
+		
+		_logger.LogDebug("No cached symbol graph found for hash: {ProjectHash}", projectHash);
+		return Task.FromResult(Result<SymbolGraph?>.Success(null));
 	}
 
 	/// <summary>
@@ -125,39 +113,26 @@ public class GraphCacheManager : IGraphCacheManager
 		string projectHash, 
 		CancellationToken cancellationToken = default)
 	{
-		try
+		cancellationToken.ThrowIfCancellationRequested();
+		
+		_logger.LogInformation("Invalidating cached symbol graph for hash: {ProjectHash}", projectHash);
+		
+		if (string.IsNullOrEmpty(projectHash))
 		{
-			cancellationToken.ThrowIfCancellationRequested();
-			
-			_logger.LogInformation("Invalidating cached symbol graph for hash: {ProjectHash}", projectHash);
-			
-			if (string.IsNullOrEmpty(projectHash))
-			{
-				_logger.LogWarning("Project hash is null or empty");
-				return Task.FromResult(Result.WithFailure("Project hash cannot be null or empty"));
-			}
-			
-			var removed = _cache.TryRemove(projectHash, out _);
-			if (removed)
-			{
-				_logger.LogDebug("Successfully invalidated cached symbol graph for hash: {ProjectHash}", projectHash);
-			}
-			else
-			{
-				_logger.LogDebug("No cached symbol graph found to invalidate for hash: {ProjectHash}", projectHash);
-			}
-			
-			return Task.FromResult(Result.Success());
+			_logger.LogWarning("Project hash is null or empty");
+			return Task.FromResult(Result.WithFailure("Project hash cannot be null or empty"));
 		}
-		catch (OperationCanceledException)
+		
+		var removed = _cache.TryRemove(projectHash, out _);
+		if (removed)
 		{
-			_logger.LogInformation("Operation was cancelled while invalidating cached symbol graph for hash: {ProjectHash}", projectHash);
-			throw;
+			_logger.LogDebug("Successfully invalidated cached symbol graph for hash: {ProjectHash}", projectHash);
 		}
-		catch (Exception ex)
+		else
 		{
-			_logger.LogError(ex, "Error invalidating cached symbol graph for hash: {ProjectHash}", projectHash);
-			return Task.FromResult(Result.WithFailure($"Failed to invalidate cached symbol graph: {ex.Message}"));
+			_logger.LogDebug("No cached symbol graph found to invalidate for hash: {ProjectHash}", projectHash);
 		}
+		
+		return Task.FromResult(Result.Success());
 	}
 }

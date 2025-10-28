@@ -214,6 +214,12 @@ public static class MoveMethodFileService
     {
         foreach (var inj in constructorInjections)
         {
+            // Skip "this" injection as it should be handled by parameter injection instead
+            // Constructor injection with "this" means we want to pass the source instance as a parameter
+            // to static methods, not create a field to store it
+            if (inj == "this")
+                continue;
+                
             var paramName = GetParameterName(inj, sourceClass);
             var fieldName = GetFieldName(inj, sourceClass);
             var method = root.DescendantNodes()

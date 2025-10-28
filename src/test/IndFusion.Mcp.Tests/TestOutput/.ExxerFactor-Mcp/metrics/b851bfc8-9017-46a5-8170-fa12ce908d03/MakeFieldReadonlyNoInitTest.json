@@ -1,0 +1,13 @@
+{
+  "linesOfCode": 5,
+  "numberOfClasses": 1,
+  "numberOfPublicMethods": 0,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "TestClass",
+      "linesOfCode": 4,
+      "methods": []
+    }
+  ]
+}

@@ -25,6 +25,8 @@
   <!-- Package Dependencies                                                   -->
   <!-- ===================================================================== -->
   <ItemGroup>
+	<!-- Project References -->
+	<ProjectReference Include="..\IndFusion.Analyzer\IndFusion.Analyzer.csproj" />
 	<!-- Roslyn Compiler Platform & Code Analysis -->
 	<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
 	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />
@@ -45,6 +47,8 @@
 	<!-- System & JSON (part of framework for net10) -->
 	<!-- Protocol & Communication -->
 	<PackageReference Include="ModelContextProtocol" />
+	<!-- Functional Programming -->
+	<PackageReference Include="IndQuestResults" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- InternalsVisibleTo Configuration                                       -->

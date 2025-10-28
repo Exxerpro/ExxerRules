@@ -1,3 +1,8 @@
+---
+globs: *.md
+description: Standards for writing clear, consistent, and informative commit messages
+---
+
 # Commit Message Standards
 
 ## Meta

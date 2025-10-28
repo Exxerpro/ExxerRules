@@ -1,0 +1,23 @@
+{
+  "stryker-config": {
+    "test-projects": [
+      "Calculator.Tests.csproj"
+    ],
+    "mutate": [
+      "../Calculator.Core/**/*.cs"
+    ],
+    "reporters": [
+      "html",
+      "json",
+      "progress"
+    ],
+    "thresholds": {
+      "high": 80,
+      "break": 70
+    },
+    "ignore-mutations": [],
+    "coverage-analysis": "off",
+    "concurrency": 4,
+    "verbosity": "info"
+  }
+}

@@ -1,3 +1,8 @@
+---
+globs: *.cs
+description: Principles for writing readable, maintainable, and efficient code
+---
+
 # Clean Code Principles
 
 ## Meta

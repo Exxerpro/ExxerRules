@@ -5,18 +5,20 @@
   <PropertyGroup>
     <!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
     <OutputType>Exe</OutputType>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+	<NoWarn>$(NoWarn);CS1591;CA1707;CA1859</NoWarn>
     <EnableMSTestRunner>true</EnableMSTestRunner>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformServer>true</TestingPlatformServer>
     <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
     <RootNamespace>IndFusion.Mcp.Tests</RootNamespace>
-
   </PropertyGroup>
   <Import Project="..\TestingPlatform.props" />
   <!-- ===================================================================== -->
@@ -26,16 +28,10 @@
     <!-- Testing Framework & Tools -->
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.v3" />
-    <PackageReference Update="xunit.v3.runner.console">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+    <PackageReference Include="xunit.v3.core" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Update="xunit.v3.runner.msbuild">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <!-- Test Coverage -->
     <PackageReference Include="coverlet.collector">
@@ -44,12 +40,27 @@
     </PackageReference>
     <PackageReference Include="Shouldly" />
     <PackageReference Include="NSubstitute" />
+    <PackageReference Include="NSubstitute.Analyzers.CSharp" />
+    <PackageReference Include="IndQuestResults" />
+    <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Extensions.TimeProvider.Testing" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Global Using Statements                                                -->
   <!-- ===================================================================== -->
   <ItemGroup>
     <Using Include="Xunit" />
+    <Using Include="NSubstitute" />
+    <Using Include="Shouldly" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Text" />
+    <Using Include="System.IO" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->
@@ -72,5 +83,22 @@
     <Compile Remove="**\*Fixture.cs" />
     <None Include="**\*Sample.cs" />
     <None Include="**\*Fixture.cs" />
+  </ItemGroup>
+  
+  <!-- ===================================================================== -->
+  <!-- Testing Platform Capabilities                                         -->
+  <!-- ===================================================================== -->
+  <ItemGroup Label="Testing Platform Capabilities">
+    <ProjectCapability Include="DiagnoseCapabilities" />
+    <ProjectCapability Include="TestingPlatformServer" />
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+  
+  <!-- ===================================================================== -->
+  <!-- Test Organization Folders                                             -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+    <Folder Include="Architecture\" />
+    <Folder Include="PatternGraph\" />
   </ItemGroup>
 </Project>

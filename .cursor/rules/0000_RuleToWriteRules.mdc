@@ -1,3 +1,8 @@
+---
+globs: *.mdc
+description: Establishes standards for creating effective AI agent rules that are clear, enforceable, and optimized for AI consumption
+---
+
 # Rule for Writing Rules
 
 ## Meta

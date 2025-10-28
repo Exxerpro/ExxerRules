@@ -94,12 +94,15 @@ public static class MetricsProvider
     {
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(solutionPath, cancellationToken);
         var doc = ExxerFactoringHelpers.GetDocumentByPath(solution, filePath);
+        Console.WriteLine($"LoadTreeAndModel: Looking for {filePath}");
+        Console.WriteLine($"LoadTreeAndModel: Found document: {doc != null}");
         if (doc != null)
         {
             var tree = await doc.GetSyntaxTreeAsync(cancellationToken) ?? CSharpSyntaxTree.ParseText(await File.ReadAllTextAsync(filePath, cancellationToken));
             var model = await doc.GetSemanticModelAsync(cancellationToken);
             return (tree, model);
         }
+        Console.WriteLine($"LoadTreeAndModel: Document not found, falling back to file reading");
         var syntaxTree = CSharpSyntaxTree.ParseText(await File.ReadAllTextAsync(filePath, cancellationToken));
         return (syntaxTree, null);
     }

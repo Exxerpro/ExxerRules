@@ -1,0 +1,21 @@
+{
+  "linesOfCode": 11,
+  "numberOfClasses": 1,
+  "numberOfPublicMethods": 1,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "Counter",
+      "linesOfCode": 11,
+      "methods": [
+        {
+          "name": "Update",
+          "linesOfCode": 5,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

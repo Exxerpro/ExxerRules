@@ -1,0 +1,137 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<!-- ============================================================================ -->
+	<!-- CORE PROPERTIES -->
+	<!-- ============================================================================ -->
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		<!-- Microsoft Testing Platform Configuration -->
+		<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+		<TestingPlatformServer>true</TestingPlatformServer>
+
+		<OutputType>Exe</OutputType>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<!-- Language Features -->
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+
+
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+
+		<!-- Application Information -->
+		<AssemblyTitle>ExxerAI Integration Tests</AssemblyTitle>
+		<Description>Unit and Integration Tests for ExxerAI Integration Services</Description>
+		<Company>Exxerpro Solutions</Company>
+		<Product>ExxerAI Intelligence System</Product>
+		<Title>ExxerAI.Infrastructure.Tests</Title>
+	</PropertyGroup>
+
+	<!-- ============================================================================ -->
+	<!-- PUBLISHING PROPERTIES -->
+	<!-- ============================================================================ -->
+	<PropertyGroup>
+		<!-- Publishing Enhancements -->
+		<EnableDynamicPgo>true</EnableDynamicPgo>
+		<TieredCompilation>true</TieredCompilation>
+	</PropertyGroup>
+
+	<!-- ============================================================================ -->
+	<!-- PACKAGE REFERENCES - TESTING FRAMEWORK (XUnit v3) -->
+	<!-- ============================================================================ -->
+	<ItemGroup Label="xUnit v3">
+		<PackageReference Include="xunit.v3" />
+		<PackageReference Include="xunit.v3.core" />
+	</ItemGroup>
+	
+	<ItemGroup Label="Visual Studio Runner">
+		<PackageReference Include="Microsoft.NET.Test.Sdk" />
+		<PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
+		<PackageReference Include="xunit.runner.visualstudio">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3.runner.inproc.console" />
+		<PackageReference Include="xunit.v3.runner.msbuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="coverlet.collector" />
+	</ItemGroup>
+	
+	<ItemGroup Label="Analyzers">
+		<PackageReference Include="xunit.analyzers">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	
+	<ItemGroup Label="Logging">
+        <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
+        <PackageReference Include="Microsoft.Extensions.Logging" />
+        <PackageReference Include="Seq.Extensions.Logging" />
+	</ItemGroup>
+
+	<!-- ============================================================================ -->
+	<!-- PACKAGE REFERENCES - TESTING UTILITIES -->
+	<!-- ============================================================================ -->
+	<ItemGroup Label="Testing Utilities">
+		<PackageReference Include="Shouldly" />
+		<PackageReference Include="NetArchTest.Rules" />
+		<PackageReference Include="NSubstitute" />
+	</ItemGroup>
+	
+	<!-- ============================================================================ -->
+	<!-- MICROSOFT TESTING PLATFORM -->
+	<!-- ============================================================================ -->
+	<ItemGroup Label="Microsoft Testing Platform">
+		<PackageReference Include="Microsoft.Testing.Platform" />
+		<PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+	</ItemGroup>
+	
+
+	<!-- ============================================================================ -->
+	<!-- GLOBAL USINGS -->
+	<!-- ============================================================================ -->
+	<ItemGroup Label="Global Usings">
+		<Using Include="System" />
+		<Using Include="System.Collections.Generic" />
+		<Using Include="System.Linq" />
+		<Using Include="System.Reflection" />
+		<Using Include="System.IO" />
+		<Using Include="Xunit" />
+		<Using Include="Shouldly" />
+		<Using Include="NetArchTest.Rules" />
+	</ItemGroup>
+
+	<!-- ============================================================================ -->
+	<!-- PROJECT REFERENCES -->
+	<!-- ============================================================================ -->
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\ExxerAI.Application\ExxerAI.Application.csproj" />
+		<ProjectReference Include="..\..\Core\ExxerAI.Domain\ExxerAI.Domain.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAI.Api\ExxerAI.Api.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAI.CLI.Library\ExxerAI.CLI.Library.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAI.Infrastructure\ExxerAI.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAi.MCPServer\ExxerAI.MCPServer.csproj" />
+		<ProjectReference Include="..\..\Presentation\ExxerAI.UI.Library\ExxerAI.UI.Library.csproj" />
+		<ProjectReference Include="..\..\Presentation\ExxerAI.UI\ExxerAI.UI.csproj" />
+	</ItemGroup>
+
+
+  <!-- ============================================================================ -->
+  <!-- PROJECT CAPABILITIES -->
+  <!-- ============================================================================ -->
+  <ItemGroup Label="Testing Platform Capabilities">
+    <ProjectCapability Include="DiagnoseCapabilities" />
+    <ProjectCapability Include="TestingPlatformServer" />
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+</Project>

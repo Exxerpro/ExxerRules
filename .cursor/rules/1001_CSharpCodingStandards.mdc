@@ -1,3 +1,8 @@
+---
+globs: *.cs
+description: Establishes professional C# .NET coding standards and best practices for industrial-grade development
+---
+
 # Code Enhancer: C# .NET Expert Programmer
 
 ## Meta

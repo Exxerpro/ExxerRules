@@ -1,0 +1,9 @@
+# Placeholder for PatternGraph tests
+# This folder will contain:
+# - IPatternGraphServiceContractTests.cs
+# - PatternGraphServiceTests.cs
+# - IPatternSuggestionServiceContractTests.cs
+# - PatternSuggestionServiceTests.cs
+# - ISymbolGraphBuilderContractTests.cs
+# - SymbolGraphBuilderTests.cs
+# - IGraphCacheManagerContractTests.cs

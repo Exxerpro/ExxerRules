@@ -11,7 +11,7 @@ This document captures open questions and future considerations that don't need 
 **Context**: Need to determine the optimal approach for indexing repositories in the IndFusion Semantic RAG system without overwhelming the server resources.
 
 **Options Under Consideration**:
-1. **On-Demand Indexing**: Index repositories only when requested by the LLM
+1. **On-Demand Indexing**: Index repositories only when requested by the LLM <--Manage Onboarding like serena sever
 2. **Selective Pre-Indexing**: Index only critical/active repositories
 3. **Tiered Indexing**: Always indexed (Tier 1) vs On-demand (Tier 2) vs Never indexed (Tier 3)
 
@@ -38,7 +38,7 @@ This document captures open questions and future considerations that don't need 
 - ✅ **Initial Performance**: Worked like a charm initially
 - ⚠️ **Performance Issues**: Noticed degradation over time
 - ❌ **Stats/Logging**: Stats functionality never worked well
-- 🔍 **Investigation Needed**: Need to analyze root cause of degradation
+- 🔍 **Investigation Needed**: Need to analyze root cause of degradation  < Deleted cahce and started to work againg but needed to reindex- we can call serenea as intermediate or use  indepented
 
 **Integration Options**:
 1. **Adapt Serena's tools** into our MCP server
@@ -68,8 +68,8 @@ This document captures open questions and future considerations that don't need 
 **Context**: While we have a strong foundation with ExxerAI adaptation, some technology choices remain open for future optimization.
 
 **Open Decisions**:
-- **Vector Database**: Qdrant vs PostgreSQL with pgvector (both supported)
-- **Graph Database**: Neo4j implementation details and optimization
+- **Vector Database**: Qdrant vs PostgreSQL with pgvector (both supported) <--Qdrant
+- **Graph Database**: Neo4j implementation details and optimization 
 - **LLM Models**: Specific Ollama model selection for different use cases
 - **OCR Engine**: Tesseract configuration and language support
 - **Caching Strategy**: Redis vs in-memory vs hybrid approach
@@ -91,7 +91,7 @@ This document captures open questions and future considerations that don't need 
 
 ## Security and Compliance
 
-### **Question**: Security model and compliance requirements
+### **Question**: Security model and compliance requirements <--While on premiss not need now
 
 **Context**: Need to define security requirements and compliance standards for the IndFusion platform.
 
@@ -124,7 +124,7 @@ This document captures open questions and future considerations that don't need 
 **Context**: While focused on MVP delivery, need to consider future enhancement opportunities.
 
 **Potential Enhancements**:
-- **Multi-Language Support**: Beyond C#/.NET ecosystem
+- **Multi-Language Support**: Beyond C#/.NET ecosystem  <-- Python as second language, maybe 
 - **Advanced Analytics**: Code quality trends, pattern adoption metrics
 - **AI/ML Integration**: Predictive analysis, automated recommendations
 - **Integration Ecosystem**: Third-party tool integrations

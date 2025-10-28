@@ -1,3 +1,8 @@
+---
+globs: *.cs
+description: Professional software engineering standards for C# .NET development
+---
+
 # Code Enhancer Standards
 
 ## Meta

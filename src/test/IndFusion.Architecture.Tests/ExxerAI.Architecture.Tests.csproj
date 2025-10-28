@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Project Sdk="Microsoft.NET.Sdk">
+
+	
+	
+	
+	<PropertyGroup>
+		<TargetFramework>net10.0</TargetFramework>
+		
+		<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+		<TestingPlatformServer>true</TestingPlatformServer>
+
+		<OutputType>Exe</OutputType>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+
+
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+
+		
+		<AssemblyTitle>ExxerAI Integration Tests</AssemblyTitle>
+		<Description>Unit and Integration Tests for ExxerAI Integration Services</Description>
+		<Company>Exxerpro Solutions</Company>
+		<Product>ExxerAI Intelligence System</Product>
+		<Title>ExxerAI.Infrastructure.Tests</Title>
+	</PropertyGroup>
+
+	
+	
+	
+	<PropertyGroup>
+		
+		<EnableDynamicPgo>true</EnableDynamicPgo>
+		<TieredCompilation>true</TieredCompilation>
+	</PropertyGroup>
+
+	
+	
+	
+	<ItemGroup Label="Global Usings">
+		<Using Include="System" />
+		<Using Include="System.Collections.Generic" />
+		<Using Include="System.Linq" />
+		<Using Include="System.Reflection" />
+		<Using Include="System.IO" />
+		<Using Include="Xunit" />
+		<Using Include="Shouldly" />
+		<Using Include="NetArchTest.Rules" />
+	</ItemGroup>
+
+	
+	
+	
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\ExxerAI.Application\ExxerAI.Application.csproj" />
+		<ProjectReference Include="..\..\Core\ExxerAI.Domain\ExxerAI.Domain.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAI.Api\ExxerAI.Api.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAI.CLI.Library\ExxerAI.CLI.Library.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAI.Infrastructure\ExxerAI.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\ExxerAi.MCPServer\ExxerAI.MCPServer.csproj" />
+		<ProjectReference Include="..\..\Presentation\ExxerAI.UI.Library\ExxerAI.UI.Library.csproj" />
+		<ProjectReference Include="..\..\Presentation\ExxerAI.UI\ExxerAI.UI.csproj" />
+	</ItemGroup>
+
+
+  
+  
+  
+  <ItemGroup Label="Testing Platform Capabilities">
+    <ProjectCapability Include="DiagnoseCapabilities" />
+    <ProjectCapability Include="TestingPlatformServer" />
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+</Project>

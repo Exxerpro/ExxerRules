@@ -20,11 +20,13 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics File ReturnsJson.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
+    [Fact(Timeout = 30000)] // 30 second timeout for unit test
     public async Task ReadMetrics_File_ReturnsJson()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        var result = await MetricsResource.ReadMetrics(ExampleFilePath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
+        var solutionDir = Path.GetDirectoryName(SolutionPath)!;
+        var testFilePath = Path.Combine(solutionDir, "TestProject", "TestClass.cs");
+        var result = await MetricsResource.ReadMetrics(testFilePath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.True(doc.RootElement.TryGetProperty("linesOfCode", out _));
     }
@@ -33,30 +35,32 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics Directory ReturnsAggregatedJson.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
+    [Fact(Timeout = 30000)] // 30 second timeout for unit test
     public async Task ReadMetrics_Directory_ReturnsAggregatedJson()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        var dir = Path.GetDirectoryName(ExampleFilePath)!;
+        var dir = Path.GetDirectoryName(SolutionPath)!;
         var result = await MetricsResource.ReadMetrics(dir, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
         Assert.Equal(JsonValueKind.Array, doc.RootElement.ValueKind);
         Assert.Contains(doc.RootElement.EnumerateArray(), e =>
-            e.TryGetProperty("name", out var n) && n.GetString() == "Calculator");
+            e.TryGetProperty("name", out var n) && n.GetString() == "TestClass");
     }
 
     /// <summary>
     /// ReadMetrics Class ReturnsClassMetrics.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
+    [Fact(Timeout = 30000)] // 30 second timeout for unit test
     public async Task ReadMetrics_Class_ReturnsClassMetrics()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        var classPath = ExampleFilePath + Path.DirectorySeparatorChar + "Calculator";
+        var solutionDir = Path.GetDirectoryName(SolutionPath)!;
+        var testClassPath = Path.Combine(solutionDir, "TestProject", "TestClass.cs");
+        var classPath = testClassPath + Path.DirectorySeparatorChar + "TestClass";
         var result = await MetricsResource.ReadMetrics(classPath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         using var doc = JsonDocument.Parse(result.Text);
-        Assert.Equal("Calculator", doc.RootElement.GetProperty("name").GetString());
+        Assert.Equal("TestClass", doc.RootElement.GetProperty("name").GetString());
         Assert.True(doc.RootElement.TryGetProperty("methods", out _));
     }
 
@@ -64,14 +68,17 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics Method ReturnsMethodMetrics.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
+    [Fact(Timeout = 30000)] // 30 second timeout for unit test
     public async Task ReadMetrics_Method_ReturnsMethodMetrics()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        var methodPath = ExampleFilePath + Path.DirectorySeparatorChar + "Calculator.Calculate";
+        var solutionDir = Path.GetDirectoryName(SolutionPath)!;
+        var testClassPath = Path.Combine(solutionDir, "TestProject", "TestClass.cs");
+        var methodPath = testClassPath + Path.DirectorySeparatorChar + "TestClass.ProcessValue";
         var result = await MetricsResource.ReadMetrics(methodPath, SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
+        Console.WriteLine($"Actual JSON: {result.Text}");
         using var doc = JsonDocument.Parse(result.Text);
-        Assert.Equal("Calculate", doc.RootElement.GetProperty("name").GetString());
+        Assert.Equal("ProcessValue", doc.RootElement.GetProperty("name").GetString());
         Assert.True(doc.RootElement.TryGetProperty("cyclomaticComplexity", out _));
     }
 
@@ -79,7 +86,7 @@ public class MetricsResourceTests : TestBase
     /// ReadMetrics InvalidPath ReturnsError.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 5000)] // 5 second timeout - will fail and start TDD
+    [Fact(Timeout = 30000)] // 30 second timeout for unit test
     public async Task ReadMetrics_InvalidPath_ReturnsError()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);

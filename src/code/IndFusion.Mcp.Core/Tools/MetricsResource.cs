@@ -101,7 +101,16 @@ public static class MetricsResource
 
     private static async Task<JsonDocument> GetFileMetricsJson(string solutionPath, string filePath, CancellationToken cancellationToken = default)
     {
-        var json = await MetricsProvider.GetFileMetrics(solutionPath, filePath, cancellationToken);
-        return JsonDocument.Parse(json);
+        try
+        {
+            var json = await MetricsProvider.GetFileMetrics(solutionPath, filePath, cancellationToken);
+            return JsonDocument.Parse(json);
+        }
+        catch (Exception ex)
+        {
+            // Return error as JSON instead of throwing
+            var errorJson = JsonSerializer.Serialize(new { Error = ex.Message }, new JsonSerializerOptions { WriteIndented = true });
+            return JsonDocument.Parse(errorJson);
+        }
     }
 }

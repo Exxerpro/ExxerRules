@@ -8,11 +8,14 @@ public class MoveMultipleMethodsToolTests : TestBase
     public async Task MoveMultipleMethods_FailureDoesNotRecordHistory()
     {
         UnloadSolutionTool.ClearSolutionCache(Xunit.TestContext.Current.CancellationToken);
-        var testFile = Path.Combine(TestOutputPath, "MoveMultiFailHistory.cs");
-        await TestUtilities.CreateTestFile(testFile, File.ReadAllText(ExampleFilePath));
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
         var project = solution.Projects.First();
+        
+        // Create test file in the TestProject directory (like other successful tests)
+        var solutionDir = Path.GetDirectoryName(SolutionPath)!;
+        var testFile = Path.Combine(solutionDir, "TestProject", "MoveMultiFailHistory.cs");
+        await TestUtilities.CreateTestFile(testFile, File.ReadAllText(ExampleFilePath));
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
 
         var error = await MoveMultipleMethodsTool.MoveMultipleMethodsStatic(
@@ -40,7 +43,13 @@ public class MoveMultipleMethodsToolTests : TestBase
     public async Task MoveMultipleMethods_NestedClassGenerics_ShouldSucceed()
     {
         UnloadSolutionTool.ClearSolutionCache(Xunit.TestContext.Current.CancellationToken);
-        var testFile = Path.Combine(TestOutputPath, "NestedGeneric.cs");
+        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
+        var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
+        var project = solution.Projects.First();
+        
+        // Create test file in the TestProject directory (like other successful tests)
+        var solutionDir = Path.GetDirectoryName(SolutionPath)!;
+        var testFile = Path.Combine(solutionDir, "TestProject", "NestedGeneric.cs");
         var code = @"using System.Collections.Generic;
 public class Outer
 {
@@ -50,9 +59,6 @@ public class Outer
 }
 public class Target { }";
         await TestUtilities.CreateTestFile(testFile, code);
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
-        var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath, cancellationToken: Xunit.TestContext.Current.CancellationToken);
-        var project = solution.Projects.First();
         ExxerFactoringHelpers.AddDocumentToProject(project, testFile);
 
         var result = await MoveMultipleMethodsTool.MoveMultipleMethodsStatic(

@@ -268,6 +268,84 @@ dotnet test src/test/IndFusion.Mcp.Tests.Integration/ --logger "console;verbosit
 dotnet test src/test/IndFusion.Mcp.Tests.Integration/Infrastructure/ --logger "console;verbosity=detailed"
 ```
 
+## 🐛 Bug Discovery
+
+### MoveMethodFileService Compilation Error
+
+**Date Discovered**: 2025-01-15  
+**Status**: Blocking - Requires immediate fix  
+**Priority**: High  
+
+#### Problem Description
+
+During Sprint 3 PatternGraph implementation, a pre-existing compilation error was discovered in the `MoveMethodFileService.MoveInstanceMethodInFile` method:
+
+**File**: `ExxerRules/src/code/IndFusion.Mcp.Core/Move/MoveMethodFileService.cs`  
+**Line**: 133-144  
+
+#### Root Cause
+
+The method signature is missing the `filePath` parameter but the method body attempts to use it:
+
+```csharp
+// INCORRECT - Missing filePath parameter
+public static async Task<string> MoveInstanceMethodInFile(
+    // MISSING: string filePath,
+    string sourceClass,
+    string methodName,
+    string[] constructorInjections,
+    string[] parameterInjections,
+    string targetClass,
+    string accessMemberName,
+    string accessMemberType,
+    string? targetFilePath = null,
+    IProgress<string>? progress = null,
+    CancellationToken cancellationToken = default)
+{
+    MoveMethodTool.EnsureNotAlreadyMoved(filePath, methodName); // ← filePath is undefined!
+    ValidateFileExists(filePath); // ← filePath is undefined!
+    // ... rest of method
+}
+```
+
+#### Impact
+
+- **Failing Tests**: `MoveMultipleMethodsConstructorInjectionTests.MoveMultipleMethods_ConstructorInjection_UsesThis`
+- **Test Count**: 7-8 tests failing due to this compilation error
+- **Blocking**: Prevents proper test execution and CI/CD pipeline success
+
+#### Expected Fix
+
+Add the missing `filePath` parameter to the method signature:
+
+```csharp
+public static async Task<string> MoveInstanceMethodInFile(
+    string filePath, // ← ADD THIS PARAMETER
+    string sourceClass,
+    string methodName,
+    string[] constructorInjections,
+    string[] parameterInjections,
+    string targetClass,
+    string accessMemberName,
+    string accessMemberType,
+    string? targetFilePath = null,
+    IProgress<string>? progress = null,
+    CancellationToken cancellationToken = default)
+```
+
+#### Verification Steps
+
+1. Fix the method signature by adding `string filePath` as the first parameter
+2. Run the failing test: `dotnet test --filter "MoveMultipleMethodsConstructorInjectionTests"`
+3. Verify all MoveMethodFileService tests pass
+4. Ensure no regression in other test suites
+
+#### Notes
+
+- This bug is **NOT related** to Sprint 3 PatternGraph implementation
+- The PatternGraph work is isolated and does not affect MoveMethodFileService
+- This appears to be a pre-existing issue from previous agent work that was incompletely fixed
+
 ## 📚 References
 
 - [Unified Semantic RAG Standards Initiative](docs/Unified-Semantic-RAG-Standards-Initiative.md)

@@ -211,7 +211,11 @@ public class Calculator
             return;
 
         var solutionDir = Path.GetDirectoryName(solutionPath)!;
-        var projectPath = Path.Combine(solutionDir, "TestProject.csproj");
+        var projectDir = Path.Combine(solutionDir, "TestProject");
+        var projectPath = Path.Combine(projectDir, "TestProject.csproj");
+
+        // Create project directory
+        Directory.CreateDirectory(projectDir);
 
         // Create a minimal test project
         var projectContent = """
@@ -227,9 +231,10 @@ public class Calculator
         File.WriteAllText(projectPath, projectContent);
 
         // Create a minimal C# file for the test project
-        var csFilePath = Path.Combine(solutionDir, "TestClass.cs");
+        var csFilePath = Path.Combine(projectDir, "TestClass.cs");
         var csFileContent = """
             using System;
+            using System.Threading.Tasks;
 
             namespace TestProject;
 
@@ -263,6 +268,27 @@ public class Calculator
 
                     return value * 2;
                 }
+
+                // This method violates EXXER rules - missing CancellationToken
+                public async Task<string> GetDataAsync()
+                {
+                    await Task.Delay(100);
+                    return "data";
+                }
+
+                // This method violates EXXER rules - uses Console.WriteLine
+                public void LogMessage(string message)
+                {
+                    Console.WriteLine(message);
+                }
+
+                // This method violates EXXER rules - uses regions
+                #region Helper Methods
+                private void HelperMethod()
+                {
+                    // Helper implementation
+                }
+                #endregion
             }
             """;
 
@@ -274,7 +300,7 @@ public class Calculator
             # Visual Studio Version 17
             VisualStudioVersion = 17.0.31903.59
             MinimumVisualStudioVersion = 10.0.40219.1
-            Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject.csproj", "{12345678-1234-5678-9ABC-123456789ABC}"
+            Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject", "TestProject\TestProject.csproj", "{12345678-1234-5678-9ABC-123456789ABC}"
             EndProject
             Global
                 GlobalSection(SolutionConfigurationPlatforms) = preSolution

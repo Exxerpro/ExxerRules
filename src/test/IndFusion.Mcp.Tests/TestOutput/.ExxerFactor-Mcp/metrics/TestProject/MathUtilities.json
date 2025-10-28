@@ -1,0 +1,126 @@
+{
+  "linesOfCode": 69,
+  "numberOfClasses": 1,
+  "numberOfPublicMethods": 14,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "MathUtilities",
+      "linesOfCode": 67,
+      "methods": [
+        {
+          "name": "FormatCurrency",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogOperation",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "BaseLogOperation",
+          "linesOfCode": 3,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "FormatCurrency",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "BaseFormatCurrency",
+          "linesOfCode": 3,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogOperation",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "FormatCurrency",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogOperation",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "FormatCurrency",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogOperation",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "FormatCurrency",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogOperation",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "FormatCurrency",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogOperation",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "FormatCurrency",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogOperation",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

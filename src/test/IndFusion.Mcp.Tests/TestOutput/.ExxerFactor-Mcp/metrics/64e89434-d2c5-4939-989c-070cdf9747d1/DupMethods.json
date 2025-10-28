@@ -1,0 +1,26 @@
+{
+  "linesOfCode": 1,
+  "numberOfClasses": 2,
+  "numberOfPublicMethods": 1,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "Source",
+      "linesOfCode": 1,
+      "methods": [
+        {
+          "name": "A",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    },
+    {
+      "name": "Target",
+      "linesOfCode": 1,
+      "methods": []
+    }
+  ]
+}

@@ -1,3 +1,8 @@
+---
+globs: *.cs
+description: Modern C# features and patterns used throughout the project
+---
+
 # ExxerAI Modern C# Features
 
 ## Meta

@@ -2,10 +2,14 @@
   "version": "1.0",
   "packs": [
     {
-      $1[1034, 1033, 1032, 7, 1028, 1042, 1041, 1030, 701, 702, 703]
+      "id": "pack.refactoring",
+      "title": "Refactoring Standards",
+      "rules": [1034, 1033, 1032, 7, 1028, 1042, 1041, 1030, 701, 702, 703]
     },
     {
-      $1[1029, 305, 306, 307, 308]
+      "id": "pack.testing",
+      "title": "Testing Standards",
+      "rules": [1029, 305, 306, 307, 308]
     },
     {
       "id": "pack.architecture",

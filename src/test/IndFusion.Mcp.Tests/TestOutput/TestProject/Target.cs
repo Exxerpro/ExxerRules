@@ -1,0 +1,121 @@
+﻿using System.Collections.Generic;
+
+public class Target
+{
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+
+    internal static int BaseCountList(List<Outer.Inner> items)
+    {
+    }
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+
+    internal static List<Outer.Inner> BaseMakeList()
+    {
+    }
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
+}

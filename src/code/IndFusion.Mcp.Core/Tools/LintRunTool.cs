@@ -35,6 +35,7 @@ public static class LintRunTool
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
             progress?.Report("Starting linting analysis...");
 
             // Validate inputs
@@ -55,10 +56,9 @@ public static class LintRunTool
 
             progress?.Report("Loading solution and preparing analyzers...");
 
-            // TODO: Implement proper solution loading with caching
-            // For now, use a simple workspace approach
-            using var workspace = Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.Create();
-            var solution = await workspace.OpenSolutionAsync(solutionPath, progress: null, cancellationToken);
+            // Use LintingService for solution loading with caching
+            var logger = new LoggerFactory().CreateLogger<LintingService>();
+            var lintingService = new LintingService(logger);
 
             progress?.Report("Running EXXER analyzers...");
 
@@ -72,10 +72,6 @@ public static class LintRunTool
                 SeverityFilter: "Warning", // TODO: Use parsed severities
                 IncludePolicyRecommendations: true
             );
-
-            // Create linting service (this would be injected in real implementation)
-            var logger = new LoggerFactory().CreateLogger<LintingService>();
-            var lintingService = new LintingService(logger);
 
             // Execute linting
             var result = await lintingService.RunLintingAsync(request, cancellationToken);

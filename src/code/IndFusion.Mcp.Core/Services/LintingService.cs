@@ -1,8 +1,10 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
+using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Extensions.Logging;
 using IndFusion.Mcp.Core.Abstractions;
 using System.Collections.Immutable;
+using IndFusion.Analyzers;
 
 namespace IndFusion.Mcp.Core.Services;
 
@@ -13,6 +15,11 @@ namespace IndFusion.Mcp.Core.Services;
 public class LintingService : ILintingService
 {
     private readonly ILogger<LintingService> _logger;
+    
+    // Static workspace cache to prevent duplicate solution loading
+    private static readonly Dictionary<string, (MSBuildWorkspace Workspace, Solution Solution, DateTime LastAccessed)> _workspaceCache = new();
+    private static readonly object _cacheLock = new();
+    private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(5);
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LintingService"/> class.
@@ -39,8 +46,9 @@ public class LintingService : ILintingService
                 throw new ArgumentException($"Solution file not found: {request.SolutionPath}", nameof(request));
             }
 
-            // Load solution
-            var solution = await LoadSolutionAsync(request.SolutionPath, cancellationToken);
+            // Create workspace and keep it alive for the entire operation
+            // Load solution with caching
+            var solution = await GetOrCreateSolutionAsync(request.SolutionPath, cancellationToken);
             
             // Determine files to analyze
             var filesToAnalyze = await GetFilesToAnalyzeAsync(solution, request.Scope, cancellationToken);
@@ -161,15 +169,6 @@ public class LintingService : ILintingService
         );
     }
 
-    private async Task<Solution> LoadSolutionAsync(string solutionPath, CancellationToken cancellationToken)
-    {
-        // TODO: Implement proper solution loading with caching
-        // For now, use a simple workspace approach
-        using var workspace = Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.Create();
-        var solution = await workspace.OpenSolutionAsync(solutionPath, progress: null, cancellationToken);
-        
-        return solution;
-    }
 
     private async Task<List<Document>> GetFilesToAnalyzeAsync(Solution solution, string? scope, CancellationToken cancellationToken)
     {
@@ -223,14 +222,16 @@ public class LintingService : ILintingService
         LintingRequest request, 
         CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
+        
         var violations = new List<LintingViolation>();
 
         // Create analyzer compilation
         var compilation = await solution.Projects.First().GetCompilationAsync(cancellationToken);
         if (compilation == null) return violations;
 
-        // Create analyzer - TODO: Replace with actual IndFusion analyzers
-        var analyzers = ImmutableArray<DiagnosticAnalyzer>.Empty; // Placeholder for now
+        // Create analyzer - Load actual IndFusion analyzers
+        var analyzers = ImmutableArray.Create<DiagnosticAnalyzer>(new IndFusionAnalyzer());
         var compilationWithAnalyzers = compilation.WithAnalyzers(analyzers);
 
         // Run analysis
@@ -280,22 +281,129 @@ public class LintingService : ILintingService
         CancellationToken cancellationToken)
     {
         var decisions = new List<PolicyDecision>();
-
-        // TODO: Implement actual policy application logic
-        // This would involve checking policy rules, severity settings, etc.
-        await Task.Delay(100, cancellationToken); // Placeholder
-
-        foreach (var violation in violations)
+        
+        // Group violations by rule ID for efficient policy application
+        var violationsByRule = violations.GroupBy(v => v.RuleId);
+        
+        foreach (var ruleGroup in violationsByRule)
         {
-            decisions.Add(new PolicyDecision(
-                RuleId: violation.RuleId,
-                Decision: "Enforce", // Default decision
-                Reason: "Standard policy enforcement",
-                Timestamp: DateTime.UtcNow
-            ));
+            cancellationToken.ThrowIfCancellationRequested();
+            
+            var ruleId = ruleGroup.Key;
+            var ruleViolations = ruleGroup.ToList();
+            
+            // Apply policy rules based on rule ID and severity
+            var decision = ApplyPolicyRule(ruleId, ruleViolations, request);
+            decisions.Add(decision);
         }
-
+        
         return decisions;
+    }
+    
+    /// <summary>
+    /// Applies policy rules to violations for a specific rule ID.
+    /// </summary>
+    private PolicyDecision ApplyPolicyRule(string ruleId, List<LintingViolation> violations, LintingRequest request)
+    {
+        var timestamp = DateTime.UtcNow;
+        
+        // Policy rules based on rule ID patterns and severity
+        return ruleId switch
+        {
+            // Architecture rules - High priority enforcement
+            var id when id.StartsWith("EXXER001") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Enforce",
+                Reason: "Architecture violations must be fixed to maintain code quality",
+                Timestamp: timestamp
+            ),
+            
+            // Async rules - Critical for performance
+            var id when id.StartsWith("EXXER002") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Enforce",
+                Reason: "Async patterns are critical for application performance",
+                Timestamp: timestamp
+            ),
+            
+            // Error handling rules - Critical for reliability
+            var id when id.StartsWith("EXXER003") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Enforce",
+                Reason: "Proper error handling is essential for application reliability",
+                Timestamp: timestamp
+            ),
+            
+            // Testing rules - Important for quality
+            var id when id.StartsWith("EXXER004") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Enforce",
+                Reason: "Testing standards ensure code quality and maintainability",
+                Timestamp: timestamp
+            ),
+            
+            // Documentation rules - Medium priority
+            var id when id.StartsWith("EXXER005") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: violations.Count > 10 ? "Enforce" : "Suppress",
+                Reason: violations.Count > 10 
+                    ? "Too many documentation violations, enforce standards"
+                    : "Minor documentation issues, suppress for now",
+                Timestamp: timestamp
+            ),
+            
+            // Code quality rules - Enforce based on severity
+            var id when id.StartsWith("EXXER006") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: violations.Any(v => v.Severity == "Error") ? "Enforce" : "Custom",
+                Reason: violations.Any(v => v.Severity == "Error")
+                    ? "Error-level violations must be fixed"
+                    : "Warning-level violations can be addressed incrementally",
+                Timestamp: timestamp
+            ),
+            
+            // Modern C# rules - Encourage adoption
+            var id when id.StartsWith("EXXER007") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Custom",
+                Reason: "Modern C# patterns improve code readability and performance",
+                Timestamp: timestamp
+            ),
+            
+            // Performance rules - High priority
+            var id when id.StartsWith("EXXER008") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Enforce",
+                Reason: "Performance issues can impact user experience",
+                Timestamp: timestamp
+            ),
+            
+            // Logging rules - Important for debugging
+            var id when id.StartsWith("EXXER009") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Enforce",
+                Reason: "Proper logging is essential for debugging and monitoring",
+                Timestamp: timestamp
+            ),
+            
+            // Null safety rules - Critical for reliability
+            var id when id.StartsWith("EXXER010") => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: "Enforce",
+                Reason: "Null safety prevents runtime exceptions",
+                Timestamp: timestamp
+            ),
+            
+            // Default policy for unknown rules
+            _ => new PolicyDecision(
+                RuleId: ruleId,
+                Decision: violations.Count > 5 ? "Enforce" : "Custom",
+                Reason: violations.Count > 5 
+                    ? "Multiple violations detected, enforce policy"
+                    : "Custom handling for unknown rule",
+                Timestamp: timestamp
+            )
+        };
     }
 
     private LintingSummary GenerateSummary(IEnumerable<LintingViolation> violations, int filesAnalyzed)
@@ -335,28 +443,460 @@ public class LintingService : ILintingService
 
     private PolicyRecommendation GeneratePolicyRecommendation(Diagnostic diagnostic)
     {
-        // TODO: Implement intelligent policy recommendation based on rule type, context, etc.
-        return new PolicyRecommendation(
-            Action: "Fix",
-            Reason: "Standard code quality improvement",
-            Confidence: 0.8,
-            AutoFixable: true,
-            EstimatedEffort: "Low"
-        );
+        var ruleId = diagnostic.Id;
+        var severity = diagnostic.Severity.ToString();
+        
+        // Generate context-aware recommendations based on rule ID patterns
+        return ruleId switch
+        {
+            // Architecture rules - Critical for maintainability
+            var id when id.StartsWith("EXXER001") => new PolicyRecommendation(
+                Action: "Fix",
+                Reason: "Architecture violations compromise code maintainability and testability",
+                Confidence: 0.95,
+                AutoFixable: false, // Architecture changes require manual review
+                EstimatedEffort: "High"
+            ),
+            
+            // Async rules - Critical for performance
+            var id when id.StartsWith("EXXER002") => new PolicyRecommendation(
+                Action: "Fix",
+                Reason: "Async patterns are essential for scalable applications",
+                Confidence: 0.9,
+                AutoFixable: true, // Many async patterns can be auto-fixed
+                EstimatedEffort: "Medium"
+            ),
+            
+            // Error handling rules - Critical for reliability
+            var id when id.StartsWith("EXXER003") => new PolicyRecommendation(
+                Action: "Fix",
+                Reason: "Proper error handling prevents application crashes",
+                Confidence: 0.95,
+                AutoFixable: false, // Error handling requires careful consideration
+                EstimatedEffort: "High"
+            ),
+            
+            // Testing rules - Important for quality
+            var id when id.StartsWith("EXXER004") => new PolicyRecommendation(
+                Action: "Fix",
+                Reason: "Testing standards ensure code reliability and maintainability",
+                Confidence: 0.85,
+                AutoFixable: true, // Test patterns can often be auto-fixed
+                EstimatedEffort: "Medium"
+            ),
+            
+            // Documentation rules - Important for maintainability
+            var id when id.StartsWith("EXXER005") => new PolicyRecommendation(
+                Action: severity == "Error" ? "Fix" : "Suppress",
+                Reason: severity == "Error" 
+                    ? "Missing documentation for public APIs is critical"
+                    : "Documentation improves code maintainability",
+                Confidence: 0.7,
+                AutoFixable: false, // Documentation requires human input
+                EstimatedEffort: "Low"
+            ),
+            
+            // Code quality rules - Important for readability
+            var id when id.StartsWith("EXXER006") => new PolicyRecommendation(
+                Action: severity == "Error" ? "Fix" : "Custom",
+                Reason: severity == "Error"
+                    ? "Code quality errors must be addressed"
+                    : "Code quality improvements enhance readability",
+                Confidence: 0.8,
+                AutoFixable: true, // Many code quality issues can be auto-fixed
+                EstimatedEffort: "Low"
+            ),
+            
+            // Modern C# rules - Performance and readability
+            var id when id.StartsWith("EXXER007") => new PolicyRecommendation(
+                Action: "Custom",
+                Reason: "Modern C# patterns improve performance and code clarity",
+                Confidence: 0.75,
+                AutoFixable: true, // Modern patterns can often be auto-applied
+                EstimatedEffort: "Low"
+            ),
+            
+            // Performance rules - Critical for user experience
+            var id when id.StartsWith("EXXER008") => new PolicyRecommendation(
+                Action: "Fix",
+                Reason: "Performance issues directly impact user experience",
+                Confidence: 0.9,
+                AutoFixable: false, // Performance fixes require analysis
+                EstimatedEffort: "High"
+            ),
+            
+            // Logging rules - Important for debugging
+            var id when id.StartsWith("EXXER009") => new PolicyRecommendation(
+                Action: "Fix",
+                Reason: "Proper logging is essential for debugging and monitoring",
+                Confidence: 0.85,
+                AutoFixable: true, // Logging patterns can be standardized
+                EstimatedEffort: "Low"
+            ),
+            
+            // Null safety rules - Critical for reliability
+            var id when id.StartsWith("EXXER010") => new PolicyRecommendation(
+                Action: "Fix",
+                Reason: "Null safety prevents runtime exceptions and improves reliability",
+                Confidence: 0.95,
+                AutoFixable: true, // Null safety can often be auto-applied
+                EstimatedEffort: "Medium"
+            ),
+            
+            // Default recommendation for unknown rules
+            _ => new PolicyRecommendation(
+                Action: severity == "Error" ? "Fix" : "Custom",
+                Reason: severity == "Error"
+                    ? "Error-level violations should be addressed"
+                    : "Review violation and determine appropriate action",
+                Confidence: 0.6,
+                AutoFixable: false, // Unknown rules require manual review
+                EstimatedEffort: "Medium"
+            )
+        };
     }
 
     private IEnumerable<RemediationSuggestion> GenerateRemediationSuggestions(Diagnostic diagnostic)
     {
-        // TODO: Implement intelligent remediation suggestions based on rule type
-        return new[]
+        var ruleId = diagnostic.Id;
+        var severity = diagnostic.Severity.ToString();
+        
+        // Generate rule-specific remediation suggestions with code examples
+        return ruleId switch
         {
-            new RemediationSuggestion(
-                Type: "CodeFix",
-                Description: $"Apply suggested fix for {diagnostic.Id}",
-                CodeExample: "// TODO: Generate example code",
-                Confidence: 0.8,
-                Effort: "Low"
-            )
+            // Architecture rules - Repository pattern suggestions
+            var id when id.StartsWith("EXXER001") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "Refactor",
+                    Description: "Implement Repository pattern with focused interfaces",
+                    CodeExample: """
+                        // Before: Direct DbContext usage
+                        public class UserService
+                        {
+                            private readonly DbContext _context;
+                            public UserService(DbContext context) => _context = context;
+                        }
+                        
+                        // After: Repository pattern
+                        public interface IUserRepository
+                        {
+                            Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken);
+                        }
+                        
+                        public class UserService
+                        {
+                            private readonly IUserRepository _userRepository;
+                            public UserService(IUserRepository userRepository) => _userRepository = userRepository;
+                        }
+                        """,
+                    Confidence: 0.9,
+                    Effort: "High"
+                )
+            },
+            
+            // Async rules - Cancellation token suggestions
+            var id when id.StartsWith("EXXER002") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "CodeFix",
+                    Description: "Add CancellationToken parameter to async methods",
+                    CodeExample: """
+                        // Before
+                        public async Task<string> GetDataAsync()
+                        {
+                            return await httpClient.GetStringAsync("https://api.example.com");
+                        }
+                        
+                        // After
+                        public async Task<string> GetDataAsync(CancellationToken cancellationToken = default)
+                        {
+                            return await httpClient.GetStringAsync("https://api.example.com", cancellationToken);
+                        }
+                        """,
+                    Confidence: 0.95,
+                    Effort: "Low"
+                )
+            },
+            
+            // Error handling rules - Result pattern suggestions
+            var id when id.StartsWith("EXXER003") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "Refactor",
+                    Description: "Replace exceptions with Result pattern for better error handling",
+                    CodeExample: """
+                        // Before: Throwing exceptions
+                        public User GetUser(int id)
+                        {
+                            if (id <= 0) throw new ArgumentException("Invalid ID");
+                            return _repository.GetUser(id) ?? throw new UserNotFoundException();
+                        }
+                        
+                        // After: Result pattern
+                        public Result<User> GetUser(int id)
+                        {
+                            if (id <= 0) return Result<User>.WithFailure("Invalid ID");
+                            var user = _repository.GetUser(id);
+                            return user != null ? Result<User>.Success(user) : Result<User>.WithFailure("User not found");
+                        }
+                        """,
+                    Confidence: 0.9,
+                    Effort: "High"
+                )
+            },
+            
+            // Testing rules - XUnit v3 suggestions
+            var id when id.StartsWith("EXXER004") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "CodeFix",
+                    Description: "Use XUnit v3 with Shouldly assertions instead of FluentAssertions",
+                    CodeExample: """
+                        // Before: FluentAssertions
+                        result.Should().NotBeNull();
+                        result.Name.Should().Be("Expected");
+                        
+                        // After: Shouldly
+                        result.ShouldNotBeNull();
+                        result.Name.ShouldBe("Expected");
+                        """,
+                    Confidence: 0.85,
+                    Effort: "Low"
+                )
+            },
+            
+            // Documentation rules - XML documentation suggestions
+            var id when id.StartsWith("EXXER005") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "Documentation",
+                    Description: "Add XML documentation comments to public members",
+                    CodeExample: """
+                        // Before
+                        public class UserService
+                        {
+                            public async Task<User> CreateUserAsync(string name) { }
+                        }
+                        
+                        // After
+                        /// <summary>
+                        /// Service for managing user operations.
+                        /// </summary>
+                        public class UserService
+                        {
+                            /// <summary>
+                            /// Creates a new user with the specified name.
+                            /// </summary>
+                            /// <param name="name">The name of the user to create.</param>
+                            /// <returns>A task representing the created user.</returns>
+                            public async Task<User> CreateUserAsync(string name) { }
+                        }
+                        """,
+                    Confidence: 0.8,
+                    Effort: "Low"
+                )
+            },
+            
+            // Code quality rules - Modern C# suggestions
+            var id when id.StartsWith("EXXER006") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "CodeFix",
+                    Description: "Use modern C# patterns for better readability",
+                    CodeExample: """
+                        // Before: Traditional patterns
+                        if (user != null)
+                        {
+                            return user.Name;
+                        }
+                        return "Unknown";
+                        
+                        // After: Modern patterns
+                        return user?.Name ?? "Unknown";
+                        """,
+                    Confidence: 0.8,
+                    Effort: "Low"
+                )
+            },
+            
+            // Modern C# rules - Pattern matching suggestions
+            var id when id.StartsWith("EXXER007") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "CodeFix",
+                    Description: "Use pattern matching for cleaner code",
+                    CodeExample: """
+                        // Before: Traditional switch
+                        switch (shape)
+                        {
+                            case Circle c:
+                                return Math.PI * c.Radius * c.Radius;
+                            case Rectangle r:
+                                return r.Width * r.Height;
+                            default:
+                                return 0;
+                        }
+                        
+                        // After: Pattern matching
+                        return shape switch
+                        {
+                            Circle c => Math.PI * c.Radius * c.Radius,
+                            Rectangle r => r.Width * r.Height,
+                            _ => 0
+                        };
+                        """,
+                    Confidence: 0.85,
+                    Effort: "Low"
+                )
+            },
+            
+            // Performance rules - LINQ optimization suggestions
+            var id when id.StartsWith("EXXER008") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "Refactor",
+                    Description: "Optimize LINQ queries for better performance",
+                    CodeExample: """
+                        // Before: Multiple enumerations
+                        var users = GetUsers();
+                        var activeUsers = users.Where(u => u.IsActive);
+                        var count = activeUsers.Count();
+                        var names = activeUsers.Select(u => u.Name).ToList();
+                        
+                        // After: Single enumeration
+                        var users = GetUsers();
+                        var activeUsers = users.Where(u => u.IsActive).ToList();
+                        var count = activeUsers.Count;
+                        var names = activeUsers.Select(u => u.Name).ToList();
+                        """,
+                    Confidence: 0.8,
+                    Effort: "Medium"
+                )
+            },
+            
+            // Logging rules - Structured logging suggestions
+            var id when id.StartsWith("EXXER009") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "CodeFix",
+                    Description: "Use structured logging instead of string concatenation",
+                    CodeExample: """
+                        // Before: String concatenation
+                        _logger.LogInformation("User " + userId + " performed action " + action);
+                        
+                        // After: Structured logging
+                        _logger.LogInformation("User {UserId} performed action {Action}", userId, action);
+                        """,
+                    Confidence: 0.9,
+                    Effort: "Low"
+                )
+            },
+            
+            // Null safety rules - Nullable reference types suggestions
+            var id when id.StartsWith("EXXER010") => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "CodeFix",
+                    Description: "Use nullable reference types for better null safety",
+                    CodeExample: """
+                        // Before: No null safety
+                        public string GetUserName(User user)
+                        {
+                            return user.Name; // Could be null
+                        }
+                        
+                        // After: Nullable reference types
+                        public string? GetUserName(User? user)
+                        {
+                            return user?.Name;
+                        }
+                        """,
+                    Confidence: 0.9,
+                    Effort: "Medium"
+                )
+            },
+            
+            // Default suggestions for unknown rules
+            _ => new[]
+            {
+                new RemediationSuggestion(
+                    Type: "CodeFix",
+                    Description: $"Review and fix {ruleId} violation",
+                    CodeExample: "// TODO: Implement appropriate fix for this rule",
+                    Confidence: 0.6,
+                    Effort: "Medium"
+                )
+            }
         };
+    }
+    
+    /// <summary>
+    /// Gets or creates a cached solution for the given path.
+    /// </summary>
+    private async Task<Solution> GetOrCreateSolutionAsync(string solutionPath, CancellationToken cancellationToken)
+    {
+        lock (_cacheLock)
+        {
+            // Check if we have a valid cached solution
+            if (_workspaceCache.TryGetValue(solutionPath, out var cachedEntry))
+            {
+                var (workspace, solution, lastAccessed) = cachedEntry;
+                
+                // Check if cache is still valid
+                if (DateTime.UtcNow - lastAccessed < _cacheExpiration)
+                {
+                    // Update last accessed time
+                    _workspaceCache[solutionPath] = (workspace, solution, DateTime.UtcNow);
+                    return solution;
+                }
+                else
+                {
+                    // Cache expired, remove it
+                    _workspaceCache.Remove(solutionPath);
+                    workspace.Dispose();
+                }
+            }
+        }
+        
+        // Create new workspace and solution
+        var newWorkspace = MSBuildWorkspace.Create();
+        var newSolution = await newWorkspace.OpenSolutionAsync(solutionPath, progress: null, cancellationToken);
+        
+        lock (_cacheLock)
+        {
+            // Cache the new solution
+            _workspaceCache[solutionPath] = (newWorkspace, newSolution, DateTime.UtcNow);
+            
+            // Clean up expired entries
+            CleanupExpiredEntries();
+        }
+        
+        return newSolution;
+    }
+    
+    /// <summary>
+    /// Cleans up expired workspace cache entries.
+    /// </summary>
+    private static void CleanupExpiredEntries()
+    {
+        var expiredKeys = new List<string>();
+        
+        foreach (var kvp in _workspaceCache)
+        {
+            if (DateTime.UtcNow - kvp.Value.LastAccessed >= _cacheExpiration)
+            {
+                expiredKeys.Add(kvp.Key);
+            }
+        }
+        
+        foreach (var key in expiredKeys)
+        {
+            if (_workspaceCache.TryGetValue(key, out var entry))
+            {
+                entry.Workspace.Dispose();
+                _workspaceCache.Remove(key);
+            }
+        }
     }
 }

@@ -286,10 +286,10 @@ public record ValidationStep(
 /// <param name="Caching">Caching settings.</param>
 public record IntegrationSettings(
     AuthenticationSettings Authentication,
-    int TimeoutMs = 30000,
-    int RetryAttempts = 3,
     RateLimitingSettings RateLimiting,
-    CachingSettings Caching
+    CachingSettings Caching,
+    int TimeoutMs = 30000,
+    int RetryAttempts = 3
 );
 
 /// <summary>

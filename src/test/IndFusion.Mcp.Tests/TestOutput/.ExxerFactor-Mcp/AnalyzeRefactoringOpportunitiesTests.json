@@ -1,0 +1,28 @@
+{
+  "linesOfCode": 46,
+  "numberOfClasses": 1,
+  "numberOfPublicMethods": 2,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "AnalyzeExxerFactoringOpportunitiesTests",
+      "linesOfCode": 28,
+      "methods": [
+        {
+          "name": "Dispose",
+          "linesOfCode": 4,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "AnalyzeExampleCode_ReturnsSuggestions",
+          "linesOfCode": 9,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

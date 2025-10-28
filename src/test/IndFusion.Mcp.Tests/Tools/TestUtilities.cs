@@ -226,6 +226,48 @@ public class Calculator
 
         File.WriteAllText(projectPath, projectContent);
 
+        // Create a minimal C# file for the test project
+        var csFilePath = Path.Combine(solutionDir, "TestClass.cs");
+        var csFileContent = """
+            using System;
+
+            namespace TestProject;
+
+            /// <summary>
+            /// A minimal test class for linting tests.
+            /// </summary>
+            public class TestClass
+            {
+                private string _name = "Test";
+
+                /// <summary>
+                /// Gets or sets the name.
+                /// </summary>
+                public string Name 
+                { 
+                    get => _name; 
+                    set => _name = value ?? throw new ArgumentNullException(nameof(value));
+                }
+
+                /// <summary>
+                /// Performs a test operation.
+                /// </summary>
+                /// <param name="value">The value to process.</param>
+                /// <returns>The processed value.</returns>
+                public int ProcessValue(int value)
+                {
+                    if (value < 0)
+                    {
+                        throw new ArgumentException("Value cannot be negative", nameof(value));
+                    }
+
+                    return value * 2;
+                }
+            }
+            """;
+
+        File.WriteAllText(csFilePath, csFileContent);
+
         // Create a minimal solution file
         var solutionContent = """
             Microsoft Visual Studio Solution File, Format Version 12.00

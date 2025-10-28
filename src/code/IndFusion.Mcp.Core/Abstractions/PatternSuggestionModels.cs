@@ -99,7 +99,7 @@ public record PatternSuggestionResult(
 public record PatternAnalysisResult(
     bool Success,
     PatternAlignmentAnalysis PatternAlignment,
-    IEnumerable<ImprovementSuggestion> ImprovementSuggestions,
+    IEnumerable<PatternImprovementSuggestion> ImprovementSuggestions,
     PatternMetrics Metrics,
     string? Report = null,
     long ExecutionTimeMs = 0,
@@ -200,7 +200,7 @@ public record PatternAlignmentAnalysis(
 /// <param name="Priority">Priority level (Low, Medium, High).</param>
 /// <param name="EstimatedEffort">Estimated effort to implement.</param>
 /// <param name="ExpectedBenefit">Expected benefit from the improvement.</param>
-public record ImprovementSuggestion(
+public record PatternImprovementSuggestion(
     string Type,
     string Description,
     string Priority,

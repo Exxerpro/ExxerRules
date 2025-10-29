@@ -61,7 +61,7 @@ public class ICodeTransformationServiceContractTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
+        result.Success.ShouldBeTrue();
         result.TransformationDetails.ChangesApplied.ShouldBe(3);
         result.TransformationDetails.FilesAffected.ShouldBe(1);
     }
@@ -108,9 +108,7 @@ public class ICodeTransformationServiceContractTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
+        result.Success.ShouldBeTrue();
         result.TransformationDetails.ChangesApplied.ShouldBe(5);
         result.TransformationDetails.FilesAffected.ShouldBe(1);
     }
@@ -152,9 +150,7 @@ public class ICodeTransformationServiceContractTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
+        result.IsValid.ShouldBeTrue();
         result.BuildSuccess.ShouldBeTrue();
     }
 
@@ -206,9 +202,7 @@ public class ICodeTransformationServiceContractTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
-        result.ShouldNotBeNull();
+        result.Success.ShouldBeTrue();
         result.ConfidenceScore.ShouldBe(0.95);
     }
 

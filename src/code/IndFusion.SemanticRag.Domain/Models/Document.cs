@@ -97,38 +97,4 @@ public record Document(
     }
 }
 
-/// <summary>
-/// Represents the type of document in the system.
-/// </summary>
-public enum DocumentType
-{
-    /// <summary>
-    /// Source code file.
-    /// </summary>
-    SourceCode,
-
-    /// <summary>
-    /// Documentation file.
-    /// </summary>
-    Documentation,
-
-    /// <summary>
-    /// Configuration file.
-    /// </summary>
-    Configuration,
-
-    /// <summary>
-    /// Test file.
-    /// </summary>
-    Test,
-
-    /// <summary>
-    /// Build script or automation file.
-    /// </summary>
-    BuildScript,
-
-    /// <summary>
-    /// Other type of file.
-    /// </summary>
-    Other
-}
+// DocumentType enum is defined in ProcessingModels.cs

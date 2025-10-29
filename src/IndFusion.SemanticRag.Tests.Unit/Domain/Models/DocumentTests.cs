@@ -18,7 +18,7 @@ public class DocumentTests
         var sourcePath = "/path/to/file.cs";
         var repository = "test-repo";
         var commitHash = "abc123";
-        var documentType = DocumentType.SourceCode;
+        var documentType = DocumentType.CSharpCode;
         var metadata = new Dictionary<string, object> { ["key"] = "value" };
         var createdAt = DateTimeOffset.UtcNow;
         var updatedAt = DateTimeOffset.UtcNow;
@@ -71,7 +71,7 @@ public class DocumentTests
         // Arrange
         var document = new Document(
             id, content, sourcePath, repository, commitHash,
-            DocumentType.SourceCode, new Dictionary<string, object>(),
+            DocumentType.CSharpCode, new Dictionary<string, object>(),
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
 
         // Act
@@ -88,7 +88,7 @@ public class DocumentTests
         // Arrange
         var document = new Document(
             null!, "Content", "SourcePath", "Repository", "CommitHash",
-            DocumentType.SourceCode, new Dictionary<string, object>(),
+            DocumentType.CSharpCode, new Dictionary<string, object>(),
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
 
         // Act
@@ -105,7 +105,7 @@ public class DocumentTests
         // Arrange
         var document = new Document(
             "Id", null!, "SourcePath", "Repository", "CommitHash",
-            DocumentType.SourceCode, new Dictionary<string, object>(),
+            DocumentType.CSharpCode, new Dictionary<string, object>(),
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
 
         // Act
@@ -122,7 +122,7 @@ public class DocumentTests
         // Arrange
         var document = new Document(
             "Id", "Content", null!, "Repository", "CommitHash",
-            DocumentType.SourceCode, new Dictionary<string, object>(),
+            DocumentType.CSharpCode, new Dictionary<string, object>(),
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
 
         // Act
@@ -139,7 +139,7 @@ public class DocumentTests
         // Arrange
         var document = new Document(
             "Id", "Content", "SourcePath", null!, "CommitHash",
-            DocumentType.SourceCode, new Dictionary<string, object>(),
+            DocumentType.CSharpCode, new Dictionary<string, object>(),
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
 
         // Act
@@ -156,7 +156,7 @@ public class DocumentTests
         // Arrange
         var document = new Document(
             "Id", "Content", "SourcePath", "Repository", null!,
-            DocumentType.SourceCode, new Dictionary<string, object>(),
+            DocumentType.CSharpCode, new Dictionary<string, object>(),
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
 
         // Act
@@ -173,7 +173,7 @@ public class DocumentTests
         // Arrange
         var document = new Document(
             "Id", "Content", "SourcePath", "Repository", "CommitHash",
-            DocumentType.SourceCode, null!,
+            DocumentType.CSharpCode, null!,
             DateTimeOffset.UtcNow, DateTimeOffset.UtcNow);
 
         // Act
@@ -192,7 +192,7 @@ public class DocumentTests
             "/path/to/file.cs",
             "test-repo",
             "abc123",
-            DocumentType.SourceCode,
+            DocumentType.CSharpCode,
             new Dictionary<string, object> { ["key"] = "value" },
             DateTimeOffset.UtcNow,
             DateTimeOffset.UtcNow);

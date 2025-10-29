@@ -124,6 +124,12 @@ public class ClassDuplicationTests
         
         // Contracts Layer
         new object[] { "ExxerAI.Contracts" },
+        
+        // SemanticRag Layer
+        new object[] { "IndFusion.SemanticRag.Domain" },
+        new object[] { "IndFusion.SemanticRag.Application" },
+        new object[] { "IndFusion.SemanticRag.Infrastructure" },
+        new object[] { "IndFusion.SemanticRag.WebAPI" },
     };
 
     // Individual tests for each production project to ensure no duplicate types across namespaces within the same assembly

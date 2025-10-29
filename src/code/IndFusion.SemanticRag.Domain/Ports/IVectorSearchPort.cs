@@ -4,55 +4,102 @@ using IndQuestResults;
 namespace IndFusion.SemanticRag.Domain.Ports;
 
 /// <summary>
-/// Port interface for vector search operations in the hexagonal architecture.
+/// Port for vector search operations in the Semantic RAG system.
+/// This defines the contract for vector similarity search and indexing.
 /// </summary>
 public interface IVectorSearchPort
 {
     /// <summary>
-    /// Stores a vector embedding in the vector database.
+    /// Searches for similar vectors using cosine similarity.
     /// </summary>
-    /// <param name="vector">The vector embedding to store.</param>
-    /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>A Result indicating success or failure.</returns>
-    Task<Result> StoreVectorAsync(VectorEmbedding vector, CancellationToken cancellationToken = default);
-
-    /// <summary>
-    /// Searches for similar vectors using the provided query.
-    /// </summary>
-    /// <param name="query">The search query.</param>
+    /// <param name="queryVector">Query vector to search with.</param>
+    /// <param name="options">Search options including filters and limits.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A Result containing the search results.</returns>
-    Task<Result<IReadOnlyList<VectorSearchResult>>> SearchSimilarVectorsAsync(
-        VectorSearchQuery query, 
+    Task<Result<VectorSearchResult>> SearchAsync(
+        float[] queryVector,
+        VectorSearchOptions options,
         CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Retrieves a vector by its ID.
+    /// Searches for similar vectors using multiple query vectors.
     /// </summary>
-    /// <param name="id">The vector ID.</param>
+    /// <param name="queryVectors">Query vectors to search with.</param>
+    /// <param name="options">Search options including filters and limits.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>A Result containing the vector or failure.</returns>
-    Task<Result<VectorEmbedding>> GetVectorByIdAsync(string id, CancellationToken cancellationToken = default);
+    /// <returns>A Result containing the search results.</returns>
+    Task<Result<IReadOnlyList<VectorSearchResult>>> SearchBatchAsync(
+        IReadOnlyList<float[]> queryVectors,
+        VectorSearchOptions options,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Deletes a vector by its ID.
+    /// Indexes a vector embedding for future searches.
     /// </summary>
-    /// <param name="id">The vector ID.</param>
+    /// <param name="embedding">Vector embedding to index.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A Result indicating success or failure.</returns>
-    Task<Result> DeleteVectorAsync(string id, CancellationToken cancellationToken = default);
+    Task<Result> IndexAsync(
+        VectorEmbedding embedding,
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Gets the total count of vectors in the database.
+    /// Indexes multiple vector embeddings in batch.
+    /// </summary>
+    /// <param name="embeddings">Vector embeddings to index.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A Result indicating success or failure.</returns>
+    Task<Result> IndexBatchAsync(
+        IReadOnlyList<VectorEmbedding> embeddings,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Updates an existing vector embedding in the index.
+    /// </summary>
+    /// <param name="embedding">Updated vector embedding.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A Result indicating success or failure.</returns>
+    Task<Result> UpdateAsync(
+        VectorEmbedding embedding,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Deletes a vector embedding from the index.
+    /// </summary>
+    /// <param name="embeddingId">ID of the embedding to delete.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    /// <returns>A Result indicating success or failure.</returns>
+    Task<Result> DeleteAsync(
+        string embeddingId,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Gets statistics about the vector index.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
-    /// <returns>A Result containing the count.</returns>
-    Task<Result<int>> GetVectorCountAsync(CancellationToken cancellationToken = default);
+    /// <returns>A Result containing index statistics.</returns>
+    Task<Result<VectorIndexStatistics>> GetStatisticsAsync(
+        CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Clears all vectors from the database.
+    /// Clears all vectors from the index.
     /// </summary>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A Result indicating success or failure.</returns>
-    Task<Result> ClearAllVectorsAsync(CancellationToken cancellationToken = default);
+    Task<Result> ClearAsync(
+        CancellationToken cancellationToken = default);
 }
+
+/// <summary>
+/// Statistics about the vector index.
+/// </summary>
+/// <param name="TotalVectors">Total number of vectors in the index.</param>
+/// <param name="IndexSize">Size of the index in bytes.</param>
+/// <param name="LastUpdated">When the index was last updated.</param>
+/// <param name="AverageVectorDimension">Average dimension of vectors in the index.</param>
+public record VectorIndexStatistics(
+    long TotalVectors,
+    long IndexSize,
+    DateTimeOffset LastUpdated,
+    int AverageVectorDimension
+);

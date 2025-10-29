@@ -147,7 +147,7 @@ public readonly record struct SemanticSearchResponse(
     /// Gets the average relevance score of the results.
     /// </summary>
     public float AverageRelevance => Results.Count > 0 
-        ? Results.Average(r => r.Score) 
+        ? (float)Results.SelectMany(r => r.Results).Average(item => item.Score) 
         : 0.0f;
 }
 

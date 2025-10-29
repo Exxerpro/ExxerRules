@@ -5,7 +5,6 @@ using System.Text;
 using Tesseract;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
-using DocumentType = IndFusion.SemanticRag.Application.Interfaces.DocumentType;
 
 namespace IndFusion.SemanticRag.Infrastructure.Services;
 
@@ -46,6 +45,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
             {
                 return new DocumentProcessingResult
                 {
+                    Id = Guid.NewGuid().ToString(),
                     DocumentId = input.Id,
                     Content = string.Empty,
                     Chunks = new List<DocumentChunk>(),
@@ -90,6 +90,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
 
             return new DocumentProcessingResult
             {
+                Id = Guid.NewGuid().ToString(),
                 DocumentId = input.Id,
                 Content = content,
                 Chunks = chunks,
@@ -105,6 +106,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
             
             return new DocumentProcessingResult
             {
+                Id = Guid.NewGuid().ToString(),
                 DocumentId = input.Id,
                 Content = string.Empty,
                 Chunks = new List<DocumentChunk>(),
@@ -308,16 +310,16 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
         switch (options.ChunkingStrategy)
         {
             case ChunkingStrategy.FixedSize:
-                chunks = CreateFixedSizeChunks(content, options.MaxChunkSize);
+                chunks = CreateFixedSizeChunks(content, options.MaxChunkSize, input);
                 break;
             case ChunkingStrategy.Semantic:
-                chunks = CreateSemanticChunks(content, options.MaxChunkSize);
+                chunks = CreateSemanticChunks(content, options.MaxChunkSize, input);
                 break;
             case ChunkingStrategy.LineBased:
-                chunks = CreateLineBasedChunks(content, options.MaxChunkSize);
+                chunks = CreateLineBasedChunks(content, options.MaxChunkSize, input);
                 break;
             case ChunkingStrategy.ParagraphBased:
-                chunks = CreateParagraphBasedChunks(content, options.MaxChunkSize);
+                chunks = CreateParagraphBasedChunks(content, options.MaxChunkSize, input);
                 break;
         }
 
@@ -327,7 +329,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     /// <summary>
     /// Creates fixed-size chunks.
     /// </summary>
-    private List<DocumentChunk> CreateFixedSizeChunks(string content, int maxChunkSize)
+    private List<DocumentChunk> CreateFixedSizeChunks(string content, int maxChunkSize, DocumentInput input)
     {
         var chunks = new List<DocumentChunk>();
         var lines = content.Split('\n');
@@ -339,19 +341,19 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
         {
             if (currentChunk.Length + line.Length > maxChunkSize && currentChunk.Length > 0)
             {
-                chunks.Add(new DocumentChunk
-                {
-                    Id = $"{chunkIndex}",
-                    Content = currentChunk.ToString(),
-                    Index = chunkIndex,
-                    StartPosition = startPosition,
-                    EndPosition = startPosition + currentChunk.Length,
-                    Metadata = new Dictionary<string, object>
+                chunks.Add(new DocumentChunk(
+                    Id: $"{chunkIndex}",
+                    DocumentId: input.Id,
+                    Content: currentChunk.ToString(),
+                    ChunkIndex: chunkIndex,
+                    StartPosition: startPosition,
+                    EndPosition: startPosition + currentChunk.Length,
+                    Metadata: new Dictionary<string, object>
                     {
                         ["chunk_type"] = "fixed_size",
                         ["chunk_size"] = currentChunk.Length
                     }
-                });
+                ));
 
                 startPosition += currentChunk.Length;
                 currentChunk.Clear();
@@ -363,19 +365,19 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
 
         if (currentChunk.Length > 0)
         {
-            chunks.Add(new DocumentChunk
-            {
-                Id = $"{chunkIndex}",
-                Content = currentChunk.ToString(),
-                Index = chunkIndex,
-                StartPosition = startPosition,
-                EndPosition = startPosition + currentChunk.Length,
-                Metadata = new Dictionary<string, object>
+            chunks.Add(new DocumentChunk(
+                Id: $"{chunkIndex}",
+                DocumentId: input.Id,
+                Content: currentChunk.ToString(),
+                ChunkIndex: chunkIndex,
+                StartPosition: startPosition,
+                EndPosition: startPosition + currentChunk.Length,
+                Metadata: new Dictionary<string, object>
                 {
                     ["chunk_type"] = "fixed_size",
                     ["chunk_size"] = currentChunk.Length
                 }
-            });
+            ));
         }
 
         return chunks;
@@ -384,16 +386,16 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     /// <summary>
     /// Creates semantic chunks based on content structure.
     /// </summary>
-    private List<DocumentChunk> CreateSemanticChunks(string content, int maxChunkSize)
+    private List<DocumentChunk> CreateSemanticChunks(string content, int maxChunkSize, DocumentInput input)
     {
         // For now, use paragraph-based chunking as a semantic approach
-        return CreateParagraphBasedChunks(content, maxChunkSize);
+        return CreateParagraphBasedChunks(content, maxChunkSize, input);
     }
 
     /// <summary>
     /// Creates line-based chunks for code files.
     /// </summary>
-    private List<DocumentChunk> CreateLineBasedChunks(string content, int maxChunkSize)
+    private List<DocumentChunk> CreateLineBasedChunks(string content, int maxChunkSize, DocumentInput input)
     {
         var chunks = new List<DocumentChunk>();
         var lines = content.Split('\n');
@@ -405,19 +407,19 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
         {
             if (currentChunk.Length + line.Length > maxChunkSize && currentChunk.Length > 0)
             {
-                chunks.Add(new DocumentChunk
-                {
-                    Id = $"{chunkIndex}",
-                    Content = currentChunk.ToString(),
-                    Index = chunkIndex,
-                    StartPosition = startPosition,
-                    EndPosition = startPosition + currentChunk.Length,
-                    Metadata = new Dictionary<string, object>
+                chunks.Add(new DocumentChunk(
+                    Id: $"{chunkIndex}",
+                    DocumentId: input.Id,
+                    Content: currentChunk.ToString(),
+                    ChunkIndex: chunkIndex,
+                    StartPosition: startPosition,
+                    EndPosition: startPosition + currentChunk.Length,
+                    Metadata: new Dictionary<string, object>
                     {
                         ["chunk_type"] = "line_based",
                         ["line_count"] = currentChunk.ToString().Split('\n').Length
                     }
-                });
+                ));
 
                 startPosition += currentChunk.Length;
                 currentChunk.Clear();
@@ -429,19 +431,19 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
 
         if (currentChunk.Length > 0)
         {
-            chunks.Add(new DocumentChunk
-            {
-                Id = $"{chunkIndex}",
-                Content = currentChunk.ToString(),
-                Index = chunkIndex,
-                StartPosition = startPosition,
-                EndPosition = startPosition + currentChunk.Length,
-                Metadata = new Dictionary<string, object>
+            chunks.Add(new DocumentChunk(
+                Id: $"{chunkIndex}",
+                DocumentId: input.Id,
+                Content: currentChunk.ToString(),
+                ChunkIndex: chunkIndex,
+                StartPosition: startPosition,
+                EndPosition: startPosition + currentChunk.Length,
+                Metadata: new Dictionary<string, object>
                 {
                     ["chunk_type"] = "line_based",
                     ["line_count"] = currentChunk.ToString().Split('\n').Length
                 }
-            });
+            ));
         }
 
         return chunks;
@@ -450,7 +452,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     /// <summary>
     /// Creates paragraph-based chunks for text documents.
     /// </summary>
-    private List<DocumentChunk> CreateParagraphBasedChunks(string content, int maxChunkSize)
+    private List<DocumentChunk> CreateParagraphBasedChunks(string content, int maxChunkSize, DocumentInput input)
     {
         var chunks = new List<DocumentChunk>();
         var paragraphs = content.Split(new[] { "\n\n", "\r\n\r\n" }, StringSplitOptions.RemoveEmptyEntries);
@@ -462,34 +464,36 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
             if (paragraph.Length > maxChunkSize)
             {
                 // Split large paragraphs into smaller chunks
-                var subChunks = CreateFixedSizeChunks(paragraph, maxChunkSize);
+                var subChunks = CreateFixedSizeChunks(paragraph, maxChunkSize, input);
                 foreach (var subChunk in subChunks)
                 {
-                    chunks.Add(subChunk with
-                    {
-                        Id = $"{chunkIndex}",
-                        Index = chunkIndex,
-                        StartPosition = startPosition + subChunk.StartPosition,
-                        EndPosition = startPosition + subChunk.EndPosition
-                    });
+                    chunks.Add(new DocumentChunk(
+                        Id: $"{chunkIndex}",
+                        DocumentId: input.Id,
+                        Content: subChunk.Content,
+                        ChunkIndex: chunkIndex,
+                        StartPosition: startPosition + subChunk.StartPosition,
+                        EndPosition: startPosition + subChunk.EndPosition,
+                        Metadata: subChunk.Metadata
+                    ));
                     chunkIndex++;
                 }
             }
             else
             {
-                chunks.Add(new DocumentChunk
-                {
-                    Id = $"{chunkIndex}",
-                    Content = paragraph,
-                    Index = chunkIndex,
-                    StartPosition = startPosition,
-                    EndPosition = startPosition + paragraph.Length,
-                    Metadata = new Dictionary<string, object>
+                chunks.Add(new DocumentChunk(
+                    Id: $"{chunkIndex}",
+                    DocumentId: input.Id,
+                    Content: paragraph,
+                    ChunkIndex: chunkIndex,
+                    StartPosition: startPosition,
+                    EndPosition: startPosition + paragraph.Length,
+                    Metadata: new Dictionary<string, object>
                     {
                         ["chunk_type"] = "paragraph",
                         ["paragraph_length"] = paragraph.Length
                     }
-                });
+                ));
                 chunkIndex++;
             }
 

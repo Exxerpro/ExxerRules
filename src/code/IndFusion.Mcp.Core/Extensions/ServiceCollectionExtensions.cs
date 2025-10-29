@@ -22,6 +22,12 @@ public static class ServiceCollectionExtensions
         // Core services
         services.AddScoped<IExxerFactoringService, ExxerFactoringService>();
 
+        // Sprint 4 Safe Transformation services
+        services.AddScoped<IBuildValidationService, BuildValidationService>();
+        services.AddScoped<ISafeRegexService, SafeRegexService>();
+        services.AddScoped<IFixer001Service, Fixer001Service>();
+        services.AddScoped<ICodeTransformationService, CodeTransformationService>();
+
         // Add other core services here
         services.AddMemoryCache();
 

@@ -80,6 +80,8 @@ public class SemanticRagOrchestrationService
                 var topResults = searchResponse.Results.Take(options.MaxResultsForExtraction);
                 foreach (var result in topResults)
                 {
+                    if (result.Document == null) continue;
+                    
                     var extractionResult = await _extractionService.ExtractKnowledgeAsync(
                         result.Document,
                         options.ExtractionOptions,
@@ -266,9 +268,21 @@ public class SemanticRagOrchestrationService
             var searchResponse = searchResult.Value;
 
             // Combine context and search results
-            var allDocuments = context.Documents.Concat(searchResponse.Results.Select(r => r.Document)).ToList();
-            var allEntities = context.Entities.ToList();
-            var allRelationships = context.Relationships.ToList();
+#pragma warning disable CS8602 // Dereference of a possibly null reference
+            var contextDocuments = context.Documents ?? Enumerable.Empty<SemanticDocument>();
+#pragma warning restore CS8602
+            var searchResults = searchResponse.Results ?? Enumerable.Empty<SemanticSearchResult>();
+            var searchDocuments = searchResults.Where(r => r.Document != null).Select(r => r.Document!);
+            var allDocuments = contextDocuments.Concat(searchDocuments).ToList();
+            var allEntities = (context.Entities ?? Enumerable.Empty<KnowledgeEntity>()).ToList();
+            var allRelationships = (context.Relationships ?? Enumerable.Empty<EntityRelationship>()).Select(r => new KnowledgeRelationship(
+                Id: r.Id,
+                FromNodeId: r.SourceEntityId,
+                ToNodeId: r.TargetEntityId,
+                RelationshipType: r.RelationshipType,
+                Properties: r.Properties.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
+                CreatedAt: DateTimeOffset.UtcNow
+            )).ToList();
 
             // Generate answer (this would typically involve an LLM)
             var answer = GenerateAnswer(question, allDocuments, allEntities, options);
@@ -385,7 +399,15 @@ public readonly record struct ComprehensiveSearchOptions(
     /// </summary>
     public static ComprehensiveSearchOptions Default() => new(
         SearchOptions: new SemanticSearchOptions(),
-        RagConfig: new SemanticRagConfig(),
+        RagConfig: new SemanticRagConfig(
+            Id: "default",
+            Name: "Default Configuration",
+            EmbeddingModel: "text-embedding-ada-002",
+            VectorDimensions: 1536,
+            SimilarityThreshold: 0.7,
+            MaxResults: 10,
+            Properties: new Dictionary<string, object>()
+        ),
         EnableKnowledgeExtraction: true,
         MaxResultsForExtraction: 5,
         ExtractionOptions: ComprehensiveExtractionOptions.Default(),

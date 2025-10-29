@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using IndFusion.SemanticRag.Domain.Models;
-using IndFusion.SemanticRag.Domain.Services;
+using IndFusion.SemanticRag.Domain.Ports;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shouldly;
@@ -13,435 +12,273 @@ using Xunit;
 namespace IndFusion.SemanticRag.Tests.Unit.Domain.Services;
 
 /// <summary>
-/// Unit tests for the semantic RAG service.
+/// Unit tests for semantic RAG port interfaces.
+/// These tests verify the interface contracts using mocks (ITDD approach).
 /// </summary>
 public class SemanticRagServiceTests
 {
-    private readonly ISemanticRagService _semanticRagService;
-    private readonly ILogger<ISemanticRagService> _logger;
+    private readonly IVectorSearchPort _mockVectorSearchPort;
+    private readonly IKnowledgeGraphServicePort _mockKnowledgeGraphServicePort;
+    private readonly ILogger<IVectorSearchPort> _logger;
 
     public SemanticRagServiceTests()
     {
-        _semanticRagService = Substitute.For<ISemanticRagService>();
-        _logger = Substitute.For<ILogger<ISemanticRagService>>();
+        _mockVectorSearchPort = Substitute.For<IVectorSearchPort>();
+        _mockKnowledgeGraphServicePort = Substitute.For<IKnowledgeGraphServicePort>();
+        _logger = Substitute.For<ILogger<IVectorSearchPort>>();
     }
 
-    public class SearchAsyncTests
+    [Fact]
+    public async Task VectorSearchPort_SearchAsync_Should_Return_Similar_Vectors()
     {
-        [Fact]
-        public async Task Should_ReturnSearchResults_When_ValidQueryProvided()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var query = new SemanticSearchQuery("test query");
-            var config = new SemanticRagConfig();
-            var expectedResults = new[]
+        // Arrange
+        var queryVector = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
+        var options = new VectorSearchOptions(
+            QueryVector: queryVector,
+            MaxResults: 5,
+            SimilarityThreshold: 0.7
+        );
+        var expectedResult = new VectorSearchResult(
+            Id: "search-1",
+            QueryId: "query-1",
+            Results: new List<VectorEmbedding>
             {
-                CreateTestSearchResult("doc-1", 0.9f),
-                CreateTestSearchResult("doc-2", 0.8f)
-            };
+                new("emb-1", "Content 1", new float[] { 0.11f, 0.21f, 0.31f, 0.41f }, 
+                    new Dictionary<string, object>(), DateTimeOffset.UtcNow),
+                new("emb-2", "Content 2", new float[] { 0.12f, 0.22f, 0.32f, 0.42f }, 
+                    new Dictionary<string, object>(), DateTimeOffset.UtcNow)
+            },
+            TotalCount: 2,
+            QueryTime: TimeSpan.FromMilliseconds(50),
+            Metadata: new Dictionary<string, object>()
+        );
 
-            semanticRagService.SearchAsync(query, config, Arg.Any<CancellationToken>())
-                .Returns(Result<IReadOnlyList<SemanticSearchResult>>.Success(expectedResults));
+        _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None)
+            .Returns(Result<VectorSearchResult>.Success(expectedResult));
 
-            // Act
-            var result = await semanticRagService.SearchAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-            result.Value.ShouldNotBeNull();
-            result.Value.ShouldBe(expectedResults);
-            result.Value.Count.ShouldBe(2);
-        }
-
-        [Fact]
-        public async Task Should_ReturnFailure_When_ServiceFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var query = new SemanticSearchQuery("test query");
-            var config = new SemanticRagConfig();
-            var errorMessage = "Search failed";
-
-            semanticRagService.SearchAsync(query, config, Arg.Any<CancellationToken>())
-                .Returns(Result<IReadOnlyList<SemanticSearchResult>>.WithFailure(errorMessage));
-
-            // Act
-            var result = await semanticRagService.SearchAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
-
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
-
-        private static SemanticSearchResult CreateTestSearchResult(string documentId, float score)
-        {
-            var document = new SemanticDocument(
-                documentId,
-                "test content",
-                new Dictionary<string, object>(),
-                null,
-                DateTimeOffset.UtcNow,
-                DateTimeOffset.UtcNow);
-
-            return new SemanticSearchResult(document, score, Array.Empty<string>());
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value.Id.ShouldBe(expectedResult.Id);
+        result.Value.Results.Count.ShouldBe(2);
+        result.Value.TotalCount.ShouldBe(2);
+        result.Value.QueryTime.ShouldBe(expectedResult.QueryTime);
     }
 
-    public class GetContextAsyncTests
+    [Fact]
+    public async Task VectorSearchPort_IndexAsync_Should_Index_Vector_Successfully()
     {
-        [Fact]
-        public async Task Should_ReturnContext_When_ValidQueryProvided()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var query = "test query";
-            var config = new SemanticRagConfig();
-            var expectedContext = CreateTestContext();
+        // Arrange
+        var embedding = new VectorEmbedding(
+            Id: "emb-1",
+            Content: "Test content",
+            Embedding: new float[] { 0.1f, 0.2f, 0.3f, 0.4f },
+            Metadata: new Dictionary<string, object> { ["source"] = "test" },
+            CreatedAt: DateTimeOffset.UtcNow
+        );
 
-            semanticRagService.GetContextAsync(query, config, Arg.Any<CancellationToken>())
-                .Returns(Result<SemanticContext>.Success(expectedContext));
+        _mockVectorSearchPort.IndexAsync(embedding, CancellationToken.None)
+            .Returns(Result.Success());
 
-            // Act
-            var result = await semanticRagService.GetContextAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockVectorSearchPort.IndexAsync(embedding, CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-            result.Value.ShouldBe(expectedContext);
-            result.Value.Query.ShouldBe(query);
-        }
-
-        [Fact]
-        public async Task Should_ReturnFailure_When_ServiceFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var query = "test query";
-            var config = new SemanticRagConfig();
-            var errorMessage = "Context retrieval failed";
-
-            semanticRagService.GetContextAsync(query, config, Arg.Any<CancellationToken>())
-                .Returns(Result<SemanticContext>.WithFailure(errorMessage));
-
-            // Act
-            var result = await semanticRagService.GetContextAsync(query, config, cancellationToken: TestContext.Current.CancellationToken);
-
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
-
-        private static SemanticContext CreateTestContext()
-        {
-            var documents = new[]
-            {
-                new SemanticDocument("doc-1", "content1", new Dictionary<string, object>(), null, DateTimeOffset.UtcNow, DateTimeOffset.UtcNow)
-            };
-            var entities = new[]
-            {
-                new KnowledgeEntity("entity-1", "Person", "John Doe", null, new Dictionary<string, object>(), null)
-            };
-            var relationships = new[]
-            {
-                new KnowledgeRelationship("rel-1", "entity-1", "entity-2", "RELATES_TO", new Dictionary<string, object>(), DateTimeOffset.UtcNow)
-            };
-
-            return new SemanticContext(documents, entities, relationships, "test query", 0.8f);
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
     }
 
-    public class IndexDocumentAsyncTests
+    [Fact]
+    public async Task KnowledgeGraphServicePort_CreateEntityAsync_Should_Create_Entity_Successfully()
     {
-        [Fact]
-        public async Task Should_ReturnSuccess_When_DocumentIndexedSuccessfully()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var document = CreateTestDocument();
+        // Arrange
+        var entity = new KnowledgeEntity(
+            Id: "entity-1",
+            Name: "Test Entity",
+            Type: "Person",
+            Description: "A test entity",
+            Properties: new Dictionary<string, object> { ["age"] = 30 }
+        );
 
-            semanticRagService.IndexDocumentAsync(document, Arg.Any<CancellationToken>())
-                .Returns(Result.Success());
+        _mockKnowledgeGraphServicePort.CreateEntityAsync(entity, CancellationToken.None)
+            .Returns(Result.Success());
 
-            // Act
-            var result = await semanticRagService.IndexDocumentAsync(document, cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockKnowledgeGraphServicePort.CreateEntityAsync(entity, CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-        }
-
-        [Fact]
-        public async Task Should_ReturnFailure_When_IndexingFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var document = CreateTestDocument();
-            var errorMessage = "Indexing failed";
-
-            semanticRagService.IndexDocumentAsync(document, Arg.Any<CancellationToken>())
-                .Returns(Result.WithFailure(errorMessage));
-
-            // Act
-            var result = await semanticRagService.IndexDocumentAsync(document, cancellationToken: TestContext.Current.CancellationToken);
-
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
-
-        private static SemanticDocument CreateTestDocument()
-        {
-            return new SemanticDocument(
-                "doc-1",
-                "test content",
-                new Dictionary<string, object> { ["type"] = "test" },
-                new float[] { 0.1f, 0.2f, 0.3f },
-                DateTimeOffset.UtcNow,
-                DateTimeOffset.UtcNow);
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
     }
 
-    public class AddEntityAsyncTests
+    [Fact]
+    public async Task KnowledgeGraphServicePort_CreateRelationshipAsync_Should_Create_Relationship_Successfully()
     {
-        [Fact]
-        public async Task Should_ReturnSuccess_When_EntityAddedSuccessfully()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var entity = CreateTestEntity();
+        // Arrange
+        var relationship = new KnowledgeRelationship(
+            Id: "rel-1",
+            FromNodeId: "entity-1",
+            ToNodeId: "entity-2",
+            RelationshipType: "WORKS_FOR",
+            Properties: new Dictionary<string, object> { ["since"] = "2020" },
+            CreatedAt: DateTimeOffset.UtcNow
+        );
 
-            semanticRagService.AddEntityAsync(entity, Arg.Any<CancellationToken>())
-                .Returns(Result.Success());
+        _mockKnowledgeGraphServicePort.CreateRelationshipAsync(relationship, CancellationToken.None)
+            .Returns(Result.Success());
 
-            // Act
-            var result = await semanticRagService.AddEntityAsync(entity, cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockKnowledgeGraphServicePort.CreateRelationshipAsync(relationship, CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-        }
-
-        [Fact]
-        public async Task Should_ReturnFailure_When_AddingEntityFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var entity = CreateTestEntity();
-            var errorMessage = "Entity addition failed";
-
-            semanticRagService.AddEntityAsync(entity, Arg.Any<CancellationToken>())
-                .Returns(Result.WithFailure(errorMessage));
-
-            // Act
-            var result = await semanticRagService.AddEntityAsync(entity, cancellationToken: TestContext.Current.CancellationToken);
-
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
-
-        private static KnowledgeEntity CreateTestEntity()
-        {
-            return new KnowledgeEntity(
-                "entity-1",
-                "Person",
-                "John Doe",
-                "Software Engineer",
-                new Dictionary<string, object> { ["age"] = 30 },
-                new float[] { 0.1f, 0.2f, 0.3f });
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
     }
 
-    public class CreateRelationshipAsyncTests
+    [Fact]
+    public async Task KnowledgeGraphServicePort_GetEntityAsync_Should_Return_Entity_When_Found()
     {
-        [Fact]
-        public async Task Should_ReturnSuccess_When_RelationshipCreatedSuccessfully()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var relationship = CreateTestRelationship();
+        // Arrange
+        var entityId = "entity-1";
+        var expectedEntity = new KnowledgeEntity(
+            Id: entityId,
+            Name: "Test Entity",
+            Type: "Person",
+            Description: "A test entity",
+            Properties: new Dictionary<string, object>()
+        );
 
-            semanticRagService.CreateRelationshipAsync(relationship, Arg.Any<CancellationToken>())
-                .Returns(Result.Success());
+        _mockKnowledgeGraphServicePort.GetEntityAsync(entityId, CancellationToken.None)
+            .Returns(Result<KnowledgeEntity>.Success(expectedEntity));
 
-            // Act
-            var result = await semanticRagService.CreateRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockKnowledgeGraphServicePort.GetEntityAsync(entityId, CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-        }
-
-        [Fact]
-        public async Task Should_ReturnFailure_When_CreatingRelationshipFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var relationship = CreateTestRelationship();
-            var errorMessage = "Relationship creation failed";
-
-            semanticRagService.CreateRelationshipAsync(relationship, Arg.Any<CancellationToken>())
-                .Returns(Result.WithFailure(errorMessage));
-
-            // Act
-            var result = await semanticRagService.CreateRelationshipAsync(relationship, cancellationToken: TestContext.Current.CancellationToken);
-
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
-
-        private static KnowledgeRelationship CreateTestRelationship()
-        {
-            return new KnowledgeRelationship(
-                "rel-1",
-                "entity-1",
-                "entity-2",
-                "RELATES_TO",
-                new Dictionary<string, object> { ["strength"] = "strong" },
-                DateTimeOffset.UtcNow);
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value.Id.ShouldBe(entityId);
+        result.Value.Name.ShouldBe("Test Entity");
+        result.Value.Type.ShouldBe("Person");
     }
 
-    public class FindSimilarEntitiesAsyncTests
+    [Fact]
+    public async Task KnowledgeGraphServicePort_SearchEntitiesAsync_Should_Return_Matching_Entities()
     {
-        [Fact]
-        public async Task Should_ReturnSimilarEntities_When_ValidEntityProvided()
+        // Arrange
+        var entityType = "Person";
+        var properties = new Dictionary<string, object> { ["age"] = 30 };
+        var expectedEntities = new List<KnowledgeEntity>
         {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var entity = CreateTestEntity();
-            var limit = 5;
-            var threshold = 0.7f;
-            var expectedEntities = new[]
-            {
-                CreateTestEntity("entity-2"),
-                CreateTestEntity("entity-3")
-            };
+            new("entity-1", "John Doe", "Person", "A person", new Dictionary<string, object> { ["age"] = 30 }),
+            new("entity-2", "Jane Smith", "Person", "Another person", new Dictionary<string, object> { ["age"] = 30 })
+        };
 
-            semanticRagService.FindSimilarEntitiesAsync(entity, limit, threshold, Arg.Any<CancellationToken>())
-                .Returns(Result<IReadOnlyList<KnowledgeEntity>>.Success(expectedEntities));
+        _mockKnowledgeGraphServicePort.SearchEntitiesAsync(entityType, properties, 100, CancellationToken.None)
+            .Returns(Result<IReadOnlyList<KnowledgeEntity>>.Success(expectedEntities));
 
-            // Act
-            var result = await semanticRagService.FindSimilarEntitiesAsync(entity, limit, threshold, cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockKnowledgeGraphServicePort.SearchEntitiesAsync(entityType, properties, 100, CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-            result.Value.ShouldNotBeNull();
-            result.Value.ShouldBe(expectedEntities);
-            result.Value.Count.ShouldBe(2);
-        }
-
-        [Fact]
-        public async Task Should_ReturnFailure_When_FindingSimilarEntitiesFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var entity = CreateTestEntity();
-            var errorMessage = "Similarity search failed";
-
-            semanticRagService.FindSimilarEntitiesAsync(entity, 5, 0.7f, Arg.Any<CancellationToken>())
-                .Returns(Result<IReadOnlyList<KnowledgeEntity>>.WithFailure(errorMessage));
-
-            // Act
-            var result = await semanticRagService.FindSimilarEntitiesAsync(entity, 5, 0.7f, cancellationToken: TestContext.Current.CancellationToken);
-
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
-
-        private static KnowledgeEntity CreateTestEntity(string id = "entity-1")
-        {
-            return new KnowledgeEntity(
-                id,
-                "Person",
-                "John Doe",
-                "Software Engineer",
-                new Dictionary<string, object>(),
-                new float[] { 0.1f, 0.2f, 0.3f });
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value.Count.ShouldBe(2);
+        result.Value.All(e => e.Type == "Person").ShouldBeTrue();
     }
 
-    public class GetStatsAsyncTests
+    [Fact]
+    public async Task VectorSearchPort_GetStatisticsAsync_Should_Return_Index_Statistics()
     {
-        [Fact]
-        public async Task Should_ReturnStats_When_ServiceSucceeds()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var expectedStats = new SemanticRagStats(
-                TotalDocuments: 100,
-                TotalEntities: 50,
-                TotalRelationships: 25,
-                LastIndexedAt: DateTimeOffset.UtcNow,
-                AverageDocumentSize: 1024.5,
-                EmbeddingDimension: 768);
+        // Arrange
+        var expectedStats = new VectorIndexStatistics(
+            TotalVectors: 1000,
+            IndexSize: 1024 * 1024, // 1MB
+            LastUpdated: DateTimeOffset.UtcNow,
+            AverageVectorDimension: 384
+        );
 
-            semanticRagService.GetStatsAsync(Arg.Any<CancellationToken>())
-                .Returns(Result<SemanticRagStats>.Success(expectedStats));
+        _mockVectorSearchPort.GetStatisticsAsync(CancellationToken.None)
+            .Returns(Result<VectorIndexStatistics>.Success(expectedStats));
 
-            // Act
-            var result = await semanticRagService.GetStatsAsync(cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockVectorSearchPort.GetStatisticsAsync(CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-            result.Value.ShouldBe(expectedStats);
-            result.Value.TotalDocuments.ShouldBe(100);
-            result.Value.TotalEntities.ShouldBe(50);
-            result.Value.TotalRelationships.ShouldBe(25);
-        }
-
-        [Fact]
-        public async Task Should_ReturnFailure_When_GettingStatsFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var errorMessage = "Stats retrieval failed";
-
-            semanticRagService.GetStatsAsync(Arg.Any<CancellationToken>())
-                .Returns(Result<SemanticRagStats>.WithFailure(errorMessage));
-
-            // Act
-            var result = await semanticRagService.GetStatsAsync(cancellationToken: TestContext.Current.CancellationToken);
-
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value.TotalVectors.ShouldBe(1000);
+        result.Value.IndexSize.ShouldBe(1024 * 1024);
+        result.Value.AverageVectorDimension.ShouldBe(384);
     }
 
-    public class ClearAllAsyncTests
+    [Fact]
+    public async Task KnowledgeGraphServicePort_GetStatisticsAsync_Should_Return_Graph_Statistics()
     {
-        [Fact]
-        public async Task Should_ReturnSuccess_When_ClearingAllSucceeds()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
+        // Arrange
+        var expectedStats = new KnowledgeGraphStatistics(
+            TotalNodes: 1000,
+            TotalRelationships: 2000,
+            NodeTypes: new Dictionary<string, long> { ["Person"] = 500, ["Organization"] = 300, ["Location"] = 200 },
+            RelationshipTypes: new Dictionary<string, long> { ["WORKS_FOR"] = 800, ["MANAGES"] = 200, ["LOCATED_IN"] = 1000 },
+            LastUpdated: DateTimeOffset.UtcNow
+        );
 
-            semanticRagService.ClearAllAsync(Arg.Any<CancellationToken>())
-                .Returns(Result.Success());
+        _mockKnowledgeGraphServicePort.GetStatisticsAsync(CancellationToken.None)
+            .Returns(Result<KnowledgeGraphStatistics>.Success(expectedStats));
 
-            // Act
-            var result = await semanticRagService.ClearAllAsync(cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockKnowledgeGraphServicePort.GetStatisticsAsync(CancellationToken.None);
 
-            // Assert
-            result.IsSuccess.ShouldBeTrue();
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value.TotalNodes.ShouldBe(1000);
+        result.Value.TotalRelationships.ShouldBe(2000);
+        result.Value.NodeTypes.Count.ShouldBe(3);
+        result.Value.RelationshipTypes.Count.ShouldBe(3);
+    }
 
-        [Fact]
-        public async Task Should_ReturnFailure_When_ClearingAllFails()
-        {
-            // Arrange
-            var semanticRagService = Substitute.For<ISemanticRagService>();
-            var errorMessage = "Clear all failed";
+    [Theory]
+    [InlineData(0.5f, 0.5f)]
+    [InlineData(0.7f, 0.7f)]
+    [InlineData(0.9f, 0.9f)]
+    public async Task VectorSearchPort_SearchAsync_Should_Respect_Similarity_Threshold(float threshold, float expectedThreshold)
+    {
+        // Arrange
+        var queryVector = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
+        var options = new VectorSearchOptions(
+            QueryVector: queryVector,
+            MaxResults: 5,
+            SimilarityThreshold: threshold
+        );
+        var expectedResult = new VectorSearchResult(
+            Id: "search-threshold",
+            QueryId: "query-threshold",
+            Results: new List<VectorEmbedding>(),
+            TotalCount: 0,
+            QueryTime: TimeSpan.FromMilliseconds(10),
+            Metadata: new Dictionary<string, object> { ["threshold"] = expectedThreshold }
+        );
 
-            semanticRagService.ClearAllAsync(Arg.Any<CancellationToken>())
-                .Returns(Result.WithFailure(errorMessage));
+        _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None)
+            .Returns(Result<VectorSearchResult>.Success(expectedResult));
 
-            // Act
-            var result = await semanticRagService.ClearAllAsync(cancellationToken: TestContext.Current.CancellationToken);
+        // Act
+        var result = await _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None);
 
-            // Assert
-            result.IsFailure.ShouldBeTrue();
-            result.Error.ShouldBe(errorMessage);
-        }
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsSuccess.ShouldBeTrue();
+        result.Value.ShouldNotBeNull();
+        result.Value.Metadata["threshold"].ShouldBe(expectedThreshold);
     }
 }

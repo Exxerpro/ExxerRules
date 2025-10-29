@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Appli
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Infrastructure", "code\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj", "{C3D4E5F6-G7H8-9012-CDEF-345678901234}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests", "test\IndFusion.SemanticRag.Tests\IndFusion.SemanticRag.Tests.csproj", "{D4E5F6G7-H8I9-0123-DEF0-456789012345}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.WebAPI", "code\IndFusion.SemanticRag.WebAPI\IndFusion.SemanticRag.WebAPI.csproj", "{D4E5F6G7-H8I9-0123-DEF0-456789012345}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests.Unit", "IndFusion.SemanticRag.Tests.Unit\IndFusion.SemanticRag.Tests.Unit.csproj", "{E5F6G7H8-I9J0-1234-EF01-567890123456}"

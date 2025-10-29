@@ -78,4 +78,6 @@ public class Target
     public static int CountList(List<Outer.Inner> items) => items.Count;
     public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
     public static int CountList(List<Outer.Inner> items) => items.Count;
+    public static List<Outer.Inner> MakeList() => new List<Outer.Inner>();
+    public static int CountList(List<Outer.Inner> items) => items.Count;
 }

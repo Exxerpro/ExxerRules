@@ -1,29 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
-using Microsoft.Extensions.Logging;
-using NSubstitute;
-using Shouldly;
-using Xunit;
 
-namespace IndFusion.SemanticRag.Tests.Unit.Domain.Services;
+namespace IndFusion.SemanticRag.Tests.Interfaces;
 
 /// <summary>
-/// Unit tests for the document ingestion port interface.
-/// These tests verify the interface contracts using mocks (ITDD approach).
+/// ITDD tests for IDocumentIngestionPort interface contracts.
+/// These tests verify that any implementation satisfies the interface contract using mocks.
 /// </summary>
-public class DocumentIngestionServiceTests
+public class IDocumentIngestionPortTests
 {
     private readonly IDocumentIngestionPort _mockIngestionPort;
-    private readonly ILogger<IDocumentIngestionPort> _logger;
 
-    public DocumentIngestionServiceTests()
+    public IDocumentIngestionPortTests()
     {
         _mockIngestionPort = Substitute.For<IDocumentIngestionPort>();
-        _logger = Substitute.For<ILogger<IDocumentIngestionPort>>();
     }
 
     [Fact]
@@ -141,7 +131,7 @@ public class DocumentIngestionServiceTests
         var expectedResult = new RepositoryIngestionResult(
             ProcessedDocuments: new List<SemanticDocument>
             {
-                new("doc-1", "Test Document", "Content", new Dictionary<string, object>(), DateTime.UtcNow, DateTime.UtcNow)
+                new("doc-1", "Test Document", "Content", "source", new Dictionary<string, object>())
             },
             TotalDocuments: 1,
             ExtractedKnowledge: new List<KnowledgeExtractionResult>(),
@@ -229,6 +219,27 @@ public class DocumentIngestionServiceTests
         result.Error.ShouldBe("Document not found");
     }
 
+    [Fact]
+    public async Task IngestDocumentAsync_Should_Handle_Cancellation()
+    {
+        // Arrange
+        var input = new DocumentInput("test", "test.txt", "content".ToUtf8Bytes(), "text/plain");
+        var options = DocumentIngestionOptions.Default();
+        var cts = new CancellationTokenSource();
+        cts.Cancel();
+
+        _mockIngestionPort.IngestDocumentAsync(input, options, cts.Token)
+            .Returns(Result<DocumentIngestionResult>.WithFailure("Operation was cancelled"));
+
+        // Act
+        var result = await _mockIngestionPort.IngestDocumentAsync(input, options, cts.Token);
+
+        // Assert
+        result.ShouldNotBeNull();
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldBe("Operation was cancelled");
+    }
+
     [Theory]
     [InlineData(IngestionStatus.Pending, 0)]
     [InlineData(IngestionStatus.Processing, 50)]
@@ -263,12 +274,4 @@ public class DocumentIngestionServiceTests
         result.Value.Status.ShouldBe(expectedStatus);
         result.Value.ProgressPercentage.ShouldBe(expectedProgress);
     }
-}
-
-/// <summary>
-/// Extension methods for test data creation.
-/// </summary>
-public static class TestDataExtensions
-{
-    public static byte[] ToUtf8Bytes(this string text) => System.Text.Encoding.UTF8.GetBytes(text);
 }

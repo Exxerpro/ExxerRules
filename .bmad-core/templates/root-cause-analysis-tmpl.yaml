@@ -1,0 +1,82 @@
+# Root Cause Analysis Template
+
+title: "Root Cause Analysis: {IssueTitle}"
+date: "{CurrentDate}"
+analyst: "Dr. Alex Debugger"
+version: "1.0"
+
+## Problem Statement
+- **Issue**: {IssueDescription}
+- **Severity**: {SeverityLevel}
+- **Priority**: {PriorityLevel}
+- **Business Impact**: {BusinessImpact}
+
+## Initial Observations
+- **Symptoms**: {ObservedSymptoms}
+- **First Occurrence**: {FirstOccurrence}
+- **Frequency**: {OccurrenceFrequency}
+- **Environment**: {EnvironmentDetails}
+
+## Data Collection
+- **Logs Analyzed**: {LogFiles}
+- **Metrics Collected**: {PerformanceMetrics}
+- **User Reports**: {UserReports}
+- **System State**: {SystemStateSnapshot}
+
+## Analysis Process
+- **Hypothesis 1**: {Hypothesis1}
+  - **Evidence**: {Evidence1}
+  - **Validation**: {Validation1}
+  - **Conclusion**: {Conclusion1}
+
+- **Hypothesis 2**: {Hypothesis2}
+  - **Evidence**: {Evidence2}
+  - **Validation**: {Validation2}
+  - **Conclusion**: {Conclusion2}
+
+- **Hypothesis 3**: {Hypothesis3}
+  - **Evidence**: {Evidence3}
+  - **Validation**: {Validation3}
+  - **Conclusion**: {Conclusion3}
+
+## Root Cause Identification
+- **Primary Root Cause**: {PrimaryRootCause}
+- **Contributing Factors**: {ContributingFactors}
+- **Causal Chain**: {CausalChain}
+- **Confidence Level**: {ConfidenceLevel}
+
+## Evidence Summary
+- **Supporting Evidence**: {SupportingEvidence}
+- **Contradicting Evidence**: {ContradictingEvidence}
+- **Missing Information**: {MissingInformation}
+- **Validation Methods**: {ValidationMethods}
+
+## Impact Analysis
+- **Immediate Impact**: {ImmediateImpact}
+- **Long-term Impact**: {LongTermImpact}
+- **Affected Systems**: {AffectedSystems}
+- **User Impact**: {UserImpact}
+
+## Solution Recommendations
+- **Immediate Actions**: {ImmediateActions}
+- **Long-term Solutions**: {LongTermSolutions}
+- **Prevention Measures**: {PreventionMeasures}
+- **Monitoring Requirements**: {MonitoringRequirements}
+
+## Risk Assessment
+- **Implementation Risks**: {ImplementationRisks}
+- **Business Risks**: {BusinessRisks}
+- **Technical Risks**: {TechnicalRisks}
+- **Mitigation Strategies**: {MitigationStrategies}
+
+## Lessons Learned
+- **Process Improvements**: {ProcessImprovements}
+- **Detection Improvements**: {DetectionImprovements}
+- **Prevention Strategies**: {PreventionStrategies}
+- **Knowledge Gaps**: {KnowledgeGaps}
+
+## Next Steps
+- **Immediate Actions**: {ImmediateNextSteps}
+- **Follow-up Tasks**: {FollowUpTasks}
+- **Review Schedule**: {ReviewSchedule}
+- **Success Criteria**: {SuccessCriteria}

@@ -1,0 +1,79 @@
+# Debugging Report Template
+
+title: "Debugging Report: {IssueTitle}"
+date: "{CurrentDate}"
+analyst: "Dr. Alex Debugger"
+version: "1.0"
+
+## Executive Summary
+- **Issue**: {IssueDescription}
+- **Severity**: {SeverityLevel}
+- **Status**: {ResolutionStatus}
+- **Root Cause**: {RootCauseSummary}
+- **Impact**: {BusinessImpact}
+
+## Problem Description
+- **Symptoms**: {ObservedSymptoms}
+- **Environment**: {EnvironmentDetails}
+- **Reproduction Steps**: {ReproductionSteps}
+- **Affected Components**: {AffectedComponents}
+
+## Investigation Process
+- **Methodology**: {InvestigationMethodology}
+- **Tools Used**: {DebuggingTools}
+- **Data Collected**: {DataCollectionSummary}
+- **Analysis Approach**: {AnalysisApproach}
+
+## Root Cause Analysis
+- **Primary Root Cause**: {PrimaryRootCause}
+- **Contributing Factors**: {ContributingFactors}
+- **Causal Chain**: {CausalChain}
+- **Evidence**: {SupportingEvidence}
+
+## Technical Details
+- **Code Analysis**: {CodeAnalysis}
+- **Performance Impact**: {PerformanceImpact}
+- **Memory Impact**: {MemoryImpact}
+- **Security Implications**: {SecurityImplications}
+
+## Solution Design
+- **Immediate Fix**: {ImmediateFix}
+- **Long-term Solution**: {LongTermSolution}
+- **Prevention Measures**: {PreventionMeasures}
+- **Monitoring Strategy**: {MonitoringStrategy}
+
+## Implementation Plan
+- **Phase 1**: {Phase1Tasks}
+- **Phase 2**: {Phase2Tasks}
+- **Phase 3**: {Phase3Tasks}
+- **Timeline**: {ImplementationTimeline}
+
+## Testing Strategy
+- **Unit Tests**: {UnitTestRequirements}
+- **Integration Tests**: {IntegrationTestRequirements}
+- **Performance Tests**: {PerformanceTestRequirements}
+- **Regression Tests**: {RegressionTestRequirements}
+
+## Risk Assessment
+- **Implementation Risks**: {ImplementationRisks}
+- **Mitigation Strategies**: {MitigationStrategies}
+- **Rollback Plan**: {RollbackPlan}
+
+## Lessons Learned
+- **Key Insights**: {KeyInsights}
+- **Process Improvements**: {ProcessImprovements}
+- **Knowledge Gaps**: {KnowledgeGaps}
+- **Training Needs**: {TrainingNeeds}
+
+## Recommendations
+- **Code Quality**: {CodeQualityRecommendations}
+- **Architecture**: {ArchitectureRecommendations}
+- **Process**: {ProcessRecommendations}
+- **Monitoring**: {MonitoringRecommendations}
+
+## Appendices
+- **A**: Detailed Code Analysis
+- **B**: Performance Metrics
+- **C**: Memory Analysis
+- **D**: Test Results
+- **E**: Tool Outputs

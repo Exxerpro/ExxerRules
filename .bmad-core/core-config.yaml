@@ -1,0 +1,108 @@
+# BMAD Core Configuration
+
+project:
+  name: "IndFusion.Mcp"
+  description: "IndFusion MCP Server with Advanced Debugging Capabilities"
+  version: "1.0.0"
+  type: "mcp-server"
+
+debugging:
+  enabled: true
+  log_level: "Information"
+  trace_enabled: true
+  performance_monitoring: true
+
+agents:
+  debugger-solver:
+    enabled: true
+    specialization: ".NET Debugging and Root Cause Analysis"
+    capabilities:
+      - "Root Cause Analysis"
+      - "Memory Leak Detection"
+      - "Performance Profiling"
+      - "Async Debugging"
+      - "Exception Analysis"
+      - "Code Review for Debugging Issues"
+
+tools:
+  debugging:
+    - "Visual Studio Debugger"
+    - "JetBrains Rider"
+    - "dotnet-dump"
+    - "dotnet-gcdump"
+    - "PerfView"
+    - "Application Insights"
+    - "Serilog"
+    - "System.Diagnostics.Activity"
+
+  profiling:
+    - "dotMemory"
+    - "dotTrace"
+    - "BenchmarkDotNet"
+    - "PerfCollect"
+
+  monitoring:
+    - "Application Insights"
+    - "OpenTelemetry"
+    - "Custom Performance Counters"
+    - "Health Checks"
+
+methodologies:
+  root_cause_analysis:
+    - "5 Whys Technique"
+    - "Fishbone Diagram"
+    - "Fault Tree Analysis"
+    - "Systematic Investigation"
+
+  debugging:
+    - "Evidence-Based Analysis"
+    - "Systematic Approach"
+    - "Holistic System Understanding"
+    - "Prevention-Focused Solutions"
+
+  performance_analysis:
+    - "CPU Profiling"
+    - "Memory Analysis"
+    - "I/O Profiling"
+    - "Network Analysis"
+
+standards:
+  code_quality:
+    - "Modern C# Best Practices"
+    - "SOLID Principles"
+    - "Clean Code"
+    - "Functional Programming Patterns"
+
+  debugging:
+    - "Structured Logging"
+    - "Exception Handling"
+    - "Resource Management"
+    - "Async Patterns"
+
+  testing:
+    - "Unit Testing"
+    - "Integration Testing"
+    - "Performance Testing"
+    - "Regression Testing"
+
+documentation:
+  required:
+    - "Root Cause Analysis Reports"
+    - "Debugging Findings"
+    - "Solution Documentation"
+    - "Prevention Strategies"
+    - "Lessons Learned"
+
+  templates:
+    - "debugging-report-tmpl.yaml"
+    - "root-cause-analysis-tmpl.yaml"
+    - "performance-analysis-tmpl.yaml"
+    - "memory-analysis-tmpl.yaml"
+
+knowledge_base:
+  debugging_techniques: "debugging-techniques.md"
+  .net_tools: ".net-debugging-tools.md"
+  performance_patterns: "performance-patterns.md"
+  memory_management: "memory-management-patterns.md"
+  async_patterns: "async-patterns.md"
+  exception_patterns: "exception-patterns.md"

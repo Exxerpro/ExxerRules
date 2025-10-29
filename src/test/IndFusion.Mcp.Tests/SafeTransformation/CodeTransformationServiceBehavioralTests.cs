@@ -18,13 +18,17 @@ public class CodeTransformationServiceBehavioralTests
 
     public CodeTransformationServiceBehavioralTests()
     {
-        // Use real logger from xUnit v3
-        _logger = Xunit.TestContext.Current.LoggerFactory.CreateLogger<CodeTransformationService>();
+        // Use simple logger factory
+        var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.Information));
+        _logger = loggerFactory.CreateLogger<CodeTransformationService>();
         
         // Create real service dependencies
-        var buildValidationService = new BuildValidationService(Xunit.TestContext.Current.LoggerFactory.CreateLogger<BuildValidationService>());
-        var fixer001Service = new Fixer001Service(Xunit.TestContext.Current.LoggerFactory.CreateLogger<Fixer001Service>(), buildValidationService);
-        var safeRegexService = new SafeRegexService(Xunit.TestContext.Current.LoggerFactory.CreateLogger<SafeRegexService>(), buildValidationService);
+        var buildValidationLogger = loggerFactory.CreateLogger<BuildValidationService>();
+        var buildValidationService = new BuildValidationService(buildValidationLogger);
+        var fixer001Logger = loggerFactory.CreateLogger<Fixer001Service>();
+        var fixer001Service = new Fixer001Service(fixer001Logger, buildValidationService);
+        var safeRegexLogger = loggerFactory.CreateLogger<SafeRegexService>();
+        var safeRegexService = new SafeRegexService(safeRegexLogger, buildValidationService);
         
         _service = new CodeTransformationService(_logger, fixer001Service, safeRegexService, buildValidationService);
     }

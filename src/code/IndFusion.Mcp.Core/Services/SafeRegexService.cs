@@ -60,7 +60,7 @@ public class SafeRegexService : ISafeRegexService
                 return Result<SafeRegexResult>.WithFailure($"Invalid regex pattern: {validationResult.Error}");
             }
 
-            var validation = validationResult.Value;
+            var validation = validationResult.Value!;
             if (!validation.IsValid)
             {
                 return Result<SafeRegexResult>.WithFailure($"Regex pattern validation failed: {string.Join(", ", validation.Issues.Select(i => i.Message))}");
@@ -292,7 +292,7 @@ public class SafeRegexService : ISafeRegexService
 
             // Validate regex pattern
             var validationResult = await ValidateRegexPatternAsync(request.Pattern, cancellationToken);
-            if (validationResult.IsFailure || !validationResult.Value.IsValid)
+            if (validationResult.IsFailure || !validationResult.Value!.IsValid)
             {
                 return Result<SafeRegexPreviewResult>.WithFailure("Invalid regex pattern");
             }

@@ -139,7 +139,7 @@ public class SemanticRagOrchestrationService
     /// <returns>A Result containing the ingestion results.</returns>
     public async Task<Result<RepositoryIngestionResult>> IngestRepositoryAsync(
         string repositoryPath,
-        RepositoryIngestionConfig config,
+        IndFusion.SemanticRag.Domain.Models.RepositoryIngestionConfig config,
         CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Starting repository ingestion for path: {Path}", repositoryPath);
@@ -429,7 +429,7 @@ public readonly record struct ComprehensiveSearchResult(
     int TotalCount,
     string Query,
     long ProcessingTimeMs,
-    IReadOnlyList<KnowledgeExtractionResult> ExtractedKnowledge,
+    IReadOnlyList<IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult> ExtractedKnowledge,
     SemanticContext? AdditionalContext,
     IReadOnlyList<string>? SearchSuggestions = null);
 
@@ -444,7 +444,7 @@ public readonly record struct ComprehensiveSearchResult(
 public readonly record struct RepositoryIngestionResult(
     IReadOnlyList<SemanticDocument> ProcessedDocuments,
     int TotalDocuments,
-    IReadOnlyList<KnowledgeExtractionResult> ExtractedKnowledge,
+    IReadOnlyList<IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult> ExtractedKnowledge,
     long ProcessingTimeMs,
     bool Success);
 

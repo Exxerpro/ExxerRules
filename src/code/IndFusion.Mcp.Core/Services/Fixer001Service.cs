@@ -481,7 +481,7 @@ public class Fixer001Service : IFixer001Service
         }
 
         var workspace = MSBuildWorkspace.Create();
-        var solution = await workspace.OpenSolutionAsync(solutionPath, cancellationToken);
+        var solution = await workspace.OpenSolutionAsync(solutionPath, progress: null, cancellationToken);
 
         lock (_cacheLock)
         {

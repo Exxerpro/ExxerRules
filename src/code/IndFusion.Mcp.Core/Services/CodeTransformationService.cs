@@ -47,27 +47,41 @@ public class CodeTransformationService : ICodeTransformationService
             
             if (result.IsSuccess)
             {
+                var transformationDetails = new TransformationDetails(
+                    TransformationType: "Fixer001",
+                    TransformationId: request.DiagnosticId,
+                    Description: $"Applied Fixer001 for diagnostic {request.DiagnosticId}",
+                    ChangesApplied: result.Value!.ChangesApplied,
+                    FilesAffected: result.Value!.FilesAffected,
+                    Confidence: 1.0
+                );
+
                 return new CodeTransformationResult(
                     Success: true,
-                    TransformationType: "Fixer001",
-                    ChangesApplied: result.Value.ChangesApplied,
-                    FilesAffected: result.Value.FilesAffected,
-                    ExecutionTimeMs: result.Value.ExecutionTimeMs,
-                    ValidationResults: result.Value.ValidationResults,
-                    DiffPreview: result.Value.DiffPreview,
-                    ModifiedFiles: result.Value.ModifiedFiles,
-                    ErrorDetails: result.Value.ErrorDetails
+                    TransformationDetails: transformationDetails,
+                    ValidationResults: result.Value!.ValidationResults,
+                    DiffPreview: result.Value!.DiffPreview,
+                    ModifiedFiles: result.Value!.ModifiedFiles,
+                    ExecutionTimeMs: result.Value!.ExecutionTimeMs,
+                    ErrorDetails: result.Value!.ErrorDetails
                 );
             }
             else
             {
-                return new CodeTransformationResult(
-                    Success: false,
+                var transformationDetails = new TransformationDetails(
                     TransformationType: "Fixer001",
+                    TransformationId: request.DiagnosticId,
+                    Description: $"Failed to apply Fixer001 for diagnostic {request.DiagnosticId}",
                     ChangesApplied: 0,
                     FilesAffected: 0,
-                    ExecutionTimeMs: 0,
+                    Confidence: 0.0
+                );
+
+                return new CodeTransformationResult(
+                    Success: false,
+                    TransformationDetails: transformationDetails,
                     ValidationResults: Enumerable.Empty<ValidationResult>(),
+                    ExecutionTimeMs: 0,
                     ErrorDetails: result.Error
                 );
             }
@@ -75,13 +89,21 @@ public class CodeTransformationService : ICodeTransformationService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in Fixer001 transformation orchestrator for diagnostic: {DiagnosticId}", request.DiagnosticId);
-            return new CodeTransformationResult(
-                Success: false,
+            
+            var transformationDetails = new TransformationDetails(
                 TransformationType: "Fixer001",
+                TransformationId: request.DiagnosticId,
+                Description: $"Exception during Fixer001 transformation",
                 ChangesApplied: 0,
                 FilesAffected: 0,
-                ExecutionTimeMs: 0,
+                Confidence: 0.0
+            );
+
+            return new CodeTransformationResult(
+                Success: false,
+                TransformationDetails: transformationDetails,
                 ValidationResults: Enumerable.Empty<ValidationResult>(),
+                ExecutionTimeMs: 0,
                 ErrorDetails: ex.Message
             );
         }
@@ -100,27 +122,41 @@ public class CodeTransformationService : ICodeTransformationService
             
             if (result.IsSuccess)
             {
+                var transformationDetails = new TransformationDetails(
+                    TransformationType: "SafeRegex",
+                    TransformationId: $"regex_{Guid.NewGuid():N}",
+                    Description: $"Applied safe regex pattern: {request.Pattern}",
+                    ChangesApplied: result.Value!.ChangesApplied,
+                    FilesAffected: result.Value!.FilesAffected,
+                    Confidence: 1.0
+                );
+
                 return new CodeTransformationResult(
                     Success: true,
-                    TransformationType: "SafeRegex",
-                    ChangesApplied: result.Value.ChangesApplied,
-                    FilesAffected: result.Value.FilesAffected,
-                    ExecutionTimeMs: result.Value.ExecutionTimeMs,
-                    ValidationResults: result.Value.ValidationResults,
-                    DiffPreview: result.Value.DiffPreview,
-                    ModifiedFiles: result.Value.ModifiedFiles,
-                    ErrorDetails: result.Value.ErrorDetails
+                    TransformationDetails: transformationDetails,
+                    ValidationResults: result.Value!.ValidationResults,
+                    DiffPreview: result.Value!.DiffPreview,
+                    ModifiedFiles: result.Value!.ModifiedFiles,
+                    ExecutionTimeMs: result.Value!.ExecutionTimeMs,
+                    ErrorDetails: result.Value!.ErrorDetails
                 );
             }
             else
             {
-                return new CodeTransformationResult(
-                    Success: false,
+                var transformationDetails = new TransformationDetails(
                     TransformationType: "SafeRegex",
+                    TransformationId: $"regex_{Guid.NewGuid():N}",
+                    Description: $"Failed to apply safe regex pattern: {request.Pattern}",
                     ChangesApplied: 0,
                     FilesAffected: 0,
-                    ExecutionTimeMs: 0,
+                    Confidence: 0.0
+                );
+
+                return new CodeTransformationResult(
+                    Success: false,
+                    TransformationDetails: transformationDetails,
                     ValidationResults: Enumerable.Empty<ValidationResult>(),
+                    ExecutionTimeMs: 0,
                     ErrorDetails: result.Error
                 );
             }
@@ -128,13 +164,21 @@ public class CodeTransformationService : ICodeTransformationService
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in safe regex transformation orchestrator with pattern: {Pattern}", request.Pattern);
-            return new CodeTransformationResult(
-                Success: false,
+            
+            var transformationDetails = new TransformationDetails(
                 TransformationType: "SafeRegex",
+                TransformationId: $"regex_{Guid.NewGuid():N}",
+                Description: $"Exception during safe regex transformation",
                 ChangesApplied: 0,
                 FilesAffected: 0,
-                ExecutionTimeMs: 0,
+                Confidence: 0.0
+            );
+
+            return new CodeTransformationResult(
+                Success: false,
+                TransformationDetails: transformationDetails,
                 ValidationResults: Enumerable.Empty<ValidationResult>(),
+                ExecutionTimeMs: 0,
                 ErrorDetails: ex.Message
             );
         }
@@ -172,12 +216,12 @@ public class CodeTransformationService : ICodeTransformationService
             if (result.IsSuccess)
             {
                 return new TransformationValidationResult(
-                    IsValid: result.Value.IsValid,
-                    BuildSuccess: result.Value.BuildSuccess,
-                    ValidationChecks: result.Value.ValidationChecks,
-                    NewIssues: result.Value.NewIssues,
-                    AnalyzerResults: result.Value.AnalyzerResults,
-                    ValidationTimeMs: result.Value.ValidationTimeMs
+                    IsValid: result.Value!.IsValid,
+                    BuildSuccess: result.Value!.BuildSuccess,
+                    ValidationChecks: result.Value!.ValidationChecks,
+                    NewIssues: result.Value!.NewIssues,
+                    AnalyzerResults: result.Value!.AnalyzerResults,
+                    ValidationTimeMs: result.Value!.ValidationTimeMs
                 );
             }
             else
@@ -217,33 +261,54 @@ public class CodeTransformationService : ICodeTransformationService
         {
             // This would implement semantic diff analysis
             // For now, return a basic result
-            var changes = new List<SemanticChange>();
+            var structuralChanges = new List<StructuralChange>();
+            var behavioralChanges = new List<BehavioralChange>();
             var driftDetected = false;
             var fixSuggestions = new List<FixSuggestion>();
 
             // Basic text diff analysis
             if (request.OriginalCode != request.ModifiedCode)
             {
-                changes.Add(new SemanticChange(
+                structuralChanges.Add(new StructuralChange(
                     ChangeType: "CodeModification",
-                    Description: "Code content has been modified",
-                    Location: new SourceLocation("", 1, 1, 1),
-                    Severity: "Info",
-                    Confidence: 0.8
+                    ElementName: "Unknown",
+                    ChangeDescription: "Code content has been modified",
+                    Impact: "Medium"
                 ));
                 driftDetected = true;
             }
 
+            var semanticDiff = new SemanticDiffAnalysis(
+                StructuralChanges: structuralChanges,
+                BehavioralChanges: behavioralChanges,
+                ImpactAnalysis: new ImpactAnalysis(
+                    OverallImpact: "Low",
+                    AffectedComponents: new List<string>(),
+                    RiskLevel: "Low",
+                    MitigationStrategies: new List<string>()
+                ),
+                ConfidenceScore: 0.8
+            );
+
+            var driftAnalysis = new DriftAnalysis(
+                DriftDetected: driftDetected,
+                DriftType: driftDetected ? "Structural" : "None",
+                DriftSeverity: driftDetected ? "Low" : "None",
+                AffectedAreas: new List<string>(),
+                Recommendations: new List<string>()
+            );
+
             var result = new SemanticChangeReviewResult(
                 Success: true,
-                Changes: changes,
-                DriftDetected: driftDetected,
+                SemanticDiff: semanticDiff,
+                DriftAnalysis: driftAnalysis,
                 FixSuggestions: fixSuggestions,
+                ConfidenceScore: 0.8,
                 ReviewTimeMs: 100
             );
 
             _logger.LogInformation("Semantic change review completed. Changes detected: {ChangeCount}, Drift detected: {DriftDetected}", 
-                changes.Count, driftDetected);
+                structuralChanges.Count, driftDetected);
 
             return result;
         }
@@ -252,10 +317,17 @@ public class CodeTransformationService : ICodeTransformationService
             _logger.LogError(ex, "Error in semantic change review orchestrator");
             return new SemanticChangeReviewResult(
                 Success: false,
-                Changes: Enumerable.Empty<SemanticChange>(),
-                DriftDetected: false,
+                SemanticDiff: new SemanticDiffAnalysis(
+                    StructuralChanges: Enumerable.Empty<StructuralChange>(),
+                    BehavioralChanges: Enumerable.Empty<BehavioralChange>(),
+                    ImpactAnalysis: new ImpactAnalysis("None", Enumerable.Empty<string>(), "None", Enumerable.Empty<string>()),
+                    ConfidenceScore: 0.0
+                ),
+                DriftAnalysis: new DriftAnalysis(false, "None", "None", Enumerable.Empty<string>(), Enumerable.Empty<string>()),
                 FixSuggestions: Enumerable.Empty<FixSuggestion>(),
-                ReviewTimeMs: 0
+                ConfidenceScore: 0.0,
+                ReviewTimeMs: 0,
+                ErrorDetails: ex.Message
             );
         }
     }
@@ -273,7 +345,7 @@ public class CodeTransformationService : ICodeTransformationService
             
             if (result.IsSuccess)
             {
-                return result.Value;
+                return result.Value!;
             }
             else
             {

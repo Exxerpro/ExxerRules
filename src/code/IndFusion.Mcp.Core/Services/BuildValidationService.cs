@@ -53,7 +53,7 @@ public class BuildValidationService : IBuildValidationService
                 return Result<BuildValidationResult>.WithFailure(workspaceResult.Error!);
             }
 
-            var workspace = workspaceResult.Value;
+            var workspace = workspaceResult.Value!;
 
             try
             {
@@ -304,7 +304,7 @@ public class BuildValidationService : IBuildValidationService
         }
 
         var workspace = MSBuildWorkspace.Create();
-        var solution = await workspace.OpenSolutionAsync(solutionPath, cancellationToken);
+        var solution = await workspace.OpenSolutionAsync(solutionPath, progress: null, cancellationToken);
 
         lock (_cacheLock)
         {

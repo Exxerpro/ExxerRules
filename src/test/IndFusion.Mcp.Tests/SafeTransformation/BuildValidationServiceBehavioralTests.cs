@@ -19,8 +19,9 @@ public class BuildValidationServiceBehavioralTests
 
     public BuildValidationServiceBehavioralTests()
     {
-        // Use real logger from xUnit v3
-        _logger = Xunit.TestContext.Current.LoggerFactory.CreateLogger<BuildValidationService>();
+        // Use simple logger factory
+        var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.Information));
+        _logger = loggerFactory.CreateLogger<BuildValidationService>();
         _service = new BuildValidationService(_logger);
     }
 
@@ -164,7 +165,7 @@ public class BuildValidationServiceBehavioralTests
         createResult.IsSuccess.ShouldBeTrue("Workspace creation should succeed for cleanup test");
 
         // Act
-        var result = await _service.CleanupTemporaryWorkspaceAsync(createResult.Value, _cancellationToken);
+        var result = await _service.CleanupTemporaryWorkspaceAsync(createResult.Value!, _cancellationToken);
 
         // Assert
         result.ShouldNotBeNull();

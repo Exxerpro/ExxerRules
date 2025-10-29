@@ -20,9 +20,10 @@ public class Fixer001ServiceBehavioralTests
 
     public Fixer001ServiceBehavioralTests()
     {
-        // Use real logger from xUnit v3
-        _logger = Xunit.TestContext.Current.LoggerFactory.CreateLogger<Fixer001Service>();
-        _buildValidationService = new BuildValidationService(Xunit.TestContext.Current.LoggerFactory.CreateLogger<BuildValidationService>());
+        // Use simple logger factory
+        var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.Information));
+        _logger = loggerFactory.CreateLogger<Fixer001Service>();
+        _buildValidationService = new BuildValidationService(loggerFactory.CreateLogger<BuildValidationService>());
         _service = new Fixer001Service(_logger, _buildValidationService);
     }
 

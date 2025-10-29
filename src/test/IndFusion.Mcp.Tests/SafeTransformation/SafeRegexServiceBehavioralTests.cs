@@ -20,9 +20,10 @@ public class SafeRegexServiceBehavioralTests
 
     public SafeRegexServiceBehavioralTests()
     {
-        // Use real logger from xUnit v3
-        _logger = Xunit.TestContext.Current.LoggerFactory.CreateLogger<SafeRegexService>();
-        _buildValidationService = new BuildValidationService(Xunit.TestContext.Current.LoggerFactory.CreateLogger<BuildValidationService>());
+        // Use simple logger factory
+        var loggerFactory = LoggerFactory.Create(builder => builder.SetMinimumLevel(LogLevel.Information));
+        _logger = loggerFactory.CreateLogger<SafeRegexService>();
+        _buildValidationService = new BuildValidationService(loggerFactory.CreateLogger<BuildValidationService>());
         _service = new SafeRegexService(_logger, _buildValidationService);
     }
 

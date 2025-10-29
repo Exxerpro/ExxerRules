@@ -1,0 +1,21 @@
+{
+  "linesOfCode": 7,
+  "numberOfClasses": 1,
+  "numberOfPublicMethods": 1,
+  "numberOfPrivateMethods": 0,
+  "classes": [
+    {
+      "name": "CleanupSample",
+      "linesOfCode": 4,
+      "methods": [
+        {
+          "name": "Say",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

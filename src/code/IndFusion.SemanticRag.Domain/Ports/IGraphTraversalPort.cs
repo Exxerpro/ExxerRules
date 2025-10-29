@@ -21,11 +21,11 @@ public interface IGraphTraversalPort
     /// <summary>
     /// Adds a new edge/relationship to the knowledge graph.
     /// </summary>
-    /// <param name="edge">The graph edge to add.</param>
+    /// <param name="edge">The graph relationship to add.</param>
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
     /// <returns>A Result indicating success or failure.</returns>
     Task<Result> AddEdgeAsync(
-        GraphEdge edge, 
+        GraphRelationship edge, 
         CancellationToken cancellationToken = default);
 
     /// <summary>

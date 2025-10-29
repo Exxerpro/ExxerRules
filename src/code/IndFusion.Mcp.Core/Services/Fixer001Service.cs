@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
+using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Extensions.Logging;
@@ -515,11 +516,11 @@ public class Fixer001Service : IFixer001Service
         return string.Empty;
     }
 
-    private async Task<IEnumerable<CodeFix>> GetAvailableFixesAsync(Document document, string diagnosticId, CancellationToken cancellationToken)
+    private async Task<IEnumerable<CodeAction>> GetAvailableFixesAsync(Document document, string diagnosticId, CancellationToken cancellationToken)
     {
         // This is a simplified implementation
         // In a real implementation, this would use the actual code fix providers
-        var fixes = new List<CodeFix>();
+        var fixes = new List<CodeAction>();
         
         try
         {
@@ -554,7 +555,7 @@ public class Fixer001Service : IFixer001Service
 
     private async Task<IEnumerable<string>> GenerateFixPreviewAsync(
         Document document, 
-        IEnumerable<CodeFix> fixes, 
+        IEnumerable<CodeAction> fixes, 
         Fixer001Request request, 
         CancellationToken cancellationToken)
     {
@@ -573,7 +574,7 @@ public class Fixer001Service : IFixer001Service
 
     private async Task<(bool Success, int ChangesApplied, string ErrorMessage)> ApplyFixesAsync(
         Document document, 
-        IEnumerable<CodeFix> fixes, 
+        IEnumerable<CodeAction> fixes, 
         Fixer001Request request, 
         CancellationToken cancellationToken)
     {

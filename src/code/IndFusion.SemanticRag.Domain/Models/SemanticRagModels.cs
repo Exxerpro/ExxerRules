@@ -1,16 +1,7 @@
 namespace IndFusion.SemanticRag.Domain.Models;
 
-/// <summary>
-/// Represents a path through the knowledge graph.
-/// </summary>
-/// <param name="Nodes">Sequence of nodes in the path.</param>
-/// <param name="Relationships">Sequence of relationships connecting the nodes.</param>
-/// <param name="TotalWeight">Total weight/cost of the path.</param>
-public record GraphPath(
-    IEnumerable<GraphNode> Nodes,
-    IEnumerable<GraphRelationship> Relationships,
-    double TotalWeight
-);
+// Note: GraphPath is now defined in TraversalModels.cs
+// This file is kept for backward compatibility but the duplicate GraphPath definition has been removed
 
 /// <summary>
 /// Statistics about the knowledge graph.

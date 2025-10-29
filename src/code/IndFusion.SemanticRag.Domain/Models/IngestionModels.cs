@@ -16,7 +16,7 @@ public record DocumentIngestionOptions(
     bool EnableKnowledgeGraph = true,
     bool EnableEntityExtraction = true,
     bool EnableRelationshipMapping = true,
-    DocumentProcessingOptions ProcessingOptions = default,
+    DocumentProcessingOptions? ProcessingOptions = null,
     IReadOnlyDictionary<string, object>? CustomSettings = null
 )
 {
@@ -187,11 +187,11 @@ public record DocumentIngestionStatus
 /// <param name="IngestionOptions">Document ingestion options.</param>
 /// <param name="CustomSettings">Custom repository settings.</param>
 public record RepositoryIngestionConfig(
-    IReadOnlyList<string> IncludePatterns = default,
-    IReadOnlyList<string> ExcludePatterns = default,
+    IReadOnlyList<string>? IncludePatterns = null,
+    IReadOnlyList<string>? ExcludePatterns = null,
     long MaxFileSize = 10 * 1024 * 1024, // 10MB
     int MaxDepth = 10,
-    DocumentIngestionOptions IngestionOptions = default,
+    DocumentIngestionOptions? IngestionOptions = null,
     IReadOnlyDictionary<string, object>? CustomSettings = null
 )
 {

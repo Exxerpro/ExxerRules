@@ -86,6 +86,24 @@ public class CodeTransformationService : ICodeTransformationService
                 );
             }
         }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Fixer001 transformation was cancelled");
+            return new CodeTransformationResult(
+                Success: false,
+                TransformationDetails: new TransformationDetails(
+                    TransformationType: "Fixer001",
+                    TransformationId: request.DiagnosticId,
+                    Description: "Fixer001 transformation was cancelled",
+                    ChangesApplied: 0,
+                    FilesAffected: 0,
+                    Confidence: 0.0
+                ),
+                ValidationResults: Enumerable.Empty<ValidationResult>(),
+                ExecutionTimeMs: 0,
+                ErrorDetails: "Operation was cancelled"
+            );
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error in Fixer001 transformation orchestrator for diagnostic: {DiagnosticId}", request.DiagnosticId);
@@ -160,6 +178,24 @@ public class CodeTransformationService : ICodeTransformationService
                     ErrorDetails: result.Error
                 );
             }
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Safe regex transformation was cancelled");
+            return new CodeTransformationResult(
+                Success: false,
+                TransformationDetails: new TransformationDetails(
+                    TransformationType: "SafeRegex",
+                    TransformationId: $"regex_{Guid.NewGuid():N}",
+                    Description: "Safe regex transformation was cancelled",
+                    ChangesApplied: 0,
+                    FilesAffected: 0,
+                    Confidence: 0.0
+                ),
+                ValidationResults: Enumerable.Empty<ValidationResult>(),
+                ExecutionTimeMs: 0,
+                ErrorDetails: "Operation was cancelled"
+            );
         }
         catch (Exception ex)
         {

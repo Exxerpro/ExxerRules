@@ -40,12 +40,17 @@ public class Fixer001Service : IFixer001Service
         Fixer001Request request, 
         CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+            return Result<Fixer001Result>.WithFailure("Operation was cancelled");
+
         _logger.LogInformation("Starting Fixer001 transformation for diagnostic: {DiagnosticId}", request.DiagnosticId);
 
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             // Validate inputs
             if (string.IsNullOrEmpty(request.DiagnosticId))
             {
@@ -170,6 +175,12 @@ public class Fixer001Service : IFixer001Service
 
             return Result<Fixer001Result>.Success(result);
         }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Fixer001 transformation was cancelled");
+            stopwatch.Stop();
+            return Result<Fixer001Result>.WithFailure("Operation was cancelled");
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during Fixer001 transformation for diagnostic: {DiagnosticId}", request.DiagnosticId);
@@ -184,10 +195,15 @@ public class Fixer001Service : IFixer001Service
         string solutionPath, 
         CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+            return Result<Fixer001Configuration>.WithFailure("Operation was cancelled");
+
         _logger.LogInformation("Getting Fixer001 configuration for solution: {SolutionPath}", solutionPath);
 
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!File.Exists(solutionPath))
             {
                 return Result<Fixer001Configuration>.WithFailure($"Solution file not found: {solutionPath}");
@@ -214,6 +230,11 @@ public class Fixer001Service : IFixer001Service
             _logger.LogInformation("Fixer001 configuration retrieved successfully. Available transformations: {Count}", availableTransformations.Count());
 
             return Result<Fixer001Configuration>.Success(configuration);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("GetFixer001ConfigurationAsync was cancelled");
+            return Result<Fixer001Configuration>.WithFailure("Operation was cancelled");
         }
         catch (Exception ex)
         {
@@ -342,7 +363,22 @@ public class Fixer001Service : IFixer001Service
 
             if (!request.TargetFiles.Any())
             {
-                return Result<Fixer001ValidationResult>.WithFailure("No target files specified");
+                // Return success with readiness information indicating not ready
+                var noFilesIssue = new Fixer001Issue(
+                    "no-target-files",
+                    "NoTargetFiles",
+                    "High",
+                    "No target files specified",
+                    "Provide target files for analysis"
+                );
+                
+                return Result<Fixer001ValidationResult>.Success(new Fixer001ValidationResult(
+                    IsReady: false,
+                    ReadinessScore: 0.0,
+                    Issues: new[] { noFilesIssue },
+                    Warnings: Array.Empty<Fixer001Warning>(),
+                    ValidationTimeMs: 0
+                ));
             }
 
             var issues = new List<Fixer001Issue>();

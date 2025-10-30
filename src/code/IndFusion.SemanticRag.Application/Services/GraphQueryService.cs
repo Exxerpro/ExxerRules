@@ -81,22 +81,22 @@ public class GraphQueryService : IGraphQueryService
             var records = new List<GraphRecord>();
             var recordsAffected = 0;
 
-            if (nodesResult.IsSuccess)
+            if (nodesResult.IsSuccess && nodesResult.Value != null)
             {
                 foreach (var node in nodesResult.Value)
                 {
-                    var values = new List<object> { node.Id, node.Type, node.Properties };
+                    var values = new List<object> { node.Id, node.Label, node.Properties };
                     var keys = new List<string> { "id", "type", "properties" };
                     records.Add(new GraphRecord(values, keys));
                     recordsAffected++;
                 }
             }
 
-            if (relationshipsResult.IsSuccess)
+            if (relationshipsResult.IsSuccess && relationshipsResult.Value != null)
             {
                 foreach (var relationship in relationshipsResult.Value)
                 {
-                    var values = new List<object> { relationship.Id, relationship.Type, relationship.StartNodeId, relationship.EndNodeId, relationship.Properties };
+                    var values = new List<object> { relationship.Id, relationship.RelationshipType, relationship.FromNodeId, relationship.ToNodeId, relationship.Properties };
                     var keys = new List<string> { "id", "type", "startNodeId", "endNodeId", "properties" };
                     records.Add(new GraphRecord(values, keys));
                     recordsAffected++;
@@ -157,7 +157,7 @@ public class GraphQueryService : IGraphQueryService
                 return Result<IReadOnlyList<GraphNode>>.WithFailure(nodesResult.Error!);
             }
 
-            var graphNodes = nodesResult.Value.Select(knowledgeNode => new GraphNode(
+            var graphNodes = (nodesResult.Value ?? new List<KnowledgeNode>()).Select(knowledgeNode => new GraphNode(
                 knowledgeNode.Id,
                 knowledgeNode.Label,
                 knowledgeNode.Properties,
@@ -215,7 +215,7 @@ public class GraphQueryService : IGraphQueryService
                 return Result<IReadOnlyList<GraphRelationship>>.WithFailure(relationshipsResult.Error!);
             }
 
-            var graphRelationships = relationshipsResult.Value.Select(rel => new GraphRelationship(
+            var graphRelationships = (relationshipsResult.Value ?? new List<KnowledgeRelationship>()).Select(rel => new GraphRelationship(
                 rel.Id,
                 rel.RelationshipType,
                 rel.FromNodeId,
@@ -295,7 +295,7 @@ public class GraphQueryService : IGraphQueryService
             var paths = new List<GraphPath>();
             var maxDepthReached = 0;
 
-            if (nodesResult.IsSuccess)
+            if (nodesResult.IsSuccess && nodesResult.Value != null)
             {
                 foreach (var node in nodesResult.Value)
                 {
@@ -303,7 +303,7 @@ public class GraphQueryService : IGraphQueryService
                 }
             }
 
-            if (relationshipsResult.IsSuccess)
+            if (relationshipsResult.IsSuccess && relationshipsResult.Value != null)
             {
                 foreach (var relationship in relationshipsResult.Value)
                 {
@@ -400,7 +400,7 @@ public class GraphQueryService : IGraphQueryService
                 return Result<GraphPath?>.Success(null);
             }
 
-            if (nodesResult.IsSuccess && nodesResult.Value.Count > 0)
+            if (nodesResult.IsSuccess && nodesResult.Value != null && nodesResult.Value.Count > 0)
             {
                 var pathNodes = nodesResult.Value.Select(node => new GraphNode(
                     node.Id,
@@ -409,7 +409,7 @@ public class GraphQueryService : IGraphQueryService
                     new List<string> { node.Label }
                 )).ToList();
 
-                var pathRelationships = relationshipsResult.IsSuccess
+                var pathRelationships = relationshipsResult.IsSuccess && relationshipsResult.Value != null
                     ? relationshipsResult.Value.Select(rel => new GraphRelationship(
                         rel.Id,
                         rel.RelationshipType,

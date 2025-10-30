@@ -70,7 +70,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
 
             // Convert nodes to pattern definitions
             var patterns = new List<PatternDefinition>();
-            if (nodesResult.IsSuccess)
+            if (nodesResult.IsSuccess && nodesResult.Value != null)
             {
                 patterns = nodesResult.Value.Select(node => new PatternDefinition(
                     Id: node.GetProperty<string>("id") ?? node.Id,
@@ -80,7 +80,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                     Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
                     Pattern: node.GetProperty<string>("pattern") ?? "",
                     Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
-                    IsEnabled: node.GetProperty<bool>("isEnabled") ?? true,
+                    IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
                     CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
                     UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
                 )).ToList();
@@ -88,15 +88,15 @@ public class PatternGraphQueryService : IPatternGraphQueryService
 
             // Convert relationships to pattern relationships
             var relationships = new List<PatternRelationship>();
-            if (relationshipsResult.IsSuccess)
+            if (relationshipsResult.IsSuccess && relationshipsResult.Value != null)
             {
                 relationships = relationshipsResult.Value.Select(rel => new PatternRelationship(
                     Id: rel.Id,
-                    Type: rel.Type,
-                    SourcePatternId: rel.StartNodeId,
-                    TargetPatternId: rel.EndNodeId,
+                    Type: rel.RelationshipType,
+                    SourcePatternId: rel.FromNodeId,
+                    TargetPatternId: rel.ToNodeId,
                     Properties: rel.Properties,
-                    Strength: rel.GetProperty<float>("strength") ?? 1.0f
+                    Strength: rel.Properties.TryGetValue("strength", out var strengthValue) && strengthValue is float strength ? strength : 1.0f
                 )).ToList();
             }
 
@@ -172,13 +172,13 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                 return Result<IReadOnlyList<PatternRelationship>>.WithFailure(relationshipsResult.Error!);
             }
 
-            var patternRelationships = relationshipsResult.Value.Select(rel => new PatternRelationship(
+            var patternRelationships = (relationshipsResult.Value ?? new List<KnowledgeRelationship>()).Select(rel => new PatternRelationship(
                 Id: rel.Id,
-                Type: rel.Type,
-                SourcePatternId: rel.StartNodeId,
-                TargetPatternId: rel.EndNodeId,
+                Type: rel.RelationshipType,
+                SourcePatternId: rel.FromNodeId,
+                TargetPatternId: rel.ToNodeId,
                 Properties: rel.Properties,
-                Strength: rel.GetProperty<float>("strength") ?? 1.0f
+                Strength: rel.Properties.TryGetValue("strength", out var strengthValue) && strengthValue is float strength ? strength : 1.0f
             )).ToList();
 
             _logger.LogDebug("Found {Count} pattern relationships for pattern {PatternId}", patternRelationships.Count, patternId);
@@ -258,7 +258,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
 
             var similarities = new List<PatternSimilarity>();
 
-            foreach (var node in nodesResult.Value)
+            foreach (var node in nodesResult.Value ?? new List<KnowledgeNode>())
             {
                 var targetPattern = new PatternDefinition(
                     Id: node.GetProperty<string>("id") ?? node.Id,
@@ -268,7 +268,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                     Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
                     Pattern: node.GetProperty<string>("pattern") ?? "",
                     Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
-                    IsEnabled: node.GetProperty<bool>("isEnabled") ?? true,
+                    IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
                     CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
                     UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
                 );
@@ -354,12 +354,12 @@ public class PatternGraphQueryService : IPatternGraphQueryService
             var projectCount = 0;
             DateTimeOffset? lastUsed = null;
 
-            if (nodesResult.Value.Any())
+            if (nodesResult.Value != null && nodesResult.Value.Any())
             {
                 var firstNode = nodesResult.Value.First();
-                usageCount = firstNode.GetProperty<int>("usageCount");
-                fileCount = firstNode.GetProperty<int>("fileCount");
-                projectCount = firstNode.GetProperty<int>("projectCount");
+                usageCount = firstNode.GetProperty<int?>("usageCount") ?? 0;
+                fileCount = firstNode.GetProperty<int?>("fileCount") ?? 0;
+                projectCount = firstNode.GetProperty<int?>("projectCount") ?? 0;
                 lastUsed = firstNode.GetProperty<DateTimeOffset?>("lastUsed");
             }
 
@@ -431,7 +431,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
 
             var violations = new List<AntiPatternViolation>();
 
-            foreach (var node in nodesResult.Value)
+            foreach (var node in nodesResult.Value ?? new List<KnowledgeNode>())
             {
                 var antiPatternId = node.GetProperty<string>("antiPatternId") ?? node.Id;
                 var antiPatternName = node.GetProperty<string>("antiPatternName") ?? "Unknown Anti-Pattern";
@@ -510,12 +510,12 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                 return Result<IReadOnlyList<PatternEvolution>>.WithFailure(nodesResult.Error!);
             }
 
-            var evolutionHistory = nodesResult.Value.Select(node => new PatternEvolution(
+            var evolutionHistory = (nodesResult.Value ?? new List<KnowledgeNode>()).Select(node => new PatternEvolution(
                 PatternId: patternId,
                 Version: node.GetProperty<string>("version") ?? "1.0",
                 ChangeType: Enum.TryParse<PatternChangeType>(node.GetProperty<string>("changeType"), out var changeType) ? changeType : PatternChangeType.Updated,
                 ChangeDescription: node.GetProperty<string>("changeDescription") ?? "Pattern updated",
-                ChangedAt: node.GetProperty<DateTimeOffset>("changedAt") ?? DateTimeOffset.UtcNow,
+                ChangedAt: node.GetProperty<DateTimeOffset?>("changedAt") ?? DateTimeOffset.UtcNow,
                 ChangedBy: node.GetProperty<string>("changedBy")
             )).ToList();
 
@@ -547,7 +547,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
             return Result<PatternDefinition>.WithFailure(nodesResult.Error!);
         }
 
-        if (!nodesResult.Value.Any())
+        if (nodesResult.Value == null || !nodesResult.Value.Any())
         {
             return Result<PatternDefinition>.WithFailure($"Pattern with ID {patternId} not found");
         }
@@ -561,7 +561,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
             Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
             Pattern: node.GetProperty<string>("pattern") ?? "",
             Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
-            IsEnabled: node.GetProperty<bool>("isEnabled") ?? true,
+            IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
             CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
             UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
         );

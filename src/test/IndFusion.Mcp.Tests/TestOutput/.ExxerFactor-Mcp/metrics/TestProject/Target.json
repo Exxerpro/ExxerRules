@@ -1,12 +1,12 @@
 {
-  "linesOfCode": 69,
+  "linesOfCode": 187,
   "numberOfClasses": 1,
-  "numberOfPublicMethods": 56,
+  "numberOfPublicMethods": 174,
   "numberOfPrivateMethods": 0,
   "classes": [
     {
       "name": "Target",
-      "linesOfCode": 67,
+      "linesOfCode": 185,
       "methods": [
         {
           "name": "MakeList",
@@ -39,6 +39,832 @@
         {
           "name": "BaseMakeList",
           "linesOfCode": 3,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "CountList",
+          "linesOfCode": 1,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "MakeList",
+          "linesOfCode": 1,
           "parameterCount": 0,
           "cyclomaticComplexity": 1,
           "maxNestingDepth": 0

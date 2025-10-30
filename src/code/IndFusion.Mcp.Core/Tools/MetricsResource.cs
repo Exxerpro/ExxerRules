@@ -103,11 +103,14 @@ public static class MetricsResource
     {
         try
         {
+            Console.WriteLine($"GetFileMetricsJson called with solutionPath: {solutionPath}, filePath: {filePath}");
             var json = await MetricsProvider.GetFileMetrics(solutionPath, filePath, cancellationToken);
+            Console.WriteLine($"MetricsProvider returned JSON: {json.Substring(0, Math.Min(200, json.Length))}...");
             return JsonDocument.Parse(json);
         }
         catch (Exception ex)
         {
+            Console.WriteLine($"Error in GetFileMetricsJson: {ex.Message}");
             // Return error as JSON instead of throwing
             var errorJson = JsonSerializer.Serialize(new { Error = ex.Message }, new JsonSerializerOptions { WriteIndented = true });
             return JsonDocument.Parse(errorJson);

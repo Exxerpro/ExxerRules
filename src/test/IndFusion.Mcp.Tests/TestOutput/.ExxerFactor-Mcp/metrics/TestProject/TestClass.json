@@ -1,1 +1,42 @@
-modified
+{
+  "linesOfCode": 57,
+  "numberOfClasses": 1,
+  "numberOfPublicMethods": 3,
+  "numberOfPrivateMethods": 1,
+  "classes": [
+    {
+      "name": "TestClass",
+      "linesOfCode": 49,
+      "methods": [
+        {
+          "name": "ProcessValue",
+          "linesOfCode": 9,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 2,
+          "maxNestingDepth": 1
+        },
+        {
+          "name": "GetDataAsync",
+          "linesOfCode": 5,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "LogMessage",
+          "linesOfCode": 4,
+          "parameterCount": 1,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        },
+        {
+          "name": "HelperMethod",
+          "linesOfCode": 4,
+          "parameterCount": 0,
+          "cyclomaticComplexity": 1,
+          "maxNestingDepth": 0
+        }
+      ]
+    }
+  ]
+}

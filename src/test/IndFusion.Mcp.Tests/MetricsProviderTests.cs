@@ -27,7 +27,7 @@ public class MetricsProviderTests : TestBase
 
         // Use a file that's actually part of the test solution
         var solutionDir = Path.GetDirectoryName(SolutionPath)!;
-        var testFilePath = Path.Combine(solutionDir, "TestProject", "TestClass.cs");
+        var testFilePath = Path.Combine(solutionDir, "TestProject", "ExampleCode.cs");
 
         // Debug: Check what documents are in the solution
         var solution = await ExxerFactoringHelpers.GetOrLoadSolution(SolutionPath, Xunit.TestContext.Current.CancellationToken);

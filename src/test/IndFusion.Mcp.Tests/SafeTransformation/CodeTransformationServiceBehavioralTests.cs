@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using IndFusion.Mcp.Core.Abstractions;
 using IndFusion.Mcp.Core.Services;
+using IndFusion.Mcp.Tests.TestInfrastructure;
 using Shouldly;
 using Xunit;
 
@@ -229,9 +230,12 @@ public class CodeTransformationServiceBehavioralTests
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.ApplyFixer001Async(request, cts.Token));
+        // Act
+        var result = await _service.ApplyFixer001Async(request, cts.Token);
+        
+        // Assert
+        result.Success.ShouldBeFalse("Operation should fail when cancellation token is triggered");
+        result.ErrorDetails?.ShouldContain("Operation was cancelled");
 
         // Cleanup
         CleanupTestFile(testFile);
@@ -253,9 +257,12 @@ public class CodeTransformationServiceBehavioralTests
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.ApplySafeRegexAsync(request, cts.Token));
+        // Act
+        var result = await _service.ApplySafeRegexAsync(request, cts.Token);
+        
+        // Assert
+        result.Success.ShouldBeFalse("Operation should fail when cancellation token is triggered");
+        result.ErrorDetails?.ShouldContain("Operation was cancelled");
 
         // Cleanup
         CleanupTestFile(testFile);
@@ -265,26 +272,18 @@ public class CodeTransformationServiceBehavioralTests
 
     private static string CreateTestFile(string content)
     {
-        var tempFile = Path.GetTempFileName();
-        var testFile = tempFile + ".cs";
-        File.Move(tempFile, testFile);
-        File.WriteAllText(testFile, content);
-        return testFile;
+        var fileName = $"TestFile_{Guid.NewGuid():N}";
+        return TestSolutionFactory.CreateTestFile(fileName, content);
     }
 
     private static void CleanupTestFile(string filePath)
     {
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
+        TestSolutionFactory.CleanupTestFile(filePath);
     }
 
     private static string GetTestSolutionPath()
     {
-        // Return a path to a test solution file
-        // In a real implementation, this would create a minimal test solution
-        return Path.Combine(Path.GetTempPath(), "TestSolution.sln");
+        return TestSolutionFactory.GetOrCreateTestSolution();
     }
 
     #endregion

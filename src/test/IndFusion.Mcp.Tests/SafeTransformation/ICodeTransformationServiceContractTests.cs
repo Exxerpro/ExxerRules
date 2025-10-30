@@ -263,7 +263,7 @@ public class ICodeTransformationServiceContractTests
                 Success: false,
                 TransformationDetails: new TransformationDetails("", "", "", 0, 0, 0.0),
                 ValidationResults: Array.Empty<ValidationResult>(),
-                ErrorDetails: "Unknown diagnostic ID"
+                ErrorDetails: "Operation was cancelled"
             ));
 
         // Act

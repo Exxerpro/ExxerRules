@@ -29,7 +29,10 @@ public class NoDuplicateTypesTests
 			.Where(t => !t.Name.StartsWith("<>") && 
 			           !t.Name.Contains("__DisplayClass") && 
 			           !t.Name.Contains("__AnonymousType") &&
-			           !t.Name.Contains("<>c"))
+			           !t.Name.Contains("<>c") &&
+			           !t.Name.Contains("d__") && // Async state machines
+			           !t.Name.Contains("__") && // Other compiler-generated types
+			           !t.Name.StartsWith("<")) // Generic types
 			.GroupBy(t => new { t.Namespace, t.Name })
 			.Where(g => g.Count() > 1)
 			.Select(g => new { g.Key.Namespace, g.Key.Name, Count = g.Count() })

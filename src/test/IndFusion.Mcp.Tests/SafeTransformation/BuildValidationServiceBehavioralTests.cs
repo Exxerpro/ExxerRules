@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using IndFusion.Mcp.Core.Abstractions;
 using IndFusion.Mcp.Core.Services;
+using IndFusion.Mcp.Tests.TestInfrastructure;
 using IndQuestResults;
 using Shouldly;
 using Xunit;
@@ -51,7 +52,11 @@ public class BuildValidationServiceBehavioralTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.IsSuccess.ShouldBeTrue("Build validation should succeed");
+        if (!result.IsSuccess)
+        {
+            Console.WriteLine($"Build validation failed: {result.Error}");
+        }
+        result.IsSuccess.ShouldBeTrue($"Build validation should succeed. Error: {result.Error}");
         result.Value.ShouldNotBeNull();
         result.Value.ValidationChecks.ShouldNotBeEmpty("Should have validation checks");
     }
@@ -188,9 +193,12 @@ public class BuildValidationServiceBehavioralTests
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.ValidateTransformationAsync(request, cts.Token));
+        // Act
+        var result = await _service.ValidateTransformationAsync(request, cts.Token);
+        
+        // Assert
+        result.IsFailure.ShouldBeTrue("Operation should fail when cancellation token is triggered");
+        result.Error.ShouldContain("Operation was cancelled");
     }
 
     [Fact]
@@ -205,24 +213,25 @@ public class BuildValidationServiceBehavioralTests
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.ValidateFileTransformationAsync(filePath, originalContent, transformedContent, validationOptions, cts.Token));
+        // Act
+        var result = await _service.ValidateFileTransformationAsync(filePath, originalContent, transformedContent, validationOptions, cts.Token);
+        
+        // Assert
+        result.IsFailure.ShouldBeTrue("Operation should fail when cancellation token is triggered");
+        result.Error.ShouldContain("Operation was cancelled");
     }
 
     #region Private Helper Methods
 
     private static string GetTestSolutionPath()
     {
-        // Return a path to a test solution file
-        // In a real implementation, this would create a minimal test solution
-        return Path.Combine(Path.GetTempPath(), "TestSolution.sln");
+        return TestSolutionFactory.GetOrCreateTestSolution();
     }
 
     private static string GetTestFilePath()
     {
-        // Return a path to a test file
-        return Path.Combine(Path.GetTempPath(), "TestFile.cs");
+        // Create a test file in the shared solution
+        return TestSolutionFactory.CreateTestFile("TestFile", "class Test { }");
     }
 
     #endregion

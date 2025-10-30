@@ -1,12 +1,12 @@
 {
-  "linesOfCode": 15,
+  "linesOfCode": 12,
   "numberOfClasses": 3,
   "numberOfPublicMethods": 2,
   "numberOfPrivateMethods": 0,
   "classes": [
     {
       "name": "Outer",
-      "linesOfCode": 13,
+      "linesOfCode": 10,
       "methods": [
         {
           "name": "MakeList",
@@ -17,7 +17,7 @@
         },
         {
           "name": "CountList",
-          "linesOfCode": 4,
+          "linesOfCode": 1,
           "parameterCount": 1,
           "cyclomaticComplexity": 1,
           "maxNestingDepth": 0

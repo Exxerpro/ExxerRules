@@ -31,14 +31,28 @@ public static class MetricsProvider
             var key = $"{solutionPath}|{filePath}";
 
             if (_cache.TryGetValue(key, out string? cached))
+            {
+                Console.WriteLine($"Found in memory cache for key: {key}");
                 return cached!;
+            }
 
             var metricsFile = GetMetricsFilePath(solutionPath, filePath);
             if (File.Exists(metricsFile))
             {
                 var fromDisk = await File.ReadAllTextAsync(metricsFile);
-                _cache.Set(key, fromDisk);
-                return fromDisk;
+                
+                // Validate JSON before returning from disk cache
+                try
+                {
+                    JsonDocument.Parse(fromDisk);
+                    Console.WriteLine($"Setting memory cache from disk for key: {key}");
+                    _cache.Set(key, fromDisk);
+                    return fromDisk;
+                }
+                catch (JsonException)
+                {
+                    // Cached file contains invalid JSON, fall through to recompute metrics
+                }
             }
 
             var (tree, model) = await LoadTreeAndModel(solutionPath, filePath);
@@ -49,6 +63,7 @@ public static class MetricsProvider
                 WriteIndented = true,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             });
+            Console.WriteLine($"Setting memory cache for key: {key}");
             _cache.Set(key, json);
 
             try

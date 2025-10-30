@@ -305,6 +305,14 @@ private static void CheckRepositoryHasInterface(SyntaxNodeAnalysisContext contex
             return false;
         }
 
+        var className = classDeclaration.Identifier.ValueText;
+
+        // Check if class name ends with "Handler" (e.g., CreateUserCommandHandler)
+        if (className.EndsWith("Handler"))
+        {
+            return true;
+        }
+
         // Check if class implements a handler interface
         var implementsHandler = classDeclaration.BaseList?.Types
             .Any(t => t.Type.ToString().Contains("IRequestHandler") || 

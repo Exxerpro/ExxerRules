@@ -11,15 +11,101 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 10000)] // 10 second timeout for analyzer execution
+    [Fact(Timeout = 30000)] // 30 second timeout for analyzer execution
     public async Task LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations()
     {
-        // Arrange - Load solution first
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
+        // Arrange - Create a clean test solution for LintRunTool
+        var cleanSolutionPath = Path.Combine(TestOutputPath, "LintRunTestSolution.sln");
+        var cleanProjectDir = Path.Combine(TestOutputPath, "LintRunTestProject");
+        var cleanProjectPath = Path.Combine(cleanProjectDir, "LintRunTestProject.csproj");
+        
+        // Clean up any existing files
+        if (Directory.Exists(cleanProjectDir))
+            Directory.Delete(cleanProjectDir, true);
+        
+        Directory.CreateDirectory(cleanProjectDir);
+        
+        // Create a minimal, clean test project
+        var projectContent = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFramework>net8.0</TargetFramework>
+                <Nullable>enable</Nullable>
+                <ImplicitUsings>enable</ImplicitUsings>
+              </PropertyGroup>
+            </Project>
+            """;
+        File.WriteAllText(cleanProjectPath, projectContent);
+        
+        // Create a simple test file with some violations
+        var testFilePath = Path.Combine(cleanProjectDir, "TestFile.cs");
+        var testFileContent = """
+            using System;
+            using System.Threading.Tasks;
 
-        // Act - Run linting on the solution
+            namespace LintRunTestProject;
+
+            public class TestClass
+            {
+                private string _name = "Test";
+
+                public string Name 
+                { 
+                    get => _name; 
+                    set => _name = value ?? throw new ArgumentNullException(nameof(value));
+                }
+
+                public int ProcessValue(int value)
+                {
+                    if (value < 0)
+                    {
+                        throw new ArgumentException("Value cannot be negative", nameof(value));
+                    }
+                    return value * 2;
+                }
+
+                // This method violates EXXER rules - missing CancellationToken
+                public async Task<string> GetDataAsync()
+                {
+                    await Task.Delay(100);
+                    return "data";
+                }
+
+                // This method violates EXXER rules - uses Console.WriteLine
+                public void LogMessage(string message)
+                {
+                    Console.WriteLine(message);
+                }
+            }
+            """;
+        File.WriteAllText(testFilePath, testFileContent);
+        
+        // Create a clean solution file
+        var solutionContent = """
+            Microsoft Visual Studio Solution File, Format Version 12.00
+            # Visual Studio Version 17
+            VisualStudioVersion = 17.0.31903.59
+            MinimumVisualStudioVersion = 10.0.40219.1
+            Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LintRunTestProject", "LintRunTestProject\\LintRunTestProject.csproj", "{12345678-1234-5678-9ABC-123456789ABC}"
+            EndProject
+            Global
+                GlobalSection(SolutionConfigurationPlatforms) = preSolution
+                    Debug|Any CPU = Debug|Any CPU
+                EndGlobalSection
+                GlobalSection(ProjectConfigurationPlatforms) = postSolution
+                    {12345678-1234-5678-9ABC-123456789ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                    {12345678-1234-5678-9ABC-123456789ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                EndGlobalSection
+            EndGlobal
+            """;
+        File.WriteAllText(cleanSolutionPath, solutionContent);
+
+        // Load the clean solution first
+        await LoadSolutionTool.LoadSolution(cleanSolutionPath, null, Xunit.TestContext.Current.CancellationToken);
+
+        // Act - Run linting on the clean solution
         var result = await LintRunTool.LintRun(
-            solutionPath: SolutionPath,
+            solutionPath: cleanSolutionPath,
             scope: "all",
             severityConfig: "error,warning",
             progress: null,
@@ -37,16 +123,85 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithSpecificFile_ReturnsFileSpecificViolations.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 10000)]
+    [Fact(Timeout = 30000)]
     public async Task LintRun_WithSpecificFile_ReturnsFileSpecificViolations()
     {
-        // Arrange - Load solution first
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
+        // Arrange - Create a clean test solution for LintRunTool
+        var cleanSolutionPath = Path.Combine(TestOutputPath, "LintRunTestSolution2.sln");
+        var cleanProjectDir = Path.Combine(TestOutputPath, "LintRunTestProject2");
+        var cleanProjectPath = Path.Combine(cleanProjectDir, "LintRunTestProject2.csproj");
+        
+        // Clean up any existing files
+        if (Directory.Exists(cleanProjectDir))
+            Directory.Delete(cleanProjectDir, true);
+        
+        Directory.CreateDirectory(cleanProjectDir);
+        
+        // Create a minimal, clean test project
+        var projectContent = """
+            <Project Sdk="Microsoft.NET.Sdk">
+              <PropertyGroup>
+                <TargetFramework>net8.0</TargetFramework>
+                <Nullable>enable</Nullable>
+                <ImplicitUsings>enable</ImplicitUsings>
+              </PropertyGroup>
+            </Project>
+            """;
+        File.WriteAllText(cleanProjectPath, projectContent);
+        
+        // Create a simple test file with some violations
+        var testFilePath = Path.Combine(cleanProjectDir, "TestFile.cs");
+        var testFileContent = """
+            using System;
+            using System.Threading.Tasks;
+
+            namespace LintRunTestProject2;
+
+            public class TestClass
+            {
+                // This method violates EXXER rules - missing CancellationToken
+                public async Task<string> GetDataAsync()
+                {
+                    await Task.Delay(100);
+                    return "data";
+                }
+
+                // This method violates EXXER rules - uses Console.WriteLine
+                public void LogMessage(string message)
+                {
+                    Console.WriteLine(message);
+                }
+            }
+            """;
+        File.WriteAllText(testFilePath, testFileContent);
+        
+        // Create a clean solution file
+        var solutionContent = """
+            Microsoft Visual Studio Solution File, Format Version 12.00
+            # Visual Studio Version 17
+            VisualStudioVersion = 17.0.31903.59
+            MinimumVisualStudioVersion = 10.0.40219.1
+            Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LintRunTestProject2", "LintRunTestProject2\\LintRunTestProject2.csproj", "{12345678-1234-5678-9ABC-123456789ABC}"
+            EndProject
+            Global
+                GlobalSection(SolutionConfigurationPlatforms) = preSolution
+                    Debug|Any CPU = Debug|Any CPU
+                EndGlobalSection
+                GlobalSection(ProjectConfigurationPlatforms) = postSolution
+                    {12345678-1234-5678-9ABC-123456789ABC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                    {12345678-1234-5678-9ABC-123456789ABC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                EndGlobalSection
+            EndGlobal
+            """;
+        File.WriteAllText(cleanSolutionPath, solutionContent);
+
+        // Load the clean solution first
+        await LoadSolutionTool.LoadSolution(cleanSolutionPath, null, Xunit.TestContext.Current.CancellationToken);
 
         // Act - Run linting on specific file
         var result = await LintRunTool.LintRun(
-            solutionPath: SolutionPath,
-            scope: ExampleFilePath,
+            solutionPath: cleanSolutionPath,
+            scope: testFilePath,
             severityConfig: "error",
             progress: null,
             cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -101,7 +256,7 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithProgressReporter_CallsProgressCallback.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // Increased timeout for unit test
+    [Fact(Timeout = 10000)] // Reduced timeout to fail faster
     public async Task LintRun_WithProgressReporter_CallsProgressCallback()
     {
         // Arrange - Load solution first

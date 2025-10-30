@@ -68,7 +68,7 @@ public class PatternSuggestService : IPatternSuggestService
                 return Result<IReadOnlyList<PatternSuggestion>>.WithFailure(analysisResult.Error!);
             }
 
-            var suggestions = analysisResult.Value
+            var suggestions = (analysisResult.Value ?? new List<PatternSuggestion>())
                 .Where(s => s.Confidence >= options.MinConfidence)
                 .OrderByDescending(s => s.Confidence)
                 .Take(options.MaxSuggestions)
@@ -129,7 +129,7 @@ public class PatternSuggestService : IPatternSuggestService
                 return Result<PatternAnalysis>.WithFailure(patternDefinitionsResult.Error!);
             }
 
-            var patternDefinitions = patternDefinitionsResult.Value;
+            var patternDefinitions = patternDefinitionsResult.Value ?? new List<PatternDefinition>();
             if (!patternDefinitions.Any())
             {
                 _logger.LogWarning("No pattern definitions found for type: {PatternType}", patternType);
@@ -152,7 +152,7 @@ public class PatternSuggestService : IPatternSuggestService
                     var suggestion = GeneratePatternSuggestion(code, patternDef);
                     if (suggestion != null)
                     {
-                        suggestions.Add(suggestion);
+                        suggestions.Add(suggestion.Value);
                     }
                 }
                 else
@@ -225,7 +225,7 @@ public class PatternSuggestService : IPatternSuggestService
                 return Result<IReadOnlyList<PatternViolation>>.WithFailure(allPatternsResult.Error!);
             }
 
-            var patternDefinitions = allPatternsResult.Value;
+            var patternDefinitions = allPatternsResult.Value ?? new List<PatternDefinition>();
 
             // Analyze each pattern for violations
             foreach (var patternDef in patternDefinitions)
@@ -284,7 +284,7 @@ public class PatternSuggestService : IPatternSuggestService
                 return Result<IReadOnlyList<PatternDefinition>>.WithFailure(nodesResult.Error!);
             }
 
-            var patternDefinitions = nodesResult.Value.Select(node => new PatternDefinition(
+            var patternDefinitions = (nodesResult.Value ?? new List<KnowledgeNode>()).Select(node => new PatternDefinition(
                 Id: node.GetProperty<string>("id") ?? node.Id,
                 Name: node.GetProperty<string>("name") ?? "Unknown",
                 Description: node.GetProperty<string>("description") ?? "",
@@ -292,7 +292,7 @@ public class PatternSuggestService : IPatternSuggestService
                 Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
                 Pattern: node.GetProperty<string>("pattern") ?? "",
                 Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
-                IsEnabled: node.GetProperty<bool>("isEnabled") ?? true,
+                IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
                 CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
                 UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
             )).ToList();
@@ -335,11 +335,12 @@ public class PatternSuggestService : IPatternSuggestService
                 return Result<IReadOnlyList<string>>.WithFailure(nodesResult.Error!);
             }
 
-            var categories = nodesResult.Value
+            var categories = (nodesResult.Value ?? new List<KnowledgeNode>())
                 .Select(node => node.GetProperty<string>("category"))
                 .Where(category => !string.IsNullOrWhiteSpace(category))
                 .Distinct()
                 .OrderBy(c => c)
+                .Cast<string>()
                 .ToList();
 
             _logger.LogDebug("Retrieved {Count} pattern categories", categories.Count);
@@ -414,7 +415,7 @@ public class PatternSuggestService : IPatternSuggestService
             return Result<IReadOnlyList<PatternSuggestion>>.WithFailure(allPatternsResult.Error!);
         }
 
-        var patternDefinitions = allPatternsResult.Value;
+        var patternDefinitions = allPatternsResult.Value ?? new List<PatternDefinition>();
 
         // Filter by categories if specified
         if (options.Categories != null && options.Categories.Count > 0)
@@ -431,7 +432,7 @@ public class PatternSuggestService : IPatternSuggestService
                 var suggestion = GeneratePatternSuggestion(codeContext, patternDef);
                 if (suggestion != null)
                 {
-                    suggestions.Add(suggestion);
+                    suggestions.Add(suggestion.Value);
                 }
             }
         }
@@ -453,7 +454,7 @@ public class PatternSuggestService : IPatternSuggestService
             return Result<IReadOnlyList<PatternDefinition>>.WithFailure(nodesResult.Error!);
         }
 
-        var patternDefinitions = nodesResult.Value.Select(node => new PatternDefinition(
+        var patternDefinitions = (nodesResult.Value ?? new List<KnowledgeNode>()).Select(node => new PatternDefinition(
             Id: node.GetProperty<string>("id") ?? node.Id,
             Name: node.GetProperty<string>("name") ?? "Unknown",
             Description: node.GetProperty<string>("description") ?? "",
@@ -461,7 +462,7 @@ public class PatternSuggestService : IPatternSuggestService
             Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
             Pattern: node.GetProperty<string>("pattern") ?? "",
             Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
-            IsEnabled: node.GetProperty<bool>("isEnabled") ?? true,
+            IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
             CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
             UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
         )).ToList();
@@ -479,7 +480,7 @@ public class PatternSuggestService : IPatternSuggestService
             return Result<IReadOnlyList<PatternDefinition>>.WithFailure(nodesResult.Error!);
         }
 
-        var patternDefinitions = nodesResult.Value.Select(node => new PatternDefinition(
+        var patternDefinitions = (nodesResult.Value ?? new List<KnowledgeNode>()).Select(node => new PatternDefinition(
             Id: node.GetProperty<string>("id") ?? node.Id,
             Name: node.GetProperty<string>("name") ?? "Unknown",
             Description: node.GetProperty<string>("description") ?? "",
@@ -487,7 +488,7 @@ public class PatternSuggestService : IPatternSuggestService
             Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
             Pattern: node.GetProperty<string>("pattern") ?? "",
             Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
-            IsEnabled: node.GetProperty<bool>("isEnabled") ?? true,
+            IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
             CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
             UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
         )).ToList();

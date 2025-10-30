@@ -55,7 +55,19 @@ public class SearchSimilarVectorsQueryHandler : IQueryHandler<SearchSimilarVecto
 
         try
         {
-            var result = await _vectorSearchPort.SearchSimilarVectorsAsync(request.Query, cancellationToken);
+            // Convert VectorSearchQuery to the expected parameters for SearchAsync
+            var searchOptions = new VectorSearchOptions(
+                Limit: request.Query.Limit,
+                Threshold: request.Query.Threshold,
+                IncludeMetadata: true,
+                IncludeEmbedding: false,
+                Filters: request.Query.Filters,
+                TimeoutMs: 5000
+            );
+            
+            // Use SearchBatchAsync with a single query vector to get a list of results
+            var queryVectors = new[] { request.Query.Embedding };
+            var result = await _vectorSearchPort.SearchBatchAsync(queryVectors, searchOptions, cancellationToken);
             
             if (result.IsSuccess)
             {
@@ -71,7 +83,13 @@ public class SearchSimilarVectorsQueryHandler : IQueryHandler<SearchSimilarVecto
                     request.Query.Query ?? "null", errorMessage);
             }
 
-            return result;
+            // Return the results directly since SearchBatchAsync returns a single list
+            if (result.IsSuccess)
+            {
+                return Result<IReadOnlyList<VectorSearchResult>>.Success(result.Value!);
+            }
+            
+            return Result<IReadOnlyList<VectorSearchResult>>.WithFailure(result.Error!);
         }
         catch (Exception ex)
         {

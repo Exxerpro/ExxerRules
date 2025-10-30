@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using IndFusion.Mcp.Core.Abstractions;
 using IndFusion.Mcp.Core.Services;
+using IndFusion.Mcp.Tests.TestInfrastructure;
 using IndQuestResults;
 using Shouldly;
 using Xunit;
@@ -245,7 +246,7 @@ public class Fixer001ServiceBehavioralTests
     }
 
     [Fact]
-    public async Task ValidateFixer001ReadinessAsync_WithEmptyTargetFiles_ShouldReturnFailureResult()
+    public async Task ValidateFixer001ReadinessAsync_WithEmptyTargetFiles_ShouldReturnSuccessWithNotReady()
     {
         // Arrange
         var request = new Fixer001Request(
@@ -260,7 +261,7 @@ public class Fixer001ServiceBehavioralTests
 
         // Assert
         result.ShouldNotBeNull();
-        result.IsSuccess.ShouldBeTrue("Fixer001 readiness validation should succeed");
+        result.IsSuccess.ShouldBeTrue("Fixer001 readiness validation should succeed even with no target files");
         result.Value.ShouldNotBeNull();
         result.Value.IsReady.ShouldBeFalse("Should not be ready with no target files");
         result.Value.Issues.ShouldNotBeEmpty("Should have issues with no target files");
@@ -281,9 +282,12 @@ public class Fixer001ServiceBehavioralTests
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.ApplyFixer001Async(request, cts.Token));
+        // Act
+        var result = await _service.ApplyFixer001Async(request, cts.Token);
+        
+        // Assert
+        result.IsFailure.ShouldBeTrue("Operation should fail when cancellation token is triggered");
+        result.Error.ShouldContain("Operation was cancelled");
 
         // Cleanup
         CleanupTestFile(testFile);
@@ -298,35 +302,30 @@ public class Fixer001ServiceBehavioralTests
         using var cts = new CancellationTokenSource();
         cts.Cancel();
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.GetFixer001ConfigurationAsync(solutionPath, cts.Token));
+        // Act
+        var result = await _service.GetFixer001ConfigurationAsync(solutionPath, cts.Token);
+        
+        // Assert
+        result.IsFailure.ShouldBeTrue("Operation should fail when cancellation token is triggered");
+        result.Error.ShouldContain("Operation was cancelled");
     }
 
     #region Private Helper Methods
 
     private static string CreateTestFile(string content)
     {
-        var tempFile = Path.GetTempFileName();
-        var testFile = tempFile + ".cs";
-        File.Move(tempFile, testFile);
-        File.WriteAllText(testFile, content);
-        return testFile;
+        var fileName = $"TestFile_{Guid.NewGuid():N}";
+        return TestSolutionFactory.CreateTestFile(fileName, content);
     }
 
     private static void CleanupTestFile(string filePath)
     {
-        if (File.Exists(filePath))
-        {
-            File.Delete(filePath);
-        }
+        TestSolutionFactory.CleanupTestFile(filePath);
     }
 
     private static string GetTestSolutionPath()
     {
-        // Return a path to a test solution file
-        // In a real implementation, this would create a minimal test solution
-        return Path.Combine(Path.GetTempPath(), "TestSolution.sln");
+        return TestSolutionFactory.GetOrCreateTestSolution();
     }
 
     #endregion

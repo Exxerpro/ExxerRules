@@ -52,7 +52,7 @@ public class StoreVectorCommandHandler : ICommandHandler<StoreVectorCommand>
 
         try
         {
-            var result = await _vectorSearchPort.StoreVectorAsync(request.Vector, cancellationToken);
+            var result = await _vectorSearchPort.IndexAsync(request.Vector, cancellationToken);
             
             if (result.IsSuccess)
             {

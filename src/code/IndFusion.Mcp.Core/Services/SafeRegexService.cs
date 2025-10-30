@@ -37,6 +37,9 @@ public class SafeRegexService : ISafeRegexService
 
         try
         {
+            Console.WriteLine($"ApplySafeRegexAsync called with cancellation token: {cancellationToken.IsCancellationRequested}");
+            cancellationToken.ThrowIfCancellationRequested();
+            
             // Validate inputs
             if (string.IsNullOrEmpty(request.Pattern))
             {
@@ -63,7 +66,7 @@ public class SafeRegexService : ISafeRegexService
             var validation = validationResult.Value!;
             if (!validation.IsValid)
             {
-                return Result<SafeRegexResult>.WithFailure($"Regex pattern validation failed: {string.Join(", ", validation.Issues.Select(i => i.Message))}");
+                return Result<SafeRegexResult>.WithFailure("Invalid regex pattern");
             }
 
             // Apply transformations
@@ -149,6 +152,12 @@ public class SafeRegexService : ISafeRegexService
 
             return Result<SafeRegexResult>.Success(result);
         }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Safe regex transformation was cancelled");
+            stopwatch.Stop();
+            return Result<SafeRegexResult>.WithFailure("Operation was cancelled");
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error during safe regex transformation with pattern: {Pattern}", request.Pattern);
@@ -169,6 +178,9 @@ public class SafeRegexService : ISafeRegexService
 
         try
         {
+            Console.WriteLine($"ValidateRegexPatternAsync called with cancellation token: {cancellationToken.IsCancellationRequested}");
+            cancellationToken.ThrowIfCancellationRequested();
+            
             if (string.IsNullOrEmpty(pattern))
             {
                 return Result<RegexValidationResult>.WithFailure("Pattern cannot be null or empty");
@@ -183,6 +195,7 @@ public class SafeRegexService : ISafeRegexService
             try
             {
                 var regex = new Regex(pattern, RegexOptions.Compiled);
+                cancellationToken.ThrowIfCancellationRequested();
                 
                 // Test for ReDoS vulnerability
                 var redosResult = TestForReDoS(pattern);
@@ -200,6 +213,8 @@ public class SafeRegexService : ISafeRegexService
 
                 // Test for performance issues
                 var performanceResult = TestPerformance(pattern);
+                cancellationToken.ThrowIfCancellationRequested();
+                
                 if (performanceResult.IsSlow)
                 {
                     warnings.Add(new RegexWarning(
@@ -253,6 +268,12 @@ public class SafeRegexService : ISafeRegexService
                 stopwatch.ElapsedMilliseconds, isValid, safetyScore);
 
             return Result<RegexValidationResult>.Success(result);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Regex pattern validation was cancelled");
+            stopwatch.Stop();
+            return Result<RegexValidationResult>.WithFailure("Operation was cancelled");
         }
         catch (Exception ex)
         {
@@ -349,6 +370,12 @@ public class SafeRegexService : ISafeRegexService
                 stopwatch.ElapsedMilliseconds, estimatedChanges, affectedFiles.Count);
 
             return Result<SafeRegexPreviewResult>.Success(result);
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogInformation("Regex transformation preview was cancelled");
+            stopwatch.Stop();
+            return Result<SafeRegexPreviewResult>.WithFailure("Operation was cancelled");
         }
         catch (Exception ex)
         {

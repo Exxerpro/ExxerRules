@@ -232,10 +232,15 @@ public class SafeRegexServiceBehavioralTests
 
         using var cts = new CancellationTokenSource();
         cts.Cancel();
+        
+        Console.WriteLine($"Test: Cancellation token is cancelled: {cts.Token.IsCancellationRequested}");
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.ApplySafeRegexAsync(request, cts.Token));
+        // Act
+        var result = await _service.ApplySafeRegexAsync(request, cts.Token);
+        
+        // Assert
+        result.IsFailure.ShouldBeTrue("Operation should fail when cancellation token is triggered");
+        result.Error.ShouldContain("Operation was cancelled");
 
         // Cleanup
         CleanupTestFile(testFile);
@@ -249,10 +254,15 @@ public class SafeRegexServiceBehavioralTests
 
         using var cts = new CancellationTokenSource();
         cts.Cancel();
+        
+        Console.WriteLine($"Test: Cancellation token is cancelled: {cts.Token.IsCancellationRequested}");
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.ValidateRegexPatternAsync(pattern, cts.Token));
+        // Act
+        var result = await _service.ValidateRegexPatternAsync(pattern, cts.Token);
+        
+        // Assert
+        result.IsFailure.ShouldBeTrue("Operation should fail when cancellation token is triggered");
+        result.Error.ShouldContain("Operation was cancelled");
     }
 
     #region Private Helper Methods

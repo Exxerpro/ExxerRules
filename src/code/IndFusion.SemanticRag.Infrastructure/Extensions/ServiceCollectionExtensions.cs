@@ -50,7 +50,6 @@ public static class ServiceCollectionExtensions
         // Register core services
         services.AddScoped<IVectorSearchService, QdrantVectorSearchService>();
         services.AddScoped<IPatternKnowledgeBase, PatternKnowledgeBaseService>();
-        services.AddScoped<IKnowledgeGraphService, Neo4jKnowledgeGraphService>();
         services.AddScoped<ICodeAnalysisService, RoslynCodeAnalysisService>();
         services.AddScoped<ISemanticPatternEngine, SemanticPatternEngineService>();
         services.AddScoped<IRagService, RagService>();
@@ -58,8 +57,27 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IDocumentIngestionService, DocumentIngestionService>();
 
         // Register domain ports (hexagonal architecture)
+        services.AddScoped<IVectorSearchPort, QdrantVectorSearchService>();
+        services.AddScoped<IKnowledgeGraphServicePort, Neo4jKnowledgeGraphService>();
         services.AddScoped<IKnowledgeGraphPort, Neo4jKnowledgeGraphAdapter>();
         services.AddScoped<IEmbeddingServicePort, OllamaEmbeddingServiceAdapter>();
+        services.AddScoped<IDocumentIngestionPort, DocumentIngestionService>();
+
+        // Register port adapters (technology-agnostic ports)
+        services.AddScoped<IVectorDatabasePort>(provider =>
+        {
+            var qdrantClient = provider.GetRequiredService<QdrantClient>();
+            var logger = provider.GetRequiredService<ILogger<QdrantVectorDatabaseAdapter>>();
+            return new QdrantVectorDatabaseAdapter(qdrantClient, logger);
+        });
+
+        services.AddScoped<IGraphDatabasePort>(provider =>
+        {
+            var driver = provider.GetRequiredService<IDriver>();
+            var options = provider.GetRequiredService<IOptions<Neo4jOptions>>();
+            var logger = provider.GetRequiredService<ILogger<Neo4jGraphDatabaseAdapter>>();
+            return new Neo4jGraphDatabaseAdapter(driver, options, logger);
+        });
 
         // Register HTTP clients
         services.AddHttpClient<OllamaClient>();

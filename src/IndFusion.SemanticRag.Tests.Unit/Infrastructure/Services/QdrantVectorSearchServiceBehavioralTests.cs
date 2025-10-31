@@ -4,13 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using IndFusion.SemanticRag.Application.Interfaces;
 using IndFusion.SemanticRag.Domain.Models;
+using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Domain.ValueObjects;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndFusion.SemanticRag.Infrastructure.Services;
+using IndQuestResults;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
-using Qdrant.Client;
 using Shouldly;
 using Xunit;
 
@@ -23,23 +24,24 @@ namespace IndFusion.SemanticRag.Tests.Unit.Infrastructure.Services;
 public class QdrantVectorSearchServiceBehavioralTests
 {
     private readonly ILogger<QdrantVectorSearchService> _logger;
-    private readonly QdrantClient _qdrantClient;
-    private readonly OllamaClient _ollamaClient;
+    private readonly IVectorDatabasePort _vectorDatabasePort;
+    private readonly IEmbeddingServicePort _embeddingServicePort;
     private readonly IOptions<QdrantOptions> _options;
     private readonly QdrantOptions _qdrantOptions;
 
     public QdrantVectorSearchServiceBehavioralTests()
     {
         _logger = Substitute.For<ILogger<QdrantVectorSearchService>>();
-        _qdrantClient = Substitute.For<QdrantClient>();
-        _ollamaClient = Substitute.For<OllamaClient>();
+        _vectorDatabasePort = Substitute.For<IVectorDatabasePort>();
+        _embeddingServicePort = Substitute.For<IEmbeddingServicePort>();
         
         _qdrantOptions = new QdrantOptions
         {
             CollectionName = "test-collection",
             Host = "localhost",
             Port = 6333,
-            ApiKey = "test-key"
+            ApiKey = "test-key",
+            VectorSize = 384
         };
         _options = Options.Create(_qdrantOptions);
     }
@@ -50,12 +52,12 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "test query";
         var searchOptions = VectorSearchOptions.Default();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
-        // Mock Ollama to return actual embedding
+        // Mock embedding service to return actual embedding
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
@@ -66,8 +68,8 @@ public class QdrantVectorSearchServiceBehavioralTests
         result.Success.ShouldBeTrue();
         result.ErrorMessage.ShouldBeNull();
         
-        // Verify that Ollama was called to generate embedding
-        await _ollamaClient.Received(1).GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>());
+        // Verify that embedding service was called to generate embedding
+        await _embeddingServicePort.Received(1).GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>());
         
         // Verify that Qdrant client was used (when implemented)
         // This test will fail until actual Qdrant integration is implemented
@@ -80,11 +82,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "precise query";
         var searchOptions = VectorSearchOptions.HighPrecision();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.9f, 0.8f, 0.7f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
@@ -102,11 +104,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "broad query";
         var searchOptions = VectorSearchOptions.Broad();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.5f, 0.4f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
@@ -123,11 +125,11 @@ public class QdrantVectorSearchServiceBehavioralTests
     {
         // Arrange
         var text = "sample text for embedding";
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f };
-        _ollamaClient.GenerateEmbeddingAsync(text, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(text, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.GenerateEmbeddingAsync(text, CancellationToken.None);
@@ -135,15 +137,15 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Assert
         result.Values.ShouldBe(expectedEmbedding);
         
-        // Verify Ollama was called
-        await _ollamaClient.Received(1).GenerateEmbeddingAsync(text, Arg.Any<CancellationToken>());
+        // Verify embedding service was called
+        await _embeddingServicePort.Received(1).GenerateEmbeddingAsync(text, Arg.Any<CancellationToken>());
     }
 
     [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingAsync_WithEmptyText_ShouldThrowArgumentException()
     {
         // Arrange
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -157,18 +159,18 @@ public class QdrantVectorSearchServiceBehavioralTests
         var id = "doc-123";
         var content = "document content";
         var metadata = new Dictionary<string, object> { { "source", "test" }, { "type", "document" } };
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         await service.StoreDocumentAsync(id, content, metadata, CancellationToken.None);
 
         // Assert
-        // Verify Ollama was called to generate embedding
-        await _ollamaClient.Received(1).GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>());
+        // Verify embedding service was called to generate embedding
+        await _embeddingServicePort.Received(1).GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>());
         
         // This test drives implementation of document storage with Qdrant
         // Currently fails because implementation uses Task.Delay placeholder
@@ -178,7 +180,7 @@ public class QdrantVectorSearchServiceBehavioralTests
     public async Task StoreDocumentAsync_WithNullId_ShouldThrowArgumentException()
     {
         // Arrange
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -189,7 +191,7 @@ public class QdrantVectorSearchServiceBehavioralTests
     public async Task StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException()
     {
         // Arrange
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -200,7 +202,7 @@ public class QdrantVectorSearchServiceBehavioralTests
     public async Task StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException()
     {
         // Arrange
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -214,18 +216,18 @@ public class QdrantVectorSearchServiceBehavioralTests
         var id = "doc-123";
         var content = "updated content";
         var metadata = new Dictionary<string, object> { { "source", "test" }, { "updated", true } };
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.2f, 0.3f, 0.4f };
-        _ollamaClient.GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         await service.UpdateDocumentAsync(id, content, metadata, CancellationToken.None);
 
         // Assert
-        // Verify Ollama was called to generate new embedding
-        await _ollamaClient.Received(1).GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>());
+        // Verify embedding service was called to generate new embedding
+        await _embeddingServicePort.Received(1).GenerateEmbeddingAsync(content, Arg.Any<CancellationToken>());
         
         // This test drives implementation of document updates with Qdrant
     }
@@ -235,7 +237,7 @@ public class QdrantVectorSearchServiceBehavioralTests
     {
         // Arrange
         var id = "doc-123";
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
 
         // Act
         await service.DeleteDocumentAsync(id, CancellationToken.None);
@@ -249,7 +251,7 @@ public class QdrantVectorSearchServiceBehavioralTests
     public async Task DeleteDocumentAsync_WithNullId_ShouldThrowArgumentException()
     {
         // Arrange
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -262,7 +264,7 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "test query";
         var searchOptions = VectorSearchOptions.Default();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         using var cts = new CancellationTokenSource();
         cts.Cancel(); // Cancel immediately
@@ -278,11 +280,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "test query";
         var searchOptions = new VectorSearchOptions(TimeoutMs: 100); // Very short timeout
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
-        // Mock Ollama to delay longer than timeout
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(new float[] { 0.1f, 0.2f, 0.3f }));
+        // Mock embedding service to delay longer than timeout
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(new float[] { 0.1f, 0.2f, 0.3f }));
 
         // Act & Assert
         await Should.ThrowAsync<OperationCanceledException>(async () =>
@@ -290,19 +292,22 @@ public class QdrantVectorSearchServiceBehavioralTests
     }
 
     [Fact(Timeout = 5000)]
-    public async Task SearchSimilarAsync_WithOllamaFailure_ShouldPropagateException()
+    public async Task SearchSimilarAsync_WithEmbeddingServiceFailure_ShouldPropagateFailure()
     {
         // Arrange
         var query = "test query";
         var searchOptions = VectorSearchOptions.Default();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(Task.FromException<float[]>(new InvalidOperationException("Ollama service unavailable")));
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.WithFailure("Embedding service unavailable"));
 
-        // Act & Assert
-        await Should.ThrowAsync<InvalidOperationException>(async () =>
-            await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None));
+        // Act
+        var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
+
+        // Assert
+        result.Success.ShouldBeFalse();
+        result.ErrorMessage.ShouldContain("Embedding service unavailable");
     }
 
     [Fact(Timeout = 5000)]
@@ -311,15 +316,15 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "test query";
         var searchOptions = VectorSearchOptions.Default();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
-        // Mock Qdrant to throw exception (when implemented)
-        // _qdrantClient.SearchAsync(Arg.Any<SearchRequest>(), Arg.Any<CancellationToken>())
-        //     .ThrowsAsync(new QdrantException("Qdrant service unavailable"));
+        // Mock vector database port to return failure (when implemented)
+        // _vectorDatabasePort.SearchAsync(Arg.Any<string>(), Arg.Any<float[]>(), Arg.Any<uint>(), Arg.Any<float?>(), Arg.Any<Dictionary<string, object>>(), Arg.Any<CancellationToken>())
+        //     .Returns(Result<IReadOnlyList<VectorSearchHit>>.WithFailure("Vector database service unavailable"));
 
         // Act & Assert
         // This test will drive implementation of proper Qdrant error handling
@@ -333,11 +338,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         var query = "filtered query";
         var filters = new Dictionary<string, object> { { "category", "test" }, { "priority", "high" } };
         var searchOptions = new VectorSearchOptions(Filters: filters);
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
@@ -354,11 +359,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "query with embedding";
         var searchOptions = new VectorSearchOptions(IncludeEmbedding: true);
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
@@ -375,11 +380,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "query with metadata";
         var searchOptions = new VectorSearchOptions(IncludeMetadata: true);
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
@@ -396,11 +401,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "timing query";
         var searchOptions = VectorSearchOptions.Default();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);
@@ -418,11 +423,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Arrange
         var query = "query that should return results";
         var searchOptions = VectorSearchOptions.Default();
-        var service = new QdrantVectorSearchService(_qdrantClient, _ollamaClient, _options, _logger);
+        var service = new QdrantVectorSearchService(_vectorDatabasePort, _embeddingServicePort, _options, _logger);
         
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        _ollamaClient.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
-            .Returns(expectedEmbedding);
+        _embeddingServicePort.GenerateEmbeddingAsync(query, Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
         // Act
         var result = await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None);

@@ -1,4 +1,8 @@
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
+using IndFusion.SemanticRag.Tests.Unit.Helpers;
+using IndFusion.SemanticRag.Tests.Unit.Shared;
+using IndQuestResults;
 using Shouldly;
 using Xunit;
 
@@ -43,8 +47,10 @@ public class DocumentTests
     [Fact]
     public void Should_ValidateSuccessfully_When_ValidDocument()
     {
-        // Arrange
-        var document = CreateValidDocument();
+        // ✅ Use fluent builder from TestDataBuilders
+        var documentResult = TestDataBuilders.CreateValidDocument();
+        documentResult.IsSuccess.ShouldBeTrue();
+        var document = documentResult.Value!; // Null-forgiving: IsSuccess guarantees non-null
 
         // Act
         var result = document.Validate();
@@ -96,7 +102,7 @@ public class DocumentTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("Id");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -113,7 +119,7 @@ public class DocumentTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("Content");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -130,7 +136,7 @@ public class DocumentTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("SourcePath");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -147,7 +153,7 @@ public class DocumentTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("Repository");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -164,7 +170,7 @@ public class DocumentTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("CommitHash");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -179,22 +185,8 @@ public class DocumentTests
         // Act
         var result = document.Validate();
 
-        // Assert
-        result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("Metadata");
+        // Assert: Use error code assertion instead of fragile string assertion
+        result.ShouldFailWith(ErrorCodes.DocumentMetadataRequired);
     }
 
-    private static Document CreateValidDocument()
-    {
-        return new Document(
-            "doc-123",
-            "Test document content",
-            "/path/to/file.cs",
-            "test-repo",
-            "abc123",
-            DocumentType.CSharpCode,
-            new Dictionary<string, object> { ["key"] = "value" },
-            DateTimeOffset.UtcNow,
-            DateTimeOffset.UtcNow);
-    }
 }

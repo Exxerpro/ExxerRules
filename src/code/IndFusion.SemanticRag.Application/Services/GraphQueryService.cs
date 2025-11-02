@@ -394,9 +394,14 @@ public class GraphQueryService : IGraphQueryService
             var nodesResult = await _knowledgeGraphPort.QueryNodesAsync(cypherQuery, parameters, cancellationToken).ConfigureAwait(false);
             var relationshipsResult = await _knowledgeGraphPort.QueryRelationshipsAsync(cypherQuery, parameters, cancellationToken).ConfigureAwait(false);
 
-            if (nodesResult.IsFailure && relationshipsResult.IsFailure)
+            // No path exists if:
+            // 1. Both queries failed, OR
+            // 2. Nodes query failed, OR
+            // 3. Nodes query succeeded but returned no results (empty or null)
+            if (nodesResult.IsFailure || 
+                (nodesResult.IsSuccess && (nodesResult.Value == null || nodesResult.Value.Count == 0)))
             {
-                _logger.LogWarning("No path found from {StartNodeId} to {EndNodeId}", startNodeId, endNodeId);
+                _logger.LogDebug("No path found from {StartNodeId} to {EndNodeId}", startNodeId, endNodeId);
                 return Result<GraphPath?>.Success(null);
             }
 

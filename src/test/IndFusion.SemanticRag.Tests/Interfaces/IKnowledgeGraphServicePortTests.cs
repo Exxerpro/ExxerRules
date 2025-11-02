@@ -11,11 +11,17 @@ public class IKnowledgeGraphServicePortTests
 {
     private readonly IKnowledgeGraphServicePort _mockKnowledgeGraphService;
 
+    /// <summary>
+    /// Initializes a new instance of the IKnowledgeGraphServicePortTests class.
+    /// </summary>
     public IKnowledgeGraphServicePortTests()
     {
         _mockKnowledgeGraphService = Substitute.For<IKnowledgeGraphServicePort>();
     }
 
+    /// <summary>
+    /// Verifies that CreateEntityAsync creates entity successfully.
+    /// </summary>
     [Fact]
     public async Task CreateEntityAsync_Should_Create_Entity_Successfully()
     {
@@ -25,7 +31,9 @@ public class IKnowledgeGraphServicePortTests
             Name: "Test Entity",
             Type: "Person",
             Description: "A test entity",
-            Properties: new Dictionary<string, object> { ["age"] = 30 }
+            Properties: new Dictionary<string, object> { ["age"] = 30 },
+            Confidence: 0.9,
+            CreatedAt: DateTime.UtcNow
         );
 
         _mockKnowledgeGraphService.CreateEntityAsync(entity, CancellationToken.None)
@@ -39,14 +47,17 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that CreateEntitiesAsync creates multiple entities.
+    /// </summary>
     [Fact]
     public async Task CreateEntitiesAsync_Should_Create_Multiple_Entities()
     {
         // Arrange
         var entities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>()),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>())
+            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphService.CreateEntitiesAsync(entities, CancellationToken.None)
@@ -60,6 +71,9 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that CreateRelationshipAsync creates relationship successfully.
+    /// </summary>
     [Fact]
     public async Task CreateRelationshipAsync_Should_Create_Relationship_Successfully()
     {
@@ -84,6 +98,9 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that CreateRelationshipsAsync creates multiple relationships.
+    /// </summary>
     [Fact]
     public async Task CreateRelationshipsAsync_Should_Create_Multiple_Relationships()
     {
@@ -105,6 +122,9 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that GetEntityAsync returns entity when found.
+    /// </summary>
     [Fact]
     public async Task GetEntityAsync_Should_Return_Entity_When_Found()
     {
@@ -115,7 +135,9 @@ public class IKnowledgeGraphServicePortTests
             Name: "Test Entity",
             Type: "Person",
             Description: "A test entity",
-            Properties: new Dictionary<string, object>()
+            Properties: new Dictionary<string, object>(),
+            Confidence: 0.9,
+            CreatedAt: DateTime.UtcNow
         );
 
         _mockKnowledgeGraphService.GetEntityAsync(entityId, CancellationToken.None)
@@ -133,6 +155,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value.Type.ShouldBe("Person");
     }
 
+    /// <summary>
+    /// Verifies that GetEntityAsync returns failure when not found.
+    /// </summary>
     [Fact]
     public async Task GetEntityAsync_Should_Return_Failure_When_Not_Found()
     {
@@ -151,6 +176,9 @@ public class IKnowledgeGraphServicePortTests
         result.Error.ShouldBe("Entity not found");
     }
 
+    /// <summary>
+    /// Verifies that GetEntitiesAsync returns multiple entities.
+    /// </summary>
     [Fact]
     public async Task GetEntitiesAsync_Should_Return_Multiple_Entities()
     {
@@ -158,8 +186,8 @@ public class IKnowledgeGraphServicePortTests
         var entityIds = new List<string> { "entity-1", "entity-2" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>()),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>())
+            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphService.GetEntitiesAsync(entityIds, CancellationToken.None)
@@ -175,6 +203,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value.Count.ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that GetRelationshipAsync returns relationship when found.
+    /// </summary>
     [Fact]
     public async Task GetRelationshipAsync_Should_Return_Relationship_When_Found()
     {
@@ -203,6 +234,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value.RelationshipType.ShouldBe("WORKS_FOR");
     }
 
+    /// <summary>
+    /// Verifies that SearchEntitiesAsync returns matching entities.
+    /// </summary>
     [Fact]
     public async Task SearchEntitiesAsync_Should_Return_Matching_Entities()
     {
@@ -211,8 +245,8 @@ public class IKnowledgeGraphServicePortTests
         var properties = new Dictionary<string, object> { ["age"] = 30 };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-1", "John Doe", "Person", "A person", new Dictionary<string, object> { ["age"] = 30 }),
-            new("entity-2", "Jane Smith", "Person", "Another person", new Dictionary<string, object> { ["age"] = 30 })
+            new("entity-1", "John Doe", "Person", "A person", new Dictionary<string, object> { ["age"] = 30 }, 0.9, DateTime.UtcNow),
+            new("entity-2", "Jane Smith", "Person", "Another person", new Dictionary<string, object> { ["age"] = 30 }, 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphService.SearchEntitiesAsync(entityType, properties, 100, CancellationToken.None)
@@ -229,6 +263,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value.All(e => e.Type == "Person").ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that SearchRelationshipsAsync returns matching relationships.
+    /// </summary>
     [Fact]
     public async Task SearchRelationshipsAsync_Should_Return_Matching_Relationships()
     {
@@ -255,6 +292,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value.All(r => r.RelationshipType == "WORKS_FOR").ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that FindConnectedEntitiesAsync returns connected entities.
+    /// </summary>
     [Fact]
     public async Task FindConnectedEntitiesAsync_Should_Return_Connected_Entities()
     {
@@ -263,8 +303,8 @@ public class IKnowledgeGraphServicePortTests
         var relationshipTypes = new List<string> { "WORKS_FOR", "MANAGES" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-2", "Connected Entity 1", "Person", "Connected entity", new Dictionary<string, object>()),
-            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", new Dictionary<string, object>())
+            new("entity-2", "Connected Entity 1", "Person", "Connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
+            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphService.FindConnectedEntitiesAsync(entityId, relationshipTypes, 2, CancellationToken.None)
@@ -280,6 +320,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value.Count.ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that FindPathsAsync returns paths between entities.
+    /// </summary>
     [Fact]
     public async Task FindPathsAsync_Should_Return_Paths_Between_Entities()
     {
@@ -291,16 +334,17 @@ public class IKnowledgeGraphServicePortTests
             new(
                 Nodes: new List<GraphNode>
                 {
-                    new("entity-1", "Person", new Dictionary<string, object>()),
-                    new("entity-2", "Organization", new Dictionary<string, object>()),
-                    new("entity-3", "Person", new Dictionary<string, object>())
+                    new("entity-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" }),
+                    new("entity-2", "Organization", new Dictionary<string, object>(), new List<string> { "Organization" }),
+                    new("entity-3", "Person", new Dictionary<string, object>(), new List<string> { "Person" })
                 },
                 Relationships: new List<GraphRelationship>
                 {
                     new("rel-1", "entity-1", "entity-2", "WORKS_FOR", new Dictionary<string, object>()),
                     new("rel-2", "entity-2", "entity-3", "MANAGES", new Dictionary<string, object>())
                 },
-                TotalWeight: 2.0
+                Length: 2,
+                Weight: 2.0
             )
         };
 
@@ -319,6 +363,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value[0].Relationships.Count().ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that UpdateEntityAsync updates entity successfully.
+    /// </summary>
     [Fact]
     public async Task UpdateEntityAsync_Should_Update_Entity_Successfully()
     {
@@ -328,7 +375,9 @@ public class IKnowledgeGraphServicePortTests
             Name: "Updated Entity",
             Type: "Person",
             Description: "An updated entity",
-            Properties: new Dictionary<string, object> { ["updated"] = true }
+            Properties: new Dictionary<string, object> { ["updated"] = true },
+            Confidence: 0.9,
+            CreatedAt: DateTime.UtcNow
         );
 
         _mockKnowledgeGraphService.UpdateEntityAsync(entity, CancellationToken.None)
@@ -342,6 +391,9 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that UpdateRelationshipAsync updates relationship successfully.
+    /// </summary>
     [Fact]
     public async Task UpdateRelationshipAsync_Should_Update_Relationship_Successfully()
     {
@@ -366,6 +418,9 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that DeleteEntityAsync deletes entity successfully.
+    /// </summary>
     [Fact]
     public async Task DeleteEntityAsync_Should_Delete_Entity_Successfully()
     {
@@ -383,6 +438,9 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that DeleteRelationshipAsync deletes relationship successfully.
+    /// </summary>
     [Fact]
     public async Task DeleteRelationshipAsync_Should_Delete_Relationship_Successfully()
     {
@@ -400,6 +458,9 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that GetStatisticsAsync returns graph statistics.
+    /// </summary>
     [Fact]
     public async Task GetStatisticsAsync_Should_Return_Graph_Statistics()
     {
@@ -409,7 +470,7 @@ public class IKnowledgeGraphServicePortTests
             TotalRelationships: 2000,
             NodeTypes: new Dictionary<string, long> { ["Person"] = 500, ["Organization"] = 300, ["Location"] = 200 },
             RelationshipTypes: new Dictionary<string, long> { ["WORKS_FOR"] = 800, ["MANAGES"] = 200, ["LOCATED_IN"] = 1000 },
-            LastUpdated: DateTimeOffset.UtcNow
+            LastUpdated: DateTimeOffset.UtcNow.DateTime
         );
 
         _mockKnowledgeGraphService.GetStatisticsAsync(CancellationToken.None)
@@ -428,6 +489,9 @@ public class IKnowledgeGraphServicePortTests
         result.Value.RelationshipTypes.Count.ShouldBe(3);
     }
 
+    /// <summary>
+    /// Verifies that ClearAsync clears all data.
+    /// </summary>
     [Fact]
     public async Task ClearAsync_Should_Clear_All_Data()
     {
@@ -443,6 +507,11 @@ public class IKnowledgeGraphServicePortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that SearchEntitiesAsync respects limit parameter.
+    /// </summary>
+    /// <param name="entityType">The entity type to search for.</param>
+    /// <param name="limit">The maximum number of entities to return.</param>
     [Theory]
     [InlineData("Person", 0)]
     [InlineData("Organization", 5)]
@@ -451,7 +520,7 @@ public class IKnowledgeGraphServicePortTests
     {
         // Arrange
         var expectedEntities = Enumerable.Range(0, Math.Min(limit, 10))
-            .Select(i => new KnowledgeEntity($"entity-{i}", $"Entity {i}", entityType, $"Description {i}", new Dictionary<string, object>()))
+            .Select(i => new KnowledgeEntity($"entity-{i}", $"Entity {i}", entityType, $"Description {i}", new Dictionary<string, object>(), 0.9, DateTime.UtcNow))
             .ToList();
 
         _mockKnowledgeGraphService.SearchEntitiesAsync(entityType, null, limit, CancellationToken.None)

@@ -33,37 +33,64 @@ public static class LintRunTool
         IProgress<string>? progress = null,
         CancellationToken cancellationToken = default)
     {
+        var logger = new LoggerFactory().CreateLogger("LintRunTool");
+        var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
         try
         {
+            logger.LogInformation("STEP 1: Starting LintRun - Checking cancellation token");
             cancellationToken.ThrowIfCancellationRequested();
             progress?.Report("Starting linting analysis...");
+            logger.LogInformation("STEP 1: Completed in {ElapsedMs}ms", stopwatch.ElapsedMilliseconds);
 
+            logger.LogInformation("STEP 2: Validating inputs");
+            var stepStopwatch = System.Diagnostics.Stopwatch.StartNew();
+            
             // Validate inputs
             if (!File.Exists(solutionPath))
             {
+                logger.LogError("Solution file not found at {SolutionPath}", solutionPath);
                 throw new McpException($"Solution file not found at {solutionPath}");
             }
 
             if (string.IsNullOrWhiteSpace(scope))
             {
+                logger.LogError("Scope cannot be null or empty");
                 throw new McpException("Scope cannot be null or empty");
             }
 
             if (string.IsNullOrWhiteSpace(severityConfig))
             {
+                logger.LogError("Severity configuration cannot be null or empty");
                 throw new McpException("Severity configuration cannot be null or empty");
             }
 
-            progress?.Report("Loading solution and preparing analyzers...");
+            stepStopwatch.Stop();
+            logger.LogInformation("STEP 2: Validation completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+
+            logger.LogInformation("STEP 3: Creating logger and linting service");
+            stepStopwatch.Restart();
 
             // Use LintingService for solution loading with caching
-            var logger = new LoggerFactory().CreateLogger<LintingService>();
-            var lintingService = new LintingService(logger);
+            var lintingServiceLogger = new LoggerFactory().CreateLogger<LintingService>();
+            var lintingService = new LintingService(lintingServiceLogger);
 
-            progress?.Report("Running EXXER analyzers...");
+            stepStopwatch.Stop();
+            logger.LogInformation("STEP 3: Service creation completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
 
+            progress?.Report("Loading solution and preparing analyzers...");
+
+            logger.LogInformation("STEP 4: Parsing severity configuration");
+            stepStopwatch.Restart();
+            
             // Parse severity configuration
             var severities = ParseSeverityConfig(severityConfig);
+            
+            stepStopwatch.Stop();
+            logger.LogInformation("STEP 4: Severity parsing completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+
+            logger.LogInformation("STEP 5: Creating linting request");
+            stepStopwatch.Restart();
             
             // Create linting request
             var request = new LintingRequest(
@@ -73,20 +100,47 @@ public static class LintRunTool
                 IncludePolicyRecommendations: true
             );
 
-            // Execute linting
+            stepStopwatch.Stop();
+            logger.LogInformation("STEP 5: Request creation completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+
+            progress?.Report("Running EXXER analyzers...");
+
+            logger.LogInformation("STEP 6: Starting linting service execution with progressive timeouts");
+            stepStopwatch.Restart();
+
+            // Execute linting - rely on test-level timeout (90s) rather than internal timeout
+            // NOTE: Analyzer execution can take 40-50 seconds for large solutions.
+            // Removing internal timeout to allow full use of test timeout window.
             var result = await lintingService.RunLintingAsync(request, cancellationToken);
+
+            stepStopwatch.Stop();
+            logger.LogInformation("STEP 6: Linting service execution completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
 
             progress?.Report("Analysis complete, formatting results...");
 
+            logger.LogInformation("STEP 7: Formatting results");
+            stepStopwatch.Restart();
+
             // Format results for MCP response
-            return FormatLintingResult(result);
+            var formattedResult = FormatLintingResult(result);
+
+            stepStopwatch.Stop();
+            logger.LogInformation("STEP 7: Result formatting completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+            stopwatch.Stop();
+            logger.LogInformation("=== LintRun completed successfully in {TotalElapsedMs}ms ===", stopwatch.ElapsedMilliseconds);
+
+            return formattedResult;
         }
-        catch (OperationCanceledException)
+        catch (OperationCanceledException ex)
         {
+            stopwatch.Stop();
+            logger.LogError(ex, "=== LintRun CANCELLED after {ElapsedMs}ms ===", stopwatch.ElapsedMilliseconds);
             throw;
         }
         catch (Exception ex)
         {
+            stopwatch.Stop();
+            logger.LogError(ex, "=== LintRun FAILED after {ElapsedMs}ms ===", stopwatch.ElapsedMilliseconds);
             throw new McpException($"Error running linting analysis: {ex.Message}", ex);
         }
     }

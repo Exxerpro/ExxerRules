@@ -5,9 +5,11 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Infrastructure.Adapters;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
+using IndFusion.SemanticRag.Tests.Unit.Helpers;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
@@ -70,9 +72,8 @@ public class OllamaEmbeddingServiceAdapterTests
         // Act
         var result = await adapter.GenerateEmbeddingAsync(null!, CancellationToken.None);
 
-        // Assert
-        result.IsFailure.ShouldBeTrue();
-        result.Error.ShouldContain("null or empty");
+        // Assert: Use error code assertion
+        result.ShouldFailWith(ErrorCodes.ParameterNullOrWhitespace);
     }
 
     [Fact]
@@ -85,25 +86,26 @@ public class OllamaEmbeddingServiceAdapterTests
         // Act
         var result = await adapter.GenerateEmbeddingAsync(string.Empty, CancellationToken.None);
 
-        // Assert
-        result.IsFailure.ShouldBeTrue();
-        result.Error.ShouldContain("null or empty");
+        // Assert: Use error code assertion
+        result.ShouldFailWith(ErrorCodes.ParameterNullOrWhitespace);
     }
 
     [Fact]
     public async Task GenerateEmbeddingAsync_WithTextTooLong_ShouldReturnFailure()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        // Use mocked HttpClient to avoid infrastructure dependency
+        // Validation should happen before HTTP call, so this shouldn't be called
+        var mockEmbedding = new float[] { 0.1f };
+        var httpClient = CreateMockHttpClient(mockEmbedding);
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
         var longText = new string('a', _ollamaOptions.MaxTextLength + 1);
 
         // Act
         var result = await adapter.GenerateEmbeddingAsync(longText, CancellationToken.None);
 
-        // Assert
-        result.IsFailure.ShouldBeTrue();
-        result.Error.ShouldContain("exceeds maximum");
+        // Assert: Use error code assertion - validation should fail before HTTP call
+        result.ShouldFailWith(ErrorCodes.ValueOutOfRange);
     }
 
     [Fact]
@@ -200,17 +202,115 @@ public class OllamaEmbeddingServiceAdapterTests
         // Act
         var result = adapter.ValidateTextLength(longText);
 
-        // Assert
-        result.IsFailure.ShouldBeTrue();
-        result.Error.ShouldNotBeNull();
-        result.Error.ShouldContain("exceeds maximum");
+        // Assert: Use error code assertion
+        result.ShouldFailWith(ErrorCodes.ValueOutOfRange);
+    }
+
+    [Fact]
+    public async Task GenerateEmbeddingsAsync_WithNullTexts_ShouldReturnFailure()
+    {
+        // Arrange
+        var httpClient = new HttpClient();
+        var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
+
+        // Act
+        var result = await adapter.GenerateEmbeddingsAsync(null!, CancellationToken.None);
+
+        // Assert: Use error code assertion
+        result.ShouldFailWith(ErrorCodes.CollectionEmpty);
+    }
+
+    [Fact]
+    public async Task GenerateEmbeddingsAsync_WithEmptyTexts_ShouldReturnFailure()
+    {
+        // Arrange
+        var httpClient = new HttpClient();
+        var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
+
+        // Act
+        var result = await adapter.GenerateEmbeddingsAsync(new List<string>().AsReadOnly(), CancellationToken.None);
+
+        // Assert: Use error code assertion
+        result.ShouldFailWith(ErrorCodes.CollectionEmpty);
+    }
+
+    [Fact]
+    public async Task GenerateEmbeddingAsync_WithCancellation_ShouldReturnCancelled()
+    {
+        // ✅ TDD: Test cancellation handling
+        var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.Cancel();
+        
+        var httpClient = new HttpClient();
+        var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
+
+        // Act
+        var result = await adapter.GenerateEmbeddingAsync("test text", cancellationTokenSource.Token);
+
+        // ✅ TDD: Assert cancellation contract - result must be a failure with OperationCancelled error code
+        result.ShouldBeCancelled();
+    }
+
+    [Fact]
+    public async Task GenerateEmbeddingsAsync_WithCancellation_ShouldReturnCancelled()
+    {
+        // ✅ TDD: Test cancellation handling
+        var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.Cancel();
+        
+        var httpClient = new HttpClient();
+        var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
+        var texts = new List<string> { "Text 1", "Text 2" }.AsReadOnly();
+
+        // Act
+        var result = await adapter.GenerateEmbeddingsAsync(texts, cancellationTokenSource.Token);
+
+        // ✅ TDD: Assert cancellation contract - result must be a failure with OperationCancelled error code
+        result.ShouldBeCancelled();
+    }
+
+    [Fact]
+    public async Task GenerateEmbeddingWithMetadataAsync_WithCancellation_ShouldReturnCancelled()
+    {
+        // ✅ TDD: Test cancellation handling
+        var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.Cancel();
+        
+        var httpClient = new HttpClient();
+        var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
+
+        // Act
+        var result = await adapter.GenerateEmbeddingWithMetadataAsync(
+            "test text",
+            new Dictionary<string, object>(),
+            cancellationTokenSource.Token);
+
+        // ✅ TDD: Assert cancellation contract - result must be a failure with OperationCancelled error code
+        result.ShouldBeCancelled();
+    }
+
+    [Fact]
+    public async Task GetModelInfoAsync_WithCancellation_ShouldReturnCancelled()
+    {
+        // ✅ TDD: Test cancellation handling
+        var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.Cancel();
+        
+        var httpClient = new HttpClient();
+        var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
+
+        // Act
+        var result = await adapter.GetModelInfoAsync(cancellationTokenSource.Token);
+
+        // ✅ TDD: Assert cancellation contract - result must be a failure with OperationCancelled error code
+        result.ShouldBeCancelled();
     }
 
     private HttpClient CreateMockHttpClient(float[] expectedEmbedding)
     {
         var response = new
         {
-            embedding = expectedEmbedding
+            Embedding = expectedEmbedding  // Match OllamaEmbeddingResponse record property name (uppercase E)
         };
 
         var json = JsonSerializer.Serialize(response);

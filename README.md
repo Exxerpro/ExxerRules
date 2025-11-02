@@ -1,3 +1,3 @@
-# IndFusion
+# IndFusion MCP
 
-This repository contains the IndFusion solution. This placeholder README satisfies packaging requirements for local builds.
+This is the IndFusion Model Context Protocol implementation for semantic pattern enforcement.

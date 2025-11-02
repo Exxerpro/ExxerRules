@@ -40,7 +40,7 @@ public class IntegrationTestFixture : IDisposable
     public async Task ClearRepositoryAsync()
     {
         var vectorSearchPort = ServiceProvider.GetRequiredService<IVectorSearchPort>();
-        await vectorSearchPort.ClearAllVectorsAsync();
+        await vectorSearchPort.ClearAsync();
     }
 
     /// <summary>

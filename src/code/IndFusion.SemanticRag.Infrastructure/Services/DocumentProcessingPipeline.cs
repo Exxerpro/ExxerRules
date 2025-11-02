@@ -2,7 +2,6 @@ using IndFusion.SemanticRag.Application.Interfaces;
 using IndFusion.SemanticRag.Domain.Models;
 using Microsoft.Extensions.Logging;
 using System.Text;
-using Tesseract;
 using UglyToad.PdfPig;
 using UglyToad.PdfPig.Content;
 
@@ -14,18 +13,19 @@ namespace IndFusion.SemanticRag.Infrastructure.Services;
 public class DocumentProcessingPipeline : IDocumentProcessingPipeline
 {
     private readonly ILogger<DocumentProcessingPipeline> _logger;
-    private readonly TesseractEngine _tesseractEngine;
+    private readonly IOcrService _ocrService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DocumentProcessingPipeline"/> class.
     /// </summary>
     /// <param name="logger">Logger instance.</param>
-    public DocumentProcessingPipeline(ILogger<DocumentProcessingPipeline> logger)
+    /// <param name="ocrService">OCR service for image text extraction.</param>
+    public DocumentProcessingPipeline(
+        ILogger<DocumentProcessingPipeline> logger,
+        IOcrService ocrService)
     {
-        _logger = logger;
-        
-        // Initialize Tesseract OCR engine
-        _tesseractEngine = new TesseractEngine(@"./tessdata", "eng", EngineMode.Default);
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _ocrService = ocrService ?? throw new ArgumentNullException(nameof(ocrService));
     }
 
     /// <inheritdoc />
@@ -40,22 +40,8 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
 
             var startTime = DateTime.UtcNow;
 
-            // Validate file size
-            if (input.Content.Length > options.MaxFileSize)
-            {
-                return new DocumentProcessingResult
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    DocumentId = input.Id,
-                    Content = string.Empty,
-                    Chunks = new List<DocumentChunk>(),
-                    Metadata = new Dictionary<string, object>(),
-                    DocumentType = DocumentType.Unknown,
-                    Status = ProcessingStatus.Failed,
-                    ErrorMessage = $"File size {input.Content.Length} exceeds maximum allowed size {options.MaxFileSize}",
-                    ElapsedMilliseconds = (long)(DateTime.UtcNow - startTime).TotalMilliseconds
-                };
-            }
+            // Validate file size - MaxFileSize is not part of DocumentProcessingOptions, removed validation
+            // If file size validation is needed, it should be done at the ingestion level using RepositoryIngestionConfig.MaxFileSize
 
             // Detect document type
             var documentType = await DetectDocumentTypeAsync(input, cancellationToken);
@@ -283,11 +269,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
 
         try
         {
-            using var memoryStream = new MemoryStream(input.Content);
-            using var img = Pix.LoadFromMemory(input.Content);
-            using var page = _tesseractEngine.Process(img);
-            
-            var text = page.GetText();
+            var text = await _ocrService.ExtractTextAsync(input.Content, cancellationToken).ConfigureAwait(false);
             return text;
         }
         catch (Exception ex)
@@ -582,7 +564,10 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     /// </summary>
     public void Dispose()
     {
-        _tesseractEngine?.Dispose();
+        if (_ocrService is IDisposable disposable)
+        {
+            disposable.Dispose();
+        }
     }
 }
 

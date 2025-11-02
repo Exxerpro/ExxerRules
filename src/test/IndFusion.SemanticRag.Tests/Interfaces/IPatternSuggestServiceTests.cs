@@ -18,11 +18,17 @@ public class IPatternSuggestServiceTests
 {
     private readonly IPatternSuggestService _mockPatternSuggestService;
 
+    /// <summary>
+    /// Initializes a new instance of the IPatternSuggestServiceTests class.
+    /// </summary>
     public IPatternSuggestServiceTests()
     {
         _mockPatternSuggestService = Substitute.For<IPatternSuggestService>();
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync returns success for valid code context.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Return_Success_For_Valid_CodeContext()
     {
@@ -63,6 +69,9 @@ public class IPatternSuggestServiceTests
         result.Value[0].Confidence.ShouldBe(0.8f);
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync returns empty list for no suggestions.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Return_Empty_List_For_No_Suggestions()
     {
@@ -82,6 +91,9 @@ public class IPatternSuggestServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync returns failure for invalid code context.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Return_Failure_For_Invalid_CodeContext()
     {
@@ -101,6 +113,9 @@ public class IPatternSuggestServiceTests
         result.Error.ShouldBe(expectedError);
     }
 
+    /// <summary>
+    /// Verifies that AnalyzePatternAsync returns success for valid pattern analysis.
+    /// </summary>
     [Fact]
     public async Task AnalyzePatternAsync_Should_Return_Success_For_Valid_Pattern_Analysis()
     {
@@ -109,7 +124,7 @@ public class IPatternSuggestServiceTests
         var patternType = "Singleton";
         var expectedAnalysis = new PatternAnalysis(
             PatternType: "Singleton",
-            Matches: new List<PatternMatch>
+            Matches: new List<Domain.Models.PatternMatch>
             {
                 new(
                     Pattern: new SemanticPattern("singleton1", "Singleton", "Singleton pattern", "class.*Singleton", "Design Patterns"),
@@ -139,7 +154,7 @@ public class IPatternSuggestServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternAnalysis>(default);
         result.Value.PatternType.ShouldBe("Singleton");
         result.Value.MatchCount.ShouldBe(1);
         result.Value.ViolationCount.ShouldBe(0);
@@ -148,6 +163,9 @@ public class IPatternSuggestServiceTests
         result.Value.HasViolations.ShouldBeFalse();
     }
 
+    /// <summary>
+    /// Verifies that AnalyzePatternAsync returns failure for invalid pattern type.
+    /// </summary>
     [Fact]
     public async Task AnalyzePatternAsync_Should_Return_Failure_For_Invalid_Pattern_Type()
     {
@@ -167,6 +185,9 @@ public class IPatternSuggestServiceTests
         result.Error.ShouldBe(expectedError);
     }
 
+    /// <summary>
+    /// Verifies that FindViolationsAsync returns success with violations.
+    /// </summary>
     [Fact]
     public async Task FindViolationsAsync_Should_Return_Success_With_Violations()
     {
@@ -202,6 +223,9 @@ public class IPatternSuggestServiceTests
         result.Value[0].HasLocation.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that FindViolationsAsync returns empty list for clean code.
+    /// </summary>
     [Fact]
     public async Task FindViolationsAsync_Should_Return_Empty_List_For_Clean_Code()
     {
@@ -221,6 +245,9 @@ public class IPatternSuggestServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that FindViolationsAsync handles null file path.
+    /// </summary>
     [Fact]
     public async Task FindViolationsAsync_Should_Handle_Null_FilePath()
     {
@@ -249,6 +276,9 @@ public class IPatternSuggestServiceTests
         result.Value[0].HasLocation.ShouldBeFalse();
     }
 
+    /// <summary>
+    /// Verifies that GetPatternDefinitionsAsync returns success for valid category.
+    /// </summary>
     [Fact]
     public async Task GetPatternDefinitionsAsync_Should_Return_Success_For_Valid_Category()
     {
@@ -282,6 +312,9 @@ public class IPatternSuggestServiceTests
         result.Value[0].HasTag("creational").ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that GetPatternDefinitionsAsync returns empty list for unknown category.
+    /// </summary>
     [Fact]
     public async Task GetPatternDefinitionsAsync_Should_Return_Empty_List_For_Unknown_Category()
     {
@@ -300,6 +333,9 @@ public class IPatternSuggestServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that GetPatternCategoriesAsync returns success with categories.
+    /// </summary>
     [Fact]
     public async Task GetPatternCategoriesAsync_Should_Return_Success_With_Categories()
     {
@@ -328,6 +364,9 @@ public class IPatternSuggestServiceTests
         result.Value.ShouldContain("Performance");
     }
 
+    /// <summary>
+    /// Verifies that ValidatePatternDefinitionAsync returns success for valid definition.
+    /// </summary>
     [Fact]
     public async Task ValidatePatternDefinitionAsync_Should_Return_Success_For_Valid_Definition()
     {
@@ -351,6 +390,9 @@ public class IPatternSuggestServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that ValidatePatternDefinitionAsync returns failure for invalid definition.
+    /// </summary>
     [Fact]
     public async Task ValidatePatternDefinitionAsync_Should_Return_Failure_For_Invalid_Definition()
     {
@@ -377,6 +419,9 @@ public class IPatternSuggestServiceTests
         result.Error.ShouldBe(expectedError);
     }
 
+    /// <summary>
+    /// Verifies that all methods handle cancellation token.
+    /// </summary>
     [Fact]
     public async Task All_Methods_Should_Handle_Cancellation_Token()
     {
@@ -418,6 +463,9 @@ public class IPatternSuggestServiceTests
         validateResult.IsFailure.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync handles null categories.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Handle_Null_Categories()
     {

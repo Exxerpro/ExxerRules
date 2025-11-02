@@ -299,7 +299,7 @@ public class BuildValidationService : IBuildValidationService
             // This is sufficient for the test to pass
 
             var workspace = new TemporaryWorkspace(
-                WorkspacePath: tempDir, // Use the temp directory, not the solution file path
+                WorkspacePath: tempSolutionPath, // Use the solution file path, not the directory
                 OriginalSolutionPath: solutionPath,
                 CreatedAt: DateTime.UtcNow,
                 ExpiresAt: DateTime.UtcNow.AddHours(1) // 1 hour expiration
@@ -375,7 +375,9 @@ public class BuildValidationService : IBuildValidationService
     {
         foreach (var transformedFile in transformedFiles)
         {
-            var filePath = Path.Combine(workspace.WorkspacePath, transformedFile.FilePath);
+            // WorkspacePath now points to the solution file, so we need to get its directory
+            var workspaceDir = Path.GetDirectoryName(workspace.WorkspacePath)!;
+            var filePath = Path.Combine(workspaceDir, transformedFile.FilePath);
             var directory = Path.GetDirectoryName(filePath);
             
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))

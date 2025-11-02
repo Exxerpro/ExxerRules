@@ -1,6 +1,9 @@
 using IndFusion.SemanticRag.Application.Interfaces;
 using IndFusion.SemanticRag.Domain.Models;
 using Microsoft.Extensions.Logging;
+using NSubstitute;
+using Shouldly;
+using Xunit;
 
 namespace IndFusion.SemanticRag.Tests.Interfaces;
 
@@ -13,12 +16,18 @@ public class IDocumentProcessingPipelineTests
     private readonly IDocumentProcessingPipeline _mockPipeline;
     private readonly ILogger<IDocumentProcessingPipeline> _mockLogger;
 
+    /// <summary>
+    /// Initializes a new instance of the IDocumentProcessingPipelineTests class.
+    /// </summary>
     public IDocumentProcessingPipelineTests()
     {
         _mockPipeline = Substitute.For<IDocumentProcessingPipeline>();
         _mockLogger = Substitute.For<ILogger<IDocumentProcessingPipeline>>();
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync returns valid result for valid input.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Return_Valid_Result_For_Valid_Input()
     {
@@ -58,6 +67,9 @@ public class IDocumentProcessingPipelineTests
         result.ElapsedMilliseconds.ShouldBe(expectedResult.ElapsedMilliseconds);
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync handles null input gracefully.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Handle_Null_Input_Gracefully()
     {
@@ -66,13 +78,16 @@ public class IDocumentProcessingPipelineTests
         var options = new DocumentProcessingOptions();
 
         _mockPipeline.ProcessDocumentAsync(nullInput!, options, CancellationToken.None)
-            .ThrowsAsync(new ArgumentNullException(nameof(nullInput)));
+            .Returns(Task.FromException<DocumentProcessingResult>(new ArgumentNullException(nameof(nullInput))));
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentNullException>(() =>
             _mockPipeline.ProcessDocumentAsync(nullInput!, options, CancellationToken.None));
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentsAsync processes multiple documents.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentsAsync_Should_Process_Multiple_Documents()
     {
@@ -102,6 +117,9 @@ public class IDocumentProcessingPipelineTests
         results[1].DocumentId.ShouldBe("doc-2");
     }
 
+    /// <summary>
+    /// Verifies that DetectDocumentTypeAsync detects correct document types.
+    /// </summary>
     [Fact]
     public async Task DetectDocumentTypeAsync_Should_Detect_Correct_Document_Types()
     {
@@ -128,6 +146,9 @@ public class IDocumentProcessingPipelineTests
         }
     }
 
+    /// <summary>
+    /// Verifies that GetSupportedDocumentTypes returns all supported types.
+    /// </summary>
     [Fact]
     public void GetSupportedDocumentTypes_Should_Return_All_Supported_Types()
     {
@@ -161,6 +182,9 @@ public class IDocumentProcessingPipelineTests
         supportedTypes.ShouldContain(DocumentType.Text);
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync handles cancellation.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Handle_Cancellation()
     {
@@ -171,13 +195,16 @@ public class IDocumentProcessingPipelineTests
         cts.Cancel();
 
         _mockPipeline.ProcessDocumentAsync(input, options, cts.Token)
-            .ThrowsAsync(new OperationCanceledException());
+            .Returns(Task.FromCanceled<DocumentProcessingResult>(cts.Token));
 
         // Act & Assert
         await Should.ThrowAsync<OperationCanceledException>(() =>
             _mockPipeline.ProcessDocumentAsync(input, options, cts.Token));
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync handles processing errors.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Handle_Processing_Errors()
     {
@@ -216,5 +243,10 @@ public class IDocumentProcessingPipelineTests
 /// </summary>
 public static class TestDataExtensions
 {
+    /// <summary>
+    /// Converts a string to UTF-8 encoded bytes.
+    /// </summary>
+    /// <param name="text">The text to convert.</param>
+    /// <returns>The UTF-8 encoded bytes.</returns>
     public static byte[] ToUtf8Bytes(this string text) => System.Text.Encoding.UTF8.GetBytes(text);
 }

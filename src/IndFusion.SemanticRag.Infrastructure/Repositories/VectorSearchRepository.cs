@@ -189,6 +189,187 @@ public class VectorSearchRepository : IVectorSearchPort
         }
     }
 
+    /// <inheritdoc />
+    public Task<Result<VectorSearchResult>> SearchAsync(
+        float[] queryVector,
+        VectorSearchOptions options,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            _logger.LogInformation("Searching for similar vectors with query vector of dimension: {Dimension}", queryVector.Length);
+
+            // Convert VectorSearchOptions to VectorSearchQuery for internal use
+            var query = new VectorSearchQuery(
+                Query: string.Empty, // VectorSearchOptions doesn't have a query string
+                Embedding: queryVector,
+                Limit: options.Limit,
+                Threshold: options.Threshold,
+                Filters: options.Filters);
+
+            // Use existing SearchSimilarVectorsAsync logic
+            var result = SearchSimilarVectorsAsync(query, cancellationToken).Result;
+            if (result.IsFailure)
+            {
+                return Task.FromResult(Result<VectorSearchResult>.WithFailure(result.Error ?? "Failed to search vectors", default));
+            }
+
+            // Return first result (SearchAsync returns single result, not list)
+            if (result.Value == null || result.Value.Count == 0)
+            {
+                _logger.LogWarning("No similar vectors found");
+                return Task.FromResult(Result<VectorSearchResult>.WithFailure("No similar vectors found", default));
+            }
+
+            var firstResult = result.Value[0];
+            return Task.FromResult(Result<VectorSearchResult>.Success(firstResult));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to search vectors");
+            return Task.FromResult(Result<VectorSearchResult>.WithFailure($"Failed to search vectors: {ex.Message}", default));
+        }
+    }
+
+    /// <inheritdoc />
+    public Task<Result<IReadOnlyList<VectorSearchResult>>> SearchBatchAsync(
+        IReadOnlyList<float[]> queryVectors,
+        VectorSearchOptions options,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            _logger.LogInformation("Searching with {Count} query vectors", queryVectors.Count);
+
+            var allResults = new List<VectorSearchResult>();
+
+            foreach (var queryVector in queryVectors)
+            {
+                var query = new VectorSearchQuery(
+                    Query: string.Empty,
+                    Embedding: queryVector,
+                    Limit: options.Limit,
+                    Threshold: options.Threshold,
+                    Filters: options.Filters);
+
+                var result = SearchSimilarVectorsAsync(query, cancellationToken).Result;
+                if (result.IsSuccess && result.Value != null)
+                {
+                    allResults.AddRange(result.Value);
+                }
+            }
+
+            _logger.LogInformation("Found {Count} total results across {VectorCount} query vectors", allResults.Count, queryVectors.Count);
+            return Task.FromResult(Result<IReadOnlyList<VectorSearchResult>>.Success(allResults));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to search vectors in batch");
+            return Task.FromResult(Result<IReadOnlyList<VectorSearchResult>>.WithFailure($"Failed to search vectors: {ex.Message}", Array.Empty<VectorSearchResult>()));
+        }
+    }
+
+    /// <inheritdoc />
+    public Task<Result> IndexAsync(VectorEmbedding embedding, CancellationToken cancellationToken = default)
+    {
+        // Use existing StoreVectorAsync logic
+        return StoreVectorAsync(embedding, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<Result> IndexBatchAsync(IReadOnlyList<VectorEmbedding> embeddings, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            _logger.LogInformation("Indexing {Count} embeddings in batch", embeddings.Count);
+
+            foreach (var embedding in embeddings)
+            {
+                var result = StoreVectorAsync(embedding, cancellationToken).Result;
+                if (result.IsFailure)
+                {
+                    _logger.LogError("Failed to index embedding: {EmbeddingId}, Error: {Error}", embedding.Id, result.Error);
+                    return Task.FromResult(Result.WithFailure($"Failed to index embedding {embedding.Id}: {result.Error}"));
+                }
+            }
+
+            _logger.LogInformation("Successfully indexed {Count} embeddings", embeddings.Count);
+            return Task.FromResult(Result.Success());
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to index embeddings in batch");
+            return Task.FromResult(Result.WithFailure($"Failed to index embeddings: {ex.Message}"));
+        }
+    }
+
+    /// <inheritdoc />
+    public Task<Result> UpdateAsync(VectorEmbedding embedding, CancellationToken cancellationToken = default)
+    {
+        // Update is same as index (upsert behavior)
+        return IndexAsync(embedding, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<Result> DeleteAsync(string embeddingId, CancellationToken cancellationToken = default)
+    {
+        // Use existing DeleteVectorAsync logic
+        return DeleteVectorAsync(embeddingId, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Task<Result<VectorIndexStatistics>> GetStatisticsAsync(CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            _logger.LogInformation("Getting vector index statistics");
+
+            var countResult = GetVectorCountAsync(cancellationToken).Result;
+            if (countResult.IsFailure)
+            {
+                return Task.FromResult(Result<VectorIndexStatistics>.WithFailure(countResult.Error ?? "Failed to get vector count", default));
+            }
+
+            var totalVectors = countResult.Value;
+            
+            // Calculate average vector dimension
+            var totalDimension = 0;
+            var vectorCount = 0;
+            foreach (var vector in _vectors.Values)
+            {
+                totalDimension += vector.Dimension;
+                vectorCount++;
+            }
+
+            var averageDimension = vectorCount > 0 ? totalDimension / vectorCount : 0;
+
+            // Calculate index size (approximate - in-memory dictionary size)
+            // This is a rough estimate: each vector embedding takes up space
+            var indexSize = totalVectors * averageDimension * sizeof(float); // Rough estimate
+
+            var stats = new VectorIndexStatistics(
+                TotalVectors: totalVectors,
+                IndexSize: indexSize,
+                LastUpdated: DateTimeOffset.UtcNow,
+                AverageVectorDimension: averageDimension);
+
+            _logger.LogInformation("Vector index statistics: {TotalVectors} vectors, {AverageDimension} avg dimension", totalVectors, averageDimension);
+            return Task.FromResult(Result<VectorIndexStatistics>.Success(stats));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to get vector index statistics");
+            return Task.FromResult(Result<VectorIndexStatistics>.WithFailure($"Failed to get statistics: {ex.Message}", default));
+        }
+    }
+
+    /// <inheritdoc />
+    public Task<Result> ClearAsync(CancellationToken cancellationToken = default)
+    {
+        // Use existing ClearAllVectorsAsync logic
+        return ClearAllVectorsAsync(cancellationToken);
+    }
+
     /// <summary>
     /// Calculates cosine similarity between two vectors.
     /// </summary>

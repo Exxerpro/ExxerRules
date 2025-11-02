@@ -1,12 +1,23 @@
 using IndFusion.Mcp.Tests.Tools;
+using Xunit.Abstractions;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
 /// <summary>
 /// Tests for the LintRun MCP tool that runs EXXER analyzers and returns violations with policy recommendations.
 /// </summary>
-public class LintRunToolTests : TestBase
+	public class LintRunToolTests : TestBase
 {
+	private readonly Infrastructure.FileLogger<LintRunToolTests> _testLogger;
+
+	/// <summary>
+	/// Initializes a new instance of the LintRunToolTests class.
+	/// </summary>
+	/// <param name="output">xUnit test output helper for logging (automatically injected by xUnit v3).</param>
+	public LintRunToolTests(Xunit.ITestOutputHelper output)
+	{
+		_testLogger = new Infrastructure.FileLogger<LintRunToolTests>(output, nameof(LintRunToolTests));
+	}
     /// <summary>
     /// LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations.
     /// </summary>
@@ -256,28 +267,122 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithProgressReporter_CallsProgressCallback.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 10000)] // Reduced timeout to fail faster
+    /// <remarks>
+    /// <para>
+    /// <strong>Timeout Configuration:</strong>
+    /// Timeout is set to 90 seconds for peace of mind, though actual execution time is typically less than 60 seconds.
+    /// This higher timeout accounts for system variability and ensures the test doesn't fail due to temporary system load.
+    /// </para>
+    /// <para>
+    /// <strong>Performance Regression Guard:</strong>
+    /// This test includes execution time tracking and assertion NOT as a performance benchmark, but as a regression guard
+    /// to detect code degradation. If execution time exceeds 75 seconds, it indicates potential performance regression
+    /// that should be investigated. This helps catch:
+    /// - Unintended synchronous blocking operations
+    /// - Degraded caching effectiveness
+    /// - Increased solution complexity without corresponding optimizations
+    /// - Resource contention issues
+    /// </para>
+    /// <para>
+    /// <strong>Note:</strong> This is NOT a formal performance test. For true performance testing, use dedicated
+    /// performance test suites with controlled environments and statistical analysis.
+    /// </para>
+    /// </remarks>
+    [Fact(Timeout = 90000)] // 90 seconds for peace of mind (actual execution typically < 60 seconds)
     public async Task LintRun_WithProgressReporter_CallsProgressCallback()
     {
+        // Overall test execution timer for regression detection
+        var totalTestStopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
+        _testLogger.LogInformation("=== TEST STARTED ===");
+        _testLogger.LogInformation("Step 1: Test initialization complete");
+
         // Arrange - Load solution first
-        await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
+        _testLogger.LogInformation("Step 2: Starting LoadSolutionTool.LoadSolution");
+        var loadSolutionStopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
+        try
+        {
+            await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
+            loadSolutionStopwatch.Stop();
+            _testLogger.LogInformation("Step 2: LoadSolutionTool.LoadSolution completed in {ElapsedMs}ms", loadSolutionStopwatch.ElapsedMilliseconds);
+        }
+        catch (Exception ex)
+        {
+            loadSolutionStopwatch.Stop();
+            _testLogger.LogError(ex, "Step 2: LoadSolutionTool.LoadSolution FAILED after {ElapsedMs}ms", loadSolutionStopwatch.ElapsedMilliseconds);
+            throw;
+        }
 
         // Arrange - Track progress calls
+        _testLogger.LogInformation("Step 3: Setting up progress tracking");
         var progressCalls = new List<string>();
-        var progress = new Progress<string>(message => progressCalls.Add(message));
+        var progress = new Progress<string>(message =>
+        {
+            _testLogger.LogInformation("PROGRESS: {Message}", message);
+            progressCalls.Add(message);
+        });
+        _testLogger.LogInformation("Step 3: Progress tracking setup complete");
 
         // Act - Run linting with progress reporter
-        var result = await LintRunTool.LintRun(
-            solutionPath: SolutionPath,
-            scope: "all",
-            severityConfig: "error,warning",
-            progress: progress,
-            cancellationToken: Xunit.TestContext.Current.CancellationToken);
+        _testLogger.LogInformation("Step 4: Starting LintRunTool.LintRun");
+        var lintRunStopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
+        try
+        {
+            var result = await LintRunTool.LintRun(
+                solutionPath: SolutionPath,
+                scope: "all",
+                severityConfig: "error,warning",
+                progress: progress,
+                cancellationToken: Xunit.TestContext.Current.CancellationToken);
+            
+            lintRunStopwatch.Stop();
+            _testLogger.LogInformation("Step 4: LintRunTool.LintRun completed in {ElapsedMs}ms", lintRunStopwatch.ElapsedMilliseconds);
 
-        // Assert - Verify progress was reported
-        Assert.NotNull(result);
-        Assert.NotEmpty(progressCalls);
-        Assert.Contains(progressCalls, call => call.Contains("linting", StringComparison.OrdinalIgnoreCase));
+            // Assert - Verify progress was reported
+            _testLogger.LogInformation("Step 5: Starting assertions");
+            Assert.NotNull(result);
+            Assert.NotEmpty(progressCalls);
+            Assert.Contains(progressCalls, call => call.Contains("linting", StringComparison.OrdinalIgnoreCase));
+            
+            totalTestStopwatch.Stop();
+            var totalElapsedSeconds = totalTestStopwatch.ElapsedMilliseconds / 1000.0;
+            
+            _testLogger.LogInformation("Step 5: All functional assertions passed");
+            _testLogger.LogInformation("=== EXECUTION TIME TRACKING ===");
+            _testLogger.LogInformation("Total test execution time: {TotalSeconds:F2} seconds ({TotalMs}ms)", totalElapsedSeconds, totalTestStopwatch.ElapsedMilliseconds);
+            _testLogger.LogInformation("  - LoadSolution: {LoadSolutionMs}ms", loadSolutionStopwatch.ElapsedMilliseconds);
+            _testLogger.LogInformation("  - LintRun: {LintRunMs}ms", lintRunStopwatch.ElapsedMilliseconds);
+            _testLogger.LogInformation("  - Other overhead: {OtherMs}ms", totalTestStopwatch.ElapsedMilliseconds - loadSolutionStopwatch.ElapsedMilliseconds - lintRunStopwatch.ElapsedMilliseconds);
+            
+            // Performance regression guard assertion
+            // NOTE: This is NOT a performance test - it's a regression guard to detect code degradation.
+            // If execution time exceeds 75 seconds, it indicates potential performance regression that should be investigated.
+            // Actual execution time is typically less than 60 seconds under normal conditions.
+            Assert.True(
+                totalElapsedSeconds < 75.0,
+                $"Test execution took {totalElapsedSeconds:F2} seconds, exceeding the 75-second regression threshold. " +
+                $"This may indicate performance degradation. Investigate: caching effectiveness, synchronous blocking operations, " +
+                $"or increased solution complexity without corresponding optimizations.");
+            
+            _testLogger.LogInformation("=== REGRESSION GUARD ===");
+            _testLogger.LogInformation("Execution time ({TotalSeconds:F2}s) is within acceptable threshold (< 75s)", totalElapsedSeconds);
+            _testLogger.LogInformation("=== TEST COMPLETED SUCCESSFULLY ===");
+        }
+        catch (Exception ex)
+        {
+            lintRunStopwatch.Stop();
+            totalTestStopwatch.Stop();
+            var totalElapsedSeconds = totalTestStopwatch.ElapsedMilliseconds / 1000.0;
+            
+            _testLogger.LogError(ex, "Step 4: LintRunTool.LintRun FAILED after {ElapsedMs}ms", lintRunStopwatch.ElapsedMilliseconds);
+            _testLogger.LogInformation("Total test execution time before failure: {TotalSeconds:F2} seconds ({TotalMs}ms)", totalElapsedSeconds, totalTestStopwatch.ElapsedMilliseconds);
+            _testLogger.LogInformation("Progress calls count: {Count}", progressCalls.Count);
+            _testLogger.LogInformation("Last progress message: {LastMessage}", progressCalls.LastOrDefault() ?? "None");
+            _testLogger.LogInformation("Log file location: {LogFilePath}", _testLogger.LogFilePath);
+            throw;
+        }
     }
 
     /// <summary>

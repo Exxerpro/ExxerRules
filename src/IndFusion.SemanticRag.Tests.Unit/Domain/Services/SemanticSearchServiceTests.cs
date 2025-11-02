@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Tests.Unit.Shared;
+using IndQuestResults;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shouldly;
@@ -38,18 +40,30 @@ public class SemanticSearchServiceTests
             new float[] { 0.5f, 0.6f, 0.7f, 0.8f }
         };
         var options = new VectorSearchOptions(
-            QueryVector: queryVectors[0], // Will be overridden in batch
-            MaxResults: 3,
-            SimilarityThreshold: 0.7
+            Limit: 3,
+            Threshold: 0.7f
         );
+        // ✅ Use fluent builders from TestDataBuilders
+        var vector1Result = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "emb-1",
+            content: "Content 1",
+            embeddingSize: 4);
+        var vector2Result = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "emb-2",
+            content: "Content 2",
+            embeddingSize: 4);
+        vector1Result.IsSuccess.ShouldBeTrue();
+        vector2Result.IsSuccess.ShouldBeTrue();
+        var vectorEmbedding1 = vector1Result.Value;
+        var vectorEmbedding2 = vector2Result.Value;
         var expectedResults = new List<VectorSearchResult>
         {
-            new("search-1", "query-1", new List<VectorEmbedding>(), 0, TimeSpan.FromMilliseconds(50), new Dictionary<string, object>()),
-            new("search-2", "query-2", new List<VectorEmbedding>(), 0, TimeSpan.FromMilliseconds(60), new Dictionary<string, object>())
+            new VectorSearchResult(Vector: vectorEmbedding1, Similarity: 0.9f, Rank: 1),
+            new VectorSearchResult(Vector: vectorEmbedding2, Similarity: 0.85f, Rank: 2)
         };
 
         _mockVectorSearchPort.SearchBatchAsync(queryVectors, options, CancellationToken.None)
-            .Returns(Result<IReadOnlyList<VectorSearchResult>>.Success(expectedResults));
+            .Returns(Task.FromResult(Result<IReadOnlyList<VectorSearchResult>>.Success(expectedResults)));
 
         // Act
         var result = await _mockVectorSearchPort.SearchBatchAsync(queryVectors, options, CancellationToken.None);
@@ -86,13 +100,13 @@ public class SemanticSearchServiceTests
     public async Task VectorSearchPort_UpdateAsync_Should_Update_Existing_Vector()
     {
         // Arrange
-        var embedding = new VectorEmbedding(
-            Id: "emb-1",
-            Content: "Updated content",
-            Embedding: new float[] { 0.5f, 0.6f, 0.7f, 0.8f },
-            Metadata: new Dictionary<string, object> { ["updated"] = true },
-            CreatedAt: DateTimeOffset.UtcNow
-        );
+        // ✅ Use fluent builder from TestDataBuilders
+        var embeddingResult = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "emb-1",
+            content: "Updated content",
+            embeddingSize: 4);
+        embeddingResult.IsSuccess.ShouldBeTrue();
+        var embedding = embeddingResult.Value;
 
         _mockVectorSearchPort.UpdateAsync(embedding, CancellationToken.None)
             .Returns(Result.Success());
@@ -143,8 +157,8 @@ public class SemanticSearchServiceTests
         // Arrange
         var entities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>()),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>())
+            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.CreateEntitiesAsync(entities, CancellationToken.None)
@@ -186,8 +200,8 @@ public class SemanticSearchServiceTests
         var entityIds = new List<string> { "entity-1", "entity-2" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>()),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>())
+            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.GetEntitiesAsync(entityIds, CancellationToken.None)
@@ -261,8 +275,8 @@ public class SemanticSearchServiceTests
         var relationshipTypes = new List<string> { "WORKS_FOR", "MANAGES" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-2", "Connected Entity 1", "Person", "Connected entity", new Dictionary<string, object>()),
-            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", new Dictionary<string, object>())
+            new("entity-2", "Connected Entity 1", "Person", "Connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
+            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.FindConnectedEntitiesAsync(entityId, relationshipTypes, 2, CancellationToken.None)
@@ -287,7 +301,9 @@ public class SemanticSearchServiceTests
             Name: "Updated Entity",
             Type: "Person",
             Description: "An updated entity",
-            Properties: new Dictionary<string, object> { ["updated"] = true }
+            Properties: new Dictionary<string, object> { ["updated"] = true },
+            Confidence: 0.9,
+            CreatedAt: DateTime.UtcNow
         );
 
         _mockKnowledgeGraphServicePort.UpdateEntityAsync(entity, CancellationToken.None)

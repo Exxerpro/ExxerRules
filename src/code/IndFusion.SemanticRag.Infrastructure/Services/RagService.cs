@@ -1,5 +1,7 @@
 using IndFusion.SemanticRag.Application.Interfaces;
 using IndFusion.SemanticRag.Domain.Models;
+using IndFusion.SemanticRag.Domain.Ports;
+using IndQuestResults;
 using Microsoft.Extensions.Logging;
 
 namespace IndFusion.SemanticRag.Infrastructure.Services;
@@ -10,6 +12,7 @@ namespace IndFusion.SemanticRag.Infrastructure.Services;
 public class RagService : IRagService
 {
     private readonly IVectorSearchService _vectorSearchService;
+    private readonly IEmbeddingServicePort _embeddingService;
     private readonly OllamaClient _ollamaClient;
     private readonly ILogger<RagService> _logger;
 
@@ -17,14 +20,17 @@ public class RagService : IRagService
     /// Initializes a new instance of the <see cref="RagService"/> class.
     /// </summary>
     /// <param name="vectorSearchService">Vector search service.</param>
+    /// <param name="embeddingService">Embedding service port.</param>
     /// <param name="ollamaClient">Ollama client for text generation.</param>
     /// <param name="logger">Logger instance.</param>
     public RagService(
         IVectorSearchService vectorSearchService,
+        IEmbeddingServicePort embeddingService,
         OllamaClient ollamaClient,
         ILogger<RagService> logger)
     {
         _vectorSearchService = vectorSearchService;
+        _embeddingService = embeddingService;
         _ollamaClient = ollamaClient;
         _logger = logger;
     }
@@ -42,17 +48,48 @@ public class RagService : IRagService
 
             var startTime = DateTime.UtcNow;
 
-            // Step 1: Retrieve relevant documents
-            var searchOptions = new VectorSearchOptions
+            // Step 1: Generate embedding for the query
+            var embeddingResult = await _embeddingService.GenerateEmbeddingAsync(query, cancellationToken);
+            if (embeddingResult.IsFailure)
             {
-                Limit = maxResults,
-                Threshold = 0.7f,
-                IncludeMetadata = true
-            };
+                _logger.LogError("Failed to generate embedding for query: {Error}", embeddingResult.Error);
+                throw new InvalidOperationException($"Failed to generate embedding: {embeddingResult.Error}");
+            }
 
-            var searchResults = await _vectorSearchService.SearchSimilarAsync(query, searchOptions, cancellationToken);
+            var queryEmbedding = embeddingResult.Value;
 
-            // Step 2: Prepare context from retrieved documents
+            // Step 2: Search for relevant documents using vector search
+            var searchOptions = new VectorSearchOptions(
+                Limit: maxResults,
+                Threshold: 0.7f,
+                IncludeMetadata: true,
+                IncludeEmbedding: false
+            );
+
+            var searchResult = await _vectorSearchService.SearchBatchAsync(
+                new[] { queryEmbedding! },
+                searchOptions,
+                cancellationToken);
+
+            if (searchResult.IsFailure)
+            {
+                _logger.LogError("Failed to search for documents: {Error}", searchResult.Error);
+                throw new InvalidOperationException($"Failed to search for documents: {searchResult.Error}");
+            }
+
+            var searchResultsData = searchResult.Value;
+            var allResults = searchResultsData ?? Array.Empty<VectorSearchResult>();
+
+            var searchResults = new VectorSearchResponse(
+                Results: allResults,
+                TotalCount: allResults.Count,
+                Query: query,
+                ProcessingTimeMs: 0,
+                SearchOptions: searchOptions,
+                Success: true
+            );
+
+            // Step 3: Prepare context from retrieved documents
             var contextDocuments = searchResults.Results
                 .Select(result => result.Vector.Content)
                 .ToList();
@@ -63,13 +100,13 @@ public class RagService : IRagService
                 contextDocuments.Insert(0, context);
             }
 
-            // Step 3: Generate response using LLM
+            // Step 4: Generate response using LLM
             var answer = await GenerateResponseAsync(query, contextDocuments, cancellationToken);
 
-            // Step 4: Calculate confidence based on source relevance
+            // Step 5: Calculate confidence based on source relevance
             var confidence = CalculateConfidence(searchResults.Results);
 
-            // Step 5: Map sources
+            // Step 6: Map sources
             var sources = searchResults.Results.Select(result => new RagSource
             {
                 Id = result.Vector.Id,
@@ -112,14 +149,62 @@ public class RagService : IRagService
         {
             _logger.LogInformation("Searching for relevant documents: {Query}", query);
 
-            var searchOptions = new VectorSearchOptions
+            // Generate embedding for the query
+            var embeddingResult = await _embeddingService.GenerateEmbeddingAsync(query, cancellationToken);
+            if (embeddingResult.IsFailure)
             {
-                Limit = maxResults,
-                Threshold = 0.6f,
-                IncludeMetadata = true
-            };
+                _logger.LogError("Failed to generate embedding for query: {Error}", embeddingResult.Error);
+                return new VectorSearchResponse(
+                    Results: Array.Empty<VectorSearchResult>(),
+                    TotalCount: 0,
+                    Query: query,
+                    ProcessingTimeMs: 0,
+                    SearchOptions: new VectorSearchOptions(),
+                    Success: false,
+                    ErrorMessage: $"Failed to generate embedding: {embeddingResult.Error}"
+                );
+            }
 
-            var results = await _vectorSearchService.SearchSimilarAsync(query, searchOptions, cancellationToken);
+            var queryEmbedding = embeddingResult.Value;
+
+            // Search for relevant documents
+            var searchOptions = new VectorSearchOptions(
+                Limit: maxResults,
+                Threshold: 0.6f,
+                IncludeMetadata: true,
+                IncludeEmbedding: false
+            );
+
+            var searchResult = await _vectorSearchService.SearchBatchAsync(
+                new[] { queryEmbedding! },
+                searchOptions,
+                cancellationToken);
+
+            if (searchResult.IsFailure)
+            {
+                _logger.LogError("Failed to search for documents: {Error}", searchResult.Error);
+                return new VectorSearchResponse(
+                    Results: Array.Empty<VectorSearchResult>(),
+                    TotalCount: 0,
+                    Query: query,
+                    ProcessingTimeMs: 0,
+                    SearchOptions: searchOptions,
+                    Success: false,
+                    ErrorMessage: $"Failed to search: {searchResult.Error}"
+                );
+            }
+
+            var searchResultsData = searchResult.Value;
+            var allResults = searchResultsData ?? Array.Empty<VectorSearchResult>();
+
+            var results = new VectorSearchResponse(
+                Results: allResults,
+                TotalCount: allResults.Count,
+                Query: query,
+                ProcessingTimeMs: 0,
+                SearchOptions: searchOptions,
+                Success: true
+            );
 
             _logger.LogInformation("Found {Count} relevant documents", results.TotalCount);
 

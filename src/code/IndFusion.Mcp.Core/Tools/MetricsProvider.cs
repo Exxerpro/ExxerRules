@@ -225,18 +225,33 @@ public static class MetricsProvider
     /// <param name="cancellationToken">Cancellation token for the operation.</param>
     private static async Task SaveMetricsWithRetryAsync(string filePath, string content, CancellationToken cancellationToken)
     {
-        const int maxRetries = 5;
-        const int baseDelayMs = 50;
+        const int maxRetries = 3; // Reduced retries to fail faster
+        const int baseDelayMs = 100; // Increased base delay
 
         for (int attempt = 1; attempt <= maxRetries; attempt++)
         {
             try
             {
-                // Use FileShare.None to prevent concurrent access and ensure exclusive write
-                using var fileStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
-                using var writer = new StreamWriter(fileStream);
-                await writer.WriteAsync(content);
-                await writer.FlushAsync();
+                // Ensure directory exists before writing
+                var directory = Path.GetDirectoryName(filePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+
+                // Use atomic write pattern: write to temp file first, then move
+                var tempFilePath = filePath + ".tmp";
+                
+                // Write to temporary file first
+                using (var fileStream = new FileStream(tempFilePath, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var writer = new StreamWriter(fileStream))
+                {
+                    await writer.WriteAsync(content);
+                    await writer.FlushAsync();
+                }
+
+                // Atomic move to final location
+                File.Move(tempFilePath, filePath, overwrite: true);
                 return; // Success, exit retry loop
             }
             catch (IOException ex) when (attempt < maxRetries)

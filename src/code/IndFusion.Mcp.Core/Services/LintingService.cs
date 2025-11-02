@@ -33,39 +33,94 @@ public class LintingService : ILintingService
     /// <inheritdoc />
     public async Task<LintingResult> RunLintingAsync(LintingRequest request, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Starting linting analysis for solution: {SolutionPath}, scope: {Scope}", 
-            request.SolutionPath, request.Scope);
+        _logger.LogInformation("=== RUNLINTINGASYNC STARTED ===");
+        _logger.LogInformation("Solution: {SolutionPath}, Scope: {Scope}", request.SolutionPath, request.Scope);
 
         var stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        var stepStopwatch = System.Diagnostics.Stopwatch.StartNew();
 
         try
         {
-            // Validate inputs
+            // Step 1: Validate inputs
+            _logger.LogInformation("STEP 1.1: Validating solution file exists");
+            stepStopwatch.Restart();
+            
             if (!File.Exists(request.SolutionPath))
             {
+                _logger.LogError("Solution file not found: {SolutionPath}", request.SolutionPath);
                 throw new ArgumentException($"Solution file not found: {request.SolutionPath}", nameof(request));
             }
 
-            // Create workspace and keep it alive for the entire operation
-            // Load solution with caching
-            var solution = await GetOrCreateSolutionAsync(request.SolutionPath, cancellationToken);
+            stepStopwatch.Stop();
+            _logger.LogInformation("STEP 1.1: Validation completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+
+            // Step 2: Get or create solution
+            _logger.LogInformation("STEP 1.2: Getting or creating solution with timeout (30s)");
+            stepStopwatch.Restart();
             
-            // Determine files to analyze
-            var filesToAnalyze = await GetFilesToAnalyzeAsync(solution, request.Scope, cancellationToken);
+            using var solutionCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            solutionCts.CancelAfter(TimeSpan.FromSeconds(30)); // Progressive timeout for solution loading
             
-            // Run analyzers
+            var solution = await GetOrCreateSolutionAsync(request.SolutionPath, solutionCts.Token);
+            
+            stepStopwatch.Stop();
+            _logger.LogInformation("STEP 1.2: Solution loaded in {ElapsedMs}ms. Projects: {ProjectCount}", 
+                stepStopwatch.ElapsedMilliseconds, solution.ProjectIds.Count);
+            
+            // Step 3: Determine files to analyze
+            _logger.LogInformation("STEP 1.3: Determining files to analyze with timeout (5s)");
+            stepStopwatch.Restart();
+            
+            using var filesCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            filesCts.CancelAfter(TimeSpan.FromSeconds(5)); // Progressive timeout for file enumeration
+            
+            var filesToAnalyze = await GetFilesToAnalyzeAsync(solution, request.Scope, filesCts.Token);
+            
+            stepStopwatch.Stop();
+            _logger.LogInformation("STEP 1.3: File enumeration completed in {ElapsedMs}ms. Files: {FileCount}", 
+                stepStopwatch.ElapsedMilliseconds, filesToAnalyze.Count);
+            
+            // Step 4: Run analyzers
+            _logger.LogInformation("STEP 1.4: Running analyzers (no internal timeout - relies on test-level timeout)");
+            stepStopwatch.Restart();
+            
+            // NOTE: No progressive timeout for analyzer execution - it can take 40-50 seconds for large solutions.
+            // The test-level timeout (90s) provides sufficient protection against hangs.
+            // Using cancellationToken directly without additional timeout allows full use of test timeout.
+            
             var violations = await RunAnalyzersAsync(solution, filesToAnalyze, request, cancellationToken);
             
-            // Apply policies
-            var policyDecisions = await ApplyPoliciesAsync(violations, request, cancellationToken);
+            stepStopwatch.Stop();
+            _logger.LogInformation("STEP 1.4: Analyzers completed in {ElapsedMs}ms. Violations: {ViolationCount}", 
+                stepStopwatch.ElapsedMilliseconds, violations.Count());
             
-            // Generate summary
+            // Step 5: Apply policies
+            _logger.LogInformation("STEP 1.5: Applying policies with timeout (5s)");
+            stepStopwatch.Restart();
+            
+            using var policiesCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+            policiesCts.CancelAfter(TimeSpan.FromSeconds(5)); // Progressive timeout for policy application
+            
+            var policyDecisions = await ApplyPoliciesAsync(violations, request, policiesCts.Token);
+            
+            stepStopwatch.Stop();
+            _logger.LogInformation("STEP 1.5: Policy application completed in {ElapsedMs}ms. Decisions: {DecisionCount}", 
+                stepStopwatch.ElapsedMilliseconds, policyDecisions.Count());
+            
+            // Step 6: Generate summary
+            _logger.LogInformation("STEP 1.6: Generating summary");
+            stepStopwatch.Restart();
+            
             var summary = GenerateSummary(violations, filesToAnalyze.Count);
+            
+            stepStopwatch.Stop();
+            _logger.LogInformation("STEP 1.6: Summary generation completed in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
             
             stopwatch.Stop();
 
-            _logger.LogInformation("Linting analysis completed in {ElapsedMs}ms. Found {ViolationCount} violations", 
-                stopwatch.ElapsedMilliseconds, violations.Count());
+            _logger.LogInformation("=== RUNLINTINGASYNC COMPLETED SUCCESSFULLY in {TotalElapsedMs}ms ===", 
+                stopwatch.ElapsedMilliseconds);
+            _logger.LogInformation("Total violations: {ViolationCount}", violations.Count());
 
             return new LintingResult(
                 Success: true,
@@ -75,9 +130,17 @@ public class LintingService : ILintingService
                 ExecutionTimeMs: stopwatch.ElapsedMilliseconds
             );
         }
+        catch (OperationCanceledException ex)
+        {
+            _logger.LogError(ex, "=== RUNLINTINGASYNC CANCELLED after {ElapsedMs}ms ===", stopwatch.ElapsedMilliseconds);
+            _logger.LogInformation("Last completed step: Check logs above for step markers");
+            stopwatch.Stop();
+            throw;
+        }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error during linting analysis for solution: {SolutionPath}", request.SolutionPath);
+            _logger.LogError(ex, "=== RUNLINTINGASYNC FAILED after {ElapsedMs}ms ===", stopwatch.ElapsedMilliseconds);
+            _logger.LogInformation("Last completed step: Check logs above for step markers");
             stopwatch.Stop();
 
             return new LintingResult(
@@ -222,33 +285,85 @@ public class LintingService : ILintingService
         LintingRequest request, 
         CancellationToken cancellationToken)
     {
+        _logger.LogInformation("RunAnalyzersAsync: Starting analyzer execution");
+        var stepStopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
         cancellationToken.ThrowIfCancellationRequested();
         
         var violations = new List<LintingViolation>();
 
+        _logger.LogInformation("RunAnalyzersAsync: STEP 1 - Getting compilation from first project");
+        stepStopwatch.Restart();
+        
         // Create analyzer compilation
-        var compilation = await solution.Projects.First().GetCompilationAsync(cancellationToken);
-        if (compilation == null) return violations;
+        var firstProject = solution.Projects.FirstOrDefault();
+        if (firstProject == null)
+        {
+            _logger.LogWarning("RunAnalyzersAsync: No projects found in solution");
+            return violations;
+        }
+        
+        _logger.LogInformation("RunAnalyzersAsync: Getting compilation for project: {ProjectName}", firstProject.Name);
+        var compilation = await firstProject.GetCompilationAsync(cancellationToken);
+        
+        stepStopwatch.Stop();
+        _logger.LogInformation("RunAnalyzersAsync: Compilation retrieved in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+        
+        if (compilation == null)
+        {
+            _logger.LogWarning("RunAnalyzersAsync: Compilation is null");
+            return violations;
+        }
 
+        _logger.LogInformation("RunAnalyzersAsync: STEP 2 - Creating analyzers and compilation with analyzers");
+        stepStopwatch.Restart();
+        
         // Create analyzer - Load actual IndFusion analyzers
         var analyzers = ImmutableArray.Create<DiagnosticAnalyzer>(new IndFusionAnalyzer());
         var compilationWithAnalyzers = compilation.WithAnalyzers(analyzers);
 
+        stepStopwatch.Stop();
+        _logger.LogInformation("RunAnalyzersAsync: Compilation with analyzers created in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+
+        _logger.LogInformation("RunAnalyzersAsync: STEP 3 - Running analyzer diagnostics (this may take time)");
+        stepStopwatch.Restart();
+        
         // Run analysis
         var diagnostics = await compilationWithAnalyzers.GetAnalyzerDiagnosticsAsync(cancellationToken);
 
+        stepStopwatch.Stop();
+        _logger.LogInformation("RunAnalyzersAsync: Analyzer diagnostics completed in {ElapsedMs}ms. Found {DiagnosticCount} diagnostics", 
+            stepStopwatch.ElapsedMilliseconds, diagnostics.Length);
+
+        _logger.LogInformation("RunAnalyzersAsync: STEP 4 - Filtering diagnostics by severity");
+        stepStopwatch.Restart();
+        
         // Filter by severity
         var filteredDiagnostics = diagnostics.Where(d => 
             request.SeverityFilter.Equals("All", StringComparison.OrdinalIgnoreCase) ||
             d.Severity.ToString().Equals(request.SeverityFilter, StringComparison.OrdinalIgnoreCase));
 
+        stepStopwatch.Stop();
+        _logger.LogInformation("RunAnalyzersAsync: Severity filtering completed in {ElapsedMs}ms. Filtered count: {Count}", 
+            stepStopwatch.ElapsedMilliseconds, filteredDiagnostics.Count());
+
         // Filter by rule IDs if specified
         if (request.RuleIds?.Any() == true)
         {
+            _logger.LogInformation("RunAnalyzersAsync: STEP 5 - Filtering by rule IDs");
+            stepStopwatch.Restart();
+            
             filteredDiagnostics = filteredDiagnostics.Where(d => 
                 request.RuleIds.Contains(d.Id, StringComparer.OrdinalIgnoreCase));
+            
+            stepStopwatch.Stop();
+            _logger.LogInformation("RunAnalyzersAsync: Rule ID filtering completed in {ElapsedMs}ms. Final count: {Count}", 
+                stepStopwatch.ElapsedMilliseconds, filteredDiagnostics.Count());
         }
 
+        _logger.LogInformation("RunAnalyzersAsync: STEP 6 - Converting diagnostics to violations");
+        stepStopwatch.Restart();
+        
         // Convert diagnostics to violations
         foreach (var diagnostic in filteredDiagnostics)
         {
@@ -271,6 +386,10 @@ public class LintingService : ILintingService
 
             violations.Add(violation);
         }
+
+        stepStopwatch.Stop();
+        _logger.LogInformation("RunAnalyzersAsync: Violation conversion completed in {ElapsedMs}ms. Total violations: {Count}", 
+            stepStopwatch.ElapsedMilliseconds, violations.Count);
 
         return violations;
     }
@@ -836,6 +955,13 @@ public class LintingService : ILintingService
     /// </summary>
     private async Task<Solution> GetOrCreateSolutionAsync(string solutionPath, CancellationToken cancellationToken)
     {
+        _logger.LogInformation("GetOrCreateSolutionAsync: Starting solution retrieval");
+        var stepStopwatch = System.Diagnostics.Stopwatch.StartNew();
+        
+        _logger.LogInformation("GetOrCreateSolutionAsync: STEP 1 - Checking cache");
+        stepStopwatch.Restart();
+        
+        Solution? cachedSolution = null;
         lock (_cacheLock)
         {
             // Check if we have a valid cached solution
@@ -843,25 +969,58 @@ public class LintingService : ILintingService
             {
                 var (workspace, solution, lastAccessed) = cachedEntry;
                 
+                _logger.LogInformation("GetOrCreateSolutionAsync: Found cached solution. Last accessed: {LastAccessed}, Age: {Age}ms", 
+                    lastAccessed, (DateTime.UtcNow - lastAccessed).TotalMilliseconds);
+                
                 // Check if cache is still valid
                 if (DateTime.UtcNow - lastAccessed < _cacheExpiration)
                 {
+                    _logger.LogInformation("GetOrCreateSolutionAsync: Cache valid, returning cached solution");
                     // Update last accessed time
                     _workspaceCache[solutionPath] = (workspace, solution, DateTime.UtcNow);
-                    return solution;
+                    cachedSolution = solution;
                 }
                 else
                 {
+                    _logger.LogInformation("GetOrCreateSolutionAsync: Cache expired, removing entry");
                     // Cache expired, remove it
                     _workspaceCache.Remove(solutionPath);
                     workspace.Dispose();
                 }
             }
+            else
+            {
+                _logger.LogInformation("GetOrCreateSolutionAsync: No cached solution found");
+            }
         }
+        
+        if (cachedSolution != null)
+        {
+            stepStopwatch.Stop();
+            _logger.LogInformation("GetOrCreateSolutionAsync: Returning cached solution in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+            return cachedSolution;
+        }
+        
+        _logger.LogInformation("GetOrCreateSolutionAsync: STEP 2 - Creating new workspace");
+        stepStopwatch.Restart();
         
         // Create new workspace and solution
         var newWorkspace = MSBuildWorkspace.Create();
+        
+        stepStopwatch.Stop();
+        _logger.LogInformation("GetOrCreateSolutionAsync: Workspace created in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
+        
+        _logger.LogInformation("GetOrCreateSolutionAsync: STEP 3 - Opening solution (this may take time)");
+        stepStopwatch.Restart();
+        
         var newSolution = await newWorkspace.OpenSolutionAsync(solutionPath, progress: null, cancellationToken);
+        
+        stepStopwatch.Stop();
+        _logger.LogInformation("GetOrCreateSolutionAsync: Solution opened in {ElapsedMs}ms. Projects: {ProjectCount}", 
+            stepStopwatch.ElapsedMilliseconds, newSolution.ProjectIds.Count);
+        
+        _logger.LogInformation("GetOrCreateSolutionAsync: STEP 4 - Caching solution");
+        stepStopwatch.Restart();
         
         lock (_cacheLock)
         {
@@ -871,6 +1030,9 @@ public class LintingService : ILintingService
             // Clean up expired entries
             CleanupExpiredEntries();
         }
+        
+        stepStopwatch.Stop();
+        _logger.LogInformation("GetOrCreateSolutionAsync: Solution cached in {ElapsedMs}ms", stepStopwatch.ElapsedMilliseconds);
         
         return newSolution;
     }

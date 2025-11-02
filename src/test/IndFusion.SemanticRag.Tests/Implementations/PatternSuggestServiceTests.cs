@@ -23,6 +23,9 @@ public class PatternSuggestServiceTests
     private readonly ILogger<PatternSuggestService> _logger;
     private readonly PatternSuggestService _patternSuggestService;
 
+    /// <summary>
+    /// Initializes a new instance of the PatternSuggestServiceTests class.
+    /// </summary>
     public PatternSuggestServiceTests()
     {
         _knowledgeGraphPort = Substitute.For<IKnowledgeGraphPort>();
@@ -30,6 +33,9 @@ public class PatternSuggestServiceTests
         _patternSuggestService = new PatternSuggestService(_knowledgeGraphPort, _logger);
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync generates suggestions for code context.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Generate_Suggestions_For_Code_Context()
     {
@@ -46,7 +52,7 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "singleton-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "singleton",
@@ -58,7 +64,6 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -77,6 +82,9 @@ public class PatternSuggestServiceTests
         result.Value[0].Confidence.ShouldBeGreaterThanOrEqualTo(options.MinConfidence);
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync handles empty code context.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Handle_Empty_Code_Context()
     {
@@ -92,6 +100,9 @@ public class PatternSuggestServiceTests
         result.Error.ShouldContain("Code context cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync handles invalid options.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Handle_Invalid_Options()
     {
@@ -107,6 +118,9 @@ public class PatternSuggestServiceTests
         result.Error.ShouldContain("Max suggestions must be greater than 0");
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync filters by categories.
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Filter_By_Categories()
     {
@@ -118,7 +132,7 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "singleton-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "singleton",
@@ -130,12 +144,11 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "security-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "security",
@@ -147,7 +160,6 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "security" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -165,6 +177,9 @@ public class PatternSuggestServiceTests
         result.Value.All(s => s.Title.Contains("Singleton")).ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that AnalyzePatternAsync analyzes specific pattern.
+    /// </summary>
     [Fact]
     public async Task AnalyzePatternAsync_Should_Analyze_Specific_Pattern()
     {
@@ -176,7 +191,7 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "singleton-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "singleton",
@@ -188,7 +203,6 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -201,12 +215,15 @@ public class PatternSuggestServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternAnalysis>(default);
         result.Value.PatternType.ShouldBe(patternType);
         result.Value.AnalysisTimeMs.ShouldBeGreaterThan(0);
         result.Value.Confidence.ShouldBeGreaterThan(0.0f);
     }
 
+    /// <summary>
+    /// Verifies that AnalyzePatternAsync handles empty code.
+    /// </summary>
     [Fact]
     public async Task AnalyzePatternAsync_Should_Handle_Empty_Code()
     {
@@ -222,6 +239,9 @@ public class PatternSuggestServiceTests
         result.Error.ShouldContain("Code cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that AnalyzePatternAsync handles unknown pattern type.
+    /// </summary>
     [Fact]
     public async Task AnalyzePatternAsync_Should_Handle_Unknown_Pattern_Type()
     {
@@ -240,6 +260,9 @@ public class PatternSuggestServiceTests
         result.Error.ShouldContain($"No pattern definitions found for type: {patternType}");
     }
 
+    /// <summary>
+    /// Verifies that FindViolationsAsync finds pattern violations.
+    /// </summary>
     [Fact]
     public async Task FindViolationsAsync_Should_Find_Pattern_Violations()
     {
@@ -251,7 +274,7 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "null-assignment-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "null-assignment",
@@ -263,7 +286,6 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "null-safety" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -281,6 +303,9 @@ public class PatternSuggestServiceTests
         result.Value.Count.ShouldBeGreaterThanOrEqualTo(0);
     }
 
+    /// <summary>
+    /// Verifies that FindViolationsAsync handles null file path.
+    /// </summary>
     [Fact]
     public async Task FindViolationsAsync_Should_Handle_Null_FilePath()
     {
@@ -291,7 +316,7 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "empty-class-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "empty-class",
@@ -303,7 +328,6 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "maintainability" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -319,6 +343,9 @@ public class PatternSuggestServiceTests
         result.Value.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Verifies that GetPatternDefinitionsAsync retrieves patterns by category.
+    /// </summary>
     [Fact]
     public async Task GetPatternDefinitionsAsync_Should_Retrieve_Patterns_By_Category()
     {
@@ -328,7 +355,7 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "singleton-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "singleton",
@@ -340,7 +367,6 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -359,6 +385,9 @@ public class PatternSuggestServiceTests
         result.Value[0].Name.ShouldBe("Singleton Pattern");
     }
 
+    /// <summary>
+    /// Verifies that GetPatternDefinitionsAsync handles empty category.
+    /// </summary>
     [Fact]
     public async Task GetPatternDefinitionsAsync_Should_Handle_Empty_Category()
     {
@@ -373,6 +402,9 @@ public class PatternSuggestServiceTests
         result.Error.ShouldContain("Category cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that GetPatternCategoriesAsync returns all categories.
+    /// </summary>
     [Fact]
     public async Task GetPatternCategoriesAsync_Should_Return_All_Categories()
     {
@@ -381,32 +413,29 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "pattern1",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["category"] = "Design Patterns"
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "pattern2",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["category"] = "Security"
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "pattern3",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["category"] = "Performance"
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -426,6 +455,9 @@ public class PatternSuggestServiceTests
         result.Value.ShouldContain("Performance");
     }
 
+    /// <summary>
+    /// Verifies that ValidatePatternDefinitionAsync validates valid pattern.
+    /// </summary>
     [Fact]
     public async Task ValidatePatternDefinitionAsync_Should_Validate_Valid_Pattern()
     {
@@ -446,6 +478,9 @@ public class PatternSuggestServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that ValidatePatternDefinitionAsync rejects invalid pattern.
+    /// </summary>
     [Fact]
     public async Task ValidatePatternDefinitionAsync_Should_Reject_Invalid_Pattern()
     {
@@ -464,9 +499,13 @@ public class PatternSuggestServiceTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNull();
         result.Error.ShouldContain("Pattern ID cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that all methods handle cancellation properly.
+    /// </summary>
     [Fact]
     public async Task All_Methods_Should_Handle_Cancellation()
     {
@@ -501,9 +540,13 @@ public class PatternSuggestServiceTests
         var validateResult = await _patternSuggestService.ValidatePatternDefinitionAsync(
             new PatternDefinition("test", "test", "test", "test", PatternSeverity.Info, "test", new List<string>()), cts.Token);
         validateResult.IsFailure.ShouldBeTrue();
+        validateResult.Error.ShouldNotBeNull();
         validateResult.Error.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Verifies that SuggestPatternsAsync uses ConfigureAwait(false).
+    /// </summary>
     [Fact]
     public async Task SuggestPatternsAsync_Should_Use_ConfigureAwait_False()
     {
@@ -523,6 +566,9 @@ public class PatternSuggestServiceTests
         await _knowledgeGraphPort.Received().QueryNodesAsync(Arg.Any<string>(), null, Arg.Any<CancellationToken>());
     }
 
+    /// <summary>
+    /// Verifies that AnalyzePatternAsync calculates confidence correctly.
+    /// </summary>
     [Fact]
     public async Task AnalyzePatternAsync_Should_Calculate_Confidence_Correctly()
     {
@@ -534,7 +580,7 @@ public class PatternSuggestServiceTests
         {
             new(
                 Id: "singleton-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "singleton",
@@ -546,7 +592,6 @@ public class PatternSuggestServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -559,7 +604,7 @@ public class PatternSuggestServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternAnalysis>(default);
         result.Value.Confidence.ShouldBeGreaterThan(0.0f);
         result.Value.Confidence.ShouldBeLessThanOrEqualTo(1.0f);
     }

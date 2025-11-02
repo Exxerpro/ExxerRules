@@ -23,6 +23,9 @@ public class GraphQueryServiceTests
     private readonly ILogger<GraphQueryService> _logger;
     private readonly GraphQueryService _graphQueryService;
 
+    /// <summary>
+    /// Initializes a new instance of the GraphQueryServiceTests class.
+    /// </summary>
     public GraphQueryServiceTests()
     {
         _knowledgeGraphPort = Substitute.For<IKnowledgeGraphPort>();
@@ -30,6 +33,9 @@ public class GraphQueryServiceTests
         _graphQueryService = new GraphQueryService(_knowledgeGraphPort, _logger);
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync executes valid query successfully.
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Execute_Valid_Query_Successfully()
     {
@@ -40,9 +46,8 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "node1",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object> { ["name"] = "TestNode" },
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -57,12 +62,15 @@ public class GraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<GraphQueryResult>(default);
         result.Value.IsSuccess.ShouldBeTrue();
         result.Value.RecordCount.ShouldBe(1);
         result.Value.ExecutionTimeMs.ShouldBeGreaterThan(0);
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync handles empty query.
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Handle_Empty_Query()
     {
@@ -77,6 +85,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldContain("Query cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync handles query failure.
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Handle_Query_Failure()
     {
@@ -97,6 +108,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldContain("Query execution failed");
     }
 
+    /// <summary>
+    /// Verifies that GetNodesAsync retrieves nodes by type.
+    /// </summary>
     [Fact]
     public async Task GetNodesAsync_Should_Retrieve_Nodes_By_Type()
     {
@@ -106,16 +120,14 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "node1",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object> { ["name"] = "TestNode1" },
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "node2",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object> { ["name"] = "TestNode2" },
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -136,6 +148,9 @@ public class GraphQueryServiceTests
         result.Value[1].Type.ShouldBe("CodeNode");
     }
 
+    /// <summary>
+    /// Verifies that GetNodesAsync handles empty node type.
+    /// </summary>
     [Fact]
     public async Task GetNodesAsync_Should_Handle_Empty_NodeType()
     {
@@ -150,6 +165,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldContain("Node type cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that GetNodesAsync applies filters.
+    /// </summary>
     [Fact]
     public async Task GetNodesAsync_Should_Apply_Filters()
     {
@@ -160,9 +178,8 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "node1",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object> { ["name"] = "TestNode", ["language"] = "C#" },
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -180,6 +197,9 @@ public class GraphQueryServiceTests
         result.Value[0].GetProperty<string>("language").ShouldBe("C#");
     }
 
+    /// <summary>
+    /// Verifies that GetRelationshipsAsync retrieves relationships by type.
+    /// </summary>
     [Fact]
     public async Task GetRelationshipsAsync_Should_Retrieve_Relationships_By_Type()
     {
@@ -189,12 +209,11 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "rel1",
-                Type: "DEPENDS_ON",
-                StartNodeId: "node1",
-                EndNodeId: "node2",
+                RelationshipType: "DEPENDS_ON",
+                FromNodeId: "node1",
+                ToNodeId: "node2",
                 Properties: new Dictionary<string, object> { ["strength"] = 0.8 },
-                CreatedAt: DateTimeOffset.UtcNow,
-                UpdatedAt: DateTimeOffset.UtcNow)
+                CreatedAt: DateTimeOffset.UtcNow)
         };
 
         _knowledgeGraphPort.QueryRelationshipsAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
@@ -213,6 +232,9 @@ public class GraphQueryServiceTests
         result.Value[0].EndNodeId.ShouldBe("node2");
     }
 
+    /// <summary>
+    /// Verifies that GetRelationshipsAsync handles empty relationship type.
+    /// </summary>
     [Fact]
     public async Task GetRelationshipsAsync_Should_Handle_Empty_RelationshipType()
     {
@@ -227,6 +249,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldContain("Relationship type cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that TraverseAsync performs graph traversal.
+    /// </summary>
     [Fact]
     public async Task TraverseAsync_Should_Perform_Graph_Traversal()
     {
@@ -238,16 +263,14 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "startNode",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object>(),
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "targetNode",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object>(),
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -255,12 +278,11 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "rel1",
-                Type: "DEPENDS_ON",
-                StartNodeId: "startNode",
-                EndNodeId: "targetNode",
+                RelationshipType: "DEPENDS_ON",
+                FromNodeId: "startNode",
+                ToNodeId: "targetNode",
                 Properties: new Dictionary<string, object>(),
-                CreatedAt: DateTimeOffset.UtcNow,
-                UpdatedAt: DateTimeOffset.UtcNow)
+                CreatedAt: DateTimeOffset.UtcNow)
         };
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
@@ -273,13 +295,16 @@ public class GraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<GraphTraversalResult>(default);
         result.Value.TotalNodesVisited.ShouldBe(2);
         result.Value.TotalRelationshipsTraversed.ShouldBe(1);
         result.Value.Nodes.Count.ShouldBe(2);
         result.Value.Relationships.Count.ShouldBe(1);
     }
 
+    /// <summary>
+    /// Verifies that TraverseAsync handles invalid start node ID.
+    /// </summary>
     [Fact]
     public async Task TraverseAsync_Should_Handle_Invalid_StartNodeId()
     {
@@ -294,6 +319,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldContain("Start node ID cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that TraverseAsync handles negative max depth.
+    /// </summary>
     [Fact]
     public async Task TraverseAsync_Should_Handle_Negative_MaxDepth()
     {
@@ -309,6 +337,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldContain("Max depth cannot be negative");
     }
 
+    /// <summary>
+    /// Verifies that FindShortestPathAsync finds path between nodes.
+    /// </summary>
     [Fact]
     public async Task FindShortestPathAsync_Should_Find_Path_Between_Nodes()
     {
@@ -320,23 +351,20 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "startNode",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object>(),
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "middleNode",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object>(),
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "endNode",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object>(),
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -344,20 +372,18 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "rel1",
-                Type: "DEPENDS_ON",
-                StartNodeId: "startNode",
-                EndNodeId: "middleNode",
+                RelationshipType: "DEPENDS_ON",
+                FromNodeId: "startNode",
+                ToNodeId: "middleNode",
                 Properties: new Dictionary<string, object>(),
-                CreatedAt: DateTimeOffset.UtcNow,
-                UpdatedAt: DateTimeOffset.UtcNow),
+                CreatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "rel2",
-                Type: "DEPENDS_ON",
-                StartNodeId: "middleNode",
-                EndNodeId: "endNode",
+                RelationshipType: "DEPENDS_ON",
+                FromNodeId: "middleNode",
+                ToNodeId: "endNode",
                 Properties: new Dictionary<string, object>(),
-                CreatedAt: DateTimeOffset.UtcNow,
-                UpdatedAt: DateTimeOffset.UtcNow)
+                CreatedAt: DateTimeOffset.UtcNow)
         };
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
@@ -370,14 +396,17 @@ public class GraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
-        result.Value.Value.Length.ShouldBe(2);
+        result.Value.ShouldNotBe<GraphPath?>(default);
+        result.Value!.Value.Length.ShouldBe(2);
         result.Value.Value.StartNode.Id.ShouldBe("startNode");
         result.Value.Value.EndNode.Id.ShouldBe("endNode");
         result.Value.Value.Nodes.Count.ShouldBe(3);
         result.Value.Value.Relationships.Count.ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that FindShortestPathAsync returns null for no path.
+    /// </summary>
     [Fact]
     public async Task FindShortestPathAsync_Should_Return_Null_For_No_Path()
     {
@@ -399,6 +428,9 @@ public class GraphQueryServiceTests
         result.Value.ShouldBeNull();
     }
 
+    /// <summary>
+    /// Verifies that FindShortestPathAsync handles invalid parameters.
+    /// </summary>
     [Fact]
     public async Task FindShortestPathAsync_Should_Handle_Invalid_Parameters()
     {
@@ -414,6 +446,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldContain("Start node ID cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that GetStatisticsAsync returns graph statistics.
+    /// </summary>
     [Fact]
     public async Task GetStatisticsAsync_Should_Return_Graph_Statistics()
     {
@@ -435,13 +470,16 @@ public class GraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<GraphStatistics>(default);
         result.Value.TotalNodes.ShouldBe(nodeCount);
         result.Value.TotalRelationships.ShouldBe(relationshipCount);
         result.Value.AverageDegree.ShouldBe((double)relationshipCount / nodeCount);
         result.Value.LastUpdated.ShouldNotBe(default(DateTimeOffset));
     }
 
+    /// <summary>
+    /// Verifies that GetStatisticsAsync handles node count failure.
+    /// </summary>
     [Fact]
     public async Task GetStatisticsAsync_Should_Handle_Node_Count_Failure()
     {
@@ -459,6 +497,9 @@ public class GraphQueryServiceTests
         result.Error.ShouldBe(expectedError);
     }
 
+    /// <summary>
+    /// Verifies that all methods handle cancellation.
+    /// </summary>
     [Fact]
     public async Task All_Methods_Should_Handle_Cancellation()
     {
@@ -501,6 +542,9 @@ public class GraphQueryServiceTests
         statsResult.Error.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync uses ConfigureAwait(false).
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Use_ConfigureAwait_False()
     {
@@ -510,9 +554,8 @@ public class GraphQueryServiceTests
         {
             new(
                 Id: "node1",
-                Type: "CodeNode",
+                Label: "CodeNode",
                 Properties: new Dictionary<string, object>(),
-                Labels: new List<string> { "CodeNode" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };

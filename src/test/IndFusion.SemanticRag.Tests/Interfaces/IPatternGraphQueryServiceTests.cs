@@ -18,11 +18,17 @@ public class IPatternGraphQueryServiceTests
 {
     private readonly IPatternGraphQueryService _mockPatternGraphQueryService;
 
+    /// <summary>
+    /// Initializes a new instance of the IPatternGraphQueryServiceTests class.
+    /// </summary>
     public IPatternGraphQueryServiceTests()
     {
         _mockPatternGraphQueryService = Substitute.For<IPatternGraphQueryService>();
     }
 
+    /// <summary>
+    /// Verifies that QueryPatternGraphAsync returns success for valid query.
+    /// </summary>
     [Fact]
     public async Task QueryPatternGraphAsync_Should_Return_Success_For_Valid_Query()
     {
@@ -67,7 +73,7 @@ public class IPatternGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternGraphResult>(default);
         result.Value.PatternCount.ShouldBe(1);
         result.Value.RelationshipCount.ShouldBe(1);
         result.Value.TotalResults.ShouldBe(1);
@@ -75,6 +81,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.ExecutionTimeMs.ShouldBe(150);
     }
 
+    /// <summary>
+    /// Verifies that QueryPatternGraphAsync returns failure for invalid query.
+    /// </summary>
     [Fact]
     public async Task QueryPatternGraphAsync_Should_Return_Failure_For_Invalid_Query()
     {
@@ -98,6 +107,9 @@ public class IPatternGraphQueryServiceTests
         result.Error.ShouldBe(expectedError);
     }
 
+    /// <summary>
+    /// Verifies that FindPatternRelationshipsAsync returns success for valid pattern.
+    /// </summary>
     [Fact]
     public async Task FindPatternRelationshipsAsync_Should_Return_Success_For_Valid_Pattern()
     {
@@ -137,6 +149,9 @@ public class IPatternGraphQueryServiceTests
         result.Value[0].Strength.ShouldBe(0.8f);
     }
 
+    /// <summary>
+    /// Verifies that FindPatternRelationshipsAsync returns empty list for isolated pattern.
+    /// </summary>
     [Fact]
     public async Task FindPatternRelationshipsAsync_Should_Return_Empty_List_For_Isolated_Pattern()
     {
@@ -156,6 +171,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that FindSimilarPatternsAsync returns success with similar patterns.
+    /// </summary>
     [Fact]
     public async Task FindSimilarPatternsAsync_Should_Return_Success_With_Similar_Patterns()
     {
@@ -193,6 +211,9 @@ public class IPatternGraphQueryServiceTests
         result.Value[0].CommonElements.Count.ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that FindSimilarPatternsAsync returns empty list for unique pattern.
+    /// </summary>
     [Fact]
     public async Task FindSimilarPatternsAsync_Should_Return_Empty_List_For_Unique_Pattern()
     {
@@ -213,6 +234,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that GetPatternUsageStatisticsAsync returns success with statistics.
+    /// </summary>
     [Fact]
     public async Task GetPatternUsageStatisticsAsync_Should_Return_Success_With_Statistics()
     {
@@ -234,7 +258,7 @@ public class IPatternGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternUsageStatistics>(default);
         result.Value.PatternId.ShouldBe(patternId);
         result.Value.UsageCount.ShouldBe(150);
         result.Value.FileCount.ShouldBe(45);
@@ -244,6 +268,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.AverageUsagePerProject.ShouldBe(150.0 / 12);
     }
 
+    /// <summary>
+    /// Verifies that GetPatternUsageStatisticsAsync returns zero stats for unused pattern.
+    /// </summary>
     [Fact]
     public async Task GetPatternUsageStatisticsAsync_Should_Return_Zero_Stats_For_Unused_Pattern()
     {
@@ -265,7 +292,7 @@ public class IPatternGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternUsageStatistics>(default);
         result.Value.UsageCount.ShouldBe(0);
         result.Value.FileCount.ShouldBe(0);
         result.Value.ProjectCount.ShouldBe(0);
@@ -273,6 +300,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.Trend.ShouldBe(UsageTrend.Unknown);
     }
 
+    /// <summary>
+    /// Verifies that FindAntiPatternsAsync returns success with violations.
+    /// </summary>
     [Fact]
     public async Task FindAntiPatternsAsync_Should_Return_Success_With_Violations()
     {
@@ -309,6 +339,9 @@ public class IPatternGraphQueryServiceTests
         result.Value[0].Location.ShouldBe("DataService.cs:25");
     }
 
+    /// <summary>
+    /// Verifies that FindAntiPatternsAsync returns empty list for clean code.
+    /// </summary>
     [Fact]
     public async Task FindAntiPatternsAsync_Should_Return_Empty_List_For_Clean_Code()
     {
@@ -328,6 +361,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that FindAntiPatternsAsync handles null category.
+    /// </summary>
     [Fact]
     public async Task FindAntiPatternsAsync_Should_Handle_Null_Category()
     {
@@ -355,6 +391,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.Count.ShouldBe(1);
     }
 
+    /// <summary>
+    /// Verifies that GetPatternEvolutionAsync returns success with evolution history.
+    /// </summary>
     [Fact]
     public async Task GetPatternEvolutionAsync_Should_Return_Success_With_Evolution_History()
     {
@@ -394,6 +433,9 @@ public class IPatternGraphQueryServiceTests
         result.Value[1].Version.ShouldBe("1.1");
     }
 
+    /// <summary>
+    /// Verifies that GetPatternEvolutionAsync returns empty list for new pattern.
+    /// </summary>
     [Fact]
     public async Task GetPatternEvolutionAsync_Should_Return_Empty_List_For_New_Pattern()
     {
@@ -412,6 +454,9 @@ public class IPatternGraphQueryServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that all methods handle cancellation token.
+    /// </summary>
     [Fact]
     public async Task All_Methods_Should_Handle_Cancellation_Token()
     {
@@ -453,6 +498,9 @@ public class IPatternGraphQueryServiceTests
         evolutionResult.IsFailure.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that QueryPatternGraphAsync handles null parameters.
+    /// </summary>
     [Fact]
     public async Task QueryPatternGraphAsync_Should_Handle_Null_Parameters()
     {
@@ -478,7 +526,7 @@ public class IPatternGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternGraphResult>(default);
         result.Value.PatternCount.ShouldBe(0);
         result.Value.RelationshipCount.ShouldBe(0);
     }

@@ -3,13 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Infrastructure.Configuration;
+using IndQuestResults;
+using IndQuestResults.Operations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Neo4j.Driver;
-using IndQuestResults;
-using IndFusion.SemanticRag.Infrastructure.Configuration;
+using static IndQuestResults.Operations.ResultExtensionsWithErrorCodes;
 
 namespace IndFusion.SemanticRag.Infrastructure.Adapters;
 
@@ -47,44 +50,62 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     /// <inheritdoc />
     public async Task<Result> StoreNodeAsync(KnowledgeNode node, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Storing node: {NodeId} with label: {Label}", node.Id, node.Label);
-
             var validation = node.Validate();
             if (validation.IsFailure)
             {
-                _logger.LogWarning("Node validation failed: {Error}", validation.Error);
-                return validation;
+                return Result.WithFailure(validation.Error ?? ErrorCodes.KnowledgeNodeIdRequired);
             }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                MERGE (n:KnowledgeNode {id: $id})
-                SET n.label = $label,
-                    n.properties = $properties,
-                    n.createdAt = $createdAt,
-                    n.updatedAt = $updatedAt
-                RETURN n";
+            return await Task.FromResult(Result<KnowledgeNode>.Success(node))
+                .ThenAsync<KnowledgeNode, Result>(
+                    async n =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            var parameters = new Dictionary<string, object>
-            {
-                ["id"] = node.Id,
-                ["label"] = node.Label,
-                ["properties"] = node.Properties,
-                ["createdAt"] = node.CreatedAt,
-                ["updatedAt"] = node.UpdatedAt
-            };
+                        _logger.LogInformation("Storing node: {NodeId} with label: {Label}", n.Id, n.Label);
 
-            await session.RunAsync(cypher, parameters);
-            
-            _logger.LogInformation("Successfully stored node: {NodeId}", node.Id);
-            return Result.Success();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            MERGE (n:KnowledgeNode {id: $id})
+                            SET n.label = $label,
+                                n.properties = $properties,
+                                n.createdAt = $createdAt,
+                                n.updatedAt = $updatedAt
+                            RETURN n";
+
+                        var parameters = new Dictionary<string, object>
+                        {
+                            ["id"] = n.Id,
+                            ["label"] = n.Label,
+                            ["properties"] = n.Properties,
+                            ["createdAt"] = n.CreatedAt,
+                            ["updatedAt"] = n.UpdatedAt
+                        };
+
+                        await session.RunAsync(cypher, parameters);
+                        
+                        _logger.LogInformation("Successfully stored node: {NodeId}", n.Id);
+                        return Result.Success();
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to store node: {NodeId}", node.Id);
-            return Result.WithFailure($"Failed to store node: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 
@@ -97,57 +118,82 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     /// <inheritdoc />
     public async Task<Result> StoreNodesAsync(IReadOnlyList<KnowledgeNode> nodes, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Storing {Count} nodes", nodes.Count);
+            if (nodes == null)
+            {
+                return Result.WithFailure(ErrorCodes.ParameterNull);
+            }
 
+            // Allow empty list - it's a valid operation (no-op)
             if (!nodes.Any())
             {
-                _logger.LogWarning("No nodes provided for storage");
+                _logger.LogInformation("Empty nodes list provided - returning success");
                 return Result.Success();
             }
 
-            // Validate all nodes first
-            foreach (var node in nodes)
-            {
-                var validation = node.Validate();
-                if (validation.IsFailure)
-                {
-                    _logger.LogWarning("Node validation failed for {NodeId}: {Error}", node.Id, validation.Error);
-                    return validation;
-                }
-            }
+            return await Task.FromResult(Result<IReadOnlyList<KnowledgeNode>>.Success(nodes))
+                .ThenAsync<IReadOnlyList<KnowledgeNode>, Result>(
+                    async nodesList =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                UNWIND $nodes AS node
-                MERGE (n:KnowledgeNode {id: node.id})
-                SET n.label = node.label,
-                    n.properties = node.properties,
-                    n.createdAt = node.createdAt,
-                    n.updatedAt = node.updatedAt";
+                        _logger.LogInformation("Storing {Count} nodes", nodesList.Count);
 
-            var parameters = new Dictionary<string, object>
-            {
-                ["nodes"] = nodes.Select(n => new Dictionary<string, object>
-                {
-                    ["id"] = n.Id,
-                    ["label"] = n.Label,
-                    ["properties"] = n.Properties,
-                    ["createdAt"] = n.CreatedAt,
-                    ["updatedAt"] = n.UpdatedAt
-                }).ToList()
-            };
+                        // Validate all nodes first
+                        foreach (var node in nodesList)
+                        {
+                            var validation = node.Validate();
+                            if (validation.IsFailure)
+                            {
+                                _logger.LogWarning("Node validation failed for {NodeId}: {Error}", node.Id, validation.Error);
+                                return Result.WithFailure(validation.Error ?? ErrorCodes.KnowledgeNodeIdRequired);
+                            }
+                        }
 
-            await session.RunAsync(cypher, parameters);
-            
-            _logger.LogInformation("Successfully stored {Count} nodes", nodes.Count);
-            return Result.Success();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            UNWIND $nodes AS node
+                            MERGE (n:KnowledgeNode {id: node.id})
+                            SET n.label = node.label,
+                                n.properties = node.properties,
+                                n.createdAt = node.createdAt,
+                                n.updatedAt = node.updatedAt";
+
+                        var parameters = new Dictionary<string, object>
+                        {
+                            ["nodes"] = nodesList.Select(n => new Dictionary<string, object>
+                            {
+                                ["id"] = n.Id,
+                                ["label"] = n.Label,
+                                ["properties"] = n.Properties,
+                                ["createdAt"] = n.CreatedAt,
+                                ["updatedAt"] = n.UpdatedAt
+                            }).ToList()
+                        };
+
+                        await session.RunAsync(cypher, parameters);
+                        
+                        _logger.LogInformation("Successfully stored {Count} nodes", nodesList.Count);
+                        return Result.Success();
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to store {Count} nodes", nodes.Count);
-            return Result.WithFailure($"Failed to store nodes: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 
@@ -160,47 +206,65 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     /// <inheritdoc />
     public async Task<Result> StoreRelationshipAsync(KnowledgeRelationship relationship, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Storing relationship: {RelationshipId} from {SourceId} to {TargetId}", 
-                relationship.Id, relationship.FromNodeId, relationship.ToNodeId);
-
             var validation = relationship.Validate();
             if (validation.IsFailure)
             {
-                _logger.LogWarning("Relationship validation failed: {Error}", validation.Error);
-                return validation;
+                return Result.WithFailure(validation.Error ?? ErrorCodes.KnowledgeRelationshipIdRequired);
             }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                MATCH (source:KnowledgeNode {id: $sourceId})
-                MATCH (target:KnowledgeNode {id: $targetId})
-                MERGE (source)-[r:RELATIONSHIP {id: $id}]->(target)
-                SET r.type = $type,
-                    r.properties = $properties,
-                    r.createdAt = $createdAt
-                RETURN r";
+            return await Task.FromResult(Result<KnowledgeRelationship>.Success(relationship))
+                .ThenAsync<KnowledgeRelationship, Result>(
+                    async r =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            var parameters = new Dictionary<string, object>
-            {
-                ["id"] = relationship.Id,
-                ["sourceId"] = relationship.FromNodeId,
-                ["targetId"] = relationship.ToNodeId,
-                ["type"] = relationship.RelationshipType,
-                ["properties"] = relationship.Properties,
-                ["createdAt"] = relationship.CreatedAt
-            };
+                        _logger.LogInformation("Storing relationship: {RelationshipId} from {SourceId} to {TargetId}", 
+                            r.Id, r.FromNodeId, r.ToNodeId);
 
-            await session.RunAsync(cypher, parameters);
-            
-            _logger.LogInformation("Successfully stored relationship: {RelationshipId}", relationship.Id);
-            return Result.Success();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            MATCH (source:KnowledgeNode {id: $sourceId})
+                            MATCH (target:KnowledgeNode {id: $targetId})
+                            MERGE (source)-[r:RELATIONSHIP {id: $id}]->(target)
+                            SET r.type = $type,
+                                r.properties = $properties,
+                                r.createdAt = $createdAt
+                            RETURN r";
+
+                        var parameters = new Dictionary<string, object>
+                        {
+                            ["id"] = r.Id,
+                            ["sourceId"] = r.FromNodeId,
+                            ["targetId"] = r.ToNodeId,
+                            ["type"] = r.RelationshipType,
+                            ["properties"] = r.Properties,
+                            ["createdAt"] = r.CreatedAt
+                        };
+
+                        await session.RunAsync(cypher, parameters);
+                        
+                        _logger.LogInformation("Successfully stored relationship: {RelationshipId}", r.Id);
+                        return Result.Success();
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to store relationship: {RelationshipId}", relationship.Id);
-            return Result.WithFailure($"Failed to store relationship: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 
@@ -213,60 +277,76 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     /// <inheritdoc />
     public async Task<Result> StoreRelationshipsAsync(IReadOnlyList<KnowledgeRelationship> relationships, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Storing {Count} relationships", relationships.Count);
+            return await Task.FromResult(Result<IReadOnlyList<KnowledgeRelationship>>.Success(relationships)
+                .Ensure(
+                    rs => rs != null && rs.Any(),
+                    ErrorCodes.CollectionEmpty))
+                .ThenAsync<IReadOnlyList<KnowledgeRelationship>, Result>(
+                    async relationshipsList =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            if (!relationships.Any())
-            {
-                _logger.LogWarning("No relationships provided for storage");
-                return Result.Success();
-            }
+                        _logger.LogInformation("Storing {Count} relationships", relationshipsList.Count);
 
-            // Validate all relationships first
-            foreach (var relationship in relationships)
-            {
-                var validation = relationship.Validate();
-                if (validation.IsFailure)
-                {
-                    _logger.LogWarning("Relationship validation failed for {RelationshipId}: {Error}", 
-                        relationship.Id, validation.Error);
-                    return validation;
-                }
-            }
+                        // Validate all relationships first
+                        foreach (var relationship in relationshipsList)
+                        {
+                            var validation = relationship.Validate();
+                            if (validation.IsFailure)
+                            {
+                                _logger.LogWarning("Relationship validation failed for {RelationshipId}: {Error}", 
+                                    relationship.Id, validation.Error);
+                                return validation;
+                            }
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                UNWIND $relationships AS rel
-                MATCH (source:KnowledgeNode {id: rel.sourceId})
-                MATCH (target:KnowledgeNode {id: rel.targetId})
-                MERGE (source)-[r:RELATIONSHIP {id: rel.id}]->(target)
-                SET r.type = rel.type,
-                    r.properties = rel.properties,
-                    r.createdAt = rel.createdAt";
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            UNWIND $relationships AS rel
+                            MATCH (source:KnowledgeNode {id: rel.sourceId})
+                            MATCH (target:KnowledgeNode {id: rel.targetId})
+                            MERGE (source)-[r:RELATIONSHIP {id: rel.id}]->(target)
+                            SET r.type = rel.type,
+                                r.properties = rel.properties,
+                                r.createdAt = rel.createdAt";
 
-            var parameters = new Dictionary<string, object>
-            {
-                ["relationships"] = relationships.Select(r => new Dictionary<string, object>
-                {
-                    ["id"] = r.Id,
-                    ["sourceId"] = r.FromNodeId,
-                    ["targetId"] = r.ToNodeId,
-                    ["type"] = r.RelationshipType,
-                    ["properties"] = r.Properties,
-                    ["createdAt"] = r.CreatedAt
-                }).ToList()
-            };
+                        var parameters = new Dictionary<string, object>
+                        {
+                            ["relationships"] = relationshipsList.Select(r => new Dictionary<string, object>
+                            {
+                                ["id"] = r.Id,
+                                ["sourceId"] = r.FromNodeId,
+                                ["targetId"] = r.ToNodeId,
+                                ["type"] = r.RelationshipType,
+                                ["properties"] = r.Properties,
+                                ["createdAt"] = r.CreatedAt
+                            }).ToList()
+                        };
 
-            await session.RunAsync(cypher, parameters);
-            
-            _logger.LogInformation("Successfully stored {Count} relationships", relationships.Count);
-            return Result.Success();
+                        await session.RunAsync(cypher, parameters);
+                        
+                        _logger.LogInformation("Successfully stored {Count} relationships", relationshipsList.Count);
+                        return Result.Success();
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to store {Count} relationships", relationships.Count);
-            return Result.WithFailure($"Failed to store relationships: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 
@@ -282,41 +362,63 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     /// <inheritdoc />
     public async Task<Result<KnowledgeNode>> GetNodeByIdAsync(string nodeId, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<KnowledgeNode>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Retrieving node: {NodeId}", nodeId);
+            return await Task.FromResult(Result<string>.Success(nodeId)
+                .Ensure(
+                    id => !string.IsNullOrWhiteSpace(id),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync(
+                    async id =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<KnowledgeNode>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                MATCH (n:KnowledgeNode {id: $id})
-                RETURN n.id AS id, n.label AS label, n.properties AS properties, 
-                       n.createdAt AS createdAt, n.updatedAt AS updatedAt";
+                        _logger.LogInformation("Retrieving node: {NodeId}", id);
 
-            var parameters = new Dictionary<string, object> { ["id"] = nodeId };
-            var result = await session.RunAsync(cypher, parameters);
-            var record = await result.SingleOrDefaultAsync(cancellationToken);
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            MATCH (n:KnowledgeNode {id: $id})
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties, 
+                                   n.createdAt AS createdAt, n.updatedAt AS updatedAt";
 
-            if (record == null)
-            {
-                _logger.LogWarning("Node not found: {NodeId}", nodeId);
-                return Result<KnowledgeNode>.WithFailure($"Node not found: {nodeId}");
-            }
+                        var parameters = new Dictionary<string, object> { ["id"] = id };
+                        var result = await session.RunAsync(cypher, parameters);
+                        var record = await result.SingleOrDefaultAsync(cancellationToken);
 
-            var node = new KnowledgeNode(
-                record["id"].As<string>(),
-                record["label"].As<string>(),
-                record["properties"].As<Dictionary<string, object>>(),
-                record["createdAt"].As<DateTimeOffset>(),
-                record["updatedAt"].As<DateTimeOffset>()
-            );
+                        if (record == null)
+                        {
+                            _logger.LogWarning("Node not found: {NodeId}", id);
+                            return Result<KnowledgeNode>.WithFailure(ErrorCodes.EntityNotFound);
+                        }
 
-            _logger.LogInformation("Successfully retrieved node: {NodeId}", nodeId);
-            return Result<KnowledgeNode>.Success(node);
+                        var node = new KnowledgeNode(
+                            record["id"].As<string>(),
+                            record["label"].As<string>(),
+                            record["properties"].As<Dictionary<string, object>>(),
+                            record["createdAt"].As<DateTimeOffset>(),
+                            record["updatedAt"].As<DateTimeOffset>()
+                        );
+
+                        _logger.LogInformation("Successfully retrieved node: {NodeId}", id);
+                        return Result<KnowledgeNode>.Success(node);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<KnowledgeNode>(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to retrieve node: {NodeId}", nodeId);
-            return Result<KnowledgeNode>.WithFailure($"Failed to retrieve node: {ex.Message}");
+            return WithFailure<KnowledgeNode>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
@@ -326,41 +428,63 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
         int limit = 100, 
         CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeNode>>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Retrieving nodes by label: {Label} with limit: {Limit}", label, limit);
+            return await Task.FromResult(Result<string>.Success(label)
+                .Ensure(
+                    l => !string.IsNullOrWhiteSpace(l),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync(
+                    async labelValue =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<IReadOnlyList<KnowledgeNode>>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                MATCH (n:KnowledgeNode {label: $label})
-                RETURN n.id AS id, n.label AS label, n.properties AS properties, 
-                       n.createdAt AS createdAt, n.updatedAt AS updatedAt
-                LIMIT $limit";
+                        _logger.LogInformation("Retrieving nodes by label: {Label} with limit: {Limit}", labelValue, limit);
 
-            var parameters = new Dictionary<string, object> 
-            { 
-                ["label"] = label,
-                ["limit"] = limit
-            };
-            
-            var result = await session.RunAsync(cypher, parameters);
-            var records = await result.ToListAsync(cancellationToken);
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            MATCH (n:KnowledgeNode {label: $label})
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties, 
+                                   n.createdAt AS createdAt, n.updatedAt AS updatedAt
+                            LIMIT $limit";
 
-            var nodes = records.Select(record => new KnowledgeNode(
-                record["id"].As<string>(),
-                record["label"].As<string>(),
-                record["properties"].As<Dictionary<string, object>>(),
-                record["createdAt"].As<DateTimeOffset>(),
-                record["updatedAt"].As<DateTimeOffset>()
-            )).ToList();
+                        var parameters = new Dictionary<string, object> 
+                        { 
+                            ["label"] = labelValue,
+                            ["limit"] = limit
+                        };
+                        
+                        var result = await session.RunAsync(cypher, parameters);
+                        var records = await result.ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Successfully retrieved {Count} nodes with label: {Label}", nodes.Count, label);
-            return Result<IReadOnlyList<KnowledgeNode>>.Success(nodes);
+                        var nodes = records.Select(record => new KnowledgeNode(
+                            record["id"].As<string>(),
+                            record["label"].As<string>(),
+                            record["properties"].As<Dictionary<string, object>>(),
+                            record["createdAt"].As<DateTimeOffset>(),
+                            record["updatedAt"].As<DateTimeOffset>()
+                        )).ToList();
+
+                        _logger.LogInformation("Successfully retrieved {Count} nodes with label: {Label}", nodes.Count, labelValue);
+                        return Result<IReadOnlyList<KnowledgeNode>>.Success(nodes);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeNode>>(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to retrieve nodes by label: {Label}", label);
-            return Result<IReadOnlyList<KnowledgeNode>>.WithFailure($"Failed to retrieve nodes by label: {ex.Message}");
+            return WithFailure<IReadOnlyList<KnowledgeNode>>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
@@ -377,37 +501,59 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     /// <inheritdoc />
     public async Task<Result<IReadOnlyList<KnowledgeRelationship>>> GetRelationshipsForNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeRelationship>>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Retrieving relationships for node: {NodeId}", nodeId);
+            return await Task.FromResult(Result<string>.Success(nodeId)
+                .Ensure(
+                    id => !string.IsNullOrWhiteSpace(id),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync(
+                    async id =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                MATCH (n:KnowledgeNode {id: $id})-[r:RELATIONSHIP]-(related)
-                RETURN r.id AS id, r.type AS type, r.properties AS properties, r.createdAt AS createdAt,
-                       startNode(r).id AS sourceId, endNode(r).id AS targetId";
+                        _logger.LogInformation("Retrieving relationships for node: {NodeId}", id);
 
-            var parameters = new Dictionary<string, object> { ["id"] = nodeId };
-            var result = await session.RunAsync(cypher, parameters);
-            var records = await result.ToListAsync(cancellationToken);
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            MATCH (n:KnowledgeNode {id: $id})-[r:RELATIONSHIP]-(related)
+                            RETURN r.id AS id, r.type AS type, r.properties AS properties, r.createdAt AS createdAt,
+                                   startNode(r).id AS sourceId, endNode(r).id AS targetId";
 
-            var relationships = records.Select(record => new KnowledgeRelationship(
-                record["id"].As<string>(),
-                record["sourceId"].As<string>(),
-                record["targetId"].As<string>(),
-                record["type"].As<string>(),
-                record["properties"].As<Dictionary<string, object>>(),
-                record["createdAt"].As<DateTimeOffset>()
-            )).ToList();
+                        var parameters = new Dictionary<string, object> { ["id"] = id };
+                        var result = await session.RunAsync(cypher, parameters);
+                        var records = await result.ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Successfully retrieved {Count} relationships for node: {NodeId}", 
-                relationships.Count, nodeId);
-            return Result<IReadOnlyList<KnowledgeRelationship>>.Success(relationships);
+                        var relationships = records.Select(record => new KnowledgeRelationship(
+                            record["id"].As<string>(),
+                            record["sourceId"].As<string>(),
+                            record["targetId"].As<string>(),
+                            record["type"].As<string>(),
+                            record["properties"].As<Dictionary<string, object>>(),
+                            record["createdAt"].As<DateTimeOffset>()
+                        )).ToList();
+
+                        _logger.LogInformation("Successfully retrieved {Count} relationships for node: {NodeId}", 
+                            relationships.Count, id);
+                        return Result<IReadOnlyList<KnowledgeRelationship>>.Success(relationships);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeRelationship>>(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to retrieve relationships for node: {NodeId}", nodeId);
-            return Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure($"Failed to retrieve relationships: {ex.Message}");
+            return WithFailure<IReadOnlyList<KnowledgeRelationship>>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
@@ -417,29 +563,51 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
         IReadOnlyDictionary<string, object>? parameters = null,
         CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeNode>>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Executing node query: {Query}", cypherQuery);
+            return await Task.FromResult(Result<string>.Success(cypherQuery)
+                .Ensure(
+                    query => !string.IsNullOrWhiteSpace(query),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync(
+                    async query =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<IReadOnlyList<KnowledgeNode>>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var result = await session.RunAsync(cypherQuery, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
-            var records = await result.ToListAsync(cancellationToken);
+                        _logger.LogInformation("Executing node query: {Query}", query);
 
-            var nodes = records.Select(record => new KnowledgeNode(
-                record["id"].As<string>(),
-                record["label"].As<string>(),
-                record["properties"].As<Dictionary<string, object>>(),
-                record["createdAt"].As<DateTimeOffset>(),
-                record["updatedAt"].As<DateTimeOffset>()
-            )).ToList();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var result = await session.RunAsync(query, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
+                        var records = await result.ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Successfully executed node query, returned {Count} nodes", nodes.Count);
-            return Result<IReadOnlyList<KnowledgeNode>>.Success(nodes);
+                        var nodes = records.Select(record => new KnowledgeNode(
+                            record["id"].As<string>(),
+                            record["label"].As<string>(),
+                            record["properties"].As<Dictionary<string, object>>(),
+                            record["createdAt"].As<DateTimeOffset>(),
+                            record["updatedAt"].As<DateTimeOffset>()
+                        )).ToList();
+
+                        _logger.LogInformation("Successfully executed node query, returned {Count} nodes", nodes.Count);
+                        return Result<IReadOnlyList<KnowledgeNode>>.Success(nodes);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeNode>>(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to execute node query: {Query}", cypherQuery);
-            return Result<IReadOnlyList<KnowledgeNode>>.WithFailure($"Failed to execute node query: {ex.Message}");
+            return WithFailure<IReadOnlyList<KnowledgeNode>>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
@@ -449,46 +617,77 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
         IReadOnlyDictionary<string, object>? parameters = null,
         CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeRelationship>>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Executing relationship query: {Query}", cypherQuery);
+            return await Task.FromResult(Result<string>.Success(cypherQuery)
+                .Ensure(
+                    query => !string.IsNullOrWhiteSpace(query),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync(
+                    async query =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var result = await session.RunAsync(cypherQuery, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
-            var records = await result.ToListAsync(cancellationToken);
+                        _logger.LogInformation("Executing relationship query: {Query}", query);
 
-            var relationships = records.Select(record => new KnowledgeRelationship(
-                record["id"].As<string>(),
-                record["sourceId"].As<string>(),
-                record["targetId"].As<string>(),
-                record["type"].As<string>(),
-                record["properties"].As<Dictionary<string, object>>(),
-                record["createdAt"].As<DateTimeOffset>()
-            )).ToList();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var result = await session.RunAsync(query, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
+                        var records = await result.ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Successfully executed relationship query, returned {Count} relationships", relationships.Count);
-            return Result<IReadOnlyList<KnowledgeRelationship>>.Success(relationships);
+                        var relationships = records.Select(record => new KnowledgeRelationship(
+                            record["id"].As<string>(),
+                            record["sourceId"].As<string>(),
+                            record["targetId"].As<string>(),
+                            record["type"].As<string>(),
+                            record["properties"].As<Dictionary<string, object>>(),
+                            record["createdAt"].As<DateTimeOffset>()
+                        )).ToList();
+
+                        _logger.LogInformation("Successfully executed relationship query, returned {Count} relationships", relationships.Count);
+                        return Result<IReadOnlyList<KnowledgeRelationship>>.Success(relationships);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<IReadOnlyList<KnowledgeRelationship>>(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to execute relationship query: {Query}", cypherQuery);
-            return Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure($"Failed to execute relationship query: {ex.Message}");
+            return WithFailure<IReadOnlyList<KnowledgeRelationship>>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
     /// <inheritdoc />
     public async Task<Result> UpdateNodeAsync(KnowledgeNode node, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Updating node: {NodeId}", node.Id);
-
             var validation = node.Validate();
             if (validation.IsFailure)
             {
-                _logger.LogWarning("Node validation failed: {Error}", validation.Error);
-                return validation;
+                return Result.WithFailure(validation.Error ?? ErrorCodes.KnowledgeNodeIdRequired);
             }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Result.WithFailure(ErrorCodes.OperationCancelled);
+            }
+
+            _logger.LogInformation("Updating node: {NodeId}", node.Id);
 
             using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = @"
@@ -511,18 +710,32 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
             _logger.LogInformation("Successfully updated node: {NodeId}", node.Id);
             return Result.Success();
         }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to update node: {NodeId}", node.Id);
-            return Result.WithFailure($"Failed to update node: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 
     /// <inheritdoc />
     public async Task<Result<int>> GetNodeCountAsync(CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<int>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Result<int>.WithFailure(ErrorCodes.OperationCancelled);
+            }
+
             _logger.LogInformation("Getting node count");
 
             using var session = _driver.AsyncSession(ConfigureSession);
@@ -534,18 +747,32 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
             _logger.LogInformation("Node count: {Count}", count);
             return Result<int>.Success(count);
         }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<int>(ErrorCodes.OperationCancelled);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to get node count");
-            return Result<int>.WithFailure($"Failed to get node count: {ex.Message}");
+            return WithFailure<int>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
     /// <inheritdoc />
     public async Task<Result<int>> GetRelationshipCountAsync(CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<int>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Result<int>.WithFailure(ErrorCodes.OperationCancelled);
+            }
+
             _logger.LogInformation("Getting relationship count");
 
             using var session = _driver.AsyncSession(ConfigureSession);
@@ -557,18 +784,32 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
             _logger.LogInformation("Relationship count: {Count}", count);
             return Result<int>.Success(count);
         }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<int>(ErrorCodes.OperationCancelled);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to get relationship count");
-            return Result<int>.WithFailure($"Failed to get relationship count: {ex.Message}");
+            return WithFailure<int>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
     /// <inheritdoc />
     public async Task<Result> ClearAllAsync(CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Result.WithFailure(ErrorCodes.OperationCancelled);
+            }
+
             _logger.LogInformation("Clearing all nodes and relationships");
 
             using var session = _driver.AsyncSession(ConfigureSession);
@@ -578,10 +819,14 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
             _logger.LogInformation("Successfully cleared all nodes and relationships");
             return Result.Success();
         }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to clear all nodes and relationships");
-            return Result.WithFailure($"Failed to clear all: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 
@@ -591,75 +836,141 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
         IReadOnlyDictionary<string, object>? parameters = null,
         CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<IReadOnlyList<IReadOnlyDictionary<string, object>>>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Executing graph query: {Query}", query);
+            return await Task.FromResult(Result<string>.Success(query)
+                .Ensure(
+                    q => !string.IsNullOrWhiteSpace(q),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync(
+                    async q =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var result = await session.RunAsync(query, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
-            var records = await result.ToListAsync(cancellationToken);
+                        _logger.LogInformation("Executing graph query: {Query}", q);
 
-            var queryResults = records.Select(record => 
-                record.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) as IReadOnlyDictionary<string, object>
-            ).ToList();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var result = await session.RunAsync(q, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
+                        var records = await result.ToListAsync(cancellationToken);
 
-            _logger.LogInformation("Successfully executed graph query, returned {Count} results", queryResults.Count);
-            return Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>.Success(queryResults);
+                        var queryResults = records.Select(record => 
+                            record.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) as IReadOnlyDictionary<string, object>
+                        ).ToList();
+
+                        _logger.LogInformation("Successfully executed graph query, returned {Count} results", queryResults.Count);
+                        return Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>.Success(queryResults);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<IReadOnlyList<IReadOnlyDictionary<string, object>>>(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to execute graph query: {Query}", query);
-            return Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>.WithFailure($"Failed to execute graph query: {ex.Message}");
+            return WithFailure<IReadOnlyList<IReadOnlyDictionary<string, object>>>(ErrorCodes.CypherQueryFailed, ex);
         }
     }
 
     /// <inheritdoc />
     public async Task<Result> DeleteNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Deleting node: {NodeId}", nodeId);
+            return await Task.FromResult(Result<string>.Success(nodeId)
+                .Ensure(
+                    id => !string.IsNullOrWhiteSpace(id),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync<string, Result>(
+                    async id =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                MATCH (n:KnowledgeNode {id: $id})
-                DETACH DELETE n";
+                        _logger.LogInformation("Deleting node: {NodeId}", id);
 
-            var parameters = new Dictionary<string, object> { ["id"] = nodeId };
-            await session.RunAsync(cypher, parameters);
-            
-            _logger.LogInformation("Successfully deleted node: {NodeId}", nodeId);
-            return Result.Success();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            MATCH (n:KnowledgeNode {id: $id})
+                            DETACH DELETE n";
+
+                        var parameters = new Dictionary<string, object> { ["id"] = id };
+                        await session.RunAsync(cypher, parameters);
+                        
+                        _logger.LogInformation("Successfully deleted node: {NodeId}", id);
+                        return Result.Success();
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to delete node: {NodeId}", nodeId);
-            return Result.WithFailure($"Failed to delete node: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 
     /// <inheritdoc />
     public async Task<Result> DeleteRelationshipAsync(string relationshipId, CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            _logger.LogInformation("Deleting relationship: {RelationshipId}", relationshipId);
+            return await Task.FromResult(Result<string>.Success(relationshipId)
+                .Ensure(
+                    id => !string.IsNullOrWhiteSpace(id),
+                    ErrorCodes.ParameterNullOrWhitespace))
+                .ThenAsync<string, Result>(
+                    async id =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            var cypher = @"
-                MATCH ()-[r:RELATIONSHIP {id: $id}]-()
-                DELETE r";
+                        _logger.LogInformation("Deleting relationship: {RelationshipId}", id);
 
-            var parameters = new Dictionary<string, object> { ["id"] = relationshipId };
-            await session.RunAsync(cypher, parameters);
-            
-            _logger.LogInformation("Successfully deleted relationship: {RelationshipId}", relationshipId);
-            return Result.Success();
+                        using var session = _driver.AsyncSession(ConfigureSession);
+                        var cypher = @"
+                            MATCH ()-[r:RELATIONSHIP {id: $id}]-()
+                            DELETE r";
+
+                        var parameters = new Dictionary<string, object> { ["id"] = id };
+                        await session.RunAsync(cypher, parameters);
+                        
+                        _logger.LogInformation("Successfully deleted relationship: {RelationshipId}", id);
+                        return Result.Success();
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Result.WithFailure(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to delete relationship: {RelationshipId}", relationshipId);
-            return Result.WithFailure($"Failed to delete relationship: {ex.Message}");
+            return Result.WithFailure(ErrorCodes.GraphDatabaseError);
         }
     }
 

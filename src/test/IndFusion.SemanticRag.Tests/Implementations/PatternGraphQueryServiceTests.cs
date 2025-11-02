@@ -23,6 +23,9 @@ public class PatternGraphQueryServiceTests
     private readonly ILogger<PatternGraphQueryService> _logger;
     private readonly PatternGraphQueryService _patternGraphQueryService;
 
+    /// <summary>
+    /// Initializes a new instance of the PatternGraphQueryServiceTests class.
+    /// </summary>
     public PatternGraphQueryServiceTests()
     {
         _knowledgeGraphPort = Substitute.For<IKnowledgeGraphPort>();
@@ -30,6 +33,9 @@ public class PatternGraphQueryServiceTests
         _patternGraphQueryService = new PatternGraphQueryService(_knowledgeGraphPort, _logger);
     }
 
+    /// <summary>
+    /// Verifies that QueryPatternGraphAsync executes pattern graph query successfully.
+    /// </summary>
     [Fact]
     public async Task QueryPatternGraphAsync_Should_Execute_Pattern_Graph_Query()
     {
@@ -44,7 +50,7 @@ public class PatternGraphQueryServiceTests
         {
             new(
                 Id: "singleton-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "singleton",
@@ -56,7 +62,6 @@ public class PatternGraphQueryServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -65,7 +70,7 @@ public class PatternGraphQueryServiceTests
         {
             new(
                 Id: "rel1",
-                Type: "PatternRelationship",
+                Label: "PatternRelationship",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "rel1",
@@ -74,7 +79,6 @@ public class PatternGraphQueryServiceTests
                     ["targetPatternId"] = "factory",
                     ["strength"] = 0.8f
                 },
-                Labels: new List<string> { "PatternRelationship" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -89,7 +93,7 @@ public class PatternGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternGraphResult>(default);
         result.Value.PatternCount.ShouldBe(1);
         result.Value.RelationshipCount.ShouldBe(0);
         result.Value.TotalResults.ShouldBe(1);
@@ -97,6 +101,9 @@ public class PatternGraphQueryServiceTests
         result.Value.HasMoreResults.ShouldBeFalse();
     }
 
+    /// <summary>
+    /// Verifies that QueryPatternGraphAsync handles invalid query.
+    /// </summary>
     [Fact]
     public async Task QueryPatternGraphAsync_Should_Handle_Invalid_Query()
     {
@@ -120,6 +127,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Pattern graph query execution failed");
     }
 
+    /// <summary>
+    /// Verifies that QueryPatternGraphAsync handles empty query.
+    /// </summary>
     [Fact]
     public async Task QueryPatternGraphAsync_Should_Handle_Empty_Query()
     {
@@ -138,6 +148,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Query cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that FindPatternRelationshipsAsync finds pattern relationships.
+    /// </summary>
     [Fact]
     public async Task FindPatternRelationshipsAsync_Should_Find_Pattern_Relationships()
     {
@@ -148,12 +161,11 @@ public class PatternGraphQueryServiceTests
         {
             new(
                 Id: "rel1",
-                Type: "RELATED_TO",
-                StartNodeId: "singleton",
-                EndNodeId: "factory",
+                RelationshipType: "RELATED_TO",
+                FromNodeId: "singleton",
+                ToNodeId: "factory",
                 Properties: new Dictionary<string, object> { ["strength"] = 0.8 },
-                CreatedAt: DateTimeOffset.UtcNow,
-                UpdatedAt: DateTimeOffset.UtcNow)
+                CreatedAt: DateTimeOffset.UtcNow)
         };
 
         _knowledgeGraphPort.QueryRelationshipsAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
@@ -171,6 +183,9 @@ public class PatternGraphQueryServiceTests
         result.Value[0].Strength.ShouldBe(0.8f);
     }
 
+    /// <summary>
+    /// Verifies that FindPatternRelationshipsAsync handles empty pattern ID.
+    /// </summary>
     [Fact]
     public async Task FindPatternRelationshipsAsync_Should_Handle_Empty_PatternId()
     {
@@ -186,6 +201,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Pattern ID cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that FindPatternRelationshipsAsync handles negative max depth.
+    /// </summary>
     [Fact]
     public async Task FindPatternRelationshipsAsync_Should_Handle_Negative_MaxDepth()
     {
@@ -201,6 +219,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Max depth cannot be negative");
     }
 
+    /// <summary>
+    /// Verifies that FindSimilarPatternsAsync finds similar patterns.
+    /// </summary>
     [Fact]
     public async Task FindSimilarPatternsAsync_Should_Find_Similar_Patterns()
     {
@@ -211,7 +232,7 @@ public class PatternGraphQueryServiceTests
 
         var sourcePatternNode = new KnowledgeNode(
             Id: "singleton-pattern",
-            Type: "PatternDefinition",
+            Label: "PatternDefinition",
             Properties: new Dictionary<string, object>
             {
                 ["id"] = "singleton",
@@ -223,7 +244,6 @@ public class PatternGraphQueryServiceTests
                 ["tags"] = new List<string> { "creational" },
                 ["isEnabled"] = true
             },
-            Labels: new List<string> { "PatternDefinition" },
             CreatedAt: DateTimeOffset.UtcNow,
             UpdatedAt: DateTimeOffset.UtcNow);
 
@@ -231,7 +251,7 @@ public class PatternGraphQueryServiceTests
         {
             new(
                 Id: "factory-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "factory",
@@ -243,7 +263,6 @@ public class PatternGraphQueryServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -264,6 +283,9 @@ public class PatternGraphQueryServiceTests
         result.Value[0].SimilarityScore.ShouldBeGreaterThanOrEqualTo(similarityThreshold);
     }
 
+    /// <summary>
+    /// Verifies that FindSimilarPatternsAsync handles empty pattern ID.
+    /// </summary>
     [Fact]
     public async Task FindSimilarPatternsAsync_Should_Handle_Empty_PatternId()
     {
@@ -280,6 +302,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Pattern ID cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that FindSimilarPatternsAsync handles invalid threshold.
+    /// </summary>
     [Fact]
     public async Task FindSimilarPatternsAsync_Should_Handle_Invalid_Threshold()
     {
@@ -296,6 +321,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Similarity threshold must be between 0.0 and 1.0");
     }
 
+    /// <summary>
+    /// Verifies that GetPatternUsageStatisticsAsync returns usage statistics.
+    /// </summary>
     [Fact]
     public async Task GetPatternUsageStatisticsAsync_Should_Return_Usage_Statistics()
     {
@@ -303,7 +331,7 @@ public class PatternGraphQueryServiceTests
         var patternId = "singleton";
         var usageNode = new KnowledgeNode(
             Id: "usage-stats",
-            Type: "UsageStatistics",
+            Label: "UsageStatistics",
             Properties: new Dictionary<string, object>
             {
                 ["usageCount"] = 150,
@@ -311,7 +339,6 @@ public class PatternGraphQueryServiceTests
                 ["projectCount"] = 12,
                 ["lastUsed"] = DateTimeOffset.UtcNow.AddDays(-1)
             },
-            Labels: new List<string> { "UsageStatistics" },
             CreatedAt: DateTimeOffset.UtcNow,
             UpdatedAt: DateTimeOffset.UtcNow);
 
@@ -323,7 +350,7 @@ public class PatternGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<PatternUsageStatistics>(default);
         result.Value.PatternId.ShouldBe(patternId);
         result.Value.UsageCount.ShouldBe(150);
         result.Value.FileCount.ShouldBe(45);
@@ -331,6 +358,9 @@ public class PatternGraphQueryServiceTests
         result.Value.LastUsed.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Verifies that GetPatternUsageStatisticsAsync handles empty pattern ID.
+    /// </summary>
     [Fact]
     public async Task GetPatternUsageStatisticsAsync_Should_Handle_Empty_PatternId()
     {
@@ -345,6 +375,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Pattern ID cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that FindAntiPatternsAsync finds anti-pattern violations.
+    /// </summary>
     [Fact]
     public async Task FindAntiPatternsAsync_Should_Find_Anti_Pattern_Violations()
     {
@@ -356,7 +389,7 @@ public class PatternGraphQueryServiceTests
         {
             new(
                 Id: "anti-pattern-1",
-                Type: "AntiPatternViolation",
+                Label: "AntiPatternViolation",
                 Properties: new Dictionary<string, object>
                 {
                     ["antiPatternId"] = "n-plus-one",
@@ -368,7 +401,6 @@ public class PatternGraphQueryServiceTests
                     ["codeSnippet"] = "foreach (var item in items) { db.Query(item.Id); }",
                     ["suggestedFix"] = "Use batch loading or include statements"
                 },
-                Labels: new List<string> { "AntiPatternViolation" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -388,6 +420,9 @@ public class PatternGraphQueryServiceTests
         result.Value[0].Location.ShouldBe("DataService.cs:25");
     }
 
+    /// <summary>
+    /// Verifies that FindAntiPatternsAsync handles null category.
+    /// </summary>
     [Fact]
     public async Task FindAntiPatternsAsync_Should_Handle_Null_Category()
     {
@@ -406,6 +441,9 @@ public class PatternGraphQueryServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that GetPatternEvolutionAsync returns evolution history.
+    /// </summary>
     [Fact]
     public async Task GetPatternEvolutionAsync_Should_Return_Evolution_History()
     {
@@ -415,7 +453,7 @@ public class PatternGraphQueryServiceTests
         {
             new(
                 Id: "evolution-1",
-                Type: "PatternEvolution",
+                Label: "PatternEvolution",
                 Properties: new Dictionary<string, object>
                 {
                     ["version"] = "1.0",
@@ -424,12 +462,11 @@ public class PatternGraphQueryServiceTests
                     ["changedAt"] = DateTimeOffset.UtcNow.AddDays(-30),
                     ["changedBy"] = "developer1"
                 },
-                Labels: new List<string> { "PatternEvolution" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow),
             new(
                 Id: "evolution-2",
-                Type: "PatternEvolution",
+                Label: "PatternEvolution",
                 Properties: new Dictionary<string, object>
                 {
                     ["version"] = "1.1",
@@ -438,7 +475,6 @@ public class PatternGraphQueryServiceTests
                     ["changedAt"] = DateTimeOffset.UtcNow.AddDays(-15),
                     ["changedBy"] = "developer2"
                 },
-                Labels: new List<string> { "PatternEvolution" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };
@@ -459,6 +495,9 @@ public class PatternGraphQueryServiceTests
         result.Value[1].Version.ShouldBe("1.1");
     }
 
+    /// <summary>
+    /// Verifies that GetPatternEvolutionAsync handles empty pattern ID.
+    /// </summary>
     [Fact]
     public async Task GetPatternEvolutionAsync_Should_Handle_Empty_PatternId()
     {
@@ -473,6 +512,9 @@ public class PatternGraphQueryServiceTests
         result.Error.ShouldContain("Pattern ID cannot be null or empty");
     }
 
+    /// <summary>
+    /// Verifies that all methods handle cancellation properly.
+    /// </summary>
     [Fact]
     public async Task All_Methods_Should_Handle_Cancellation()
     {
@@ -512,6 +554,9 @@ public class PatternGraphQueryServiceTests
         evolutionResult.Error.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Verifies that QueryPatternGraphAsync uses ConfigureAwait(false).
+    /// </summary>
     [Fact]
     public async Task QueryPatternGraphAsync_Should_Use_ConfigureAwait_False()
     {
@@ -537,6 +582,9 @@ public class PatternGraphQueryServiceTests
         await _knowledgeGraphPort.Received().QueryRelationshipsAsync(query.Query, query.Parameters, Arg.Any<CancellationToken>());
     }
 
+    /// <summary>
+    /// Verifies that FindSimilarPatternsAsync calculates similarity correctly.
+    /// </summary>
     [Fact]
     public async Task FindSimilarPatternsAsync_Should_Calculate_Similarity_Correctly()
     {
@@ -547,7 +595,7 @@ public class PatternGraphQueryServiceTests
 
         var sourcePatternNode = new KnowledgeNode(
             Id: "singleton-pattern",
-            Type: "PatternDefinition",
+            Label: "PatternDefinition",
             Properties: new Dictionary<string, object>
             {
                 ["id"] = "singleton",
@@ -559,7 +607,6 @@ public class PatternGraphQueryServiceTests
                 ["tags"] = new List<string> { "creational" },
                 ["isEnabled"] = true
             },
-            Labels: new List<string> { "PatternDefinition" },
             CreatedAt: DateTimeOffset.UtcNow,
             UpdatedAt: DateTimeOffset.UtcNow);
 
@@ -567,7 +614,7 @@ public class PatternGraphQueryServiceTests
         {
             new(
                 Id: "factory-pattern",
-                Type: "PatternDefinition",
+                Label: "PatternDefinition",
                 Properties: new Dictionary<string, object>
                 {
                     ["id"] = "factory",
@@ -579,7 +626,6 @@ public class PatternGraphQueryServiceTests
                     ["tags"] = new List<string> { "creational" },
                     ["isEnabled"] = true
                 },
-                Labels: new List<string> { "PatternDefinition" },
                 CreatedAt: DateTimeOffset.UtcNow,
                 UpdatedAt: DateTimeOffset.UtcNow)
         };

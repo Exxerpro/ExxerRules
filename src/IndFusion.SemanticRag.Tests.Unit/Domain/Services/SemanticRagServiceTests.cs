@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Tests.Unit.Shared;
+using IndQuestResults;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shouldly;
@@ -34,27 +36,30 @@ public class SemanticRagServiceTests
         // Arrange
         var queryVector = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
         var options = new VectorSearchOptions(
-            QueryVector: queryVector,
-            MaxResults: 5,
-            SimilarityThreshold: 0.7
+            Limit: 5,
+            Threshold: 0.7f
         );
-        var expectedResult = new VectorSearchResult(
-            Id: "search-1",
-            QueryId: "query-1",
-            Results: new List<VectorEmbedding>
-            {
-                new("emb-1", "Content 1", new float[] { 0.11f, 0.21f, 0.31f, 0.41f }, 
-                    new Dictionary<string, object>(), DateTimeOffset.UtcNow),
-                new("emb-2", "Content 2", new float[] { 0.12f, 0.22f, 0.32f, 0.42f }, 
-                    new Dictionary<string, object>(), DateTimeOffset.UtcNow)
-            },
-            TotalCount: 2,
-            QueryTime: TimeSpan.FromMilliseconds(50),
-            Metadata: new Dictionary<string, object>()
-        );
+        // ✅ Use fluent builders from TestDataBuilders
+        var vector1Result = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "emb-1",
+            content: "Content 1",
+            embeddingSize: 4);
+        var vector2Result = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "emb-2",
+            content: "Content 2",
+            embeddingSize: 4);
+        vector1Result.IsSuccess.ShouldBeTrue();
+        vector2Result.IsSuccess.ShouldBeTrue();
+        var vectorEmbedding1 = vector1Result.Value;
+        var vectorEmbedding2 = vector2Result.Value;
+        var expectedResults = new List<VectorSearchResult>
+        {
+            new VectorSearchResult(Vector: vectorEmbedding1, Similarity: 0.9f, Rank: 1),
+            new VectorSearchResult(Vector: vectorEmbedding2, Similarity: 0.85f, Rank: 2)
+        };
 
         _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None)
-            .Returns(Result<VectorSearchResult>.Success(expectedResult));
+            .Returns(Task.FromResult(Result<VectorSearchResult>.Success(expectedResults[0])));
 
         // Act
         var result = await _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None);
@@ -62,24 +67,22 @@ public class SemanticRagServiceTests
         // Assert
         result.ShouldNotBeNull();
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
-        result.Value.Id.ShouldBe(expectedResult.Id);
-        result.Value.Results.Count.ShouldBe(2);
-        result.Value.TotalCount.ShouldBe(2);
-        result.Value.QueryTime.ShouldBe(expectedResult.QueryTime);
+        result.Value.Vector.Id.ShouldBe("emb-1");
+        result.Value.Similarity.ShouldBe(0.9f);
+        result.Value.Rank.ShouldBe(1);
     }
 
     [Fact]
     public async Task VectorSearchPort_IndexAsync_Should_Index_Vector_Successfully()
     {
         // Arrange
-        var embedding = new VectorEmbedding(
-            Id: "emb-1",
-            Content: "Test content",
-            Embedding: new float[] { 0.1f, 0.2f, 0.3f, 0.4f },
-            Metadata: new Dictionary<string, object> { ["source"] = "test" },
-            CreatedAt: DateTimeOffset.UtcNow
-        );
+        // ✅ Use fluent builder from TestDataBuilders
+        var embeddingResult = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "emb-1",
+            content: "Test content",
+            embeddingSize: 4);
+        embeddingResult.IsSuccess.ShouldBeTrue();
+        var embedding = embeddingResult.Value;
 
         _mockVectorSearchPort.IndexAsync(embedding, CancellationToken.None)
             .Returns(Result.Success());
@@ -96,13 +99,19 @@ public class SemanticRagServiceTests
     public async Task KnowledgeGraphServicePort_CreateEntityAsync_Should_Create_Entity_Successfully()
     {
         // Arrange
-        var entity = new KnowledgeEntity(
-            Id: "entity-1",
-            Name: "Test Entity",
-            Type: "Person",
-            Description: "A test entity",
-            Properties: new Dictionary<string, object> { ["age"] = 30 }
-        );
+        // ✅ Use fluent builder from TestDataBuilders with custom properties
+        var entityResult = TestDataBuilders
+            .CreateValidKnowledgeEntity(id: "entity-1", name: "Test Entity", type: "Person")
+            .Map(e => new KnowledgeEntity(
+                e.Id,
+                e.Name,
+                e.Type,
+                "A test entity",
+                new Dictionary<string, object> { ["age"] = 30 },
+                0.9,
+                DateTime.UtcNow));
+        entityResult.IsSuccess.ShouldBeTrue();
+        var entity = entityResult.Value!; // Null-forgiving: IsSuccess guarantees non-null
 
         _mockKnowledgeGraphServicePort.CreateEntityAsync(entity, CancellationToken.None)
             .Returns(Result.Success());
@@ -125,7 +134,7 @@ public class SemanticRagServiceTests
             ToNodeId: "entity-2",
             RelationshipType: "WORKS_FOR",
             Properties: new Dictionary<string, object> { ["since"] = "2020" },
-            CreatedAt: DateTimeOffset.UtcNow
+            CreatedAt: DateTime.UtcNow
         );
 
         _mockKnowledgeGraphServicePort.CreateRelationshipAsync(relationship, CancellationToken.None)
@@ -143,14 +152,14 @@ public class SemanticRagServiceTests
     public async Task KnowledgeGraphServicePort_GetEntityAsync_Should_Return_Entity_When_Found()
     {
         // Arrange
+        // ✅ Use fluent builder from TestDataBuilders
         var entityId = "entity-1";
-        var expectedEntity = new KnowledgeEntity(
-            Id: entityId,
-            Name: "Test Entity",
-            Type: "Person",
-            Description: "A test entity",
-            Properties: new Dictionary<string, object>()
-        );
+        var entityResult = TestDataBuilders.CreateValidKnowledgeEntity(
+            id: entityId,
+            name: "Test Entity",
+            type: "Person");
+        entityResult.IsSuccess.ShouldBeTrue();
+        var expectedEntity = entityResult.Value!; // Null-forgiving: IsSuccess guarantees non-null
 
         _mockKnowledgeGraphServicePort.GetEntityAsync(entityId, CancellationToken.None)
             .Returns(Result<KnowledgeEntity>.Success(expectedEntity));
@@ -175,8 +184,8 @@ public class SemanticRagServiceTests
         var properties = new Dictionary<string, object> { ["age"] = 30 };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-1", "John Doe", "Person", "A person", new Dictionary<string, object> { ["age"] = 30 }),
-            new("entity-2", "Jane Smith", "Person", "Another person", new Dictionary<string, object> { ["age"] = 30 })
+            new("entity-1", "John Doe", "Person", "A person", new Dictionary<string, object> { ["age"] = 30 }, 0.9, DateTime.UtcNow),
+            new("entity-2", "Jane Smith", "Person", "Another person", new Dictionary<string, object> { ["age"] = 30 }, 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.SearchEntitiesAsync(entityType, properties, 100, CancellationToken.None)
@@ -200,7 +209,7 @@ public class SemanticRagServiceTests
         var expectedStats = new VectorIndexStatistics(
             TotalVectors: 1000,
             IndexSize: 1024 * 1024, // 1MB
-            LastUpdated: DateTimeOffset.UtcNow,
+            LastUpdated: DateTime.UtcNow,
             AverageVectorDimension: 384
         );
 
@@ -228,7 +237,7 @@ public class SemanticRagServiceTests
             TotalRelationships: 2000,
             NodeTypes: new Dictionary<string, long> { ["Person"] = 500, ["Organization"] = 300, ["Location"] = 200 },
             RelationshipTypes: new Dictionary<string, long> { ["WORKS_FOR"] = 800, ["MANAGES"] = 200, ["LOCATED_IN"] = 1000 },
-            LastUpdated: DateTimeOffset.UtcNow
+            LastUpdated: DateTime.UtcNow
         );
 
         _mockKnowledgeGraphServicePort.GetStatisticsAsync(CancellationToken.None)
@@ -248,29 +257,35 @@ public class SemanticRagServiceTests
     }
 
     [Theory]
-    [InlineData(0.5f, 0.5f)]
-    [InlineData(0.7f, 0.7f)]
-    [InlineData(0.9f, 0.9f)]
-    public async Task VectorSearchPort_SearchAsync_Should_Respect_Similarity_Threshold(float threshold, float expectedThreshold)
+    [InlineData(0.5f)]
+    [InlineData(0.7f)]
+    [InlineData(0.9f)]
+    public async Task VectorSearchPort_SearchAsync_Should_Respect_Similarity_Threshold(float threshold)
     {
         // Arrange
         var queryVector = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
         var options = new VectorSearchOptions(
-            QueryVector: queryVector,
-            MaxResults: 5,
-            SimilarityThreshold: threshold
+            Limit: 5,
+            Threshold: threshold
         );
-        var expectedResult = new VectorSearchResult(
-            Id: "search-threshold",
-            QueryId: "query-threshold",
-            Results: new List<VectorEmbedding>(),
-            TotalCount: 0,
-            QueryTime: TimeSpan.FromMilliseconds(10),
-            Metadata: new Dictionary<string, object> { ["threshold"] = expectedThreshold }
-        );
+        // ✅ Use fluent builder from TestDataBuilders
+        var vectorResult = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "test-id",
+            content: "test-content",
+            embeddingSize: queryVector.Length);
+        vectorResult.IsSuccess.ShouldBeTrue();
+        var vectorEmbedding = vectorResult.Value;
+        var expectedResults = new List<VectorSearchResult>
+        {
+            new VectorSearchResult(
+                Vector: vectorEmbedding,
+                Similarity: 0.85f,
+                Rank: 1
+            )
+        };
 
         _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None)
-            .Returns(Result<VectorSearchResult>.Success(expectedResult));
+            .Returns(Task.FromResult(Result<VectorSearchResult>.Success(expectedResults[0])));
 
         // Act
         var result = await _mockVectorSearchPort.SearchAsync(queryVector, options, CancellationToken.None);
@@ -278,7 +293,7 @@ public class SemanticRagServiceTests
         // Assert
         result.ShouldNotBeNull();
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
-        result.Value.Metadata["threshold"].ShouldBe(expectedThreshold);
+        result.Value.Similarity.ShouldBeGreaterThanOrEqualTo(threshold);
+        result.Value.Rank.ShouldBe(1);
     }
 }

@@ -6,6 +6,7 @@ using IndFusion.SemanticRag.Infrastructure.Factories;
 using IndFusion.SemanticRag.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Neo4j.Driver;
 using Qdrant.Client;
@@ -48,6 +49,11 @@ public static class ServiceCollectionExtensions
         });
 
         // Register core services
+        services.AddScoped<IOcrService>(provider =>
+        {
+            var logger = provider.GetRequiredService<ILogger<TesseractOcrService>>();
+            return new TesseractOcrService(logger);
+        });
         services.AddScoped<IVectorSearchService, QdrantVectorSearchService>();
         services.AddScoped<IPatternKnowledgeBase, PatternKnowledgeBaseService>();
         services.AddScoped<ICodeAnalysisService, RoslynCodeAnalysisService>();

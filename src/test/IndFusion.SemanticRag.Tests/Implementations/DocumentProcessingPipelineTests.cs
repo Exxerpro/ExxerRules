@@ -12,14 +12,22 @@ namespace IndFusion.SemanticRag.Tests.Implementations;
 public class DocumentProcessingPipelineTests : IDisposable
 {
     private readonly ILogger<DocumentProcessingPipeline> _logger;
+    private readonly IOcrService _mockOcrService;
     private readonly DocumentProcessingPipeline _pipeline;
 
+    /// <summary>
+    /// Initializes a new instance of the DocumentProcessingPipelineTests class.
+    /// </summary>
     public DocumentProcessingPipelineTests()
     {
         _logger = Substitute.For<ILogger<DocumentProcessingPipeline>>();
-        _pipeline = new DocumentProcessingPipeline(_logger);
+        _mockOcrService = Substitute.For<IOcrService>();
+        _pipeline = new DocumentProcessingPipeline(_logger, _mockOcrService);
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync processes text documents successfully.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Process_Text_Document_Successfully()
     {
@@ -47,6 +55,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Metadata.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync detects C# code correctly.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Detect_CSharp_Code_Correctly()
     {
@@ -79,6 +90,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Content.ShouldContain("public class TestClass");
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync detects TypeScript code correctly.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Detect_TypeScript_Code_Correctly()
     {
@@ -111,6 +125,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Content.ShouldContain("interface TestInterface");
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync detects Python code correctly.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Detect_Python_Code_Correctly()
     {
@@ -140,6 +157,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Content.ShouldContain("def hello_world()");
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync detects Markdown correctly.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Detect_Markdown_Correctly()
     {
@@ -172,6 +192,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Content.ShouldContain("# Test Document");
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentsAsync processes multiple documents.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentsAsync_Should_Process_Multiple_Documents()
     {
@@ -196,6 +219,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         results.All(r => r.Status == ProcessingStatus.Success).ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that DetectDocumentTypeAsync detects document types by MIME type.
+    /// </summary>
     [Fact]
     public async Task DetectDocumentTypeAsync_Should_Detect_By_MimeType()
     {
@@ -221,6 +247,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         }
     }
 
+    /// <summary>
+    /// Verifies that DetectDocumentTypeAsync detects document types by file extension.
+    /// </summary>
     [Fact]
     public async Task DetectDocumentTypeAsync_Should_Detect_By_File_Extension()
     {
@@ -246,6 +275,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         }
     }
 
+    /// <summary>
+    /// Verifies that DetectDocumentTypeAsync detects document types by content analysis.
+    /// </summary>
     [Fact]
     public async Task DetectDocumentTypeAsync_Should_Detect_By_Content_Analysis()
     {
@@ -268,6 +300,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         }
     }
 
+    /// <summary>
+    /// Verifies that GetSupportedDocumentTypes returns all supported types.
+    /// </summary>
     [Fact]
     public void GetSupportedDocumentTypes_Should_Return_All_Supported_Types()
     {
@@ -286,6 +321,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         supportedTypes.ShouldContain(DocumentType.Text);
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync creates chunks with fixed size strategy.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Create_Chunks_With_Fixed_Size_Strategy()
     {
@@ -314,6 +352,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Chunks.All(c => !string.IsNullOrEmpty(c.Content)).ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync creates chunks with paragraph strategy.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Create_Chunks_With_Paragraph_Strategy()
     {
@@ -347,6 +388,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Chunks.All(c => c.DocumentId == input.Id).ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync handles cancellation.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Handle_Cancellation()
     {
@@ -366,6 +410,9 @@ public class DocumentProcessingPipelineTests : IDisposable
             _pipeline.ProcessDocumentAsync(input, options, cts.Token));
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync extracts metadata when enabled.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Extract_Metadata_When_Enabled()
     {
@@ -397,6 +444,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Metadata.ShouldContainKey("custom");
     }
 
+    /// <summary>
+    /// Verifies that ProcessDocumentAsync does not extract metadata when disabled.
+    /// </summary>
     [Fact]
     public async Task ProcessDocumentAsync_Should_Not_Extract_Metadata_When_Disabled()
     {
@@ -418,6 +468,9 @@ public class DocumentProcessingPipelineTests : IDisposable
         result.Metadata.ShouldBeNull();
     }
 
+    /// <summary>
+    /// Disposes of the test resources.
+    /// </summary>
     public void Dispose()
     {
         _pipeline?.Dispose();

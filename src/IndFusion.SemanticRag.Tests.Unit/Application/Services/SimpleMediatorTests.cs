@@ -51,28 +51,36 @@ public class SimpleMediatorTests
     }
 
     /// <summary>
-    /// Send_WithNullCommand_ShouldThrowArgumentNullException.
+    /// Send_WithNullCommand_ShouldReturnFailure.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
     [Fact]
-    public async Task Send_WithNullCommand_ShouldThrowArgumentNullException()
+    public async Task Send_WithNullCommand_ShouldReturnFailure()
     {
-        // Act & Assert
-        await Assert.ThrowsAsync<ArgumentNullException>(() => _mediator.Send<ProcessDocumentCommand>(null!, TestContext.Current.CancellationToken));
+        // Act
+        var result = await _mediator.Send<ProcessDocumentCommand>(null!, TestContext.Current.CancellationToken);
+
+        // Assert: SimpleMediator returns Result<T> instead of throwing exceptions (functional pattern)
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     /// <summary>
-    /// Send_WithNoHandler_ShouldThrowInvalidOperationException.
+    /// Send_WithNoHandler_ShouldReturnFailure.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
     [Fact]
-    public async Task Send_WithNoHandler_ShouldThrowInvalidOperationException()
+    public async Task Send_WithNoHandler_ShouldReturnFailure()
     {
         // Arrange
         var command = new ProcessDocumentCommand();
         _serviceProvider.GetService<ICommandHandler<ProcessDocumentCommand>>().Returns((ICommandHandler<ProcessDocumentCommand>?)null);
 
-        // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _mediator.Send(command, TestContext.Current.CancellationToken));
+        // Act
+        var result = await _mediator.Send(command, TestContext.Current.CancellationToken);
+
+        // Assert: SimpleMediator returns Result<T> instead of throwing exceptions (functional pattern)
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 }

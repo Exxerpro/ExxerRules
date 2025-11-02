@@ -6,12 +6,15 @@ using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
+using IndQuestResults;
+using IndQuestResults.Operations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using IndQuestResults;
+using static IndQuestResults.Operations.ResultExtensionsWithErrorCodes;
 
 namespace IndFusion.SemanticRag.Infrastructure.Adapters;
 
@@ -43,61 +46,85 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
     /// <inheritdoc />
     public async Task<Result<float[]>> GenerateEmbeddingAsync(string text, CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrWhiteSpace(text))
-            return Result<float[]>.WithFailure("Text cannot be null or empty");
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<float[]>(ErrorCodes.OperationCancelled);
+        }
 
-        var validation = ValidateTextLength(text);
-        if (validation.IsFailure)
-            return Result<float[]>.WithFailure(validation.Error!);
+        // Early validation to avoid NullReferenceException
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return Result<float[]>.WithFailure(ErrorCodes.ParameterNullOrWhitespace);
+        }
 
         try
         {
-            _logger.LogInformation("Generating embedding for text of length {TextLength}", text.Length);
-
-            var request = new
+            var validationResult = ValidateTextLength(text);
+            if (validationResult.IsFailure)
             {
-                model = _options.EmbeddingModel,
-                prompt = text
-            };
-
-            var json = JsonSerializer.Serialize(request);
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-            var response = await _httpClient.PostAsync($"{_options.BaseUrl}/api/embeddings", content, cancellationToken);
-            
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                _logger.LogError("Ollama API error: {StatusCode} - {ErrorContent}", response.StatusCode, errorContent);
-                return Result<float[]>.WithFailure($"Ollama API error: {response.StatusCode} - {errorContent}");
+                return Result<float[]>.WithFailure(validationResult.Errors);
             }
 
-            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            var embeddingResponse = JsonSerializer.Deserialize<OllamaEmbeddingResponse>(responseContent);
+            return await Task.FromResult(Result<string>.Success(text))
+                .ThenAsync(
+                    async textValue =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<float[]>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            if (embeddingResponse?.Embedding == null || embeddingResponse.Embedding.Length == 0)
-            {
-                _logger.LogError("Invalid embedding response from Ollama API");
-                return Result<float[]>.WithFailure("Invalid embedding response from Ollama API");
-            }
+                        _logger.LogInformation("Generating embedding for text of length {TextLength}", textValue.Length);
 
-            _logger.LogInformation("Successfully generated embedding with dimension {Dimension}", embeddingResponse.Embedding.Length);
-            return Result<float[]>.Success(embeddingResponse.Embedding);
-        }
-        catch (HttpRequestException ex)
-        {
-            _logger.LogError(ex, "HTTP request failed while generating embedding");
-            return Result<float[]>.WithFailure($"HTTP request failed: {ex.Message}");
+                        var request = new
+                        {
+                            model = _options.EmbeddingModel,
+                            prompt = textValue
+                        };
+
+                        var json = JsonSerializer.Serialize(request);
+                        var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                        var response = await _httpClient.PostAsync($"{_options.BaseUrl}/api/embeddings", content, cancellationToken);
+                        
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                            _logger.LogError("Ollama API error: {StatusCode} - {ErrorContent}", response.StatusCode, errorContent);
+                            return Result<float[]>.WithFailure(ErrorCodes.EmbeddingServiceError);
+                        }
+
+                        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                        var embeddingResponse = JsonSerializer.Deserialize<OllamaEmbeddingResponse>(responseContent);
+
+                        if (embeddingResponse?.Embedding == null || embeddingResponse.Embedding.Length == 0)
+                        {
+                            _logger.LogError("Invalid embedding response from Ollama API");
+                            return Result<float[]>.WithFailure(ErrorCodes.EmbeddingGenerationFailed);
+                        }
+
+                        _logger.LogInformation("Successfully generated embedding with dimension {Dimension}", embeddingResponse.Embedding.Length);
+                        return Result<float[]>.Success(embeddingResponse.Embedding);
+                    });
         }
         catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
         {
             _logger.LogError(ex, "Timeout while generating embedding");
-            return Result<float[]>.WithFailure("Timeout while generating embedding");
+            return WithFailure<float[]>(ErrorCodes.EmbeddingGenerationFailed, ex);
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<float[]>(ErrorCodes.OperationCancelled);
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "HTTP request failed while generating embedding");
+            return WithFailure<float[]>(ErrorCodes.EmbeddingServiceError, ex);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Unexpected error while generating embedding");
-            return Result<float[]>.WithFailure($"Unexpected error: {ex.Message}");
+            return WithFailure<float[]>(ErrorCodes.EmbeddingServiceError, ex);
         }
     }
 
@@ -106,53 +133,86 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
         IReadOnlyList<string> texts, 
         CancellationToken cancellationToken = default)
     {
+        // Early validation to avoid NullReferenceException
         if (texts == null || texts.Count == 0)
-            return Result<IReadOnlyList<float[]>>.WithFailure("Texts cannot be null or empty");
-
-        var results = new List<float[]>();
-        var errors = new List<string>();
-
-        // Process texts in parallel with concurrency limit
-        var semaphore = new SemaphoreSlim(10, 10); // Default concurrency limit
-        var tasks = texts.Select(async (text, index) =>
         {
-            await semaphore.WaitAsync(cancellationToken);
-            try
-            {
-                var result = await GenerateEmbeddingAsync(text, cancellationToken);
-                if (result.IsSuccess)
-                {
-                    lock (results)
-                    {
-                        if (result.Value != null)
-                        {
-                            results.Add(result.Value);
-                        }
-                    }
-                }
-                else
-                {
-                    lock (errors)
-                    {
-                        errors.Add($"Text {index}: {result.Error}");
-                    }
-                }
-            }
-            finally
-            {
-                semaphore.Release();
-            }
-        });
-
-        await Task.WhenAll(tasks);
-
-        if (errors.Count > 0)
-        {
-            _logger.LogWarning("Failed to generate {ErrorCount} embeddings out of {TotalCount}", errors.Count, texts.Count);
-            return Result<IReadOnlyList<float[]>>.WithFailure($"Failed to generate {errors.Count} embeddings: {string.Join("; ", errors)}");
+            return Result<IReadOnlyList<float[]>>.WithFailure(ErrorCodes.CollectionEmpty);
         }
 
-        return Result<IReadOnlyList<float[]>>.Success(results.AsReadOnly());
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<IReadOnlyList<float[]>>(ErrorCodes.OperationCancelled);
+        }
+
+        try
+        {
+            return await Task.FromResult(Result<IReadOnlyList<string>>.Success(texts)
+                .Ensure(
+                    ts => ts != null && ts.Count > 0,
+                    ErrorCodes.CollectionEmpty))
+                .ThenAsync(
+                    async textsList =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<IReadOnlyList<float[]>>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
+
+                        var results = new List<float[]>();
+                        var errors = new List<string>();
+
+                        // Process texts in parallel with concurrency limit
+                        var semaphore = new SemaphoreSlim(10, 10); // Default concurrency limit
+                        var tasks = textsList.Select(async (text, index) =>
+                        {
+                            await semaphore.WaitAsync(cancellationToken);
+                            try
+                            {
+                                var result = await GenerateEmbeddingAsync(text, cancellationToken);
+                                if (result.IsSuccess)
+                                {
+                                    lock (results)
+                                    {
+                                        if (result.Value != null)
+                                        {
+                                            results.Add(result.Value);
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    lock (errors)
+                                    {
+                                        errors.Add($"Text {index}: {result.Error}");
+                                    }
+                                }
+                            }
+                            finally
+                            {
+                                semaphore.Release();
+                            }
+                        });
+
+                        await Task.WhenAll(tasks);
+
+                        if (errors.Count > 0)
+                        {
+                            _logger.LogWarning("Failed to generate {ErrorCount} embeddings out of {TotalCount}", errors.Count, textsList.Count);
+                            return Result<IReadOnlyList<float[]>>.WithFailure(ErrorCodes.EmbeddingGenerationFailed);
+                        }
+
+                        return Result<IReadOnlyList<float[]>>.Success(results.AsReadOnly());
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<IReadOnlyList<float[]>>(ErrorCodes.OperationCancelled);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to generate embeddings");
+            return WithFailure<IReadOnlyList<float[]>>(ErrorCodes.EmbeddingGenerationFailed, ex);
+        }
     }
 
     /// <inheritdoc />
@@ -161,86 +221,128 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
         Dictionary<string, object> metadata, 
         CancellationToken cancellationToken = default)
     {
-        var embeddingResult = await GenerateEmbeddingAsync(text, cancellationToken);
-        if (embeddingResult.IsFailure)
-            return Result<VectorEmbedding>.WithFailure(embeddingResult.Error!);
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<VectorEmbedding>(ErrorCodes.OperationCancelled);
+        }
 
-        if (embeddingResult.Value == null)
-            return Result<VectorEmbedding>.WithFailure("Generated embedding is null");
+        try
+        {
+            return await GenerateEmbeddingAsync(text, cancellationToken)
+                .ThenAsync(
+                    async embedding =>
+                    {
+                        if (embedding == null)
+                        {
+                            return Result<VectorEmbedding>.WithFailure(ErrorCodes.VectorEmbeddingRequired);
+                        }
 
-        var vectorEmbedding = new VectorEmbedding(
-            Id: Guid.NewGuid().ToString(),
-            Content: text,
-            Embedding: embeddingResult.Value,
-            Metadata: metadata ?? new Dictionary<string, object>(),
-            CreatedAt: DateTimeOffset.UtcNow
-        );
+                        var vectorEmbedding = new VectorEmbedding(
+                            Id: Guid.NewGuid().ToString(),
+                            Content: text,
+                            Embedding: embedding,
+                            Metadata: metadata ?? new Dictionary<string, object>(),
+                            CreatedAt: DateTimeOffset.UtcNow
+                        );
 
-        return Result<VectorEmbedding>.Success(vectorEmbedding);
+                        return Result<VectorEmbedding>.Success(vectorEmbedding);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<VectorEmbedding>(ErrorCodes.OperationCancelled);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to generate embedding with metadata");
+            return WithFailure<VectorEmbedding>(ErrorCodes.EmbeddingGenerationFailed, ex);
+        }
     }
 
     /// <inheritdoc />
     public int GetEmbeddingDimension()
     {
-        return 1536; // Standard embedding dimension for most models
+        return _options.EmbeddingDimension;
     }
 
     /// <inheritdoc />
     public int GetMaxTextLength()
     {
-        return 8192; // Default max text length
+        return _options.MaxTextLength;
     }
 
     /// <inheritdoc />
     public Result ValidateTextLength(string text)
     {
-        if (string.IsNullOrWhiteSpace(text))
-            return Result.WithFailure("Text cannot be null or empty");
+        var result = Result<string>.Success(text)
+            .Ensure(
+                t => !string.IsNullOrWhiteSpace(t),
+                ErrorCodes.ParameterNullOrWhitespace)
+            .Ensure(
+                t => t.Length <= GetMaxTextLength(),
+                ErrorCodes.ValueOutOfRange);
 
-        const int maxLength = 8192;
-        if (text.Length > maxLength)
-            return Result.WithFailure($"Text length {text.Length} exceeds maximum allowed length {maxLength}");
-
-        return Result.Success();
+        return result.IsSuccess
+            ? Result.Success()
+            : Result.WithFailure(result.Errors);
     }
 
     /// <inheritdoc />
     public async Task<Result<EmbeddingModelInfo>> GetModelInfoAsync(CancellationToken cancellationToken = default)
     {
+        if (cancellationToken.IsCancellationRequested)
+        {
+            return Cancelled<EmbeddingModelInfo>(ErrorCodes.OperationCancelled);
+        }
+
         try
         {
-            var response = await _httpClient.GetAsync($"{_options.BaseUrl}/api/tags", cancellationToken);
-            
-            if (!response.IsSuccessStatusCode)
-            {
-                var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                _logger.LogError("Failed to get model info: {StatusCode} - {ErrorContent}", response.StatusCode, errorContent);
-                return Result<EmbeddingModelInfo>.WithFailure($"Failed to get model info: {response.StatusCode}");
-            }
+            return await Task.FromResult(Result<string>.Success(_options.BaseUrl))
+                .ThenAsync(
+                    async baseUrl =>
+                    {
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            return Result<EmbeddingModelInfo>.WithFailure(ErrorCodes.OperationCancelled);
+                        }
 
-            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-            var tagsResponse = JsonSerializer.Deserialize<OllamaTagsResponse>(responseContent);
+                        var response = await _httpClient.GetAsync($"{baseUrl}/api/tags", cancellationToken);
+                        
+                        if (!response.IsSuccessStatusCode)
+                        {
+                            var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                            _logger.LogError("Failed to get model info: {StatusCode} - {ErrorContent}", response.StatusCode, errorContent);
+                            return Result<EmbeddingModelInfo>.WithFailure(ErrorCodes.EmbeddingServiceError);
+                        }
 
-            var model = tagsResponse?.Models?.FirstOrDefault(m => m.Name.StartsWith(_options.EmbeddingModel));
-            if (model == null)
-            {
-                return Result<EmbeddingModelInfo>.WithFailure($"Model {_options.EmbeddingModel} not found");
-            }
+                        var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+                        var tagsResponse = JsonSerializer.Deserialize<OllamaTagsResponse>(responseContent);
 
-            var modelInfo = new EmbeddingModelInfo(
-                ModelName: model.Name,
-                Version: model.ModifiedAt.ToString("yyyy-MM-dd"),
-                Dimension: 1536,
-                MaxTextLength: 8192,
-                SupportedLanguages: new[] { "en" } // Ollama models typically support English
-            );
+                        var model = tagsResponse?.Models?.FirstOrDefault(m => m.Name.StartsWith(_options.EmbeddingModel));
+                        if (model == null)
+                        {
+                            return Result<EmbeddingModelInfo>.WithFailure(ErrorCodes.ModelNotFound);
+                        }
 
-            return Result<EmbeddingModelInfo>.Success(modelInfo);
+                        var modelInfo = new EmbeddingModelInfo(
+                            ModelName: model.Name,
+                            Version: model.ModifiedAt.ToString("yyyy-MM-dd"),
+                            Dimension: 1536,
+                            MaxTextLength: 8192,
+                            SupportedLanguages: new[] { "en" } // Ollama models typically support English
+                        );
+
+                        return Result<EmbeddingModelInfo>.Success(modelInfo);
+                    });
+        }
+        catch (OperationCanceledException)
+        {
+            return Cancelled<EmbeddingModelInfo>(ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting model info");
-            return Result<EmbeddingModelInfo>.WithFailure($"Error getting model info: {ex.Message}");
+            return WithFailure<EmbeddingModelInfo>(ErrorCodes.EmbeddingServiceError, ex);
         }
     }
 }

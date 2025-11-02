@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndQuestResults;
 
 namespace IndFusion.SemanticRag.Domain.Models;
@@ -51,10 +52,10 @@ public record KnowledgeNode(
     public Result Validate()
     {
         if (string.IsNullOrWhiteSpace(Id))
-            return Result.WithFailure("Node ID cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.KnowledgeNodeIdRequired);
 
         if (string.IsNullOrWhiteSpace(Label))
-            return Result.WithFailure("Node label cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.KnowledgeNodeLabelRequired);
 
         return Result.Success();
     }

@@ -18,11 +18,17 @@ public class IGraphQueryServiceTests
 {
     private readonly IGraphQueryService _mockGraphQueryService;
 
+    /// <summary>
+    /// Initializes a new instance of the IGraphQueryServiceTests class.
+    /// </summary>
     public IGraphQueryServiceTests()
     {
         _mockGraphQueryService = Substitute.For<IGraphQueryService>();
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync returns success for valid query.
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Return_Success_For_Valid_Query()
     {
@@ -51,6 +57,9 @@ public class IGraphQueryServiceTests
         result.Value.RecordCount.ShouldBe(1);
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync returns failure for invalid query.
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Return_Failure_For_Invalid_Query()
     {
@@ -69,6 +78,9 @@ public class IGraphQueryServiceTests
         result.Error.ShouldBe(expectedError);
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync handles cancellation token.
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Handle_Cancellation_Token()
     {
@@ -88,6 +100,9 @@ public class IGraphQueryServiceTests
         result.Error.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Verifies that GetNodesAsync returns success for valid node type.
+    /// </summary>
     [Fact]
     public async Task GetNodesAsync_Should_Return_Success_For_Valid_NodeType()
     {
@@ -113,6 +128,9 @@ public class IGraphQueryServiceTests
         result.Value[0].Type.ShouldBe("CodeNode");
     }
 
+    /// <summary>
+    /// Verifies that GetNodesAsync returns empty list for no matches.
+    /// </summary>
     [Fact]
     public async Task GetNodesAsync_Should_Return_Empty_List_For_No_Matches()
     {
@@ -132,6 +150,9 @@ public class IGraphQueryServiceTests
         result.Value.Count.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that GetRelationshipsAsync returns success for valid relationship type.
+    /// </summary>
     [Fact]
     public async Task GetRelationshipsAsync_Should_Return_Success_For_Valid_RelationshipType()
     {
@@ -157,6 +178,9 @@ public class IGraphQueryServiceTests
         result.Value[0].Type.ShouldBe("DEPENDS_ON");
     }
 
+    /// <summary>
+    /// Verifies that TraverseAsync returns success for valid traversal.
+    /// </summary>
     [Fact]
     public async Task TraverseAsync_Should_Return_Success_For_Valid_Traversal()
     {
@@ -187,12 +211,15 @@ public class IGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<GraphTraversalResult>(default);
         result.Value.TotalNodesVisited.ShouldBe(2);
         result.Value.TotalRelationshipsTraversed.ShouldBe(1);
         result.Value.MaxDepthReached.ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that FindShortestPathAsync returns success for existing path.
+    /// </summary>
     [Fact]
     public async Task FindShortestPathAsync_Should_Return_Success_For_Existing_Path()
     {
@@ -222,12 +249,15 @@ public class IGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
-        result.Value.Value.Length.ShouldBe(2);
+        result.Value.ShouldNotBe<GraphPath?>(default);
+        result.Value!.Value.Length.ShouldBe(2);
         result.Value.Value.StartNode.Id.ShouldBe("startNode");
         result.Value.Value.EndNode.Id.ShouldBe("endNode");
     }
 
+    /// <summary>
+    /// Verifies that FindShortestPathAsync returns null for no path.
+    /// </summary>
     [Fact]
     public async Task FindShortestPathAsync_Should_Return_Null_For_No_Path()
     {
@@ -247,6 +277,9 @@ public class IGraphQueryServiceTests
         result.Value.ShouldBeNull();
     }
 
+    /// <summary>
+    /// Verifies that GetStatisticsAsync returns success with valid statistics.
+    /// </summary>
     [Fact]
     public async Task GetStatisticsAsync_Should_Return_Success_With_Valid_Statistics()
     {
@@ -269,7 +302,7 @@ public class IGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<GraphStatistics>(default);
         result.Value.TotalNodes.ShouldBe(1000);
         result.Value.TotalRelationships.ShouldBe(2500);
         result.Value.AverageDegree.ShouldBe(5.0);
@@ -277,6 +310,9 @@ public class IGraphQueryServiceTests
         result.Value.ConnectedComponents.ShouldBe(5);
     }
 
+    /// <summary>
+    /// Verifies that ExecuteQueryAsync handles null parameters.
+    /// </summary>
     [Fact]
     public async Task ExecuteQueryAsync_Should_Handle_Null_Parameters()
     {
@@ -296,10 +332,13 @@ public class IGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<GraphQueryResult>(default);
         result.Value.RecordCount.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that GetNodesAsync handles null filters.
+    /// </summary>
     [Fact]
     public async Task GetNodesAsync_Should_Handle_Null_Filters()
     {
@@ -323,6 +362,9 @@ public class IGraphQueryServiceTests
         result.Value.Count.ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that GetRelationshipsAsync handles null filters.
+    /// </summary>
     [Fact]
     public async Task GetRelationshipsAsync_Should_Handle_Null_Filters()
     {
@@ -346,6 +388,9 @@ public class IGraphQueryServiceTests
         result.Value.Count.ShouldBe(2);
     }
 
+    /// <summary>
+    /// Verifies that TraverseAsync handles null relationship types.
+    /// </summary>
     [Fact]
     public async Task TraverseAsync_Should_Handle_Null_RelationshipTypes()
     {
@@ -371,11 +416,14 @@ public class IGraphQueryServiceTests
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
-        result.Value.ShouldNotBeNull();
+        result.Value.ShouldNotBe<GraphTraversalResult>(default);
         result.Value.TotalNodesVisited.ShouldBe(1);
         result.Value.TotalRelationshipsTraversed.ShouldBe(0);
     }
 
+    /// <summary>
+    /// Verifies that all methods respect cancellation token.
+    /// </summary>
     [Fact]
     public async Task All_Methods_Should_Respect_CancellationToken()
     {

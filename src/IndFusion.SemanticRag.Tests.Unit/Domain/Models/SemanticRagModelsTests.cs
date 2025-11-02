@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using IndFusion.SemanticRag.Domain.Models;
+using IndFusion.SemanticRag.Tests.Unit.Shared;
+using IndQuestResults;
 using Shouldly;
 using Xunit;
 
@@ -20,25 +22,26 @@ public class SemanticRagModelsTests
             var id = "doc-1";
             var title = "Test Document";
             var content = "This is a test document";
-            var metadata = new Dictionary<string, object>
-            {
-                ["type"] = "markdown",
-                ["source"] = "test-repo",
-                ["language"] = "en"
-            };
-            var createdAt = DateTime.UtcNow;
-            var updatedAt = DateTime.UtcNow;
 
-            // Act
-            var document = new SemanticDocument(id, title, content, metadata, createdAt, updatedAt);
+            // ✅ Use fluent builder from TestDataBuilders
+            var documentResult = TestDataBuilders.CreateValidSemanticDocument(
+                id: id,
+                title: title,
+                content: content);
+            documentResult.IsSuccess.ShouldBeTrue();
+            var document = documentResult.Value!; // Null-forgiving: IsSuccess guarantees non-null
 
             // Assert
             document.Id.ShouldBe(id);
             document.Title.ShouldBe(title);
             document.Content.ShouldBe(content);
-            document.Metadata.ShouldBe(metadata);
-            document.CreatedAt.ShouldBe(createdAt);
-            document.UpdatedAt.ShouldBe(updatedAt);
+            // Note: TestDataBuilders.CreateValidSemanticDocument creates metadata with ["source"] = "test"
+            document.Metadata.ShouldNotBeNull();
+            document.Metadata.ShouldContainKey("source");
+            document.Metadata["source"].ShouldBe("test");
+            // Note: CreatedAt/UpdatedAt are set by the builder, so we verify they are set
+            document.CreatedAt.ShouldBeGreaterThan(DateTime.MinValue);
+            document.UpdatedAt.ShouldBeGreaterThan(DateTime.MinValue);
         }
     }
 
@@ -54,8 +57,19 @@ public class SemanticRagModelsTests
             var description = "Software Engineer";
             var properties = new Dictionary<string, object> { ["age"] = 30 };
 
-            // Act
-            var entity = new KnowledgeEntity(id, name, type, description, properties);
+            // ✅ Use fluent builder from TestDataBuilders with custom properties
+            var entityResult = TestDataBuilders
+                .CreateValidKnowledgeEntity(id: id, name: name, type: type)
+                .Map(e => new KnowledgeEntity(
+                    e.Id,
+                    e.Name,
+                    e.Type,
+                    description,
+                    properties,
+                    0.9,
+                    DateTime.UtcNow));
+            entityResult.IsSuccess.ShouldBeTrue();
+            var entity = entityResult.Value!; // Null-forgiving: IsSuccess guarantees non-null
 
             // Assert
             entity.Id.ShouldBe(id);
@@ -79,8 +93,18 @@ public class SemanticRagModelsTests
             var properties = new Dictionary<string, object> { ["strength"] = "strong" };
             var createdAt = DateTimeOffset.UtcNow;
 
-            // Act
-            var relationship = new KnowledgeRelationship(id, fromNodeId, toNodeId, relationshipType, properties, createdAt);
+            // ✅ Use fluent builder from TestDataBuilders
+            var relationshipResult = TestDataBuilders
+                .CreateValidKnowledgeRelationship(id: id, fromNodeId: fromNodeId, toNodeId: toNodeId)
+                .Map(r => new KnowledgeRelationship(
+                    r.Id,
+                    r.FromNodeId,
+                    r.ToNodeId,
+                    relationshipType,
+                    properties,
+                    createdAt));
+            relationshipResult.IsSuccess.ShouldBeTrue();
+            var relationship = relationshipResult.Value!; // Null-forgiving: IsSuccess guarantees non-null
 
             // Assert
             relationship.Id.ShouldBe(id);
@@ -105,7 +129,13 @@ public class SemanticRagModelsTests
                 new("item-1", "Content 1", 0.9, new Dictionary<string, object>(), "source-1"),
                 new("item-2", "Content 2", 0.8, new Dictionary<string, object>(), "source-2")
             };
-            var document = new SemanticDocument("doc-1", "Test Doc", "Content", new Dictionary<string, object>(), DateTime.UtcNow, DateTime.UtcNow);
+            // ✅ Use fluent builder from TestDataBuilders
+            var documentResult = TestDataBuilders.CreateValidSemanticDocument(
+                id: "doc-1",
+                title: "Test Doc",
+                content: "Content");
+            documentResult.IsSuccess.ShouldBeTrue();
+            var document = documentResult.Value;
             var totalCount = 2L;
             var queryTime = TimeSpan.FromMilliseconds(100);
             var metadata = new Dictionary<string, object> { ["search_type"] = "semantic" };
@@ -139,11 +169,11 @@ public class SemanticRagModelsTests
             };
             var entities = new List<KnowledgeEntity>
             {
-                new("entity-1", "Entity 1", "Person", "Description", new Dictionary<string, object>())
+                new("entity-1", "Entity 1", "Person", "Description", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
             };
             var relationships = new List<EntityRelationship>
             {
-                new("rel-1", "entity-1", "entity-2", "RELATES_TO", new Dictionary<string, object>())
+                new("rel-1", "entity-1", "entity-2", "RELATES_TO", 0.9, new Dictionary<string, object>())
             };
             var properties = new Dictionary<string, object> { ["context_type"] = "test" };
             var createdAt = DateTime.UtcNow;

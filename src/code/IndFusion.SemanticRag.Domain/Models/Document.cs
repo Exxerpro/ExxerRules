@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndQuestResults;
 
 namespace IndFusion.SemanticRag.Domain.Models;
@@ -79,19 +80,22 @@ public record Document(
     public Result Validate()
     {
         if (string.IsNullOrWhiteSpace(Id))
-            return Result.WithFailure("Document ID cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.DocumentIdRequired);
 
         if (string.IsNullOrWhiteSpace(Content))
-            return Result.WithFailure("Document content cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.DocumentContentRequired);
 
         if (string.IsNullOrWhiteSpace(SourcePath))
-            return Result.WithFailure("Document source path cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.DocumentSourcePathRequired);
 
         if (string.IsNullOrWhiteSpace(Repository))
-            return Result.WithFailure("Document repository cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.DocumentRepositoryRequired);
 
         if (string.IsNullOrWhiteSpace(CommitHash))
-            return Result.WithFailure("Document commit hash cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.DocumentCommitHashRequired);
+
+        if (Metadata == null)
+            return Result.WithFailure(ErrorCodes.DocumentMetadataRequired);
 
         return Result.Success();
     }

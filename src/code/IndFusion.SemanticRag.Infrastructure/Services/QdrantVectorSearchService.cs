@@ -1,4 +1,5 @@
 using IndFusion.SemanticRag.Application.Interfaces;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Domain.ValueObjects;
@@ -53,7 +54,7 @@ public class QdrantVectorSearchService : IVectorSearchService
             if (collectionInfoResult.IsFailure)
             {
                 _logger.LogError("Failed to get collection info: {Error}", collectionInfoResult.Error);
-                return collectionInfoResult.ToResult();
+                return Result.WithFailure(collectionInfoResult.Error ?? ErrorCodes.VectorDatabaseError);
             }
 
             if (collectionInfoResult.Value == null)
@@ -408,6 +409,7 @@ public class QdrantVectorSearchService : IVectorSearchService
 
             // Build filter from options
             Filter? filter = null;
+            Dictionary<string, object>? domainFilter = null;
             if (options.Filters != null && options.Filters.Count > 0)
             {
                 var conditions = new List<Condition>();
@@ -792,7 +794,7 @@ public class QdrantVectorSearchService : IVectorSearchService
             if (collectionInfoResult.IsFailure)
             {
                 _logger.LogError("Failed to get collection info: {Error}", collectionInfoResult.Error);
-                return collectionInfoResult.ToResult();
+                return Result.WithFailure(collectionInfoResult.Error ?? ErrorCodes.VectorDatabaseError);
             }
 
             if (collectionInfoResult.Value == null)

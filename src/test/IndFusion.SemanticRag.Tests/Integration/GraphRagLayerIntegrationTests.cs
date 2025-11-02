@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using IndFusion.SemanticRag.Application.Services;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Domain.Services;
 using IndQuestResults;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -23,12 +24,19 @@ public class GraphRagLayerIntegrationTests : IClassFixture<IntegrationTestFixtur
     private readonly IntegrationTestFixture _fixture;
     private readonly IServiceProvider _serviceProvider;
 
+    /// <summary>
+    /// Initializes a new instance of the GraphRagLayerIntegrationTests class.
+    /// </summary>
+    /// <param name="fixture">The integration test fixture.</param>
     public GraphRagLayerIntegrationTests(IntegrationTestFixture fixture)
     {
         _fixture = fixture;
         _serviceProvider = _fixture.ServiceProvider;
     }
 
+    /// <summary>
+    /// Verifies that the full workflow completes successfully.
+    /// </summary>
     [Fact]
     public async Task Full_Workflow_Should_Complete_Successfully()
     {
@@ -56,7 +64,7 @@ public class UserService
         // Act & Assert - Step 1: Analyze code for patterns
         var analysisResult = await patternSuggestService.AnalyzePatternAsync(testCode, "Repository Pattern", CancellationToken.None);
         analysisResult.IsSuccess.ShouldBeTrue();
-        analysisResult.Value.ShouldNotBeNull();
+        analysisResult.Value.ShouldNotBe<PatternAnalysis>(default);
         analysisResult.Value.PatternType.ShouldBe("Repository Pattern");
 
         // Step 2: Get pattern suggestions
@@ -87,7 +95,7 @@ public class UserService
 
         var graphQueryResult = await patternGraphQueryService.QueryPatternGraphAsync(patternGraphQuery, CancellationToken.None);
         graphQueryResult.IsSuccess.ShouldBeTrue();
-        graphQueryResult.Value.ShouldNotBeNull();
+        graphQueryResult.Value.ShouldNotBe<PatternGraphResult>(default);
 
         // Step 5: Find pattern relationships
         var relationshipsResult = await patternGraphQueryService.FindPatternRelationshipsAsync("repository-pattern", 2, CancellationToken.None);
@@ -102,13 +110,13 @@ public class UserService
         // Step 7: Get pattern usage statistics
         var statsResult = await patternGraphQueryService.GetPatternUsageStatisticsAsync("repository-pattern", CancellationToken.None);
         statsResult.IsSuccess.ShouldBeTrue();
-        statsResult.Value.ShouldNotBeNull();
+        statsResult.Value.ShouldNotBe<PatternUsageStatistics>(default);
 
         // Step 8: Execute graph query
         var graphQuery = "MATCH (n:CodeNode) WHERE n.type = 'Class' RETURN n LIMIT 5";
         var executeQueryResult = await graphQueryService.ExecuteQueryAsync(graphQuery, null, CancellationToken.None);
         executeQueryResult.IsSuccess.ShouldBeTrue();
-        executeQueryResult.Value.ShouldNotBeNull();
+        executeQueryResult.Value.ShouldNotBe<GraphQueryResult>(default);
 
         // Step 9: Get nodes by type
         var nodesResult = await graphQueryService.GetNodesAsync("CodeNode", null, CancellationToken.None);
@@ -123,7 +131,7 @@ public class UserService
         // Step 11: Traverse graph
         var traverseResult = await graphQueryService.TraverseAsync("user-service-node", 3, new List<string> { "DEPENDS_ON" }, CancellationToken.None);
         traverseResult.IsSuccess.ShouldBeTrue();
-        traverseResult.Value.ShouldNotBeNull();
+        traverseResult.Value.ShouldNotBe<GraphTraversalResult>(default);
 
         // Step 12: Find shortest path
         var shortestPathResult = await graphQueryService.FindShortestPathAsync("user-service-node", "user-repository-node", 5, CancellationToken.None);
@@ -133,9 +141,12 @@ public class UserService
         // Step 13: Get graph statistics
         var statisticsResult = await graphQueryService.GetStatisticsAsync(CancellationToken.None);
         statisticsResult.IsSuccess.ShouldBeTrue();
-        statisticsResult.Value.ShouldNotBeNull();
+        statisticsResult.Value.ShouldNotBe<GraphStatistics>(default);
     }
 
+    /// <summary>
+    /// Verifies that the pattern suggestion workflow handles complex code.
+    /// </summary>
     [Fact]
     public async Task Pattern_Suggestion_Workflow_Should_Handle_Complex_Code()
     {
@@ -169,7 +180,7 @@ namespace MyApp.Services
         {
             try
             {
-                _logger.LogInformation("Creating order for customer {CustomerId}", request.CustomerId);
+                _logger.LogInformation(""Creating order for customer {CustomerId}"", request.CustomerId);
                 
                 var order = new Order
                 {
@@ -183,13 +194,13 @@ namespace MyApp.Services
                 
                 await _emailService.SendOrderConfirmationAsync(order);
                 
-                _logger.LogInformation("Order {OrderId} created successfully", order.Id);
+                _logger.LogInformation(""Order {OrderId} created successfully"", order.Id);
                 
                 return order;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Failed to create order for customer {CustomerId}", request.CustomerId);
+                _logger.LogError(ex, ""Failed to create order for customer {CustomerId}"", request.CustomerId);
                 throw;
             }
         }
@@ -237,6 +248,9 @@ namespace MyApp.Services
         categoriesResult.Value.Count.ShouldBeGreaterThan(0);
     }
 
+    /// <summary>
+    /// Verifies that the graph query workflow handles complex queries.
+    /// </summary>
     [Fact]
     public async Task Graph_Query_Workflow_Should_Handle_Complex_Queries()
     {
@@ -254,7 +268,7 @@ LIMIT 10";
 
         var queryResult = await graphQueryService.ExecuteQueryAsync(complexQuery, null, CancellationToken.None);
         queryResult.IsSuccess.ShouldBeTrue();
-        queryResult.Value.ShouldNotBeNull();
+        queryResult.Value.ShouldNotBe(default(GraphQueryResult));
 
         // Query with parameters
         var parameterizedQuery = "MATCH (n:CodeNode) WHERE n.language = $language AND n.type = $type RETURN n";
@@ -266,7 +280,7 @@ LIMIT 10";
 
         var parameterizedResult = await graphQueryService.ExecuteQueryAsync(parameterizedQuery, parameters, CancellationToken.None);
         parameterizedResult.IsSuccess.ShouldBeTrue();
-        parameterizedResult.Value.ShouldNotBeNull();
+        parameterizedResult.Value.ShouldNotBe(default(GraphQueryResult));
 
         // Complex pattern graph query
         var patternGraphQuery = new PatternGraphQuery(
@@ -282,7 +296,7 @@ ORDER BY r.strength DESC",
 
         var patternGraphResult = await patternGraphQueryService.QueryPatternGraphAsync(patternGraphQuery, CancellationToken.None);
         patternGraphResult.IsSuccess.ShouldBeTrue();
-        patternGraphResult.Value.ShouldNotBeNull();
+        patternGraphResult.Value.ShouldNotBe<PatternGraphResult>(default);
 
         // Find anti-patterns
         var antiPatternsResult = await patternGraphQueryService.FindAntiPatternsAsync("Performance", PatternSeverity.Warning, CancellationToken.None);
@@ -295,6 +309,9 @@ ORDER BY r.strength DESC",
         evolutionResult.Value.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Verifies that the error handling workflow handles failures gracefully.
+    /// </summary>
     [Fact]
     public async Task Error_Handling_Workflow_Should_Handle_Failures_Gracefully()
     {
@@ -336,6 +353,9 @@ ORDER BY r.strength DESC",
         negativeDepthResult.Error.ShouldContain("Max depth cannot be negative");
     }
 
+    /// <summary>
+    /// Verifies that the cancellation workflow handles cancellation gracefully.
+    /// </summary>
     [Fact]
     public async Task Cancellation_Workflow_Should_Handle_Cancellation_Gracefully()
     {
@@ -362,6 +382,9 @@ ORDER BY r.strength DESC",
         cancelledGraphQueryResult.Error.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Verifies that the performance workflow completes within reasonable time.
+    /// </summary>
     [Fact]
     public async Task Performance_Workflow_Should_Complete_Within_Reasonable_Time()
     {
@@ -404,8 +427,14 @@ ORDER BY r.strength DESC",
 /// </summary>
 public class IntegrationTestFixture : IDisposable
 {
+    /// <summary>
+    /// Gets the service provider.
+    /// </summary>
     public IServiceProvider ServiceProvider { get; }
 
+    /// <summary>
+    /// Initializes a new instance of the IntegrationTestFixture class.
+    /// </summary>
     public IntegrationTestFixture()
     {
         var services = new ServiceCollection();
@@ -434,9 +463,8 @@ public class IntegrationTestFixture : IDisposable
             {
                 new(
                     Id: "test-node",
-                    Type: "CodeNode",
+                    Label: "CodeNode",
                     Properties: new Dictionary<string, object> { ["name"] = "TestNode" },
-                    Labels: new List<string> { "CodeNode" },
                     CreatedAt: DateTimeOffset.UtcNow,
                     UpdatedAt: DateTimeOffset.UtcNow)
             }));
@@ -451,6 +479,9 @@ public class IntegrationTestFixture : IDisposable
             .Returns(Result<int>.Success(2500));
     }
 
+    /// <summary>
+    /// Disposes the integration test fixture.
+    /// </summary>
     public void Dispose()
     {
         if (ServiceProvider is IDisposable disposable)

@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndQuestResults;
+using IndQuestResults.Operations;
 using Microsoft.Extensions.Logging;
 using Qdrant.Client;
+using QdrantCollectionInfo = Qdrant.Client.Grpc.CollectionInfo;
 using Qdrant.Client.Grpc;
+using static IndQuestResults.Operations.ResultExtensionsWithErrorCodes;
 using static Qdrant.Client.Grpc.Conditions;
 
 namespace IndFusion.SemanticRag.Infrastructure.Adapters;
@@ -34,45 +38,67 @@ public class QdrantVectorDatabaseAdapter : IVectorDatabasePort
 	}
 
 	/// <inheritdoc />
-	public async Task<Result<CollectionInfo?>> GetCollectionInfoAsync(
+	public async Task<Result<Domain.Ports.CollectionInfo?>> GetCollectionInfoAsync(
 		string collectionName,
 		CancellationToken cancellationToken = default)
 	{
+		// Early validation to avoid NullReferenceException
+		if (string.IsNullOrWhiteSpace(collectionName))
+		{
+			return Result<Domain.Ports.CollectionInfo?>.WithFailure(ErrorCodes.ParameterNullOrWhitespace);
+		}
+
+		if (cancellationToken.IsCancellationRequested)
+		{
+			return Cancelled<Domain.Ports.CollectionInfo?>(ErrorCodes.OperationCancelled);
+		}
+
 		try
 		{
-			if (string.IsNullOrWhiteSpace(collectionName))
-			{
-				return Result<CollectionInfo?>.WithFailure("Collection name cannot be null or empty");
-			}
+			return await Task.FromResult(Result<string>.Success(collectionName)
+				.Ensure(
+					name => !string.IsNullOrWhiteSpace(name),
+					ErrorCodes.ParameterNullOrWhitespace))
+				.ThenAsync(
+					async name =>
+					{
+						if (cancellationToken.IsCancellationRequested)
+						{
+							return Result<Domain.Ports.CollectionInfo?>.WithFailure(ErrorCodes.OperationCancelled);
+						}
 
-			_logger.LogInformation("Getting collection info for: {CollectionName}", collectionName);
+						_logger.LogInformation("Getting collection info for: {CollectionName}", name);
+						var qdrantCollectionInfo = await _client.GetCollectionInfoAsync(name, cancellationToken);
+						
+						if (qdrantCollectionInfo == null)
+						{
+							_logger.LogInformation("Collection not found: {CollectionName}", name);
+							return Result<Domain.Ports.CollectionInfo?>.Success(null);
+						}
 
-			var qdrantCollectionInfo = await _client.GetCollectionInfoAsync(collectionName, cancellationToken);
-			
-			if (qdrantCollectionInfo == null)
-			{
-				_logger.LogInformation("Collection not found: {CollectionName}", collectionName);
-				return Result<CollectionInfo?>.Success(null);
-			}
+						// Map Qdrant collection info to domain CollectionInfo
+						var vectorSize = qdrantCollectionInfo.Config?.Params?.VectorsConfig?.Params?.Size ?? 0U;
+						var distance = MapDistance(qdrantCollectionInfo.Config?.Params?.VectorsConfig?.Params?.Distance);
+						var pointsCount = (long)qdrantCollectionInfo.PointsCount;
 
-			// Map Qdrant collection info to domain CollectionInfo
-			var vectorSize = qdrantCollectionInfo.Config?.Params?.VectorsConfig?.Params?.Size ?? 0;
-			var distance = MapDistance(qdrantCollectionInfo.Config?.Params?.VectorsConfig?.Params?.Distance);
-			var pointsCount = (long)(qdrantCollectionInfo.PointsCount ?? 0);
+						var collectionInfo = new Domain.Ports.CollectionInfo(
+							CollectionName: name,
+							VectorSize: (uint)vectorSize,
+							Distance: distance,
+							PointsCount: pointsCount);
 
-			var collectionInfo = new CollectionInfo(
-				CollectionName: collectionName,
-				VectorSize: vectorSize,
-				Distance: distance,
-				PointsCount: pointsCount);
-
-			_logger.LogInformation("Successfully retrieved collection info for: {CollectionName}", collectionName);
-			return Result<CollectionInfo?>.Success(collectionInfo);
+						_logger.LogInformation("Successfully retrieved collection info for: {CollectionName}", name);
+						return Result<Domain.Ports.CollectionInfo?>.Success(collectionInfo);
+					});
+		}
+		catch (OperationCanceledException)
+		{
+			return Cancelled<Domain.Ports.CollectionInfo?>(ErrorCodes.OperationCancelled);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Failed to get collection info for: {CollectionName}", collectionName);
-			return Result<CollectionInfo?>.WithFailure($"Failed to get collection info: {ex.Message}");
+			return WithFailure<Domain.Ports.CollectionInfo?>(ErrorCodes.VectorDatabaseError, ex);
 		}
 	}
 
@@ -83,36 +109,57 @@ public class QdrantVectorDatabaseAdapter : IVectorDatabasePort
 		VectorDistance distance,
 		CancellationToken cancellationToken = default)
 	{
+		// Early validation to avoid NullReferenceException
+		if (string.IsNullOrWhiteSpace(collectionName))
+		{
+			return Result.WithFailure(ErrorCodes.ParameterNullOrWhitespace);
+		}
+
+		if (cancellationToken.IsCancellationRequested)
+		{
+			return Result.WithFailure(ErrorCodes.OperationCancelled);
+		}
+
 		try
 		{
-			if (string.IsNullOrWhiteSpace(collectionName))
-			{
-				return Result.WithFailure("Collection name cannot be null or empty");
-			}
+			return await Task.FromResult(Result<string>.Success(collectionName)
+				.Ensure(
+					name => !string.IsNullOrWhiteSpace(name),
+					ErrorCodes.ParameterNullOrWhitespace)
+				.Ensure(
+					_ => vectorSize > 0,
+					ErrorCodes.ValueOutOfRange))
+				.ThenAsync<string, Result>(
+					async name =>
+					{
+						if (cancellationToken.IsCancellationRequested)
+						{
+							return Result.WithFailure(ErrorCodes.OperationCancelled);
+						}
 
-			if (vectorSize == 0)
-			{
-				return Result.WithFailure("Vector size must be greater than zero");
-			}
+						_logger.LogInformation("Creating collection: {CollectionName} with vector size: {VectorSize}", name, vectorSize);
 
-			_logger.LogInformation("Creating collection: {CollectionName} with vector size: {VectorSize}", collectionName, vectorSize);
+						var qdrantDistance = MapToQdrantDistance(distance);
+						var vectorParams = new VectorParams
+						{
+							Size = vectorSize,
+							Distance = qdrantDistance
+						};
 
-			var qdrantDistance = MapToQdrantDistance(distance);
-			var vectorParams = new VectorParams
-			{
-				Size = vectorSize,
-				Distance = qdrantDistance
-			};
+						await _client.CreateCollectionAsync(name, vectorParams, cancellationToken: cancellationToken);
 
-			await _client.CreateCollectionAsync(collectionName, vectorParams, cancellationToken);
-
-			_logger.LogInformation("Successfully created collection: {CollectionName}", collectionName);
-			return Result.Success();
+						_logger.LogInformation("Successfully created collection: {CollectionName}", name);
+						return Result.Success();
+					});
+		}
+		catch (OperationCanceledException)
+		{
+			return Result.WithFailure(ErrorCodes.OperationCancelled);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Failed to create collection: {CollectionName}", collectionName);
-			return Result.WithFailure($"Failed to create collection: {ex.Message}");
+			return Result.WithFailure(ErrorCodes.VectorDatabaseError);
 		}
 	}
 
@@ -125,78 +172,99 @@ public class QdrantVectorDatabaseAdapter : IVectorDatabasePort
 		Dictionary<string, object>? filter = null,
 		CancellationToken cancellationToken = default)
 	{
+		// Early validation to avoid NullReferenceException in fluent chain
+		if (queryVector == null)
+		{
+			return Result<IReadOnlyList<VectorSearchHit>>.WithFailure(ErrorCodes.VectorContentRequired);
+		}
+
+		if (cancellationToken.IsCancellationRequested)
+		{
+			return Cancelled<IReadOnlyList<VectorSearchHit>>(ErrorCodes.OperationCancelled);
+		}
+
 		try
 		{
-			if (string.IsNullOrWhiteSpace(collectionName))
-			{
-				return Result<IReadOnlyList<VectorSearchHit>>.WithFailure("Collection name cannot be null or empty");
-			}
-
-			if (queryVector == null || queryVector.Length == 0)
-			{
-				return Result<IReadOnlyList<VectorSearchHit>>.WithFailure("Query vector cannot be null or empty");
-			}
-
-			_logger.LogInformation("Searching collection: {CollectionName} with limit: {Limit}", collectionName, limit);
-
-			// Build Qdrant filter from domain filter
-			Filter? qdrantFilter = null;
-			if (filter != null && filter.Count > 0)
-			{
-				qdrantFilter = BuildQdrantFilter(filter);
-			}
-
-			var searchResults = await _client.SearchAsync(
-				collectionName: collectionName,
-				vector: queryVector,
-				filter: qdrantFilter,
-				limit: limit,
-				cancellationToken: cancellationToken);
-
-			var hits = new List<VectorSearchHit>();
-			foreach (var point in searchResults)
-			{
-				var score = (float)point.Score;
-
-				// Apply score threshold if provided
-				if (scoreThreshold.HasValue && score < scoreThreshold.Value)
-				{
-					continue;
-				}
-
-				// Extract payload
-				var payload = new Dictionary<string, object>();
-				if (point.Payload != null)
-				{
-					foreach (var kvp in point.Payload)
+			return await Task.FromResult(Result<(string collectionName, float[] queryVector)>.Success((collectionName, queryVector))
+				.Ensure(
+					args => !string.IsNullOrWhiteSpace(args.collectionName),
+					ErrorCodes.ParameterNullOrWhitespace)
+				.Ensure(
+					args => args.queryVector is not null && args.queryVector.Length > 0,
+					ErrorCodes.VectorContentRequired))
+				.ThenAsync(
+					async args =>
 					{
-						payload[kvp.Key] = kvp.Value.ToString() ?? string.Empty;
-					}
-				}
+						if (cancellationToken.IsCancellationRequested)
+						{
+							return Result<IReadOnlyList<VectorSearchHit>>.WithFailure(ErrorCodes.OperationCancelled);
+						}
 
-				// Extract vector if present
-				float[]? vector = null;
-				if (point.Vectors != null && point.Vectors.Vector != null && point.Vectors.Vector.Data != null)
-				{
-					vector = point.Vectors.Vector.Data.ToArray();
-				}
+						_logger.LogInformation("Searching collection: {CollectionName} with limit: {Limit}", args.collectionName, limit);
 
-				var hit = new VectorSearchHit(
-					PointId: point.Id.Num,
-					Score: score,
-					Payload: payload.Count > 0 ? payload : null,
-					Vector: vector);
+						// Build Qdrant filter from domain filter
+						Filter? qdrantFilter = null;
+						if (filter != null && filter.Count > 0)
+						{
+							qdrantFilter = BuildQdrantFilter(filter);
+						}
 
-				hits.Add(hit);
-			}
+						var searchResults = await _client.SearchAsync(
+							collectionName: args.collectionName,
+							vector: args.queryVector,
+							filter: qdrantFilter,
+							limit: limit,
+							cancellationToken: cancellationToken);
 
-			_logger.LogInformation("Search completed: {Count} results found", hits.Count);
-			return Result<IReadOnlyList<VectorSearchHit>>.Success(hits.AsReadOnly());
+						var hits = new List<VectorSearchHit>();
+						foreach (var point in searchResults)
+						{
+							var score = (float)point.Score;
+
+							// Apply score threshold if provided
+							if (scoreThreshold.HasValue && score < scoreThreshold.Value)
+							{
+								continue;
+							}
+
+							// Extract payload
+							var payload = new Dictionary<string, object>();
+							if (point.Payload != null)
+							{
+								foreach (var kvp in point.Payload)
+								{
+									payload[kvp.Key] = kvp.Value.ToString() ?? string.Empty;
+								}
+							}
+
+							// Extract vector if present
+							float[]? vector = null;
+							if (point.Vectors != null && point.Vectors.Vector != null && point.Vectors.Vector.Data != null)
+							{
+								vector = point.Vectors.Vector.Data.ToArray();
+							}
+
+							var hit = new VectorSearchHit(
+								PointId: point.Id.Num,
+								Score: score,
+								Payload: payload.Count > 0 ? payload : null,
+								Vector: vector);
+
+							hits.Add(hit);
+						}
+
+						_logger.LogInformation("Search completed: {Count} results found", hits.Count);
+						return Result<IReadOnlyList<VectorSearchHit>>.Success(hits.AsReadOnly());
+					});
+		}
+		catch (OperationCanceledException)
+		{
+			return Cancelled<IReadOnlyList<VectorSearchHit>>(ErrorCodes.OperationCancelled);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Failed to search collection: {CollectionName}", collectionName);
-			return Result<IReadOnlyList<VectorSearchHit>>.WithFailure($"Failed to search collection: {ex.Message}");
+			return WithFailure<IReadOnlyList<VectorSearchHit>>(ErrorCodes.VectorSearchFailed, ex);
 		}
 	}
 
@@ -206,50 +274,71 @@ public class QdrantVectorDatabaseAdapter : IVectorDatabasePort
 		IReadOnlyList<QdrantPoint> points,
 		CancellationToken cancellationToken = default)
 	{
+		if (cancellationToken.IsCancellationRequested)
+		{
+			return Result.WithFailure(ErrorCodes.OperationCancelled);
+		}
+
+		// Early validation to avoid NullReferenceException in fluent chain
+		if (points == null || points.Count == 0)
+		{
+			return Result.WithFailure(ErrorCodes.CollectionEmpty);
+		}
+
 		try
 		{
-			if (string.IsNullOrWhiteSpace(collectionName))
-			{
-				return Result.WithFailure("Collection name cannot be null or empty");
-			}
-
-			if (points == null || points.Count == 0)
-			{
-				return Result.WithFailure("Points cannot be null or empty");
-			}
-
-			_logger.LogInformation("Upserting {Count} points to collection: {CollectionName}", points.Count, collectionName);
-
-			var qdrantPoints = new List<PointStruct>();
-			foreach (var point in points)
-			{
-				var qdrantPoint = new PointStruct
-				{
-					Id = point.Id,
-					Vectors = point.Vector
-				};
-
-				// Convert payload to Qdrant Value format
-				if (point.Payload != null)
-				{
-					foreach (var kvp in point.Payload)
+			return await Task.FromResult(Result<(string collectionName, IReadOnlyList<QdrantPoint> points)>.Success((collectionName, points))
+				.Ensure(
+					args => !string.IsNullOrWhiteSpace(args.collectionName),
+					ErrorCodes.ParameterNullOrWhitespace)
+				.Ensure(
+					args => args.points != null && args.points.Count > 0,
+					ErrorCodes.CollectionEmpty))
+				.ThenAsync<(string collectionName, IReadOnlyList<QdrantPoint> points), Result>(
+					async args =>
 					{
-						qdrantPoint.Payload[kvp.Key] = ConvertToValue(kvp.Value);
-					}
-				}
+						if (cancellationToken.IsCancellationRequested)
+						{
+							return Result.WithFailure(ErrorCodes.OperationCancelled);
+						}
 
-				qdrantPoints.Add(qdrantPoint);
-			}
+						_logger.LogInformation("Upserting {Count} points to collection: {CollectionName}", args.points.Count, args.collectionName);
 
-			await _client.UpsertAsync(collectionName, qdrantPoints, cancellationToken);
+						var qdrantPoints = new List<PointStruct>();
+						foreach (var point in args.points)
+						{
+							var qdrantPoint = new PointStruct
+							{
+								Id = point.Id,
+								Vectors = point.Vector
+							};
 
-			_logger.LogInformation("Successfully upserted {Count} points to collection: {CollectionName}", points.Count, collectionName);
-			return Result.Success();
+							// Convert payload to Qdrant Value format
+							if (point.Payload != null)
+							{
+								foreach (var kvp in point.Payload)
+								{
+									qdrantPoint.Payload[kvp.Key] = ConvertToValue(kvp.Value);
+								}
+							}
+
+							qdrantPoints.Add(qdrantPoint);
+						}
+
+						await _client.UpsertAsync(args.collectionName, qdrantPoints, cancellationToken: cancellationToken);
+
+						_logger.LogInformation("Successfully upserted {Count} points to collection: {CollectionName}", args.points.Count, args.collectionName);
+						return Result.Success();
+					});
+		}
+		catch (OperationCanceledException)
+		{
+			return Result.WithFailure(ErrorCodes.OperationCancelled);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Failed to upsert points to collection: {CollectionName}", collectionName);
-			return Result.WithFailure($"Failed to upsert points: {ex.Message}");
+			return Result.WithFailure(ErrorCodes.VectorDatabaseError);
 		}
 	}
 
@@ -260,39 +349,70 @@ public class QdrantVectorDatabaseAdapter : IVectorDatabasePort
 		Dictionary<string, object>? filter = null,
 		CancellationToken cancellationToken = default)
 	{
+		// Early validation to avoid NullReferenceException
+		if (string.IsNullOrWhiteSpace(collectionName))
+		{
+			return Result.WithFailure(ErrorCodes.ParameterNullOrWhitespace);
+		}
+
+		if (cancellationToken.IsCancellationRequested)
+		{
+			return Result.WithFailure(ErrorCodes.OperationCancelled);
+		}
+
+		// Early validation: either pointIds or filter must be provided
+		var hasPointIds = pointIds != null && pointIds.Count > 0;
+		var hasFilter = filter != null && filter.Count > 0;
+		if (!hasPointIds && !hasFilter)
+		{
+			return Result.WithFailure(ErrorCodes.ParameterNull);
+		}
+
 		try
 		{
-			if (string.IsNullOrWhiteSpace(collectionName))
-			{
-				return Result.WithFailure("Collection name cannot be null or empty");
-			}
+			return await Task.FromResult(Result<string>.Success(collectionName)
+				.Ensure(
+					name => !string.IsNullOrWhiteSpace(name),
+					ErrorCodes.ParameterNullOrWhitespace))
+				.ThenAsync<string, Result>(
+					async name =>
+					{
+						if (cancellationToken.IsCancellationRequested)
+						{
+							return Result.WithFailure(ErrorCodes.OperationCancelled);
+						}
 
-			_logger.LogInformation("Deleting points from collection: {CollectionName}", collectionName);
+						_logger.LogInformation("Deleting points from collection: {CollectionName}", name);
 
-			if (pointIds != null && pointIds.Count > 0)
-			{
-				// Delete by point IDs
-				await _client.DeleteAsync(collectionName, pointIds, cancellationToken: cancellationToken);
-				_logger.LogInformation("Successfully deleted {Count} points by ID from collection: {CollectionName}", pointIds.Count, collectionName);
-			}
-			else if (filter != null && filter.Count > 0)
-			{
-				// Delete by filter
-				var qdrantFilter = BuildQdrantFilter(filter);
-				await _client.DeleteAsync(collectionName, filter: qdrantFilter, cancellationToken: cancellationToken);
-				_logger.LogInformation("Successfully deleted points by filter from collection: {CollectionName}", collectionName);
-			}
-			else
-			{
-				return Result.WithFailure("Either pointIds or filter must be provided");
-			}
+						if (pointIds != null && pointIds.Count > 0)
+						{
+							// Delete by point IDs
+							await _client.DeleteAsync(name, pointIds, cancellationToken: cancellationToken);
+							_logger.LogInformation("Successfully deleted {Count} points by ID from collection: {CollectionName}", pointIds.Count, name);
+						}
+						else if (filter != null && filter.Count > 0)
+						{
+							// Delete by filter
+							var qdrantFilter = BuildQdrantFilter(filter);
+							if (qdrantFilter == null)
+							{
+								return Result.WithFailure(ErrorCodes.ParameterNull);
+							}
+							await _client.DeleteAsync(name, filter: qdrantFilter, cancellationToken: cancellationToken);
+							_logger.LogInformation("Successfully deleted points by filter from collection: {CollectionName}", name);
+						}
 
-			return Result.Success();
+						return Result.Success();
+					});
+		}
+		catch (OperationCanceledException)
+		{
+			return Result.WithFailure(ErrorCodes.OperationCancelled);
 		}
 		catch (Exception ex)
 		{
 			_logger.LogError(ex, "Failed to delete points from collection: {CollectionName}", collectionName);
-			return Result.WithFailure($"Failed to delete points: {ex.Message}");
+			return Result.WithFailure(ErrorCodes.VectorDatabaseError);
 		}
 	}
 
@@ -309,9 +429,8 @@ public class QdrantVectorDatabaseAdapter : IVectorDatabasePort
 		return qdrantDistance.Value switch
 		{
 			Distance.Cosine => VectorDistance.Cosine,
-			Distance.Euclidean => VectorDistance.Euclidean,
 			Distance.Dot => VectorDistance.Dot,
-			_ => VectorDistance.Cosine
+			_ => VectorDistance.Cosine // Euclidean not directly supported in Qdrant Distance enum, defaulting to Cosine
 		};
 	}
 
@@ -323,8 +442,8 @@ public class QdrantVectorDatabaseAdapter : IVectorDatabasePort
 		return distance switch
 		{
 			VectorDistance.Cosine => Distance.Cosine,
-			VectorDistance.Euclidean => Distance.Euclidean,
 			VectorDistance.Dot => Distance.Dot,
+			VectorDistance.Euclidean => Distance.Cosine, // Euclidean not directly supported, mapping to Cosine
 			_ => Distance.Cosine
 		};
 	}

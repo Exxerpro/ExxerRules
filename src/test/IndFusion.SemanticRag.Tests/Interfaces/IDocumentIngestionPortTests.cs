@@ -1,5 +1,6 @@
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
+using IngestionStatusEnum = IndFusion.SemanticRag.Domain.Models.IngestionStatus;
 
 namespace IndFusion.SemanticRag.Tests.Interfaces;
 
@@ -11,11 +12,17 @@ public class IDocumentIngestionPortTests
 {
     private readonly IDocumentIngestionPort _mockIngestionPort;
 
+    /// <summary>
+    /// Initializes a new instance of the IDocumentIngestionPortTests class.
+    /// </summary>
     public IDocumentIngestionPortTests()
     {
         _mockIngestionPort = Substitute.For<IDocumentIngestionPort>();
     }
 
+    /// <summary>
+    /// Verifies that IngestDocumentAsync returns success result for valid input.
+    /// </summary>
     [Fact]
     public async Task IngestDocumentAsync_Should_Return_Success_Result_For_Valid_Input()
     {
@@ -31,7 +38,7 @@ public class IDocumentIngestionPortTests
         {
             Id = "ingestion-1",
             DocumentId = input.Id,
-            Status = IngestionStatus.Completed,
+            Status = IngestionStatusEnum.Completed,
             ProcessingResult = new DocumentProcessingResult
             {
                 Id = "proc-1",
@@ -67,6 +74,9 @@ public class IDocumentIngestionPortTests
         result.Value.ProgressPercentage.ShouldBe(100);
     }
 
+    /// <summary>
+    /// Verifies that IngestDocumentAsync returns failure result for invalid input.
+    /// </summary>
     [Fact]
     public async Task IngestDocumentAsync_Should_Return_Failure_Result_For_Invalid_Input()
     {
@@ -91,6 +101,9 @@ public class IDocumentIngestionPortTests
         result.Error.ShouldBe("Invalid document input");
     }
 
+    /// <summary>
+    /// Verifies that IngestDocumentsAsync processes multiple documents.
+    /// </summary>
     [Fact]
     public async Task IngestDocumentsAsync_Should_Process_Multiple_Documents()
     {
@@ -103,8 +116,8 @@ public class IDocumentIngestionPortTests
         var options = DocumentIngestionOptions.Default();
         var expectedResults = new List<DocumentIngestionResult>
         {
-            new() { Id = "ingestion-1", DocumentId = "doc-1", Status = IngestionStatus.Completed, ProgressPercentage = 100 },
-            new() { Id = "ingestion-2", DocumentId = "doc-2", Status = IngestionStatus.Completed, ProgressPercentage = 100 }
+            new() { Id = "ingestion-1", DocumentId = "doc-1", Status = IngestionStatusEnum.Completed, ProgressPercentage = 100 },
+            new() { Id = "ingestion-2", DocumentId = "doc-2", Status = IngestionStatusEnum.Completed, ProgressPercentage = 100 }
         };
 
         _mockIngestionPort.IngestDocumentsAsync(inputs, options, CancellationToken.None)
@@ -122,6 +135,9 @@ public class IDocumentIngestionPortTests
         result.Value[1].DocumentId.ShouldBe("doc-2");
     }
 
+    /// <summary>
+    /// Verifies that IngestRepositoryAsync processes repository successfully.
+    /// </summary>
     [Fact]
     public async Task IngestRepositoryAsync_Should_Process_Repository_Successfully()
     {
@@ -131,7 +147,7 @@ public class IDocumentIngestionPortTests
         var expectedResult = new RepositoryIngestionResult(
             ProcessedDocuments: new List<SemanticDocument>
             {
-                new("doc-1", "Test Document", "Content", "source", new Dictionary<string, object>())
+                new("doc-1", "Test Document", "Content", new Dictionary<string, object>(), DateTime.UtcNow, DateTime.UtcNow)
             },
             TotalDocuments: 1,
             ExtractedKnowledge: new List<KnowledgeExtractionResult>(),
@@ -153,6 +169,9 @@ public class IDocumentIngestionPortTests
         result.Value.Success.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that GetIngestionStatusAsync returns current status.
+    /// </summary>
     [Fact]
     public async Task GetIngestionStatusAsync_Should_Return_Current_Status()
     {
@@ -161,7 +180,7 @@ public class IDocumentIngestionPortTests
         var expectedStatus = new DocumentIngestionStatus
         {
             DocumentId = documentId,
-            Status = IngestionStatus.Processing,
+            Status = IngestionStatusEnum.Processing,
             ProgressPercentage = 50,
             CurrentStage = "Processing document",
             StartedAt = DateTimeOffset.UtcNow.AddMinutes(-1),
@@ -179,11 +198,14 @@ public class IDocumentIngestionPortTests
         result.IsSuccess.ShouldBeTrue();
         result.Value.ShouldNotBeNull();
         result.Value.DocumentId.ShouldBe(documentId);
-        result.Value.Status.ShouldBe(IngestionStatus.Processing);
+        result.Value.Status.ShouldBe(IngestionStatusEnum.Processing);
         result.Value.ProgressPercentage.ShouldBe(50);
         result.Value.CurrentStage.ShouldBe("Processing document");
     }
 
+    /// <summary>
+    /// Verifies that CancelIngestionAsync cancels ongoing ingestion.
+    /// </summary>
     [Fact]
     public async Task CancelIngestionAsync_Should_Cancel_Ongoing_Ingestion()
     {
@@ -201,6 +223,9 @@ public class IDocumentIngestionPortTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies that CancelIngestionAsync handles non-existent document.
+    /// </summary>
     [Fact]
     public async Task CancelIngestionAsync_Should_Handle_Non_Existent_Document()
     {
@@ -219,6 +244,9 @@ public class IDocumentIngestionPortTests
         result.Error.ShouldBe("Document not found");
     }
 
+    /// <summary>
+    /// Verifies that IngestDocumentAsync handles cancellation.
+    /// </summary>
     [Fact]
     public async Task IngestDocumentAsync_Should_Handle_Cancellation()
     {
@@ -240,14 +268,19 @@ public class IDocumentIngestionPortTests
         result.Error.ShouldBe("Operation was cancelled");
     }
 
+    /// <summary>
+    /// Verifies that GetIngestionStatusAsync returns correct status for all states.
+    /// </summary>
+    /// <param name="expectedStatus">The expected ingestion status.</param>
+    /// <param name="expectedProgress">The expected progress percentage.</param>
     [Theory]
-    [InlineData(IngestionStatus.Pending, 0)]
-    [InlineData(IngestionStatus.Processing, 50)]
-    [InlineData(IngestionStatus.Completed, 100)]
-    [InlineData(IngestionStatus.Failed, 0)]
-    [InlineData(IngestionStatus.Cancelled, 25)]
+    [InlineData(IngestionStatusEnum.Pending, 0)]
+    [InlineData(IngestionStatusEnum.Processing, 50)]
+    [InlineData(IngestionStatusEnum.Completed, 100)]
+    [InlineData(IngestionStatusEnum.Failed, 0)]
+    [InlineData(IngestionStatusEnum.Cancelled, 25)]
     public async Task GetIngestionStatusAsync_Should_Return_Correct_Status_For_All_States(
-        IngestionStatus expectedStatus, int expectedProgress)
+        IngestionStatusEnum expectedStatus, int expectedProgress)
     {
         // Arrange
         var documentId = "test-doc-1";

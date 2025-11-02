@@ -5,6 +5,7 @@ using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndQuestResults;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Neo4j.Driver;
 
 namespace IndFusion.SemanticRag.Infrastructure.Services;
 
@@ -397,7 +398,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 }
             }
 
-            using var session = _driver.AsyncSession(ConfigureSession);
             // Note: Neo4j doesn't support parameterized relationship types directly
             // Group by relationship type for batch efficiency
             var groupedByType = relationships.GroupBy(r => r.RelationshipType);
@@ -432,7 +432,12 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                     }).ToList()
                 };
 
-                await session.RunAsync(cypher, parameters);
+                var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, parameters, _options.Database, cancellationToken);
+                if (result.IsFailure)
+                {
+                    _logger.LogError("Failed to create relationships: {Error}", result.Error);
+                    return result;
+                }
             }
             
             _logger.LogInformation("Successfully created {Count} relationships", relationships.Count);
@@ -547,29 +552,34 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Getting relationship: {RelationshipId}", relationshipId);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = @"
                 MATCH ()-[r {id: $id}]-()
                 RETURN r.id AS id, startNode(r).id AS fromNodeId, endNode(r).id AS toNodeId,
                        type(r) AS relationshipType, r.properties AS properties, r.createdAt AS createdAt";
 
             var parameters = new Dictionary<string, object> { ["id"] = relationshipId };
-            var result = await session.RunAsync(cypher, parameters);
-            var record = await result.SingleOrDefaultAsync(cancellationToken);
+            var result = await _graphDatabasePort.ExecuteReadSingleAsync(cypher, parameters, _options.Database, cancellationToken);
+            
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to get relationship: {Error}", result.Error);
+                return Result<KnowledgeRelationship>.WithFailure(result.Error ?? "Failed to get relationship", default);
+            }
 
-            if (record == null)
+            if (result.Value == null)
             {
                 _logger.LogWarning("Relationship not found: {RelationshipId}", relationshipId);
                 return Result<KnowledgeRelationship>.WithFailure($"Relationship not found: {relationshipId}", default);
             }
 
+            var record = result.Value;
             var relationship = new KnowledgeRelationship(
-                Id: record["id"].As<string>(),
-                FromNodeId: record["fromNodeId"].As<string>(),
-                ToNodeId: record["toNodeId"].As<string>(),
-                RelationshipType: record["relationshipType"].As<string>(),
-                Properties: record["properties"].As<IReadOnlyDictionary<string, object>>() ?? new Dictionary<string, object>(),
-                CreatedAt: record["createdAt"].As<DateTimeOffset>()
+                Id: record.Values["id"].As<string>(),
+                FromNodeId: record.Values["fromNodeId"].As<string>(),
+                ToNodeId: record.Values["toNodeId"].As<string>(),
+                RelationshipType: record.Values["relationshipType"].As<string>(),
+                Properties: record.Values["properties"] is IReadOnlyDictionary<string, object> props ? props : new Dictionary<string, object>(),
+                CreatedAt: record.Values["createdAt"] is DateTimeOffset dt ? dt : DateTimeOffset.MinValue
             );
 
             _logger.LogInformation("Successfully retrieved relationship: {RelationshipId}", relationshipId);
@@ -635,8 +645,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Searching entities of type: {EntityType} with limit: {Limit}", entityType, limit);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            
             var whereConditions = new List<string> { "n.type = $entityType" };
             var parameters = new Dictionary<string, object> 
             { 
@@ -667,17 +675,26 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                        n.properties AS properties, n.confidence AS confidence, n.createdAt AS createdAt
                 LIMIT $limit";
 
-            var result = await session.RunAsync(cypher, parameters);
-            var records = await result.ToListAsync(cancellationToken);
+            var result = await _graphDatabasePort.ExecuteReadAsync(cypher, parameters, _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to search entities: {Error}", result.Error);
+                return Result<IReadOnlyList<KnowledgeEntity>>.WithFailure(result.Error ?? "Failed to search entities", Array.Empty<KnowledgeEntity>());
+            }
 
-            var entities = records.Select(record => new KnowledgeEntity(
-                Id: record["id"].As<string>(),
-                Name: record["name"].As<string>(),
-                Type: record["type"].As<string>(),
-                Description: record["description"].As<string>(),
-                Properties: record["properties"].As<Dictionary<string, object>>() ?? new Dictionary<string, object>(),
-                Confidence: record["confidence"].As<double>(),
-                CreatedAt: record["createdAt"].As<DateTime>()
+            if (result.Value == null)
+            {
+                return Result<IReadOnlyList<KnowledgeEntity>>.WithFailure("No results returned", Array.Empty<KnowledgeEntity>());
+            }
+
+            var entities = result.Value.Select(record => new KnowledgeEntity(
+                Id: record.Values["id"]?.ToString() ?? string.Empty,
+                Name: record.Values["name"]?.ToString() ?? string.Empty,
+                Type: record.Values["type"]?.ToString() ?? string.Empty,
+                Description: record.Values.GetValueOrDefault("description")?.ToString() ?? string.Empty,
+                Properties: record.Values.GetValueOrDefault("properties") is Dictionary<string, object> props ? props : new Dictionary<string, object>(),
+                Confidence: record.Values.GetValueOrDefault("confidence") is double conf ? (float)conf : 0.0f,
+                CreatedAt: record.Values.GetValueOrDefault("createdAt") is DateTimeOffset dt ? dt.DateTime : DateTime.MinValue
             )).ToList();
 
             _logger.LogInformation("Found {Count} entities of type: {EntityType}", entities.Count, entityType);
@@ -697,8 +714,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Searching relationships of type: {RelationshipType} with limit: {Limit}", relationshipType, limit);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            
             var whereConditions = new List<string> { "type(r) = $relationshipType" };
             var parameters = new Dictionary<string, object> 
             { 
@@ -729,16 +744,25 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                        type(r) AS relationshipType, r.properties AS properties, r.createdAt AS createdAt
                 LIMIT $limit";
 
-            var result = await session.RunAsync(cypher, parameters);
-            var records = await result.ToListAsync(cancellationToken);
+            var result = await _graphDatabasePort.ExecuteReadAsync(cypher, parameters, _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to search relationships: {Error}", result.Error);
+                return Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure(result.Error ?? "Failed to search relationships", Array.Empty<KnowledgeRelationship>());
+            }
 
-            var relationships = records.Select(record => new KnowledgeRelationship(
-                Id: record["id"].As<string>(),
-                FromNodeId: record["fromNodeId"].As<string>(),
-                ToNodeId: record["toNodeId"].As<string>(),
-                RelationshipType: record["relationshipType"].As<string>(),
-                Properties: record["properties"].As<IReadOnlyDictionary<string, object>>() ?? new Dictionary<string, object>(),
-                CreatedAt: record["createdAt"].As<DateTimeOffset>()
+            if (result.Value == null)
+            {
+                return Result<IReadOnlyList<KnowledgeRelationship>>.WithFailure("No results returned", Array.Empty<KnowledgeRelationship>());
+            }
+
+            var relationships = result.Value.Select(record => new KnowledgeRelationship(
+                Id: record.Values["id"]?.ToString() ?? string.Empty,
+                FromNodeId: record.Values["fromNodeId"]?.ToString() ?? string.Empty,
+                ToNodeId: record.Values["toNodeId"]?.ToString() ?? string.Empty,
+                RelationshipType: record.Values["relationshipType"]?.ToString() ?? string.Empty,
+                Properties: record.Values.GetValueOrDefault("properties") is IReadOnlyDictionary<string, object> props ? props : new Dictionary<string, object>(),
+                CreatedAt: record.Values.GetValueOrDefault("createdAt") is DateTimeOffset dt ? dt.DateTime : DateTime.MinValue
             )).ToList();
 
             _logger.LogInformation("Found {Count} relationships of type: {RelationshipType}", relationships.Count, relationshipType);
@@ -758,8 +782,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Finding connected entities for: {EntityId} with max depth: {MaxDepth}", entityId, maxDepth);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            
             var depthRange = maxDepth == 1 ? "" : $"*1..{maxDepth}";
             var relationshipFilter = relationshipTypes != null && relationshipTypes.Count > 0
                 ? ":" + string.Join("|", relationshipTypes.Select(rt => $"`{rt}`"))
@@ -773,17 +795,26 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                        connected.confidence AS confidence, connected.createdAt AS createdAt";
 
             var parameters = new Dictionary<string, object> { ["entityId"] = entityId };
-            var result = await session.RunAsync(cypher, parameters);
-            var records = await result.ToListAsync(cancellationToken);
+            var result = await _graphDatabasePort.ExecuteReadAsync(cypher, parameters, _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to find connected entities: {Error}", result.Error);
+                return Result<IReadOnlyList<KnowledgeEntity>>.WithFailure(result.Error ?? "Failed to find connected entities", Array.Empty<KnowledgeEntity>());
+            }
 
-            var entities = records.Select(record => new KnowledgeEntity(
-                Id: record["id"].As<string>(),
-                Name: record["name"].As<string>(),
-                Type: record["type"].As<string>(),
-                Description: record["description"].As<string>(),
-                Properties: record["properties"].As<Dictionary<string, object>>() ?? new Dictionary<string, object>(),
-                Confidence: record["confidence"].As<double>(),
-                CreatedAt: record["createdAt"].As<DateTime>()
+            if (result.Value == null)
+            {
+                return Result<IReadOnlyList<KnowledgeEntity>>.WithFailure("No results returned", Array.Empty<KnowledgeEntity>());
+            }
+
+            var entities = result.Value.Select(record => new KnowledgeEntity(
+                Id: record.Values["id"]?.ToString() ?? string.Empty,
+                Name: record.Values["name"]?.ToString() ?? string.Empty,
+                Type: record.Values["type"]?.ToString() ?? string.Empty,
+                Description: record.Values.GetValueOrDefault("description")?.ToString() ?? string.Empty,
+                Properties: record.Values.GetValueOrDefault("properties") is Dictionary<string, object> props ? props : new Dictionary<string, object>(),
+                Confidence: record.Values.GetValueOrDefault("confidence") is double conf ? (float)conf : 0.0f,
+                CreatedAt: record.Values.GetValueOrDefault("createdAt") is DateTimeOffset dt ? dt.DateTime : DateTime.MinValue
             )).ToList();
 
             _logger.LogInformation("Found {Count} connected entities for: {EntityId}", entities.Count, entityId);
@@ -804,7 +835,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
             _logger.LogInformation("Finding paths from {FromEntityId} to {ToEntityId} with max length: {MaxPathLength}", 
                 fromEntityId, toEntityId, maxPathLength);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = $@"
                 MATCH (from:KnowledgeEntity {{id: $fromEntityId}})
                 MATCH (to:KnowledgeEntity {{id: $toEntityId}})
@@ -817,13 +847,22 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 ["toEntityId"] = toEntityId
             };
 
-            var result = await session.RunAsync(cypher, parameters);
-            var records = await result.ToListAsync(cancellationToken);
+            var result = await _graphDatabasePort.ExecuteReadAsync(cypher, parameters, _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to find paths: {Error}", result.Error);
+                return Result<IReadOnlyList<GraphPath>>.WithFailure(result.Error ?? "Failed to find paths", Array.Empty<GraphPath>());
+            }
 
             var paths = new List<GraphPath>();
-            foreach (var record in records)
+            foreach (var record in result.Value ?? Array.Empty<CypherRecord>())
             {
-                var path = record["path"].As<IPath>();
+                var pathValue = record.Values.GetValueOrDefault("path");
+                if (pathValue is not IPath path)
+                {
+                    _logger.LogWarning("Path value is not IPath type");
+                    continue;
+                }
                 var nodes = path.Nodes.Select(n => new GraphNode(
                     Id: n.Properties["id"].As<string>(),
                     Type: n.Properties.ContainsKey("type") ? n.Properties["type"].As<string>() : "KnowledgeEntity",
@@ -863,7 +902,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Updating entity: {EntityId}", entity.Id);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = @"
                 MATCH (n:KnowledgeEntity {id: $id})
                 SET n.name = $name,
@@ -885,7 +923,12 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 ["createdAt"] = entity.CreatedAt
             };
 
-            await session.RunAsync(cypher, parameters);
+            var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, parameters, _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to update entity: {Error}", result.Error);
+                return result;
+            }
             
             _logger.LogInformation("Successfully updated entity: {EntityId}", entity.Id);
             return Result.Success();
@@ -904,7 +947,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Updating relationship: {RelationshipId}", relationship.Id);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = @"
                 MATCH ()-[r {id: $id}]-()
                 SET r.properties = $properties,
@@ -918,7 +960,12 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 ["createdAt"] = relationship.CreatedAt
             };
 
-            await session.RunAsync(cypher, parameters);
+            var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, parameters, _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to update relationship: {Error}", result.Error);
+                return result;
+            }
             
             _logger.LogInformation("Successfully updated relationship: {RelationshipId}", relationship.Id);
             return Result.Success();
@@ -937,13 +984,17 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Deleting entity: {EntityId}", entityId);
 
-            using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = @"
                 MATCH (n:KnowledgeEntity {id: $id})
                 DETACH DELETE n";
 
             var parameters = new Dictionary<string, object> { ["id"] = entityId };
-            await session.RunAsync(cypher, parameters);
+            var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, parameters, _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to delete entity: {Error}", result.Error);
+                return result;
+            }
             
             _logger.LogInformation("Successfully deleted entity: {EntityId}", entityId);
             return Result.Success();
@@ -962,8 +1013,6 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogInformation("Getting graph statistics");
 
-            using var session = _driver.AsyncSession(ConfigureSession);
-            
             // Get total nodes and relationships
             var countCypher = @"
                 MATCH (n:KnowledgeEntity)
@@ -972,33 +1021,58 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 WITH totalNodes, count(DISTINCT r) AS totalRelationships
                 RETURN totalNodes, totalRelationships";
 
-            var countResult = await session.RunAsync(countCypher, new Dictionary<string, object>());
-            var countRecord = await countResult.SingleOrDefaultAsync(cancellationToken);
+            var countResult = await _graphDatabasePort.ExecuteReadSingleAsync(countCypher, null, _options.Database, cancellationToken);
+            if (countResult.IsFailure)
+            {
+                _logger.LogError("Failed to get graph statistics: {Error}", countResult.Error);
+                return Result<KnowledgeGraphStatistics>.WithFailure(countResult.Error ?? "Failed to get graph statistics", default);
+            }
             
-            var totalNodes = countRecord?["totalNodes"].As<long>() ?? 0;
-            var totalRelationships = countRecord?["totalRelationships"].As<long>() ?? 0;
+            var countRecord = countResult.Value;
+            var totalNodes = countRecord?.Values.GetValueOrDefault("totalNodes") is long tn ? tn : 0;
+            var totalRelationships = countRecord?.Values.GetValueOrDefault("totalRelationships") is long tr ? tr : 0;
 
             // Get node types distribution
             var nodeTypesCypher = @"
                 MATCH (n:KnowledgeEntity)
                 RETURN n.type AS type, count(n) AS count";
 
-            var nodeTypesResult = await session.RunAsync(nodeTypesCypher, new Dictionary<string, object>());
-            var nodeTypesRecords = await nodeTypesResult.ToListAsync(cancellationToken);
-            var nodeTypes = nodeTypesRecords.ToDictionary(
-                r => r["type"].As<string>(),
-                r => r["count"].As<long>());
+            var nodeTypesResult = await _graphDatabasePort.ExecuteReadAsync(nodeTypesCypher, null, _options.Database, cancellationToken);
+            if (nodeTypesResult.IsFailure)
+            {
+                _logger.LogError("Failed to get node types: {Error}", nodeTypesResult.Error);
+                return Result<KnowledgeGraphStatistics>.WithFailure(nodeTypesResult.Error ?? "Failed to get node types", default);
+            }
+            
+            if (nodeTypesResult.Value == null)
+            {
+                return Result<KnowledgeGraphStatistics>.WithFailure("No node types returned", default);
+            }
+            
+            var nodeTypes = nodeTypesResult.Value.ToDictionary(
+                r => r.Values["type"]?.ToString() ?? string.Empty,
+                r => r.Values.GetValueOrDefault("count") is long count ? count : 0);
 
             // Get relationship types distribution
             var relTypesCypher = @"
                 MATCH ()-[r]-()
                 RETURN type(r) AS type, count(DISTINCT r) AS count";
 
-            var relTypesResult = await session.RunAsync(relTypesCypher, new Dictionary<string, object>());
-            var relTypesRecords = await relTypesResult.ToListAsync(cancellationToken);
-            var relationshipTypes = relTypesRecords.ToDictionary(
-                r => r["type"].As<string>(),
-                r => r["count"].As<long>());
+            var relTypesResult = await _graphDatabasePort.ExecuteReadAsync(relTypesCypher, null, _options.Database, cancellationToken);
+            if (relTypesResult.IsFailure)
+            {
+                _logger.LogError("Failed to get relationship types: {Error}", relTypesResult.Error);
+                return Result<KnowledgeGraphStatistics>.WithFailure(relTypesResult.Error ?? "Failed to get relationship types", default);
+            }
+            
+            if (relTypesResult.Value == null)
+            {
+                return Result<KnowledgeGraphStatistics>.WithFailure("No relationship types returned", default);
+            }
+            
+            var relationshipTypes = relTypesResult.Value.ToDictionary(
+                r => r.Values["type"]?.ToString() ?? string.Empty,
+                r => r.Values.GetValueOrDefault("count") is long count ? count : 0);
 
             var stats = new KnowledgeGraphStatistics(
                 TotalNodes: totalNodes,
@@ -1025,12 +1099,16 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             _logger.LogWarning("Clearing entire graph - this will delete all nodes and relationships");
 
-            using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = @"
                 MATCH (n:KnowledgeEntity)
                 DETACH DELETE n";
 
-            await session.RunAsync(cypher, new Dictionary<string, object>());
+            var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, new Dictionary<string, object>(), _options.Database, cancellationToken);
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to clear graph: {Error}", result.Error);
+                return result;
+            }
             
             _logger.LogInformation("Successfully cleared graph");
             return Result.Success();

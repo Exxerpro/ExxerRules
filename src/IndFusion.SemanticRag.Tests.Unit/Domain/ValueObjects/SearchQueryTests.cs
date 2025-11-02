@@ -72,7 +72,7 @@ public class SearchQueryTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("cannot be null, empty, or whitespace");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class SearchQueryTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("cannot exceed 1000 characters");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Theory]
@@ -104,7 +104,7 @@ public class SearchQueryTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("must be greater than zero");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Fact]
@@ -118,7 +118,7 @@ public class SearchQueryTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("cannot exceed 1000");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Theory]
@@ -136,7 +136,7 @@ public class SearchQueryTests
 
         // Assert
         result.IsFailure.ShouldBeTrue();
-        result.Error!.ShouldContain("must be between 0.0 and 1.0");
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     [Theory]

@@ -30,10 +30,16 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the FluentAssertions usage rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that flag FluentAssertions namespaces and chained assertion patterns.
+    /// </summary>
+    /// <param name="context">The analysis context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -43,8 +49,10 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeUsingDirective, SyntaxKind.UsingDirective);
     }
 
-
-
+    /// <summary>
+    /// Inspects using directives for FluentAssertions namespaces.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
     private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
     {
         var usingDirective = (UsingDirectiveSyntax)context.Node;
@@ -62,6 +70,10 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Analyzes member access expressions to detect FluentAssertions assertion chains.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
     private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context)
     {
         var memberAccess = (MemberAccessExpressionSyntax)context.Node;
@@ -100,6 +112,11 @@ public class DoNotUseFluentAssertionsAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Determines whether the supplied member access is part of a FluentAssertions chain.
+    /// </summary>
+    /// <param name="memberAccess">The member access expression to evaluate.</param>
+    /// <returns><c>true</c> when the expression is part of a <c>.Should()</c> chain; otherwise, <c>false</c>.</returns>
     private static bool IsPartOfFluentAssertionsChain(MemberAccessExpressionSyntax memberAccess)
     {
         // Look for patterns like "something.Should().Be(...)"

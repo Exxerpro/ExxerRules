@@ -60,80 +60,80 @@
   - [x] Method `Initialize(AnalysisContext context) : override void`
 - [x] class `UseExpressionBodiedMembersAnalyzer` in `code\IndFusion.Analyzer\ModernCSharp\UseExpressionBodiedMembersAnalyzer.cs`
   - [x] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `UseModernPatternMatchingAnalyzer` in `code\IndFusion.Analyzer\ModernCSharp\UseModernPatternMatchingAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `ValidateNullParametersAnalyzer` in `code\IndFusion.Analyzer\NullSafety\ValidateNullParametersAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-  - [ ] Method `WrapCancellationAware(
+- [x] class `UseModernPatternMatchingAnalyzer` in `code\IndFusion.Analyzer\ModernCSharp\UseModernPatternMatchingAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `ValidateNullParametersAnalyzer` in `code\IndFusion.Analyzer\NullSafety\ValidateNullParametersAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+  - [x] Method `WrapCancellationAware(
         Func<CancellationToken, Task> operation,
         CancellationToken cancellationToken = default) : async Task<Result>`
-- [ ] class `MultipleNullArgumentsError` in `code\IndFusion.Analyzer\Operations\MultipleNullArgumentsError.cs`
-  - [ ] Method `ToString() : override string`
-  - [ ] Property `Errors : IReadOnlyList<NullArgumentError>`
-- [ ] class `NullArgumentError` in `code\IndFusion.Analyzer\Operations\NullArgumentError.cs`
-  - [ ] Method `NullArgumentError(string parameterName, string? message = null) : class`
-  - [ ] Method `ToString() : override string`
-  - [ ] Property `ParameterName : string`
-  - [ ] Method `Failure(string parameterName, string? message = null) : Result`
-  - [ ] Method `Failure(params string[] parameterNames) : Result`
-- [ ] class `Result` in `code\IndFusion.Analyzer\Operations\Result.cs`
-- [ ] class `Result` in `code\IndFusion.Analyzer\Operations\Result.cs`
-  - [ ] Method `Normalize(IEnumerable<string>? errors) : string[]`
-  - [ ] Method `ToString() : override string`
-  - [ ] Method `FormatErrorsString(IEnumerable<string> errors, string prefix) : string`
-  - [ ] Method `Success() : Result`
-  - [ ] Method `WithFailure(IEnumerable<string> errors) : Result`
-  - [ ] Method `WithFailure(string[] errors) : Result`
-  - [ ] Method `WithFailure(string error) : Result`
-  - [ ] Method `OnSuccess(Action action) : Result`
-  - [ ] Method `OnFailure(Action<IEnumerable<string>> action) : Result`
-  - [ ] Method `Ensure(Func<bool> condition, string errorMessage) : Result`
-  - [ ] Method `Tap(Action action) : Result`
-  - [ ] Method `Combine(params Result[] results) : Result`
-  - [ ] Method `Recover(Func<Result> recoverFunc) : Result`
-  - [ ] Method `CombineErrors(IEnumerable<string>? primaryErrors, IEnumerable<string>? secondaryErrors) : Result`
-  - [ ] Method `Success(T data) : Result<T>`
-  - [ ] Method `WithSuccess(T data) : Result<T>`
-  - [ ] Method `ToString() : override string`
-  - [ ] Method `WithFailure(IEnumerable<string>? errors, T? value = default) : Result<T>`
-  - [ ] Method `WithFailure(T? value = default, IEnumerable<string>? errors = default) : Result<T>`
-  - [ ] Method `WithWarnings(IEnumerable<string> warnings, T value) : Result<T>`
-  - [ ] Method `WithFailure(string[] errors, T? value = default) : Result<T>`
-  - [ ] Method `WithFailure(string error, T? value = default) : Result<T>`
-  - [ ] Method `Result(Result<T> result) : implicit operator`
-  - [ ] Method `Deconstruct(out bool succeeded, out T? data, out IEnumerable<string> errors) : void`
-  - [ ] Method `OnSuccess(Action<T> action) : Result<T>`
-  - [ ] Method `OnFailure(Action<IEnumerable<string>> action) : Result<T>`
-  - [ ] Method `Ensure(Func<T, bool> condition, string errorMessage) : Result<T>`
-  - [ ] Method `Tap(Action<T> action) : Result<T>`
-  - [ ] Method `Combine(params Result[] results) : Result<T>`
-  - [ ] Method `Recover(Func<Result<T>> recoverFunc) : Result<T>`
-  - [ ] Property `IsSuccess : bool`
-  - [ ] Property `Errors : IEnumerable<string>`
-  - [ ] Property `HasErrors : bool`
-  - [ ] Property `IsRecoverable : bool`
-  - [ ] Property `Errors : IEnumerable<string>`
-  - [ ] Method `Cancelled() : Result`
-  - [ ] Method `IsCancelled(this Result result) : bool`
-  - [ ] Method `FailForNullArgument(string parameterName, string? message = null) : Result`
-  - [ ] Method `FailForNullArguments(params string[] parameterNames) : Result`
-  - [ ] Method `ValidateNotNull(params (object? value, string parameterName) : Result`
-- [ ] class `UseEfficientLinqAnalyzer` in `code\IndFusion.Analyzer\Performance\UseEfficientLinqAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-  - [ ] Method `Equals(EnumerationTarget x, EnumerationTarget y) : bool`
-  - [ ] Method `GetHashCode(EnumerationTarget obj) : int`
-  - [ ] Property `ExpressionText : string`
-  - [ ] Property `Instance : static EnumerationTargetComparer`
-- [ ] class `DoNotMockDbContextAnalyzer` in `code\IndFusion.Analyzer\Testing\DoNotMockDbContextAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `DoNotUseFluentAssertionsAnalyzer` in `code\IndFusion.Analyzer\Testing\DoNotUseFluentAssertionsAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `DoNotUseMoqAnalyzer` in `code\IndFusion.Analyzer\Testing\DoNotUseMoqAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `TestNamingConventionAnalyzer` in `code\IndFusion.Analyzer\Testing\TestNamingConventionAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `UseXUnitV3Analyzer` in `code\IndFusion.Analyzer\Testing\UseXUnitV3Analyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `MultipleNullArgumentsError` in `code\IndFusion.Analyzer\Operations\MultipleNullArgumentsError.cs`
+  - [x] Method `ToString() : override string`
+  - [x] Property `Errors : IReadOnlyList<NullArgumentError>`
+- [x] class `NullArgumentError` in `code\IndFusion.Analyzer\Operations\NullArgumentError.cs`
+  - [x] Method `NullArgumentError(string parameterName, string? message = null) : class`
+  - [x] Method `ToString() : override string`
+  - [x] Property `ParameterName : string`
+  - [x] Method `Failure(string parameterName, string? message = null) : Result`
+  - [x] Method `Failure(params string[] parameterNames) : Result`
+- [x] class `Result` in `code\IndFusion.Analyzer\Operations\Result.cs`
+- [x] class `Result` in `code\IndFusion.Analyzer\Operations\Result.cs`
+  - [x] Method `Normalize(IEnumerable<string>? errors) : string[]`
+  - [x] Method `ToString() : override string`
+  - [x] Method `FormatErrorsString(IEnumerable<string> errors, string prefix) : string`
+  - [x] Method `Success() : Result`
+  - [x] Method `WithFailure(IEnumerable<string> errors) : Result`
+  - [x] Method `WithFailure(string[] errors) : Result`
+  - [x] Method `WithFailure(string error) : Result`
+  - [x] Method `OnSuccess(Action action) : Result`
+  - [x] Method `OnFailure(Action<IEnumerable<string>> action) : Result`
+  - [x] Method `Ensure(Func<bool> condition, string errorMessage) : Result`
+  - [x] Method `Tap(Action action) : Result`
+  - [x] Method `Combine(params Result[] results) : Result`
+  - [x] Method `Recover(Func<Result> recoverFunc) : Result`
+  - [x] Method `CombineErrors(IEnumerable<string>? primaryErrors, IEnumerable<string>? secondaryErrors) : Result`
+  - [x] Method `Success(T data) : Result<T>`
+  - [x] Method `WithSuccess(T data) : Result<T>`
+  - [x] Method `ToString() : override string`
+  - [x] Method `WithFailure(IEnumerable<string>? errors, T? value = default) : Result<T>`
+  - [x] Method `WithFailure(T? value = default, IEnumerable<string>? errors = default) : Result<T>`
+  - [x] Method `WithWarnings(IEnumerable<string> warnings, T value) : Result<T>`
+  - [x] Method `WithFailure(string[] errors, T? value = default) : Result<T>`
+  - [x] Method `WithFailure(string error, T? value = default) : Result<T>`
+  - [x] Method `Result(Result<T> result) : implicit operator`
+  - [x] Method `Deconstruct(out bool succeeded, out T? data, out IEnumerable<string> errors) : void`
+  - [x] Method `OnSuccess(Action<T> action) : Result<T>`
+  - [x] Method `OnFailure(Action<IEnumerable<string>> action) : Result<T>`
+  - [x] Method `Ensure(Func<T, bool> condition, string errorMessage) : Result<T>`
+  - [x] Method `Tap(Action<T> action) : Result<T>`
+  - [x] Method `Combine(params Result[] results) : Result<T>`
+  - [x] Method `Recover(Func<Result<T>> recoverFunc) : Result<T>`
+  - [x] Property `IsSuccess : bool`
+  - [x] Property `Errors : IEnumerable<string>`
+  - [x] Property `HasErrors : bool`
+  - [x] Property `IsRecoverable : bool`
+  - [x] Property `Errors : IEnumerable<string>`
+  - [x] Method `Cancelled() : Result`
+  - [x] Method `IsCancelled(this Result result) : bool`
+  - [x] Method `FailForNullArgument(string parameterName, string? message = null) : Result`
+  - [x] Method `FailForNullArguments(params string[] parameterNames) : Result`
+  - [x] Method `ValidateNotNull(params (object? value, string parameterName) : Result`
+- [x] class `UseEfficientLinqAnalyzer` in `code\IndFusion.Analyzer\Performance\UseEfficientLinqAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+  - [x] Method `Equals(EnumerationTarget x, EnumerationTarget y) : bool`
+  - [x] Method `GetHashCode(EnumerationTarget obj) : int`
+  - [x] Property `ExpressionText : string`
+  - [x] Property `Instance : static EnumerationTargetComparer`
+- [x] class `DoNotMockDbContextAnalyzer` in `code\IndFusion.Analyzer\Testing\DoNotMockDbContextAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `DoNotUseFluentAssertionsAnalyzer` in `code\IndFusion.Analyzer\Testing\DoNotUseFluentAssertionsAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `DoNotUseMoqAnalyzer` in `code\IndFusion.Analyzer\Testing\DoNotUseMoqAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `TestNamingConventionAnalyzer` in `code\IndFusion.Analyzer\Testing\TestNamingConventionAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `UseXUnitV3Analyzer` in `code\IndFusion.Analyzer\Testing\UseXUnitV3Analyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
 - [ ] class `DomainShouldNotReferenceInfrastructureCodeFixProvider` in `code\IndFusion.Fixer\Architecture\DomainShouldNotReferenceInfrastructureCodeFixProvider.cs`
   - [ ] Method `GetFixAllProvider() : override sealed FixAllProvider`
   - [ ] Method `RegisterCodeFixesAsync(CodeFixContext context) : override sealed async Task`
@@ -3053,7 +3053,7 @@
   - [ ] Method `Validate() : Result`
   - [ ] Method `Create(string value) : Result<DocumentId>`
   - [ ] Method `string(DocumentId documentId) : implicit operator`
-  - [ ] Method `ToString() : override string`
+  - [x] Method `ToString() : override string`
   - [ ] Property `Value : string`
   - [ ] Method `EmbeddingVector(IReadOnlyList<float> Values) : record`
   - [ ] Method `Validate() : Result`
@@ -3064,7 +3064,7 @@
   - [ ] Method `DotProduct(EmbeddingVector other) : float`
   - [ ] Method `CosineSimilarity(EmbeddingVector other) : float`
   - [ ] Method `EuclideanDistance(EmbeddingVector other) : float`
-  - [ ] Method `ToString() : override string`
+  - [x] Method `ToString() : override string`
   - [ ] Property `Values : IReadOnlyList<float>`
   - [ ] Method `SearchQuery(
     string Text,
@@ -3078,7 +3078,7 @@
         float threshold = 0.0f, 
         IReadOnlyDictionary<string, object>? filters = null) : Result<SearchQuery>`
   - [ ] Method `HasFilter(string key) : bool`
-  - [ ] Method `ToString() : override string`
+  - [x] Method `ToString() : override string`
   - [ ] Property `Text : string`
   - [ ] Property `Limit : int`
   - [ ] Property `Threshold : float`

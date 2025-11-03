@@ -18,10 +18,24 @@ namespace IndFusion.Analyzers.Testing;
 public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
 {
 #pragma warning disable IDE1006
+    /// <summary>
+    /// Gets the localized title displayed when a test method violates the naming convention.
+    /// </summary>
     private static readonly LocalizableString Title = "Test methods should follow naming convention";
+
+    /// <summary>
+    /// Gets the diagnostic message format describing the offending test method.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Test method '{0}' should follow naming convention: Should_Action_When_Condition";
+
+    /// <summary>
+    /// Gets the diagnostic description explaining the prescribed naming pattern.
+    /// </summary>
     private static readonly LocalizableString Description = "Test methods should use descriptive names following the pattern Should_Action_When_Condition for better readability and maintainability.";
 
+    /// <summary>
+    /// The diagnostic emitted when a test method name falls outside the accepted pattern.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.TestNamingConvention,
         Title,
@@ -31,10 +45,16 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the test naming convention rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that validate test method names against the project convention.
+    /// </summary>
+    /// <param name="context">The analysis context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -43,6 +63,10 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
     }
 
+    /// <summary>
+    /// Validates a test method declaration against the configured naming convention.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.Node;
@@ -95,6 +119,12 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
             methodName);
     }
 
+    /// <summary>
+    /// Determines whether the test method supplies a DisplayName or Description override.
+    /// </summary>
+    /// <param name="methodDeclaration">The method declaration under analysis.</param>
+    /// <param name="context">The syntax node analysis context.</param>
+    /// <returns><c>true</c> when an override is present; otherwise, <c>false</c>.</returns>
     private static bool HasDisplayNameOrDescriptionOverride(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
     {
         foreach (var attributeList in methodDeclaration.AttributeLists)
@@ -132,6 +162,12 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the test method or containing class opts out of naming enforcement.
+    /// </summary>
+    /// <param name="methodDeclaration">The method declaration under analysis.</param>
+    /// <param name="context">The syntax node analysis context.</param>
+    /// <returns><c>true</c> when an opt-out attribute is present; otherwise, <c>false</c>.</returns>
     private static bool HasOptOutAttribute(MethodDeclarationSyntax methodDeclaration, SyntaxNodeAnalysisContext context)
     {
         static bool MatchesOptOut(AttributeSyntax attribute, SemanticModel semanticModel)
@@ -185,6 +221,11 @@ public class TestNamingConventionAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the test method is nested in a context class that relaxes naming requirements.
+    /// </summary>
+    /// <param name="methodDeclaration">The method declaration under analysis.</param>
+    /// <returns><c>true</c> when the method is within a contextual test class; otherwise, <c>false</c>.</returns>
     private static bool IsWithinContextClass(MethodDeclarationSyntax methodDeclaration)
     {
         for (SyntaxNode? node = methodDeclaration.Parent; node != null; node = node.Parent)

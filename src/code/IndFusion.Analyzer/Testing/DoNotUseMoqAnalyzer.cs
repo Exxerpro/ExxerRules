@@ -16,10 +16,24 @@ namespace IndFusion.Analyzers.Testing;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Gets the localized analyzer title displayed when Moq usage is detected.
+    /// </summary>
     private static readonly LocalizableString Title = "Use NSubstitute instead of Moq for mocking";
+
+    /// <summary>
+    /// Gets the diagnostic message format describing the discovered Moq artifact.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Moq usage detected: '{0}' - use NSubstitute for consistent testing patterns";
+
+    /// <summary>
+    /// Gets the diagnostic description explaining the preference for NSubstitute.
+    /// </summary>
     private static readonly LocalizableString Description = "NSubstitute provides a cleaner, more readable mocking syntax than Moq. It's the preferred mocking framework for this project to ensure consistent testing patterns and better maintainability.";
 
+    /// <summary>
+    /// The diagnostic emitted when Moq constructs are found in tests.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.UseNSubstitute,
         Title,
@@ -29,10 +43,16 @@ public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the Moq usage rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that flag Moq namespaces, object creation, and static helpers.
+    /// </summary>
+    /// <param name="context">The analysis context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -45,7 +65,10 @@ public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
     }
 
 
-
+    /// <summary>
+    /// Inspects using directives for Moq namespaces.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
     private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
     {
         var usingDirective = (UsingDirectiveSyntax)context.Node;
@@ -63,6 +86,10 @@ public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Examines object creation expressions for <c>Mock</c> instantiations.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
     private static void AnalyzeObjectCreation(SyntaxNodeAnalysisContext context)
     {
         var objectCreation = (ObjectCreationExpressionSyntax)context.Node;
@@ -91,6 +118,10 @@ public class DoNotUseMoqAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Detects Moq static helper usage accessed via the <c>Mock</c> type.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
     private static void AnalyzeMemberAccess(SyntaxNodeAnalysisContext context)
     {
         var memberAccess = (MemberAccessExpressionSyntax)context.Node;

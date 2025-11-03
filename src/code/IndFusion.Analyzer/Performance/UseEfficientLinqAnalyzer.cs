@@ -71,10 +71,16 @@ public sealed class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
         "ToHashSet",
         "ToLookup");
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the inefficient LINQ usage rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that analyze methods and properties for repeated LINQ enumerations.
+    /// </summary>
+    /// <param name="context">The analysis context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -435,15 +441,30 @@ public sealed class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
             ExpressionText = expressionText;
         }
 
+        /// <summary>
+        /// Gets the symbol associated with the deferred enumerable, when available.
+        /// </summary>
         public ISymbol? Symbol { get; }
 
+        /// <summary>
+        /// Gets the textual representation of the enumeration target used when no symbol is available.
+        /// </summary>
         public string ExpressionText { get; }
     }
 
     private sealed class EnumerationTargetComparer : IEqualityComparer<EnumerationTarget>
     {
+        /// <summary>
+        /// Gets the singleton comparer instance used to deduplicate enumeration targets.
+        /// </summary>
         public static EnumerationTargetComparer Instance { get; } = new();
 
+        /// <summary>
+        /// Determines whether two enumeration targets refer to the same deferred enumerable.
+        /// </summary>
+        /// <param name="x">The first enumeration target.</param>
+        /// <param name="y">The second enumeration target.</param>
+        /// <returns><c>true</c> when both targets represent the same enumerable; otherwise, <c>false</c>.</returns>
         public bool Equals(EnumerationTarget x, EnumerationTarget y)
         {
             if (x.Symbol is not null && y.Symbol is not null)
@@ -459,6 +480,11 @@ public sealed class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
             return string.Equals(x.ExpressionText, y.ExpressionText, StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Computes a hash code for the specified enumeration target.
+        /// </summary>
+        /// <param name="obj">The enumeration target to hash.</param>
+        /// <returns>A hash code representing the target.</returns>
         public int GetHashCode(EnumerationTarget obj)
         {
             if (obj.Symbol is not null)

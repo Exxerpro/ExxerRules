@@ -21,10 +21,10 @@ public static class ResultExtensions
     public static Result Cancelled() => Result.WithFailure(ResultErrors.OperationCancelled);
 
     /// <summary>
-    /// /// Creates a generic result indicating that an operation was cancelled.
+    /// Creates a generic result indicating that an operation was cancelled.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <returns></returns>
+    /// <typeparam name="T">The type of the result value.</typeparam>
+    /// <returns>A <see cref="Result{T}"/> representing a cancelled operation.</returns>
     public static Result<T> Cancelled<T>() => Result<T>.WithFailure(ResultErrors.OperationCancelled);
 
     /// <summary>
@@ -43,12 +43,12 @@ public static class ResultExtensions
     public static bool IsCancelled<T>(this Result<T> result) => result != null && result.Errors != null && result.Errors.Any(e => e == ResultErrors.OperationCancelled);
 
     /// <summary>
-    /// Creates a failure result for a null argument with fluent syntax
+    /// Creates a failure result for a single null argument using fluent syntax.
     /// </summary>
-    /// <typeparam name="T">Result type</typeparam>
-    /// <param name="parameterName">Name of the null parameter</param>
-    /// <param name="message">Optional error message</param>
-    /// <returns>Failed result with null argument error</returns>
+    /// <typeparam name="T">The type carried by the result.</typeparam>
+    /// <param name="parameterName">The name of the parameter that was <c>null</c>.</param>
+    /// <param name="message">An optional custom error message.</param>
+    /// <returns>A failed result containing the null argument error.</returns>
     public static Result<T> FailForNullArgument<T>(string parameterName, string? message = null)
     {
         if (string.IsNullOrEmpty(parameterName))
@@ -61,11 +61,11 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Creates a failure result for multiple null arguments with fluent syntax
+    /// Creates a failure result that aggregates multiple null argument errors using fluent syntax.
     /// </summary>
-    /// <typeparam name="T">Result type</typeparam>
-    /// <param name="parameterNames">Names of null parameters</param>
-    /// <returns>Failed result with multiple null argument errors</returns>
+    /// <typeparam name="T">The type carried by the result.</typeparam>
+    /// <param name="parameterNames">The names of the parameters that were <c>null</c>.</param>
+    /// <returns>A failed result describing each null argument error.</returns>
     public static Result<T> FailForNullArguments<T>(params string[] parameterNames)
     {
         if (parameterNames == null || parameterNames.Length == 0 || parameterNames.Any(string.IsNullOrEmpty))
@@ -78,11 +78,11 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Creates a non-generic failure result for a null argument with fluent syntax
+    /// Creates a non-generic failure result for a single null argument using fluent syntax.
     /// </summary>
-    /// <param name="parameterName">Name of the null parameter</param>
-    /// <param name="message">Optional error message</param>
-    /// <returns>Failed result with null argument error</returns>
+    /// <param name="parameterName">The name of the parameter that was <c>null</c>.</param>
+    /// <param name="message">An optional custom error message.</param>
+    /// <returns>A failed result containing the null argument error.</returns>
     public static Result FailForNullArgument(string parameterName, string? message = null)
     {
         if (string.IsNullOrEmpty(parameterName))
@@ -95,10 +95,10 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Creates a non-generic failure result for multiple null arguments with fluent syntax
+    /// Creates a non-generic failure result that aggregates multiple null argument errors using fluent syntax.
     /// </summary>
-    /// <param name="parameterNames">Names of null parameters</param>
-    /// <returns>Failed result with multiple null argument errors</returns>
+    /// <param name="parameterNames">The names of the parameters that were <c>null</c>.</param>
+    /// <returns>A failed result describing each null argument error.</returns>
     public static Result FailForNullArguments(params string[] parameterNames)
     {
         if (parameterNames == null || parameterNames.Length == 0 || parameterNames.Any(string.IsNullOrEmpty))
@@ -111,12 +111,12 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Validates that a parameter is not null and returns appropriate result
+    /// Validates that a reference-type parameter is not <c>null</c> and returns the appropriate result.
     /// </summary>
-    /// <typeparam name="T">StepType of the parameter to validate</typeparam>
-    /// <param name="value">Value to validate</param>
-    /// <param name="parameterName">Name of the parameter</param>
-    /// <returns>Success result if not null, failure result if null</returns>
+    /// <typeparam name="T">The type of the parameter to validate.</typeparam>
+    /// <param name="value">The value to validate.</param>
+    /// <param name="parameterName">The name of the parameter being validated.</param>
+    /// <returns>A success result when the value is non-null; otherwise, a failure describing the missing parameter.</returns>
     public static Result<T> EnsureNotNull<T>(T? value, string parameterName) where T : class
     {
         if (string.IsNullOrEmpty(parameterName))
@@ -130,12 +130,12 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Validates that a nullable parameter is not null and returns appropriate result
+    /// Validates that a nullable value type is not <c>null</c> and returns the appropriate result.
     /// </summary>
-    /// <typeparam name="T">StepType of the parameter to validate</typeparam>
-    /// <param name="value">Nullable value to validate</param>
-    /// <param name="parameterName">Name of the parameter</param>
-    /// <returns>Success result if has value, failure result if null</returns>
+    /// <typeparam name="T">The value type being validated.</typeparam>
+    /// <param name="value">The nullable value to validate.</param>
+    /// <param name="parameterName">The name of the parameter being validated.</param>
+    /// <returns>A success result when the value has a value; otherwise, a failure describing the missing parameter.</returns>
     public static Result<T> EnsureNotNull<T>(T? value, string parameterName) where T : struct
     {
         if (string.IsNullOrEmpty(parameterName))
@@ -149,10 +149,10 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Validates multiple parameters and returns success or failure with all null parameter names
+    /// Validates multiple parameters and returns a result indicating which values were <c>null</c>.
     /// </summary>
-    /// <param name="validations">Array of parameter validations (value, parameterName)</param>
-    /// <returns>Success result if all valid, failure result with all null parameter names</returns>
+    /// <param name="validations">An array of parameter validations consisting of the value and parameter name.</param>
+    /// <returns>A success result when all parameters are non-null; otherwise, a failure describing the null parameters.</returns>
     public static Result ValidateNotNull(params (object? value, string parameterName)[] validations)
     {
         if (validations == null || validations.Length == 0)
@@ -175,12 +175,12 @@ public static class ResultExtensions
     }
 
     /// <summary>
-    /// Fluent validation chain for multiple parameters
+    /// Validates multiple parameters and, when successful, produces a result using the provided factory function.
     /// </summary>
-    /// <typeparam name="T">Result type</typeparam>
-    /// <param name="factory">Factory function to create result if all validations pass</param>
-    /// <param name="validations">Array of parameter validations</param>
-    /// <returns>Success result with factory value or failure with validation errors</returns>
+    /// <typeparam name="T">The type produced by the factory function.</typeparam>
+    /// <param name="factory">The factory function invoked when all validations pass.</param>
+    /// <param name="validations">An array of parameter validations consisting of the value and parameter name.</param>
+    /// <returns>A success result produced by the factory or a failure listing the null parameters.</returns>
     public static Result<T> CreateIfValid<T>(Func<T> factory, params (object? value, string parameterName)[] validations)
     {
         if (factory == null)

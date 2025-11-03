@@ -171,10 +171,18 @@ namespace IndFusion.Analyzers.Operations;
 /// }
 /// </code>
 /// </example>
+/// <summary>
+/// Provides utility functions for normalizing error collections used by <see cref="Result"/> instances.
+/// </summary>
 internal static class ResultErrorNormalizer
 {
     private const int MaxEnumeratedErrors = 4096;
 
+    /// <summary>
+    /// Normalizes the provided collection of error messages into a sanitized array.
+    /// </summary>
+    /// <param name="errors">The error messages to normalize.</param>
+    /// <returns>An array containing non-empty error messages with invalid or missing entries replaced by a default message.</returns>
     public static string[] Normalize(IEnumerable<string>? errors)
     {
         var errorList = new List<string>();

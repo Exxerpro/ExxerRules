@@ -115,7 +115,7 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return name;
     }
 
-    //  False-Positive Mitigation Methods
+    // False-positive mitigation helpers
 
     /// <summary>
     /// Determines whether the supplied region directive should be exempt from diagnostics.
@@ -358,9 +358,6 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    // False-Positive Mitigation Methods
-
-    //  Helper Methods
     /// <summary>
     /// Retrieves the syntax node that spans the content enclosed by the supplied region directives.
     /// </summary>
@@ -555,5 +552,4 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return member is Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax;
     }
 
-    // Helper Methods
 }

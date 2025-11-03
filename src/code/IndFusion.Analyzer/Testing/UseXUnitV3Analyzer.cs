@@ -15,10 +15,24 @@ namespace IndFusion.Analyzers.Testing;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UseXUnitV3Analyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Gets the localized analyzer title shown when an outdated testing attribute is discovered.
+    /// </summary>
     private static readonly LocalizableString Title = "Use XUnit v3 for testing";
+
+    /// <summary>
+    /// Gets the format string used for diagnostics describing the discovered testing framework.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Use XUnit v3 instead of '{0}' for testing";
+
+    /// <summary>
+    /// Gets the diagnostic description explaining why XUnit v3 should be preferred.
+    /// </summary>
     private static readonly LocalizableString Description = "XUnit v3 should be used for all testing instead of other testing frameworks like MSTest or NUnit.";
 
+    /// <summary>
+    /// The diagnostic emitted when MSTest or NUnit artifacts are found in source code.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.UseXUnitV3,
         Title,
@@ -28,10 +42,16 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the single <c>UseXUnitV3</c> descriptor.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Configures syntax node actions used to flag legacy testing frameworks.
+    /// </summary>
+    /// <param name="context">The analysis context used to register callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -41,6 +61,10 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeUsingDirective, SyntaxKind.UsingDirective);
     }
 
+    /// <summary>
+    /// Examines attribute declarations for MSTest or NUnit usage and reports diagnostics when found.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context for the attribute.</param>
     private static void AnalyzeAttribute(SyntaxNodeAnalysisContext context)
     {
         var attribute = (AttributeSyntax)context.Node;
@@ -130,6 +154,10 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Inspects using directives for forbidden testing framework namespaces.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context for the using directive.</param>
     private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
     {
         var usingDirective = (UsingDirectiveSyntax)context.Node;
@@ -183,6 +211,11 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Maps a forbidden attribute name to its parent testing framework.
+    /// </summary>
+    /// <param name="attributeName">The attribute identifier discovered in source.</param>
+    /// <returns>The friendly testing framework name associated with the attribute.</returns>
     private static string GetFrameworkName(string attributeName) => attributeName switch
     {
         "TestMethod" or "TestClass" or "TestInitialize" or "TestCleanup" or
@@ -192,6 +225,11 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         _ => "unknown testing framework"
     };
 
+    /// <summary>
+    /// Maps a forbidden namespace to its parent testing framework.
+    /// </summary>
+    /// <param name="namespaceName">The namespace discovered in a using directive.</param>
+    /// <returns>The friendly testing framework name associated with the namespace.</returns>
     private static string GetFrameworkNameFromNamespace(string namespaceName) => namespaceName switch
     {
         var ns when ns.StartsWith("Microsoft.VisualStudio.TestTools.UnitTesting") => "MSTest",
@@ -199,8 +237,18 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         _ => "unknown testing framework"
     };
 
+    /// <summary>
+    /// Determines whether the supplied name belongs to the Microsoft Testing Platform.
+    /// </summary>
+    /// <param name="name">The fully qualified type or namespace name.</param>
+    /// <returns><c>true</c> when the name references Microsoft Testing Platform artifacts; otherwise, <c>false</c>.</returns>
     private static bool IsTestingPlatform(string name) => name.StartsWith("Microsoft.Testing.Platform", StringComparison.OrdinalIgnoreCase);
 
+    /// <summary>
+    /// Determines whether the file path points to build output such as <c>bin</c> or <c>obj</c> folders.
+    /// </summary>
+    /// <param name="path">The file path under analysis.</param>
+    /// <returns><c>true</c> when the path resides in build output; otherwise, <c>false</c>.</returns>
     private static bool IsInBuildOutputFolder(string? path)
     {
         if (string.IsNullOrEmpty(path)) return false;
@@ -215,6 +263,11 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the syntax tree represents auto-generated code.
+    /// </summary>
+    /// <param name="tree">The syntax tree to inspect.</param>
+    /// <returns><c>true</c> when the file contains an auto-generated header; otherwise, <c>false</c>.</returns>
     private static bool IsAutoGenerated(SyntaxTree tree)
     {
         try
@@ -229,6 +282,11 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Evaluates analyzer configuration to determine whether the current file should be skipped.
+    /// </summary>
+    /// <param name="context">The analysis context associated with the syntax node.</param>
+    /// <returns><c>true</c> when project metadata disables the analyzer for this file; otherwise, <c>false</c>.</returns>
     private static bool IsIgnoredByProjectConfig(SyntaxNodeAnalysisContext context)
     {
         // Path-based skip for analyzer test assets
@@ -257,6 +315,11 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the current compilation suppresses the conversion diagnostics at the assembly level.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
+    /// <returns><c>true</c> when suppression attributes are present; otherwise, <c>false</c>.</returns>
     private static bool HasAssemblySuppression(SyntaxNodeAnalysisContext context)
     {
         try
@@ -270,13 +333,28 @@ public class UseXUnitV3Analyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Tracks using directives already reported per syntax tree to avoid duplicate diagnostics.
+    /// </summary>
     private static readonly ConcurrentDictionary<SyntaxTree, ConcurrentDictionary<string, byte>> ReportedNamespaces = new();
+
+    /// <summary>
+    /// Adds a namespace to the reported cache and indicates whether it should be reported.
+    /// </summary>
+    /// <param name="tree">The syntax tree hosting the using directive.</param>
+    /// <param name="ns">The namespace discovered.</param>
+    /// <returns><c>true</c> when the namespace was not previously reported; otherwise, <c>false</c>.</returns>
     private static bool ShouldReportUsing(SyntaxTree tree, string ns)
     {
         var set = ReportedNamespaces.GetOrAdd(tree, _ => new ConcurrentDictionary<string, byte>(StringComparer.OrdinalIgnoreCase));
         return set.TryAdd(ns, 0);
     }
 
+    /// <summary>
+    /// Retrieves a diagnostic descriptor honoring severity overrides supplied via editorconfig.
+    /// </summary>
+    /// <param name="context">The syntax node analysis context.</param>
+    /// <returns>The severity-adjusted descriptor when provided; otherwise, <c>null</c> to fall back to the default rule.</returns>
     private static DiagnosticDescriptor? GetDescriptorWithSeverity(SyntaxNodeAnalysisContext context)
     {
         if (context.Options.AnalyzerConfigOptionsProvider.GlobalOptions.TryGetValue("dotnet_diagnostic.EXXER101.severity", out var value))

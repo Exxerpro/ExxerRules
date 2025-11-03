@@ -59,6 +59,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeIfStatement, SyntaxKind.IfStatement);
     }
 
+    /// <summary>
+    /// Evaluates if-statements to determine whether declaration patterns should be used.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the if-statement.</param>
     private static void AnalyzeIfStatement(SyntaxNodeAnalysisContext context)
     {
         try
@@ -98,6 +102,11 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Recursively evaluates else-if statements for pattern matching opportunities.
+    /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <param name="reportDiagnostic">Callback used to report diagnostics.</param>
     private static void AnalyzeIfStatementForPattern(IfStatementSyntax ifStatement, Action<Diagnostic> reportDiagnostic)
     {
         // Check if condition is a simple 'is' expression without declaration pattern
@@ -117,6 +126,12 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Determines whether the statement contains a cast of the variable checked by the <c>is</c> expression.
+    /// </summary>
+    /// <param name="statement">The statement to inspect.</param>
+    /// <param name="isExpression">The binary expression representing the <c>is</c> check.</param>
+    /// <returns><c>true</c> when a matching cast is present; otherwise, <c>false</c>.</returns>
     private static bool ContainsCastOfSameVariable(StatementSyntax statement, BinaryExpressionSyntax isExpression)
     {
         // Get the variable being checked in the 'is' expression
@@ -138,6 +153,13 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the block contains a cast of the supplied variable to the target type.
+    /// </summary>
+    /// <param name="block">The block syntax to inspect.</param>
+    /// <param name="variableName">The variable name referenced in the <c>is</c> expression.</param>
+    /// <param name="targetType">The target type being cast to.</param>
+    /// <returns><c>true</c> when a cast is detected; otherwise, <c>false</c>.</returns>
     private static bool BlockContainsCast(BlockSyntax block, string variableName, string targetType)
     {
         foreach (var statement in block.Statements)
@@ -176,6 +198,13 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Recursively inspects an expression for casts of the variable to the specified type.
+    /// </summary>
+    /// <param name="expression">The expression to analyze.</param>
+    /// <param name="variableName">The variable name referenced in the <c>is</c> expression.</param>
+    /// <param name="targetType">The target type being cast to.</param>
+    /// <returns><c>true</c> when a matching cast is found; otherwise, <c>false</c>.</returns>
     private static bool ExpressionContainsCast(ExpressionSyntax? expression, string variableName, string targetType)
     {
         if (expression == null)
@@ -215,65 +244,68 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     //  False-Positive Mitigation Methods
 
     /// <summary>
-    /// Determines if an if statement is exempt from the pattern matching rule.
+    /// Determines whether an if-statement should be exempt from the pattern matching rule.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to evaluate.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when the statement matches an exemption scenario; otherwise, <c>false</c>.</returns>
     private static bool IsExemptFromPatternMatchingRule(IfStatementSyntax ifStatement, SyntaxNodeAnalysisContext context)
     {
-        // Story 1.1: Exempt Conditional Operator Guards
+        // Exemption: Conditional operator guards already validate types inline
         if (IsConditionalOperatorGuard(ifStatement))
         {
             return true;
         }
 
-        // Story 1.2: Exempt Reflection Property Access
+        // Exemption: Reflection-based property access patterns rely on explicit casts
         if (IsReflectionPropertyAccess(ifStatement, context))
         {
             return true;
         }
 
-        // Story 1.3: Exempt Type-Switched Casts
+        // Exemption: Type-switched casts intentionally pattern-match via if/else chains
         if (IsTypeSwitchedCast(ifStatement))
         {
             return true;
         }
 
-        // Story 1.4: Exempt Local Function Closures
+        // Exemption: Local function closures may require explicit casts for captured variables
         if (IsLocalFunctionClosure(ifStatement))
         {
             return true;
         }
 
-        // Story 1.5: Support is not null Guard Clauses
+        // Exemption: <c>is not null</c> guard clauses provide a different intent
         if (IsIsNotNullGuard(ifStatement))
         {
             return true;
         }
 
-        // Story 1.6: Exempt Nullable Unwrap Patterns
+        // Exemption: Nullable unwrap patterns already express intent clearly
         if (IsNullableUnwrapPattern(ifStatement))
         {
             return true;
         }
 
-        // Story 1.7: Exempt Type Equality Guards
+        // Exemption: Type equality guards rely on <c>typeof</c> comparisons
         if (IsTypeEqualityGuard(ifStatement))
         {
             return true;
         }
 
-        // Story 1.8: Exempt Tuple Pattern Extraction
+        // Exemption: Tuple extraction often demands explicit casting for clarity
         if (IsTuplePatternExtraction(ifStatement))
         {
             return true;
         }
 
-        // Story 1.9: Exempt Pattern-Matched Exception Handling
+        // Exemption: Exception handling patterns may cast for legacy compatibility
         if (IsPatternMatchedExceptionHandling(ifStatement))
         {
             return true;
         }
 
-        // Story 1.10: Exempt Temporary Variable Reassignment
+        // Exemption: Temporary variable reassignment may require explicit casts
         if (IsTemporaryVariableReassignment(ifStatement))
         {
             return true;
@@ -283,8 +315,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.1: Exempt Conditional Operator Guards
+    /// Determines whether the statement uses a conditional operator pattern that already performs safe casting.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when conditional operator guards require explicit casts; otherwise, <c>false</c>.</returns>
     private static bool IsConditionalOperatorGuard(IfStatementSyntax ifStatement)
     {
         // Check if the if statement contains a conditional operator with is check and cast
@@ -296,8 +330,11 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.2: Exempt Reflection Property Access
+    /// Determines whether the statement participates in reflection-based property access where explicit casts are expected.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when reflection patterns are detected; otherwise, <c>false</c>.</returns>
     private static bool IsReflectionPropertyAccess(IfStatementSyntax ifStatement, SyntaxNodeAnalysisContext context)
     {
         // Check if we're in a reflection helper method
@@ -317,8 +354,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.3: Exempt Type-Switched Casts
+    /// Determines whether the statement participates in a type-switch construct that deliberately casts values.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when the statement is part of a type-switch pattern; otherwise, <c>false</c>.</returns>
     private static bool IsTypeSwitchedCast(IfStatementSyntax ifStatement)
     {
         // Check if the if statement contains a type switch expression
@@ -327,8 +366,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.4: Exempt Local Function Closures
+    /// Determines whether the statement contains local function or lambda closures that require explicit casts.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when closures necessitate the legacy pattern; otherwise, <c>false</c>.</returns>
     private static bool IsLocalFunctionClosure(IfStatementSyntax ifStatement)
     {
         // Check if the if statement contains local functions or lambdas
@@ -340,8 +381,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.5: Support is not null Guard Clauses
+    /// Determines whether the statement is an <c>is not null</c> guard clause.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when the guard simply checks for non-null values; otherwise, <c>false</c>.</returns>
     private static bool IsIsNotNullGuard(IfStatementSyntax ifStatement)
     {
         // Check if the condition uses "is not null"
@@ -350,8 +393,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.6: Exempt Nullable Unwrap Patterns
+    /// Determines whether the statement unwraps nullable value types in a way that favors explicit casts.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when nullable unwrap patterns are detected; otherwise, <c>false</c>.</returns>
     private static bool IsNullableUnwrapPattern(IfStatementSyntax ifStatement)
     {
         // Check if the condition checks for value types
@@ -362,8 +407,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.7: Exempt Type Equality Guards
+    /// Determines whether the statement compares <c>typeof</c> values to enforce type equality.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when a <c>typeof</c> equality guard is present; otherwise, <c>false</c>.</returns>
     private static bool IsTypeEqualityGuard(IfStatementSyntax ifStatement)
     {
         // Check if the condition uses typeof equality
@@ -372,8 +419,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.8: Exempt Tuple Pattern Extraction
+    /// Determines whether the statement performs tuple extraction that requires explicit casting.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when tuple extraction patterns are detected; otherwise, <c>false</c>.</returns>
     private static bool IsTuplePatternExtraction(IfStatementSyntax ifStatement)
     {
         // Check if the if statement contains tuple patterns - be more specific
@@ -384,8 +433,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.9: Exempt Pattern-Matched Exception Handling
+    /// Determines whether the statement participates in pattern-matched exception handling scenarios.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when pattern-matched exception handling is detected; otherwise, <c>false</c>.</returns>
     private static bool IsPatternMatchedExceptionHandling(IfStatementSyntax ifStatement)
     {
         // Check if we're in a catch block with when clause
@@ -400,8 +451,10 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.10: Exempt Temporary Variable Reassignment
+    /// Determines whether the statement reassigns temporary variables in a way that necessitates explicit casts.
     /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when temporary variable reassignment is detected; otherwise, <c>false</c>.</returns>
     private static bool IsTemporaryVariableReassignment(IfStatementSyntax ifStatement)
     {
         // Check if the if statement contains variable reassignment patterns

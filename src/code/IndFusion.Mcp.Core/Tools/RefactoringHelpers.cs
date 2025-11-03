@@ -21,13 +21,13 @@ public static class ExxerFactoringHelpers
     // This allows us to store and access Solution instances across threads
     // without additional locking or synchronization.
     /// <summary>Cache of loaded solutions keyed by solution path.</summary>
-    public static MemoryCache SolutionCache = new(new MemoryCacheOptions());
+    public static MemoryCache SolutionCache { get; private set; } = new(new MemoryCacheOptions());
 
     /// <summary>Cache of parsed syntax trees keyed by file path.</summary>
-    public static MemoryCache SyntaxTreeCache = new(new MemoryCacheOptions());
+    public static MemoryCache SyntaxTreeCache { get; private set; } = new(new MemoryCacheOptions());
 
     /// <summary>Cache of semantic models keyed by file path.</summary>
-    public static MemoryCache ModelCache = new(new MemoryCacheOptions());
+    public static MemoryCache ModelCache { get; private set; } = new(new MemoryCacheOptions());
 
     /// <summary>
     /// Clears and recreates all in-memory caches for solutions, syntax trees and semantic models.

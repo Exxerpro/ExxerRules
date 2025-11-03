@@ -1,17 +1,17 @@
 namespace IndFusion.Analyzers.Operations;
 
 /// <summary>
-/// Static factory for creating null argument validation results
+/// Provides factory methods for creating <see cref="Result"/> instances that capture null argument validation failures.
 /// </summary>
 public static class NullArgumentValidation
 {
     /// <summary>
-    /// Creates a failure result for a single null argument
+    /// Creates a generic failure result for a single null argument.
     /// </summary>
-    /// <typeparam name="T">Result type</typeparam>
-    /// <param name="parameterName">Name of the null parameter</param>
-    /// <param name="message">Optional error message</param>
-    /// <returns>Failed result with null argument error</returns>
+    /// <typeparam name="T">The type carried by the result.</typeparam>
+    /// <param name="parameterName">The name of the parameter that was <c>null</c>.</param>
+    /// <param name="message">An optional custom error message.</param>
+    /// <returns>A failed result containing the null argument error.</returns>
     public static Result<T> Failure<T>(string parameterName, string? message = null)
     {
         var error = new NullArgumentError(parameterName, message);
@@ -19,11 +19,11 @@ public static class NullArgumentValidation
     }
 
     /// <summary>
-    /// Creates a failure result for multiple null arguments
+    /// Creates a generic failure result for multiple null arguments.
     /// </summary>
-    /// <typeparam name="T">Result type</typeparam>
-    /// <param name="parameterNames">Names of null parameters</param>
-    /// <returns>Failed result with multiple null argument errors</returns>
+    /// <typeparam name="T">The type carried by the result.</typeparam>
+    /// <param name="parameterNames">The names of the parameters that were <c>null</c>.</param>
+    /// <returns>A failed result describing each null argument error.</returns>
     public static Result<T> Failure<T>(params string[] parameterNames)
     {
         var error = new MultipleNullArgumentsError(parameterNames);
@@ -31,11 +31,11 @@ public static class NullArgumentValidation
     }
 
     /// <summary>
-    /// Creates a non-generic failure result for a single null argument
+    /// Creates a non-generic failure result for a single null argument.
     /// </summary>
-    /// <param name="parameterName">Name of the null parameter</param>
-    /// <param name="message">Optional error message</param>
-    /// <returns>Failed result with null argument error</returns>
+    /// <param name="parameterName">The name of the parameter that was <c>null</c>.</param>
+    /// <param name="message">An optional custom error message.</param>
+    /// <returns>A failed result containing the null argument error.</returns>
     public static Result Failure(string parameterName, string? message = null)
     {
         var error = new NullArgumentError(parameterName, message);
@@ -43,10 +43,10 @@ public static class NullArgumentValidation
     }
 
     /// <summary>
-    /// Creates a non-generic failure result for multiple null arguments
+    /// Creates a non-generic failure result for multiple null arguments.
     /// </summary>
-    /// <param name="parameterNames">Names of null parameters</param>
-    /// <returns>Failed result with multiple null argument errors</returns>
+    /// <param name="parameterNames">The names of the parameters that were <c>null</c>.</param>
+    /// <returns>A failed result describing each null argument error.</returns>
     public static Result Failure(params string[] parameterNames)
     {
         var error = new MultipleNullArgumentsError(parameterNames);

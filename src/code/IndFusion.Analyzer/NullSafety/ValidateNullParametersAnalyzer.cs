@@ -16,10 +16,24 @@ namespace IndFusion.Analyzers.NullSafety;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Title displayed when null parameter validation is missing.
+    /// </summary>
     private static readonly LocalizableString Title = "Validate null parameters at method entry";
+
+    /// <summary>
+    /// Message format identifying the member and parameters that require validation.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Method '{0}' should validate null parameters at method entry for parameter(s): {1}";
+
+    /// <summary>
+    /// Description explaining why null parameter validation is enforced.
+    /// </summary>
     private static readonly LocalizableString Description = "Methods should validate reference type parameters for null values at the method entry point, following fail-safe defaults and defensive programming principles.";
 
+    /// <summary>
+    /// Diagnostic rule raised when null parameter validation is omitted.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.ValidateNullParameters,
         Title,
@@ -29,10 +43,16 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the null-parameter validation rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that analyze method declarations for null parameter validation.
+    /// </summary>
+    /// <param name="context">The analysis context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -41,6 +61,10 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
     }
 
+    /// <summary>
+    /// Evaluates method declarations for missing null-parameter validation.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the method.</param>
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.Node;
@@ -74,6 +98,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Determines whether the supplied method should be excluded from null-parameter validation.
+    /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when the method does not require null validation; otherwise, <c>false</c>.</returns>
     private static bool IsSkippableMethod(MethodDeclarationSyntax method)
     {
         // Skip constructors, destructors, and event handlers
@@ -97,6 +126,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Collects the reference-type parameters that require null validation for the specified method.
+    /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <param name="semanticModel">The semantic model providing type information.</param>
+    /// <returns>A list of parameter names that should be validated for null.</returns>
     private static List<string> GetReferenceTypeParameters(MethodDeclarationSyntax method, SemanticModel semanticModel)
     {
         var referenceParams = new List<string>();
@@ -151,6 +186,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Checks if the method is a guard method that should be exempt from null validation.
     /// </summary>
+    /// <summary>
+    /// Determines whether the method acts as a guard helper and should bypass validation checks.
+    /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when the method behaves like a guard helper; otherwise, <c>false</c>.</returns>
     private static bool IsGuardMethod(MethodDeclarationSyntax method)
     {
         var methodName = method.Identifier.ValueText;
@@ -190,6 +230,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Checks if the type is an infrastructure type that should be exempt from null validation.
     /// </summary>
+    /// <summary>
+    /// Determines whether the specified type represents an infrastructure or framework type that is exempt from validation.
+    /// </summary>
+    /// <param name="type">The type symbol to inspect.</param>
+    /// <returns><c>true</c> when the type is considered infrastructure; otherwise, <c>false</c>.</returns>
     private static bool IsInfrastructureType(ITypeSymbol type)
     {
         if (type == null)
@@ -218,6 +263,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Checks if a type name represents a value type (fallback for when semantic model is unavailable).
     /// </summary>
+    /// <summary>
+    /// Determines whether the provided type name represents a value type that does not require null validation.
+    /// </summary>
+    /// <param name="typeName">The type name to inspect.</param>
+    /// <returns><c>true</c> when the name references a known value type; otherwise, <c>false</c>.</returns>
     private static bool IsValueTypeByName(string typeName)
     {
         // Remove nullable indicator for checking
@@ -230,6 +280,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
                      "CancellationToken" or "IntPtr" or "UIntPtr";
     }
 
+    /// <summary>
+    /// Determines which reference-type parameters in the method lack null validation.
+    /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <param name="referenceParameters">The list of reference-type parameter names requiring validation.</param>
+    /// <returns>A list containing the names of parameters missing null validation.</returns>
     private static List<string> GetUnvalidatedReferenceParameters(MethodDeclarationSyntax method, List<string> referenceParameters)
     {
         var unvalidated = new List<string>(referenceParameters);
@@ -312,6 +368,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return unvalidated;
     }
 
+    /// <summary>
+    /// Retrieves the statements contained within the method for validation analysis.
+    /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns>An enumerable collection of statements within the method body.</returns>
     private static IEnumerable<StatementSyntax> GetMethodStatements(MethodDeclarationSyntax method)
     {
         if (method.Body != null)
@@ -326,6 +387,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return [];
     }
 
+    /// <summary>
+    /// Searches the condition expression for null checks against known reference parameters.
+    /// </summary>
+    /// <param name="condition">The conditional expression to analyze.</param>
+    /// <param name="referenceParameters">The set of reference parameters requiring validation.</param>
+    /// <returns>The name of the parameter validated in the condition, or <c>null</c> when none is found.</returns>
     private static string? FindNullCheckInCondition(ExpressionSyntax condition, List<string> referenceParameters)
     {
         if (condition is BinaryExpressionSyntax binaryExpr)
@@ -358,6 +425,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return null;
     }
 
+    /// <summary>
+    /// Attempts to detect null-validation logic within the supplied statement.
+    /// </summary>
+    /// <param name="statement">The statement to inspect.</param>
+    /// <param name="referenceParameters">The reference parameters that require validation.</param>
+    /// <returns>The name of the parameter validated within the statement, or <c>null</c> when no validation is found.</returns>
     private static string? FindValidatedParameter(StatementSyntax statement, List<string> referenceParameters)
     {
         // Check for if statements with null checks
@@ -394,6 +467,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return null;
     }
 
+    /// <summary>
+    /// Determines whether the if-statement performs an appropriate null validation check.
+    /// </summary>
+    /// <param name="ifStatement">The if-statement to inspect.</param>
+    /// <returns><c>true</c> when the statement validates null parameters; otherwise, <c>false</c>.</returns>
     private static bool HasAppropriateValidation(IfStatementSyntax ifStatement)
     {
         // Check if the if statement body contains appropriate validation patterns
@@ -419,6 +497,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the statement represents an acceptable null-validation pattern.
+    /// </summary>
+    /// <param name="statement">The statement to inspect.</param>
+    /// <returns><c>true</c> when the statement guards against null values; otherwise, <c>false</c>.</returns>
     private static bool IsValidValidationStatement(StatementSyntax statement)
     {
         // Check for throw new ArgumentNullException(nameof(parameter))
@@ -455,6 +538,11 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Extracts the identifier text from the supplied expression when available.
+    /// </summary>
+    /// <param name="expression">The expression to analyze.</param>
+    /// <returns>The identifier name, or <c>string.Empty</c> when none is found.</returns>
     private static string GetIdentifierFromExpression(ExpressionSyntax expression) => expression switch
     {
         IdentifierNameSyntax identifier => identifier.Identifier.ValueText,
@@ -462,9 +550,19 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
         _ => string.Empty
     };
 
+    /// <summary>
+    /// Determines whether the expression represents a null literal.
+    /// </summary>
+    /// <param name="expression">The expression to inspect.</param>
+    /// <returns><c>true</c> when the expression is the null literal; otherwise, <c>false</c>.</returns>
     private static bool IsNullLiteral(ExpressionSyntax expression) => expression is LiteralExpressionSyntax literal &&
                literal.Token.IsKind(SyntaxKind.NullKeyword);
 
+    /// <summary>
+    /// Determines whether the pattern corresponds to a null constant.
+    /// </summary>
+    /// <param name="pattern">The pattern to inspect.</param>
+    /// <returns><c>true</c> when the pattern represents null; otherwise, <c>false</c>.</returns>
     private static bool IsNullPattern(PatternSyntax pattern) => pattern is ConstantPatternSyntax constantPattern &&
                constantPattern.Expression is LiteralExpressionSyntax literal &&
                literal.Token.IsKind(SyntaxKind.NullKeyword);
@@ -472,6 +570,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Finds validated parameters in expression-bodied members.
     /// </summary>
+    /// <summary>
+    /// Inspects an expression for nested guard calls validating reference parameters.
+    /// </summary>
+    /// <param name="expression">The expression to analyze.</param>
+    /// <param name="referenceParameters">The reference parameters that require validation.</param>
+    /// <returns>A list of parameter names validated within the expression.</returns>
     private static List<string> FindValidatedParametersInExpression(ExpressionSyntax expression, List<string> referenceParameters)
     {
         var validated = new List<string>();
@@ -533,6 +637,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Finds validated parameters in local functions.
     /// </summary>
+    /// <summary>
+    /// Examines a local function for null-validation logic covering specified reference parameters.
+    /// </summary>
+    /// <param name="localFunction">The local function statement to inspect.</param>
+    /// <param name="referenceParameters">The parameters that require validation.</param>
+    /// <returns>A list of parameter names validated within the local function.</returns>
     private static List<string> FindValidatedParametersInLocalFunction(LocalFunctionStatementSyntax localFunction, List<string> referenceParameters)
     {
         var validated = new List<string>();
@@ -560,6 +670,12 @@ public class ValidateNullParametersAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Finds validated parameters in invocation expressions (guard helpers, etc.).
     /// </summary>
+    /// <summary>
+    /// Analyzes a guard invocation to determine which reference parameters are validated.
+    /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <param name="referenceParameters">The parameters requiring validation.</param>
+    /// <returns>A list of parameter names validated by the invocation.</returns>
     private static List<string> FindValidatedParametersInInvocation(InvocationExpressionSyntax invocation, List<string> referenceParameters)
     {
         var validated = new List<string>();

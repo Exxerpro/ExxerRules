@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+	<!-- Shared testing platform + xUnit v3 configuration for robust discovery across runners -->
+	<PropertyGroup>
+		<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+		<TestingPlatformServer>true</TestingPlatformServer>
+		<IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+		<GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- xUnit v3 runners -->
+		<PackageReference Include="xunit.v3.runner.msbuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3.runner.console">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3.runner.inproc.console" />
+
+		<!-- Microsoft Testing Platform (stable 1.8.4) and extensions -->
+		<PackageReference Include="Microsoft.Testing.Platform" />
+		<PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
+		<PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+	</ItemGroup>
+
+	<ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="coverlet.collector" />
+    <PackageReference Include="Shouldly" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\code\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
+    <ProjectReference Include="..\..\code\SemanticRag\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
+    <!-- <ProjectReference Include="..\..\code\SemanticRag\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj" /> - temporarily excluded due to compilation errors -->
+  </ItemGroup>
+
+</Project>

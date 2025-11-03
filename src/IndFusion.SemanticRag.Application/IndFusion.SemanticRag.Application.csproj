@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../code/IndFusion.SemanticRag.Domain/IndFusion.SemanticRag.Domain.csproj" />
+    <ProjectReference Include="code\SemanticRag\IndFusion.SemanticRag.Domain\code\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
   </ItemGroup>
 
 </Project>

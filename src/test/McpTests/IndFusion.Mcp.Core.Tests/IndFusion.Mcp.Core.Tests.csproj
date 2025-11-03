@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ===================================================================== -->
+  <!-- Project Properties & Configuration                                      -->
+  <!-- ===================================================================== -->
+  <PropertyGroup>
+	<!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
+	<OutputType>Exe</OutputType>
+	<EnableMSTestRunner>true</EnableMSTestRunner>
+	<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<IsPackable>false</IsPackable>
+	<IsTestProject>true</IsTestProject>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+
+	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+	<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	<RootNamespace>IndFusion.Mcp.Core.Tests</RootNamespace>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  
+  </PropertyGroup>
+
+		<!-- Shared testing platform + xUnit v3 configuration for robust discovery across runners -->
+		<PropertyGroup>
+			<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+			<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+			<TestingPlatformServer>true</TestingPlatformServer>
+			<IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+			<GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<!-- xUnit v3 runners -->
+			<PackageReference Include="xunit.v3.runner.msbuild">
+				<PrivateAssets>all</PrivateAssets>
+				<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			</PackageReference>
+			<PackageReference Include="xunit.v3.runner.console">
+				<PrivateAssets>all</PrivateAssets>
+			</PackageReference>
+			<PackageReference Include="xunit.v3.runner.inproc.console" />
+
+			<!-- Microsoft Testing Platform (stable 1.8.4) and extensions -->
+			<PackageReference Include="Microsoft.Testing.Platform" />
+			<PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
+			<PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
+			<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+			<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+		</ItemGroup>
+
+
+	<!-- ===================================================================== -->
+  <!-- Package Dependencies                                                   -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<!-- Microsoft Extensions & Configuration -->
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+	<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
+	<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+	<!-- Testing Framework & Tools -->
+	<!-- Removed Microsoft.Testing.Platform due to instability in prerelease -->
+	<PackageReference Include="Microsoft.NET.Test.Sdk" />
+	<PackageReference Include="xunit.v3" />
+	<PackageReference Update="xunit.v3.runner.console">
+	  <PrivateAssets>all</PrivateAssets>
+	</PackageReference>
+	<PackageReference Include="xunit.runner.visualstudio">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Update="xunit.v3.runner.msbuild">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	</PackageReference>
+	<!-- Test Coverage & Mocking -->
+	<PackageReference Include="coverlet.collector">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="NSubstitute" />
+	<PackageReference Include="Shouldly" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Project References                                                     -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<ProjectReference Include="..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+  </ItemGroup>
+</Project>

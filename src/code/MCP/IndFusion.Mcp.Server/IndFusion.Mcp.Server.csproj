@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- ===================================================================== -->
+  <!-- Project Properties & Configuration                                      -->
+  <!-- ===================================================================== -->
+  <PropertyGroup>
+	<!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
+	<ImplicitUsings>enable</ImplicitUsings>
+	<Nullable>enable</Nullable>
+	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+	  <!-- Package Information -->
+	<PackageId>IndFusion.Mcp.Server</PackageId>
+    <PackageVersion>1.0.8</PackageVersion>
+	<Authors>IndFusion</Authors>
+	<Description>MCP server library for IndFusion - Model Context Protocol integration</Description>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<RootNamespace>IndFusion.Mcp.Server</RootNamespace>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+  <!-- ===================================================================== -->
+  <!-- Package Dependencies                                                   -->
+  <!-- ===================================================================== -->
+ <ItemGroup>
+	<!-- Microsoft Extensions & Hosting -->
+	<PackageReference Include="Microsoft.Extensions.Hosting" />
+	<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+	<PackageReference Include="Microsoft.Extensions.Logging.Console" />
+	<PackageReference Include="ModelContextProtocol.AspNetCore" />
+	<!-- UI Framework & Components -->
+	<PackageReference Include="MudBlazor" />
+	<!-- System & JSON (included in shared framework) -->
+	<!-- Protocol & Communication -->
+	<PackageReference Include="ModelContextProtocol" />
+  </ItemGroup>
+  <ItemGroup>
+	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Project References                                                     -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<ProjectReference Include="IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- InternalsVisibleTo Configuration                                       -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<InternalsVisibleTo Include="IndFusion.Mcp.Tests" />
+	<InternalsVisibleTo Include="IndFusion.Mcp.Web" />
+  </ItemGroup>
+  <!-- ===================================================================== -->
+  <!-- Package Version Overrides                                              -->
+  <!-- ===================================================================== -->
+  <ItemGroup>
+	<PackageVersion Update="Microsoft.Extensions.Hosting" />
+	<PackageVersion Update="SonarAnalyzer.CSharp" />
+  </ItemGroup>
+</Project>

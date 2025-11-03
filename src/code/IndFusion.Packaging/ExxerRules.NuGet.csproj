@@ -33,8 +33,8 @@
     <RootNamespace>IndFusion.Packaging</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\IndFusion.Analyzer\IndFusion.Analyzer.csproj" PrivateAssets="all" />
-    <ProjectReference Include="..\IndFusion.Fixer\IndFusion.Fixer.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Analyzer\IndFusion.Analyzer\IndFusion.Analyzer.csproj" PrivateAssets="all" />
+    <ProjectReference Include="..\Analyzer\IndFusion.Fixer\IndFusion.Fixer.csproj" PrivateAssets="all" />
   </ItemGroup>
   <!-- Add a minimal dependency to satisfy NuGet validation -->
   <ItemGroup>
@@ -50,8 +50,8 @@
   </ItemGroup>
   <!-- Analyzer DLLs - using None with proper PackagePath for analyzers -->
   <ItemGroup>
-    <None Include="..\IndFusion.Analyzer\bin\Release\netstandard2.0\IndFusion.Analyzer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
-    <None Include="..\IndFusion.Fixer\bin\Release\netstandard2.0\IndFusion.Fixer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\Analyzer\IndFusion.Analyzer\bin\Release\netstandard2.0\IndFusion.Analyzer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
+    <None Include="..\Analyzer\IndFusion.Fixer\bin\Release\netstandard2.0\IndFusion.Fixer.dll" Pack="true" PackagePath="analyzers\dotnet\cs\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="build\ExxerRules.props" Pack="true" PackagePath="build\" />

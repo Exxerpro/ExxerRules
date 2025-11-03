@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -22,8 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\code\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
-    <ProjectReference Include="..\..\code\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
+    <ProjectReference Include="..\code\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
+    <ProjectReference Include="..\code\SemanticRag\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
   </ItemGroup>
 
 </Project>

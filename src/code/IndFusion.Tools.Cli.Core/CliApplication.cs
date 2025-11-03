@@ -36,7 +36,7 @@ public class CliApplication
         try
         {
             var rootCommand = BuildCommandLine();
-            return await Task.FromResult(rootCommand.Parse(args).Invoke());
+            return await rootCommand.InvokeAsync(args, cancellationToken);
         }
         catch (Exception ex)
         {

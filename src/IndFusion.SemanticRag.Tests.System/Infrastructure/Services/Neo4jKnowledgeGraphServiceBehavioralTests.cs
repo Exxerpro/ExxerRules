@@ -6,13 +6,15 @@ using IndFusion.SemanticRag.Application.Interfaces;
 using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Infrastructure.Adapters;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndFusion.SemanticRag.Infrastructure.Services;
 using IndFusion.SemanticRag.Tests.System.Helpers;
+using IndFusion.SemanticRag.Tests.System.Infrastructure.Fixtures;
 using IndQuestResults;
+using Meziantou.Extensions.Logging.Xunit.v3;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using NSubstitute;
 using Shouldly;
 using Xunit;
 
@@ -20,25 +22,50 @@ namespace IndFusion.SemanticRag.Tests.System.Infrastructure.Services;
 
 /// <summary>
 /// Behavioral system tests for Neo4jKnowledgeGraphService to drive implementation.
-/// These tests verify actual behavior and drive the replacement of mock implementations.
+/// These tests verify actual behavior using real containerized Neo4j instance.
 /// </summary>
+[Collection("System")]
 [Trait("Category", "System")]
-public class Neo4jKnowledgeGraphServiceBehavioralTests
+public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 {
-    private readonly ILogger<Neo4jKnowledgeGraphService> _logger;
-    private readonly IGraphDatabasePort _graphDatabasePort;
-    private readonly IOptions<Neo4jOptions> _options;
+	private readonly Neo4jContainerFixture _fixture;
+	private readonly ILogger<Neo4jKnowledgeGraphService> _logger;
+	private readonly IGraphDatabasePort _graphDatabasePort;
+	private readonly IOptions<Neo4jOptions> _options;
+	private readonly Neo4jKnowledgeGraphService _service;
 
-    /// <summary>
-    /// Initializes the test fixture with substitute collaborators and baseline Neo4j configuration values.
-    /// </summary>
-    public Neo4jKnowledgeGraphServiceBehavioralTests()
-    {
-        _logger = Substitute.For<ILogger<Neo4jKnowledgeGraphService>>();
-        _graphDatabasePort = Substitute.For<IGraphDatabasePort>();
-        var neo4jOptions = new Neo4jOptions { Database = "test", Uri = "bolt://localhost:7687", Username = "neo4j", Password = "test" };
-        _options = Options.Create(neo4jOptions);
-    }
+	/// <summary>
+	/// Initializes the test fixture with real services from container.
+	/// </summary>
+	/// <param name="fixture">Neo4j container fixture providing real Neo4j instance.</param>
+	/// <param name="output">Test output helper for logging.</param>
+	public Neo4jKnowledgeGraphServiceBehavioralTests(Neo4jContainerFixture fixture, ITestOutputHelper output)
+	{
+		_fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
+
+		// Create real logger using Meziantou XUnit logger
+		_logger = XUnitLogger.CreateLogger<Neo4jKnowledgeGraphService>(output);
+
+		// Create real Neo4j graph database adapter with container driver
+		var graphAdapterLogger = XUnitLogger.CreateLogger<Neo4jGraphDatabaseAdapter>(output);
+		_graphDatabasePort = new Neo4jGraphDatabaseAdapter(_fixture.Driver, Options.Create(_fixture.Options), graphAdapterLogger);
+
+		// Use container options
+		_options = Options.Create(_fixture.Options);
+
+		// Create real service instance
+		_service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+	}
+
+	/// <summary>
+	/// Cleans up test database after each test class.
+	/// </summary>
+	public void Dispose()
+	{
+		// Clear database after tests
+		Task.Run(async () => await TestCleanupHelpers.ClearNeo4jDatabase(_fixture.Driver, _fixture.Options.Database))
+			.Wait(TimeSpan.FromSeconds(5));
+	}
 
     /// <summary>
     /// Verifies that executing <see cref="Neo4jKnowledgeGraphService.QueryAsync(GraphQuery, CancellationToken)"/> with a valid MATCH query succeeds and exposes no error details.
@@ -47,12 +74,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithValidQuery_ShouldReturnActualResults()
     {
-        // Arrange
-        var query = new GraphQuery("MATCH (n) RETURN n LIMIT 10");
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var query = new GraphQuery("MATCH (n) RETURN n LIMIT 10");
 
-        // Act
-        var result = await service.QueryAsync(query, CancellationToken.None);
+		// Act
+		var result = await _service.QueryAsync(query, CancellationToken.None);
 
         // Assert - Verify contract, not implementation details
         result.IsSuccess.ShouldBeTrue();
@@ -69,13 +95,12 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithParameters_ShouldUseParametersInQuery()
     {
-        // Arrange
-        var parameters = new Dictionary<string, object> { { "name", "test" }, { "age", 25 } };
-        var query = new GraphQuery("MATCH (n {name: $name, age: $age}) RETURN n", parameters);
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var parameters = new Dictionary<string, object> { { "name", "test" }, { "age", 25 } };
+		var query = new GraphQuery("MATCH (n {name: $name, age: $age}) RETURN n", parameters);
 
-        // Act
-        var result = await service.QueryAsync(query, CancellationToken.None);
+		// Act
+		var result = await _service.QueryAsync(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -91,13 +116,12 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithTimeout_ShouldRespectTimeout()
     {
-        // Arrange
-        var query = new GraphQuery("MATCH (n) RETURN n", TimeoutMs: 100); // Very short timeout
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var query = new GraphQuery("MATCH (n) RETURN n", TimeoutMs: 100); // Very short timeout
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await service.QueryAsync(query, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<OperationCanceledException>(async () =>
+			await _service.QueryAsync(query, CancellationToken.None));
         
         // This test drives implementation of timeout handling
     }
@@ -109,16 +133,14 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithCancellation_ShouldRespectCancellationToken()
     {
-        // Arrange
-        var query = new GraphQuery("MATCH (n) RETURN n");
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-        
-        using var cts = new CancellationTokenSource();
-        cts.Cancel(); // Cancel immediately
+		// Arrange
+		var query = new GraphQuery("MATCH (n) RETURN n");
+		using var cts = new CancellationTokenSource();
+		cts.Cancel(); // Cancel immediately
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await service.QueryAsync(query, cts.Token));
+		// Act & Assert
+		await Should.ThrowAsync<OperationCanceledException>(async () =>
+			await _service.QueryAsync(query, cts.Token));
     }
 
     /// <summary>
@@ -128,12 +150,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithInvalidQuery_ShouldReturnFailure()
     {
-        // Arrange
-        var query = new GraphQuery("INVALID CYPHER QUERY");
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var query = new GraphQuery("INVALID CYPHER QUERY");
 
-        // Act
-        var result = await service.QueryAsync(query, CancellationToken.None);
+		// Act
+		var result = await _service.QueryAsync(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.ShouldBeFalse();
@@ -148,16 +169,15 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task AddNodeAsync_WithValidNode_ShouldAddNode()
     {
-        // Arrange
-        var node = new GraphNode(
-            "node-1",
-            "Person",
-            new Dictionary<string, object> { { "name", "John" }, { "age", 30 } },
-            new List<string> { "Person" });
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var node = new GraphNode(
+			"node-1",
+			"Person",
+			new Dictionary<string, object> { { "name", "John" }, { "age", 30 } },
+			new List<string> { "Person" });
 
-        // Act
-        var result = await service.AddNodeAsync(node, CancellationToken.None);
+		// Act
+		var result = await _service.AddNodeAsync(node, CancellationToken.None);
 
         // Assert
         result.Id.ShouldBe(node.Id);
@@ -174,12 +194,9 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task AddNodeAsync_WithNullNode_ShouldThrowArgumentException()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AddNodeAsync(default, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.AddNodeAsync(default, CancellationToken.None));
     }
 
     /// <summary>
@@ -189,13 +206,12 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task AddNodeAsync_WithInvalidNode_ShouldThrowArgumentException()
     {
-        // Arrange
-        var invalidNode = new GraphNode("", "", new Dictionary<string, object>(), new List<string>());
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var invalidNode = new GraphNode("", "", new Dictionary<string, object>(), new List<string>());
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AddNodeAsync(invalidNode, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.AddNodeAsync(invalidNode, CancellationToken.None));
     }
     /// <summary>
     /// Verifies that updating an existing node returns the updated node metadata and reports success.
@@ -204,17 +220,23 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task UpdateNodeAsync_WithValidNode_ShouldUpdateNode()
     {
-        // Arrange
-        var nodeId = "node-1";
-        var updatedNode = new GraphNode(
-            nodeId,
-            "Person",
-            new Dictionary<string, object> { { "name", "Jane" }, { "age", 35 } },
-            new List<string> { "Person" });
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange - Create node first
+		var nodeId = "node-1";
+		var initialNode = new GraphNode(
+			nodeId,
+			"Person",
+			new Dictionary<string, object> { { "name", "John" }, { "age", 30 } },
+			new List<string> { "Person" });
+		await _service.AddNodeAsync(initialNode, CancellationToken.None);
 
-        // Act
-        var result = await service.UpdateNodeAsync(nodeId, updatedNode, CancellationToken.None);
+		var updatedNode = new GraphNode(
+			nodeId,
+			"Person",
+			new Dictionary<string, object> { { "name", "Jane" }, { "age", 35 } },
+			new List<string> { "Person" });
+
+		// Act
+		var result = await _service.UpdateNodeAsync(nodeId, updatedNode, CancellationToken.None);
 
         // Assert
         result.Id.ShouldBe(nodeId);
@@ -231,13 +253,12 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task UpdateNodeAsync_WithNullNodeId_ShouldThrowArgumentException()
     {
-        // Arrange
-        var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.UpdateNodeAsync(null!, node, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.UpdateNodeAsync(null!, node, CancellationToken.None));
     }
 
     /// <summary>
@@ -247,13 +268,12 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task UpdateNodeAsync_WithEmptyNodeId_ShouldThrowArgumentException()
     {
-        // Arrange
-        var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.UpdateNodeAsync(string.Empty, node, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.UpdateNodeAsync(string.Empty, node, CancellationToken.None));
     }
     /// <summary>
     /// Validates that deleting an existing node returns a success result referencing the removed node id.
@@ -262,12 +282,17 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task DeleteNodeAsync_WithValidNodeId_ShouldDeleteNode()
     {
-        // Arrange
-        var nodeId = "node-1";
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange - Create node first
+		var nodeId = "node-1";
+		var node = new GraphNode(
+			nodeId,
+			"Person",
+			new Dictionary<string, object> { { "name", "John" } },
+			new List<string> { "Person" });
+		await _service.AddNodeAsync(node, CancellationToken.None);
 
-        // Act
-        await service.DeleteNodeAsync(nodeId, CancellationToken.None);
+		// Act
+		await _service.DeleteNodeAsync(nodeId, CancellationToken.None);
 
         // Assert
         // This test drives implementation of actual node deletion
@@ -281,12 +306,9 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task DeleteNodeAsync_WithNullNodeId_ShouldThrowArgumentException()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.DeleteNodeAsync(null!, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.DeleteNodeAsync(null!, CancellationToken.None));
     }
 
     /// <summary>
@@ -296,12 +318,9 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task DeleteNodeAsync_WithEmptyNodeId_ShouldThrowArgumentException()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.DeleteNodeAsync(string.Empty, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.DeleteNodeAsync(string.Empty, CancellationToken.None));
     }
     /// <summary>
     /// Ensures that creating a relationship with valid endpoints results in a success response containing the created relationship identifier.
@@ -310,17 +329,21 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task CreateRelationshipAsync_WithValidRelationship_ShouldCreateRelationship()
     {
-        // Arrange
-        var relationship = new GraphRelationship(
-            "rel-1",
-            "KNOWS",
-            "node-1",
-            "node-2",
-            new Dictionary<string, object> { { "since", "2023" } });
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange - Create nodes first
+		var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+		var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+		await _service.AddNodeAsync(node1, CancellationToken.None);
+		await _service.AddNodeAsync(node2, CancellationToken.None);
 
-        // Act
-        var result = await service.CreateRelationshipAsync(relationship, CancellationToken.None);
+		var relationship = new GraphRelationship(
+			"rel-1",
+			"KNOWS",
+			"node-1",
+			"node-2",
+			new Dictionary<string, object> { { "since", "2023" } });
+
+		// Act
+		var result = await _service.CreateRelationshipAsync(relationship, CancellationToken.None);
 
         // Assert
         result.Id.ShouldBe(relationship.Id);
@@ -338,18 +361,17 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task CreateRelationshipAsync_WithInvalidRelationship_ShouldThrowArgumentException()
     {
-        // Arrange
-        var invalidRelationship = new GraphRelationship(
-            "",
-            "",
-            "",
-            "",
-            new Dictionary<string, object>());
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var invalidRelationship = new GraphRelationship(
+			"",
+			"",
+			"",
+			"",
+			new Dictionary<string, object>());
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.CreateRelationshipAsync(invalidRelationship, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.CreateRelationshipAsync(invalidRelationship, CancellationToken.None));
     }
 
     /// <summary>
@@ -359,18 +381,17 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task CreateRelationshipAsync_WithSelfReferencingRelationship_ShouldThrowArgumentException()
     {
-        // Arrange
-        var selfReferencingRelationship = new GraphRelationship(
-            "rel-1",
-            "KNOWS",
-            "node-1",
-            "node-1",
-            new Dictionary<string, object>());
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var selfReferencingRelationship = new GraphRelationship(
+			"rel-1",
+			"KNOWS",
+			"node-1",
+			"node-1",
+			new Dictionary<string, object>());
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.CreateRelationshipAsync(selfReferencingRelationship, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.CreateRelationshipAsync(selfReferencingRelationship, CancellationToken.None));
     }
     /// <summary>
     /// Confirms that deleting an existing relationship reports a success state and includes the identifier of the removed edge.
@@ -379,14 +400,18 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task DeleteRelationshipAsync_WithValidRelationshipId_ShouldDeleteRelationship()
     {
-        // Arrange
-        var relationshipId = "rel-1";
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-        _graphDatabasePort.ExecuteWriteVoidAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Result.Success());
+		// Arrange - Create nodes and relationship first
+		var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+		var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+		await _service.AddNodeAsync(node1, CancellationToken.None);
+		await _service.AddNodeAsync(node2, CancellationToken.None);
+		var relationship = new GraphRelationship("rel-1", "KNOWS", "node-1", "node-2", new Dictionary<string, object>());
+		await _service.CreateRelationshipAsync(relationship, CancellationToken.None);
 
-        // Act
-        var result = await service.DeleteRelationshipAsync(relationshipId, CancellationToken.None);
+		var relationshipId = "rel-1";
+
+		// Act
+		var result = await _service.DeleteRelationshipAsync(relationshipId, CancellationToken.None);
 
         // Assert: DeleteRelationshipAsync returns Result<T> instead of void (functional pattern)
         result.IsSuccess.ShouldBeTrue();
@@ -400,11 +425,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task DeleteRelationshipAsync_WithNullRelationshipId_ShouldReturnFailure()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-
-        // Act
-        var result = await service.DeleteRelationshipAsync(null!, CancellationToken.None);
+		// Act
+		var result = await _service.DeleteRelationshipAsync(null!, CancellationToken.None);
 
         // Assert: DeleteRelationshipAsync returns Result<T> instead of throwing exceptions (functional pattern)
         result.IsFailure.ShouldBeTrue();
@@ -418,11 +440,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task DeleteRelationshipAsync_WithEmptyRelationshipId_ShouldReturnFailure()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-
-        // Act
-        var result = await service.DeleteRelationshipAsync(string.Empty, CancellationToken.None);
+		// Act
+		var result = await _service.DeleteRelationshipAsync(string.Empty, CancellationToken.None);
 
         // Assert: DeleteRelationshipAsync returns Result<T> instead of throwing exceptions (functional pattern)
         result.IsFailure.ShouldBeTrue();
@@ -435,12 +454,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task GetContextAsync_WithValidQuery_ShouldReturnContext()
     {
-        // Arrange
-        var query = "What is the relationship between Person and Company?";
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var query = "What is the relationship between Person and Company?";
 
-        // Act
-        var result = await service.GetContextAsync(query, CancellationToken.None);
+		// Act
+		var result = await _service.GetContextAsync(query, CancellationToken.None);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -455,12 +473,9 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task GetContextAsync_WithNullQuery_ShouldThrowArgumentException()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.GetContextAsync(null!, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.GetContextAsync(null!, CancellationToken.None));
     }
 
     /// <summary>
@@ -470,12 +485,9 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task GetContextAsync_WithEmptyQuery_ShouldThrowArgumentException()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.GetContextAsync(string.Empty, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.GetContextAsync(string.Empty, CancellationToken.None));
     }
     /// <summary>
     /// Confirms that code model nodes can be added successfully and mirror the supplied identifier in the response.
@@ -484,28 +496,27 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task AddCodeNodeAsync_WithValidCodeNode_ShouldAddCodeNode()
     {
-        // Arrange
-        var codeNode = new CodeNode(
-            "code-1",
-            "Method",
-            "CalculateTotal",
-            "MyApp.Services.Calculator.CalculateTotal",
-            "MyApp.Services",
-            "/path/to/file.cs",
-            42,
-            40,
-            50,
-            "public int CalculateTotal(int a, int b) { return a + b; }",
-            "C#",
-            new List<string> { "public", "method" },
-            new Dictionary<string, object> { { "visibility", "public" } },
-            new float[] { 0.1f, 0.2f, 0.3f },
-            DateTimeOffset.UtcNow,
-            DateTimeOffset.UtcNow);
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var codeNode = new CodeNode(
+			"code-1",
+			"Method",
+			"CalculateTotal",
+			"MyApp.Services.Calculator.CalculateTotal",
+			"MyApp.Services",
+			"/path/to/file.cs",
+			42,
+			40,
+			50,
+			"public int CalculateTotal(int a, int b) { return a + b; }",
+			"C#",
+			new List<string> { "public", "method" },
+			new Dictionary<string, object> { { "visibility", "public" } },
+			new float[] { 0.1f, 0.2f, 0.3f },
+			DateTimeOffset.UtcNow,
+			DateTimeOffset.UtcNow);
 
-        // Act
-        var result = await service.AddCodeNodeAsync(codeNode, CancellationToken.None);
+		// Act
+		var result = await _service.AddCodeNodeAsync(codeNode, CancellationToken.None);
 
         // Assert
         result.Id.ShouldBe(codeNode.Id);
@@ -524,29 +535,28 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task AddCodeNodeAsync_WithInvalidCodeNode_ShouldThrowArgumentException()
     {
-        // Arrange
-        var invalidCodeNode = new CodeNode(
-            "",
-            "",
-            "",
-            "",
-            null,
-            null,
-            null,
-            0,
-            0,
-            "",
-            "",
-            new List<string>(),
-            new Dictionary<string, object>(),
-            null,
-            DateTimeOffset.UtcNow,
-            DateTimeOffset.UtcNow);
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var invalidCodeNode = new CodeNode(
+			"",
+			"",
+			"",
+			"",
+			null,
+			null,
+			null,
+			0,
+			0,
+			"",
+			"",
+			new List<string>(),
+			new Dictionary<string, object>(),
+			null,
+			DateTimeOffset.UtcNow,
+			DateTimeOffset.UtcNow);
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AddCodeNodeAsync(invalidCodeNode, CancellationToken.None));
+		// Act & Assert
+		await Should.ThrowAsync<ArgumentException>(async () =>
+			await _service.AddCodeNodeAsync(invalidCodeNode, CancellationToken.None));
     }
     /// <summary>
     /// Validates that complex multi-clause queries execute successfully and preserve query metadata in the returned result.
@@ -555,17 +565,16 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithComplexQuery_ShouldExecuteComplexQuery()
     {
-        // Arrange
-        var complexQuery = new GraphQuery(
-            "MATCH (p:Person)-[r:KNOWS]->(f:Person) " +
-            "WHERE p.age > $minAge " +
-            "RETURN p.name, f.name, r.since " +
-            "ORDER BY p.name",
-            new Dictionary<string, object> { { "minAge", 18 } });
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var complexQuery = new GraphQuery(
+			"MATCH (p:Person)-[r:KNOWS]->(f:Person) " +
+			"WHERE p.age > $minAge " +
+			"RETURN p.name, f.name, r.since " +
+			"ORDER BY p.name",
+			new Dictionary<string, object> { { "minAge", 18 } });
 
-        // Act
-        var result = await service.QueryAsync(complexQuery, CancellationToken.None);
+		// Act
+		var result = await _service.QueryAsync(complexQuery, CancellationToken.None);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -583,15 +592,14 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults()
     {
-        // Arrange
-        var aggregationQuery = new GraphQuery(
-            "MATCH (p:Person) " +
-            "RETURN p.department, COUNT(p) as employeeCount " +
-            "ORDER BY employeeCount DESC");
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var aggregationQuery = new GraphQuery(
+			"MATCH (p:Person) " +
+			"RETURN p.department, COUNT(p) as employeeCount " +
+			"ORDER BY employeeCount DESC");
 
-        // Act
-        var result = await service.QueryAsync(aggregationQuery, CancellationToken.None);
+		// Act
+		var result = await _service.QueryAsync(aggregationQuery, CancellationToken.None);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -607,16 +615,15 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithPathQuery_ShouldReturnPathResults()
     {
-        // Arrange
-        var pathQuery = new GraphQuery(
-            "MATCH path = (start:Person)-[*1..3]->(end:Company) " +
-            "WHERE start.name = $startName " +
-            "RETURN path, length(path) as pathLength",
-            new Dictionary<string, object> { { "startName", "John" } });
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+		// Arrange
+		var pathQuery = new GraphQuery(
+			"MATCH path = (start:Person)-[*1..3]->(end:Company) " +
+			"WHERE start.name = $startName " +
+			"RETURN path, length(path) as pathLength",
+			new Dictionary<string, object> { { "startName", "John" } });
 
-        // Act
-        var result = await service.QueryAsync(pathQuery, CancellationToken.None);
+		// Act
+		var result = await _service.QueryAsync(pathQuery, CancellationToken.None);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -634,22 +641,21 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithMultipleQueries_ShouldExecuteSequentially()
     {
-        // Arrange
-        var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
-        var queries = new[]
-        {
-            new GraphQuery("CREATE (n:Test {id: 1})"),
-            new GraphQuery("MATCH (n:Test {id: 1}) RETURN n"),
-            new GraphQuery("MATCH (n:Test {id: 1}) DELETE n")
-        };
+		// Arrange
+		var queries = new[]
+		{
+			new GraphQuery("CREATE (n:Test {id: 1})"),
+			new GraphQuery("MATCH (n:Test {id: 1}) RETURN n"),
+			new GraphQuery("MATCH (n:Test {id: 1}) DELETE n")
+		};
 
-        // Act
-        var results = new List<GraphQueryResult>();
-        foreach (var query in queries)
-        {
-            var result = await service.QueryAsync(query, CancellationToken.None);
-            results.Add(result);
-        }
+		// Act
+		var results = new List<GraphQueryResult>();
+		foreach (var query in queries)
+		{
+			var result = await _service.QueryAsync(query, CancellationToken.None);
+			results.Add(result);
+		}
 
         // Assert
         results.ShouldNotBeNull();

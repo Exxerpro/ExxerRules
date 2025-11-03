@@ -25,7 +25,7 @@ public class Neo4jKnowledgeGraphAdapterTests
 {
     private readonly IDriver _mockDriver;
     private readonly MockAsyncSession _mockSession;
-    private readonly IResultCursor _mockResultCursor;
+    private readonly MockResultCursor _mockResultCursor;
     private readonly ILogger<Neo4jKnowledgeGraphAdapter> _mockLogger;
     private readonly IOptions<Neo4jOptions> _mockOptions;
     private readonly Neo4jKnowledgeGraphAdapter _adapter;
@@ -33,10 +33,10 @@ public class Neo4jKnowledgeGraphAdapterTests
     public Neo4jKnowledgeGraphAdapterTests()
     {
         _mockDriver = Substitute.For<IDriver>();
-        _mockResultCursor = Substitute.For<IResultCursor>();
+        _mockResultCursor = new MockResultCursor();
         _mockLogger = Substitute.For<ILogger<Neo4jKnowledgeGraphAdapter>>();
 
-        // Use manual mock for IAsyncSession to work around NSubstitute's limitation
+        // Use manual mocks to work around NSubstitute's limitation
         // with non-generic ValueTask return types in IAsyncDisposable.DisposeAsync()
         _mockSession = new MockAsyncSession(_mockResultCursor);
 
@@ -139,7 +139,7 @@ public class Neo4jKnowledgeGraphAdapterTests
 
         // Assert: Contract-based assertion
         result.ShouldSucceed();
-        await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
+        _mockSession.RunAsyncCallCount.ShouldBe(0);
     }
 
     [Fact(Timeout = 5000)]
@@ -222,7 +222,7 @@ public class Neo4jKnowledgeGraphAdapterTests
 
         // Assert: Use error code assertion instead of fragile string assertion
         result.ShouldFailWith(ErrorCodes.KnowledgeRelationshipIdRequired);
-        await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
+        _mockSession.RunAsyncCallCount.ShouldBe(0);
     }
 
     [Fact(Timeout = 5000)]
@@ -253,8 +253,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         record["createdAt"].Returns(DateTimeOffset.UtcNow);
         record["updatedAt"].Returns(DateTimeOffset.UtcNow);
 
-        _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>())
-            .Returns(ValueTask.FromResult<IRecord?>(record));
+        _mockResultCursor.SingleRecord = record;
 
         // Act
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
@@ -270,7 +269,7 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var nodeId = "non-existent-node";
-        _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns(ValueTask.FromResult<IRecord?>(null));
+        _mockResultCursor.SingleRecord = null;
 
         // Act
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
@@ -284,9 +283,7 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var nodeId = "test-node-id";
-        // Avoid returning a ValueTask<T> via a lambda to prevent NSubstitute type-matching issues.
-        var singleOrDefaultException = ValueTask.FromException<IRecord?>(new Exception("Neo4j query failed"));
-        _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns(singleOrDefaultException);
+        _mockResultCursor.SetExceptionForSingleOrDefault(new Exception("Neo4j query failed"));
 
         // Act
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
@@ -324,11 +321,10 @@ public class Neo4jKnowledgeGraphAdapterTests
         record["sourceId"].Returns("source-id");
         record["targetId"].Returns("target-id");
 
-        var cancellationToken = TestContext.Current.CancellationToken;
-        _mockResultCursor.ToListAsync(cancellationToken).Returns(Task.FromResult<List<IRecord>>(new List<IRecord> { record }));
+        _mockResultCursor.RecordsList = new List<IRecord> { record };
 
         // Act
-        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: cancellationToken);
+        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert: Contract-based assertion
         result.ShouldSucceed();
@@ -342,11 +338,10 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var nodeId = "test-node-id";
-        var cancellationToken = TestContext.Current.CancellationToken;
-        _mockResultCursor.ToListAsync(cancellationToken).Returns(Task.FromResult<List<IRecord>>(new List<IRecord>()));
+        _mockResultCursor.RecordsList = new List<IRecord>();
 
         // Act
-        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: cancellationToken);
+        var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert: Contract-based assertion
         result.ShouldSucceed();
@@ -376,11 +371,10 @@ public class Neo4jKnowledgeGraphAdapterTests
         var query = "MATCH (n) RETURN n";
         var record = Substitute.For<IRecord>();
         record.Values.Returns(new Dictionary<string, object> { { "n", "test-value" } });
-        var cancellationToken = TestContext.Current.CancellationToken;
-        _mockResultCursor.ToListAsync(cancellationToken).Returns(Task.FromResult<List<IRecord>>(new List<IRecord> { record }));
+        _mockResultCursor.RecordsList = new List<IRecord> { record };
 
         // Act
-        var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: cancellationToken);
+        var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken);
 
         // Assert: Contract-based assertion
         result.ShouldSucceed();
@@ -393,9 +387,7 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var query = "INVALID CYPHER QUERY";
-        var cancellationToken = TestContext.Current.CancellationToken;
-        _mockResultCursor.ToListAsync(cancellationToken)
-            .Returns(Task.FromException<List<IRecord>>(new Exception("Invalid syntax")));
+        _mockResultCursor.SetExceptionForToList(new Exception("Invalid syntax"));
 
         // Act
         var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken);
@@ -444,8 +436,7 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var nodeId = "test-node-id";
-        _mockSession.RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>())
-            .Returns(Task.FromException<IResultCursor>(new Exception("Delete failed")));
+        _mockSession.ExceptionToThrow = new Exception("Delete failed");
 
         // Act
         var result = await _adapter.DeleteNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
@@ -494,9 +485,7 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var relationshipId = "test-rel-id";
-        // For exception scenarios, we can't configure the mock session easily
-        // Instead, the test will naturally fail if the exception isn't handled properly
-        // If needed, we could add exception throwing capability to MockAsyncSession
+        _mockSession.ExceptionToThrow = new Exception("Delete relationship failed");
 
         // Act
         var result = await _adapter.DeleteRelationshipAsync(relationshipId, cancellationToken: TestContext.Current.CancellationToken);

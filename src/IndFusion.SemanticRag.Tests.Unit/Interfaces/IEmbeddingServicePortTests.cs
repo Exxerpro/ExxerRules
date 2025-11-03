@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using IndFusion.SemanticRag.Domain.Builders;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Tests.Unit.Shared;
@@ -142,11 +144,20 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
         // ✅ IITDD: Test interface contract
         var text = "This is a test text";
         var metadata = new Dictionary<string, object> { ["source"] = "test", ["type"] = "document" };
-        // ✅ Use fluent builder from TestDataBuilders
-        var vectorResult = TestDataBuilders.CreateValidVectorEmbedding(
+        
+        // Create VectorEmbedding with the same metadata as the input to match contract requirements
+        var embedding = new float[3];
+        for (int i = 0; i < 3; i++)
+        {
+            embedding[i] = 0.1f * (i + 1);
+        }
+        
+        var vectorResult = VectorEmbeddingBuilder.Build(
             id: "emb-1",
             content: text,
-            embeddingSize: 3);
+            embedding: embedding,
+            metadata: metadata, // Use the same metadata as input
+            createdAt: DateTimeOffset.UtcNow);
         vectorResult.IsSuccess.ShouldBeTrue();
         var expectedEmbedding = vectorResult.Value;
 

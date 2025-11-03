@@ -44,6 +44,11 @@ public class MockAsyncSession : IAsyncSession, IAsyncQueryRunner
 	/// </summary>
 	public List<string> AllQueries { get; } = new List<string>();
 
+	/// <summary>
+	/// Gets or sets the exception to throw on the next RunAsync call. Set to null to clear.
+	/// </summary>
+	public Exception? ExceptionToThrow { get; set; }
+
 	/// <inheritdoc />
 	public Task<IResultCursor> RunAsync(string query, IDictionary<string, object>? parameters = null)
 	{
@@ -51,6 +56,14 @@ public class MockAsyncSession : IAsyncSession, IAsyncQueryRunner
 		LastParameters = parameters != null ? new Dictionary<string, object>(parameters) : null;
 		RunAsyncCallCount++;
 		AllQueries.Add(query);
+
+		if (ExceptionToThrow != null)
+		{
+			var ex = ExceptionToThrow;
+			ExceptionToThrow = null; // Clear after throwing
+			return Task.FromException<IResultCursor>(ex);
+		}
+
 		return Task.FromResult(_resultCursor);
 	}
 

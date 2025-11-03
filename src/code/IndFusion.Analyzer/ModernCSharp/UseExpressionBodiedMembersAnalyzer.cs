@@ -123,7 +123,7 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
         return expressionText.Length < 100; // Arbitrary threshold for simplicity
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
     /// <summary>
     /// Determines if a method body is exempt from expression-bodied member suggestions.
@@ -281,5 +281,5 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 }

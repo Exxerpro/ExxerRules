@@ -1,0 +1,11 @@
+*** Begin Patch
+*** Update File: src/code/IndFusion.Analyzer/CodeQuality/AvoidMagicNumbersAndStringsAnalyzer.cs
+@@
+-	private static bool IsCommonNumber(string value)
++	/// <summary>
++	/// Determines whether the numeric literal represents a commonly accepted value that should not trigger diagnostics.
++	/// </summary>
++	/// <param name="value">The numeric literal value as text.</param>
++	/// <returns><c>true</c> when the number is considered common and safe; otherwise, <c>false</c>.</returns>
++	private static bool IsCommonNumber(string value)
+*** End Patch

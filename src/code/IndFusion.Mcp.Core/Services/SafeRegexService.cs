@@ -386,7 +386,7 @@ public class SafeRegexService : ISafeRegexService
         }
     }
 
-    #region Private Helper Methods
+    //  Private Helper Methods
 
     private static RegexOptions GetRegexOptions(SafeRegexRequest request)
     {
@@ -489,5 +489,5 @@ public class SafeRegexService : ISafeRegexService
         return validationResults;
     }
 
-    #endregion
+     // 
 }

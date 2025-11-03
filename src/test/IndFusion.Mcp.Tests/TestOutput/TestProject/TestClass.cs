@@ -48,10 +48,10 @@ public class TestClass
     }
 
     // This method violates EXXER rules - uses regions
-    #region Helper Methods
+    //  Helper Methods
     private void HelperMethod()
     {
         // Helper implementation
     }
-    #endregion
+     // 
 }

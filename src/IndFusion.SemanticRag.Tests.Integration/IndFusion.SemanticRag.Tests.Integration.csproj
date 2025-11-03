@@ -9,17 +9,47 @@
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
+	<!-- Shared testing platform + xUnit v3 configuration for robust discovery across runners -->
+	<PropertyGroup>
+		<UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+		<TestingPlatformServer>true</TestingPlatformServer>
+		<IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+		<GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+	</PropertyGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<!-- xUnit v3 runners -->
+		<PackageReference Include="xunit.v3.runner.msbuild">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3.runner.console">
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<PackageReference Include="xunit.v3.runner.inproc.console" />
+
+		<PackageReference Include="NSubstitute.Analyzers.CSharp">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+
+		<!-- Microsoft Testing Platform (stable 1.8.4) and extensions -->
+		<PackageReference Include="Microsoft.Testing.Platform" />
+		<PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
+		<PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+	</ItemGroup>
+
+	<ItemGroup>
     <PackageReference Include="coverlet.collector" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit.v3" />
     <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="Shouldly" />
     <PackageReference Include="NSubstitute" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Console" />
+    <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
   </ItemGroup>
 
   <ItemGroup>
@@ -28,7 +58,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../code/IndFusion.SemanticRag.Application/IndFusion.SemanticRag.Application.csproj" />
-    <ProjectReference Include="../IndFusion.SemanticRag.Infrastructure/IndFusion.SemanticRag.Infrastructure.csproj" />
+    <ProjectReference Include="..\code\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -361,7 +361,7 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    #region Story 1.1: Exempt Overridden and Explicitly Implemented Methods
+    //  Story 1.1: Exempt Overridden and Explicitly Implemented Methods
 
     /// <summary>
     /// Determines whether an override can be skipped because the base signature already provides a cancellation token.
@@ -403,9 +403,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Blazor Lifecycle Methods
+    //  Story 1.2: Exempt Blazor Lifecycle Methods
 
     /// <summary>
     /// Determines whether the supplied method is a Blazor component lifecycle callback.
@@ -463,9 +463,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt SignalR Hub Lifecycle Methods
+    //  Story 1.3: Exempt SignalR Hub Lifecycle Methods
 
     /// <summary>
     /// Determines whether the method is part of the SignalR hub lifecycle.
@@ -521,9 +521,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt Test Methods
+    //  Story 1.4: Exempt Test Methods
 
     /// <summary>
     /// Determines whether the method is decorated as a test case.
@@ -548,9 +548,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Test Class Helper Methods
+    //  Story 1.5: Exempt Test Class Helper Methods
 
     /// <summary>
     /// Determines whether the method belongs to a test class and serves as a helper utility.
@@ -573,9 +573,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
                className.EndsWith("TestFixture");
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt IAsyncLifetime Contract Methods
+    //  Story 1.6: Exempt IAsyncLifetime Contract Methods
 
     /// <summary>
     /// Determines whether the method implements the <c>IAsyncLifetime</c> contract provided by xUnit.
@@ -628,9 +628,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt Test Fixture Methods
+    //  Story 1.7: Exempt Test Fixture Methods
 
     /// <summary>
     /// Determines whether the method belongs to an xUnit test fixture class.
@@ -667,9 +667,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Blazor EventCallback Handlers
+    //  Story 1.8: Exempt Blazor EventCallback Handlers
 
     /// <summary>
     /// Determines whether the method signature aligns with Blazor event handlers where cancellation might not apply.
@@ -693,9 +693,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
                methodName.Contains("Change");
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Analyze Cancellation Availability
+    //  Story 1.9: Analyze Cancellation Availability
 
     /// <summary>
     /// Determines whether the method awaits operations that support cancellation tokens.
@@ -786,9 +786,9 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return methodsWithoutCancellation.Contains(methodName);
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Be Aware of Captured Tokens
+    //  Story 1.10: Be Aware of Captured Tokens
 
     /// <summary>
     /// Determines whether the method accesses a previously captured cancellation token.
@@ -822,5 +822,5 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return cancellationTokenUsages.Any() || memberAccessUsages.Any();
     }
 
-    #endregion
+     // 
 }

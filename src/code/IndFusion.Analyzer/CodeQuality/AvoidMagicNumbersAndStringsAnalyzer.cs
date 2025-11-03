@@ -17,10 +17,24 @@ namespace IndFusion.Analyzers.CodeQuality;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Gets the localized title displayed when a magic literal is detected.
+    /// </summary>
     private static readonly LocalizableString Title = "Avoid magic numbers and strings";
+
+    /// <summary>
+    /// Gets the localized message format describing the magic literal that triggered the diagnostic.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Magic {0} '{1}' should be replaced with a named constant";
+
+    /// <summary>
+    /// Gets the diagnostic description that explains why magic literals should be replaced.
+    /// </summary>
     private static readonly LocalizableString Description = "Magic numbers and strings should be replaced with named constants to improve code readability, maintainability, and reduce the risk of errors. Follow the principle of avoiding globals and hardcoding.";
 
+    /// <summary>
+    /// The diagnostic descriptor emitted when a magic number or string is encountered.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.AvoidMagicNumbersAndStrings,
         Title,
@@ -43,6 +57,10 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeLiteralExpression, SyntaxKind.StringLiteralExpression);
     }
 
+    /// <summary>
+    /// Evaluates literal expressions and reports diagnostics for magic numbers or strings that are not exempt.
+    /// </summary>
+    /// <param name="context">The syntax analysis context supplying the literal expression.</param>
     private static void AnalyzeLiteralExpression(SyntaxNodeAnalysisContext context)
     {
         var literalExpression = (LiteralExpressionSyntax)context.Node;
@@ -88,6 +106,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Inspects numeric literals and reports diagnostics when they qualify as magic numbers.
+    /// </summary>
+    /// <param name="context">The syntax analysis context used to report diagnostics.</param>
+    /// <param name="literal">The numeric literal expression being analyzed.</param>
     private static void AnalyzeNumericLiteral(SyntaxNodeAnalysisContext context, LiteralExpressionSyntax literal)
     {
         var value = literal.Token.ValueText;
@@ -107,6 +130,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
+    /// <summary>
+    /// Inspects string literals and reports diagnostics when they qualify as magic strings.
+    /// </summary>
+    /// <param name="context">The syntax analysis context used to report diagnostics.</param>
+    /// <param name="literal">The string literal expression being analyzed.</param>
     private static void AnalyzeStringLiteral(SyntaxNodeAnalysisContext context, LiteralExpressionSyntax literal)
     {
         var value = literal.Token.ValueText;
@@ -138,6 +166,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
+	/// <summary>
+	/// Determines whether the literal resides within a constant declaration and should therefore be ignored.
+	/// </summary>
+	/// <param name="node">The syntax node representing the literal expression.</param>
+	/// <returns><c>true</c> when the literal is part of a constant declaration; otherwise, <c>false</c>.</returns>
 	private static bool IsInConstantDeclaration(SyntaxNode node)
     {
         // Check if we're in a const field declaration
@@ -171,6 +204,12 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 		return false;
     }
 
+	/// <summary>
+	/// Determines whether the literal initializes a static readonly field within a static constructor.
+	/// </summary>
+	/// <param name="literal">The literal expression under inspection.</param>
+	/// <param name="context">The syntax analysis context providing semantic information.</param>
+	/// <returns><c>true</c> when the literal is part of a static readonly initialization in a static constructor; otherwise, <c>false</c>.</returns>
 	private static bool IsAssignmentToStaticReadonlyInStaticCtor(LiteralExpressionSyntax literal, SyntaxNodeAnalysisContext context)
 	{
 		// Look for an assignment expression ancestor
@@ -198,13 +237,28 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 		return leftSymbol.IsStatic && leftSymbol.IsReadOnly;
 	}
 
-    private static bool IsAttributeArgument(SyntaxNode node) => node.FirstAncestorOrSelf<AttributeArgumentSyntax>() != null ||
+	/// <summary>
+	/// Determines whether the literal is used as an attribute argument.
+	/// </summary>
+	/// <param name="node">The syntax node to inspect.</param>
+	/// <returns><c>true</c> when the literal resides within an attribute argument; otherwise, <c>false</c>.</returns>
+	private static bool IsAttributeArgument(SyntaxNode node) => node.FirstAncestorOrSelf<AttributeArgumentSyntax>() != null ||
                node.FirstAncestorOrSelf<AttributeSyntax>() != null;
 
-    private static bool IsInSwitchOrCase(SyntaxNode node) => node.FirstAncestorOrSelf<SwitchExpressionArmSyntax>() != null ||
+	/// <summary>
+	/// Determines whether the literal appears in a switch expression arm or case label.
+	/// </summary>
+	/// <param name="node">The syntax node to inspect.</param>
+	/// <returns><c>true</c> when the literal is part of a switch expression or case label; otherwise, <c>false</c>.</returns>
+	private static bool IsInSwitchOrCase(SyntaxNode node) => node.FirstAncestorOrSelf<SwitchExpressionArmSyntax>() != null ||
                node.FirstAncestorOrSelf<CaseSwitchLabelSyntax>() != null ||
                node.FirstAncestorOrSelf<SwitchExpressionSyntax>() != null;
 
+	/// <summary>
+	/// Determines whether the numeric literal represents a commonly accepted value that should not trigger diagnostics.
+	/// </summary>
+	/// <param name="value">The numeric literal value as text.</param>
+	/// <returns><c>true</c> when the number is considered common and safe; otherwise, <c>false</c>.</returns>
 	private static bool IsCommonNumber(string value)
     {
 		// Commonly acceptable literals (configurable in future):
@@ -222,10 +276,20 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
 		return commonNumbers.Contains(value);
     }
 
+    /// <summary>
+    /// Determines whether the supplied string literal resembles a format template and should be exempted.
+    /// </summary>
+    /// <param name="value">The string literal value.</param>
+    /// <returns><c>true</c> when the string appears to be a format template; otherwise, <c>false</c>.</returns>
     private static bool IsFormatString(string value) =>
         // Check for format strings like "{0}", "{name}", etc.
         value.Contains('{') && value.Contains('}');
 
+    /// <summary>
+    /// Determines whether the string literal is a commonly accepted value that should be exempt from diagnostics.
+    /// </summary>
+    /// <param name="value">The string literal value.</param>
+    /// <returns><c>true</c> when the string is deemed common; otherwise, <c>false</c>.</returns>
     private static bool IsCommonString(string value)
     {
         // Very common strings that might be acceptable
@@ -238,12 +302,15 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         return commonStrings.Contains(value, System.StringComparer.OrdinalIgnoreCase);
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
-    /// <summary>
-    /// Determines if a literal expression is exempt from magic number/string checks.
-    /// </summary>
-    private static bool IsExemptFromMagicNumberCheck(LiteralExpressionSyntax literal, SyntaxNodeAnalysisContext context)
+	/// <summary>
+	/// Determines whether the literal expression matches any exemption scenario and should not trigger diagnostics.
+	/// </summary>
+	/// <param name="literal">The literal expression under evaluation.</param>
+	/// <param name="context">The syntax analysis context providing semantic information.</param>
+	/// <returns><c>true</c> when an exemption rule applies; otherwise, <c>false</c>.</returns>
+	private static bool IsExemptFromMagicNumberCheck(LiteralExpressionSyntax literal, SyntaxNodeAnalysisContext context)
     {
         // Story 1.1: Exempt Enum Member Values
         if (IsEnumMemberValue(literal))
@@ -317,6 +384,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.1: Exempt Enum Member Values
     /// </summary>
+    /// <summary>
+    /// Story 1.1: Exempts enum member values from magic-literal diagnostics.
+    /// </summary>
+    /// <param name="literal">The literal expression to evaluate.</param>
+    /// <returns><c>true</c> when the literal belongs to an enum member; otherwise, <c>false</c>.</returns>
     private static bool IsEnumMemberValue(LiteralExpressionSyntax literal)
     {
         // Check if we're in an enum member declaration
@@ -327,6 +399,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.2: Exempt Bit-Flag Enum Values
     /// </summary>
+    /// <summary>
+    /// Story 1.2: Exempts bit-flag enum values (e.g., shift expressions) from diagnostics.
+    /// </summary>
+    /// <param name="literal">The literal expression to evaluate.</param>
+    /// <returns><c>true</c> when the literal participates in a bit-flag enum definition; otherwise, <c>false</c>.</returns>
     private static bool IsBitFlagEnumValue(LiteralExpressionSyntax literal)
     {
         // Check if we're in a bit-shift expression within an enum member
@@ -361,6 +438,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.3: Exempt Domain Range Guards
     /// </summary>
+    /// <summary>
+    /// Story 1.3: Exempts literals used in domain guard clauses (e.g., range checks).
+    /// </summary>
+    /// <param name="literal">The literal expression under evaluation.</param>
+    /// <returns><c>true</c> when the literal participates in domain range validation; otherwise, <c>false</c>.</returns>
     private static bool IsDomainRangeGuard(LiteralExpressionSyntax literal)
     {
         // Check if we're in a comparison within a guard clause that throws ArgumentOutOfRangeException
@@ -427,6 +509,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.4: Exempt Business Rule Thresholds
     /// </summary>
+    /// <summary>
+    /// Story 1.4: Exempts literals representing business rule thresholds (e.g., length checks).
+    /// </summary>
+    /// <param name="literal">The literal expression to inspect.</param>
+    /// <returns><c>true</c> when the literal appears in a business-rule guard; otherwise, <c>false</c>.</returns>
     private static bool IsBusinessRuleThreshold(LiteralExpressionSyntax literal)
     {
         // Check if we're in a comparison against Length or Count property
@@ -453,6 +540,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.5: Exempt Exception Messages
     /// </summary>
+    /// <summary>
+    /// Story 1.5: Exempts string literals used as exception messages.
+    /// </summary>
+    /// <param name="literal">The string literal to evaluate.</param>
+    /// <returns><c>true</c> when the literal feeds an exception constructor; otherwise, <c>false</c>.</returns>
     private static bool IsExceptionMessage(LiteralExpressionSyntax literal)
     {
         // Check if we're in an exception constructor
@@ -469,6 +561,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.6: Exempt Result/Validation Messages
     /// </summary>
+    /// <summary>
+    /// Story 1.6: Exempts literals used in result or validation messaging scenarios.
+    /// </summary>
+    /// <param name="literal">The literal expression under consideration.</param>
+    /// <returns><c>true</c> when the literal participates in validation messaging; otherwise, <c>false</c>.</returns>
     private static bool IsResultValidationMessage(LiteralExpressionSyntax literal)
     {
         // Check if we're adding to a collection named 'errors' or 'warnings'
@@ -510,6 +607,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.7: Exempt Regex and Pattern Literals
     /// </summary>
+    /// <summary>
+    /// Story 1.7: Exempts literals representing regular expressions or pattern tokens.
+    /// </summary>
+    /// <param name="literal">The literal expression to inspect.</param>
+    /// <returns><c>true</c> when the literal appears to be a regex or pattern literal; otherwise, <c>false</c>.</returns>
     private static bool IsRegexOrPatternLiteral(LiteralExpressionSyntax literal)
     {
         if (!literal.Token.IsKind(SyntaxKind.StringLiteralToken))
@@ -559,6 +661,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.8: Exempt Culture and Locale Codes
     /// </summary>
+    /// <summary>
+    /// Story 1.8: Exempts literals that represent culture or locale codes.
+    /// </summary>
+    /// <param name="literal">The literal expression under consideration.</param>
+    /// <returns><c>true</c> when the literal denotes a culture or locale code; otherwise, <c>false</c>.</returns>
     private static bool IsCultureOrLocaleCode(LiteralExpressionSyntax literal)
     {
         if (!literal.Token.IsKind(SyntaxKind.StringLiteralToken))
@@ -591,6 +698,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.9: Exempt TimeSpan and DateTime Construction
     /// </summary>
+    /// <summary>
+    /// Story 1.9: Exempts numeric literals used in <see cref="System.TimeSpan"/> or <see cref="System.DateTime"/> construction.
+    /// </summary>
+    /// <param name="literal">The numeric literal expression to inspect.</param>
+    /// <returns><c>true</c> when the literal participates in TimeSpan or DateTime construction; otherwise, <c>false</c>.</returns>
     private static bool IsTimeSpanOrDateTimeConstruction(LiteralExpressionSyntax literal)
     {
         if (!literal.Token.IsKind(SyntaxKind.NumericLiteralToken))
@@ -629,6 +741,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.10: Exempt Logging Message Templates
     /// </summary>
+    /// <summary>
+    /// Story 1.10: Exempts string literals used as logging message templates.
+    /// </summary>
+    /// <param name="literal">The string literal under evaluation.</param>
+    /// <returns><c>true</c> when the literal is the first argument to a logging call; otherwise, <c>false</c>.</returns>
     private static bool IsLoggingMessageTemplate(LiteralExpressionSyntax literal)
     {
         if (!literal.Token.IsKind(SyntaxKind.StringLiteralToken))
@@ -666,6 +783,11 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Story 1.11: Exempt Logging Method Parameters
     /// </summary>
+    /// <summary>
+    /// Story 1.11: Exempts literals used as structured logging parameters beyond the message template.
+    /// </summary>
+    /// <param name="literal">The literal expression to inspect.</param>
+    /// <returns><c>true</c> when the literal appears among logging method parameters; otherwise, <c>false</c>.</returns>
     private static bool IsLoggingMethodParameter(LiteralExpressionSyntax literal)
     {
         // Check if we're in an ILogger.Log method call
@@ -698,5 +820,5 @@ public class AvoidMagicNumbersAndStringsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 }

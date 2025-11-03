@@ -343,7 +343,7 @@ public class BuildValidationService : IBuildValidationService
         }
     }
 
-    #region Private Helper Methods
+    //  Private Helper Methods
 
     private async Task<Solution> GetOrCreateSolutionAsync(string solutionPath, CancellationToken cancellationToken)
     {
@@ -722,5 +722,5 @@ public class BuildValidationService : IBuildValidationService
         }
     }
 
-    #endregion
+     // 
 }

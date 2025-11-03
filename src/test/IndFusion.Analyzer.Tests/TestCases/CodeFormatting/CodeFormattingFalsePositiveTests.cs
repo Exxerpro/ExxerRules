@@ -11,7 +11,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFormatting;
 /// </summary>
 public class CodeFormattingFalsePositiveTests
 {
-    #region Story 1.1: Correctly Handle LINQ Projections
+    //  Story 1.1: Correctly Handle LINQ Projections
 
     /// <summary>
     /// Tests that LINQ projection assignments are handled correctly.
@@ -39,9 +39,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Correctly Handle Guard Clause Mock Data Assignments
+    //  Story 1.2: Correctly Handle Guard Clause Mock Data Assignments
 
     /// <summary>
     /// Tests that assignments within debug guard clauses are handled correctly.
@@ -73,9 +73,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Correctly Handle Dictionary Initializations
+    //  Story 1.3: Correctly Handle Dictionary Initializations
 
     /// <summary>
     /// Tests that dictionary initializations are handled correctly.
@@ -111,9 +111,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Correctly Handle Awaited Repository Calls
+    //  Story 1.4: Correctly Handle Awaited Repository Calls
 
     /// <summary>
     /// Tests that awaited repository calls are handled correctly.
@@ -161,9 +161,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Correctly Handle Projections to DTOs
+    //  Story 1.5: Correctly Handle Projections to DTOs
 
     /// <summary>
     /// Tests that LINQ projections to DTOs are handled correctly.
@@ -209,9 +209,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Correctly Handle GroupBy/ToDictionary Pipelines
+    //  Story 1.6: Correctly Handle GroupBy/ToDictionary Pipelines
 
     /// <summary>
     /// Tests that GroupBy/ToDictionary pipelines are handled correctly.
@@ -256,9 +256,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Correctly Handle Fluent Result Pipelines
+    //  Story 1.7: Correctly Handle Fluent Result Pipelines
 
     /// <summary>
     /// Tests that fluent Result pipelines are handled correctly.
@@ -299,9 +299,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Correctly Handle Specification Builder Assignments
+    //  Story 1.8: Correctly Handle Specification Builder Assignments
 
     /// <summary>
     /// Tests that specification builder assignments are handled correctly.
@@ -343,9 +343,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Correctly Handle Dictionary Materialization from Collections
+    //  Story 1.9: Correctly Handle Dictionary Materialization from Collections
 
     /// <summary>
     /// Tests that dictionary materialization from collections is handled correctly.
@@ -385,5 +385,5 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 }

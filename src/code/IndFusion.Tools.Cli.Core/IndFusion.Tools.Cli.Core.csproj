@@ -24,6 +24,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <!-- System.CommandLine -->
     <PackageReference Include="System.CommandLine" />
+    <PackageReference Include="System.CommandLine.DragonFruit" />
+    <PackageReference Include="CommandLineParser" />
   </ItemGroup>
 
   <ItemGroup>

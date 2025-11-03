@@ -265,7 +265,7 @@ public class SafeRegexServiceBehavioralTests
         result.Error.ShouldContain("Operation was cancelled");
     }
 
-    #region Private Helper Methods
+    //  Private Helper Methods
 
     private static string CreateTestFile(string content)
     {
@@ -284,5 +284,5 @@ public class SafeRegexServiceBehavioralTests
         }
     }
 
-    #endregion
+     // 
 }

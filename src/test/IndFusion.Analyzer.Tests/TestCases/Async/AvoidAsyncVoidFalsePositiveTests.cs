@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Async;
 /// </summary>
 public class AvoidAsyncVoidFalsePositiveTests
 {
-    #region Story 1.1: Allow Nullable Event Handler Parameters
+    //  Story 1.1: Allow Nullable Event Handler Parameters
 
     /// <summary>
     /// Tests that async void methods with nullable event handler parameters are not flagged.
@@ -46,9 +46,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Allow Derived EventArgs Types
+    //  Story 1.2: Allow Derived EventArgs Types
 
     /// <summary>
     /// Tests that async void methods with derived EventArgs types are not flagged.
@@ -85,9 +85,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Allow Routed Event Patterns
+    //  Story 1.3: Allow Routed Event Patterns
 
     /// <summary>
     /// Tests that async void methods with RoutedEventArgs are not flagged.
@@ -120,9 +120,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Allow ICommand.Execute Methods
+    //  Story 1.4: Allow ICommand.Execute Methods
 
     /// <summary>
     /// Tests that async void ICommand.Execute implementations are not flagged.
@@ -154,9 +154,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Allow Overridden async void Methods
+    //  Story 1.5: Allow Overridden async void Methods
 
     /// <summary>
     /// Tests that overridden async void methods are not flagged.
@@ -188,9 +188,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Allow Interface Implementations Requiring void
+    //  Story 1.6: Allow Interface Implementations Requiring void
 
     /// <summary>
     /// Tests that async void methods implementing interfaces requiring void are not flagged.
@@ -222,9 +222,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Allow Custom EventHandler Delegate Aliases
+    //  Story 1.7: Allow Custom EventHandler Delegate Aliases
 
     /// <summary>
     /// Tests that async void methods matching custom event handler delegates are not flagged.
@@ -258,9 +258,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Allow Partial Methods in Blazor Components
+    //  Story 1.8: Allow Partial Methods in Blazor Components
 
     /// <summary>
     /// Tests that async void event handlers in Blazor components are not flagged.
@@ -293,9 +293,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Allow Fire-and-Forget Methods with an Attribute
+    //  Story 1.9: Allow Fire-and-Forget Methods with an Attribute
 
     /// <summary>
     /// Tests that async void methods with FireAndForget attribute are not flagged.
@@ -331,9 +331,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular async void methods are still flagged (positive control).
@@ -365,5 +365,5 @@ namespace TestProject
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.AvoidAsyncVoid);
     }
 
-    #endregion
+     // 
 }

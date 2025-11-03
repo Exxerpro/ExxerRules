@@ -12,7 +12,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Async;
 /// </summary>
 public class AsyncMethodsShouldAcceptCancellationTokenFalsePositiveTests
 {
-    #region Story 1.1: Exempt Overridden and Explicitly Implemented Methods
+    //  Story 1.1: Exempt Overridden and Explicitly Implemented Methods
 
     /// <summary>
     /// Tests that overridden async methods are not flagged.
@@ -43,9 +43,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Blazor Lifecycle Methods
+    //  Story 1.2: Exempt Blazor Lifecycle Methods
 
     /// <summary>
     /// Tests that Blazor lifecycle methods are not flagged.
@@ -82,9 +82,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt SignalR Hub Lifecycle Methods
+    //  Story 1.3: Exempt SignalR Hub Lifecycle Methods
 
     /// <summary>
     /// Tests that SignalR hub lifecycle methods are not flagged.
@@ -116,9 +116,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt Test Methods
+    //  Story 1.4: Exempt Test Methods
 
     /// <summary>
     /// Tests that test methods are not flagged.
@@ -152,9 +152,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Test Class Helper Methods
+    //  Story 1.5: Exempt Test Class Helper Methods
 
     /// <summary>
     /// Tests that helper methods in test classes are not flagged.
@@ -201,9 +201,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt IAsyncLifetime Contract Methods
+    //  Story 1.6: Exempt IAsyncLifetime Contract Methods
 
     /// <summary>
     /// Tests that IAsyncLifetime methods are not flagged.
@@ -235,9 +235,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt Test Fixture Methods
+    //  Story 1.7: Exempt Test Fixture Methods
 
     /// <summary>
     /// Tests that test fixture methods are not flagged.
@@ -278,9 +278,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Blazor EventCallback Handlers
+    //  Story 1.8: Exempt Blazor EventCallback Handlers
 
     /// <summary>
     /// Tests that Blazor event handlers are not flagged.
@@ -317,9 +317,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Analyze Cancellation Availability
+    //  Story 1.9: Analyze Cancellation Availability
 
     /// <summary>
     /// Tests that methods without cancellation overloads are not flagged.
@@ -352,9 +352,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Be Aware of Captured Tokens
+    //  Story 1.10: Be Aware of Captured Tokens
 
     /// <summary>
     /// Tests that methods with captured tokens are not flagged.
@@ -388,9 +388,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular async methods without CancellationToken are still flagged (positive control).
@@ -423,5 +423,5 @@ namespace TestProject
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken);
     }
 
-    #endregion
+     // 
 }

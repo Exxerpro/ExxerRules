@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Performance;
 /// </summary>
 public class UseEfficientLinqFalsePositiveTests
 {
-    #region Story 1.1: Exempt Guard Patterns on ICollection and Arrays
+    //  Story 1.1: Exempt Guard Patterns on ICollection and Arrays
 
     /// <summary>
     /// Tests that guard patterns on ICollection and arrays are not flagged.
@@ -74,9 +74,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Recognize Materialized Queries
+    //  Story 1.2: Recognize Materialized Queries
 
     /// <summary>
     /// Tests that materialized queries are not flagged for multiple operations.
@@ -140,9 +140,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt IQueryable
+    //  Story 1.3: Exempt IQueryable
 
     /// <summary>
     /// Tests that IQueryable chained operations are not flagged.
@@ -206,9 +206,9 @@ namespace MyProject.Infrastructure
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt Set Operations
+    //  Story 1.4: Exempt Set Operations
 
     /// <summary>
     /// Tests that set operations are not flagged as multiple enumerations.
@@ -264,9 +264,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Any() Guard Followed by First() on Lists
+    //  Story 1.5: Exempt Any() Guard Followed by First() on Lists
 
     /// <summary>
     /// Tests that Any() guard followed by First() on lists is not flagged.
@@ -330,9 +330,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt Async LINQ
+    //  Story 1.6: Exempt Async LINQ
 
     /// <summary>
     /// Tests that async LINQ methods are not flagged.
@@ -394,9 +394,9 @@ namespace MyProject.Infrastructure
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt Null-Coalesced Enumerables
+    //  Story 1.7: Exempt Null-Coalesced Enumerables
 
     /// <summary>
     /// Tests that null-coalesced enumerables are not flagged.
@@ -449,9 +449,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Expression-Bodied Properties
+    //  Story 1.8: Exempt Expression-Bodied Properties
 
     /// <summary>
     /// Tests that expression-bodied properties using LINQ are not flagged.
@@ -499,9 +499,9 @@ namespace MyProject.Models
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Differentiate Query Variables Semantically
+    //  Story 1.9: Differentiate Query Variables Semantically
 
     /// <summary>
     /// Tests that different query variables are differentiated semantically.
@@ -567,9 +567,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Provide an Opt-Out Attribute
+    //  Story 1.10: Provide an Opt-Out Attribute
 
     /// <summary>
     /// Tests that methods with AllowMultipleEnumeration attribute are not flagged.
@@ -627,9 +627,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that actual inefficient LINQ usage is still flagged (positive control).
@@ -682,5 +682,5 @@ namespace MyProject.Services
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.UseEfficientLinq);
     }
 
-    #endregion
+     // 
 }

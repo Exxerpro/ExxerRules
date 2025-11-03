@@ -5,11 +5,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<WarningsNotAsErrors>NU1903;NU5104</WarningsNotAsErrors>
-		<NoWarn>$(NoWarn);NU1903</NoWarn>
+		<NoWarn>$(NoWarn);NU1903;NU5104</NoWarn>
 
 		<!--
 		  NoWarn rationale:
+		  - NU15104 A stable realease we are develping for the release of Dotnet core 10.0
 		  - NU1510/NU1603: transient/restore edge cases during CI matrix (documented in SUPPRESSIONS.md).
 		  - NU1903: security advisory for Microsoft.Build.Tasks.Core may surface transitively. We try to upgrade first;
 		    if cannot, we keep this suppression temporarily and track in SUPPRESSIONS.md with remediation plan.

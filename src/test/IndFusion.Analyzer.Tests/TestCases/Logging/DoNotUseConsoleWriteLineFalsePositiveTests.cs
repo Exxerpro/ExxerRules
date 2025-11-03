@@ -11,7 +11,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Logging;
 /// </summary>
 public class DoNotUseConsoleWriteLineFalsePositiveTests
 {
-    #region Story 1.1: Exempt Console Applications and Tooling
+    //  Story 1.1: Exempt Console Applications and Tooling
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed in Main methods and Program classes.
@@ -50,9 +50,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Build and Deployment Scripts
+    //  Story 1.2: Exempt Build and Deployment Scripts
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed in build and deployment scripts.
@@ -106,9 +106,9 @@ namespace MyProject.Scripts
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt Conditional Compilation Blocks
+    //  Story 1.3: Exempt Conditional Compilation Blocks
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed in DEBUG and TRACE blocks.
@@ -144,9 +144,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt ConditionalAttribute Methods
+    //  Story 1.4: Exempt ConditionalAttribute Methods
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed in methods with Conditional attributes.
@@ -184,9 +184,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Unit and Integration Tests
+    //  Story 1.5: Exempt Unit and Integration Tests
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed in test classes.
@@ -227,9 +227,9 @@ namespace MyProject.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt Redirected Console Output
+    //  Story 1.6: Exempt Redirected Console Output
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed when console output is redirected.
@@ -262,9 +262,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt CLI Prompting
+    //  Story 1.7: Exempt CLI Prompting
 
     /// <summary>
     /// Tests that Console.Write is allowed when followed by Console.ReadLine or Console.ReadKey.
@@ -306,9 +306,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Exception Reporting During Startup
+    //  Story 1.8: Exempt Exception Reporting During Startup
 
     /// <summary>
     /// Tests that Console.Error.WriteLine is allowed in catch blocks followed by Environment.Exit.
@@ -360,9 +360,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Exempt Console Logger Adapters
+    //  Story 1.9: Exempt Console Logger Adapters
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed in ConsoleLogger classes or classes with AllowConsoleLogging attribute.
@@ -411,9 +411,9 @@ namespace MyProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Exempt Generated Code
+    //  Story 1.10: Exempt Generated Code
 
     /// <summary>
     /// Tests that Console.WriteLine is allowed in generated code.
@@ -458,5 +458,5 @@ namespace MyProject
         diagnostics[0].Location.SourceSpan.Start.ShouldBeGreaterThan(0); // Verify it's the right location
     }
 
-    #endregion
+     // 
 }

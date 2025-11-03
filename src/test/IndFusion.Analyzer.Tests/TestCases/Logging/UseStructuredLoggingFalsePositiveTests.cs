@@ -13,7 +13,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Logging;
 /// </summary>
 public class UseStructuredLoggingFalsePositiveTests
 {
-    #region Story 1.1: Verify Receiver is ILogger
+    //  Story 1.1: Verify Receiver is ILogger
 
     /// <summary>
     /// Tests that non-ILogger receivers are not flagged.
@@ -71,9 +71,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Recognize Existing Structured Templates
+    //  Story 1.2: Recognize Existing Structured Templates
 
     /// <summary>
     /// Tests that existing structured templates are not flagged.
@@ -117,9 +117,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Support Interpolated String Handlers
+    //  Story 1.3: Support Interpolated String Handlers
 
     /// <summary>
     /// Tests that interpolated string handlers are not flagged.
@@ -162,9 +162,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Support Logging Wrapper Helpers
+    //  Story 1.4: Support Logging Wrapper Helpers
 
     /// <summary>
     /// Tests that logging wrapper helpers are not flagged.
@@ -204,9 +204,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Support Interpolation with Positional Arguments
+    //  Story 1.5: Support Interpolation with Positional Arguments
 
     /// <summary>
     /// Tests that interpolation with positional arguments is not flagged.
@@ -249,9 +249,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Support Localization Resources
+    //  Story 1.6: Support Localization Resources
 
     /// <summary>
     /// Tests that localization resources are not flagged.
@@ -297,9 +297,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Support Other Structured Logging Libraries
+    //  Story 1.7: Support Other Structured Logging Libraries
 
     /// <summary>
     /// Tests that other structured logging libraries are not flagged.
@@ -343,9 +343,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Non-Structured Sinks
+    //  Story 1.8: Exempt Non-Structured Sinks
 
     /// <summary>
     /// Tests that non-structured sinks are not flagged.
@@ -381,9 +381,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Exempt Testing Context Output
+    //  Story 1.9: Exempt Testing Context Output
 
     /// <summary>
     /// Tests that testing context output is not flagged.
@@ -430,9 +430,9 @@ namespace MyProject.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Provide an Opt-Out Attribute
+    //  Story 1.10: Provide an Opt-Out Attribute
 
     /// <summary>
     /// Tests that opt-out attribute allows interpolated logging.
@@ -480,9 +480,9 @@ namespace MyProject.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that actual inefficient logging is still flagged (positive control).
@@ -523,5 +523,5 @@ namespace MyProject.Services
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.UseStructuredLogging);
     }
 
-    #endregion
+     // 
 }

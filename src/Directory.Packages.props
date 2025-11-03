@@ -1,119 +1,118 @@
 <Project>
-  <PropertyGroup>
-    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
-  </PropertyGroup>
-  <ItemGroup>
-    <!-- Source Link -->
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <!-- Roslyn & Build -->
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Features" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="4.14.0" />
-    <PackageVersion Include="Microsoft.Build.Locator" Version="1.9.1" />
-    <!-- Microsoft.Build toolset (pin to patched versions to address NU1903 advisory without suppressions) -->
-    <PackageVersion Include="Microsoft.Build" Version="17.12.6" />
-    <PackageVersion Include="Microsoft.Build.Framework" Version="17.12.6" />
-    <PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.12.6" />
-    <PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.12.6" />
-    <!-- ASP.NET / Hosting -->
-    <PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="9.0.9" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.0-rc.1.25451.107" />
-    <!-- UI -->
-    <PackageVersion Include="MudBlazor" Version="8.12.0" />
-    <PackageVersion Include="Extensions.MudBlazor.StaticInput" Version="3.2.1" />
-    <PackageVersion Include="AngleSharp" Version="1.3.0" />
-    <PackageVersion Include="AngleSharp.Css" Version="1.0.0-beta.157" />
-    <PackageVersion Include="bunit" Version="1.40.0" />
-    <!-- Logging -->
-    <PackageVersion Include="Serilog" Version="4.3.0" />
-    <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
-    <PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.2" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="6.0.0" />
-    <PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
-    <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
-    <PackageVersion Include="Serilog.Enrichers.OpenTelemetry" Version="1.0.1" />
-    <!-- Telemetry -->
-    <PackageVersion Include="OpenTelemetry" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.12.0" />
-    <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.12.0" />
-    <!-- System -->
-    <PackageVersion Include="System.Text.Json" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="System.Diagnostics.EventLog" Version="10.0.0-rc.1.25451.107" />
-    <!-- Ensure consistency for transitive dependencies used by Roslyn stack -->
-    <PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.8" />
-    <!-- Protocol -->
-    <PackageVersion Include="ModelContextProtocol" Version="0.3.0-preview.4" />
-    <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.3.0-preview.4" />
-    <!-- Command Line Interface -->
-    <PackageVersion Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-    <PackageVersion Include="System.CommandLine.DragonFruit" Version="0.4.0-alpha.21617.1" />
-    <!-- Testing -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-    <PackageVersion Include="Microsoft.Testing.Platform" Version="1.8.4" />
-    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.8.4" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.VSTestBridge" Version="1.8.4" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.8.4" />
-    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
-    <PackageVersion Include="UglyToad.PdfPig" Version="1.7.0-custom-5" />
-    <PackageVersion Include="xunit" Version="2.9.2" />
-    <PackageVersion Include="xunit.v3" Version="3.0.1" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.4" />
-    <PackageVersion Include="xunit.v3.runner.msbuild" Version="3.0.1" />
-    <PackageVersion Include="xunit.v3.runner.console" Version="3.0.1" />
-    <PackageVersion Include="xunit.v3.runner.inproc.console" Version="3.0.1" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="NSubstitute" Version="5.3.0" />
-    <PackageVersion Include="Shouldly" Version="4.3.0" />
-    <PackageVersion Include="NSubstitute.Analyzers.CSharp" Version="1.0.0" />
-    <PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
-    <PackageVersion Include="xunit.v3.core" Version="3.0.1" />
-    <PackageVersion Include="xunit.abstractions" Version="2.0.3" />
-    <!-- Note: MediatR, AutoMapper, FluentAssertions removed per project preferences -->
-    <!-- Using custom dispatcher instead of MediatR -->
-    <!-- Using manual mapping instead of AutoMapper -->
-    <!-- Using Shouldly instead of FluentAssertions -->
-    <!-- ========================= IndQuestResults Package ========================= -->
-    <PackageVersion Include="IndQuestResults" Version="1.0.6" />
-    <PackageVersion Include="IndQuestResults.Analyzers" Version="1.0.5" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="8.0.11" />
-    <PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="8.0.11" />
-    <PackageVersion Include="Meziantou.Extensions.Logging.Xunit.v3" Version="1.1.12" />
-    <!-- Application Layer Dependencies -->
-    <PackageVersion Include="FluentValidation" Version="11.11.0" />
-    <PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
-    <!-- Semantic RAG Dependencies -->
-    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Qdrant.Client" Version="1.7.0" />
-    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.5.0" />
-    <PackageVersion Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.5.0" />
-    <PackageVersion Include="Neo4j.Driver" Version="5.15.0" />
-    <PackageVersion Include="OllamaSharp" Version="1.0.0" />
-    <PackageVersion Include="Tesseract" Version="5.2.0" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="CSharpFunctionalExtensions" Version="3.0.0" />
-    <!-- ASP.NET Core Web API Dependencies -->
-    <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.1.25451.107" />
-    <PackageVersion Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-    <!-- Note: Microsoft.AspNetCore.Cors removed - included with ASP.NET Core -->
-    <!-- VSIX -->
-    <PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.8.3365" />
-  </ItemGroup>
+	<PropertyGroup>
+		<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+	</PropertyGroup>
+	<ItemGroup>
+		<!-- Source Link -->
+		<PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
+		<!-- Roslyn & Build -->
+		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0-2.final" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="5.0.0-2.final" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.0.0-1.25277.114" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.Features" Version="5.0.0-2.final" />
+		<PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.MSBuild" Version="5.0.0-2.final" />
+		<PackageVersion Include="Microsoft.Build.Locator" Version="1.10.2" />
+		<!-- Microsoft.Build toolset (pin to patched versions to address NU1903 advisory without suppressions) -->
+		<PackageVersion Include="Microsoft.Build" Version="17.12.6" />
+		<PackageVersion Include="Microsoft.Build.Framework" Version="17.12.6" />
+		<PackageVersion Include="Microsoft.Build.Tasks.Core" Version="17.12.6" />
+		<PackageVersion Include="Microsoft.Build.Utilities.Core" Version="17.12.6" />
+		<!-- ASP.NET / Hosting -->
+		<PackageVersion Include="Microsoft.Extensions.Caching.Memory" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.AspNetCore.Components" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Hosting" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Configuration.Json" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Logging.Console" Version="10.0.0-rc.2.25502.107" />
+		<!-- UI -->
+		<PackageVersion Include="MudBlazor" Version="8.13.0" />
+		<PackageVersion Include="Extensions.MudBlazor.StaticInput" Version="3.2.1" />
+		<PackageVersion Include="AngleSharp" Version="1.3.1-beta.491" />
+		<PackageVersion Include="AngleSharp.Css" Version="1.0.0-beta.157" />
+		<PackageVersion Include="bunit" Version="2.0.64-preview" />
+		<!-- Logging -->
+		<PackageVersion Include="Serilog" Version="4.3.1-dev-02390" />
+		<PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
+		<PackageVersion Include="Serilog.Extensions.Logging" Version="9.0.3-dev-02320" />
+		<PackageVersion Include="Serilog.Sinks.Console" Version="6.1.1" />
+		<PackageVersion Include="Serilog.Sinks.File" Version="7.0.0" />
+		<PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
+		<PackageVersion Include="Serilog.Enrichers.OpenTelemetry" Version="1.0.1" />
+		<!-- Telemetry -->
+		<PackageVersion Include="OpenTelemetry" Version="1.14.0-rc.1" />
+		<PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="1.14.0-rc.1" />
+		<PackageVersion Include="OpenTelemetry.Exporter.Console" Version="1.14.0-rc.1" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.13.0" />
+		<PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="1.13.0" />
+		<!-- System -->
+		<PackageVersion Include="System.Text.Json" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="System.Diagnostics.EventLog" Version="10.0.0-rc.2.25502.107" />
+		<!-- Ensure consistency for transitive dependencies used by Roslyn stack -->
+		<PackageVersion Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.9" />
+		<!-- Protocol -->
+		<PackageVersion Include="ModelContextProtocol" Version="0.4.0-preview.3" />
+		<PackageVersion Include="ModelContextProtocol.AspNetCore" Version="0.4.0-preview.3" />
+		<!-- Command Line Interface -->
+		<PackageVersion Include="CommandLineParser" Version="2.9.1" />
+		<PackageVersion Include="System.CommandLine" Version="2.0.0-rc.2.25502.107" />
+		<PackageVersion Include="System.CommandLine.DragonFruit" Version="0.4.0-alpha.25306.1" />
+		<!-- Testing -->
+		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+		<PackageVersion Include="Microsoft.Testing.Platform" Version="2.0.1" />
+		<PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="2.0.1" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.VSTestBridge" Version="2.0.1" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.0.1" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.1.0" />
+		<PackageVersion Include="UglyToad.PdfPig" Version="1.7.0-custom-5" />
+		<PackageVersion Include="xunit.v3" Version="3.2.0" />
+		<PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+		<PackageVersion Include="xunit.v3.runner.msbuild" Version="3.2.0" />
+		<PackageVersion Include="xunit.v3.runner.console" Version="3.2.0" />
+		<PackageVersion Include="xunit.v3.runner.inproc.console" Version="3.2.0" />
+		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
+		<PackageVersion Include="NSubstitute" Version="5.3.0" />
+		<PackageVersion Include="Shouldly" Version="4.3.0" />
+		<PackageVersion Include="NSubstitute.Analyzers.CSharp" Version="1.0.17" />
+		<PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
+		<PackageVersion Include="xunit.v3.core" Version="3.2.0" />
+		<PackageVersion Include="xunit.abstractions" Version="2.0.3" />
+		<!-- Note: MediatR, AutoMapper, FluentAssertions removed per project preferences -->
+		<!-- Using custom dispatcher instead of MediatR -->
+		<!-- Using manual mapping instead of AutoMapper -->
+		<!-- Using Shouldly instead of FluentAssertions -->
+		<!-- ========================= IndQuestResults Package ========================= -->
+		<PackageVersion Include="IndQuestResults" Version="1.0.9" />
+		<PackageVersion Include="IndQuestResults.Analyzers" Version="1.0.9" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.EntityFrameworkCore.Abstractions" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Meziantou.Extensions.Logging.Xunit.v3" Version="1.1.16" />
+		<!-- Application Layer Dependencies -->
+		<PackageVersion Include="FluentValidation" Version="11.11.0" />
+		<PackageVersion Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+		<!-- Semantic RAG Dependencies -->
+		<PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Logging" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Options" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Microsoft.Extensions.Http" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Qdrant.Client" Version="1.15.1" />
+		<PackageVersion Include="Microsoft.SemanticKernel" Version="1.66.0" />
+		<PackageVersion Include="Microsoft.SemanticKernel.Connectors.OpenAI" Version="1.66.0" />
+		<PackageVersion Include="Neo4j.Driver" Version="5.28.3" />
+		<PackageVersion Include="OllamaSharp" Version="5.4.8" />
+		<PackageVersion Include="Tesseract" Version="5.2.0" />
+		<PackageVersion Include="Newtonsoft.Json" Version="13.0.4" />
+		<PackageVersion Include="CSharpFunctionalExtensions" Version="3.6.0" />
+		<!-- ASP.NET Core Web API Dependencies -->
+		<PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.0-rc.2.25502.107" />
+		<PackageVersion Include="Swashbuckle.AspNetCore" Version="9.0.6" />
+		<!-- Note: Microsoft.AspNetCore.Cors removed - included with ASP.NET Core -->
+		<!-- VSIX -->
+		<PackageVersion Include="Microsoft.VSSDK.BuildTools" Version="17.8.3365" />
+	</ItemGroup>
 </Project>

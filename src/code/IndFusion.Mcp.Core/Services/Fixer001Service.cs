@@ -502,7 +502,7 @@ public class Fixer001Service : IFixer001Service
         }
     }
 
-    #region Private Helper Methods
+    //  Private Helper Methods
 
     private async Task<Solution> GetOrCreateSolutionAsync(string solutionPath, CancellationToken cancellationToken)
     {
@@ -675,5 +675,5 @@ public class Fixer001Service : IFixer001Service
         return validationResults;
     }
 
-    #endregion
+     // 
 }

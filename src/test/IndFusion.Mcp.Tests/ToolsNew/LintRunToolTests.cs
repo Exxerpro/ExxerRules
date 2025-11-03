@@ -1,23 +1,23 @@
 using IndFusion.Mcp.Tests.Tools;
-using Xunit.Abstractions;
 
 namespace IndFusion.Mcp.Tests.ToolsNew;
 
 /// <summary>
 /// Tests for the LintRun MCP tool that runs EXXER analyzers and returns violations with policy recommendations.
 /// </summary>
-	public class LintRunToolTests : TestBase
+public class LintRunToolTests : TestBase
 {
-	private readonly Infrastructure.FileLogger<LintRunToolTests> _testLogger;
+    private readonly Infrastructure.FileLogger<LintRunToolTests> _testLogger;
 
-	/// <summary>
-	/// Initializes a new instance of the LintRunToolTests class.
-	/// </summary>
-	/// <param name="output">xUnit test output helper for logging (automatically injected by xUnit v3).</param>
-	public LintRunToolTests(Xunit.ITestOutputHelper output)
-	{
-		_testLogger = new Infrastructure.FileLogger<LintRunToolTests>(output, nameof(LintRunToolTests));
-	}
+    /// <summary>
+    /// Initializes a new instance of the LintRunToolTests class.
+    /// </summary>
+    /// <param name="output">xUnit test output helper for logging (automatically injected by xUnit v3).</param>
+    public LintRunToolTests(Xunit.ITestOutputHelper output)
+    {
+        _testLogger = new Infrastructure.FileLogger<LintRunToolTests>(output, nameof(LintRunToolTests));
+    }
+
     /// <summary>
     /// LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations.
     /// </summary>
@@ -29,13 +29,13 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
         var cleanSolutionPath = Path.Combine(TestOutputPath, "LintRunTestSolution.sln");
         var cleanProjectDir = Path.Combine(TestOutputPath, "LintRunTestProject");
         var cleanProjectPath = Path.Combine(cleanProjectDir, "LintRunTestProject.csproj");
-        
+
         // Clean up any existing files
         if (Directory.Exists(cleanProjectDir))
             Directory.Delete(cleanProjectDir, true);
-        
+
         Directory.CreateDirectory(cleanProjectDir);
-        
+
         // Create a minimal, clean test project
         var projectContent = """
             <Project Sdk="Microsoft.NET.Sdk">
@@ -47,7 +47,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
             </Project>
             """;
         File.WriteAllText(cleanProjectPath, projectContent);
-        
+
         // Create a simple test file with some violations
         var testFilePath = Path.Combine(cleanProjectDir, "TestFile.cs");
         var testFileContent = """
@@ -60,9 +60,9 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
             {
                 private string _name = "Test";
 
-                public string Name 
-                { 
-                    get => _name; 
+                public string Name
+                {
+                    get => _name;
                     set => _name = value ?? throw new ArgumentNullException(nameof(value));
                 }
 
@@ -90,7 +90,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
             }
             """;
         File.WriteAllText(testFilePath, testFileContent);
-        
+
         // Create a clean solution file
         var solutionContent = """
             Microsoft Visual Studio Solution File, Format Version 12.00
@@ -141,13 +141,13 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
         var cleanSolutionPath = Path.Combine(TestOutputPath, "LintRunTestSolution2.sln");
         var cleanProjectDir = Path.Combine(TestOutputPath, "LintRunTestProject2");
         var cleanProjectPath = Path.Combine(cleanProjectDir, "LintRunTestProject2.csproj");
-        
+
         // Clean up any existing files
         if (Directory.Exists(cleanProjectDir))
             Directory.Delete(cleanProjectDir, true);
-        
+
         Directory.CreateDirectory(cleanProjectDir);
-        
+
         // Create a minimal, clean test project
         var projectContent = """
             <Project Sdk="Microsoft.NET.Sdk">
@@ -159,7 +159,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
             </Project>
             """;
         File.WriteAllText(cleanProjectPath, projectContent);
-        
+
         // Create a simple test file with some violations
         var testFilePath = Path.Combine(cleanProjectDir, "TestFile.cs");
         var testFileContent = """
@@ -185,7 +185,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
             }
             """;
         File.WriteAllText(testFilePath, testFileContent);
-        
+
         // Create a clean solution file
         var solutionContent = """
             Microsoft Visual Studio Solution File, Format Version 12.00
@@ -293,14 +293,14 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
     {
         // Overall test execution timer for regression detection
         var totalTestStopwatch = System.Diagnostics.Stopwatch.StartNew();
-        
+
         _testLogger.LogInformation("=== TEST STARTED ===");
         _testLogger.LogInformation("Step 1: Test initialization complete");
 
         // Arrange - Load solution first
         _testLogger.LogInformation("Step 2: Starting LoadSolutionTool.LoadSolution");
         var loadSolutionStopwatch = System.Diagnostics.Stopwatch.StartNew();
-        
+
         try
         {
             await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
@@ -327,7 +327,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
         // Act - Run linting with progress reporter
         _testLogger.LogInformation("Step 4: Starting LintRunTool.LintRun");
         var lintRunStopwatch = System.Diagnostics.Stopwatch.StartNew();
-        
+
         try
         {
             var result = await LintRunTool.LintRun(
@@ -336,7 +336,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
                 severityConfig: "error,warning",
                 progress: progress,
                 cancellationToken: Xunit.TestContext.Current.CancellationToken);
-            
+
             lintRunStopwatch.Stop();
             _testLogger.LogInformation("Step 4: LintRunTool.LintRun completed in {ElapsedMs}ms", lintRunStopwatch.ElapsedMilliseconds);
 
@@ -345,17 +345,17 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
             Assert.NotNull(result);
             Assert.NotEmpty(progressCalls);
             Assert.Contains(progressCalls, call => call.Contains("linting", StringComparison.OrdinalIgnoreCase));
-            
+
             totalTestStopwatch.Stop();
             var totalElapsedSeconds = totalTestStopwatch.ElapsedMilliseconds / 1000.0;
-            
+
             _testLogger.LogInformation("Step 5: All functional assertions passed");
             _testLogger.LogInformation("=== EXECUTION TIME TRACKING ===");
             _testLogger.LogInformation("Total test execution time: {TotalSeconds:F2} seconds ({TotalMs}ms)", totalElapsedSeconds, totalTestStopwatch.ElapsedMilliseconds);
             _testLogger.LogInformation("  - LoadSolution: {LoadSolutionMs}ms", loadSolutionStopwatch.ElapsedMilliseconds);
             _testLogger.LogInformation("  - LintRun: {LintRunMs}ms", lintRunStopwatch.ElapsedMilliseconds);
             _testLogger.LogInformation("  - Other overhead: {OtherMs}ms", totalTestStopwatch.ElapsedMilliseconds - loadSolutionStopwatch.ElapsedMilliseconds - lintRunStopwatch.ElapsedMilliseconds);
-            
+
             // Performance regression guard assertion
             // NOTE: This is NOT a performance test - it's a regression guard to detect code degradation.
             // If execution time exceeds 75 seconds, it indicates potential performance regression that should be investigated.
@@ -365,7 +365,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
                 $"Test execution took {totalElapsedSeconds:F2} seconds, exceeding the 75-second regression threshold. " +
                 $"This may indicate performance degradation. Investigate: caching effectiveness, synchronous blocking operations, " +
                 $"or increased solution complexity without corresponding optimizations.");
-            
+
             _testLogger.LogInformation("=== REGRESSION GUARD ===");
             _testLogger.LogInformation("Execution time ({TotalSeconds:F2}s) is within acceptable threshold (< 75s)", totalElapsedSeconds);
             _testLogger.LogInformation("=== TEST COMPLETED SUCCESSFULLY ===");
@@ -375,7 +375,7 @@ namespace IndFusion.Mcp.Tests.ToolsNew;
             lintRunStopwatch.Stop();
             totalTestStopwatch.Stop();
             var totalElapsedSeconds = totalTestStopwatch.ElapsedMilliseconds / 1000.0;
-            
+
             _testLogger.LogError(ex, "Step 4: LintRunTool.LintRun FAILED after {ElapsedMs}ms", lintRunStopwatch.ElapsedMilliseconds);
             _testLogger.LogInformation("Total test execution time before failure: {TotalSeconds:F2} seconds ({TotalMs}ms)", totalElapsedSeconds, totalTestStopwatch.ElapsedMilliseconds);
             _testLogger.LogInformation("Progress calls count: {Count}", progressCalls.Count);

@@ -17,37 +17,50 @@
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   
   </PropertyGroup>
-  <Import Project="..\TestingPlatform.props" />
-  <!-- ===================================================================== -->
-  <!-- Package Dependencies                                                   -->
-  <!-- ===================================================================== -->
+  <!-- Shared testing platform + xUnit v3 configuration for robust discovery across runners -->
+  <PropertyGroup>
+	  <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+	  <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+	  <TestingPlatformServer>true</TestingPlatformServer>
+	  <IsTestingPlatformApplication>false</IsTestingPlatformApplication>
+	  <GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+  </PropertyGroup>
+
   <ItemGroup>
-    <!-- Microsoft Extensions & Configuration -->
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" />
-    <!-- Testing Framework & Tools -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
-    <PackageReference Include="xunit.v3" />
-    <PackageReference Update="xunit.v3.runner.console">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="xunit.runner.visualstudio">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Update="xunit.v3.runner.msbuild">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-    </PackageReference>
-    <!-- Test Coverage & Assertions -->
-    <PackageReference Include="coverlet.collector">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="NSubstitute" />
-    <PackageReference Include="Shouldly" />
+	  <!-- xUnit v3 runners -->
+	  <PackageReference Include="xunit.v3.runner.msbuild">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="xunit.v3.runner.console">
+		  <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
+	  <PackageReference Include="xunit.v3.runner.inproc.console" />
+
+	  <PackageReference Include="NSubstitute.Analyzers.CSharp">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+	  </PackageReference>
+
+	  <!-- Microsoft Testing Platform (stable 1.8.4) and extensions -->
+	  <PackageReference Include="Microsoft.Testing.Platform" />
+	  <PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
+	  <PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
+	  <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+	  <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
   </ItemGroup>
-  <!-- ===================================================================== -->
+
+  <ItemGroup>
+	  <PackageReference Include="coverlet.collector" />
+	  <PackageReference Include="Microsoft.NET.Test.Sdk" />
+	  <PackageReference Include="xunit.v3" />
+	  <PackageReference Include="xunit.runner.visualstudio" />
+	  <PackageReference Include="Shouldly" />
+	  <PackageReference Include="NSubstitute" />
+	  <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
+  </ItemGroup>
+
+	<!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>

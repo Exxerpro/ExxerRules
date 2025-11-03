@@ -228,7 +228,7 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
     /// <summary>
     /// Determines if an invocation is exempt from the structured logging rule.
@@ -640,5 +640,5 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 }

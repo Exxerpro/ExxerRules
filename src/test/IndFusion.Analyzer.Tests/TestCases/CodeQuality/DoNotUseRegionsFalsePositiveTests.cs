@@ -12,7 +12,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeQuality;
 /// </summary>
 public class DoNotUseRegionsFalsePositiveTests
 {
-    #region Story 1.1: Allow Regions for Constant Observability Buckets
+    //  Story 1.1: Allow Regions for Constant Observability Buckets
 
     /// <summary>
     /// Tests that regions containing only const or static readonly fields are not flagged.
@@ -25,19 +25,19 @@ namespace TestProject
 {
     public static class LoggingEvents
     {
-        #region User Events
+        //  User Events
         public const int UserCreated = 1001;
         public const int UserUpdated = 1002;
         public const int UserDeleted = 1003;
         public static readonly string UserEventCategory = ""User"";
-        #endregion
+         // 
 
-        #region Order Events
+        //  Order Events
         public const int OrderPlaced = 2001;
         public const int OrderCancelled = 2002;
         public const int OrderCompleted = 2003;
         public static readonly string OrderEventCategory = ""Order"";
-        #endregion
+         // 
     }
 }";
 
@@ -45,9 +45,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Allow Regions for Activity Source Constants
+    //  Story 1.2: Allow Regions for Activity Source Constants
 
     /// <summary>
     /// Tests that regions containing ActivitySource constants for OpenTelemetry are not flagged.
@@ -62,7 +62,7 @@ namespace TestProject
 {
     public static class ActivitySources
     {
-        #region Database Activities
+        //  Database Activities
         public const string DatabaseQuery = ""Database.Query"";
         public const string DatabaseConnection = ""Database.Connection"";
         
@@ -70,9 +70,9 @@ namespace TestProject
         {
             return $""Database.{operation}"";
         }
-        #endregion
+         // 
 
-        #region API Activities
+        //  API Activities
         public const string ApiRequest = ""API.Request"";
         public const string ApiResponse = ""API.Response"";
         
@@ -80,7 +80,7 @@ namespace TestProject
         {
             return $""API.{endpoint}"";
         }
-        #endregion
+         // 
     }
 }";
 
@@ -88,9 +88,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Allow Regions for Pipeline Steps in Command Handlers
+    //  Story 1.3: Allow Regions for Pipeline Steps in Command Handlers
 
     /// <summary>
     /// Tests that regions named ""Pipeline"" containing private methods ending with ""Step"" are not flagged.
@@ -110,7 +110,7 @@ namespace TestProject
                 .BindAsync(SaveStep);
         }
 
-        #region Pipeline Steps
+        //  Pipeline Steps
         private async Task<Result> ValidateStep(CreateUserCommand command)
         {
             // Validation logic
@@ -128,7 +128,7 @@ namespace TestProject
             // Save logic
             return Result.Success();
         }
-        #endregion
+         // 
     }
 
     public class CreateUserCommand { }
@@ -143,9 +143,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Allow Regions for Success/Failure Handlers
+    //  Story 1.4: Allow Regions for Success/Failure Handlers
 
     /// <summary>
     /// Tests that regions named ""Success"" or ""Failure"" containing private handling methods are not flagged.
@@ -167,7 +167,7 @@ namespace TestProject
             _logger = logger;
         }
 
-        #region Success Handlers
+        //  Success Handlers
         private void LogUserCreated(string userId)
         {
             _logger.LogInformation(""User {UserId} created successfully"", userId);
@@ -177,9 +177,9 @@ namespace TestProject
         {
             _logger.LogInformation(""User {UserId} updated successfully"", userId);
         }
-        #endregion
+         // 
 
-        #region Failure Handlers
+        //  Failure Handlers
         private void LogUserCreationFailed(string reason)
         {
             _logger.LogError(""User creation failed: {Reason}"", reason);
@@ -189,7 +189,7 @@ namespace TestProject
         {
             _logger.LogError(""User {UserId} update failed: {Reason}"", userId, reason);
         }
-        #endregion
+         // 
     }
 }";
 
@@ -197,9 +197,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Allow Regions for Helper Methods in Gateway Pipelines
+    //  Story 1.5: Allow Regions for Helper Methods in Gateway Pipelines
 
     /// <summary>
     /// Tests that regions named ""Helper"" containing private methods returning Task or Result-like types are not flagged.
@@ -219,7 +219,7 @@ namespace TestProject
                 .BindAsync(SendToBackend);
         }
 
-        #region Helper Methods
+        //  Helper Methods
         private async Task<Result> ValidateRequest(string request)
         {
             // Validation logic
@@ -237,7 +237,7 @@ namespace TestProject
             // Backend communication logic
             return Result.Success();
         }
-        #endregion
+         // 
     }
 
     public class Result
@@ -251,9 +251,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Allow Regions for Nested Context Classes
+    //  Story 1.6: Allow Regions for Nested Context Classes
 
     /// <summary>
     /// Tests that regions containing exactly one nested type declaration are not flagged.
@@ -272,7 +272,7 @@ namespace TestProject
             // Process user logic
         }
 
-        #region User Context
+        //  User Context
         private class UserContext
         {
             public UserData Data { get; }
@@ -284,11 +284,11 @@ namespace TestProject
                 CreatedAt = DateTime.UtcNow;
             }
         }
-        #endregion
+         // 
 
-        #region User Result
+        //  User Result
         private record UserResult(bool Success, string Message);
-        #endregion
+         // 
     }
 
     public class UserData { }
@@ -298,9 +298,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Allow Regions for Private Helpers in Static Utilities
+    //  Story 1.7: Allow Regions for Private Helpers in Static Utilities
 
     /// <summary>
     /// Tests that regions in static classes containing only private static members are not flagged.
@@ -318,7 +318,7 @@ namespace TestProject
             return CombineNames(firstName, lastName);
         }
 
-        #region Private Helpers
+        //  Private Helpers
         private static string CombineNames(string firstName, string lastName)
         {
             return $""{firstName} {lastName}"";
@@ -333,7 +333,7 @@ namespace TestProject
         {
             return name.Trim();
         }
-        #endregion
+         // 
     }
 }";
 
@@ -341,9 +341,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Allow Regions for Scenario Grouping in Tests
+    //  Story 1.8: Allow Regions for Scenario Grouping in Tests
 
     /// <summary>
     /// Tests that regions in test files containing only xUnit test methods are not flagged.
@@ -358,7 +358,7 @@ namespace TestProject.Tests
 {
     public class UserServiceTests
     {
-        #region Create User Tests
+        //  Create User Tests
         [Fact]
         public void Should_Create_User_When_Valid_Data()
         {
@@ -372,9 +372,9 @@ namespace TestProject.Tests
         {
             // Test implementation
         }
-        #endregion
+         // 
 
-        #region Update User Tests
+        //  Update User Tests
         [Fact]
         public void Should_Update_User_When_Valid_Data()
         {
@@ -386,7 +386,7 @@ namespace TestProject.Tests
         {
             // Test implementation
         }
-        #endregion
+         // 
     }
 }";
 
@@ -394,9 +394,9 @@ namespace TestProject.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Allow Regions for Fixture Definitions in Test Suites
+    //  Story 1.9: Allow Regions for Fixture Definitions in Test Suites
 
     /// <summary>
     /// Tests that regions in test files containing only nested type declarations for test fixtures are not flagged.
@@ -422,7 +422,7 @@ namespace TestProject.Tests
             // Test implementation
         }
 
-        #region Test Fixtures
+        //  Test Fixtures
         public class DatabaseFixture : IDisposable
         {
             public void Dispose()
@@ -438,7 +438,7 @@ namespace TestProject.Tests
                 // Cleanup
             }
         }
-        #endregion
+         // 
     }
 }";
 
@@ -446,9 +446,9 @@ namespace TestProject.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular regions are still flagged (positive control).
@@ -461,12 +461,12 @@ namespace TestProject
 {
     public class RegularClass
     {
-        #region Properties
+        //  Properties
         public string Name { get; set; } = string.Empty;
         public int Age { get; set; }
-        #endregion
+         // 
 
-        #region Methods
+        //  Methods
         public void DoSomething()
         {
             // Implementation
@@ -476,7 +476,7 @@ namespace TestProject
         {
             // Implementation
         }
-        #endregion
+         // 
     }
 }";
 
@@ -485,5 +485,5 @@ namespace TestProject
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.DoNotUseRegions);
     }
 
-    #endregion
+     // 
 }

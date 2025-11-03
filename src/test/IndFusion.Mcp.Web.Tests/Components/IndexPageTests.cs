@@ -1,14 +1,13 @@
 using IndFusion.Mcp.Web.Models;
 using IndFusion.Mcp.Web.Services;
 using IndexPage = IndFusion.Mcp.Web.Pages.Index;
-using TestContext = Bunit.TestContext;
 
 namespace IndFusion.Mcp.Web.Tests.Components;
 
 /// <summary>
 /// Component tests for the Index page verifying key sections and interactions.
 /// </summary>
-public class IndexPageTests : TestContext
+public class IndexPageTests : BunitContext
 {
     /// <summary>
     /// Configures test services and mocks used by the Index page.
@@ -58,7 +57,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldRender_WithCorrectTitle()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         component.Find("h3").TextContent.ShouldContain("Welcome to IndFusion MCP");
@@ -71,7 +70,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldDisplay_StatsCards()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         // Should have cards for Available Tools, Total ExxerFactorings, Active Solutions, Success Rate
@@ -92,7 +91,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldDisplay_SystemHealthSection()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         component.Markup.ShouldContain("System Health");
@@ -108,7 +107,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldDisplay_RecentActivityTimeline()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         component.Markup.ShouldContain("Recent Activity");
@@ -125,7 +124,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldDisplay_QuickActionButtons()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         component.Markup.ShouldContain("Quick Actions");
@@ -148,7 +147,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldHave_RefreshButton()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         var refreshButton = component.FindAll(".mud-icon-button").FirstOrDefault();
@@ -162,7 +161,7 @@ public class IndexPageTests : TestContext
     public async Task Index_RefreshButton_ShouldTriggerDataRefresh()
     {
         // Arrange
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
         var refreshButton = component.FindAll(".mud-icon-button").First();
 
         // Act
@@ -181,7 +180,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldDisplay_StatsWithCorrectValues()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         // Check that the mock values are displayed
@@ -198,7 +197,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldShowActivityDuration()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         // Should show completion times
@@ -213,7 +212,7 @@ public class IndexPageTests : TestContext
     public void Index_ShouldDisplayHealthStatusCorrectly()
     {
         // Act
-        var component = RenderComponent<IndexPage>();
+        var component = Render<IndexPage>();
 
         // Assert
         // Should show healthy status with success styling

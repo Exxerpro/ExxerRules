@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Logging;
 /// </summary>
 public class LoggingComprehensiveTests
 {
-    #region Structured Logging Tests
+    //  Structured Logging Tests
 
     /// <summary>
     /// Tests structured logging with different patterns.
@@ -84,9 +84,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0);
     }
 
-    #endregion
+     // 
 
-    #region String Concatenation Tests
+    //  String Concatenation Tests
 
     /// <summary>
     /// Tests string concatenation logging patterns.
@@ -156,9 +156,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region String Interpolation Tests
+    //  String Interpolation Tests
 
     /// <summary>
     /// Tests string interpolation logging patterns.
@@ -228,9 +228,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Mixed Logging Pattern Tests
+    //  Mixed Logging Pattern Tests
 
     /// <summary>
     /// Tests mixed logging patterns.
@@ -271,9 +271,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Different Logger Types Tests
+    //  Different Logger Types Tests
 
     /// <summary>
     /// Tests different logger types.
@@ -313,9 +313,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Log Level Tests
+    //  Log Level Tests
 
     /// <summary>
     /// Tests different log levels.
@@ -354,9 +354,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Complex Expression Tests
+    //  Complex Expression Tests
 
     /// <summary>
     /// Tests complex expressions in logging.
@@ -397,9 +397,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Method Chain Tests
+    //  Method Chain Tests
 
     /// <summary>
     /// Tests method chains in logging.
@@ -437,9 +437,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Conditional Logging Tests
+    //  Conditional Logging Tests
 
     /// <summary>
     /// Tests conditional logging patterns.
@@ -480,9 +480,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Exception Logging Tests
+    //  Exception Logging Tests
 
     /// <summary>
     /// Tests exception logging patterns.
@@ -524,9 +524,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0); // Exception logging with exception parameter is not reported
     }
 
-    #endregion
+     // 
 
-    #region Scope Logging Tests
+    //  Scope Logging Tests
 
     /// <summary>
     /// Tests scope logging patterns.
@@ -567,9 +567,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0); // Scope logging is not reported
     }
 
-    #endregion
+     // 
 
-    #region Negative Test Cases
+    //  Negative Test Cases
 
     /// <summary>
     /// Tests that structured logging is not reported.
@@ -604,9 +604,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0);
     }
 
-    #endregion
+     // 
 
-    #region Edge Case Tests
+    //  Edge Case Tests
 
     /// <summary>
     /// Tests edge cases in logging patterns.
@@ -647,5 +647,5 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 }

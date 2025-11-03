@@ -983,6 +983,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
         config.WithDatabase(_options.Database);
     }
 
+
     /// <summary>
     /// Disposes the Neo4j driver.
     /// </summary>

@@ -221,7 +221,7 @@ public class BuildValidationServiceBehavioralTests
         result.Error.ShouldContain("Operation was cancelled");
     }
 
-    #region Private Helper Methods
+    //  Private Helper Methods
 
     private static string GetTestSolutionPath()
     {
@@ -234,5 +234,5 @@ public class BuildValidationServiceBehavioralTests
         return TestSolutionFactory.CreateTestFile("TestFile", "class Test { }");
     }
 
-    #endregion
+     // 
 }

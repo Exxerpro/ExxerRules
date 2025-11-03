@@ -18,7 +18,7 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class EdgeCaseTests
 {
-    #region Async Analyzer Edge Cases
+    //  Async Analyzer Edge Cases
 
     /// <summary>
     /// Tests edge case: Async method with complex nested namespaces.
@@ -155,9 +155,9 @@ namespace TestProject
         diagnostics.Any(d => d.Id == DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region ConfigureAwait Analyzer Edge Cases
+    //  ConfigureAwait Analyzer Edge Cases
 
     /// <summary>
     /// Tests edge case: ConfigureAwait with complex method chains.
@@ -214,9 +214,9 @@ namespace TestProject
         diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 
-    #region Null Safety Analyzer Edge Cases
+    //  Null Safety Analyzer Edge Cases
 
     /// <summary>
     /// Tests edge case: Null validation with complex type patterns.
@@ -352,9 +352,9 @@ namespace TestProject
         diagnostics[0].Id.ShouldBe(DiagnosticIds.ValidateNullParameters);
     }
 
-    #endregion
+     // 
 
-    #region Boundary Condition Tests
+    //  Boundary Condition Tests
 
     /// <summary>
     /// Tests boundary condition: Empty namespace.
@@ -437,9 +437,9 @@ namespace TestProject
         configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 
-    #region Complex Scenario Tests
+    //  Complex Scenario Tests
 
     /// <summary>
     /// Tests complex scenario: Multiple analyzers on same code.
@@ -523,5 +523,5 @@ namespace TestProject
         configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
     }
 
-    #endregion
+     // 
 }

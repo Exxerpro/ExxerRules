@@ -18,269 +18,268 @@ namespace IndFusion.SemanticRag.Tests.Unit.Interfaces;
 /// </summary>
 public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, EmbeddingRequest, float[]>
 {
-	public IEmbeddingServicePortTests()
-	{
-		SetUp();
-	}
+    public IEmbeddingServicePortTests()
+    {
+        SetUp();
+    }
 
-	protected override EmbeddingRequest CreateValidRequest()
-	{
-		return new EmbeddingRequest
-		{
-			Text = "This is a test text for embedding generation.",
-			Metadata = new Dictionary<string, object> { ["source"] = "test" }
-		};
-	}
+    protected override EmbeddingRequest CreateValidRequest()
+    {
+        return new EmbeddingRequest
+        {
+            Text = "This is a test text for embedding generation.",
+            Metadata = new Dictionary<string, object> { ["source"] = "test" }
+        };
+    }
 
-	protected override EmbeddingRequest CreateInvalidRequest()
-	{
-		return new EmbeddingRequest
-		{
-			Text = null!, // Invalid: null text
-			Metadata = new Dictionary<string, object>()
-		};
-	}
+    protected override EmbeddingRequest CreateInvalidRequest()
+    {
+        return new EmbeddingRequest
+        {
+            Text = null!, // Invalid: null text
+            Metadata = new Dictionary<string, object>()
+        };
+    }
 
-	[Fact(Timeout = 5000)]
-	public async Task GenerateEmbeddingAsync_WithValidText_ShouldReturnSuccess()
-	{
-		// ✅ IITDD: Test interface contract using mock
-		var request = CreateValidRequest();
-		var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
+    [Fact(Timeout = 5000)]
+    public async Task GenerateEmbeddingAsync_WithValidText_ShouldReturnSuccess()
+    {
+        // ✅ IITDD: Test interface contract using mock
+        var request = CreateValidRequest();
+        var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f, 0.4f };
 
-		MockPort.GenerateEmbeddingAsync(
-			request.Text,
-			Arg.Any<CancellationToken>())
-			.Returns(Result<float[]>.Success(expectedEmbedding));
+        MockPort.GenerateEmbeddingAsync(
+            request.Text,
+            Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.Success(expectedEmbedding));
 
-		var result = await MockPort.GenerateEmbeddingAsync(request.Text);
+        var result = await MockPort.GenerateEmbeddingAsync(request.Text, cancellationToken: TestContext.Current.CancellationToken);
 
-		// ✅ IITDD: Assert contract, not implementation details
-		AssertSuccess(result);
-		result.Value.ShouldNotBeNull();
-		result.Value!.Length.ShouldBeGreaterThan(0); // ✅ This is a contract requirement (embedding dimension > 0)
-	}
+        // ✅ IITDD: Assert contract, not implementation details
+        AssertSuccess(result);
+        result.Value.ShouldNotBeNull();
+        result.Value!.Length.ShouldBeGreaterThan(0); // ✅ This is a contract requirement (embedding dimension > 0)
+    }
 
-	[Fact(Timeout = 5000)]
-	public async Task GenerateEmbeddingAsync_WithNullText_ShouldReturnFailure()
-	{
-		// ✅ IITDD: Test contract - null text should fail
-		MockPort.GenerateEmbeddingAsync(
-			null!,
-			Arg.Any<CancellationToken>())
-			.Returns(Result<float[]>.WithFailure("Text cannot be null or empty"));
+    [Fact(Timeout = 5000)]
+    public async Task GenerateEmbeddingAsync_WithNullText_ShouldReturnFailure()
+    {
+        // ✅ IITDD: Test contract - null text should fail
+        MockPort.GenerateEmbeddingAsync(
+            null!,
+            Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.WithFailure("Text cannot be null or empty"));
 
-		var result = await MockPort.GenerateEmbeddingAsync(null!);
+        var result = await MockPort.GenerateEmbeddingAsync(null!, cancellationToken: TestContext.Current.CancellationToken);
 
-		// ✅ IITDD: Assert failure contract
-		AssertFailure(result);
-	}
+        // ✅ IITDD: Assert failure contract
+        AssertFailure(result);
+    }
 
-	[Fact(Timeout = 5000)]
-	public async Task GenerateEmbeddingAsync_WithEmptyText_ShouldReturnFailure()
-	{
-		// ✅ IITDD: Test contract - empty text should fail
-		MockPort.GenerateEmbeddingAsync(
-			string.Empty,
-			Arg.Any<CancellationToken>())
-			.Returns(Result<float[]>.WithFailure("Text cannot be null or empty"));
+    [Fact(Timeout = 5000)]
+    public async Task GenerateEmbeddingAsync_WithEmptyText_ShouldReturnFailure()
+    {
+        // ✅ IITDD: Test contract - empty text should fail
+        MockPort.GenerateEmbeddingAsync(
+            string.Empty,
+            Arg.Any<CancellationToken>())
+            .Returns(Result<float[]>.WithFailure("Text cannot be null or empty"));
 
-		var result = await MockPort.GenerateEmbeddingAsync(string.Empty);
+        var result = await MockPort.GenerateEmbeddingAsync(string.Empty, cancellationToken: TestContext.Current.CancellationToken);
 
-		// ✅ IITDD: Assert failure contract
-		AssertFailure(result);
-	}
+        // ✅ IITDD: Assert failure contract
+        AssertFailure(result);
+    }
 
-	[Fact(Timeout = 5000)]
-	public async Task GenerateEmbeddingsAsync_WithValidTexts_ShouldReturnSuccess()
-	{
-		// ✅ IITDD: Test interface contract
-		var texts = new List<string> { "Text 1", "Text 2", "Text 3" }.AsReadOnly();
-		var expectedEmbeddings = new List<float[]>
-		{
-			new float[] { 0.1f, 0.2f, 0.3f },
-			new float[] { 0.4f, 0.5f, 0.6f },
-			new float[] { 0.7f, 0.8f, 0.9f }
-		}.AsReadOnly();
+    [Fact(Timeout = 5000)]
+    public async Task GenerateEmbeddingsAsync_WithValidTexts_ShouldReturnSuccess()
+    {
+        // ✅ IITDD: Test interface contract
+        var texts = new List<string> { "Text 1", "Text 2", "Text 3" }.AsReadOnly();
+        var expectedEmbeddings = new List<float[]>
+        {
+            new float[] { 0.1f, 0.2f, 0.3f },
+            new float[] { 0.4f, 0.5f, 0.6f },
+            new float[] { 0.7f, 0.8f, 0.9f }
+        }.AsReadOnly();
 
-		MockPort.GenerateEmbeddingsAsync(
-			texts,
-			Arg.Any<CancellationToken>())
-			.Returns(Result<IReadOnlyList<float[]>>.Success(expectedEmbeddings));
+        MockPort.GenerateEmbeddingsAsync(
+            texts,
+            Arg.Any<CancellationToken>())
+            .Returns(Result<IReadOnlyList<float[]>>.Success(expectedEmbeddings));
 
-		var result = await MockPort.GenerateEmbeddingsAsync(texts);
+        var result = await MockPort.GenerateEmbeddingsAsync(texts, cancellationToken: TestContext.Current.CancellationToken);
 
-		// ✅ IITDD: Assert contract compliance
-		AssertSuccess(result);
-		result.Value.ShouldNotBeNull();
-		result.Value!.Count.ShouldBe(texts.Count); // ✅ Contract requirement: count must match input count
-	}
+        // ✅ IITDD: Assert contract compliance
+        AssertSuccess(result);
+        result.Value.ShouldNotBeNull();
+        result.Value!.Count.ShouldBe(texts.Count); // ✅ Contract requirement: count must match input count
+    }
 
-	[Fact(Timeout = 5000)]
-	public async Task GenerateEmbeddingsAsync_WithEmptyList_ShouldReturnSuccess()
-	{
-		// ✅ IITDD: Test contract - empty list should return empty results (not failure)
-		var texts = new List<string>().AsReadOnly();
-		var expectedEmbeddings = new List<float[]>().AsReadOnly();
+    [Fact(Timeout = 5000)]
+    public async Task GenerateEmbeddingsAsync_WithEmptyList_ShouldReturnSuccess()
+    {
+        // ✅ IITDD: Test contract - empty list should return empty results (not failure)
+        var texts = new List<string>().AsReadOnly();
+        var expectedEmbeddings = new List<float[]>().AsReadOnly();
 
-		MockPort.GenerateEmbeddingsAsync(
-			texts,
-			Arg.Any<CancellationToken>())
-			.Returns(Result<IReadOnlyList<float[]>>.Success(expectedEmbeddings));
+        MockPort.GenerateEmbeddingsAsync(
+            texts,
+            Arg.Any<CancellationToken>())
+            .Returns(Result<IReadOnlyList<float[]>>.Success(expectedEmbeddings));
 
-		var result = await MockPort.GenerateEmbeddingsAsync(texts);
+        var result = await MockPort.GenerateEmbeddingsAsync(texts, cancellationToken: TestContext.Current.CancellationToken);
 
-		// ✅ IITDD: Assert contract - empty input returns empty output
-		AssertSuccess(result);
-		result.Value.ShouldNotBeNull();
-		result.Value!.Count.ShouldBe(0);
-	}
+        // ✅ IITDD: Assert contract - empty input returns empty output
+        AssertSuccess(result);
+        result.Value.ShouldNotBeNull();
+        result.Value!.Count.ShouldBe(0);
+    }
 
-	[Fact(Timeout = 5000)]
-	public async Task GenerateEmbeddingWithMetadataAsync_WithValidText_ShouldReturnSuccess()
-	{
-		// ✅ IITDD: Test interface contract
-		var text = "This is a test text";
-		var metadata = new Dictionary<string, object> { ["source"] = "test", ["type"] = "document" };
-		// ✅ Use fluent builder from TestDataBuilders
-		var vectorResult = TestDataBuilders.CreateValidVectorEmbedding(
-			id: "emb-1",
-			content: text,
-			embeddingSize: 3);
-		vectorResult.IsSuccess.ShouldBeTrue();
-		var expectedEmbedding = vectorResult.Value;
+    [Fact(Timeout = 5000)]
+    public async Task GenerateEmbeddingWithMetadataAsync_WithValidText_ShouldReturnSuccess()
+    {
+        // ✅ IITDD: Test interface contract
+        var text = "This is a test text";
+        var metadata = new Dictionary<string, object> { ["source"] = "test", ["type"] = "document" };
+        // ✅ Use fluent builder from TestDataBuilders
+        var vectorResult = TestDataBuilders.CreateValidVectorEmbedding(
+            id: "emb-1",
+            content: text,
+            embeddingSize: 3);
+        vectorResult.IsSuccess.ShouldBeTrue();
+        var expectedEmbedding = vectorResult.Value;
 
-		MockPort.GenerateEmbeddingWithMetadataAsync(
-			text,
-			metadata,
-			Arg.Any<CancellationToken>())
-			.Returns(Result<VectorEmbedding>.Success(expectedEmbedding));
+        MockPort.GenerateEmbeddingWithMetadataAsync(
+            text,
+            metadata,
+            Arg.Any<CancellationToken>())
+            .Returns(Result<VectorEmbedding>.Success(expectedEmbedding));
 
-		var result = await MockPort.GenerateEmbeddingWithMetadataAsync(text, metadata);
+        var result = await MockPort.GenerateEmbeddingWithMetadataAsync(text, metadata, cancellationToken: TestContext.Current.CancellationToken);
 
-		// ✅ IITDD: Assert contract compliance
-		AssertSuccess(result);
-		// Note: VectorEmbedding is a value type, so no null check needed
-		result.Value.Content.ShouldBe(text); // ✅ Contract requirement: content must match input
-		
-		// ✅ Contract requirement: metadata must match input (compare contents, not references)
-		result.Value.Metadata.ShouldNotBeNull();
-		result.Value.Metadata.Count.ShouldBe(metadata.Count);
-		foreach (var kvp in metadata)
-		{
-			result.Value.Metadata.ShouldContainKey(kvp.Key);
-			result.Value.Metadata[kvp.Key].ShouldBe(kvp.Value);
-		}
-	}
+        // ✅ IITDD: Assert contract compliance
+        AssertSuccess(result);
+        // Note: VectorEmbedding is a value type, so no null check needed
+        result.Value.Content.ShouldBe(text); // ✅ Contract requirement: content must match input
 
-	[Fact(Timeout = 5000)]
-	public async Task GenerateEmbeddingWithMetadataAsync_WithNullText_ShouldReturnFailure()
-	{
-		// ✅ IITDD: Test contract - null text should fail
-		var metadata = new Dictionary<string, object> { ["source"] = "test" };
+        // ✅ Contract requirement: metadata must match input (compare contents, not references)
+        result.Value.Metadata.ShouldNotBeNull();
+        result.Value.Metadata.Count.ShouldBe(metadata.Count);
+        foreach (var kvp in metadata)
+        {
+            result.Value.Metadata.ShouldContainKey(kvp.Key);
+            result.Value.Metadata[kvp.Key].ShouldBe(kvp.Value);
+        }
+    }
 
-		MockPort.GenerateEmbeddingWithMetadataAsync(
-			null!,
-			metadata,
-			Arg.Any<CancellationToken>())
-			.Returns(Result<VectorEmbedding>.WithFailure("Text cannot be null or empty"));
+    [Fact(Timeout = 5000)]
+    public async Task GenerateEmbeddingWithMetadataAsync_WithNullText_ShouldReturnFailure()
+    {
+        // ✅ IITDD: Test contract - null text should fail
+        var metadata = new Dictionary<string, object> { ["source"] = "test" };
 
-		var result = await MockPort.GenerateEmbeddingWithMetadataAsync(null!, metadata);
+        MockPort.GenerateEmbeddingWithMetadataAsync(
+            null!,
+            metadata,
+            Arg.Any<CancellationToken>())
+            .Returns(Result<VectorEmbedding>.WithFailure("Text cannot be null or empty"));
 
-		// ✅ IITDD: Assert failure contract
-		AssertFailure(result);
-	}
+        var result = await MockPort.GenerateEmbeddingWithMetadataAsync(null!, metadata, cancellationToken: TestContext.Current.CancellationToken);
 
-	[Fact(Timeout = 5000)]
-	public void GetEmbeddingDimension_ShouldReturnDimension()
-	{
-		// ✅ IITDD: Test interface contract - dimension must be positive
-		var expectedDimension = 384;
+        // ✅ IITDD: Assert failure contract
+        AssertFailure(result);
+    }
 
-		MockPort.GetEmbeddingDimension()
-			.Returns(expectedDimension);
+    [Fact(Timeout = 5000)]
+    public void GetEmbeddingDimension_ShouldReturnDimension()
+    {
+        // ✅ IITDD: Test interface contract - dimension must be positive
+        var expectedDimension = 384;
 
-		var dimension = MockPort.GetEmbeddingDimension();
+        MockPort.GetEmbeddingDimension()
+            .Returns(expectedDimension);
 
-		// ✅ IITDD: Assert contract - dimension must be positive
-		dimension.ShouldBeGreaterThan(0);
-		dimension.ShouldBe(expectedDimension); // ✅ Contract requirement: dimension must match mock
-	}
+        var dimension = MockPort.GetEmbeddingDimension();
 
-	[Fact(Timeout = 5000)]
-	public void GetMaxTextLength_ShouldReturnMaxLength()
-	{
-		// ✅ IITDD: Test interface contract - max length must be positive
-		var expectedMaxLength = 8192;
+        // ✅ IITDD: Assert contract - dimension must be positive
+        dimension.ShouldBeGreaterThan(0);
+        dimension.ShouldBe(expectedDimension); // ✅ Contract requirement: dimension must match mock
+    }
 
-		MockPort.GetMaxTextLength()
-			.Returns(expectedMaxLength);
+    [Fact(Timeout = 5000)]
+    public void GetMaxTextLength_ShouldReturnMaxLength()
+    {
+        // ✅ IITDD: Test interface contract - max length must be positive
+        var expectedMaxLength = 8192;
 
-		var maxLength = MockPort.GetMaxTextLength();
+        MockPort.GetMaxTextLength()
+            .Returns(expectedMaxLength);
 
-		// ✅ IITDD: Assert contract - max length must be positive
-		maxLength.ShouldBeGreaterThan(0);
-		maxLength.ShouldBe(expectedMaxLength); // ✅ Contract requirement: max length must match mock
-	}
+        var maxLength = MockPort.GetMaxTextLength();
 
-	[Fact(Timeout = 5000)]
-	public void ValidateTextLength_WithValidText_ShouldReturnSuccess()
-	{
-		// ✅ IITDD: Test interface contract
-		var text = "This is a valid text";
+        // ✅ IITDD: Assert contract - max length must be positive
+        maxLength.ShouldBeGreaterThan(0);
+        maxLength.ShouldBe(expectedMaxLength); // ✅ Contract requirement: max length must match mock
+    }
 
-		MockPort.ValidateTextLength(text)
-			.Returns(Result.Success());
+    [Fact(Timeout = 5000)]
+    public void ValidateTextLength_WithValidText_ShouldReturnSuccess()
+    {
+        // ✅ IITDD: Test interface contract
+        var text = "This is a valid text";
 
-		var result = MockPort.ValidateTextLength(text);
+        MockPort.ValidateTextLength(text)
+            .Returns(Result.Success());
 
-		// ✅ IITDD: Assert contract - success result
-		AssertSuccess(result);
-	}
+        var result = MockPort.ValidateTextLength(text);
 
-	[Fact(Timeout = 5000)]
-	public void ValidateTextLength_WithTooLongText_ShouldReturnFailure()
-	{
-		// ✅ IITDD: Test contract - text exceeding max length should fail
-		var tooLongText = new string('a', 10000);
+        // ✅ IITDD: Assert contract - success result
+        AssertSuccess(result);
+    }
 
-		MockPort.ValidateTextLength(tooLongText)
-			.Returns(Result.WithFailure("Text length exceeds maximum"));
+    [Fact(Timeout = 5000)]
+    public void ValidateTextLength_WithTooLongText_ShouldReturnFailure()
+    {
+        // ✅ IITDD: Test contract - text exceeding max length should fail
+        var tooLongText = new string('a', 10000);
 
-		var result = MockPort.ValidateTextLength(tooLongText);
+        MockPort.ValidateTextLength(tooLongText)
+            .Returns(Result.WithFailure("Text length exceeds maximum"));
 
-		// ✅ IITDD: Assert failure contract
-		AssertFailure(result);
-	}
+        var result = MockPort.ValidateTextLength(tooLongText);
 
-	[Fact(Timeout = 5000)]
-	public async Task GetModelInfoAsync_ShouldReturnSuccess()
-	{
-		// ✅ IITDD: Test interface contract
-		var expectedModelInfo = new EmbeddingModelInfo(
-			ModelName: "test-model",
-			Version: "1.0",
-			Dimension: 384,
-			MaxTextLength: 8192,
-			SupportedLanguages: new List<string> { "en", "es" }.AsReadOnly());
+        // ✅ IITDD: Assert failure contract
+        AssertFailure(result);
+    }
 
-		MockPort.GetModelInfoAsync(Arg.Any<CancellationToken>())
-			.Returns(Result<EmbeddingModelInfo>.Success(expectedModelInfo));
+    [Fact(Timeout = 5000)]
+    public async Task GetModelInfoAsync_ShouldReturnSuccess()
+    {
+        // ✅ IITDD: Test interface contract
+        var expectedModelInfo = new EmbeddingModelInfo(
+            ModelName: "test-model",
+            Version: "1.0",
+            Dimension: 384,
+            MaxTextLength: 8192,
+            SupportedLanguages: new List<string> { "en", "es" }.AsReadOnly());
 
-		var result = await MockPort.GetModelInfoAsync();
+        MockPort.GetModelInfoAsync(Arg.Any<CancellationToken>())
+            .Returns(Result<EmbeddingModelInfo>.Success(expectedModelInfo));
 
-		// ✅ IITDD: Assert contract compliance
-		AssertSuccess(result);
-		// Note: EmbeddingModelInfo is a value type, so no null check needed
-		result.Value.ModelName.ShouldBe(expectedModelInfo.ModelName); // ✅ Contract requirement
-		result.Value.Dimension.ShouldBe(expectedModelInfo.Dimension); // ✅ Contract requirement
-	}
+        var result = await MockPort.GetModelInfoAsync(cancellationToken: TestContext.Current.CancellationToken);
+
+        // ✅ IITDD: Assert contract compliance
+        AssertSuccess(result);
+        // Note: EmbeddingModelInfo is a value type, so no null check needed
+        result.Value.ModelName.ShouldBe(expectedModelInfo.ModelName); // ✅ Contract requirement
+        result.Value.Dimension.ShouldBe(expectedModelInfo.Dimension); // ✅ Contract requirement
+    }
 }
 
 // Helper request class for test data
 public class EmbeddingRequest
 {
-	public string Text { get; set; } = null!;
-	public Dictionary<string, object>? Metadata { get; set; }
+    public string Text { get; set; } = null!;
+    public Dictionary<string, object>? Metadata { get; set; }
 }
-

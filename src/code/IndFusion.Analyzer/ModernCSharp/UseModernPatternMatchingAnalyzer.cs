@@ -192,7 +192,7 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         return expressionText.Contains(castPattern1) || expressionText.Contains(castPattern2);
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
     /// <summary>
     /// Determines if an if statement is exempt from the pattern matching rule.
@@ -412,5 +412,5 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 }

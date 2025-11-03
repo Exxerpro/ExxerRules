@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Architecture;
 /// </summary>
 public class DomainShouldNotReferenceInfrastructureFalsePositiveTests
 {
-    #region Story 1.1: Exempt EF Core Attributes on Domain Value Objects
+    //  Story 1.1: Exempt EF Core Attributes on Domain Value Objects
 
     /// <summary>
     /// Tests that EF Core attributes on domain value objects are not flagged.
@@ -47,9 +47,9 @@ namespace MyProject.Domain.ValueObjects
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.2: Exempt Domain Enum Seeding Extensions
+    //  Story 1.2: Exempt Domain Enum Seeding Extensions
 
     /// <summary>
     /// Tests that domain enum seeding extensions using ModelBuilder are not flagged.
@@ -89,9 +89,9 @@ namespace MyProject.Domain.Enums
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.2: Exempt Domain Enum Seeding Extensions
+    // Story 1.2: Exempt Domain Enum Seeding Extensions
 
-    #region Story 1.3: Exempt Nested IEntityTypeConfiguration
+    //  Story 1.3: Exempt Nested IEntityTypeConfiguration
 
     /// <summary>
     /// Tests that nested IEntityTypeConfiguration implementations are not flagged.
@@ -127,9 +127,9 @@ namespace MyProject.Domain.Entities
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.3: Exempt Nested IEntityTypeConfiguration
+    // Story 1.3: Exempt Nested IEntityTypeConfiguration
 
-    #region Story 1.4: Exempt Domain Tests Using EF InMemory Providers
+    //  Story 1.4: Exempt Domain Tests Using EF InMemory Providers
 
     /// <summary>
     /// Tests that domain tests using EF InMemory providers are not flagged.
@@ -181,9 +181,9 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.4: Exempt Domain Tests Using EF InMemory Providers
+    // Story 1.4: Exempt Domain Tests Using EF InMemory Providers
 
-    #region Story 1.5: Exempt Domain Tests Validating ModelBuilder Projections
+    //  Story 1.5: Exempt Domain Tests Validating ModelBuilder Projections
 
     /// <summary>
     /// Tests that domain tests validating ModelBuilder projections are not flagged.
@@ -232,9 +232,9 @@ namespace MyProject.Domain.UnitTests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.5: Exempt Domain Tests Validating ModelBuilder Projections
+    // Story 1.5: Exempt Domain Tests Validating ModelBuilder Projections
 
-    #region Story 1.6: Do not Exempt SqlConnectionStringBuilder for Guard Logic
+    //  Story 1.6: Do not Exempt SqlConnectionStringBuilder for Guard Logic
 
     /// <summary>
     /// Tests that SqlConnectionStringBuilder usage for guard logic is not flagged.
@@ -275,9 +275,9 @@ namespace MyProject.Domain.Services
         diagnostics.ShouldNotBeEmpty();
     }
 
-    #endregion Story 1.6: Do not Exempt SqlConnectionStringBuilder for Guard Logic
+    // Story 1.6: Do not Exempt SqlConnectionStringBuilder for Guard Logic
 
-    #region Story 1.7: Exempt Provider-Specific Validation in Domain Rules
+    //  Story 1.7: Exempt Provider-Specific Validation in Domain Rules
 
     /// <summary>
     /// Tests that provider-specific validation in domain rules tests is not flagged.
@@ -317,9 +317,9 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.7: Exempt Provider-Specific Validation in Domain Rules
+    // Story 1.7: Exempt Provider-Specific Validation in Domain Rules
 
-    #region Story 1.8: Exempt Domain Enum Synchronization Scripts
+    //  Story 1.8: Exempt Domain Enum Synchronization Scripts
 
     /// <summary>
     /// Tests that domain enum synchronization scripts using ADO.NET builders are not flagged.
@@ -359,9 +359,9 @@ namespace MyProject.Domain.Utilities
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.8: Exempt Domain Enum Synchronization Scripts
+    // Story 1.8: Exempt Domain Enum Synchronization Scripts
 
-    #region Story 1.9: Exempt ValueComparer Usage in Domain Tests
+    //  Story 1.9: Exempt ValueComparer Usage in Domain Tests
 
     /// <summary>
     /// Tests that ValueComparer usage in domain tests is not flagged.
@@ -400,9 +400,9 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.9: Exempt ValueComparer Usage in Domain Tests
+    // Story 1.9: Exempt ValueComparer Usage in Domain Tests
 
-    #region Story 1.10: Exempt Migration Snapshot Verification in Domain Tests
+    //  Story 1.10: Exempt Migration Snapshot Verification in Domain Tests
 
     /// <summary>
     /// Tests that migration snapshot verification in domain tests is not flagged.
@@ -439,9 +439,9 @@ namespace MyProject.Domain.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion Story 1.10: Exempt Migration Snapshot Verification in Domain Tests
+    // Story 1.10: Exempt Migration Snapshot Verification in Domain Tests
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular infrastructure references in domain are still flagged (positive control).
@@ -485,5 +485,5 @@ namespace MyProject.Domain.Services
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.DomainShouldNotReferenceInfrastructure);
     }
 
-    #endregion Positive Control Tests
+    // Positive Control Tests
 }

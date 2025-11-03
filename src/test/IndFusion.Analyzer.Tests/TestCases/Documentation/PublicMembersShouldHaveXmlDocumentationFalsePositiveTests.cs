@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Documentation;
 /// </summary>
 public class PublicMembersShouldHaveXmlDocumentationFalsePositiveTests
 {
-    #region Story 1.1: Exempt Blazor Partial Components
+    //  Story 1.1: Exempt Blazor Partial Components
 
     /// <summary>
     /// Tests that public members in Blazor partial components are not flagged.
@@ -46,9 +46,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Auto-Generated Files
+    //  Story 1.2: Exempt Auto-Generated Files
 
     /// <summary>
     /// Tests that public members in auto-generated files are not flagged.
@@ -77,9 +77,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Inherit Documentation for Record Members
+    //  Story 1.3: Inherit Documentation for Record Members
 
     /// <summary>
     /// Tests that record members inherit documentation from the record type.
@@ -103,9 +103,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt DTO/ViewModel Properties
+    //  Story 1.4: Exempt DTO/ViewModel Properties
 
     /// <summary>
     /// Tests that DTO/ViewModel properties are not flagged.
@@ -137,9 +137,9 @@ namespace TestProject.Vm
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Inherit Documentation from Interface Members
+    //  Story 1.5: Inherit Documentation from Interface Members
 
     /// <summary>
     /// Tests that interface implementations inherit documentation from the interface.
@@ -176,9 +176,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt Unit Test Classes
+    //  Story 1.6: Exempt Unit Test Classes
 
     /// <summary>
     /// Tests that public members in unit test classes are not flagged.
@@ -208,9 +208,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Aggregate Documentation from Partial Types
+    //  Story 1.7: Aggregate Documentation from Partial Types
 
     /// <summary>
     /// Tests that partial types aggregate documentation from all parts.
@@ -243,9 +243,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Minimal API and Top-Level Statements
+    //  Story 1.8: Exempt Minimal API and Top-Level Statements
 
     /// <summary>
     /// Tests that public members in files with top-level statements are not flagged.
@@ -275,9 +275,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Exempt Serialized Fields and Properties
+    //  Story 1.9: Exempt Serialized Fields and Properties
 
     /// <summary>
     /// Tests that serialized fields and properties are not flagged.
@@ -308,9 +308,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Provide an Opt-Out Attribute
+    //  Story 1.10: Provide an Opt-Out Attribute
 
     /// <summary>
     /// Tests that members with AllowUndocumentedMembers attribute are not flagged.
@@ -341,9 +341,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular public members without documentation are still flagged (positive control).
@@ -372,5 +372,5 @@ namespace TestProject
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.PublicMembersShouldHaveXmlDocumentation);
     }
 
-    #endregion
+     // 
 }

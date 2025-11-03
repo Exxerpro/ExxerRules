@@ -14,10 +14,24 @@ namespace IndFusion.Analyzers.CodeFormatting;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Gets the localized title displayed by the project-formatting diagnostic.
+    /// </summary>
     private static readonly LocalizableString Title = "Format project with dotnet format";
+
+    /// <summary>
+    /// Gets the localized message format surfaced to the user when triggering project formatting.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Click to format the entire project using 'dotnet format --severity info --verbosity d'";
+
+    /// <summary>
+    /// Gets the descriptive text that explains how the project-formatting command operates.
+    /// </summary>
     private static readonly LocalizableString Description = "Provides an action to run 'dotnet format --severity info --verbosity d' on the current project. This action will format all files in the project according to EditorConfig settings and code style rules.";
 
+    /// <summary>
+    /// The diagnostic descriptor emitted to expose the project-formatting command.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.ProjectFormatting,
         Title,
@@ -27,10 +41,16 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostic descriptors supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the project-formatting trigger diagnostic.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers the compilation-start action that enables project-wide formatting diagnostics.
+    /// </summary>
+    /// <param name="context">The Roslyn analysis context used for registration.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -40,10 +60,20 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
         context.RegisterCompilationStartAction(OnCompilationStart);
     }
 
-    private static void OnCompilationStart(CompilationStartAnalysisContext context) =>
+    /// <summary>
+    /// Registers the syntax-tree action used to surface project-formatting diagnostics for each file.
+    /// </summary>
+    /// <param name="context">The compilation-start context provided by Roslyn.</param>
+    private static void OnCompilationStart(CompilationStartAnalysisContext context)
+    {
         // Register syntax tree analysis to provide formatting action on every file
         context.RegisterSyntaxTreeAction(AnalyzeSyntaxTree);
+    }
 
+    /// <summary>
+    /// Analyzes a syntax tree and reports a hidden diagnostic that can trigger project-wide formatting.
+    /// </summary>
+    /// <param name="context">The syntax tree analysis context.</param>
     private static void AnalyzeSyntaxTree(SyntaxTreeAnalysisContext context)
     {
         // Check if this file should be exempted from formatting diagnostics
@@ -70,11 +100,13 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
-    #region False-Positive Mitigation
+    //  False-Positive Mitigation
 
     /// <summary>
-    /// Central method to check if a file should be exempted from project formatting diagnostics.
+    /// Determines whether the current syntax tree should be exempt from project-formatting diagnostics.
     /// </summary>
+    /// <param name="context">The syntax tree analysis context providing file information.</param>
+    /// <returns><c>true</c> when the file meets any exemption criteria; otherwise, <c>false</c>.</returns>
     private static bool IsExemptFromProjectFormatting(SyntaxTreeAnalysisContext context)
     {
         return IsGeneratedFile(context) ||
@@ -82,8 +114,10 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.1: Exempt Generated Files
+    /// Story 1.1: Exempt Generated Files.
     /// </summary>
+    /// <param name="context">The syntax tree analysis context.</param>
+    /// <returns><c>true</c> when the file appears to be generated; otherwise, <c>false</c>.</returns>
     private static bool IsGeneratedFile(SyntaxTreeAnalysisContext context)
     {
         var root = context.Tree.GetRoot(context.CancellationToken);
@@ -112,8 +146,10 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.2: Exempt Empty or Whitespace-Only Files
+    /// Story 1.2: Exempt Empty or Whitespace-Only Files.
     /// </summary>
+    /// <param name="context">The syntax tree analysis context.</param>
+    /// <returns><c>true</c> when the file contains only whitespace or comments; otherwise, <c>false</c>.</returns>
     private static bool IsEmptyOrWhitespaceOnlyFile(SyntaxTreeAnalysisContext context)
     {
         var root = context.Tree.GetRoot(context.CancellationToken);
@@ -132,5 +168,5 @@ public class ProjectFormattingAnalyzer : DiagnosticAnalyzer
         return !hasContent;
     }
 
-    #endregion
+     // 
 }

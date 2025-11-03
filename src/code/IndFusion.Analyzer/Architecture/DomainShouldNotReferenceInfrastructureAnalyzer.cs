@@ -185,7 +185,7 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
         return classDeclaration?.Identifier.ValueText;
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
     /// <summary>
     /// Determines whether the supplied <paramref name="usingDirective"/> falls under one of the sanctioned exemption rules.
@@ -584,5 +584,5 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
                attributeName.EndsWith(".Test");
     }
 
-    #endregion
+     // 
 }

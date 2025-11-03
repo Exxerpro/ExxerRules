@@ -367,7 +367,7 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
                ClassDeclarationSyntax or
                ConstructorDeclarationSyntax;
 
-    #region False-Positive Mitigation
+    //  False-Positive Mitigation
 
     /// <summary>
     /// Central method to determine whether a variable declaration should be exempted from formatting diagnostics.
@@ -573,5 +573,5 @@ public class CodeFormattingAnalyzer : DiagnosticAnalyzer
                initializerText.Contains(".ToDictionary(");
     }
 
-    #endregion
+     // 
 }

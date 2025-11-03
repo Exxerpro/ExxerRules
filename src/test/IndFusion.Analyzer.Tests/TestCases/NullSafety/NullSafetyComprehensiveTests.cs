@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.NullSafety;
 /// </summary>
 public class NullSafetyComprehensiveTests
 {
-    #region ArgumentNullException.ThrowIfNull Tests
+    //  ArgumentNullException.ThrowIfNull Tests
 
     /// <summary>
     /// Tests ArgumentNullException.ThrowIfNull with different parameter names.
@@ -75,9 +75,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0);
     }
 
-    #endregion
+     // 
 
-    #region If Statement Validation Tests
+    //  If Statement Validation Tests
 
     /// <summary>
     /// Tests if statement validation with different null check patterns.
@@ -180,9 +180,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0);
     }
 
-    #endregion
+     // 
 
-    #region Result Pattern Validation Tests
+    //  Result Pattern Validation Tests
 
     /// <summary>
     /// Tests Result.WithFailure validation pattern.
@@ -251,9 +251,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Complex Type Validation Tests
+    //  Complex Type Validation Tests
 
     /// <summary>
     /// Tests validation with complex generic types.
@@ -323,9 +323,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0);
     }
 
-    #endregion
+     // 
 
-    #region Edge Case Validation Tests
+    //  Edge Case Validation Tests
 
     /// <summary>
     /// Tests validation with dynamic types.
@@ -383,9 +383,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Skippable Method Tests
+    //  Skippable Method Tests
 
     /// <summary>
     /// Tests that skippable methods are not reported.
@@ -424,9 +424,9 @@ namespace TestProject
         diagnostics.Length.ShouldBe(0);
     }
 
-    #endregion
+     // 
 
-    #region Complex Validation Pattern Tests
+    //  Complex Validation Pattern Tests
 
     /// <summary>
     /// Tests complex validation patterns with multiple conditions.
@@ -498,9 +498,9 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Negative Test Cases
+    //  Negative Test Cases
 
     /// <summary>
     /// Tests that methods without validation are reported.
@@ -562,5 +562,5 @@ namespace TestProject
         diagnostics.All(d => d.Id == DiagnosticIds.ValidateNullParameters).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 }

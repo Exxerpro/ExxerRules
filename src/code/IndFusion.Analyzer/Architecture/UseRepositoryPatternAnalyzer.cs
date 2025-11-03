@@ -262,7 +262,7 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
         return dataAccessTypes.Any(t => typeName.Contains(t));
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
     /// <summary>
     /// Determines whether the supplied class should be exempted from repository-pattern enforcement based on a series of heuristics.
@@ -601,5 +601,5 @@ public class UseRepositoryPatternAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 }

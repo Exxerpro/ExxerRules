@@ -235,7 +235,7 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #region Story 1.1: Exempt Test Methods
+    //  Story 1.1: Exempt Test Methods
 
     /// <summary>
     /// Checks if the await expression is inside a test method.
@@ -278,9 +278,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Test Helper Methods
+    //  Story 1.2: Exempt Test Helper Methods
 
     /// <summary>
     /// Determines whether the await expression resides inside helper methods declared on test classes.
@@ -304,9 +304,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
                className.EndsWith("Spec");
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt Test-Related Namespaces
+    //  Story 1.3: Exempt Test-Related Namespaces
 
     /// <summary>
     /// Determines whether the await expression is declared in a namespace dedicated to testing infrastructure.
@@ -325,9 +325,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return namespaceName.Contains(".Tests") || namespaceName.Contains(".TestUtilities");
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt IAsyncLifetime Implementations
+    //  Story 1.4: Exempt IAsyncLifetime Implementations
 
     /// <summary>
     /// Determines whether the await expression appears within an <c>IAsyncLifetime</c> lifecycle method.
@@ -394,9 +394,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Collection and Assembly Fixtures
+    //  Story 1.5: Exempt Collection and Assembly Fixtures
 
     /// <summary>
     /// Determines whether the await expression resides inside collection or assembly fixture classes.
@@ -433,9 +433,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt Blazor Component Lifecycle Methods
+    //  Story 1.6: Exempt Blazor Component Lifecycle Methods
 
     /// <summary>
     /// Determines whether the await expression resides within a Blazor component lifecycle method.
@@ -498,9 +498,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt Blazor EventCallback Handlers
+    //  Story 1.7: Exempt Blazor EventCallback Handlers
 
     /// <summary>
     /// Determines whether the await expression belongs to a Blazor event handler method that may omit ConfigureAwait.
@@ -530,9 +530,9 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
                methodName.Contains("Change");
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Awaits on Expressions Without ConfigureAwait Overloads
+    //  Story 1.8: Exempt Awaits on Expressions Without ConfigureAwait Overloads
 
     /// <summary>
     /// Determines whether the awaited expression targets APIs without <c>ConfigureAwait</c> overloads.
@@ -583,5 +583,5 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return string.Empty;
     }
 
-    #endregion
+     // 
 }

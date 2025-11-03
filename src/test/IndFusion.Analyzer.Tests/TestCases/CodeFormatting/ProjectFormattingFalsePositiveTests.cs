@@ -11,7 +11,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeFormatting;
 /// </summary>
 public class ProjectFormattingFalsePositiveTests
 {
-    #region Story 1.1: Exempt Generated Files
+    //  Story 1.1: Exempt Generated Files
 
     /// <summary>
     /// Tests that generated files are exempted from project formatting diagnostics.
@@ -39,9 +39,9 @@ namespace MyProject.Generated
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Empty or Whitespace-Only Files
+    //  Story 1.2: Exempt Empty or Whitespace-Only Files
 
     /// <summary>
     /// Tests that empty or whitespace-only files are exempted from project formatting diagnostics.
@@ -60,9 +60,9 @@ namespace MyProject.Generated
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Anchor Diagnostic to Start of File
+    //  Story 1.3: Anchor Diagnostic to Start of File
 
     /// <summary>
     /// Tests that the diagnostic is anchored to the start of the file.
@@ -96,9 +96,9 @@ namespace MyProject
         span.Length.ShouldBe(0);
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Correctly Handle LINQ Assignments
+    //  Story 1.4: Correctly Handle LINQ Assignments
 
     /// <summary>
     /// Tests that LINQ assignments are handled correctly.
@@ -129,9 +129,9 @@ namespace MyProject
         diagnostic.Id.ShouldBe(DiagnosticIds.ProjectFormatting);
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Correctly Handle Awaited Assignments
+    //  Story 1.5: Correctly Handle Awaited Assignments
 
     /// <summary>
     /// Tests that awaited assignments are handled correctly.
@@ -165,9 +165,9 @@ namespace MyProject
         diagnostic.Id.ShouldBe(DiagnosticIds.ProjectFormatting);
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Correctly Handle Object and Dictionary Initializers
+    //  Story 1.6: Correctly Handle Object and Dictionary Initializers
 
     /// <summary>
     /// Tests that object and dictionary initializers are handled correctly.
@@ -213,9 +213,9 @@ namespace MyProject
         diagnostic.Id.ShouldBe(DiagnosticIds.ProjectFormatting);
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Correctly Handle Fluent ToDictionary Pipelines
+    //  Story 1.7: Correctly Handle Fluent ToDictionary Pipelines
 
     /// <summary>
     /// Tests that fluent ToDictionary pipelines are handled correctly.
@@ -249,9 +249,9 @@ namespace MyProject
         diagnostic.Id.ShouldBe(DiagnosticIds.ProjectFormatting);
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Correctly Handle Specification Builder Assignments
+    //  Story 1.8: Correctly Handle Specification Builder Assignments
 
     /// <summary>
     /// Tests that specification builder assignments are handled correctly.
@@ -296,9 +296,9 @@ namespace MyProject
         diagnostic.Id.ShouldBe(DiagnosticIds.ProjectFormatting);
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Correctly Handle Fluent Result Pipelines
+    //  Story 1.9: Correctly Handle Fluent Result Pipelines
 
     /// <summary>
     /// Tests that fluent Result pipelines are handled correctly.
@@ -339,5 +339,5 @@ namespace MyProject
         diagnostic.Id.ShouldBe(DiagnosticIds.ProjectFormatting);
     }
 
-    #endregion
+     // 
 }

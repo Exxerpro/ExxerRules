@@ -60,21 +60,21 @@ namespace TestProject
 	{
 		#region Fields
 		private readonly ILogger<UserService> _logger;
-		#endregion
+		 // 
 
 		#region Constructor
 		public UserService(ILogger<UserService> logger)
 		{
 			_logger = logger;
 		}
-		#endregion
+		 // 
 
 		#region Methods
 		public void ProcessUser(int userId)
 		{
 			_logger.LogInformation(""Processing user with ID {UserId}"", userId);
 		}
-		#endregion
+		 // 
 	}
 }";
 
@@ -175,7 +175,7 @@ namespace TestProject
 		#region Properties
 		public string UserName { get; set; }
 		public int UserId { get; set; }
-		#endregion
+		 // 
 
 		#region Methods
 		public void ProcessUser()
@@ -187,14 +187,14 @@ namespace TestProject
 		{
 			return true;
 		}
-		#endregion
+		 // 
 
 		#region Private Methods
 		private void ValidateUser()
 		{
 			// Implementation
 		}
-		#endregion
+		 // 
 	}
 }";
 

@@ -360,12 +360,12 @@ public class Calculator
                 }
 
                 // This method violates EXXER rules - uses regions
-                #region Helper Methods
+                //  Helper Methods
                 private void HelperMethod()
                 {
                     // Helper implementation
                 }
-                #endregion
+                 // 
             }
             """;
 

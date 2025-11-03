@@ -268,7 +268,7 @@ public class CodeTransformationServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
-    #region Private Helper Methods
+    //  Private Helper Methods
 
     private static string CreateTestFile(string content)
     {
@@ -286,5 +286,5 @@ public class CodeTransformationServiceBehavioralTests
         return TestSolutionFactory.GetOrCreateTestSolution();
     }
 
-    #endregion
+     // 
 }

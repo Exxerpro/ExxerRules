@@ -12,7 +12,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.ModernCSharp;
 /// </summary>
 public class UseExpressionBodiedMembersFalsePositiveTests
 {
-    #region Story 1.1: Exempt ICommandData Factory Methods
+    //  Story 1.1: Exempt ICommandData Factory Methods
 
     /// <summary>
     /// Tests that ICommandData.Create factory methods are not flagged.
@@ -54,9 +54,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Fluent TODO Stubs
+    //  Story 1.2: Exempt Fluent TODO Stubs
 
     /// <summary>
     /// Tests that methods with TODO or FIXME comments are not flagged.
@@ -93,9 +93,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt IResettable.TryReset Methods
+    //  Story 1.3: Exempt IResettable.TryReset Methods
 
     /// <summary>
     /// Tests that IResettable.TryReset methods are not flagged.
@@ -134,9 +134,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt Fluent WithData Methods
+    //  Story 1.4: Exempt Fluent WithData Methods
 
     /// <summary>
     /// Tests that fluent With... methods that return this are not flagged.
@@ -178,9 +178,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Domain Entity Resetters
+    //  Story 1.5: Exempt Domain Entity Resetters
 
     /// <summary>
     /// Tests that domain entity reset methods are not flagged.
@@ -223,9 +223,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular simple methods are still flagged (positive control).
@@ -296,5 +296,5 @@ namespace TestProject
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.UseExpressionBodiedMembers);
     }
 
-    #endregion
+     // 
 }

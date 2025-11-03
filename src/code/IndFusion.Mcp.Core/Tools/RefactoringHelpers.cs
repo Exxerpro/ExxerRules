@@ -22,8 +22,10 @@ public static class ExxerFactoringHelpers
     // without additional locking or synchronization.
     /// <summary>Cache of loaded solutions keyed by solution path.</summary>
     public static MemoryCache SolutionCache = new(new MemoryCacheOptions());
+
     /// <summary>Cache of parsed syntax trees keyed by file path.</summary>
     public static MemoryCache SyntaxTreeCache = new(new MemoryCacheOptions());
+
     /// <summary>Cache of semantic models keyed by file path.</summary>
     public static MemoryCache ModelCache = new(new MemoryCacheOptions());
 
@@ -71,8 +73,8 @@ public static class ExxerFactoringHelpers
         EnsureMsBuildRegistered();
         var host = MefHostServices.Create(MSBuildMefHostServices.DefaultAssemblies);
         var workspace = MSBuildWorkspace.Create(host);
-        workspace.WorkspaceFailed += (_, e) =>
-            Console.Error.WriteLine(e.Diagnostic.Message);
+        workspace.RegisterWorkspaceFailedHandler(e =>
+            Console.Error.WriteLine(e.Diagnostic.Message));
         return workspace;
     }
 
@@ -103,6 +105,7 @@ public static class ExxerFactoringHelpers
             return solutionPath;
         }
     }
+
     /// <summary>
     /// Gets a cached solution or loads it from disk if not present.
     /// </summary>
@@ -113,7 +116,6 @@ public static class ExxerFactoringHelpers
         string solutionPath,
         CancellationToken cancellationToken = default)
     {
-
         if (SolutionCache.TryGetValue(solutionPath, out Solution? cachedSolution))
         {
             Directory.SetCurrentDirectory(Path.GetDirectoryName(solutionPath)!);
@@ -220,7 +222,6 @@ public static class ExxerFactoringHelpers
         }
         return true;
     }
-
 
     /// <summary>
     /// Applies a transformation to a single file on disk, preserving encoding and caches.

@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.CodeQuality;
 /// </summary>
 public class AvoidMagicNumbersAndStringsFalsePositiveTests
 {
-    #region Story 1.1: Exempt Enum Member Values
+    //  Story 1.1: Exempt Enum Member Values
 
     /// <summary>
     /// Tests that numeric literals used to define enum member values are not flagged.
@@ -38,9 +38,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Bit-Flag Enum Values
+    //  Story 1.2: Exempt Bit-Flag Enum Values
 
     /// <summary>
     /// Tests that bit-shift operations used to define flag enum members are not flagged.
@@ -68,9 +68,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt Domain Range Guards
+    //  Story 1.3: Exempt Domain Range Guards
 
     /// <summary>
     /// Tests that numeric literals in domain range guard clauses are not flagged.
@@ -104,9 +104,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt Business Rule Thresholds
+    //  Story 1.4: Exempt Business Rule Thresholds
 
     /// <summary>
     /// Tests that numeric literals for business rule thresholds are not flagged.
@@ -144,9 +144,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Exception Messages
+    //  Story 1.5: Exempt Exception Messages
 
     /// <summary>
     /// Tests that string literals used as exception messages are not flagged.
@@ -176,9 +176,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt Result/Validation Messages
+    //  Story 1.6: Exempt Result/Validation Messages
 
     /// <summary>
     /// Tests that string literals for validation messages in collections or Result objects are not flagged.
@@ -226,9 +226,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt Regex and Pattern Literals
+    //  Story 1.7: Exempt Regex and Pattern Literals
 
     /// <summary>
     /// Tests that string literals that are regular expressions or pattern-based strings are not flagged.
@@ -266,9 +266,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Culture and Locale Codes
+    //  Story 1.8: Exempt Culture and Locale Codes
 
     /// <summary>
     /// Tests that string literals for culture and locale codes are not flagged.
@@ -307,9 +307,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Exempt TimeSpan and DateTime Construction
+    //  Story 1.9: Exempt TimeSpan and DateTime Construction
 
     /// <summary>
     /// Tests that numeric literals when constructing TimeSpan or DateTime objects are not flagged.
@@ -350,9 +350,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Exempt Logging Message Templates
+    //  Story 1.10: Exempt Logging Message Templates
 
     /// <summary>
     /// Tests that string literals for structured logging message templates are not flagged.
@@ -387,9 +387,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular magic numbers are still flagged (positive control).
@@ -447,5 +447,5 @@ namespace TestProject
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.AvoidMagicNumbersAndStrings);
     }
 
-    #endregion
+     // 
 }

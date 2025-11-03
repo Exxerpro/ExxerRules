@@ -23,13 +23,13 @@ public static class Program
             };
 
             // Add global options
-            rootCommand.AddGlobalOption(new Option<bool>(
+            rootCommand.Add(new Option<bool>(
                 aliases: ["--version", "-V"],
-                description: "Show version information"));
+                name: "Show version information"));
 
-            rootCommand.AddGlobalOption(new Option<bool>(
+            rootCommand.Add(new Option<bool>(
                 aliases: ["--help", "-h", "-?"],
-                description: "Show help information"));
+                name: "Show help information"));
 
             // Set handler for root command
             rootCommand.SetHandler((bool version, bool help) =>
@@ -57,7 +57,7 @@ public static class Program
                 // If no specific command, show help
                 Console.WriteLine(rootCommand.Description);
                 Console.WriteLine("Use 'indfusion --help' for more information.");
-            }, 
+            },
             new Option<bool>("--version", "Show version information").FromAmong(),
             new Option<bool>("--help", "Show help information").FromAmong());
 

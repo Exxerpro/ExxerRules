@@ -167,7 +167,7 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         return "Console method";
     }
 
-    #region False-Positive Mitigation
+    //  False-Positive Mitigation
 
     /// <summary>
     /// Central method to check if a Console write call should be exempted from reporting.
@@ -462,9 +462,9 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         }
     }
 
-    #endregion
+     // 
 
-    #region Helper Methods
+    //  Helper Methods
 
     private static bool IsMainMethod(MethodDeclarationSyntax methodDeclaration)
     {
@@ -512,5 +512,5 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         return methodName == "Exit" && receiver == "Environment";
     }
 
-    #endregion
+     // 
 }

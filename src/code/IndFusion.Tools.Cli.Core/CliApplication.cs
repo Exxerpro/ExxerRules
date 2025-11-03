@@ -1,7 +1,7 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.CommandLine.Builder;
 using System.CommandLine.Parsing;
+using CommandLine;
 using IndFusion.Tools.Cli.Core.Commands;
 using IndFusion.Tools.Cli.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -73,7 +73,7 @@ public class CliApplication
             Console.WriteLine(rootCommand.Description);
             Console.WriteLine("Use 'indfusion --help' for more information.");
             context.ExitCode = 0;
-            
+
             await Task.CompletedTask;
         });
 
@@ -96,10 +96,10 @@ public class CliApplication
     public static IServiceProvider CreateDefaultServiceProvider()
     {
         var services = new ServiceCollection();
-        
+
         // Add logging
         services.AddLogging(configure => configure.AddConsole());
-        
+
         // Add CLI services
         services.AddSingleton<RefactoringOrchestrator>(provider =>
         {
@@ -119,7 +119,7 @@ public class CliApplication
             var logger = loggerFactory.CreateLogger<RefactoringService>();
             return new RefactoringService(logger);
         });
-        
+
         return services.BuildServiceProvider();
     }
 }

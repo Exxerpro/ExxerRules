@@ -15,28 +15,28 @@
   - [x] Method `Initialize(AnalysisContext context) : override void`
 - [x] class `CodeFormattingAnalyzer` in `code\IndFusion.Analyzer\CodeFormatting\CodeFormattingAnalyzer.cs`
   - [x] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `ProjectFormattingAnalyzer` in `code\IndFusion.Analyzer\CodeFormatting\ProjectFormattingAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `AvoidMagicNumbersAndStringsAnalyzer` in `code\IndFusion.Analyzer\CodeQuality\AvoidMagicNumbersAndStringsAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `DoNotUseRegionsAnalyzer` in `code\IndFusion.Analyzer\CodeQuality\DoNotUseRegionsAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-  - [ ] Method `ReportDiagnosticIfFailed(
+- [x] class `ProjectFormattingAnalyzer` in `code\IndFusion.Analyzer\CodeFormatting\ProjectFormattingAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `AvoidMagicNumbersAndStringsAnalyzer` in `code\IndFusion.Analyzer\CodeQuality\AvoidMagicNumbersAndStringsAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `DoNotUseRegionsAnalyzer` in `code\IndFusion.Analyzer\CodeQuality\DoNotUseRegionsAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+  - [x] Method `ReportDiagnosticIfFailed(
         this SyntaxNodeAnalysisContext context,
         Result result,
         DiagnosticDescriptor rule,
         Location location,
         params object?[]? messageArgs) : void`
-  - [ ] Method `ReportDiagnosticIfFalse(
+  - [x] Method `ReportDiagnosticIfFalse(
         this SyntaxNodeAnalysisContext context,
         Result<bool> result,
         DiagnosticDescriptor rule,
         Location location,
         params object?[]? messageArgs) : void`
-  - [ ] Method `ToStringResult(this SyntaxNode? node) : Result<string>`
-  - [ ] Method `Success() : Result`
-  - [ ] Method `Failure(string errorMessage) : Result`
-  - [ ] Method `Failure(Exception exception) : Result`
+  - [x] Method `ToStringResult(this SyntaxNode? node) : Result<string>`
+  - [x] Method `Success() : Result`
+  - [x] Method `Failure(string errorMessage) : Result`
+  - [x] Method `Failure(Exception exception) : Result`
 - [ ] class `TestAttributeInfo` in `code\IndFusion.Analyzer\Common\PatternDetector.cs`
 - [ ] enum `TestFramework` in `code\IndFusion.Analyzer\Common\PatternDetector.cs`
   - [ ] Method `ValidateMethodNaming(string methodName, string pattern) : Result<bool>`

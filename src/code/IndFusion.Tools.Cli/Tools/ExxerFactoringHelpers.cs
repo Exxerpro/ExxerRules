@@ -14,6 +14,7 @@ public static class ExxerFactoringHelpers
 
     /// <summary>Cache of parsed C# syntax trees keyed by file path.</summary>
     public static MemoryCache SyntaxTreeCache = new(new MemoryCacheOptions());
+
     /// <summary>Cache of semantic models keyed by file path.</summary>
     public static MemoryCache ModelCache = new(new MemoryCacheOptions());
 
@@ -60,8 +61,10 @@ public static class ExxerFactoringHelpers
         EnsureMsBuildRegistered();
         var host = MefHostServices.Create(MSBuildMefHostServices.DefaultAssemblies);
         var workspace = MSBuildWorkspace.Create(host);
+#pragma warning disable CS0618  // these was disable because a regresion was detected on the new method an was not longer marked as obsolet
         workspace.WorkspaceFailed += (_, e) =>
             Console.Error.WriteLine(e.Diagnostic.Message);
+#pragma warning restore CS0618
         return workspace;
     }
 

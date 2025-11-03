@@ -14,7 +14,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Architecture;
 /// </summary>
 public class UseRepositoryPatternFalsePositiveTests
 {
-    #region Story 1.1: Exempt Application Layer Handlers
+    //  Story 1.1: Exempt Application Layer Handlers
 
     /// <summary>
     /// Tests that application layer handlers using DbContext are not flagged.
@@ -69,9 +69,9 @@ namespace MyProject.Application.Commands
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.2: Exempt Infrastructure Layer
+    //  Story 1.2: Exempt Infrastructure Layer
 
     /// <summary>
     /// Tests that infrastructure layer classes using DbContext are not flagged.
@@ -128,9 +128,9 @@ namespace MyProject.Infrastructure.Data
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.3: Exempt Test and Fixture Classes
+    //  Story 1.3: Exempt Test and Fixture Classes
 
     /// <summary>
     /// Tests that test and fixture classes using DbContext are not flagged.
@@ -202,9 +202,9 @@ namespace MyProject.Tests
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.4: Exempt Connection Wrapper Classes
+    //  Story 1.4: Exempt Connection Wrapper Classes
 
     /// <summary>
     /// Tests that connection wrapper classes using connection objects are not flagged.
@@ -274,9 +274,9 @@ namespace MyProject.Infrastructure.Connections
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.5: Exempt DbContextOptions and EF Services
+    //  Story 1.5: Exempt DbContextOptions and EF Services
 
     /// <summary>
     /// Tests that DbContextOptions and EF services injected into constructors are not flagged.
@@ -352,9 +352,9 @@ namespace MyProject.Infrastructure.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.6: Exempt Minimal APIs and Program.cs
+    //  Story 1.6: Exempt Minimal APIs and Program.cs
 
     /// <summary>
     /// Tests that Program.cs and files with top-level statements using DbContext are not flagged.
@@ -404,9 +404,9 @@ public class User
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.7: Exempt Generic Infrastructure Services
+    //  Story 1.7: Exempt Generic Infrastructure Services
 
     /// <summary>
     /// Tests that generic infrastructure services using DbContext are not flagged.
@@ -516,9 +516,9 @@ namespace MyProject.Infrastructure.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.8: Exempt Generic Repository Base Classes
+    //  Story 1.8: Exempt Generic Repository Base Classes
 
     /// <summary>
     /// Tests that generic repository base classes with DbContext are not flagged.
@@ -586,9 +586,9 @@ namespace MyProject.Infrastructure.Repositories
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.9: Exempt Domain-Specific EF Extensions
+    //  Story 1.9: Exempt Domain-Specific EF Extensions
 
     /// <summary>
     /// Tests that domain-specific EF Core extension methods are not flagged.
@@ -666,9 +666,9 @@ namespace MyProject.Infrastructure.Persistence.Extensions
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Story 1.10: Provide an Opt-Out Attribute
+    //  Story 1.10: Provide an Opt-Out Attribute
 
     /// <summary>
     /// Tests that classes with AllowDirectDataAccess attribute are not flagged.
@@ -741,9 +741,9 @@ namespace MyProject.Application.Services
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+    //
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular domain services using DbContext are still flagged (positive control).
@@ -789,5 +789,5 @@ namespace MyProject.Domain.Services
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.UseRepositoryPattern);
     }
 
-    #endregion
+    //
 }

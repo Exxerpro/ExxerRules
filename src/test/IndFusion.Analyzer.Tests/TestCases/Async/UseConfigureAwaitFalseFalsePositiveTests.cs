@@ -12,7 +12,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.Async;
 /// </summary>
 public class UseConfigureAwaitFalseFalsePositiveTests
 {
-    #region Story 1.1: Exempt Test Methods
+    //  Story 1.1: Exempt Test Methods
 
     /// <summary>
     /// Tests that await expressions in test methods are not flagged.
@@ -58,9 +58,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Test Helper Methods
+    //  Story 1.2: Exempt Test Helper Methods
 
     /// <summary>
     /// Tests that await expressions in test helper methods are not flagged.
@@ -115,9 +115,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt Test-Related Namespaces
+    //  Story 1.3: Exempt Test-Related Namespaces
 
     /// <summary>
     /// Tests that await expressions in test-related namespaces are not flagged.
@@ -154,9 +154,9 @@ namespace TestProject.TestUtilities
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt IAsyncLifetime Implementations
+    //  Story 1.4: Exempt IAsyncLifetime Implementations
 
     /// <summary>
     /// Tests that await expressions in IAsyncLifetime methods are not flagged.
@@ -188,9 +188,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Exempt Collection and Assembly Fixtures
+    //  Story 1.5: Exempt Collection and Assembly Fixtures
 
     /// <summary>
     /// Tests that await expressions in collection and assembly fixtures are not flagged.
@@ -232,9 +232,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt Blazor Component Lifecycle Methods
+    //  Story 1.6: Exempt Blazor Component Lifecycle Methods
 
     /// <summary>
     /// Tests that await expressions in Blazor component lifecycle methods are not flagged.
@@ -271,9 +271,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt Blazor EventCallback Handlers
+    //  Story 1.7: Exempt Blazor EventCallback Handlers
 
     /// <summary>
     /// Tests that await expressions in Blazor event handlers are not flagged.
@@ -310,9 +310,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Awaits on Expressions Without ConfigureAwait Overloads
+    //  Story 1.8: Exempt Awaits on Expressions Without ConfigureAwait Overloads
 
     /// <summary>
     /// Tests that await expressions on tasks without ConfigureAwait overloads are not flagged.
@@ -345,9 +345,9 @@ namespace TestProject
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that regular await expressions without ConfigureAwait are still flagged (positive control).
@@ -380,5 +380,5 @@ namespace TestProject
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.UseConfigureAwaitFalse);
     }
 
-    #endregion
+     // 
 }

@@ -1308,4 +1308,12 @@
     { return @this.Value; }
     public static int Add(cA @this, int x)
     { return x + @this.Value; }
+    public static int Get(cA a)
+    { return a.Value; }
+    public static int Add(cA a, int x)
+    { return x + a.Value; }
+    public static int Get(cA @this)
+    { return @this.Value; }
+    public static int Add(cA @this, int x)
+    { return x + @this.Value; }
 }

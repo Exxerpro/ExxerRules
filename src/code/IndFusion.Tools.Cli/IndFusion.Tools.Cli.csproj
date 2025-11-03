@@ -35,6 +35,7 @@
 	<PackageReference Include="Microsoft.Extensions.Caching.Memory" />
 	<!-- Command Line Interface -->
 	<PackageReference Include="System.CommandLine" />
+	<PackageReference Include="CommandLineParser" />
 	<PackageReference Include="System.CommandLine.DragonFruit" />
 	<!-- Protocol & Communication -->
 	<PackageReference Include="ModelContextProtocol" />

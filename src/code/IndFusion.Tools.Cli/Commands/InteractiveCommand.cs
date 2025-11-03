@@ -26,15 +26,15 @@ public class InteractiveCommand : BaseCommand
         AddOption(AutoDetectOption);
         AddOption(ProfileOption);
 
-        this.SetHandler(ExecuteAsync,
-            SolutionOption,
-            GuidedOption,
-            AutoDetectOption,
-            ProfileOption,
-            VerboseOption,
-            ConfigOption,
-            LogLevelOption,
-            OutputOption);
+        SetHandler(ExecuteAsync,
+             SolutionOption,
+             GuidedOption,
+             AutoDetectOption,
+             ProfileOption,
+             VerboseOption,
+             ConfigOption,
+             LogLevelOption,
+             OutputOption);
     }
 
     /// <summary>

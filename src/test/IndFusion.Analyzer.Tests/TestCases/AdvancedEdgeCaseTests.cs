@@ -20,7 +20,7 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class AdvancedEdgeCaseTests
 {
-    #region Null Handling Edge Cases
+    //  Null Handling Edge Cases
 
     /// <summary>
     /// Tests edge case: Null semantic model handling.
@@ -84,9 +84,9 @@ namespace TestProject
         asyncDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 
-    #region Boundary Condition Tests
+    //  Boundary Condition Tests
 
     /// <summary>
     /// Tests edge case: Empty string identifiers.
@@ -150,9 +150,9 @@ namespace TestProject
         configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(2);
     }
 
-    #endregion
+     // 
 
-    #region Complex Type System Tests
+    //  Complex Type System Tests
 
     /// <summary>
     /// Tests edge case: Complex generic type scenarios.
@@ -227,9 +227,9 @@ namespace TestProject
         nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 
-    #region Expression Tree Complexity Tests
+    //  Expression Tree Complexity Tests
 
     /// <summary>
     /// Tests edge case: Complex conditional expressions.
@@ -277,9 +277,9 @@ namespace TestProject
         nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 
-    #region Method Chain Complexity Tests
+    //  Method Chain Complexity Tests
 
     /// <summary>
     /// Tests edge case: Complex method chains.
@@ -329,9 +329,9 @@ namespace TestProject
         nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 
-    #region Exception Handling Edge Cases
+    //  Exception Handling Edge Cases
 
     /// <summary>
     /// Tests edge case: Exception handling in async methods.
@@ -387,9 +387,9 @@ namespace TestProject
         configureAwaitDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(3);
     }
 
-    #endregion
+     // 
 
-    #region Logging Edge Cases
+    //  Logging Edge Cases
 
     /// <summary>
     /// Tests edge case: Complex logging scenarios.
@@ -432,9 +432,9 @@ namespace TestProject
         loggingDiagnostics.Any(d => d.Id == DiagnosticIds.UseStructuredLogging).ShouldBeTrue();
     }
 
-    #endregion
+     // 
 
-    #region Performance Edge Cases
+    //  Performance Edge Cases
 
     /// <summary>
     /// Tests edge case: Performance-critical code patterns.
@@ -484,9 +484,9 @@ namespace TestProject
         nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 
-    #region Code Quality Edge Cases
+    //  Code Quality Edge Cases
 
     /// <summary>
     /// Tests edge case: Code quality patterns.
@@ -557,5 +557,5 @@ namespace TestProject
         nullSafetyDiagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
     }
 
-    #endregion
+     // 
 }

@@ -206,7 +206,7 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
         return false;
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
     /// <summary>
     /// Determines if a member is exempt from documentation requirements.
@@ -719,9 +719,9 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
         return false;
     }
 
-    #endregion
+     // 
 
-    #region Helper Methods
+    //  Helper Methods
 
     private static string? GetNamespaceName(SyntaxNode node)
     {
@@ -734,5 +734,5 @@ public class PublicMembersShouldHaveXmlDocumentationAnalyzer : DiagnosticAnalyze
         return !string.IsNullOrEmpty(symbol.GetDocumentationCommentXml());
     }
 
-    #endregion
+     // 
 }

@@ -12,7 +12,7 @@ namespace IndFusion.Analyzer.Tests.TestCases.ModernCSharp;
 /// </summary>
 public class UseModernPatternMatchingFalsePositiveTests
 {
-    #region Story 1.1: Exempt Conditional Operator Guards
+    //  Story 1.1: Exempt Conditional Operator Guards
 
     /// <summary>
     /// Tests that conditional operator guards are not flagged.
@@ -51,9 +51,9 @@ namespace MyProject.Utilities
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.2: Exempt Reflection Property Access
+    //  Story 1.2: Exempt Reflection Property Access
 
     /// <summary>
     /// Tests that reflection property access patterns are not flagged.
@@ -108,9 +108,9 @@ namespace MyProject.Reflection
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.3: Exempt Type-Switched Casts
+    //  Story 1.3: Exempt Type-Switched Casts
 
     /// <summary>
     /// Tests that type-switched casts are not flagged.
@@ -158,9 +158,9 @@ namespace MyProject.TypeHandling
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.4: Exempt Local Function Closures
+    //  Story 1.4: Exempt Local Function Closures
 
     /// <summary>
     /// Tests that local function closures with guarded casts are not flagged.
@@ -217,9 +217,9 @@ namespace MyProject.LocalFunctions
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.5: Support is not null Guard Clauses
+    //  Story 1.5: Support is not null Guard Clauses
 
     /// <summary>
     /// Tests that is not null guard clauses are not flagged.
@@ -267,9 +267,9 @@ namespace MyProject.NullGuards
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.6: Exempt Nullable Unwrap Patterns
+    //  Story 1.6: Exempt Nullable Unwrap Patterns
 
     /// <summary>
     /// Tests that nullable unwrap patterns are not flagged.
@@ -324,9 +324,9 @@ namespace MyProject.NullableHandling
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.7: Exempt Type Equality Guards
+    //  Story 1.7: Exempt Type Equality Guards
 
     /// <summary>
     /// Tests that type equality guards are not flagged.
@@ -386,9 +386,9 @@ namespace MyProject.TypeEquality
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.8: Exempt Tuple Pattern Extraction
+    //  Story 1.8: Exempt Tuple Pattern Extraction
 
     /// <summary>
     /// Tests that tuple pattern extraction is not flagged.
@@ -436,9 +436,9 @@ namespace MyProject.TupleHandling
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.9: Exempt Pattern-Matched Exception Handling
+    //  Story 1.9: Exempt Pattern-Matched Exception Handling
 
     /// <summary>
     /// Tests that pattern-matched exception handling is not flagged.
@@ -504,9 +504,9 @@ namespace MyProject.ExceptionHandling
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Story 1.10: Exempt Temporary Variable Reassignment
+    //  Story 1.10: Exempt Temporary Variable Reassignment
 
     /// <summary>
     /// Tests that temporary variable reassignment is not flagged.
@@ -563,9 +563,9 @@ namespace MyProject.VariableReassignment
         diagnostics.ShouldBeEmpty();
     }
 
-    #endregion
+     // 
 
-    #region Positive Control Tests
+    //  Positive Control Tests
 
     /// <summary>
     /// Tests that actual inefficient pattern matching is still flagged (positive control).
@@ -614,5 +614,5 @@ namespace MyProject.InefficientPatterns
         diagnostics.ShouldAllBe(d => d.Id == DiagnosticIds.UseModernPatternMatching);
     }
 
-    #endregion
+     // 
 }

@@ -15,10 +15,24 @@ namespace IndFusion.Analyzers.CodeQuality;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Gets the localized title displayed when a region directive is discovered.
+    /// </summary>
     private static readonly LocalizableString Title = "Do not use regions for code organization";
+
+    /// <summary>
+    /// Gets the localized message format describing the offending region directive.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Region '{0}' should be avoided - prefer sub-classes or separate files for organization";
+
+    /// <summary>
+    /// Gets the diagnostic description that explains why regions should be avoided.
+    /// </summary>
     private static readonly LocalizableString Description = "Regions should be avoided in favor of better code organization using sub-classes or separate files. Regions can hide poor design and make code harder to navigate.";
 
+    /// <summary>
+    /// The diagnostic descriptor emitted when a region is encountered.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.DoNotUseRegions,
         Title,
@@ -28,10 +42,16 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostic descriptors supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the region-usage rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax tree analysis for detecting region directives.
+    /// </summary>
+    /// <param name="context">The Roslyn analysis context used for registration.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -40,6 +60,10 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxTreeAction(AnalyzeSyntaxTree);
     }
 
+    /// <summary>
+    /// Scans a syntax tree for region directives and reports diagnostics when necessary.
+    /// </summary>
+    /// <param name="context">The syntax tree analysis context.</param>
     private static void AnalyzeSyntaxTree(SyntaxTreeAnalysisContext context)
     {
         var root = context.Tree.GetRoot(context.CancellationToken);
@@ -69,6 +93,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Extracts the region name from a <c>#region</c> directive.
+    /// </summary>
+    /// <param name="regionDirective">The trivia representing the region directive.</param>
+    /// <returns>The trimmed region name, or "unnamed region" when no name is provided.</returns>
     private static string GetRegionName(SyntaxTrivia regionDirective)
     {
         // Get the text of the region directive and extract the name
@@ -86,67 +115,59 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return name;
     }
 
-    #region False-Positive Mitigation Methods
+    //  False-Positive Mitigation Methods
 
     /// <summary>
-    /// Determines if a region is exempt from the "do not use regions" rule.
+    /// Determines whether the supplied region directive should be exempt from diagnostics.
     /// </summary>
-    /// <summary>
-    /// Determines if a region is exempt from the "do not use regions" rule.
-    /// </summary>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root used to inspect surrounding nodes.</param>
+    /// <param name="context">The syntax tree analysis context.</param>
+    /// <returns><c>true</c> when the region matches an approved exemption; otherwise, <c>false</c>.</returns>
     private static bool IsExemptRegion(SyntaxTrivia regionDirective, SyntaxNode root, SyntaxTreeAnalysisContext context)
     {
         var regionName = GetRegionName(regionDirective);
 
-        // Story 1.1: Allow Regions for Constant Observability Buckets
         if (IsConstantObservabilityBucket(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.2: Allow Regions for Activity Source Constants
         if (IsActivitySourceConstants(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.3: Allow Regions for Pipeline Steps in Command Handlers
         if (IsPipelineSteps(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.4: Allow Regions for Success/Failure Handlers
         if (IsSuccessFailureHandlers(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.5: Allow Regions for Helper Methods in Gateway Pipelines
         if (IsHelperMethodsInGatewayPipelines(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.6: Allow Regions for Nested Context Classes
         if (IsNestedContextClasses(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.7: Allow Regions for Private Helpers in Static Utilities
         if (IsPrivateHelpersInStaticUtilities(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.8: Allow Regions for Scenario Grouping in Tests
         if (IsScenarioGroupingInTests(regionName, regionDirective, root))
         {
             return true;
         }
 
-        // Story 1.9: Allow Regions for Fixture Definitions in Test Suites
         if (IsFixtureDefinitionsInTestSuites(regionName, regionDirective, root))
         {
             return true;
@@ -156,11 +177,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.1: Allow Regions for Constant Observability Buckets
+    /// Determines whether the region groups observability-related constants that merit exemption.
     /// </summary>
-    /// <summary>
-    /// Story 1.1: Allow Regions for Constant Observability Buckets
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region groups observability constants; otherwise, <c>false</c>.</returns>
     private static bool IsConstantObservabilityBucket(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if region name suggests observability/logging constants
@@ -173,11 +195,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.2: Allow Regions for Activity Source Constants
+    /// Determines whether the region collects activity-source constants used for telemetry.
     /// </summary>
-    /// <summary>
-    /// Story 1.2: Allow Regions for Activity Source Constants
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region contains activity source constants; otherwise, <c>false</c>.</returns>
     private static bool IsActivitySourceConstants(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if region name suggests activity source constants
@@ -190,11 +213,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.3: Allow Regions for Pipeline Steps in Command Handlers
+    /// Determines whether the region outlines pipeline steps inside command handlers.
     /// </summary>
-    /// <summary>
-    /// Story 1.3: Allow Regions for Pipeline Steps in Command Handlers
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region outlines pipeline steps; otherwise, <c>false</c>.</returns>
     private static bool IsPipelineSteps(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if region name contains "Pipeline"
@@ -207,11 +231,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.4: Allow Regions for Success/Failure Handlers
+    /// Determines whether the region separates success and failure handlers for clarity.
     /// </summary>
-    /// <summary>
-    /// Story 1.4: Allow Regions for Success/Failure Handlers
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region contains success or failure handler methods; otherwise, <c>false</c>.</returns>
     private static bool IsSuccessFailureHandlers(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if region name contains "Success" or "Failure"
@@ -224,11 +249,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.5: Allow Regions for Helper Methods in Gateway Pipelines
+    /// Determines whether the region consolidates helper methods within gateway pipelines.
     /// </summary>
-    /// <summary>
-    /// Story 1.5: Allow Regions for Helper Methods in Gateway Pipelines
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region consolidates gateway helper methods; otherwise, <c>false</c>.</returns>
     private static bool IsHelperMethodsInGatewayPipelines(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if region name contains "Helper"
@@ -241,11 +267,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.6: Allow Regions for Nested Context Classes
+    /// Determines whether the region hosts nested context classes such as mocks or builders.
     /// </summary>
-    /// <summary>
-    /// Story 1.6: Allow Regions for Nested Context Classes
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region contains nested context classes; otherwise, <c>false</c>.</returns>
     private static bool IsNestedContextClasses(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if region name suggests context classes
@@ -258,11 +285,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.7: Allow Regions for Private Helpers in Static Utilities
+    /// Determines whether the region organizes private helper methods inside static utility classes.
     /// </summary>
-    /// <summary>
-    /// Story 1.7: Allow Regions for Private Helpers in Static Utilities
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region contains private helpers for static utilities; otherwise, <c>false</c>.</returns>
     private static bool IsPrivateHelpersInStaticUtilities(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if region name contains "Helpers" (more specific than just "Private")
@@ -275,11 +303,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.8: Allow Regions for Scenario Grouping in Tests
+    /// Determines whether the region groups related test scenarios within a test class.
     /// </summary>
-    /// <summary>
-    /// Story 1.8: Allow Regions for Scenario Grouping in Tests
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region groups related test scenarios; otherwise, <c>false</c>.</returns>
     private static bool IsScenarioGroupingInTests(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if we're in a test file (contains test attributes)
@@ -302,11 +331,12 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.9: Allow Regions for Fixture Definitions in Test Suites
+    /// Determines whether the region collects fixture definitions within a test suite.
     /// </summary>
-    /// <summary>
-    /// Story 1.9: Allow Regions for Fixture Definitions in Test Suites
-    /// </summary>
+    /// <param name="regionName">The extracted region name.</param>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns><c>true</c> when the region contains fixture definitions; otherwise, <c>false</c>.</returns>
     private static bool IsFixtureDefinitionsInTestSuites(string regionName, SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Check if we're in a test file
@@ -328,19 +358,15 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
-    #endregion
+    // False-Positive Mitigation Methods
 
-    #region Helper Methods
-
+    //  Helper Methods
     /// <summary>
-    /// Gets the content of a region (the nodes between #region and #endregion).
+    /// Retrieves the syntax node that spans the content enclosed by the supplied region directives.
     /// </summary>
-    /// <summary>
-    /// Gets the content of a region (the nodes between #region and #endregion).
-    /// </summary>
-    /// <summary>
-    /// Gets the content of a region (the nodes between #region and #endregion).
-    /// </summary>
+    /// <param name="regionDirective">The region directive trivia.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns>The syntax node encompassing the region content, or <c>null</c> if unavailable.</returns>
     private static SyntaxNode? GetRegionContent(SyntaxTrivia regionDirective, SyntaxNode root)
     {
         // Find the corresponding #endregion directive
@@ -360,7 +386,7 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         }
 
         // Find the common ancestor that contains both directives
-        var commonAncestor = regionParent.FirstAncestorOrSelf<SyntaxNode>(node => 
+        var commonAncestor = regionParent.FirstAncestorOrSelf<SyntaxNode>(node =>
             node.Contains(endRegionParent));
 
         if (commonAncestor == null)
@@ -375,11 +401,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Finds the corresponding #endregion directive for a #region directive.
+    /// Locates the matching <c>#endregion</c> directive for the supplied region.
     /// </summary>
-    /// <summary>
-    /// Finds the corresponding #endregion directive for a #region directive.
-    /// </summary>
+    /// <param name="regionDirective">The opening region directive.</param>
+    /// <param name="root">The syntax tree root.</param>
+    /// <returns>The trivia for the closing region directive, or <c>null</c> if not found.</returns>
     private static SyntaxTrivia? FindEndRegionDirective(SyntaxTrivia regionDirective, SyntaxNode root)
     {
         var regionToken = regionDirective.Token;
@@ -387,7 +413,7 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
 
         // Find all #endregion directives after this #region
         var endRegionDirectives = root.DescendantTrivia()
-            .Where(trivia => trivia.IsKind(SyntaxKind.EndRegionDirectiveTrivia) && 
+            .Where(trivia => trivia.IsKind(SyntaxKind.EndRegionDirectiveTrivia) &&
                            trivia.SpanStart > regionPosition)
             .OrderBy(trivia => trivia.SpanStart);
 
@@ -395,6 +421,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return endRegionDirectives.FirstOrDefault();
     }
 
+    /// <summary>
+    /// Determines whether the provided member is a const or static readonly field.
+    /// </summary>
+    /// <param name="member">The member declaration to inspect.</param>
+    /// <returns><c>true</c> when the member is const or static readonly; otherwise, <c>false</c>.</returns>
     private static bool IsConstOrStaticReadonlyField(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         if (member is Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax field)
@@ -405,6 +436,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the provided member is a constant string field.
+    /// </summary>
+    /// <param name="member">The member declaration to inspect.</param>
+    /// <returns><c>true</c> when the member is a const string field; otherwise, <c>false</c>.</returns>
     private static bool IsConstStringField(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         if (member is Microsoft.CodeAnalysis.CSharp.Syntax.FieldDeclarationSyntax field)
@@ -415,6 +451,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the member is a private helper method.
+    /// </summary>
+    /// <param name="member">The member declaration to inspect.</param>
+    /// <returns><c>true</c> when the member is a private method; otherwise, <c>false</c>.</returns>
     private static bool IsPrivateHelperMethod(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         if (member is Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax method)
@@ -424,6 +465,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the member is a private method whose name ends with "Step".
+    /// </summary>
+    /// <param name="member">The member declaration to analyze.</param>
+    /// <returns><c>true</c> when the method name ends with "Step"; otherwise, <c>false</c>.</returns>
     private static bool IsPrivateMethodEndingWithStep(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         if (member is Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax method)
@@ -434,6 +480,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the member is a private method associated with logging or handling operations.
+    /// </summary>
+    /// <param name="member">The member declaration to analyze.</param>
+    /// <returns><c>true</c> when the method name suggests logging or handling responsibilities; otherwise, <c>false</c>.</returns>
     private static bool IsPrivateLoggingOrHandlingMethod(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         if (member is Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax method)
@@ -444,6 +495,11 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the member is a private method returning <see cref="System.Threading.Tasks.Task"/> or a result type.
+    /// </summary>
+    /// <param name="member">The member declaration to analyze.</param>
+    /// <returns><c>true</c> when the method return type matches Task or a result wrapper; otherwise, <c>false</c>.</returns>
     private static bool IsPrivateMethodReturningTaskOrResult(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         if (member is Microsoft.CodeAnalysis.CSharp.Syntax.MethodDeclarationSyntax method)
@@ -455,29 +511,49 @@ public class DoNotUseRegionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the member is declared as private static.
+    /// </summary>
+    /// <param name="member">The member declaration to inspect.</param>
+    /// <returns><c>true</c> when the member is private static; otherwise, <c>false</c>.</returns>
     private static bool IsPrivateStaticMember(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
-        return member.Modifiers.Any(SyntaxKind.PrivateKeyword) && 
+        return member.Modifiers.Any(SyntaxKind.PrivateKeyword) &&
                member.Modifiers.Any(SyntaxKind.StaticKeyword);
     }
 
+    /// <summary>
+    /// Determines whether the provided attribute identifies an xUnit test.
+    /// </summary>
+    /// <param name="attribute">The attribute syntax to evaluate.</param>
+    /// <returns><c>true</c> when the attribute denotes an xUnit <c>Fact</c> or <c>Theory</c>; otherwise, <c>false</c>.</returns>
     private static bool IsTestAttribute(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax attribute)
     {
         var attributeName = attribute.Name.ToString();
-        return attributeName == "Fact" || attributeName == "Theory" || 
+        return attributeName == "Fact" || attributeName == "Theory" ||
                attributeName.EndsWith(".Fact") || attributeName.EndsWith(".Theory");
     }
 
+    /// <summary>
+    /// Determines whether the specified member declaration is decorated with any xUnit test attributes.
+    /// </summary>
+    /// <param name="member">The member declaration to inspect.</param>
+    /// <returns><c>true</c> when a <c>Fact</c> or <c>Theory</c> attribute is present; otherwise, <c>false</c>.</returns>
     private static bool HasXUnitAttribute(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         var attributes = member.DescendantNodes().OfType<Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax>();
         return attributes.Any(attr => IsTestAttribute(attr));
     }
 
+    /// <summary>
+    /// Determines whether the supplied member declaration represents a nested type.
+    /// </summary>
+    /// <param name="member">The member declaration to evaluate.</param>
+    /// <returns><c>true</c> when the member is a type declaration; otherwise, <c>false</c>.</returns>
     private static bool IsNestedTypeDeclaration(Microsoft.CodeAnalysis.CSharp.Syntax.MemberDeclarationSyntax member)
     {
         return member is Microsoft.CodeAnalysis.CSharp.Syntax.TypeDeclarationSyntax;
     }
 
-    #endregion
+    // Helper Methods
 }

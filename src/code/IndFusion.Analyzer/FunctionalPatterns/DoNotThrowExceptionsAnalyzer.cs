@@ -16,10 +16,24 @@ namespace IndFusion.Analyzers.FunctionalPatterns;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Title displayed for diagnostics emitted by this analyzer.
+    /// </summary>
     private static readonly LocalizableString Title = "Do not throw exceptions - use Result<T> pattern instead";
+
+    /// <summary>
+    /// Message format describing the offending exception type.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Method throws exception '{0}' - use Result<T> pattern for functional error handling instead";
+
+    /// <summary>
+    /// Description explaining the benefits of Result-based error handling.
+    /// </summary>
     private static readonly LocalizableString Description = "Exceptions should not be thrown in business logic. Use Result<T> pattern to represent success/failure states functionally. This improves composability, testability, and makes error paths explicit.";
 
+    /// <summary>
+    /// Diagnostic rule issued when disallowed exceptions are thrown.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.DoNotThrowExceptions,
         Title,
@@ -29,10 +43,16 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the Result enforcement rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks for throw statements and expressions.
+    /// </summary>
+    /// <param name="context">The analysis context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -42,6 +62,10 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeThrowExpression, SyntaxKind.ThrowExpression);
     }
 
+    /// <summary>
+    /// Evaluates throw statements and reports diagnostics when they are not exempt.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the throw statement.</param>
     private static void AnalyzeThrowStatement(SyntaxNodeAnalysisContext context)
     {
         var throwStatement = (ThrowStatementSyntax)context.Node;
@@ -69,6 +93,10 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
+    /// <summary>
+    /// Evaluates throw expressions and reports diagnostics when they are not exempt.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the throw expression.</param>
     private static void AnalyzeThrowExpression(SyntaxNodeAnalysisContext context)
     {
         var throwExpression = (ThrowExpressionSyntax)context.Node;
@@ -86,6 +114,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
+    /// <summary>
+    /// Determines whether a throw statement is part of a catch block rethrow pattern that should be allowed.
+    /// </summary>
+    /// <param name="throwStatement">The throw statement under evaluation.</param>
+    /// <returns><c>true</c> when the throw wraps the original exception within a catch block; otherwise, <c>false</c>.</returns>
     private static bool IsInCatchBlockRethrow(ThrowStatementSyntax throwStatement)
     {
         // Check if this throw is inside a catch block
@@ -108,6 +141,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Resolves a human-readable exception type name from the supplied expression.
+    /// </summary>
+    /// <param name="expression">The expression associated with the throw.</param>
+    /// <returns>The resolved exception type name, or <c>Exception</c> when it cannot be determined.</returns>
     private static string GetExceptionTypeName(ExpressionSyntax expression) => expression switch
     {
         ObjectCreationExpressionSyntax objectCreation when objectCreation.Type != null =>
@@ -117,6 +155,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         _ => "Exception"
     };
 
+    /// <summary>
+    /// Determines whether the throw occurs inside a boundary layer such as controllers or middleware.
+    /// </summary>
+    /// <param name="node">The syntax node representing the throw location.</param>
+    /// <returns><c>true</c> when the surrounding type matches boundary heuristics; otherwise, <c>false</c>.</returns>
     private static bool IsInBoundaryLayer(SyntaxNode node)
     {
         var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -132,6 +175,12 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Applies exemption heuristics to determine whether a throw should be ignored.
+    /// </summary>
+    /// <param name="node">The syntax node representing the throw statement or expression.</param>
+    /// <param name="semanticModel">The semantic model for additional context.</param>
+    /// <returns><c>true</c> when any exemption applies; otherwise, <c>false</c>.</returns>
     private static bool ShouldSkipThrow(SyntaxNode node, SemanticModel semanticModel)
     {
         // === Refactored: Get ancestors once at the top ===
@@ -199,6 +248,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Retrieves the textual exception type name from the supplied throw syntax.
+    /// </summary>
+    /// <param name="node">The syntax node representing the throw.</param>
+    /// <returns>The exception type name when available; otherwise, <see cref="string.Empty"/>.</returns>
     private static string GetThrownTypeName(SyntaxNode node)
     {
         if (node is ThrowStatementSyntax ts && ts.Expression is ObjectCreationExpressionSyntax oc) return oc.Type.ToString();
@@ -206,6 +260,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return string.Empty;
     }
 
+    /// <summary>
+    /// Determines whether the throw implements an <see cref="System.ArgumentNullException"/> guard.
+    /// </summary>
+    /// <param name="node">The syntax node representing the throw.</param>
+    /// <returns><c>true</c> when the throw enforces argument null checks; otherwise, <c>false</c>.</returns>
     private static bool IsArgumentNullGuard(SyntaxNode node)
     {
         // if (...) throw new ArgumentNullException(...)
@@ -225,6 +284,11 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the throw enforces an argument range guard.
+    /// </summary>
+    /// <param name="node">The syntax node representing the throw.</param>
+    /// <returns><c>true</c> when the guard matches range-check heuristics; otherwise, <c>false</c>.</returns>
     private static bool IsRangeGuard(SyntaxNode node)
     {
         if (node is ThrowStatementSyntax ts && ts.Expression is ObjectCreationExpressionSyntax oc)
@@ -242,6 +306,12 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the throw occurs within infrastructural or framework boundary code.
+    /// </summary>
+    /// <param name="className">The name of the containing class.</param>
+    /// <param name="namespaceName">The containing namespace.</param>
+    /// <returns><c>true</c> when heuristics indicate a framework boundary; otherwise, <c>false</c>.</returns>
     private static bool IsInFrameworkBoundary(string className, string namespaceName)
     {
         // ASP.NET Core patterns
@@ -267,6 +337,13 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the throw belongs to domain validation or factory routines where exceptions are tolerated.
+    /// </summary>
+    /// <param name="className">The containing class name.</param>
+    /// <param name="methodName">The containing method name.</param>
+    /// <param name="namespaceName">The containing namespace.</param>
+    /// <returns><c>true</c> when the heuristics identify domain validation scenarios; otherwise, <c>false</c>.</returns>
     private static bool IsDomainValidation(string className, string methodName, string namespaceName)
     {
         // Domain validation patterns
@@ -291,6 +368,12 @@ public class DoNotThrowExceptionsAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the throw occurs within configuration code where exceptions are acceptable.
+    /// </summary>
+    /// <param name="className">The containing class name.</param>
+    /// <param name="namespaceName">The containing namespace.</param>
+    /// <returns><c>true</c> when the context represents configuration scenarios; otherwise, <c>false</c>.</returns>
     private static bool IsConfigurationContext(string className, string namespaceName)
     {
         // Configuration classes

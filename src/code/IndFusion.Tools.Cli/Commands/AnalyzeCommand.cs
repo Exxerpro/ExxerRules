@@ -1,3 +1,6 @@
+using System.CommandLine;
+using System.CommandLine.Parsing;
+
 namespace IndFusion.Tools.Cli.Commands;
 
 /// <summary>
@@ -5,35 +8,36 @@ namespace IndFusion.Tools.Cli.Commands;
 /// </summary>
 public class AnalyzeCommand : BaseCommand
 {
-    private static readonly Argument<string> TypeArgument = new(
-        name: "type",
-        description: "Type of analysis: metrics, complexity, opportunities, all",
-        getDefaultValue: () => "all");
+    private static readonly Argument<string> TypeArgument = new("type")
+    {
+        Description = "Type of analysis: metrics, complexity, opportunities, all",
+        DefaultValueFactory = _ => "all"
+    };
 
-    private static readonly Option<string?> FormatOption = new(
-        aliases: ["--format"],
-        description: "Output format: console, json, csv, markdown",
-        getDefaultValue: () => "console");
+    private static readonly Option<string?> FormatOption = new("--format")
+    {
+        Description = "Output format: console, json, csv, markdown",
+        DefaultValueFactory = _ => "console"
+    };
 
     /// <summary>
     /// Initializes a new instance of the AnalyzeCommand class
     /// </summary>
     public AnalyzeCommand() : base("analyze", "Analyze code for metrics, complexity, and refactoring opportunities")
     {
-        AddArgument(TypeArgument);
-        AddOption(FormatOption);
+        Arguments.Add(TypeArgument);
+        Options.Add(FormatOption);
 
-        this.SetHandler(async (context) =>
+        this.SetAction(async (ParseResult parseResult, CancellationToken cancellationToken) =>
         {
-            var type = context.ParseResult.GetValueForArgument(TypeArgument);
-            var solution = context.ParseResult.GetValueForOption(SolutionOption);
-            var format = context.ParseResult.GetValueForOption(FormatOption);
-            var verbose = context.ParseResult.GetValueForOption(VerboseOption);
-            var logLevel = context.ParseResult.GetValueForOption(LogLevelOption);
-            var output = context.ParseResult.GetValueForOption(OutputOption);
+            var type = parseResult.GetValue(TypeArgument);
+            var solution = parseResult.GetValue(SolutionOption);
+            var format = parseResult.GetValue(FormatOption);
+            var verbose = parseResult.GetValue(VerboseOption);
+            var logLevel = parseResult.GetValue(LogLevelOption);
+            var output = parseResult.GetValue(OutputOption);
 
-            var exitCode = await ExecuteAsync(type!, solution, format, verbose, logLevel, output);
-            context.ExitCode = exitCode;
+            return await ExecuteAsync(type!, solution, format, verbose, logLevel, output);
         });
     }
 

@@ -1,6 +1,7 @@
 using IndFusion.SemanticRag.Application;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -24,17 +25,17 @@ public class IntegrationTestFixture : IDisposable
     /// The underlying <see cref="ServiceCollection"/> registers logging along with the application and infrastructure layers,
     /// mirroring real production wiring so that integration tests exercise concrete implementations.
     /// </remarks>
-    public IntegrationTestFixture()
+    public IntegrationTestFixture(IConfiguration configuration)
     {
         var services = new ServiceCollection();
-        
+
         // Add logging
         services.AddLogging(builder => builder.AddConsole());
-        
+
         // Add Application and Infrastructure services
         services.AddApplication();
-        services.AddInfrastructure();
-        
+        services.AddSemanticRagServices(configuration);
+
         ServiceProvider = services.BuildServiceProvider();
     }
 

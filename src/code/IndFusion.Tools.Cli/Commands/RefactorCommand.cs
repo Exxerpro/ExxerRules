@@ -1,3 +1,6 @@
+using System.CommandLine;
+using System.CommandLine.Parsing;
+
 namespace IndFusion.Tools.Cli.Commands;
 
 /// <summary>
@@ -5,44 +8,47 @@ namespace IndFusion.Tools.Cli.Commands;
 /// </summary>
 public class RefactorCommand : BaseCommand
 {
-    private static readonly Argument<string> ToolArgument = new(
-        name: "tool",
-        description: "The refactoring tool to use (e.g., extractmethod, renamemethod)");
+    private static readonly Argument<string> ToolArgument = new("tool")
+    {
+        Description = "The refactoring tool to use (e.g., extractmethod, renamemethod)"
+    };
 
-    private static readonly Option<string?> FileOption = new(
-        aliases: ["--file", "-f"],
-        description: "Path to the file to refactor");
+    private static readonly Option<string?> FileOption = new("--file", "-f")
+    {
+        Description = "Path to the file to refactor"
+    };
 
-    private static readonly Option<string?> RangeOption = new(
-        aliases: ["--range"],
-        description: "Line and column range (e.g., '10:5-12:20')");
+    private static readonly Option<string?> RangeOption = new("--range")
+    {
+        Description = "Line and column range (e.g., '10:5-12:20')"
+    };
 
-    private static readonly Option<bool> DryRunOption = new(
-        aliases: ["--dry-run"],
-        description: "Preview changes without applying them");
+    private static readonly Option<bool> DryRunOption = new("--dry-run")
+    {
+        Description = "Preview changes without applying them"
+    };
 
     /// <summary>
     /// Initializes a new instance of the RefactorCommand class
     /// </summary>
     public RefactorCommand() : base("refactor", "Apply refactoring operations to code")
     {
-        AddArgument(ToolArgument);
-        AddOption(FileOption);
-        AddOption(RangeOption);
-        AddOption(DryRunOption);
+        Arguments.Add(ToolArgument);
+        Options.Add(FileOption);
+        Options.Add(RangeOption);
+        Options.Add(DryRunOption);
 
-        this.SetHandler(async (context) =>
+        this.SetAction(async (ParseResult parseResult, CancellationToken cancellationToken) =>
         {
-            var tool = context.ParseResult.GetValueForArgument(ToolArgument);
-            var solution = context.ParseResult.GetValueForOption(SolutionOption);
-            var file = context.ParseResult.GetValueForOption(FileOption);
-            var range = context.ParseResult.GetValueForOption(RangeOption);
-            var dryRun = context.ParseResult.GetValueForOption(DryRunOption);
-            var verbose = context.ParseResult.GetValueForOption(VerboseOption);
-            var logLevel = context.ParseResult.GetValueForOption(LogLevelOption);
+            var tool = parseResult.GetValue(ToolArgument);
+            var solution = parseResult.GetValue(SolutionOption);
+            var file = parseResult.GetValue(FileOption);
+            var range = parseResult.GetValue(RangeOption);
+            var dryRun = parseResult.GetValue(DryRunOption);
+            var verbose = parseResult.GetValue(VerboseOption);
+            var logLevel = parseResult.GetValue(LogLevelOption);
 
-            var exitCode = await ExecuteAsync(tool, solution, file, range, dryRun, verbose, logLevel);
-            context.ExitCode = exitCode;
+            return await ExecuteAsync(tool!, solution, file, range, dryRun, verbose, logLevel);
         });
     }
 

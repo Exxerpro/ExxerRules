@@ -16,10 +16,24 @@ namespace IndFusion.Analyzers.Logging;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Title displayed for diagnostics emitted by this analyzer.
+    /// </summary>
     private static readonly LocalizableString Title = "Use structured logging instead of string concatenation";
+
+    /// <summary>
+    /// Message format describing the type of logging anti-pattern discovered.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Use structured logging with named parameters instead of {0}";
+
+    /// <summary>
+    /// Description explaining why structured logging is preferred.
+    /// </summary>
     private static readonly LocalizableString Description = "Structured logging improves observability, searchability, and performance. Use named parameters like logger.LogInformation(\"User {UserId} logged in\", userId) instead of string concatenation or interpolation.";
 
+    /// <summary>
+    /// Diagnostic rule triggered when non-structured logging patterns are detected.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.UseStructuredLogging,
         Title,
@@ -29,10 +43,16 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the structured logging rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers the syntax callbacks that inspect logging invocations.
+    /// </summary>
+    /// <param name="context">The analyzer context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -41,6 +61,10 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
     }
 
+	/// <summary>
+	/// Inspects logging invocations and flags non-structured message templates.
+	/// </summary>
+	/// <param name="context">The syntax analysis context for the invocation.</param>
 	private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
@@ -88,8 +112,19 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 
         // Only analyze the first argument; do not scan unrelated descendants
     }
+    /// <summary>
+    /// Determines whether the invocation represents an ILogger logging call.
+    /// </summary>
+    /// <param name="invocation">The invocation syntax under inspection.</param>
+    /// <param name="semanticModel">The semantic model for symbol resolution.</param>
+    /// <returns><c>true</c> when analysis indicates a logging call; otherwise, <c>false</c>.</returns>
     private static bool IsILoggerLoggingCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel) => true;
 
+    /// <summary>
+    /// Determines whether the method name corresponds to a known logging method.
+    /// </summary>
+    /// <param name="methodName">The method name to evaluate.</param>
+    /// <returns><c>true</c> when the name matches common logging method prefixes; otherwise, <c>false</c>.</returns>
     private static bool IsLoggingMethodName(string methodName)
     {
         // Common logging method names
@@ -102,6 +137,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         return loggingMethods.Contains(methodName);
     }
 
+	/// <summary>
+	/// Determines whether the provided type symbol represents an <c>ILogger</c>.
+	/// </summary>
+	/// <param name="typeSymbol">The type symbol to inspect.</param>
+	/// <returns><c>true</c> when the symbol is an ILogger or ILogger&lt;T&gt;; otherwise, <c>false</c>.</returns>
 	private static bool IsLoggerType(ITypeSymbol typeSymbol)
     {
 		// Handles ILogger and ILogger<T>
@@ -121,6 +161,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 		return false;
     }
 
+    /// <summary>
+    /// Builds the fully qualified namespace name for the supplied symbol.
+    /// </summary>
+    /// <param name="namespaceSymbol">The namespace symbol to expand.</param>
+    /// <returns>The fully qualified namespace string, or <see cref="string.Empty"/> for the global namespace.</returns>
     private static string GetFullNamespace(INamespaceSymbol? namespaceSymbol)
     {
         if (namespaceSymbol == null || namespaceSymbol.IsGlobalNamespace)
@@ -140,6 +185,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         return string.Join(".", parts);
     }
 
+    /// <summary>
+    /// Determines whether the supplied binary expression represents string concatenation.
+    /// </summary>
+    /// <param name="binaryExpression">The binary expression to inspect.</param>
+    /// <returns><c>true</c> when the expression concatenates string literals; otherwise, <c>false</c>.</returns>
     private static bool IsStringConcatenation(BinaryExpressionSyntax binaryExpression)
     {
         // Check if it's a + operator with string operands
@@ -164,6 +214,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         return ContainsStringConcatenation(binaryExpression);
     }
 
+    /// <summary>
+    /// Checks recursively whether the expression includes string concatenation.
+    /// </summary>
+    /// <param name="expression">The expression to inspect.</param>
+    /// <returns><c>true</c> when concatenation patterns are identified; otherwise, <c>false</c>.</returns>
     private static bool ContainsStringConcatenation(ExpressionSyntax expression) => expression switch
     {
         BinaryExpressionSyntax binaryExpr when binaryExpr.OperatorToken.IsKind(SyntaxKind.PlusToken) => true,
@@ -171,6 +226,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
         _ => false
     };
 
+    /// <summary>
+    /// Determines whether the target method supports interpolated string handler overloads.
+    /// </summary>
+    /// <param name="methodSymbol">The method symbol to inspect.</param>
+    /// <returns><c>true</c> when the method signature exposes interpolated string handlers; otherwise, <c>false</c>.</returns>
     private static bool MethodAllowsInterpolatedHandler(IMethodSymbol? methodSymbol)
 	{
         if (methodSymbol == null)
@@ -199,6 +259,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether the supplied method symbol represents an ILogger logging method.
+	/// </summary>
+	/// <param name="method">The method symbol to inspect.</param>
+	/// <returns><c>true</c> when the method operates on an ILogger instance; otherwise, <c>false</c>.</returns>
 	private static bool IsILoggerMethod(IMethodSymbol? method)
 	{
 		if (method == null)
@@ -219,6 +284,12 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
 	}
 
 
+    /// <summary>
+    /// Reports a structured logging violation at the specified syntax node.
+    /// </summary>
+    /// <param name="context">The analysis context used to report diagnostics.</param>
+    /// <param name="node">The syntax node associated with the violation.</param>
+    /// <param name="violationType">A description of the logging anti-pattern encountered.</param>
     private static void ReportDiagnostic(SyntaxNodeAnalysisContext context, SyntaxNode node, string violationType)
     {
         var diagnostic = Diagnostic.Create(
@@ -231,65 +302,68 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     //  False-Positive Mitigation Methods
 
     /// <summary>
-    /// Determines if an invocation is exempt from the structured logging rule.
+    /// Determines whether an invocation should be exempt from the structured logging rule.
     /// </summary>
+    /// <param name="invocation">The invocation expression being analyzed.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when any exemption scenario applies; otherwise, <c>false</c>.</returns>
     private static bool IsExemptFromStructuredLoggingRule(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
-        // Story 1.1: Verify Receiver is ILogger
+        // Exemption: Receiver is not an ILogger instance
         if (!IsILoggerReceiver(invocation, context))
         {
             return true;
         }
 
-        // Story 1.2: Recognize Existing Structured Templates
+        // Exemption: Message already contains structured placeholders
         if (HasExistingStructuredTemplate(invocation))
         {
             return true;
         }
 
-        // Story 1.3: Support Interpolated String Handlers
+        // Exemption: Method accepts interpolated string handlers
         if (HasInterpolatedStringHandler(invocation, context))
         {
             return true;
         }
 
-        // Story 1.4: Support Logging Wrapper Helpers
+        // Exemption: Helper methods generate structured templates
         if (IsLoggingWrapperHelper(invocation))
         {
             return true;
         }
 
-        // Story 1.5: Support Interpolation with Positional Arguments
+        // Exemption: Interpolated strings already use named placeholders
         if (HasInterpolationWithPositionalArguments(invocation))
         {
             return true;
         }
 
-        // Story 1.6: Support Localization Resources
+        // Exemption: Localization frameworks often provide structured templates
         if (UsesLocalizationResources(invocation))
         {
             return true;
         }
 
-        // Story 1.7: Support Other Structured Logging Libraries
+        // Exemption: Other structured logging providers may manage templates internally
         if (IsOtherStructuredLoggingLibrary(invocation, context))
         {
             return true;
         }
 
-        // Story 1.8: Exempt Non-Structured Sinks
+        // Exemption: Non-structured sinks such as console or debug output
         if (IsNonStructuredSink(invocation))
         {
             return true;
         }
 
-        // Story 1.9: Exempt Testing Context Output
+        // Exemption: Test output helpers intentionally accept interpolated messages
         if (IsTestingContextOutput(invocation, context))
         {
             return true;
         }
 
-        // Story 1.10: Provide an Opt-Out Attribute
+        // Exemption: Explicit opt-out attribute suppresses diagnostics
         if (HasAllowInterpolatedLoggingAttribute(invocation, context))
         {
             return true;
@@ -299,8 +373,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.1: Verify Receiver is ILogger
+    /// Determines whether the invocation receiver resolves to an <c>ILogger</c> instance.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when the receiver is an ILogger; otherwise, <c>false</c>.</returns>
     private static bool IsILoggerReceiver(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
@@ -330,8 +407,10 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.2: Recognize Existing Structured Templates
+    /// Determines whether the invocation already uses a structured logging template.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <returns><c>true</c> when the message argument contains structured placeholders; otherwise, <c>false</c>.</returns>
     private static bool HasExistingStructuredTemplate(InvocationExpressionSyntax invocation)
     {
         var arguments = invocation.ArgumentList.Arguments;
@@ -352,8 +431,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.3: Support Interpolated String Handlers
+    /// Determines whether the target logging method supports interpolated string handlers.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when interpolated string handlers are supported; otherwise, <c>false</c>.</returns>
     private static bool HasInterpolatedStringHandler(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var semanticModel = context.SemanticModel;
@@ -376,11 +458,10 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.4: Support Logging Wrapper Helpers
+    /// Determines whether the invocation delegates message creation to a helper that returns structured templates.
     /// </summary>
-    /// <summary>
-    /// Story 1.4: Support Logging Wrapper Helpers
-    /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <returns><c>true</c> when the message argument invokes helper logic; otherwise, <c>false</c>.</returns>
     private static bool IsLoggingWrapperHelper(InvocationExpressionSyntax invocation)
     {
         var arguments = invocation.ArgumentList.Arguments;
@@ -414,8 +495,10 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.5: Support Interpolation with Positional Arguments
+    /// Determines whether the invocation uses interpolation that already employs structured placeholders.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <returns><c>true</c> when the interpolated message contains double-braced placeholders; otherwise, <c>false</c>.</returns>
     private static bool HasInterpolationWithPositionalArguments(InvocationExpressionSyntax invocation)
     {
         var arguments = invocation.ArgumentList.Arguments;
@@ -436,11 +519,10 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.6: Support Localization Resources
+    /// Determines whether the message template originates from a localization resource.
     /// </summary>
-    /// <summary>
-    /// Story 1.6: Support Localization Resources
-    /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <returns><c>true</c> when the message argument accesses a localizer; otherwise, <c>false</c>.</returns>
     private static bool UsesLocalizationResources(InvocationExpressionSyntax invocation)
     {
         var arguments = invocation.ArgumentList.Arguments;
@@ -473,8 +555,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.7: Support Other Structured Logging Libraries
+    /// Determines whether the invocation targets another structured logging library such as Serilog.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when the logging target is a known structured logging provider; otherwise, <c>false</c>.</returns>
     private static bool IsOtherStructuredLoggingLibrary(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
@@ -501,8 +586,10 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.8: Exempt Non-Structured Sinks
+    /// Determines whether the invocation targets a non-structured sink where structured templates are unnecessary.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <returns><c>true</c> when the sink is console, debug, trace, or file based; otherwise, <c>false</c>.</returns>
     private static bool IsNonStructuredSink(InvocationExpressionSyntax invocation)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
@@ -521,8 +608,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.9: Exempt Testing Context Output
+    /// Determines whether the invocation writes to a testing output helper.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when the receiver is an <c>ITestOutputHelper</c>; otherwise, <c>false</c>.</returns>
     private static bool IsTestingContextOutput(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
@@ -549,8 +639,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.10: Provide an Opt-Out Attribute
+    /// Determines whether an opt-out attribute suppresses structured logging requirements.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when the opt-out attribute is applied; otherwise, <c>false</c>.</returns>
     private static bool HasAllowInterpolatedLoggingAttribute(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         // Check if the containing method has the AllowInterpolatedLogging attribute
@@ -584,8 +677,10 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Helper method to check if an invocation has interpolated string arguments.
+    /// Determines whether the invocation's first argument is an interpolated string.
     /// </summary>
+    /// <param name="invocation">The invocation expression under inspection.</param>
+    /// <returns><c>true</c> when the first argument uses string interpolation; otherwise, <c>false</c>.</returns>
     private static bool HasInterpolatedStringArgument(InvocationExpressionSyntax invocation)
     {
         var arguments = invocation.ArgumentList.Arguments;
@@ -599,9 +694,11 @@ public class UseStructuredLoggingAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Helper method to detect if we're in a test context where interpolated string handlers
-    /// are expected to work efficiently (e.g., false positive tests).
+    /// Determines whether the invocation occurs inside a test context that explicitly verifies interpolated string handler support.
     /// </summary>
+    /// <param name="invocation">The invocation expression to inspect.</param>
+    /// <param name="context">The analysis context providing semantic information.</param>
+    /// <returns><c>true</c> when the containing type name indicates an interpolated string handler test; otherwise, <c>false</c>.</returns>
     private static bool IsInterpolatedStringHandlerTestContext(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         // Check if we're in a class specifically designed for interpolated string handler testing

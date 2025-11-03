@@ -46,7 +46,7 @@ public static class ExxerFactoringHelpers
         new(() => new AdhocWorkspace());
 
     private static bool _msbuildRegistered;
-    private static readonly object _msbuildLock = new();
+    private static readonly Lock _msbuildLock = new();
 
     /// <summary>
     /// A shared <see cref="AdhocWorkspace"/> instance for formatting and analysis.
@@ -342,7 +342,7 @@ public static class ExxerFactoringHelpers
             .Select(p => MetadataReference.CreateFromFile(p));
         return CSharpCompilation.Create(
             "SingleFile",
-            new[] { tree },
+            [tree],
             refs,
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
     }
@@ -408,7 +408,7 @@ public static class ExxerFactoringHelpers
         // Strip UTF-8 BOM from text when present so content comparisons match expectations
         if (encoding.Equals(new UTF8Encoding(true)) && text.Length > 0 && text[0] == '\uFEFF')
         {
-            text = text.Substring(1);
+            text = text[1..];
             encoding = new UTF8Encoding(true);
         }
         return (text, encoding);

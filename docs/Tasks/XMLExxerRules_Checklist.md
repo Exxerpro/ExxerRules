@@ -37,29 +37,29 @@
   - [x] Method `Success() : Result`
   - [x] Method `Failure(string errorMessage) : Result`
   - [x] Method `Failure(Exception exception) : Result`
-- [ ] class `TestAttributeInfo` in `code\IndFusion.Analyzer\Common\PatternDetector.cs`
-- [ ] enum `TestFramework` in `code\IndFusion.Analyzer\Common\PatternDetector.cs`
-  - [ ] Method `ValidateMethodNaming(string methodName, string pattern) : Result<bool>`
-  - [ ] Method `DetectTestAttributes(MethodDeclarationSyntax method, SemanticModel semanticModel) : Result<TestAttributeInfo>`
-  - [ ] Method `DetectTestClass(ClassDeclarationSyntax classDeclaration) : Result<bool>`
-  - [ ] Method `TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTestAttributes, TestFramework framework) : class`
-  - [ ] Property `AttributeNames : IReadOnlyList<string>`
-  - [ ] Property `HasTestAttributes : bool`
-  - [ ] Property `Framework : TestFramework`
-- [ ] class `PublicMembersShouldHaveXmlDocumentationAnalyzer` in `code\IndFusion.Analyzer\Documentation\PublicMembersShouldHaveXmlDocumentationAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `AvoidThrowingExceptionsAnalyzer` in `code\IndFusion.Analyzer\ErrorHandling\AvoidThrowingExceptionsAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `UseResultPatternAnalyzer` in `code\IndFusion.Analyzer\ErrorHandling\UseResultPatternAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `DoNotThrowExceptionsAnalyzer` in `code\IndFusion.Analyzer\FunctionalPatterns\DoNotThrowExceptionsAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `DoNotUseConsoleWriteLineAnalyzer` in `code\IndFusion.Analyzer\Logging\DoNotUseConsoleWriteLineAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `UseStructuredLoggingAnalyzer` in `code\IndFusion.Analyzer\Logging\UseStructuredLoggingAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
-- [ ] class `UseExpressionBodiedMembersAnalyzer` in `code\IndFusion.Analyzer\ModernCSharp\UseExpressionBodiedMembersAnalyzer.cs`
-  - [ ] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `TestAttributeInfo` in `code\IndFusion.Analyzer\Common\PatternDetector.cs`
+- [x] enum `TestFramework` in `code\IndFusion.Analyzer\Common\PatternDetector.cs`
+  - [x] Method `ValidateMethodNaming(string methodName, string pattern) : Result<bool>`
+  - [x] Method `DetectTestAttributes(MethodDeclarationSyntax method, SemanticModel semanticModel) : Result<TestAttributeInfo>`
+  - [x] Method `DetectTestClass(ClassDeclarationSyntax classDeclaration) : Result<bool>`
+  - [x] Method `TestAttributeInfo(IReadOnlyList<string> attributeNames, bool hasTestAttributes, TestFramework framework) : class`
+  - [x] Property `AttributeNames : IReadOnlyList<string>`
+  - [x] Property `HasTestAttributes : bool`
+  - [x] Property `Framework : TestFramework`
+- [x] class `PublicMembersShouldHaveXmlDocumentationAnalyzer` in `code\IndFusion.Analyzer\Documentation\PublicMembersShouldHaveXmlDocumentationAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `AvoidThrowingExceptionsAnalyzer` in `code\IndFusion.Analyzer\ErrorHandling\AvoidThrowingExceptionsAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `UseResultPatternAnalyzer` in `code\IndFusion.Analyzer\ErrorHandling\UseResultPatternAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `DoNotThrowExceptionsAnalyzer` in `code\IndFusion.Analyzer\FunctionalPatterns\DoNotThrowExceptionsAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `DoNotUseConsoleWriteLineAnalyzer` in `code\IndFusion.Analyzer\Logging\DoNotUseConsoleWriteLineAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `UseStructuredLoggingAnalyzer` in `code\IndFusion.Analyzer\Logging\UseStructuredLoggingAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
+- [x] class `UseExpressionBodiedMembersAnalyzer` in `code\IndFusion.Analyzer\ModernCSharp\UseExpressionBodiedMembersAnalyzer.cs`
+  - [x] Method `Initialize(AnalysisContext context) : override void`
 - [ ] class `UseModernPatternMatchingAnalyzer` in `code\IndFusion.Analyzer\ModernCSharp\UseModernPatternMatchingAnalyzer.cs`
   - [ ] Method `Initialize(AnalysisContext context) : override void`
 - [ ] class `ValidateNullParametersAnalyzer` in `code\IndFusion.Analyzer\NullSafety\ValidateNullParametersAnalyzer.cs`

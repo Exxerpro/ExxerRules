@@ -16,10 +16,24 @@ namespace IndFusion.Analyzers.Logging;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Title displayed when console logging is detected.
+    /// </summary>
     private static readonly LocalizableString Title = "Do not use Console.WriteLine in production code";
+
+    /// <summary>
+    /// Message format describing the offending console method.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Do not use {0} in production code - use structured logging instead";
+
+    /// <summary>
+    /// Description explaining why console output should be replaced with structured logging.
+    /// </summary>
     private static readonly LocalizableString Description = "Console.WriteLine and Console.Write should not be used in production code. Use structured logging with ILogger instead for better observability, configuration, and performance.";
 
+    /// <summary>
+    /// Diagnostic rule used when console output APIs are invoked.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.DoNotUseConsoleWriteLine,
         Title,
@@ -29,10 +43,16 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the console logging rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that inspect invocation expressions.
+    /// </summary>
+    /// <param name="context">The analyzer context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -41,6 +61,10 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeInvocation, SyntaxKind.InvocationExpression);
     }
 
+    /// <summary>
+    /// Evaluates invocation expressions to detect disallowed console write calls.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the invocation.</param>
     private static void AnalyzeInvocation(SyntaxNodeAnalysisContext context)
     {
         var invocation = (InvocationExpressionSyntax)context.Node;
@@ -76,6 +100,12 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Determines whether the invocation targets a console write method.
+    /// </summary>
+    /// <param name="invocation">The invocation syntax to inspect.</param>
+    /// <param name="semanticModel">The semantic model used for symbol resolution.</param>
+    /// <returns><c>true</c> when the invocation targets <c>System.Console</c> write APIs; otherwise, <c>false</c>.</returns>
     private static bool IsConsoleWriteCall(InvocationExpressionSyntax invocation, SemanticModel semanticModel)
     {
         // Check if it's a member access on Console
@@ -122,6 +152,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         return true;
     }
 
+    /// <summary>
+    /// Determines whether the supplied method name corresponds to a console write API.
+    /// </summary>
+    /// <param name="methodName">The method name to evaluate.</param>
+    /// <returns><c>true</c> when the name matches known console write methods; otherwise, <c>false</c>.</returns>
     private static bool IsConsoleWriteMethodName(string methodName)
     {
         // Console methods that should be avoided in production code
@@ -133,11 +168,20 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         return consoleMethods.Contains(methodName);
     }
 
+    /// <summary>
+    /// Determines whether the supplied type symbol represents <c>System.Console</c>.
+    /// </summary>
+    /// <param name="typeSymbol">The type symbol to inspect.</param>
+    /// <returns><c>true</c> when the symbol represents <c>System.Console</c>; otherwise, <c>false</c>.</returns>
     private static bool IsSystemConsole(INamedTypeSymbol typeSymbol) =>
-        // Check if it's System.Console
         typeSymbol.Name == "Console" &&
                GetFullNamespace(typeSymbol.ContainingNamespace) == "System";
 
+    /// <summary>
+    /// Builds the fully qualified namespace from the provided namespace symbol.
+    /// </summary>
+    /// <param name="namespaceSymbol">The namespace symbol to expand.</param>
+    /// <returns>The fully qualified namespace string, or <see cref="string.Empty"/> for the global namespace.</returns>
     private static string GetFullNamespace(INamespaceSymbol? namespaceSymbol)
     {
         if (namespaceSymbol == null || namespaceSymbol.IsGlobalNamespace)
@@ -157,6 +201,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         return string.Join(".", parts);
     }
 
+    /// <summary>
+    /// Formats the console method name for diagnostic messaging.
+    /// </summary>
+    /// <param name="invocation">The invocation syntax to inspect.</param>
+    /// <returns>A formatted method name string suitable for reporting.</returns>
     private static string GetConsoleMethodName(InvocationExpressionSyntax invocation)
     {
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
@@ -170,8 +219,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     //  False-Positive Mitigation
 
     /// <summary>
-    /// Central method to check if a Console write call should be exempted from reporting.
+    /// Central method to determine whether a Console write call should be exempted from diagnostics.
     /// </summary>
+    /// <param name="invocation">The invocation syntax to examine.</param>
+    /// <param name="context">The analysis context that provides semantic information.</param>
+    /// <returns><c>true</c> when the invocation satisfies any exemption scenario; otherwise, <c>false</c>.</returns>
     private static bool IsExemptFromConsoleWriteCheck(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         return IsInConsoleApplicationOrTooling(invocation, context) ||
@@ -187,8 +239,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.1: Exempt Console Applications and Tooling
+    /// Determines whether the invocation occurs within a console application entry point or tooling scenario.
     /// </summary>
+    /// <param name="invocation">The invocation being analyzed.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when the call occurs in a Main method or Program class; otherwise, <c>false</c>.</returns>
     private static bool IsInConsoleApplicationOrTooling(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         // Check if we're in a Main method
@@ -209,8 +264,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.2: Exempt Build and Deployment Scripts
+    /// Determines whether the invocation belongs to build or deployment scripting code.
     /// </summary>
+    /// <param name="invocation">The invocation under examination.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when class or namespace names indicate build/deployment scripts; otherwise, <c>false</c>.</returns>
     private static bool IsInBuildOrDeploymentScript(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var classDeclaration = invocation.FirstAncestorOrSelf<ClassDeclarationSyntax>();
@@ -229,8 +287,10 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.3: Exempt Conditional Compilation Blocks
+    /// Determines whether the invocation is guarded by conditional compilation directives such as <c>#if DEBUG</c>.
     /// </summary>
+    /// <param name="invocation">The invocation being inspected.</param>
+    /// <returns><c>true</c> when the invocation appears inside a debug-only block; otherwise, <c>false</c>.</returns>
     private static bool IsInConditionalCompilationBlock(InvocationExpressionSyntax invocation)
     {
         // Check if the invocation is within a conditional compilation directive
@@ -251,8 +311,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.4: Exempt ConditionalAttribute Methods
+    /// Determines whether the invocation resides in a method decorated with <c>ConditionalAttribute</c>.
     /// </summary>
+    /// <param name="invocation">The invocation being inspected.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when the enclosing method has conditional attributes; otherwise, <c>false</c>.</returns>
     private static bool IsInConditionalAttributeMethod(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = invocation.FirstAncestorOrSelf<MethodDeclarationSyntax>();
@@ -272,8 +335,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.5: Exempt Unit and Integration Tests
+    /// Determines whether the invocation occurs within test classes where console writes are permissible.
     /// </summary>
+    /// <param name="invocation">The invocation being inspected.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when the containing class name indicates test code; otherwise, <c>false</c>.</returns>
     private static bool IsInTestClass(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var classDeclaration = invocation.FirstAncestorOrSelf<ClassDeclarationSyntax>();
@@ -287,8 +353,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.6: Exempt Redirected Console Output
+    /// Determines whether the invocation occurs in a method that first redirects console output.
     /// </summary>
+    /// <param name="invocation">The invocation under examination.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when the method redirects <c>Console.Out</c> or <c>Console.Error</c>; otherwise, <c>false</c>.</returns>
     private static bool IsInRedirectedConsoleOutput(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = invocation.FirstAncestorOrSelf<MethodDeclarationSyntax>();
@@ -312,8 +381,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.7: Exempt CLI Prompting
+    /// Determines whether the invocation participates in interactive CLI prompting.
     /// </summary>
+    /// <param name="invocation">The invocation being inspected.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when the method writes to the console before reading input; otherwise, <c>false</c>.</returns>
     private static bool IsInCliPrompting(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = invocation.FirstAncestorOrSelf<MethodDeclarationSyntax>();
@@ -344,8 +416,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.8: Exempt Exception Reporting During Startup
+    /// Determines whether the invocation reports startup failures prior to terminating the process.
     /// </summary>
+    /// <param name="invocation">The invocation under examination.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when the invocation occurs inside a catch block that exits the process; otherwise, <c>false</c>.</returns>
     private static bool IsInExceptionReportingDuringStartup(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = invocation.FirstAncestorOrSelf<MethodDeclarationSyntax>();
@@ -376,8 +451,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.9: Exempt Console Logger Adapters
+    /// Determines whether the invocation belongs to a console logger adapter that intentionally writes to the console.
     /// </summary>
+    /// <param name="invocation">The invocation being inspected.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when the containing type represents a console logger; otherwise, <c>false</c>.</returns>
     private static bool IsInConsoleLoggerAdapter(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         var classDeclaration = invocation.FirstAncestorOrSelf<ClassDeclarationSyntax>();
@@ -404,8 +482,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.10: Exempt Generated Code
+    /// Determines whether the invocation resides in generated code where console writes are acceptable.
     /// </summary>
+    /// <param name="invocation">The invocation being inspected.</param>
+    /// <param name="context">The analysis context providing semantic data.</param>
+    /// <returns><c>true</c> when generated-code patterns are detected; otherwise, <c>false</c>.</returns>
     private static bool IsInGeneratedCode(InvocationExpressionSyntax invocation, SyntaxNodeAnalysisContext context)
     {
         try
@@ -419,41 +500,39 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
             // Get the class name for debugging
             var className = classDeclaration.Identifier.ValueText;
 
-        // Check if the class has GeneratedCode attribute using semantic model
-        var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
-        if (classSymbol != null)
-        {
-            var generatedCodeAttribute = classSymbol.GetAttributes()
-                .FirstOrDefault(attr => attr.AttributeClass?.Name == "GeneratedCodeAttribute");
-            
-            if (generatedCodeAttribute != null)
+            // Check if the class has GeneratedCode attribute using semantic model
+            var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration);
+            if (classSymbol != null)
+            {
+                var generatedCodeAttribute = classSymbol.GetAttributes()
+                    .FirstOrDefault(attr => attr.AttributeClass?.Name == "GeneratedCodeAttribute");
+
+                if (generatedCodeAttribute != null)
+                {
+                    return true;
+                }
+            }
+
+            // Fallback: Check if the class has GeneratedCode attribute using syntax
+            var attributes = classDeclaration.AttributeLists
+                .SelectMany(al => al.Attributes)
+                .Select(a => a.Name.ToString());
+
+            if (attributes.Any(attr => attr == "GeneratedCode" || attr.EndsWith(".GeneratedCode")))
             {
                 return true;
             }
-        }
 
-        // Fallback: Check if the class has GeneratedCode attribute using syntax
-        var attributes = classDeclaration.AttributeLists
-            .SelectMany(al => al.Attributes)
-            .Select(a => a.Name.ToString());
+            // Check if we're in a Generated namespace
+            var namespaceDeclaration = invocation.FirstAncestorOrSelf<NamespaceDeclarationSyntax>();
+            var namespaceName = namespaceDeclaration?.Name.ToString() ?? string.Empty;
 
-        if (attributes.Any(attr => attr == "GeneratedCode" || attr.EndsWith(".GeneratedCode")))
-        {
-            return true;
-        }
-
-        // Check if we're in a Generated namespace
-        var namespaceDeclaration = invocation.FirstAncestorOrSelf<NamespaceDeclarationSyntax>();
-        var namespaceName = namespaceDeclaration?.Name.ToString() ?? "";
-        
-        // Also check if the class name contains "Generated"
-        
-        // More permissive check for generated code patterns
-        return namespaceName.Contains("Generated") || 
-               className.Contains("Generated") ||
-               className.EndsWith("Generated") ||
-               className.StartsWith("Generated") ||
-               className == "GeneratedClass"; // Specific test case exemption
+            // More permissive check for generated code patterns
+            return namespaceName.Contains("Generated") ||
+                   className.Contains("Generated") ||
+                   className.EndsWith("Generated") ||
+                   className.StartsWith("Generated") ||
+                   className == "GeneratedClass"; // Specific test case exemption
         }
         catch (Exception)
         {
@@ -466,17 +545,32 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
 
     //  Helper Methods
 
+    /// <summary>
+    /// Determines whether the supplied method is a static <c>Main</c> entry point.
+    /// </summary>
+    /// <param name="methodDeclaration">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when the method represents a <c>Main</c> entry point; otherwise, <c>false</c>.</returns>
     private static bool IsMainMethod(MethodDeclarationSyntax methodDeclaration)
     {
         return methodDeclaration.Identifier.ValueText == "Main" &&
                methodDeclaration.Modifiers.Any(m => m.IsKind(SyntaxKind.StaticKeyword));
     }
 
+    /// <summary>
+    /// Determines whether the supplied class represents a <c>Program</c> bootstrap type.
+    /// </summary>
+    /// <param name="classDeclaration">The class declaration to inspect.</param>
+    /// <returns><c>true</c> when the class name is <c>Program</c>; otherwise, <c>false</c>.</returns>
     private static bool IsProgramClass(ClassDeclarationSyntax classDeclaration)
     {
         return classDeclaration.Identifier.ValueText == "Program";
     }
 
+    /// <summary>
+    /// Determines whether the invocation redirects console output streams.
+    /// </summary>
+    /// <param name="invocation">The invocation to inspect.</param>
+    /// <returns><c>true</c> when the invocation calls <c>Console.SetOut</c> or <c>Console.SetError</c>; otherwise, <c>false</c>.</returns>
     private static bool IsConsoleSetOutCall(InvocationExpressionSyntax invocation)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
@@ -488,6 +582,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         return methodName == "SetOut" || methodName == "SetError";
     }
 
+    /// <summary>
+    /// Determines whether the invocation reads from the console for interactive prompts.
+    /// </summary>
+    /// <param name="invocation">The invocation to inspect.</param>
+    /// <returns><c>true</c> when the invocation calls <c>Console.ReadLine</c> or <c>Console.ReadKey</c>; otherwise, <c>false</c>.</returns>
     private static bool IsConsoleReadCall(InvocationExpressionSyntax invocation)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)
@@ -499,6 +598,11 @@ public class DoNotUseConsoleWriteLineAnalyzer : DiagnosticAnalyzer
         return methodName == "ReadLine" || methodName == "ReadKey";
     }
 
+    /// <summary>
+    /// Determines whether the invocation terminates the process via <c>Environment.Exit</c>.
+    /// </summary>
+    /// <param name="invocation">The invocation to inspect.</param>
+    /// <returns><c>true</c> when the call targets <c>Environment.Exit</c>; otherwise, <c>false</c>.</returns>
     private static bool IsEnvironmentExitCall(InvocationExpressionSyntax invocation)
     {
         if (invocation.Expression is not MemberAccessExpressionSyntax memberAccess)

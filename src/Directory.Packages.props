@@ -62,23 +62,28 @@
 		<PackageVersion Include="System.CommandLine.DragonFruit" Version="0.4.0-alpha.25306.1" />
 		<!-- Testing -->
 		<PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
-		<PackageVersion Include="Microsoft.Testing.Platform" Version="2.0.1" />
-		<PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="2.0.1" />
-		<PackageVersion Include="Microsoft.Testing.Extensions.VSTestBridge" Version="2.0.1" />
-		<PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="2.0.1" />
-		<PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.1.0" />
+		<PackageVersion Include="Microsoft.Testing.Platform" Version="1.8.4" />
+		<PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.8.4" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.Telemetry" Version="1.8.4" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.VSTestBridge" Version="1.8.4" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.8.4" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="1.8.4" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
 		<PackageVersion Include="UglyToad.PdfPig" Version="1.7.0-custom-5" />
-		<PackageVersion Include="xunit.v3" Version="3.2.0" />
+		<PackageVersion Include="xunit.v3" Version="3.1.0" />
+		<PackageVersion Include="xunit.v3.core" Version="3.1.0" />
+		<PackageVersion Include="xunit.v3.common" Version="3.0.1" />
 		<PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
-		<PackageVersion Include="xunit.v3.runner.msbuild" Version="3.2.0" />
-		<PackageVersion Include="xunit.v3.runner.console" Version="3.2.0" />
-		<PackageVersion Include="xunit.v3.runner.inproc.console" Version="3.2.0" />
+		<PackageVersion Include="xunit.v3.runner.msbuild" Version="3.1.0" />
+		<PackageVersion Include="xunit.v3.runner.inproc.console" Version="3.1.0" />
+		<PackageVersion Include="xunit.v3.runner.console" Version="3.1.0" />
+		<PackageVersion Include="xunit.v3.runner.common" Version="3.0.1" />
+		<PackageVersion Include="xunit.v3.runner.utility" Version="3.0.1" />
 		<PackageVersion Include="coverlet.collector" Version="6.0.4" />
 		<PackageVersion Include="NSubstitute" Version="5.3.0" />
 		<PackageVersion Include="Shouldly" Version="4.3.0" />
 		<PackageVersion Include="NSubstitute.Analyzers.CSharp" Version="1.0.17" />
 		<PackageVersion Include="Microsoft.Extensions.TimeProvider.Testing" Version="9.10.0" />
-		<PackageVersion Include="xunit.v3.core" Version="3.2.0" />
 		<PackageVersion Include="xunit.abstractions" Version="2.0.3" />
 		<!-- Note: MediatR, AutoMapper, FluentAssertions removed per project preferences -->
 		<!-- Using custom dispatcher instead of MediatR -->

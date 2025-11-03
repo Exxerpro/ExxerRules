@@ -13,10 +13,24 @@ namespace IndFusion.Analyzers.ErrorHandling;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 {
+	/// <summary>
+	/// Title displayed for diagnostics emitted by this analyzer.
+	/// </summary>
 	private static readonly LocalizableString Title = "Avoid throwing exceptions";
+
+	/// <summary>
+	/// Message format describing the detected exception type.
+	/// </summary>
 	private static readonly LocalizableString MessageFormat = "Throwing '{0}' detected. Use Result<T> pattern instead.";
+
+	/// <summary>
+	/// Description that explains the rationale behind discouraging direct exception throwing.
+	/// </summary>
 	private static readonly LocalizableString Description = "Exceptions should be avoided in favor of the Result<T> pattern for better functional programming and error handling.";
 
+	/// <summary>
+	/// Diagnostic rule surfaced when disallowed exception throws are identified.
+	/// </summary>
 	private static readonly DiagnosticDescriptor Rule = new(
 		DiagnosticIds.AvoidThrowingExceptions,
 		Title,
@@ -26,10 +40,16 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		isEnabledByDefault: true,
 		description: Description);
 
-	/// <inheritdoc/>
+	/// <summary>
+	/// Gets the diagnostics supported by this analyzer.
+	/// </summary>
+	/// <value>An immutable array containing the avoid-throwing rule.</value>
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	/// <inheritdoc/>
+	/// <summary>
+	/// Registers syntax callbacks for throw statements and throw expressions.
+	/// </summary>
+	/// <param name="context">The analysis context coordinating callbacks.</param>
 	public override void Initialize(AnalysisContext context)
 	{
 		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -39,6 +59,10 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeThrowExpression, SyntaxKind.ThrowExpression);
 	}
 
+	/// <summary>
+	/// Evaluates throw statements to determine whether they should be reported.
+	/// </summary>
+	/// <param name="context">The syntax analysis context for the throw statement.</param>
 	private static void AnalyzeThrowStatement(SyntaxNodeAnalysisContext context)
 	{
 		var throwStatement = (ThrowStatementSyntax)context.Node;
@@ -79,6 +103,10 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		context.ReportDiagnostic(diagnostic);
 	}
 
+	/// <summary>
+	/// Evaluates throw expressions (e.g., in null-coalescing operations) for compliance.
+	/// </summary>
+	/// <param name="context">The syntax analysis context for the throw expression.</param>
 	private static void AnalyzeThrowExpression(SyntaxNodeAnalysisContext context)
 	{
 		var throwExpression = (ThrowExpressionSyntax)context.Node;
@@ -105,6 +133,11 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		context.ReportDiagnostic(diagnostic);
 	}
 
+	/// <summary>
+	/// Determines whether the throw occurs inside a boundary layer such as controllers or endpoint namespaces.
+	/// </summary>
+	/// <param name="node">The syntax node associated with the throw statement or expression.</param>
+	/// <returns><c>true</c> when the surrounding type or namespace matches boundary heuristics; otherwise, <c>false</c>.</returns>
 	private static bool IsInBoundaryLayer(SyntaxNode node)
 	{
 		// Heuristics: class names ending with Controller, or namespaces containing .Web, .Api, .Endpoints
@@ -130,6 +163,11 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether the throw resides inside a unit-test context.
+	/// </summary>
+	/// <param name="node">The syntax node representing the throw location.</param>
+	/// <returns><c>true</c> when the surrounding method or class indicates test semantics; otherwise, <c>false</c>.</returns>
 	private static bool IsInTestContext(SyntaxNode node)
 	{
 		// Method attribute check or type name suffixes
@@ -155,6 +193,11 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether the enclosing member or type explicitly allows throwing exceptions.
+	/// </summary>
+	/// <param name="node">The syntax node to inspect for opt-out attributes.</param>
+	/// <returns><c>true</c> when an allow-throwing attribute is present; otherwise, <c>false</c>.</returns>
 	private static bool HasOptOutAttribute(SyntaxNode node)
 	{
 		var member = node.Ancestors().OfType<MemberDeclarationSyntax>().FirstOrDefault();
@@ -170,6 +213,11 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether the throw occurs within a Program or Startup-style bootstrap class.
+	/// </summary>
+	/// <param name="node">The syntax node representing the throw site.</param>
+	/// <returns><c>true</c> when the enclosing class name matches common bootstrap types; otherwise, <c>false</c>.</returns>
 	private static bool IsProgramOrStartup(SyntaxNode node)
 	{
 		var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -177,12 +225,22 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return name == "Program" || name == "Startup" || name == "Bootstrap" || name == "AppHost";
 	}
 
+	/// <summary>
+	/// Determines whether the throw is inside Identity UI components where exceptions are permitted.
+	/// </summary>
+	/// <param name="node">The syntax node representing the throw location.</param>
+	/// <returns><c>true</c> when the namespace indicates Identity components; otherwise, <c>false</c>.</returns>
 	private static bool IsIdentityComponentsNamespace(SyntaxNode node)
 	{
 		var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
 		return ns.Contains(".Components.Account") || ns.Contains(".Identity.Components");
 	}
 
+	/// <summary>
+	/// Determines whether the throw occurs within helper or guard routines whose purpose is to throw.
+	/// </summary>
+	/// <param name="node">The syntax node representing the throw location.</param>
+	/// <returns><c>true</c> when method or class names indicate throw-helper semantics; otherwise, <c>false</c>.</returns>
 	private static bool IsThrowHelperOrGuardContext(SyntaxNode node)
 	{
 		var method = node.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
@@ -200,6 +258,11 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 			|| className.Contains("ExceptionHelper", System.StringComparison.OrdinalIgnoreCase);
 	}
 
+	/// <summary>
+	/// Determines whether the throw occurs within a value-object style type where guard throws remain acceptable.
+	/// </summary>
+	/// <param name="node">The syntax node representing the throw location.</param>
+	/// <returns><c>true</c> when the containing type name hints at value objects; otherwise, <c>false</c>.</returns>
 	private static bool IsValueObjectContext(SyntaxNode node)
 	{
 		var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -208,6 +271,12 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return hints.Any(h => className.Contains(h, System.StringComparison.OrdinalIgnoreCase));
 	}
 
+	/// <summary>
+	/// Determines whether a throw statement participates in a range or argument guard pattern.
+	/// </summary>
+	/// <param name="node">The syntax node representing the throw.</param>
+	/// <param name="semanticModel">The semantic model for additional symbol resolution.</param>
+	/// <returns><c>true</c> when the throw matches recognized guard heuristics; otherwise, <c>false</c>.</returns>
 	private static bool IsRangeOrNullGuardPattern(SyntaxNode node, SemanticModel semanticModel)
 	{
 		// Only treat as allowed when:
@@ -243,6 +312,12 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether a throw expression is part of a null-coalescing guard that should remain allowed.
+	/// </summary>
+	/// <param name="throwExpr">The throw expression under inspection.</param>
+	/// <param name="semanticModel">The semantic model for potential future enhancements.</param>
+	/// <returns><c>true</c> when the expression is the right-hand side of a null-coalescing operator; otherwise, <c>false</c>.</returns>
 	private static bool IsNullCoalescingGuard(ThrowExpressionSyntax throwExpr, SemanticModel semanticModel)
 	{
 		// parent should be right side of coalesce
@@ -253,6 +328,11 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether the throw statement wraps an existing exception inside another exception type.
+	/// </summary>
+	/// <param name="throwStatement">The throw statement to examine.</param>
+	/// <returns><c>true</c> when the throw statement rethrows within a catch block including the original exception; otherwise, <c>false</c>.</returns>
 	private static bool IsExceptionWrappingPattern(ThrowStatementSyntax throwStatement)
 	{
 		// catch (Exception ex) { throw new InvalidOperationException("...", ex); }
@@ -267,6 +347,12 @@ public class AvoidThrowingExceptionsAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Resolves a human-readable exception type name from the supplied expression.
+	/// </summary>
+	/// <param name="expression">The expression associated with the throw.</param>
+	/// <param name="semanticModel">The semantic model used to look up type information.</param>
+	/// <returns>The resolved exception type name, or <c>exception</c> when a specific type cannot be determined.</returns>
 	private static string GetExceptionType(ExpressionSyntax? expression, SemanticModel semanticModel)
 	{
 		if (expression == null)

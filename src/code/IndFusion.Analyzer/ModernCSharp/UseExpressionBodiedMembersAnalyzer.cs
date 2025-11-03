@@ -13,10 +13,24 @@ namespace IndFusion.Analyzers.ModernCSharp;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Title displayed for diagnostics when a member can be reduced to an expression-bodied form.
+    /// </summary>
     private static readonly LocalizableString Title = "Use expression-bodied members where appropriate";
+
+    /// <summary>
+    /// Message format outlining the member that can be simplified.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Member '{0}' can be simplified to an expression-bodied member";
+
+    /// <summary>
+    /// Description explaining the benefits of expression-bodied members.
+    /// </summary>
     private static readonly LocalizableString Description = "Expression-bodied members provide a more concise syntax for simple methods and properties, improving code readability and reducing boilerplate.";
 
+    /// <summary>
+    /// Diagnostic rule used to flag members that should adopt expression-bodied syntax.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.UseExpressionBodiedMembers,
         Title,
@@ -26,10 +40,16 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the expression-bodied members rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that inspect methods and properties for expression-bodied opportunities.
+    /// </summary>
+    /// <param name="context">The analyzer context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -40,6 +60,10 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeProperty, SyntaxKind.PropertyDeclaration);
     }
 
+    /// <summary>
+    /// Examines method declarations and reports when they can be expression-bodied.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the method.</param>
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
     {
         var method = (MethodDeclarationSyntax)context.Node;
@@ -61,6 +85,10 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Examines property declarations and reports when they can be expression-bodied.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the property.</param>
     private static void AnalyzeProperty(SyntaxNodeAnalysisContext context)
     {
         var property = (PropertyDeclarationSyntax)context.Node;
@@ -91,6 +119,11 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Determines whether the specified block body can be rewritten as an expression-bodied member.
+    /// </summary>
+    /// <param name="body">The block syntax to analyze.</param>
+    /// <returns><c>true</c> when the block contains a simple return expression; otherwise, <c>false</c>.</returns>
     private static bool CanBeExpressionBodied(BlockSyntax body)
     {
         // Check if body contains only a single return statement
@@ -126,35 +159,37 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
     //  False-Positive Mitigation Methods
 
     /// <summary>
-    /// Determines if a method body is exempt from expression-bodied member suggestions.
+    /// Determines whether a method body should be exempt from expression-bodied suggestions.
     /// </summary>
+    /// <param name="body">The block syntax to evaluate.</param>
+    /// <returns><c>true</c> when the block matches an exemption scenario; otherwise, <c>false</c>.</returns>
     private static bool IsExemptFromExpressionBodied(BlockSyntax body)
     {
-        // Story 1.1: Exempt ICommandData Factory Methods
+        // Exemption: ICommandData factory methods maintain clarity in block form
         if (IsICommandDataFactoryMethod(body))
         {
             return true;
         }
 
-        // Story 1.2: Exempt Fluent TODO Stubs
+        // Exemption: Fluent TODO stubs should remain verbose for future edits
         if (IsFluentTodoStub(body))
         {
             return true;
         }
 
-        // Story 1.3: Exempt IResettable.TryReset Methods
+        // Exemption: IResettable.TryReset conveys intent with block syntax
         if (IsIResettableTryResetMethod(body))
         {
             return true;
         }
 
-        // Story 1.4: Exempt Fluent WithData Methods
+        // Exemption: Fluent With*/Set* methods often expand with future logic
         if (IsFluentWithDataMethod(body))
         {
             return true;
         }
 
-        // Story 1.5: Exempt Domain Entity Resetters
+        // Exemption: Domain resetters frequently hold additional invariants
         if (IsDomainEntityResetter(body))
         {
             return true;
@@ -164,8 +199,10 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.1: Exempt ICommandData Factory Methods
+    /// Determines whether the enclosing method is an ICommandData factory that should remain block-bodied.
     /// </summary>
+    /// <param name="body">The method body under evaluation.</param>
+    /// <returns><c>true</c> when the method appears to create command or query data; otherwise, <c>false</c>.</returns>
     private static bool IsICommandDataFactoryMethod(BlockSyntax body)
     {
         // Check if we're in a method named "Create" that implements ICommandData.Create
@@ -186,8 +223,10 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.2: Exempt Fluent TODO Stubs
+    /// Determines whether the body contains TODO scaffolding that should remain block-bodied.
     /// </summary>
+    /// <param name="body">The method or accessor body being analyzed.</param>
+    /// <returns><c>true</c> when TODO or FIXME comments are present; otherwise, <c>false</c>.</returns>
     private static bool IsFluentTodoStub(BlockSyntax body)
     {
         // Check if the body contains TODO or FIXME comments
@@ -196,8 +235,10 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.3: Exempt IResettable.TryReset Methods
+    /// Determines whether the body belongs to an <c>IResettable.TryReset</c> implementation that should remain block-bodied.
     /// </summary>
+    /// <param name="body">The method body under evaluation.</param>
+    /// <returns><c>true</c> when the method name is <c>TryReset</c> and returns <c>bool</c>; otherwise, <c>false</c>.</returns>
     private static bool IsIResettableTryResetMethod(BlockSyntax body)
     {
         // Check if we're in a method named "TryReset"
@@ -218,8 +259,10 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.4: Exempt Fluent WithData Methods
+    /// Determines whether the body belongs to a fluent configuration method expected to grow.
     /// </summary>
+    /// <param name="body">The method body being analyzed.</param>
+    /// <returns><c>true</c> when the method name starts with <c>With</c> or <c>Set</c> and contains future-work comments; otherwise, <c>false</c>.</returns>
     private static bool IsFluentWithDataMethod(BlockSyntax body)
     {
         // Check if we're in a method that starts with "With" or "Set"
@@ -244,8 +287,10 @@ public class UseExpressionBodiedMembersAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.5: Exempt Domain Entity Resetters
+    /// Determines whether the body belongs to a domain reset method that should remain block-bodied.
     /// </summary>
+    /// <param name="body">The method body being analyzed.</param>
+    /// <returns><c>true</c> when the method name includes <c>Reset</c> or documentation indicates reset semantics; otherwise, <c>false</c>.</returns>
     private static bool IsDomainEntityResetter(BlockSyntax body)
     {
         // Check if we're in a method with "Reset" in the name

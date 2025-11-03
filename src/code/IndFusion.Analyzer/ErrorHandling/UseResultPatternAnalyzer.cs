@@ -16,10 +16,24 @@ namespace IndFusion.Analyzers.ErrorHandling;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Title displayed with diagnostics emitted by this analyzer.
+    /// </summary>
     private static readonly LocalizableString Title = "Use Result<T> pattern instead of throwing exceptions";
+
+    /// <summary>
+    /// Message format describing the violating member.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Method '{0}' throws exceptions but should return Result<T>";
+
+    /// <summary>
+    /// Description explaining why Result-based error handling is encouraged.
+    /// </summary>
     private static readonly LocalizableString Description = "Methods should return Result<T> for error handling instead of throwing exceptions, following functional programming principles.";
 
+    /// <summary>
+    /// Diagnostic rule raised when a member throws exceptions instead of returning a Result.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.UseResultPattern,
         Title,
@@ -29,10 +43,16 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the Result-pattern rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax node callbacks for methods, properties, local functions, and lambdas.
+    /// </summary>
+    /// <param name="context">The analyzer context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -44,6 +64,10 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeLambda, SyntaxKind.SimpleLambdaExpression, SyntaxKind.ParenthesizedLambdaExpression);
     }
 
+    /// <summary>
+    /// Evaluates method declarations for inappropriate exception throwing.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the method.</param>
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.Node;
@@ -105,6 +129,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         }
     }
 
+	/// <summary>
+	/// Determines whether the supplied method should be excluded from Result-pattern enforcement.
+	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the method name or attributes indicate it should be skipped; otherwise, <c>false</c>.</returns>
 	private static bool IsSkippableMethod(MethodDeclarationSyntax method)
     {
         // Skip constructors, destructors, and event handlers
@@ -138,6 +167,10 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Evaluates property declarations for throw statements and expressions.
+    /// </summary>
+    /// <param name="context">The syntax analysis context for the property.</param>
     private static void AnalyzeProperty(SyntaxNodeAnalysisContext context)
     {
         var propertyDeclaration = (PropertyDeclarationSyntax)context.Node;
@@ -174,6 +207,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Determines whether any property accessor contains throw statements or expressions.
+    /// </summary>
+    /// <param name="property">The property declaration to scan.</param>
+    /// <returns><c>true</c> when an accessor throws; otherwise, <c>false</c>.</returns>
     private static bool CheckAccessorsForThrows(PropertyDeclarationSyntax property)
     {
         if (property.AccessorList == null)
@@ -186,8 +224,17 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
             accessor.DescendantNodes().OfType<ThrowExpressionSyntax>().Any());
     }
 
+    /// <summary>
+    /// Determines whether an expression-bodied property contains throw expressions.
+    /// </summary>
+    /// <param name="property">The property declaration to inspect.</param>
+    /// <returns><c>true</c> when the expression body contains a throw; otherwise, <c>false</c>.</returns>
     private static bool CheckExpressionBodyForThrows(PropertyDeclarationSyntax property) => property.ExpressionBody?.DescendantNodes().OfType<ThrowExpressionSyntax>().Any() == true;
 
+	/// <summary>
+	/// Evaluates local functions for inappropriate exception throwing.
+	/// </summary>
+	/// <param name="context">The syntax analysis context for the local function.</param>
 	private static void AnalyzeLocalFunction(SyntaxNodeAnalysisContext context)
     {
         var localFunction = (LocalFunctionStatementSyntax)context.Node;
@@ -232,6 +279,10 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         }
     }
 
+	/// <summary>
+	/// Evaluates lambda expressions for throw usage that should be replaced with Result patterns.
+	/// </summary>
+	/// <param name="context">The syntax analysis context for the lambda expression.</param>
 	private static void AnalyzeLambda(SyntaxNodeAnalysisContext context)
     {
         LambdaExpressionSyntax? lambda = context.Node switch
@@ -272,6 +323,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         }
     }
 
+	/// <summary>
+	/// Determines whether the provided type syntax already represents a Result-based return type.
+	/// </summary>
+	/// <param name="typeSyntax">The type syntax to evaluate.</param>
+	/// <returns><c>true</c> when the type is <c>Result</c> or wraps a <c>Result</c>; otherwise, <c>false</c>.</returns>
 	private static bool IsResultReturnType(TypeSyntax? typeSyntax)
     {
         if (typeSyntax == null)
@@ -302,6 +358,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+	/// <summary>
+	/// Determines whether the node is located within a boundary layer (controllers, API endpoints, etc.).
+	/// </summary>
+	/// <param name="node">The syntax node representing the analyzed member.</param>
+	/// <returns><c>true</c> when the heuristics indicate a boundary layer; otherwise, <c>false</c>.</returns>
 	private static bool IsInBoundaryLayer(SyntaxNode node)
     {
         var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -329,6 +390,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+	/// <summary>
+	/// Determines whether the node or its containing type explicitly opts out of Result enforcement.
+	/// </summary>
+	/// <param name="node">The syntax node to inspect for opt-out attributes.</param>
+	/// <returns><c>true</c> when an allow-throwing attribute is present; otherwise, <c>false</c>.</returns>
 	private static bool HasOptOutAttribute(SyntaxNode node)
 	{
 		// Check attributes on method/local function parents and containing class
@@ -356,6 +422,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether the node resides within a Program or Startup-style bootstrapper.
+	/// </summary>
+	/// <param name="node">The syntax node to evaluate.</param>
+	/// <returns><c>true</c> when the surrounding class is a bootstrap type; otherwise, <c>false</c>.</returns>
 	private static bool IsProgramOrStartup(SyntaxNode node)
 	{
 		var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -365,6 +436,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			|| name.Equals("Startup", StringComparison.OrdinalIgnoreCase);
 	}
 
+	/// <summary>
+	/// Determines whether the node is inside an Identity component namespace that permits throws.
+	/// </summary>
+	/// <param name="node">The syntax node to evaluate.</param>
+	/// <returns><c>true</c> when the namespace indicates Identity Razor components; otherwise, <c>false</c>.</returns>
 	private static bool IsIdentityComponentsNamespace(SyntaxNode node)
 	{
 		var ns = node.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault()?.Name.ToString() ?? string.Empty;
@@ -372,6 +448,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			|| ns.Contains(".Identity.Components", StringComparison.OrdinalIgnoreCase);
 	}
 
+	/// <summary>
+	/// Determines whether the method or its containing type is explicitly designated as a guard helper.
+	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the method or containing type name indicates guard semantics; otherwise, <c>false</c>.</returns>
 	private static bool IsGuardTypeOrMethod(MethodDeclarationSyntax method)
 	{
 		var type = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -388,6 +469,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			|| name.Contains("Ensure", StringComparison.OrdinalIgnoreCase);
 	}
 
+	/// <summary>
+	/// Determines whether the method belongs to a value-object type where guard throws are acceptable.
+	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the containing type name signals a value object; otherwise, <c>false</c>.</returns>
 	private static bool IsValueObjectContext(MethodDeclarationSyntax method)
 	{
 		var type = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -398,6 +484,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 		return hints.Any(h => typeName.Contains(h, StringComparison.OrdinalIgnoreCase));
 	}
 
+	/// <summary>
+	/// Determines whether the method represents a background or hosted task where throws remain acceptable.
+	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when heuristics identify a background task implementation; otherwise, <c>false</c>.</returns>
 	private static bool IsBackgroundTaskMethod(MethodDeclarationSyntax method)
 	{
 		var returnText = method.ReturnType.ToString();
@@ -426,6 +517,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether a boolean-returning method functions as a domain guard and may throw.
+	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the method name indicates guard semantics for boolean checks; otherwise, <c>false</c>.</returns>
 	private static bool IsDomainGuardBoolMethod(MethodDeclarationSyntax method)
 	{
 		// return type bool and name hints like Validate/AppliesTo/Ensure/IsValid
@@ -438,6 +534,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			|| name.Contains("IsValid", StringComparison.OrdinalIgnoreCase);
 	}
 
+	/// <summary>
+	/// Determines whether the node is contained within a test-oriented type.
+	/// </summary>
+	/// <param name="node">The syntax node representing the analyzed member.</param>
+	/// <returns><c>true</c> when the containing type name indicates tests or benchmarks; otherwise, <c>false</c>.</returns>
 	private static bool IsInTestType(SyntaxNode node)
 	{
 		var cls = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -448,6 +549,11 @@ public class UseResultPatternAnalyzer : DiagnosticAnalyzer
 			|| name.EndsWith("Benchmarks", StringComparison.OrdinalIgnoreCase);
 	}
 
+	/// <summary>
+	/// Determines whether a property uses a null-coalescing guard that should be allowed.
+	/// </summary>
+	/// <param name="property">The property declaration to inspect.</param>
+	/// <returns><c>true</c> when the expression body employs <c>?? throw</c>; otherwise, <c>false</c>.</returns>
 	private static bool IsNullCoalescingThrowGuard(PropertyDeclarationSyntax property)
 	{
 		if (property.ExpressionBody?.Expression is BinaryExpressionSyntax binary

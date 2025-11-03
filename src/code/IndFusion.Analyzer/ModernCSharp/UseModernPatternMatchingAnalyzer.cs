@@ -13,10 +13,24 @@ namespace IndFusion.Analyzers.ModernCSharp;
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Title displayed for diagnostics emitted by this analyzer.
+    /// </summary>
     private static readonly LocalizableString Title = "Use modern pattern matching with declaration patterns";
+
+    /// <summary>
+    /// Message format describing the detected pattern-matching opportunity.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Use pattern matching with declaration instead of 'is' check followed by cast";
+
+    /// <summary>
+    /// Description explaining why declaration patterns are preferred.
+    /// </summary>
     private static readonly LocalizableString Description = "Modern pattern matching with declaration patterns (e.g., 'if (value is string str)') is more concise and safer than traditional 'is' checks followed by explicit casts.";
 
+    /// <summary>
+    /// Diagnostic rule issued when non-modern pattern matching is detected.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.UseModernPatternMatching,
         Title,
@@ -26,10 +40,16 @@ public class UseModernPatternMatchingAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostics supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the modern pattern matching rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers syntax callbacks that analyze if-statements for pattern matching improvements.
+    /// </summary>
+    /// <param name="context">The analysis context coordinating callbacks.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

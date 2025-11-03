@@ -61,10 +61,10 @@ public static class ExxerFactoringHelpers
         EnsureMsBuildRegistered();
         var host = MefHostServices.Create(MSBuildMefHostServices.DefaultAssemblies);
         var workspace = MSBuildWorkspace.Create(host);
-#pragma warning disable CS0618  // these was disable because a regresion was detected on the new method an was not longer marked as obsolet
-        workspace.WorkspaceFailed += (_, e) =>
-            Console.Error.WriteLine(e.Diagnostic.Message);
-#pragma warning restore CS0618
+        // Use RegisterWorkspaceFailedHandler (new API) instead of WorkspaceFailed event (obsolete)
+        // Note: The handler receives an object with a Diagnostic property, matching RefactoringHelpers.cs pattern
+        workspace.RegisterWorkspaceFailedHandler(e =>
+            Console.Error.WriteLine(e.Diagnostic.Message));
         return workspace;
     }
 

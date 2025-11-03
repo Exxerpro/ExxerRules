@@ -5,29 +5,29 @@ VisualStudioVersion = 18.0.11123.170 d18.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "code", "code", "{314C6247-30EA-3492-19B6-DF847E3B326F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Analyzer", "code\IndFusion.Analyzer\IndFusion.Analyzer.csproj", "{D1600494-DF68-4FC9-ADC2-835BA0D19023}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Analyzer", "code\Analyzer\IndFusion.Analyzer\IndFusion.Analyzer.csproj", "{D1600494-DF68-4FC9-ADC2-835BA0D19023}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Fixer", "code\IndFusion.Fixer\IndFusion.Fixer.csproj", "{D98F86CE-0013-4098-9CAE-DC7D6319C63D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Fixer", "code\Analyzer\IndFusion.Fixer\IndFusion.Fixer.csproj", "{D98F86CE-0013-4098-9CAE-DC7D6319C63D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Core", "code\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj", "{B1E09EFF-8DC1-42B0-8D38-67FC5D8D0E4E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Core", "code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj", "{B1E09EFF-8DC1-42B0-8D38-67FC5D8D0E4E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Server", "code\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj", "{66CB80FF-F5D8-4EDB-BF43-632D7C643DA9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Server", "code\Mcp\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj", "{66CB80FF-F5D8-4EDB-BF43-632D7C643DA9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli", "code\IndFusion.Tools.Cli\IndFusion.Tools.Cli.csproj", "{8CF7B8A0-60FC-41C6-B10E-04D34626F7FD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli", "code\Cli\IndFusion.Tools.Cli\IndFusion.Tools.Cli.csproj", "{8CF7B8A0-60FC-41C6-B10E-04D34626F7FD}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{0C88DD14-F956-CE84-757C-A364CCF449FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Analyzer.Tests", "test\IndFusion.Analyzer.Tests\IndFusion.Analyzer.Tests.csproj", "{3BD1A985-7CAA-41E0-AD3A-B27A94BE2642}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Analyzer.Tests", "test\AnalyzerTests\IndFusion.Analyzer.Tests\IndFusion.Analyzer.Tests.csproj", "{3BD1A985-7CAA-41E0-AD3A-B27A94BE2642}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Core.Tests", "test\IndFusion.Mcp.Core.Tests\IndFusion.Mcp.Core.Tests.csproj", "{5AF96990-BD52-4BB5-82AB-C8B23CCA52CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Core.Tests", "test\McpTests\IndFusion.Mcp.Core.Tests\IndFusion.Mcp.Core.Tests.csproj", "{5AF96990-BD52-4BB5-82AB-C8B23CCA52CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Server.Tests", "test\IndFusion.Mcp.Server.Tests\IndFusion.Mcp.Server.Tests.csproj", "{153ED087-AA20-4DFF-A59E-53A5D38B15EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Server.Tests", "test\McpTests\IndFusion.Mcp.Server.Tests\IndFusion.Mcp.Server.Tests.csproj", "{153ED087-AA20-4DFF-A59E-53A5D38B15EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Tests", "test\IndFusion.Mcp.Tests\IndFusion.Mcp.Tests.csproj", "{2D6176E0-434D-4D6D-820C-24DEB19C28B9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Tests", "test\McpTests\IndFusion.Mcp.Tests\IndFusion.Mcp.Tests.csproj", "{2D6176E0-434D-4D6D-820C-24DEB19C28B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Web", "code\IndFusion.Mcp.Web\IndFusion.Mcp.Web.csproj", "{DBE9BFCF-DB40-42E5-B96F-B856BE43821A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Web", "code\Mcp\IndFusion.Mcp.Web\IndFusion.Mcp.Web.csproj", "{DBE9BFCF-DB40-42E5-B96F-B856BE43821A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Web.Tests", "test\IndFusion.Mcp.Web.Tests\IndFusion.Mcp.Web.Tests.csproj", "{FFD94058-41AB-48E2-9D73-3C7E0E3215EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Mcp.Web.Tests", "test\McpTests\IndFusion.Mcp.Web.Tests\IndFusion.Mcp.Web.Tests.csproj", "{FFD94058-41AB-48E2-9D73-3C7E0E3215EC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
@@ -37,27 +37,27 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		readme.md = readme.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli.Core", "code\IndFusion.Tools.Cli.Core\IndFusion.Tools.Cli.Core.csproj", "{C6DBDAE4-4575-4E34-B3D5-678B1B1A46D1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli.Core", "code\Cli\IndFusion.Tools.Cli.Core\IndFusion.Tools.Cli.Core.csproj", "{C6DBDAE4-4575-4E34-B3D5-678B1B1A46D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli.Console", "code\IndFusion.Tools.Cli.Console\IndFusion.Tools.Cli.Console.csproj", "{24ADF02C-3718-4FF7-89FF-135C55741F30}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli.Console", "code\Cli\IndFusion.Tools.Cli.Console\IndFusion.Tools.Cli.Console.csproj", "{24ADF02C-3718-4FF7-89FF-135C55741F30}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli.Tests", "test\IndFusion.Tools.Cli.Tests\IndFusion.Tools.Cli.Tests.csproj", "{6C14B2F7-3310-4516-8440-481CAC3D654C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.Tools.Cli.Tests", "test\CliTests\IndFusion.Tools.Cli.Tests\IndFusion.Tools.Cli.Tests.csproj", "{6C14B2F7-3310-4516-8440-481CAC3D654C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Domain", "code\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Domain", "code\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Application", "code\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj", "{41A68272-5409-4D4B-A123-84AB0F97DB16}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Application", "code\SemanticRag\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj", "{41A68272-5409-4D4B-A123-84AB0F97DB16}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Infrastructure", "code\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj", "{F7B53F75-CBE3-436B-8D0C-F38A0F1DD361}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Infrastructure", "code\SemanticRag\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj", "{F7B53F75-CBE3-436B-8D0C-F38A0F1DD361}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests", "test\IndFusion.SemanticRag.Tests\IndFusion.SemanticRag.Tests.csproj", "{08397747-5877-436F-B357-3A52D59C9E48}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests", "test\SemanticRagTests\IndFusion.SemanticRag.Tests\IndFusion.SemanticRag.Tests.csproj", "{08397747-5877-436F-B357-3A52D59C9E48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.WebAPI", "code\IndFusion.SemanticRag.WebAPI\IndFusion.SemanticRag.WebAPI.csproj", "{2ECF9AD3-D448-4586-8DDF-04EBA3128D5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.WebAPI", "code\SemanticRag\IndFusion.SemanticRag.WebAPI\IndFusion.SemanticRag.WebAPI.csproj", "{2ECF9AD3-D448-4586-8DDF-04EBA3128D5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests.Unit", "IndFusion.SemanticRag.Tests.Unit\IndFusion.SemanticRag.Tests.Unit.csproj", "{2A35B6E0-1C99-4231-9E23-815BE1910F80}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests.Unit", "test\SemanticRagTests\IndFusion.SemanticRag.Tests.Unit\IndFusion.SemanticRag.Tests.Unit.csproj", "{2A35B6E0-1C99-4231-9E23-815BE1910F80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests.Integration", "IndFusion.SemanticRag.Tests.Integration\IndFusion.SemanticRag.Tests.Integration.csproj", "{D3C9621D-D3C7-4AE5-B82B-F0556319A818}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests.Integration", "test\SemanticRagTests\IndFusion.SemanticRag.Tests.Integration\IndFusion.SemanticRag.Tests.Integration.csproj", "{D3C9621D-D3C7-4AE5-B82B-F0556319A818}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests.Architecture", "IndFusion.SemanticRag.Tests.Architecture\IndFusion.SemanticRag.Tests.Architecture.csproj", "{AE4231C5-550D-4ED9-9815-FE99F1F57943}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IndFusion.SemanticRag.Tests.Architecture", "test\SemanticRagTests\IndFusion.SemanticRag.Tests.Architecture\IndFusion.SemanticRag.Tests.Architecture.csproj", "{AE4231C5-550D-4ED9-9815-FE99F1F57943}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SemanticRag", "SemanticRag", "{C781B231-7384-4725-B022-53B6ACB8B248}"
 EndProject

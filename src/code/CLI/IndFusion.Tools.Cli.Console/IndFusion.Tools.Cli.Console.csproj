@@ -13,9 +13,8 @@
     <PackageTags>refactoring;code-analysis;roslyn;cli;console</PackageTags>
   </PropertyGroup>
 
-
   <ItemGroup>
-    <ProjectReference Include="IndFusion.Tools.Cli.Core\IndFusion.Tools.Cli.Core.csproj" />
+    <ProjectReference Include="..\IndFusion.Tools.Cli.Core\IndFusion.Tools.Cli.Core.csproj" />
   </ItemGroup>
 
 </Project>

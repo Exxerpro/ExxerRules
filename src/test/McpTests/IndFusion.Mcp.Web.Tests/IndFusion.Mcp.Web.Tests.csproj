@@ -74,8 +74,8 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <ProjectReference Include="..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
-    <ProjectReference Include="..\..\code\Mcp\IndFusion.Mcp.Web\IndFusion.Mcp.Web.csproj" />
-    <ProjectReference Include="..\..\code\Mcp\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
+    <ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Web\IndFusion.Mcp.Web.csproj" />
+    <ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
   </ItemGroup>
 </Project>

@@ -40,15 +40,15 @@
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
-  <ItemGroup>
-	<ProjectReference Include="IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
-  </ItemGroup>
   <!-- ===================================================================== -->
   <!-- InternalsVisibleTo Configuration                                       -->
   <!-- ===================================================================== -->
   <ItemGroup>
 	<InternalsVisibleTo Include="IndFusion.Mcp.Tests" />
 	<InternalsVisibleTo Include="IndFusion.Mcp.Web" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Package Version Overrides                                              -->

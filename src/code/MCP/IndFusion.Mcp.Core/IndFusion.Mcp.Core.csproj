@@ -27,7 +27,7 @@
   <ItemGroup>
 	<!-- Project References -->
 	<ProjectReference Include="..\..\Analyzer\IndFusion.Analyzer\IndFusion.Analyzer.csproj" />
-	<ProjectReference Include="..\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
+	<ProjectReference Include="..\..\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
 	<!-- Roslyn Compiler Platform & Code Analysis -->
 	<PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
 	<PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" />

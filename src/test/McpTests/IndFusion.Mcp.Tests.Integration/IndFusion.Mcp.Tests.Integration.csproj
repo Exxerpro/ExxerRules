@@ -80,7 +80,7 @@
 
   <!-- PROJECT REFERENCES -->
   <ItemGroup Label="Project References">
-    <ProjectReference Include="..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
     <ProjectReference Include="..\..\code\Analyzer\IndFusion.Analyzer\IndFusion.Analyzer.csproj" />
   </ItemGroup>
 

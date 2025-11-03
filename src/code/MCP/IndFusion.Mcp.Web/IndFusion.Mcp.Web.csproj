@@ -50,11 +50,11 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-	<ProjectReference Include="IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
-	<ProjectReference Include="IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
-  </ItemGroup>
-  <ItemGroup>
 	<None Include=".mcp\server.json" Pack="true" PackagePath=".mcp/server.json" />
 	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
   </ItemGroup>
 </Project>

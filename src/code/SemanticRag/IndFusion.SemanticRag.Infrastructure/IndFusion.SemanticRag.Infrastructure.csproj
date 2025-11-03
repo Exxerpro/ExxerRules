@@ -58,8 +58,8 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-	<ProjectReference Include="IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
-	<ProjectReference Include="..\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+	<ProjectReference Include="..\..\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+	<ProjectReference Include="..\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
   </ItemGroup>
 
   <!-- ===================================================================== -->

@@ -53,10 +53,6 @@
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
-  <ItemGroup>
-    <ProjectReference Include="..\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
-    <ProjectReference Include="IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
-  </ItemGroup>
 
   <!-- ===================================================================== -->
   <!-- InternalsVisibleTo Configuration                                       -->
@@ -64,5 +60,9 @@
   <ItemGroup>
     <InternalsVisibleTo Include="IndFusion.SemanticRag.Tests" />
     <InternalsVisibleTo Include="IndFusion.SemanticRag.Infrastructure" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
   </ItemGroup>
 </Project>

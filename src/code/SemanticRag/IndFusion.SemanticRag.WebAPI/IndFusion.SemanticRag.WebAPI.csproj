@@ -39,9 +39,9 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-    <ProjectReference Include="IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
-    <ProjectReference Include="IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj" />
-    <ProjectReference Include="..\Mcp\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
+    <ProjectReference Include="..\..\Mcp\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
+    <ProjectReference Include="..\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
+    <ProjectReference Include="..\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj" />
   </ItemGroup>
 
   <!-- ===================================================================== -->

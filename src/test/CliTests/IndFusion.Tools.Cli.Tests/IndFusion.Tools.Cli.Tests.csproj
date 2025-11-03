@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\code\Cli\IndFusion.Tools.Cli.Core\IndFusion.Tools.Cli.Core.csproj" />
+    <ProjectReference Include="..\..\code\CLI\IndFusion.Tools.Cli.Core\IndFusion.Tools.Cli.Core.csproj" />
   </ItemGroup>
 
 </Project>

@@ -44,9 +44,9 @@
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
   <ItemGroup>
-	<ProjectReference Include="..\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
   </ItemGroup>
   <ItemGroup>
-	<None Include="..\..\..\README.md" Pack="true" PackagePath="" Link="README.md" />
+    <ProjectReference Include="..\..\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>
 </Project>

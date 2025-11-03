@@ -13,17 +13,24 @@ using IndQuestResults;
 namespace IndFusion.SemanticRag.Tests.Integration.IntegrationTests;
 
 /// <summary>
-/// Integration tests for vector search functionality.
+/// Integration tests that exercise the end-to-end vector storage and similarity search workflows against the configured infrastructure.
 /// </summary>
 public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture>
 {
+    /// <summary>
+    /// Provides access to the shared service provider and cleanup helpers for each test run.
+    /// </summary>
     private readonly IntegrationTestFixture _fixture;
+
+    /// <summary>
+    /// Issues commands and queries against the vector search pipeline under test.
+    /// </summary>
     private readonly IMediator _mediator;
 
     /// <summary>
-    /// Initializes a new instance of the VectorSearchIntegrationTests class.
+    /// Initializes a new instance of the <see cref="VectorSearchIntegrationTests"/> class and resolves the mediator from the integration fixture.
     /// </summary>
-    /// <param name="fixture">The integration test fixture.</param>
+    /// <param name="fixture">The shared integration test fixture that provides the service provider and cleanup utilities.</param>
     public VectorSearchIntegrationTests(IntegrationTestFixture fixture)
     {
         _fixture = fixture;
@@ -31,16 +38,21 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
     }
 
     /// <summary>
-    /// Sets up the test by clearing the repository.
+    /// Resets the vector repository so each test executes against a clean data store.
     /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the repository has been cleared.</returns>
     private async Task SetupTestAsync()
     {
         await _fixture.ClearRepositoryAsync();
     }
 
     /// <summary>
-    /// Should store and retrieve vectors successfully.
+    /// Verifies that persisting a <see cref="VectorEmbedding"/> through <see cref="StoreVectorCommand"/> succeeds without errors.
     /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the assertion workflow finishes.</returns>
+    /// <remarks>
+    /// The test writes a representative vector payload and expects a successful result without any captured error details.
+    /// </remarks>
     [Fact]
     public async Task Should_StoreAndRetrieveVectors_Successfully()
     {
@@ -64,8 +76,12 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
     }
 
     /// <summary>
-    /// Should search for similar vectors successfully.
+    /// Ensures that previously stored vectors are returned by <see cref="SearchSimilarVectorsQuery"/> when the similarity threshold is met.
     /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the search assertions succeed.</returns>
+    /// <remarks>
+    /// Two related embeddings are stored and the subsequent similarity search is expected to yield at least one matching result.
+    /// </remarks>
     [Fact]
     public async Task Should_SearchSimilarVectors_Successfully()
     {
@@ -111,8 +127,9 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
     }
 
     /// <summary>
-    /// Should handle invalid vector data gracefully.
+    /// Confirms that invalid vector payloads are rejected and surface descriptive validation errors.
     /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the failure assertions are evaluated.</returns>
     [Fact]
     public async Task Should_HandleInvalidVectorData_Gracefully()
     {
@@ -137,8 +154,9 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
     }
 
     /// <summary>
-    /// Should handle invalid search query gracefully.
+    /// Verifies that submitting an invalid search query results in a failure with a meaningful error description.
     /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the failure outcome has been asserted.</returns>
     [Fact]
     public async Task Should_HandleInvalidSearchQuery_Gracefully()
     {
@@ -162,8 +180,9 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
     }
 
     /// <summary>
-    /// Should handle empty repository gracefully.
+    /// Ensures that searching an empty repository succeeds and returns an empty result set rather than failing.
     /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the empty-result assertions run.</returns>
     [Fact]
     public async Task Should_HandleEmptyRepository_Gracefully()
     {

@@ -9,7 +9,7 @@ namespace IndFusion.SemanticRag.Tests.Unit.Domain.Models;
 /// </summary>
 public class EmbeddingTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateEmbedding_When_ValidParametersProvided()
     {
         // Arrange
@@ -35,7 +35,7 @@ public class EmbeddingTests
         embedding.CreatedAt.ShouldBe(createdAt);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateSuccessfully_When_ValidEmbedding()
     {
         // Arrange
@@ -49,7 +49,7 @@ public class EmbeddingTests
         result.IsFailure.ShouldBeFalse();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("", "DocumentId", "Model")]
     [InlineData("Id", "", "Model")]
     [InlineData("Id", "DocumentId", "")]
@@ -72,7 +72,7 @@ public class EmbeddingTests
         result.Error!.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_IdIsNull()
     {
         // Arrange
@@ -88,7 +88,7 @@ public class EmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_DocumentIdIsNull()
     {
         // Arrange
@@ -104,7 +104,7 @@ public class EmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_VectorIsNull()
     {
         // Arrange
@@ -120,7 +120,7 @@ public class EmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_VectorIsEmpty()
     {
         // Arrange
@@ -136,7 +136,7 @@ public class EmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_DimensionsIsZero()
     {
         // Arrange
@@ -152,7 +152,7 @@ public class EmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_DimensionsIsNegative()
     {
         // Arrange
@@ -168,7 +168,7 @@ public class EmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_VectorCountDoesNotMatchDimensions()
     {
         // Arrange
@@ -184,7 +184,7 @@ public class EmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateCosineSimilarity_When_ValidEmbeddings()
     {
         // Arrange
@@ -203,7 +203,7 @@ public class EmbeddingTests
         similarity.ShouldBe(0.0f); // Perpendicular vectors have 0 similarity
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateCosineSimilarity_When_IdenticalEmbeddings()
     {
         // Arrange
@@ -223,7 +223,7 @@ public class EmbeddingTests
         similarity.ShouldBe(1.0f, 0.001f); // Identical vectors have similarity 1
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_CalculateCosineSimilarityWithNullEmbedding()
     {
         // Arrange
@@ -233,7 +233,7 @@ public class EmbeddingTests
         Should.Throw<ArgumentNullException>(() => embedding.CalculateCosineSimilarity(null!));
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_CalculateCosineSimilarityWithDifferentDimensions()
     {
         // Arrange

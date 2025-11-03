@@ -24,31 +24,114 @@ namespace IndFusion.SemanticRag.Tests.Unit.Implementations;
 /// </summary>
 public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabaseAdapter>
 {
-	private QdrantClient _qdrantClient = null!;
+	private QdrantClient? _qdrantClient;
 	private ILogger<QdrantVectorDatabaseAdapter> _logger = null!;
+	private static readonly bool _qdrantAvailable;
+
+	/// <summary>
+	/// Initializes a new instance of the <see cref="QdrantVectorDatabaseAdapterTests"/> class.
+	/// </summary>
+	/// <param name="output">Test output helper for logging.</param>
+	public QdrantVectorDatabaseAdapterTests(ITestOutputHelper output) : base(output)
+	{
+	}
+
+	static QdrantVectorDatabaseAdapterTests()
+	{
+		// Check if Qdrant is available via environment variable or attempt quick connection
+		var qdrantEnv = Environment.GetEnvironmentVariable("QDRANT_AVAILABLE");
+		_qdrantAvailable = qdrantEnv == "true" || CheckQdrantAvailability();
+	}
+
+	private static bool CheckQdrantAvailability()
+	{
+		// ✅ Phase 1.1: Avoid hanging - check environment variable only (no real connection)
+		// Creating QdrantClient may hang if Qdrant service isn't running
+		// For unit tests, we only check environment variable - no real connection attempt
+		// Note: For integration tests requiring real Qdrant, use [Trait("Category", "Integration")]
+		// and set QDRANT_AVAILABLE=true environment variable
+		return false; // Always false for unit tests - environment variable check is primary
+	}
 
 	protected override QdrantVectorDatabaseAdapter CreateImplementation()
 	{
-		// ✅ TDD: Test adapter behavior - create real QdrantClient instance
-		// Note: Validation tests fail before calling QdrantClient, so real instance is safe for these tests
-		// For tests that need mocked behavior, we'll mock at the port level (IVectorDatabasePort)
-		try
+		// ✅ Use Meziantou logger from base class (via ITestOutputHelper)
+		_logger = Logger;
+
+		// ✅ TDD: Test adapter behavior - create QdrantClient instance only if available
+		// Note: Validation tests fail before calling QdrantClient, so we can safely create adapter
+		// even if Qdrant isn't running - tests will still validate adapter's validation logic
+		if (_qdrantAvailable)
 		{
-			_qdrantClient = new QdrantClient("localhost", 6333);
+			try
+			{
+				_qdrantClient = new QdrantClient("localhost", 6333);
+			}
+			catch
+			{
+				// If QdrantClient construction fails, try alternative address
+				try
+				{
+					_qdrantClient = new QdrantClient("127.0.0.1", 6333);
+				}
+				catch
+				{
+					// If both fail, client will be null - tests will still work for validation-only scenarios
+					_qdrantClient = null;
+				}
+			}
 		}
-		catch
+		else
 		{
-			// If QdrantClient construction fails, create a minimal instance
-			// This should only happen if constructor signature changed
-			_qdrantClient = new QdrantClient("127.0.0.1", 6333);
+			// Qdrant not available - client will be null
+			// Tests will still validate adapter's validation logic before calling client
+			_qdrantClient = null;
 		}
-		
-		_logger = NullLogger<QdrantVectorDatabaseAdapter>.Instance;
+
+		// ✅ Phase 1.1: Avoid hanging - only create real client if explicitly available
+		// Validation tests don't call QdrantClient methods, so we can create client for validation-only tests
+		// If Qdrant is not available, we still create client (adapter requires non-null) - timeout will protect
+		if (_qdrantClient == null)
+		{
+			// ⚠️ WARNING: Creating QdrantClient may hang if Qdrant service isn't running
+			// The adapter validates input BEFORE calling client methods, so validation tests won't hang
+			// Only tests that pass validation and call client methods will potentially hang
+			// Solution: Test timeout (5000ms) will catch hanging tests
+			// For integration tests, mark with [Trait("Category", "Integration")] and set QDRANT_AVAILABLE=true
+			
+			// Create client - timeout will protect against hanging
+			// Note: This is acceptable because:
+			// 1. Validation tests fail before calling client methods (won't hang)
+			// 2. Test timeout (5000ms) will catch any hanging behavior
+			// 3. Integration tests should use QDRANT_AVAILABLE=true and be marked with Integration trait
+			try
+			{
+				_qdrantClient = new QdrantClient("localhost", 6333);
+			}
+			catch
+			{
+				// If localhost fails, try alternative address
+				try
+				{
+					_qdrantClient = new QdrantClient("127.0.0.1", 6333);
+				}
+				catch
+				{
+					// Both failed - throw informative exception
+					// Tests will fail fast with clear message instead of hanging
+					throw new InvalidOperationException(
+						"QdrantClient creation failed. " +
+						"For validation tests (which don't call client methods): This is acceptable - test timeout will protect. " +
+						"For integration tests: Ensure Qdrant is running and set QDRANT_AVAILABLE=true environment variable. " +
+						"Mark integration tests with [Trait(\"Category\", \"Integration\")] attribute.");
+				}
+			}
+		}
 		
 		return new QdrantVectorDatabaseAdapter(_qdrantClient, _logger);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task SearchAsync_WithNullQueryVector_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter validates before calling QdrantClient
@@ -70,7 +153,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		// Note: We can't easily verify this with mocked QdrantClient, but the test validates behavior
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task SearchAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior for invalid input
@@ -90,7 +173,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		// The validation happens before calling QdrantClient, so the test validates the behavior
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GetCollectionInfoAsync_WithEmptyCollectionName_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter validates before calling QdrantClient
@@ -104,7 +187,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 	}
 
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task CreateCollectionAsync_WithZeroVectorSize_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter validates vector size
@@ -122,7 +205,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		AssertResultFailure(result, ErrorCodes.ValueOutOfRange);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task CreateCollectionAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior for invalid input
@@ -142,7 +225,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		// await _qdrantClient.DidNotReceive().CreateCollectionAsync(...);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task UpsertAsync_WithEmptyPointsList_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter validates points list
@@ -156,7 +239,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		AssertResultFailure(result, ErrorCodes.CollectionEmpty);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task UpsertAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior for invalid input
@@ -171,7 +254,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task DeleteAsync_WithNoPointIdsAndNoFilter_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter requires either pointIds or filter
@@ -184,7 +267,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		AssertResultFailure(result, ErrorCodes.ParameterNull);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task DeleteAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior for invalid input
@@ -196,7 +279,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GetCollectionInfoAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling
@@ -209,7 +292,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		result.ShouldBeCancelled();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task SearchAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling
@@ -228,7 +311,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
 		result.ShouldBeCancelled();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task CreateCollectionAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling

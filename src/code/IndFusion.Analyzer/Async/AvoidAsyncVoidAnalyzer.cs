@@ -7,15 +7,29 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace IndFusion.Analyzers.Async;
 
 /// <summary>
-/// Analyzer that avoids async void methods except for event handlers.
+/// Flags <c>async void</c> methods so teams prefer <see cref="System.Threading.Tasks.Task"/>-returning async APIs outside valid event-handling scenarios.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 {
+	/// <summary>
+	/// Gets the localized diagnostic title surfaced when <c>async void</c> methods are discovered.
+	/// </summary>
 	private static readonly LocalizableString Title = "Avoid async void methods";
+
+	/// <summary>
+	/// Gets the localized message format describing the offending method name.
+	/// </summary>
 	private static readonly LocalizableString MessageFormat = "Method '{0}' should not be async void; return Task instead";
+
+	/// <summary>
+	/// Gets the descriptive text that explains why <c>async void</c> should be avoided.
+	/// </summary>
 	private static readonly LocalizableString Description = "Async void methods are hard to test and can swallow exceptions. Prefer Task-returning async methods, except for event handlers.";
 
+	/// <summary>
+	/// The diagnostic descriptor emitted when an <c>async void</c> method violates the rule.
+	/// </summary>
 	private static readonly DiagnosticDescriptor Rule = new(
 		DiagnosticIds.AvoidAsyncVoid,
 		Title,
@@ -25,10 +39,19 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 		isEnabledByDefault: true,
 		description: Description);
 
-	/// <inheritdoc />
+	/// <summary>
+	/// Gets the diagnostic descriptors supported by this analyzer.
+	/// </summary>
+	/// <value>An immutable array containing the async-void warning rule.</value>
 	public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-	/// <inheritdoc />
+	/// <summary>
+	/// Registers the syntax callbacks that detect prohibited <c>async void</c> usage.
+	/// </summary>
+	/// <param name="context">The Roslyn analysis context used for registration.</param>
+	/// <remarks>
+	/// Generated code is excluded and concurrent execution is enabled before scanning <see cref="MethodDeclarationSyntax"/> nodes.
+	/// </remarks>
 	public override void Initialize(AnalysisContext context)
 	{
 		context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -36,6 +59,10 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 		context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
 	}
 
+	/// <summary>
+	/// Analyzes method declarations and reports diagnostics for disallowed <c>async void</c> patterns.
+	/// </summary>
+	/// <param name="context">The syntax analysis context supplying the method declaration.</param>
 	private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
 	{
 		var method = (MethodDeclarationSyntax)context.Node;
@@ -71,6 +98,16 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 		}
 	}
 
+	/// <summary>
+	/// Determines whether the method signature matches common event-handler patterns that can remain <c>async void</c>.
+	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the signature resembles an event handler; otherwise, <c>false</c>.</returns>
+	/// <summary>
+	/// Determines whether the method signature matches common event-handler patterns that may legitimately remain <c>async void</c>.
+	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the signature resembles an event handler; otherwise, <c>false</c>.</returns>
 	private static bool LooksLikeEventHandler(MethodDeclarationSyntax method)
 	{
 		// Common event handler signatures: object sender, EventArgs e (or derived)
@@ -108,6 +145,11 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 		return false;
 	}
 
+	/// <summary>
+	/// Determines whether the method resides within boundary layers or other contexts that are exempt from this rule.
+	/// </summary>
+	/// <param name="node">The syntax node whose ancestors are inspected.</param>
+	/// <returns><c>true</c> when the containing namespace or class indicates boundary code; otherwise, <c>false</c>.</returns>
 	private static bool IsBoundaryOrSkippable(SyntaxNode node)
 	{
 		var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -135,8 +177,10 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 	#region Story 1.5: Allow Overridden async void Methods
 
 	/// <summary>
-	/// Checks if the method is an override method.
+	/// Determines whether the method overrides a base member that dictates the return type.
 	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the method carries the <c>override</c> modifier; otherwise, <c>false</c>.</returns>
 	private static bool IsOverriddenMethod(MethodDeclarationSyntax method)
 	{
 		return method.Modifiers.Any(SyntaxKind.OverrideKeyword);
@@ -147,8 +191,11 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 	#region Story 1.6: Allow Interface Implementations Requiring void
 
 	/// <summary>
-	/// Checks if the method is an interface implementation that requires void.
+	/// Determines whether the method explicitly implements an interface member whose signature requires <c>void</c>.
 	/// </summary>
+	/// <param name="method">The method declaration under evaluation.</param>
+	/// <param name="semanticModel">The semantic model used to resolve implemented members.</param>
+	/// <returns><c>true</c> when an implemented interface member forces a <c>void</c> return type; otherwise, <c>false</c>.</returns>
 	private static bool IsInterfaceImplementationRequiringVoid(MethodDeclarationSyntax method, SemanticModel semanticModel)
 	{
 		var methodSymbol = semanticModel.GetDeclaredSymbol(method);
@@ -179,8 +226,11 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 	#region Story 1.4: Allow ICommand.Execute Methods
 
 	/// <summary>
-	/// Checks if the method is an ICommand.Execute implementation.
+	/// Determines whether the method implements <c>ICommand.Execute</c>, which must remain <c>void</c>.
 	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <param name="semanticModel">The semantic model used to discover implemented interfaces.</param>
+	/// <returns><c>true</c> when the containing type implements <c>ICommand</c>; otherwise, <c>false</c>.</returns>
 	private static bool IsICommandExecuteMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
 	{
 		// Check if method name is Execute
@@ -234,8 +284,11 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 	#region Story 1.8: Allow Partial Methods in Blazor Components
 
 	/// <summary>
-	/// Checks if the method is a Blazor component event handler.
+	/// Determines whether the method behaves as a Blazor component event handler where <c>async void</c> is acceptable.
 	/// </summary>
+	/// <param name="method">The method declaration under evaluation.</param>
+	/// <param name="semanticModel">The semantic model used to examine the containing component.</param>
+	/// <returns><c>true</c> when the method matches Blazor event-handler patterns; otherwise, <c>false</c>.</returns>
 	private static bool IsBlazorComponentEventHandler(MethodDeclarationSyntax method, SemanticModel semanticModel)
 	{
 		// Check if method is private (typical for event handlers)
@@ -272,8 +325,10 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 	}
 
 	/// <summary>
-	/// Checks if the class inherits from ComponentBase.
+	/// Determines whether the supplied class symbol derives from <c>ComponentBase</c>.
 	/// </summary>
+	/// <param name="classSymbol">The class symbol to inspect.</param>
+	/// <returns><c>true</c> when the inheritance chain includes <c>ComponentBase</c>; otherwise, <c>false</c>.</returns>
 	private static bool InheritsFromComponentBase(INamedTypeSymbol classSymbol)
 	{
 		var current = classSymbol.BaseType;
@@ -295,8 +350,10 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
 	#region Story 1.9: Allow Fire-and-Forget Methods with an Attribute
 
 	/// <summary>
-	/// Checks if the method has a FireAndForget attribute.
+	/// Determines whether the method is decorated with a <c>FireAndForget</c> attribute that explicitly opts into <c>async void</c> behavior.
 	/// </summary>
+	/// <param name="method">The method declaration to inspect.</param>
+	/// <returns><c>true</c> when the attribute is present; otherwise, <c>false</c>.</returns>
 	private static bool HasFireAndForgetAttribute(MethodDeclarationSyntax method)
 	{
 		var attributes = method.AttributeLists.SelectMany(al => al.Attributes);

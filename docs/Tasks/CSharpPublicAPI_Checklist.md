@@ -1,0 +1,134 @@
+# XML Documentation Checklist
+
+  - [x] Method `ShouldSucceed(this Result result) : void`
+  - [x] Method `ShouldFail(this Result result) : void`
+  - [x] Method `ShouldFailWith(this Result result, string expectedErrorCode) : void`
+  - [x] Method `ShouldBeCancelled(this Result result) : void`
+- [x] class `SUTTracer` in `Helpers\SUTTracer.cs`
+  - [x] Method `TraceAsync(
+		string methodName,
+		Func<Task> operation,
+		Dictionary<string, object>? parameters = null) : async Task`
+- [x] class `Neo4jKnowledgeGraphServiceBehavioralTests` in `Infrastructure\Services\Neo4jKnowledgeGraphServiceBehavioralTests.cs`
+  - [x] Method `QueryAsync_WithValidQuery_ShouldReturnActualResults() : async Task`
+  - [x] Method `QueryAsync_WithParameters_ShouldUseParametersInQuery() : async Task`
+  - [x] Method `QueryAsync_WithTimeout_ShouldRespectTimeout() : async Task`
+  - [x] Method `QueryAsync_WithCancellation_ShouldRespectCancellationToken() : async Task`
+  - [x] Method `QueryAsync_WithInvalidQuery_ShouldReturnFailure() : async Task`
+  - [x] Method `AddNodeAsync_WithValidNode_ShouldAddNode() : async Task`
+  - [x] Method `AddNodeAsync_WithNullNode_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AddNodeAsync_WithInvalidNode_ShouldThrowArgumentException() : async Task`
+  - [x] Method `UpdateNodeAsync_WithValidNode_ShouldUpdateNode() : async Task`
+  - [x] Method `UpdateNodeAsync_WithNullNodeId_ShouldThrowArgumentException() : async Task`
+  - [x] Method `UpdateNodeAsync_WithEmptyNodeId_ShouldThrowArgumentException() : async Task`
+  - [x] Method `DeleteNodeAsync_WithValidNodeId_ShouldDeleteNode() : async Task`
+  - [x] Method `DeleteNodeAsync_WithNullNodeId_ShouldThrowArgumentException() : async Task`
+  - [x] Method `DeleteNodeAsync_WithEmptyNodeId_ShouldThrowArgumentException() : async Task`
+  - [x] Method `CreateRelationshipAsync_WithValidRelationship_ShouldCreateRelationship() : async Task`
+  - [x] Method `CreateRelationshipAsync_WithInvalidRelationship_ShouldThrowArgumentException() : async Task`
+  - [x] Method `CreateRelationshipAsync_WithSelfReferencingRelationship_ShouldThrowArgumentException() : async Task`
+  - [x] Method `DeleteRelationshipAsync_WithValidRelationshipId_ShouldDeleteRelationship() : async Task`
+  - [x] Method `DeleteRelationshipAsync_WithNullRelationshipId_ShouldReturnFailure() : async Task`
+  - [x] Method `DeleteRelationshipAsync_WithEmptyRelationshipId_ShouldReturnFailure() : async Task`
+  - [x] Method `GetContextAsync_WithValidQuery_ShouldReturnContext() : async Task`
+  - [x] Method `GetContextAsync_WithNullQuery_ShouldThrowArgumentException() : async Task`
+  - [x] Method `GetContextAsync_WithEmptyQuery_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AddCodeNodeAsync_WithValidCodeNode_ShouldAddCodeNode() : async Task`
+  - [x] Method `AddCodeNodeAsync_WithInvalidCodeNode_ShouldThrowArgumentException() : async Task`
+  - [x] Method `QueryAsync_WithComplexQuery_ShouldExecuteComplexQuery() : async Task`
+  - [x] Method `QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults() : async Task`
+  - [x] Method `QueryAsync_WithPathQuery_ShouldReturnPathResults() : async Task`
+  - [x] Method `QueryAsync_WithMultipleQueries_ShouldExecuteSequentially() : async Task`
+- [x] class `QdrantVectorSearchServiceBehavioralTests` in `Infrastructure\Services\QdrantVectorSearchServiceBehavioralTests.cs`
+  - [x] Method `SearchSimilarAsync_WithValidQuery_ShouldReturnActualSearchResults() : async Task`
+  - [x] Method `SearchSimilarAsync_WithHighPrecisionOptions_ShouldUseCorrectThreshold() : async Task`
+  - [x] Method `SearchSimilarAsync_WithBroadOptions_ShouldUseCorrectLimit() : async Task`
+  - [x] Method `GenerateEmbeddingAsync_WithValidText_ShouldReturnActualEmbedding() : async Task`
+  - [x] Method `GenerateEmbeddingAsync_WithEmptyText_ShouldThrowArgumentException() : async Task`
+  - [x] Method `StoreDocumentAsync_WithValidData_ShouldStoreDocument() : async Task`
+  - [x] Method `StoreDocumentAsync_WithNullId_ShouldThrowArgumentException() : async Task`
+  - [x] Method `StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException() : async Task`
+  - [x] Method `StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException() : async Task`
+  - [x] Method `UpdateDocumentAsync_WithValidData_ShouldUpdateDocument() : async Task`
+  - [x] Method `DeleteDocumentAsync_WithValidId_ShouldDeleteDocument() : async Task`
+  - [x] Method `DeleteDocumentAsync_WithNullId_ShouldThrowArgumentException() : async Task`
+  - [x] Method `SearchSimilarAsync_WithCancellation_ShouldRespectCancellationToken() : async Task`
+  - [x] Method `SearchSimilarAsync_WithTimeout_ShouldRespectTimeout() : async Task`
+  - [x] Method `SearchSimilarAsync_WithEmbeddingServiceFailure_ShouldPropagateFailure() : async Task`
+  - [x] Method `SearchSimilarAsync_WithQdrantFailure_ShouldPropagateException() : async Task`
+  - [x] Method `SearchSimilarAsync_WithMetadataFilters_ShouldApplyFilters() : async Task`
+  - [x] Method `SearchSimilarAsync_WithIncludeEmbedding_ShouldIncludeEmbeddingInResults() : async Task`
+  - [x] Method `SearchSimilarAsync_WithIncludeMetadata_ShouldIncludeMetadataInResults() : async Task`
+  - [x] Method `SearchSimilarAsync_WithProcessingTime_ShouldMeasureActualProcessingTime() : async Task`
+  - [x] Method `SearchSimilarAsync_WithActualResults_ShouldReturnNonEmptyResults() : async Task`
+- [x] class `RoslynCodeAnalysisServiceBehavioralTests` in `Infrastructure\Services\RoslynCodeAnalysisServiceBehavioralTests.cs`
+  - [x] Method `AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualAnalysisResults() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithNonExistentProjectPath_ShouldReturnFailure() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithNullProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithEmptyProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithCancellation_ShouldRespectCancellationToken() : async Task`
+  - [x] Method `AnalyzeFileAsync_WithValidFilePath_ShouldReturnActualAnalysisResults() : async Task`
+  - [x] Method `AnalyzeFileAsync_WithNonExistentFilePath_ShouldReturnFailure() : async Task`
+  - [x] Method `AnalyzeFileAsync_WithNullFilePath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeFileAsync_WithEmptyFilePath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithValidCode_ShouldReturnActualAnalysisResults() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithCodeContainingViolations_ShouldReturnViolations() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithNullCode_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithEmptyCode_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithNullLanguage_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithEmptyLanguage_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithUnsupportedLanguage_ShouldReturnEmptyResults() : async Task`
+  - [x] Method `GetAvailableAnalyzersAsync_ShouldReturnActualAnalyzers() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithLargeProject_ShouldHandleLargeProjects() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithProjectContainingMultipleLanguages_ShouldAnalyzeAllLanguages() : async Task`
+  - [x] Method `AnalyzeFileAsync_WithFileContainingErrors_ShouldReturnErrorViolations() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithCodeContainingSuggestions_ShouldReturnSuggestions() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithProjectContainingWarnings_ShouldReturnWarningViolations() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithProjectContainingInfoViolations_ShouldReturnInfoViolations() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithProjectContainingMixedSeverities_ShouldReturnAllSeverities() : async Task`
+- [ ] class `TestClass` in `Infrastructure\Services\RoslynCodeAnalysisServiceBehavioralTests.cs`
+- [ ] class `TestClass` in `Infrastructure\Services\RoslynCodeAnalysisServiceBehavioralTests.cs`
+- [ ] class `TestClass` in `Infrastructure\Services\RoslynCodeAnalysisServiceBehavioralTests.cs`
+  - [ ] Method `TestMethod() : void`
+  - [ ] Method `TestMethod() : void`
+  - [ ] Method `TestMethod() : void`
+- [x] class `SemanticPatternEngineServiceBehavioralTests` in `Infrastructure\Services\SemanticPatternEngineServiceBehavioralTests.cs`
+  - [x] Method `AnalyzeCodeAsync_WithValidCode_ShouldReturnActualViolations() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithCleanCode_ShouldReturnNoViolations() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithNullCode_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithEmptyCode_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithNullContext_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithEmptyContext_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithCancellation_ShouldRespectCancellationToken() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualViolations() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithSpecificPatternTypes_ShouldFilterByPatternTypes() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithNonExistentProjectPath_ShouldReturnEmptyList() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithNullProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithEmptyProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `SuggestAlternativesAsync_WithValidViolation_ShouldReturnActualSuggestions() : async Task`
+  - [x] Method `SuggestAlternativesAsync_WithNullViolation_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeConsistencyAsync_WithValidProjectPath_ShouldReturnActualConsistencyReport() : async Task`
+  - [x] Method `AnalyzeConsistencyAsync_WithAllPatternFamily_ShouldAnalyzeAllPatterns() : async Task`
+  - [x] Method `AnalyzeConsistencyAsync_WithNullProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeConsistencyAsync_WithEmptyProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `EnforcePatternsAsync_WithValidProjectPath_ShouldReturnActualEnforcementResult() : async Task`
+  - [x] Method `EnforcePatternsAsync_WithNullProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `EnforcePatternsAsync_WithEmptyProjectPath_ShouldThrowArgumentException() : async Task`
+  - [x] Method `EnforcePatternsAsync_WithNullPatternTypes_ShouldThrowArgumentException() : async Task`
+  - [x] Method `EnforcePatternsAsync_WithEmptyPatternTypes_ShouldThrowArgumentException() : async Task`
+  - [x] Method `GetPatternGuidanceAsync_WithValidContext_ShouldReturnActualGuidance() : async Task`
+  - [x] Method `GetPatternGuidanceAsync_WithAllPatternTypes_ShouldReturnComprehensiveGuidance() : async Task`
+  - [x] Method `GetPatternGuidanceAsync_WithNullContext_ShouldThrowArgumentException() : async Task`
+  - [x] Method `GetPatternGuidanceAsync_WithEmptyContext_ShouldThrowArgumentException() : async Task`
+  - [x] Method `AnalyzeCodeAsync_WithDifferentContexts_ShouldReturnContextSpecificViolations() : async Task`
+  - [x] Method `AnalyzeProjectAsync_WithLargeProject_ShouldHandleLargeProjects() : async Task`
+  - [x] Method `EnforcePatternsAsync_WithPartialSuccess_ShouldReturnPartialEnforcementResult() : async Task`
+  - [x] Method `AnalyzeConsistencyAsync_WithHighConsistencyProject_ShouldReturnHighConsistencyScore() : async Task`
+- [ ] class `TestClass` in `Infrastructure\Services\SemanticPatternEngineServiceBehavioralTests.cs`
+- [ ] class `TestClass` in `Infrastructure\Services\SemanticPatternEngineServiceBehavioralTests.cs`
+- [ ] class `TestClass` in `Infrastructure\Services\SemanticPatternEngineServiceBehavioralTests.cs`
+  - [ ] Method `TestMethod() : void`
+  - [ ] Method `TestMethod() : void`
+  - [ ] Method `TestMethod() : void`
+  - [ ] Method `AddSelfRegisteredExtensions(this global::Microsoft.Testing.Platform.Builder.ITestApplicationBuilder builder, string[] args) : void`
+  - [ ] Method `Main(string[] args) : int`

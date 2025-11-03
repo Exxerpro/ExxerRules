@@ -9,7 +9,7 @@ namespace IndFusion.SemanticRag.Tests.Unit.Domain.ValueObjects;
 /// </summary>
 public class EmbeddingVectorTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateEmbeddingVector_When_ValidValuesProvided()
     {
         // Arrange
@@ -23,7 +23,7 @@ public class EmbeddingVectorTests
         vector.Dimensions.ShouldBe(3);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateSuccessfully_When_ValidVector()
     {
         // Arrange
@@ -37,7 +37,7 @@ public class EmbeddingVectorTests
         result.IsFailure.ShouldBeFalse();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_ValuesIsNull()
     {
         // Arrange
@@ -51,7 +51,7 @@ public class EmbeddingVectorTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_ValuesIsEmpty()
     {
         // Arrange
@@ -65,7 +65,7 @@ public class EmbeddingVectorTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_ValuesExceedsMaxDimensions()
     {
         // Arrange
@@ -80,7 +80,7 @@ public class EmbeddingVectorTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_ValuesContainsNaN()
     {
         // Arrange
@@ -95,7 +95,7 @@ public class EmbeddingVectorTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_ValuesContainsInfinity()
     {
         // Arrange
@@ -110,7 +110,7 @@ public class EmbeddingVectorTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateSuccessfully_When_ValidValuesProvided()
     {
         // Arrange
@@ -125,7 +125,7 @@ public class EmbeddingVectorTests
         result.Value.Values.ShouldBe(values);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateSuccessfully_When_ValidArrayProvided()
     {
         // Arrange
@@ -140,7 +140,7 @@ public class EmbeddingVectorTests
         result.Value.Values.ShouldBe(values);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateFailure_When_InvalidValuesProvided()
     {
         // Arrange
@@ -154,7 +154,7 @@ public class EmbeddingVectorTests
         result.Error!.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateMagnitude_When_ValidVector()
     {
         // Arrange
@@ -167,7 +167,7 @@ public class EmbeddingVectorTests
         magnitude.ShouldBe(5.0f, 0.001f); // 3^2 + 4^2 = 25, sqrt(25) = 5
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateMagnitude_When_ZeroVector()
     {
         // Arrange
@@ -180,7 +180,7 @@ public class EmbeddingVectorTests
         magnitude.ShouldBe(0.0f);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_NormalizeVector_When_ValidVector()
     {
         // Arrange
@@ -195,7 +195,7 @@ public class EmbeddingVectorTests
         normalized.Values[1].ShouldBe(0.8f, 0.001f); // 4/5
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnOriginalVector_When_NormalizingZeroVector()
     {
         // Arrange
@@ -208,7 +208,7 @@ public class EmbeddingVectorTests
         normalized.ShouldBe(vector);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateDotProduct_When_ValidVectors()
     {
         // Arrange
@@ -222,7 +222,7 @@ public class EmbeddingVectorTests
         dotProduct.ShouldBe(32.0f); // 1*4 + 2*5 + 3*6 = 4 + 10 + 18 = 32
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_DotProductWithNullVector()
     {
         // Arrange
@@ -232,7 +232,7 @@ public class EmbeddingVectorTests
         Should.Throw<ArgumentNullException>(() => vector.DotProduct(null!));
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_DotProductWithDifferentDimensions()
     {
         // Arrange
@@ -243,7 +243,7 @@ public class EmbeddingVectorTests
         Should.Throw<ArgumentException>(() => vector1.DotProduct(vector2));
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateCosineSimilarity_When_ValidVectors()
     {
         // Arrange
@@ -257,7 +257,7 @@ public class EmbeddingVectorTests
         similarity.ShouldBe(0.0f, 0.001f); // Perpendicular vectors have 0 similarity
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateCosineSimilarity_When_IdenticalVectors()
     {
         // Arrange
@@ -271,7 +271,7 @@ public class EmbeddingVectorTests
         similarity.ShouldBe(1.0f, 0.001f); // Identical vectors have similarity 1
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateCosineSimilarity_When_ZeroVectors()
     {
         // Arrange
@@ -285,7 +285,7 @@ public class EmbeddingVectorTests
         similarity.ShouldBe(0.0f); // Zero vector has 0 similarity with any vector
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_CosineSimilarityWithNullVector()
     {
         // Arrange
@@ -295,7 +295,7 @@ public class EmbeddingVectorTests
         Should.Throw<ArgumentNullException>(() => vector.CosineSimilarity(null!));
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_CosineSimilarityWithDifferentDimensions()
     {
         // Arrange
@@ -306,7 +306,7 @@ public class EmbeddingVectorTests
         Should.Throw<ArgumentException>(() => vector1.CosineSimilarity(vector2));
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateEuclideanDistance_When_ValidVectors()
     {
         // Arrange
@@ -320,7 +320,7 @@ public class EmbeddingVectorTests
         distance.ShouldBe(5.0f, 0.001f); // sqrt((3-0)^2 + (4-0)^2) = sqrt(9+16) = 5
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CalculateEuclideanDistance_When_IdenticalVectors()
     {
         // Arrange
@@ -334,7 +334,7 @@ public class EmbeddingVectorTests
         distance.ShouldBe(0.0f, 0.001f); // Identical vectors have distance 0
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_EuclideanDistanceWithNullVector()
     {
         // Arrange
@@ -344,7 +344,7 @@ public class EmbeddingVectorTests
         Should.Throw<ArgumentNullException>(() => vector.EuclideanDistance(null!));
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ThrowException_When_EuclideanDistanceWithDifferentDimensions()
     {
         // Arrange
@@ -355,7 +355,7 @@ public class EmbeddingVectorTests
         Should.Throw<ArgumentException>(() => vector1.EuclideanDistance(vector2));
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ImplicitlyConvertToFloatArray()
     {
         // Arrange
@@ -368,7 +368,7 @@ public class EmbeddingVectorTests
         array.ShouldBe(new float[] { 1.0f, 2.0f, 3.0f });
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnStringRepresentation_When_ToStringCalled()
     {
         // Arrange
@@ -383,7 +383,7 @@ public class EmbeddingVectorTests
         result.ShouldContain("...");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnStringRepresentation_When_ShortVector()
     {
         // Arrange

@@ -48,7 +48,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		return new Neo4jGraphDatabaseAdapter(_driver, _options, _logger);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter validates before calling Neo4j
@@ -58,7 +58,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadAsync_WithEmptyCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -68,7 +68,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -78,7 +78,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteAsync_WithEmptyCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -88,7 +88,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadSingleAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -98,7 +98,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteSingleAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -108,7 +108,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadVoidAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -118,7 +118,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteVoidAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -128,7 +128,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		AssertResultFailure(result, ErrorCodes.ParameterNullOrWhitespace);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling
@@ -141,7 +141,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		result.ShouldBeCancelled();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling
@@ -154,7 +154,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		result.ShouldBeCancelled();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadSingleAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling
@@ -167,7 +167,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		result.ShouldBeCancelled();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteSingleAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling
@@ -180,7 +180,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		result.ShouldBeCancelled();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadVoidAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling
@@ -193,7 +193,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
 		result.ShouldBeCancelled();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteVoidAsync_WithCancellation_ShouldReturnCancelled()
 	{
 		// ✅ TDD: Test cancellation handling

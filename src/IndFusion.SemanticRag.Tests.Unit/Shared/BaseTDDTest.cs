@@ -1,7 +1,10 @@
 using System;
+using IndFusion.SemanticRag.Tests.Unit.Helpers;
 using IndQuestResults;
 using Microsoft.Extensions.Logging;
 using Shouldly;
+using Xunit;
+using Meziantou.Extensions.Logging.Xunit.v3;
 
 namespace IndFusion.SemanticRag.Tests.Unit.Shared;
 
@@ -13,12 +16,15 @@ namespace IndFusion.SemanticRag.Tests.Unit.Shared;
 public abstract class BaseTDDTest<TImplementation>
     where TImplementation : class
 {
+    private readonly ITestOutputHelper? _output;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="BaseTDDTest{TImplementation}"/> class.
-    /// Calls SetUp() to initialize the implementation instance.
     /// </summary>
-    protected BaseTDDTest()
+    /// <param name="output">Optional test output helper for logging. If provided, enables Meziantou XUnit logger.</param>
+    protected BaseTDDTest(ITestOutputHelper? output = null)
     {
+        _output = output;
         SetUp();
     }
 
@@ -28,17 +34,24 @@ public abstract class BaseTDDTest<TImplementation>
     protected TImplementation Implementation { get; private set; } = null!;
 
     /// <summary>
-    /// Gets the logger instance (can be mocked).
+    /// Gets the logger instance using Meziantou XUnit logger if output is available, otherwise NullLogger.
     /// </summary>
     protected ILogger<TImplementation> Logger { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the SUT tracer instance for method entry/exit logging with correlation IDs.
+    /// </summary>
+    protected SUTTracer Tracer { get; private set; } = null!;
 
     /// <summary>
     /// Initializes test setup. Override this method to customize setup.
     /// </summary>
     protected virtual void SetUp()
     {
-        Implementation = CreateImplementation();
+        // Create logger first so it's available in CreateImplementation()
         Logger = CreateLogger();
+        Tracer = new SUTTracer(_output); // ✅ Phase 2.3: Integrate SUTTracer for method tracing
+        Implementation = CreateImplementation();
     }
 
     /// <summary>
@@ -48,12 +61,20 @@ public abstract class BaseTDDTest<TImplementation>
     protected abstract TImplementation CreateImplementation();
 
     /// <summary>
-    /// Creates a logger instance. Override to provide custom logger creation.
+    /// Creates a logger instance using Meziantou XUnit logger if output is available, otherwise NullLogger.
+    /// Override to provide custom logger creation.
     /// </summary>
     /// <returns>The logger instance.</returns>
     protected virtual ILogger<TImplementation> CreateLogger()
     {
-        // Default implementation - can be overridden
+        // ✅ Use Meziantou XUnit logger if output is available (per project standards)
+        // See: docs/Tasks/Task(Replace ILogger with Meziantou Xunit Logger).md
+        if (_output != null)
+        {
+            return XUnitLogger.CreateLogger<TImplementation>(_output);
+        }
+        
+        // Fallback to NullLogger if no output helper is provided
         return Microsoft.Extensions.Logging.Abstractions.NullLogger<TImplementation>.Instance;
     }
 

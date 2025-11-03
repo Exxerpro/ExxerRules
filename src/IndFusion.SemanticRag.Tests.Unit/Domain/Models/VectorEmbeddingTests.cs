@@ -11,7 +11,7 @@ namespace IndFusion.SemanticRag.Tests.Unit.Domain.Models;
 /// </summary>
 public class VectorEmbeddingTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateValidVectorEmbedding_When_AllParametersAreValid()
     {
         // ✅ Use fluent builder from TestDataBuilders
@@ -30,7 +30,7 @@ public class VectorEmbeddingTests
         vector.Dimension.ShouldBe(3);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateSuccessfully_When_VectorIsValid()
     {
         // ✅ Use fluent builder from TestDataBuilders
@@ -49,7 +49,7 @@ public class VectorEmbeddingTests
         result.Error.ShouldBeNull();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("", "content")]
     [InlineData("   ", "content")]
     [InlineData(null, "content")]
@@ -71,7 +71,7 @@ public class VectorEmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("id", "")]
     [InlineData("id", "   ")]
     [InlineData("id", null)]
@@ -93,7 +93,7 @@ public class VectorEmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_EmbeddingIsEmpty()
     {
         // Arrange
@@ -112,7 +112,7 @@ public class VectorEmbeddingTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_MetadataIsNull()
     {
         // Arrange

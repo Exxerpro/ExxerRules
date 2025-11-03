@@ -17,15 +17,17 @@ using IndFusion.Analyzers.Testing;
 namespace IndFusion.Analyzers;
 
 /// <summary>
-/// Main analyzer that registers all IndFusion analyzers.
-/// This is the entry point for the analyzer package.
+/// Coordinates registration of every diagnostics analyzer shipped in the IndFusion suite so the compiler loads a single entry point.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class IndFusionAnalyzer : DiagnosticAnalyzer
 {
     /// <summary>
-    /// Gets all supported diagnostics from all analyzers.
+    /// Gets the complete catalog of diagnostics exposed by the composed analyzers.
     /// </summary>
+    /// <value>
+    /// An immutable array that aggregates the <see cref="DiagnosticDescriptor"/> instances from each analyzer registered by this package.
+    /// </value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics
     {
         get
@@ -85,8 +87,13 @@ public class IndFusionAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Initializes the analyzer by registering all individual analyzers.
+    /// Initializes the analyzer by delegating <paramref name="context"/> setup to each constituent analyzer instance.
     /// </summary>
+    /// <param name="context">The Roslyn analysis context responsible for registering actions and configuring execution.</param>
+    /// <remarks>
+    /// Generated code is excluded and concurrent execution is enabled before dispatching initialization to every analyzer in the suite,
+    /// ensuring consistent configuration across all diagnostics.
+    /// </remarks>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);

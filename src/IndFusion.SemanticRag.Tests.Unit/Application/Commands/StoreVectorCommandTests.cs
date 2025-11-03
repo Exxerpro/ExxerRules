@@ -27,7 +27,7 @@ public class StoreVectorCommandTests
         _handler = new StoreVectorCommandHandler(_vectorSearchPort, _logger);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Should_StoreVectorSuccessfully_When_VectorIsValid()
     {
         // ✅ Use factory builder with railway pattern
@@ -54,7 +54,7 @@ public class StoreVectorCommandTests
         await _vectorSearchPort.Received(1).IndexAsync(vector, Arg.Any<CancellationToken>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Should_ReturnFailure_When_VectorValidationFails()
     {
         // ✅ Use factory builder - should return failure for invalid input
@@ -87,7 +87,7 @@ public class StoreVectorCommandTests
         await _vectorSearchPort.DidNotReceive().IndexAsync(Arg.Any<VectorEmbedding>(), Arg.Any<CancellationToken>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Should_ReturnFailure_When_VectorSearchPortFails()
     {
         // ✅ Use factory builder with railway pattern
@@ -112,7 +112,7 @@ public class StoreVectorCommandTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Should_HandleException_When_UnexpectedErrorOccurs()
     {
         // ✅ Use factory builder with railway pattern
@@ -137,7 +137,7 @@ public class StoreVectorCommandTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Should_LogInformation_When_VectorIsStoredSuccessfully()
     {
         // ✅ Use factory builder with railway pattern

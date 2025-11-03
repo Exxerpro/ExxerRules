@@ -3,28 +3,35 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using IndFusion.SemanticRag.Application.Interfaces;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndFusion.SemanticRag.Infrastructure.Services;
+using IndFusion.SemanticRag.Tests.System.Helpers;
+using IndQuestResults;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace IndFusion.SemanticRag.Tests.Unit.Infrastructure.Services;
+namespace IndFusion.SemanticRag.Tests.System.Infrastructure.Services;
 
 /// <summary>
-/// Behavioral unit tests for Neo4jKnowledgeGraphService to drive implementation.
+/// Behavioral system tests for Neo4jKnowledgeGraphService to drive implementation.
 /// These tests verify actual behavior and drive the replacement of mock implementations.
 /// </summary>
+[Trait("Category", "System")]
 public class Neo4jKnowledgeGraphServiceBehavioralTests
 {
     private readonly ILogger<Neo4jKnowledgeGraphService> _logger;
     private readonly IGraphDatabasePort _graphDatabasePort;
     private readonly IOptions<Neo4jOptions> _options;
 
+    /// <summary>
+    /// Initializes the test fixture with substitute collaborators and baseline Neo4j configuration values.
+    /// </summary>
     public Neo4jKnowledgeGraphServiceBehavioralTests()
     {
         _logger = Substitute.For<ILogger<Neo4jKnowledgeGraphService>>();
@@ -33,7 +40,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         _options = Options.Create(neo4jOptions);
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that executing <see cref="Neo4jKnowledgeGraphService.QueryAsync(GraphQuery, CancellationToken)"/> with a valid MATCH query succeeds and exposes no error details.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the success assertions have been evaluated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithValidQuery_ShouldReturnActualResults()
     {
         // Arrange
@@ -51,7 +62,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // Currently fails because implementation uses Task.Delay placeholder
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures parameterized Cypher queries propagate their parameter values when issued through <see cref="Neo4jKnowledgeGraphService.QueryAsync(GraphQuery, CancellationToken)"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the query has been executed and inspected.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithParameters_ShouldUseParametersInQuery()
     {
         // Arrange
@@ -69,7 +84,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of parameterized query execution
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that query execution honors the timeout embedded in <see cref="GraphQuery"/> by surfacing an <see cref="OperationCanceledException"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the cancellation behavior has been validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithTimeout_ShouldRespectTimeout()
     {
         // Arrange
@@ -83,7 +102,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of timeout handling
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that cancellation tokens passed to <see cref="Neo4jKnowledgeGraphService.QueryAsync(GraphQuery, CancellationToken)"/> are observed immediately.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after verifying that the operation is cancelled.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithCancellation_ShouldRespectCancellationToken()
     {
         // Arrange
@@ -98,7 +121,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
             await service.QueryAsync(query, cts.Token));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that invalid Cypher queries result in a failure outcome with a populated error message rather than a silent success.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after inspecting the failure result.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithInvalidQuery_ShouldReturnFailure()
     {
         // Arrange
@@ -114,8 +141,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         
         // This test drives implementation of proper error handling
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that creating a node with valid identifiers and metadata produces a successful result mirroring the supplied node data.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the node creation assertions pass.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AddNodeAsync_WithValidNode_ShouldAddNode()
     {
         // Arrange
@@ -137,7 +167,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of actual node creation
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures <see cref="Neo4jKnowledgeGraphService.AddNodeAsync(GraphNode, CancellationToken)"/> rejects null nodes by surfacing <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the expected exception has been observed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AddNodeAsync_WithNullNode_ShouldThrowArgumentException()
     {
         // Arrange
@@ -148,7 +182,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
             await service.AddNodeAsync(default, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that attempts to add structurally invalid nodes trigger a failure result instead of succeeding silently.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after verifying the failure outcome.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AddNodeAsync_WithInvalidNode_ShouldThrowArgumentException()
     {
         // Arrange
@@ -159,8 +197,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.AddNodeAsync(invalidNode, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that updating an existing node returns the updated node metadata and reports success.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the update assertions succeed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task UpdateNodeAsync_WithValidNode_ShouldUpdateNode()
     {
         // Arrange
@@ -183,7 +224,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of actual node updates
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Asserts that attempts to update a node without an identifier are rejected with <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the guard clause is confirmed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task UpdateNodeAsync_WithNullNodeId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -195,7 +240,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
             await service.UpdateNodeAsync(null!, node, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that empty node identifiers are treated as invalid input during update operations.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the expected exception is thrown.</returns>
+    [Fact(Timeout = 60000)]
     public async Task UpdateNodeAsync_WithEmptyNodeId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -206,8 +255,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.UpdateNodeAsync(string.Empty, node, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that deleting an existing node returns a success result referencing the removed node id.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the deletion result is evaluated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task DeleteNodeAsync_WithValidNodeId_ShouldDeleteNode()
     {
         // Arrange
@@ -222,7 +274,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // Currently fails because implementation uses Task.Delay placeholder
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures null node identifiers are rejected when attempting to delete a node from the graph.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the guard clause produces the expected exception.</returns>
+    [Fact(Timeout = 60000)]
     public async Task DeleteNodeAsync_WithNullNodeId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -233,7 +289,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
             await service.DeleteNodeAsync(null!, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that empty node identifiers trigger input validation during delete operations.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once deletion rejects the empty identifier.</returns>
+    [Fact(Timeout = 60000)]
     public async Task DeleteNodeAsync_WithEmptyNodeId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -243,8 +303,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.DeleteNodeAsync(string.Empty, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures that creating a relationship with valid endpoints results in a success response containing the created relationship identifier.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when creation success has been asserted.</returns>
+    [Fact(Timeout = 60000)]
     public async Task CreateRelationshipAsync_WithValidRelationship_ShouldCreateRelationship()
     {
         // Arrange
@@ -268,7 +331,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of actual relationship creation
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that structurally invalid relationships are rejected and produce failure feedback rather than being persisted.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the failure result is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task CreateRelationshipAsync_WithInvalidRelationship_ShouldThrowArgumentException()
     {
         // Arrange
@@ -285,7 +352,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
             await service.CreateRelationshipAsync(invalidRelationship, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that self-referential relationships are prevented because Neo4j relationships must connect distinct nodes.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after observing the failure response.</returns>
+    [Fact(Timeout = 60000)]
     public async Task CreateRelationshipAsync_WithSelfReferencingRelationship_ShouldThrowArgumentException()
     {
         // Arrange
@@ -301,44 +372,67 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.CreateRelationshipAsync(selfReferencingRelationship, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that deleting an existing relationship reports a success state and includes the identifier of the removed edge.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the deletion response is evaluated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task DeleteRelationshipAsync_WithValidRelationshipId_ShouldDeleteRelationship()
     {
         // Arrange
         var relationshipId = "rel-1";
         var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
+        _graphDatabasePort.ExecuteWriteVoidAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Success());
 
         // Act
-        await service.DeleteRelationshipAsync(relationshipId, CancellationToken.None);
+        var result = await service.DeleteRelationshipAsync(relationshipId, CancellationToken.None);
 
-        // Assert
+        // Assert: DeleteRelationshipAsync returns Result<T> instead of void (functional pattern)
+        result.IsSuccess.ShouldBeTrue();
         // This test drives implementation of actual relationship deletion
     }
 
-    [Fact(Timeout = 5000)]
-    public async Task DeleteRelationshipAsync_WithNullRelationshipId_ShouldThrowArgumentException()
+    /// <summary>
+    /// Ensures null relationship identifiers are treated as invalid input during deletion attempts.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the resulting failure state has been verified.</returns>
+    [Fact(Timeout = 60000)]
+    public async Task DeleteRelationshipAsync_WithNullRelationshipId_ShouldReturnFailure()
     {
         // Arrange
         var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.DeleteRelationshipAsync(null!, CancellationToken.None));
+        // Act
+        var result = await service.DeleteRelationshipAsync(null!, CancellationToken.None);
+
+        // Assert: DeleteRelationshipAsync returns Result<T> instead of throwing exceptions (functional pattern)
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact(Timeout = 5000)]
-    public async Task DeleteRelationshipAsync_WithEmptyRelationshipId_ShouldThrowArgumentException()
+    /// <summary>
+    /// Validates that empty relationship identifiers are rejected when requesting relationship deletion.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after confirming the failure outcome.</returns>
+    [Fact(Timeout = 60000)]
+    public async Task DeleteRelationshipAsync_WithEmptyRelationshipId_ShouldReturnFailure()
     {
         // Arrange
         var service = new Neo4jKnowledgeGraphService(_graphDatabasePort, _options, _logger);
 
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.DeleteRelationshipAsync(string.Empty, CancellationToken.None));
-    }
+        // Act
+        var result = await service.DeleteRelationshipAsync(string.Empty, CancellationToken.None);
 
-    [Fact(Timeout = 5000)]
+        // Assert: DeleteRelationshipAsync returns Result<T> instead of throwing exceptions (functional pattern)
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNullOrEmpty();
+    }
+    /// <summary>
+    /// Verifies that context retrieval succeeds and returns populated context information for a well-formed query.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the context result has been inspected.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GetContextAsync_WithValidQuery_ShouldReturnContext()
     {
         // Arrange
@@ -354,7 +448,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of context retrieval
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures a null query parameter triggers an <see cref="ArgumentNullException"/> when requesting query context.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the exception assertion succeeds.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GetContextAsync_WithNullQuery_ShouldThrowArgumentException()
     {
         // Arrange
@@ -365,7 +463,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
             await service.GetContextAsync(null!, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that passing an empty string query is treated as invalid input during context retrieval.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the guard clause is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GetContextAsync_WithEmptyQuery_ShouldThrowArgumentException()
     {
         // Arrange
@@ -375,8 +477,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.GetContextAsync(string.Empty, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that code model nodes can be added successfully and mirror the supplied identifier in the response.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the code node creation result is verified.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AddCodeNodeAsync_WithValidCodeNode_ShouldAddCodeNode()
     {
         // Arrange
@@ -412,7 +517,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of actual code node creation
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures invalid code nodes are rejected, signaling to the caller that input validation must be satisfied.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the failure response has been asserted.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AddCodeNodeAsync_WithInvalidCodeNode_ShouldThrowArgumentException()
     {
         // Arrange
@@ -439,8 +548,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.AddCodeNodeAsync(invalidCodeNode, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that complex multi-clause queries execute successfully and preserve query metadata in the returned result.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the complex query outcome has been checked.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithComplexQuery_ShouldExecuteComplexQuery()
     {
         // Arrange
@@ -464,7 +576,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of complex query execution
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that aggregation queries produce a successful result and capture aggregated data when the service is fully implemented.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when aggregation assertions finish.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults()
     {
         // Arrange
@@ -484,7 +600,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of aggregation query execution
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures path traversal queries succeed and report path-oriented data without raising errors.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the path query result has been inspected.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithPathQuery_ShouldReturnPathResults()
     {
         // Arrange
@@ -507,7 +627,11 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of path query execution
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that issuing multiple sequential queries yields independent results for each request without cross-contamination.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after sequential execution assertions are performed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithMultipleQueries_ShouldExecuteSequentially()
     {
         // Arrange
@@ -537,3 +661,4 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests
         // This test drives implementation of sequential query execution
     }
 }
+

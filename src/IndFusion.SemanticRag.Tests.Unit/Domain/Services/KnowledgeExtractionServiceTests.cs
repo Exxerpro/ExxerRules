@@ -28,7 +28,7 @@ public class KnowledgeExtractionServiceTests
         _logger = Substitute.For<ILogger<IKnowledgeGraphServicePort>>();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_CreateEntityAsync_Should_Create_Entity_With_Properties()
     {
         // ✅ Use fluent builder from TestDataBuilders with custom properties
@@ -64,7 +64,7 @@ public class KnowledgeExtractionServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_CreateRelationshipAsync_Should_Create_Relationship_With_Properties()
     {
         // ✅ Use fluent builder from TestDataBuilders with custom properties
@@ -99,7 +99,7 @@ public class KnowledgeExtractionServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_SearchEntitiesAsync_Should_Filter_By_Properties()
     {
         // Arrange
@@ -139,7 +139,7 @@ public class KnowledgeExtractionServiceTests
         result.Value.All(e => e.Properties.ContainsKey("department") && e.Properties["department"].ToString() == "Engineering").ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_SearchRelationshipsAsync_Should_Filter_By_Properties()
     {
         // Arrange
@@ -174,7 +174,7 @@ public class KnowledgeExtractionServiceTests
         result.Value.All(r => r.Properties.ContainsKey("department") && r.Properties["department"].ToString() == "Engineering").ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_FindConnectedEntitiesAsync_Should_Return_Connected_Entities_With_Depth()
     {
         // Arrange
@@ -202,7 +202,7 @@ public class KnowledgeExtractionServiceTests
         result.Value.Count.ShouldBe(4);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_FindPathsAsync_Should_Return_Paths_Between_Entities()
     {
         // Arrange
@@ -242,7 +242,7 @@ public class KnowledgeExtractionServiceTests
         result.Value[0].Relationships.Count().ShouldBe(2);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_GetStatisticsAsync_Should_Return_Detailed_Statistics()
     {
         // Arrange
@@ -282,7 +282,7 @@ public class KnowledgeExtractionServiceTests
         result.Value.RelationshipTypes["WORKS_FOR"].ShouldBe(800);
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("Person", 0)]
     [InlineData("Organization", 5)]
     [InlineData("Location", 10)]
@@ -313,7 +313,7 @@ public class KnowledgeExtractionServiceTests
         result.Value.Count.ShouldBeLessThanOrEqualTo(limit);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_GetEntityAsync_Should_Return_Entity_When_Found()
     {
         // ✅ Use fluent builder from TestDataBuilders
@@ -347,7 +347,7 @@ public class KnowledgeExtractionServiceTests
         result.Value.Properties["test"].ShouldBe(true);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_GetEntityAsync_Should_Return_Failure_When_Not_Found()
     {
         // Arrange

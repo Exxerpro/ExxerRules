@@ -30,7 +30,7 @@ public class SimpleMediatorTests
     /// Send_WithValidCommand_ShouldCallHandler.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Send_WithValidCommand_ShouldCallHandler()
     {
         // Arrange
@@ -54,7 +54,7 @@ public class SimpleMediatorTests
     /// Send_WithNullCommand_ShouldReturnFailure.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Send_WithNullCommand_ShouldReturnFailure()
     {
         // Act
@@ -69,7 +69,7 @@ public class SimpleMediatorTests
     /// Send_WithNoHandler_ShouldReturnFailure.
     /// </summary>
     /// <returns>A task representing the asynchronous operation.</returns>
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task Send_WithNoHandler_ShouldReturnFailure()
     {
         // Arrange

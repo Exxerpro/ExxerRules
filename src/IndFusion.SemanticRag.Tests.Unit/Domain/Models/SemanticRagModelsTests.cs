@@ -15,7 +15,7 @@ public class SemanticRagModelsTests
 {
     public class SemanticDocumentTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public void Should_CreateSemanticDocument_When_ValidParametersProvided()
         {
             // Arrange
@@ -47,7 +47,7 @@ public class SemanticRagModelsTests
 
     public class KnowledgeEntityTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public void Should_CreateKnowledgeEntity_When_ValidParametersProvided()
         {
             // Arrange
@@ -82,7 +82,7 @@ public class SemanticRagModelsTests
 
     public class KnowledgeRelationshipTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public void Should_CreateKnowledgeRelationship_When_ValidParametersProvided()
         {
             // Arrange
@@ -118,7 +118,7 @@ public class SemanticRagModelsTests
 
     public class SemanticSearchResultTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public void Should_CreateSemanticSearchResult_When_ValidParametersProvided()
         {
             // Arrange
@@ -156,7 +156,7 @@ public class SemanticRagModelsTests
 
     public class SemanticContextTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public void Should_CreateSemanticContext_When_ValidParametersProvided()
         {
             // Arrange
@@ -195,7 +195,7 @@ public class SemanticRagModelsTests
 
     public class SemanticRagConfigTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public void Should_CreateSemanticRagConfig_When_ValidParametersProvided()
         {
             // Arrange

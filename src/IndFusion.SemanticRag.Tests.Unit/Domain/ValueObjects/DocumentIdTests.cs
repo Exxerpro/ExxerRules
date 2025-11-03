@@ -9,7 +9,7 @@ namespace IndFusion.SemanticRag.Tests.Unit.Domain.ValueObjects;
 /// </summary>
 public class DocumentIdTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateDocumentId_When_ValidValueProvided()
     {
         // Arrange
@@ -22,7 +22,7 @@ public class DocumentIdTests
         documentId.Value.ShouldBe(value);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateSuccessfully_When_ValidDocumentId()
     {
         // Arrange
@@ -36,7 +36,7 @@ public class DocumentIdTests
         result.IsFailure.ShouldBeFalse();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
@@ -53,7 +53,7 @@ public class DocumentIdTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_ValueExceedsMaxLength()
     {
         // Arrange
@@ -68,7 +68,7 @@ public class DocumentIdTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("doc@123")] // Contains @
     [InlineData("doc#123")] // Contains #
     [InlineData("doc$123")] // Contains $
@@ -89,7 +89,7 @@ public class DocumentIdTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("doc-123")]
     [InlineData("doc_123")]
     [InlineData("doc.123")]
@@ -109,7 +109,7 @@ public class DocumentIdTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateSuccessfully_When_ValidValueProvided()
     {
         // Arrange
@@ -124,7 +124,7 @@ public class DocumentIdTests
         result.Value.Value.ShouldBe(value);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateFailure_When_InvalidValueProvided()
     {
         // Arrange
@@ -138,7 +138,7 @@ public class DocumentIdTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ImplicitlyConvertToString()
     {
         // Arrange
@@ -151,7 +151,7 @@ public class DocumentIdTests
         value.ShouldBe("doc-123");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnStringValue_When_ToStringCalled()
     {
         // Arrange
@@ -164,7 +164,7 @@ public class DocumentIdTests
         result.ShouldBe("doc-123");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_BeEqual_When_SameValue()
     {
         // Arrange
@@ -177,7 +177,7 @@ public class DocumentIdTests
         (documentId1 != documentId2).ShouldBeFalse();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_NotBeEqual_When_DifferentValue()
     {
         // Arrange

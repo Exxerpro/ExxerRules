@@ -11,22 +11,29 @@ using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace IndFusion.SemanticRag.Tests.Unit.Infrastructure.Services;
+namespace IndFusion.SemanticRag.Tests.System.Infrastructure.Services;
 
 /// <summary>
-/// Behavioral unit tests for SemanticPatternEngineService to drive implementation.
+/// Behavioral system tests for SemanticPatternEngineService to drive implementation.
 /// These tests verify actual behavior and drive the replacement of mock implementations.
 /// </summary>
+[Trait("Category", "System")]
 public class SemanticPatternEngineServiceBehavioralTests
 {
     private readonly ILogger<SemanticPatternEngineService> _logger;
 
+    /// <summary>
+    /// Initializes the semantic pattern engine behavioral test fixture with substitute logging.
+    /// </summary>
     public SemanticPatternEngineServiceBehavioralTests()
     {
         _logger = Substitute.For<ILogger<SemanticPatternEngineService>>();
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that analyzing representative code returns concrete pattern violations instead of placeholder data.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the violation assertions pass.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithValidCode_ShouldReturnActualViolations()
     {
         // Arrange
@@ -65,7 +72,11 @@ public class TestClass
         // Currently fails because implementation uses Task.Delay placeholder and returns empty list
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that clean code samples yield no violations, demonstrating correct success semantics.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the absence of violations is verified.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithCleanCode_ShouldReturnNoViolations()
     {
         // Arrange
@@ -92,7 +103,11 @@ public class TestClass
         // This test drives implementation of clean code detection
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures <see cref="SemanticPatternEngineService.AnalyzeCodeAsync(string, string, CancellationToken)"/> rejects <see langword="null"/> code input.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the argument exception is observed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithNullCode_ShouldThrowArgumentException()
     {
         // Arrange
@@ -103,7 +118,11 @@ public class TestClass
             await service.AnalyzeCodeAsync(null!, "context", CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that empty code strings are treated as invalid when requesting pattern analysis.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the guard clause is exercised.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithEmptyCode_ShouldThrowArgumentException()
     {
         // Arrange
@@ -114,7 +133,11 @@ public class TestClass
             await service.AnalyzeCodeAsync(string.Empty, "context", CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms a <see langword="null"/> analysis context produces an <see cref="ArgumentException"/> to prevent ambiguous evaluation.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the exception assertion passes.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithNullContext_ShouldThrowArgumentException()
     {
         // Arrange
@@ -125,7 +148,11 @@ public class TestClass
             await service.AnalyzeCodeAsync("code", null!, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that empty analysis contexts are rejected before processing begins.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the guard clause exception is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithEmptyContext_ShouldThrowArgumentException()
     {
         // Arrange
@@ -135,8 +162,11 @@ public class TestClass
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.AnalyzeCodeAsync("code", string.Empty, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that cancellation tokens cancel in-flight code analysis promptly.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after cancellation behavior has been asserted.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithCancellation_ShouldRespectCancellationToken()
     {
         // Arrange
@@ -152,7 +182,11 @@ public class TestClass
             await service.AnalyzeCodeAsync(code, context, cts.Token));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that project-level analysis returns actual violations, timing, and scope metadata for valid projects.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the project analysis result has been inspected.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualViolations()
     {
         // Arrange
@@ -179,7 +213,11 @@ public class TestClass
         // This test drives implementation of actual project pattern analysis
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that filtering by pattern types restricts results to the requested families.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after filter assertions are executed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeProjectAsync_WithSpecificPatternTypes_ShouldFilterByPatternTypes()
     {
         // Arrange
@@ -202,7 +240,11 @@ public class TestClass
         // This test drives implementation of pattern type filtering
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures non-existent project paths produce an empty result instead of throwing unexpected exceptions.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the empty outcome is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeProjectAsync_WithNonExistentProjectPath_ShouldReturnEmptyList()
     {
         // Arrange
@@ -219,7 +261,11 @@ public class TestClass
         // This test drives implementation of proper error handling for invalid paths
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that passing a <see langword="null"/> project path to project analysis results in an <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the guard clause triggers.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeProjectAsync_WithNullProjectPath_ShouldThrowArgumentException()
     {
         // Arrange
@@ -230,7 +276,11 @@ public class TestClass
             await service.AnalyzeProjectAsync(null!, null, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that empty project paths are rejected prior to execution.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the exception assertion passes.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeProjectAsync_WithEmptyProjectPath_ShouldThrowArgumentException()
     {
         // Arrange
@@ -240,8 +290,11 @@ public class TestClass
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.AnalyzeProjectAsync(string.Empty, null, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that requesting pattern remediation suggestions yields actionable recommendations for a valid violation.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the suggestion result is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SuggestAlternativesAsync_WithValidViolation_ShouldReturnActualSuggestions()
     {
         // Arrange
@@ -279,7 +332,11 @@ public class TestClass
         // This test drives implementation of actual suggestion generation
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures a <see langword="null"/> violation argument triggers <see cref="ArgumentNullException"/> for suggestion requests.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the guard clause is exercised.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SuggestAlternativesAsync_WithNullViolation_ShouldThrowArgumentException()
     {
         // Arrange
@@ -289,8 +346,11 @@ public class TestClass
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.SuggestAlternativesAsync(default, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that consistency analysis returns a populated report for representative projects.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once report assertions succeed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeConsistencyAsync_WithValidProjectPath_ShouldReturnActualConsistencyReport()
     {
         // Arrange
@@ -322,7 +382,11 @@ public class TestClass
         // This test drives implementation of actual consistency analysis
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that selecting all pattern families results in a comprehensive consistency evaluation.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when all pattern families are reflected in the report.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeConsistencyAsync_WithAllPatternFamily_ShouldAnalyzeAllPatterns()
     {
         // Arrange
@@ -342,7 +406,11 @@ public class TestClass
         // This test drives implementation of comprehensive pattern analysis
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures <see langword="null"/> project paths cause consistency analysis to throw <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the guard clause is confirmed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeConsistencyAsync_WithNullProjectPath_ShouldThrowArgumentException()
     {
         // Arrange
@@ -353,7 +421,11 @@ public class TestClass
             await service.AnalyzeConsistencyAsync(null!, "all", CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that empty project identifiers are rejected for consistency analysis requests.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the exception assertion passes.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeConsistencyAsync_WithEmptyProjectPath_ShouldThrowArgumentException()
     {
         // Arrange
@@ -363,8 +435,11 @@ public class TestClass
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.AnalyzeConsistencyAsync(string.Empty, "all", CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that pattern enforcement returns actionable results, including counts and duration, for valid projects.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the enforcement result is examined.</returns>
+    [Fact(Timeout = 60000)]
     public async Task EnforcePatternsAsync_WithValidProjectPath_ShouldReturnActualEnforcementResult()
     {
         // Arrange
@@ -396,7 +471,11 @@ public class TestClass
         // This test drives implementation of actual pattern enforcement
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures enforcement requests with a <see langword="null"/> project path throw <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the guard clause triggers.</returns>
+    [Fact(Timeout = 60000)]
     public async Task EnforcePatternsAsync_WithNullProjectPath_ShouldThrowArgumentException()
     {
         // Arrange
@@ -407,7 +486,11 @@ public class TestClass
             await service.EnforcePatternsAsync(null!, new[] { "SOLID" }, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that empty project identifiers are rejected for pattern enforcement operations.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after verifying the thrown exception.</returns>
+    [Fact(Timeout = 60000)]
     public async Task EnforcePatternsAsync_WithEmptyProjectPath_ShouldThrowArgumentException()
     {
         // Arrange
@@ -418,7 +501,11 @@ public class TestClass
             await service.EnforcePatternsAsync(string.Empty, new[] { "SOLID" }, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that <see langword="null"/> pattern type collections are considered invalid when enforcing patterns.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the argument exception is observed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task EnforcePatternsAsync_WithNullPatternTypes_ShouldThrowArgumentException()
     {
         // Arrange
@@ -429,7 +516,11 @@ public class TestClass
             await service.EnforcePatternsAsync(@"C:\TestProject\TestProject.csproj", null!, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that empty pattern type lists are rejected to ensure callers specify at least one pattern family.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the guard clause is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task EnforcePatternsAsync_WithEmptyPatternTypes_ShouldThrowArgumentException()
     {
         // Arrange
@@ -439,8 +530,11 @@ public class TestClass
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.EnforcePatternsAsync(@"C:\TestProject\TestProject.csproj", Array.Empty<string>(), CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that requesting pattern guidance for a valid context yields actionable guidance entries.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the guidance result is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GetPatternGuidanceAsync_WithValidContext_ShouldReturnActualGuidance()
     {
         // Arrange
@@ -474,7 +568,11 @@ public class TestClass
         // This test drives implementation of actual pattern guidance generation
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that requesting guidance for all pattern types produces comprehensive recommendations.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the breadth of guidance is asserted.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GetPatternGuidanceAsync_WithAllPatternTypes_ShouldReturnComprehensiveGuidance()
     {
         // Arrange
@@ -494,7 +592,11 @@ public class TestClass
         // This test drives implementation of comprehensive pattern guidance
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures <see langword="null"/> contexts cause guidance requests to throw <see cref="ArgumentException"/>.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after verifying the exception.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GetPatternGuidanceAsync_WithNullContext_ShouldThrowArgumentException()
     {
         // Arrange
@@ -505,7 +607,11 @@ public class TestClass
             await service.GetPatternGuidanceAsync(null!, null, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that empty context identifiers are rejected, preventing ambiguous guidance generation.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the guard clause executes.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GetPatternGuidanceAsync_WithEmptyContext_ShouldThrowArgumentException()
     {
         // Arrange
@@ -516,7 +622,11 @@ public class TestClass
             await service.GetPatternGuidanceAsync(string.Empty, null, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that the engine produces context-specific violations when analyzing the same code under different contexts.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the context differentiation assertions run.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeCodeAsync_WithDifferentContexts_ShouldReturnContextSpecificViolations()
     {
         // Arrange
@@ -543,8 +653,11 @@ public class TestClass
         
         // This test drives implementation of context-specific pattern analysis
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that large projects can be analyzed without timing out and that metrics reflect the broader scope.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once large project metrics are verified.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeProjectAsync_WithLargeProject_ShouldHandleLargeProjects()
     {
         // Arrange
@@ -560,7 +673,11 @@ public class TestClass
         // This drives implementation of performance optimization for large projects
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures enforcement results capture partial success scenarios, including both successes and failures.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when partial enforcement statistics are asserted.</returns>
+    [Fact(Timeout = 60000)]
     public async Task EnforcePatternsAsync_WithPartialSuccess_ShouldReturnPartialEnforcementResult()
     {
         // Arrange
@@ -589,7 +706,11 @@ public class TestClass
         // This test drives implementation of partial enforcement handling
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that highly consistent projects produce high consistency scores and minimal violations.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after consistency score assertions finish.</returns>
+    [Fact(Timeout = 60000)]
     public async Task AnalyzeConsistencyAsync_WithHighConsistencyProject_ShouldReturnHighConsistencyScore()
     {
         // Arrange

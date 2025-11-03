@@ -7,16 +7,29 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace IndFusion.Analyzers.Async;
 
 /// <summary>
-/// Analyzer that enforces using ConfigureAwait(false) in library code.
-/// Supports the performance and async best practices principles.
+/// Ensures <c>await</c> expressions in library code opt into <c>ConfigureAwait(false)</c> to avoid deadlocks and improve responsiveness.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Gets the localized title describing the ConfigureAwait guideline.
+    /// </summary>
     private static readonly LocalizableString Title = "Use ConfigureAwait(false) in library code";
+
+    /// <summary>
+    /// Gets the localized message format reported when <c>ConfigureAwait(false)</c> is missing.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Await expression should use ConfigureAwait(false) to avoid deadlocks in library code";
+
+    /// <summary>
+    /// Gets the diagnostic description that explains the rationale behind the rule.
+    /// </summary>
     private static readonly LocalizableString Description = "In library code, await expressions should use ConfigureAwait(false) to prevent potential deadlocks when called from synchronous contexts. This improves performance and prevents threading issues.";
 
+    /// <summary>
+    /// The diagnostic descriptor emitted when an await expression omits <c>ConfigureAwait(false)</c>.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.UseConfigureAwaitFalse,
         Title,
@@ -26,10 +39,19 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostic descriptors supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the ConfigureAwait enforcement rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers the syntax callbacks that evaluate await expressions for ConfigureAwait usage.
+    /// </summary>
+    /// <param name="context">The Roslyn analysis context used for action registration.</param>
+    /// <remarks>
+    /// Generated code is excluded and concurrent execution is enabled before scanning <see cref="AwaitExpressionSyntax"/> nodes.
+    /// </remarks>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -39,6 +61,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeAwaitExpression, SyntaxKind.AwaitExpression);
     }
 
+    /// <summary>
+    /// Analyzes await expressions and reports diagnostics when <c>ConfigureAwait(false)</c> is missing outside approved exception scenarios.
+    /// </summary>
+    /// <param name="context">The syntax analysis context supplying the await expression.</param>
     private static void AnalyzeAwaitExpression(SyntaxNodeAnalysisContext context)
     {
         var awaitExpression = (AwaitExpressionSyntax)context.Node;
@@ -111,6 +137,11 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         context.ReportDiagnostic(diagnostic);
     }
 
+    /// <summary>
+    /// Determines whether the await expression belongs to application-level code where ConfigureAwait enforcement is relaxed.
+    /// </summary>
+    /// <param name="awaitExpression">The await expression being analyzed.</param>
+    /// <returns><c>true</c> when class or namespace patterns indicate application code; otherwise, <c>false</c>.</returns>
     private static bool IsApplicationCode(AwaitExpressionSyntax awaitExpression)
     {
         // Check if we're in a class that looks like application code
@@ -144,6 +175,11 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the awaited expression already invokes <c>ConfigureAwait</c>.
+    /// </summary>
+    /// <param name="expression">The expression being awaited.</param>
+    /// <returns><c>true</c> when <c>ConfigureAwait</c> is present; otherwise, <c>false</c>.</returns>
     private static bool HasConfigureAwait(ExpressionSyntax expression)
     {
         // Check for ConfigureAwait method call
@@ -170,6 +206,11 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the containing type or namespace forms part of a boundary layer (e.g., controllers or API endpoints).
+    /// </summary>
+    /// <param name="node">The node whose ancestors are inspected.</param>
+    /// <returns><c>true</c> when the await resides in a boundary layer; otherwise, <c>false</c>.</returns>
     private static bool IsInBoundaryLayer(SyntaxNode node)
     {
         var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -199,6 +240,11 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Checks if the await expression is inside a test method.
     /// </summary>
+    /// <summary>
+    /// Determines whether the await expression executes inside a test method decorated with common unit-testing attributes.
+    /// </summary>
+    /// <param name="awaitExpression">The await expression under inspection.</param>
+    /// <returns><c>true</c> when a test attribute is present; otherwise, <c>false</c>.</returns>
     private static bool IsInTestMethod(AwaitExpressionSyntax awaitExpression)
     {
         var methodDeclaration = awaitExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
@@ -237,8 +283,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     #region Story 1.2: Exempt Test Helper Methods
 
     /// <summary>
-    /// Checks if the await expression is inside a test helper method.
+    /// Determines whether the await expression resides inside helper methods declared on test classes.
     /// </summary>
+    /// <param name="awaitExpression">The await expression being analyzed.</param>
+    /// <returns><c>true</c> when the containing class name indicates test helpers; otherwise, <c>false</c>.</returns>
     private static bool IsInTestHelperMethod(AwaitExpressionSyntax awaitExpression)
     {
         var containingClass = awaitExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -261,8 +309,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     #region Story 1.3: Exempt Test-Related Namespaces
 
     /// <summary>
-    /// Checks if the await expression is in a test-related namespace.
+    /// Determines whether the await expression is declared in a namespace dedicated to testing infrastructure.
     /// </summary>
+    /// <param name="awaitExpression">The await expression to inspect.</param>
+    /// <returns><c>true</c> when the namespace path includes test-related segments; otherwise, <c>false</c>.</returns>
     private static bool IsInTestRelatedNamespace(AwaitExpressionSyntax awaitExpression)
     {
         var namespaceDeclaration = awaitExpression.Ancestors().OfType<BaseNamespaceDeclarationSyntax>().FirstOrDefault();
@@ -280,8 +330,11 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     #region Story 1.4: Exempt IAsyncLifetime Implementations
 
     /// <summary>
-    /// Checks if the await expression is inside an IAsyncLifetime method.
+    /// Determines whether the await expression appears within an <c>IAsyncLifetime</c> lifecycle method.
     /// </summary>
+    /// <param name="awaitExpression">The await expression under inspection.</param>
+    /// <param name="semanticModel">The semantic model used to inspect the containing class.</param>
+    /// <returns><c>true</c> when the method is part of <c>IAsyncLifetime</c>; otherwise, <c>false</c>.</returns>
     private static bool IsInIAsyncLifetimeMethod(AwaitExpressionSyntax awaitExpression, SemanticModel semanticModel)
     {
         var methodDeclaration = awaitExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
@@ -316,8 +369,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Checks if the class implements IAsyncLifetime.
+    /// Determines whether the class symbol implements the xUnit <c>IAsyncLifetime</c> interface.
     /// </summary>
+    /// <param name="classSymbol">The class symbol to inspect.</param>
+    /// <returns><c>true</c> when the interface is implemented from the xUnit namespace; otherwise, <c>false</c>.</returns>
     private static bool ImplementsIAsyncLifetime(INamedTypeSymbol classSymbol)
     {
         foreach (var interfaceSymbol in classSymbol.AllInterfaces)
@@ -344,8 +399,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     #region Story 1.5: Exempt Collection and Assembly Fixtures
 
     /// <summary>
-    /// Checks if the await expression is in a collection or assembly fixture.
+    /// Determines whether the await expression resides inside collection or assembly fixture classes.
     /// </summary>
+    /// <param name="awaitExpression">The await expression under inspection.</param>
+    /// <returns><c>true</c> when the containing class name and attributes indicate fixture usage; otherwise, <c>false</c>.</returns>
     private static bool IsInCollectionOrAssemblyFixture(AwaitExpressionSyntax awaitExpression)
     {
         var containingClass = awaitExpression.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -381,8 +438,11 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     #region Story 1.6: Exempt Blazor Component Lifecycle Methods
 
     /// <summary>
-    /// Checks if the await expression is in a Blazor component lifecycle method.
+    /// Determines whether the await expression resides within a Blazor component lifecycle method.
     /// </summary>
+    /// <param name="awaitExpression">The await expression to inspect.</param>
+    /// <param name="semanticModel">The semantic model used to resolve the component type.</param>
+    /// <returns><c>true</c> when the containing method matches a known lifecycle callback; otherwise, <c>false</c>.</returns>
     private static bool IsInBlazorComponentLifecycleMethod(AwaitExpressionSyntax awaitExpression, SemanticModel semanticModel)
     {
         var methodDeclaration = awaitExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
@@ -418,8 +478,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Checks if the class inherits from ComponentBase.
+    /// Determines whether the supplied class symbol derives from <c>ComponentBase</c>, indicating a Blazor component.
     /// </summary>
+    /// <param name="classSymbol">The class symbol to inspect.</param>
+    /// <returns><c>true</c> when the inheritance chain includes <c>ComponentBase</c>; otherwise, <c>false</c>.</returns>
     private static bool InheritsFromComponentBase(INamedTypeSymbol classSymbol)
     {
         var current = classSymbol.BaseType;
@@ -441,8 +503,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     #region Story 1.7: Exempt Blazor EventCallback Handlers
 
     /// <summary>
-    /// Checks if the await expression is in a Blazor event handler.
+    /// Determines whether the await expression belongs to a Blazor event handler method that may omit ConfigureAwait.
     /// </summary>
+    /// <param name="awaitExpression">The await expression under inspection.</param>
+    /// <returns><c>true</c> when the containing method matches common event-handler naming patterns; otherwise, <c>false</c>.</returns>
     private static bool IsInBlazorEventHandler(AwaitExpressionSyntax awaitExpression)
     {
         var methodDeclaration = awaitExpression.Ancestors().OfType<MethodDeclarationSyntax>().FirstOrDefault();
@@ -471,8 +535,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     #region Story 1.8: Exempt Awaits on Expressions Without ConfigureAwait Overloads
 
     /// <summary>
-    /// Checks if the expression doesn't have ConfigureAwait overloads.
+    /// Determines whether the awaited expression targets APIs without <c>ConfigureAwait</c> overloads.
     /// </summary>
+    /// <param name="expression">The awaited expression.</param>
+    /// <returns><c>true</c> when the call lacks <c>ConfigureAwait</c> support; otherwise, <c>false</c>.</returns>
     private static bool IsExpressionWithoutConfigureAwaitOverload(ExpressionSyntax expression)
     {
         // Get the method name from the expression
@@ -495,8 +561,10 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Gets the method name from an expression.
+    /// Extracts the method name from the awaited expression, handling both member-access and identifier invocations.
     /// </summary>
+    /// <param name="expression">The expression representing the awaited call.</param>
+    /// <returns>The invoked method name, or an empty string when indeterminable.</returns>
     private static string GetMethodName(ExpressionSyntax expression)
     {
         if (expression is InvocationExpressionSyntax invocation)

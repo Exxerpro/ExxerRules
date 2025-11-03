@@ -42,7 +42,7 @@ public class OllamaEmbeddingServiceAdapterTests
         _options = Options.Create(_ollamaOptions);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingAsync_WithValidText_ShouldReturnEmbedding()
     {
         // Arrange
@@ -62,11 +62,12 @@ public class OllamaEmbeddingServiceAdapterTests
         result.Value[0].ShouldBe(0.1f);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingAsync_WithNullText_ShouldReturnFailure()
     {
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
         // Arrange
-        var httpClient = new HttpClient();
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation fails first)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -76,11 +77,12 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldFailWith(ErrorCodes.ParameterNullOrWhitespace);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingAsync_WithEmptyText_ShouldReturnFailure()
     {
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
         // Arrange
-        var httpClient = new HttpClient();
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation fails first)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -90,7 +92,7 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldFailWith(ErrorCodes.ParameterNullOrWhitespace);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingAsync_WithTextTooLong_ShouldReturnFailure()
     {
         // Arrange
@@ -108,7 +110,7 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldFailWith(ErrorCodes.ValueOutOfRange);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingsAsync_WithValidTexts_ShouldReturnEmbeddings()
     {
         // Arrange
@@ -127,7 +129,7 @@ public class OllamaEmbeddingServiceAdapterTests
         result.Value.Count.ShouldBe(3);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingWithMetadataAsync_WithValidText_ShouldReturnVectorEmbedding()
     {
         // Arrange
@@ -148,11 +150,12 @@ public class OllamaEmbeddingServiceAdapterTests
         result.Value.Metadata.ShouldContainKey("source");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void GetEmbeddingDimension_ShouldReturnConfiguredDimension()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -162,11 +165,12 @@ public class OllamaEmbeddingServiceAdapterTests
         dimension.ShouldBe(_ollamaOptions.EmbeddingDimension);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void GetMaxTextLength_ShouldReturnConfiguredMaxLength()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -176,11 +180,12 @@ public class OllamaEmbeddingServiceAdapterTests
         maxLength.ShouldBe(_ollamaOptions.MaxTextLength);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void ValidateTextLength_WithValidText_ShouldReturnSuccess()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
         var text = "Valid text";
 
@@ -191,11 +196,12 @@ public class OllamaEmbeddingServiceAdapterTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void ValidateTextLength_WithTextTooLong_ShouldReturnFailure()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
         var longText = new string('a', _ollamaOptions.MaxTextLength + 1);
 
@@ -206,11 +212,12 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldFailWith(ErrorCodes.ValueOutOfRange);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingsAsync_WithNullTexts_ShouldReturnFailure()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -220,11 +227,12 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldFailWith(ErrorCodes.CollectionEmpty);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingsAsync_WithEmptyTexts_ShouldReturnFailure()
     {
         // Arrange
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -234,14 +242,15 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldFailWith(ErrorCodes.CollectionEmpty);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
         
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -251,14 +260,15 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingsAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
         
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
         var texts = new List<string> { "Text 1", "Text 2" }.AsReadOnly();
 
@@ -269,14 +279,15 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GenerateEmbeddingWithMetadataAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
         
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act
@@ -289,14 +300,15 @@ public class OllamaEmbeddingServiceAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetModelInfoAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
         
-        var httpClient = new HttpClient();
+        // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
+        var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
         // Act

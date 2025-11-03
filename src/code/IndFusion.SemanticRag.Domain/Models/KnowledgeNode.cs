@@ -139,19 +139,19 @@ public record KnowledgeRelationship(
     public Result Validate()
     {
         if (string.IsNullOrWhiteSpace(Id))
-            return Result.WithFailure("Relationship ID cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.KnowledgeRelationshipIdRequired);
 
         if (string.IsNullOrWhiteSpace(FromNodeId))
-            return Result.WithFailure("From node ID cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.KnowledgeRelationshipSourceIdRequired);
 
         if (string.IsNullOrWhiteSpace(ToNodeId))
-            return Result.WithFailure("To node ID cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.KnowledgeRelationshipTargetIdRequired);
 
         if (string.IsNullOrWhiteSpace(RelationshipType))
-            return Result.WithFailure("Relationship type cannot be empty or whitespace");
+            return Result.WithFailure(ErrorCodes.KnowledgeRelationshipTypeRequired);
 
         if (FromNodeId == ToNodeId)
-            return Result.WithFailure("From node and To node cannot be the same");
+            return Result.WithFailure(ErrorCodes.KnowledgeRelationshipSameNodeIds);
 
         return Result.Success();
     }

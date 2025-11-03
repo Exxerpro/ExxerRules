@@ -99,6 +99,11 @@ public static class ErrorCodes
     /// </summary>
     public const string KnowledgeRelationshipTypeRequired = "KG006";
 
+    /// <summary>
+    /// Knowledge relationship source and target node IDs cannot be the same.
+    /// </summary>
+    public const string KnowledgeRelationshipSameNodeIds = "KG007";
+
     // Semantic Document Error Codes (SD###)
     /// <summary>
     /// Semantic document ID is required but was null or empty.

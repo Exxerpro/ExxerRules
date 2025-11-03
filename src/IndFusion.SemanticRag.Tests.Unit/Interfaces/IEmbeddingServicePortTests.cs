@@ -41,7 +41,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		};
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingAsync_WithValidText_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract using mock
@@ -61,7 +61,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		result.Value!.Length.ShouldBeGreaterThan(0); // ✅ This is a contract requirement (embedding dimension > 0)
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingAsync_WithNullText_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null text should fail
@@ -76,7 +76,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingAsync_WithEmptyText_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - empty text should fail
@@ -91,7 +91,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingsAsync_WithValidTexts_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -116,7 +116,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		result.Value!.Count.ShouldBe(texts.Count); // ✅ Contract requirement: count must match input count
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingsAsync_WithEmptyList_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test contract - empty list should return empty results (not failure)
@@ -136,7 +136,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		result.Value!.Count.ShouldBe(0);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingWithMetadataAsync_WithValidText_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -162,10 +162,18 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		AssertSuccess(result);
 		// Note: VectorEmbedding is a value type, so no null check needed
 		result.Value.Content.ShouldBe(text); // ✅ Contract requirement: content must match input
-		result.Value.Metadata.ShouldBe(metadata); // ✅ Contract requirement: metadata must match input
+		
+		// ✅ Contract requirement: metadata must match input (compare contents, not references)
+		result.Value.Metadata.ShouldNotBeNull();
+		result.Value.Metadata.Count.ShouldBe(metadata.Count);
+		foreach (var kvp in metadata)
+		{
+			result.Value.Metadata.ShouldContainKey(kvp.Key);
+			result.Value.Metadata[kvp.Key].ShouldBe(kvp.Value);
+		}
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingWithMetadataAsync_WithNullText_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null text should fail
@@ -183,7 +191,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void GetEmbeddingDimension_ShouldReturnDimension()
 	{
 		// ✅ IITDD: Test interface contract - dimension must be positive
@@ -199,7 +207,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		dimension.ShouldBe(expectedDimension); // ✅ Contract requirement: dimension must match mock
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void GetMaxTextLength_ShouldReturnMaxLength()
 	{
 		// ✅ IITDD: Test interface contract - max length must be positive
@@ -215,7 +223,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		maxLength.ShouldBe(expectedMaxLength); // ✅ Contract requirement: max length must match mock
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void ValidateTextLength_WithValidText_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -230,7 +238,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		AssertSuccess(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void ValidateTextLength_WithTooLongText_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - text exceeding max length should fail
@@ -245,7 +253,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GetModelInfoAsync_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract

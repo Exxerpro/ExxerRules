@@ -9,16 +9,29 @@ using Microsoft.CodeAnalysis.Diagnostics;
 namespace IndFusion.Analyzers.Architecture;
 
 /// <summary>
-/// Analyzer that enforces Domain layer should not reference Infrastructure layer.
-/// Supports Clean Architecture principles.
+/// Flags references from the domain layer into the infrastructure layer to preserve the Clean Architecture dependency direction.
 /// </summary>
 [DiagnosticAnalyzer(LanguageNames.CSharp)]
 public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
 {
+    /// <summary>
+    /// Gets the localized title surfaced for violations that cross the domain-to-infrastructure boundary.
+    /// </summary>
     private static readonly LocalizableString Title = "Domain layer should not reference Infrastructure layer";
+
+    /// <summary>
+    /// Gets the localized message format providing details about the offending domain type and infrastructure namespace.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Domain layer class '{0}' should not reference Infrastructure namespace '{1}' - violates Clean Architecture";
+
+    /// <summary>
+    /// Gets the localized diagnostic description that explains the architectural guideline enforced by this analyzer.
+    /// </summary>
     private static readonly LocalizableString Description = "In Clean Architecture, the Domain layer should be independent and not reference the Infrastructure layer. Dependencies should flow inward, with Infrastructure depending on Domain, not the reverse.";
 
+    /// <summary>
+    /// Diagnostic descriptor that represents the domain-to-infrastructure dependency violation.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.DomainShouldNotReferenceInfrastructure,
         Title,
@@ -28,10 +41,16 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostic descriptors supported by this analyzer.
+    /// </summary>
+    /// <value>A single-element array containing the rule that protects the domain layer from infrastructure dependencies.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers the syntax node actions that enforce the domain-to-infrastructure dependency rule.
+    /// </summary>
+    /// <param name="context">The analysis context used to register callbacks and configure execution behavior.</param>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -41,6 +60,10 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
         context.RegisterSyntaxNodeAction(AnalyzeUsingDirective, SyntaxKind.UsingDirective);
     }
 
+    /// <summary>
+    /// Evaluates a <c>using</c> directive to determine whether it introduces an infrastructure dependency within the domain layer.
+    /// </summary>
+    /// <param name="context">The syntax analysis context that supplies the directive and semantic information.</param>
     private static void AnalyzeUsingDirective(SyntaxNodeAnalysisContext context)
     {
         var usingDirective = (UsingDirectiveSyntax)context.Node;
@@ -77,6 +100,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
         }
     }
 
+    /// <summary>
+    /// Determines whether the syntax node is declared within a namespace that belongs to the domain layer.
+    /// </summary>
+    /// <param name="node">The node to inspect for enclosing namespace information.</param>
+    /// <returns><c>true</c> when the namespace identifies domain code; otherwise, <c>false</c>.</returns>
     private static bool IsInDomainNamespace(SyntaxNode node)
     {
         // Find the containing namespace declaration
@@ -105,6 +133,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
                namespaceName == "Domain";
     }
 
+    /// <summary>
+    /// Tests whether the provided namespace represents an infrastructure concern.
+    /// </summary>
+    /// <param name="namespaceName">The namespace referenced by a <c>using</c> directive.</param>
+    /// <returns><c>true</c> when the namespace maps to known infrastructure assemblies; otherwise, <c>false</c>.</returns>
     private static bool IsInfrastructureNamespace(string namespaceName)
     {
         // Check if namespace contains "Infrastructure" (case-sensitive)
@@ -140,6 +173,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
         return infrastructureNamespaces.Any(ns => namespaceName.Contains(ns));
     }
 
+    /// <summary>
+    /// Retrieves the name of the nearest containing class for diagnostic messaging.
+    /// </summary>
+    /// <param name="node">The syntax node from which to ascend toward a class declaration.</param>
+    /// <returns>The parent class name, or <see langword="null"/> when no class scope exists.</returns>
     private static string? GetContainingClassName(SyntaxNode node)
     {
         // Find the containing class declaration
@@ -150,8 +188,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     #region False-Positive Mitigation Methods
 
     /// <summary>
-    /// Determines if a using directive is exempt from the infrastructure reference rule.
+    /// Determines whether the supplied <paramref name="usingDirective"/> falls under one of the sanctioned exemption rules.
     /// </summary>
+    /// <param name="usingDirective">The directive currently under analysis.</param>
+    /// <param name="context">The syntax context that provides semantic information for the file.</param>
+    /// <returns><c>true</c> when the directive matches a known exception; otherwise, <c>false</c>.</returns>
     private static bool IsExemptFromInfrastructureReference(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -220,8 +261,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.1: Exempt EF Core Attributes on Domain Value Objects
+    /// Story 1.1: Exempts EF Core attribute references applied to domain value objects.
     /// </summary>
+    /// <param name="usingDirective">The directive referencing a namespace potentially belonging to EF Core.</param>
+    /// <param name="context">The syntax analysis context for the current file.</param>
+    /// <returns><c>true</c> when the directive exists solely to support EF Core owned entity annotations; otherwise, <c>false</c>.</returns>
     private static bool IsEFCoreAttributesOnDomainValueObjects(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -240,8 +284,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.2: Exempt Domain Enum Seeding Extensions
+    /// Story 1.2: Exempts domain enum seeding extensions that rely on EF Core infrastructure namespaces.
     /// </summary>
+    /// <param name="usingDirective">The directive currently being evaluated for exemptions.</param>
+    /// <param name="context">The syntax context that enables structural inspection of the file.</param>
+    /// <returns><c>true</c> when the directive supports static seeding helpers intended for domain enums; otherwise, <c>false</c>.</returns>
     private static bool IsDomainEnumSeedingExtensions(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -275,8 +322,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.3: Exempt Nested IEntityTypeConfiguration
+    /// Story 1.3: Exempts nested <c>IEntityTypeConfiguration</c> implementations contained inside domain types.
     /// </summary>
+    /// <param name="usingDirective">The directive under consideration.</param>
+    /// <param name="context">The syntax context that exposes descendant declarations.</param>
+    /// <returns><c>true</c> when the directive exists solely to facilitate nested EF Core configuration; otherwise, <c>false</c>.</returns>
     private static bool IsNestedIEntityTypeConfiguration(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -301,8 +351,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.4: Exempt Domain Tests Using EF InMemory Providers
+    /// Story 1.4: Exempts domain test files that bring in EF Core in-memory providers as part of test infrastructure.
     /// </summary>
+    /// <param name="usingDirective">The directive being analyzed.</param>
+    /// <param name="context">The syntax context supplying file-level information.</param>
+    /// <returns><c>true</c> when the directive appears inside a domain-focused test that utilises in-memory EF providers; otherwise, <c>false</c>.</returns>
     private static bool IsDomainTestsUsingEFInMemoryProviders(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -331,8 +384,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.5: Exempt Domain Tests Validating ModelBuilder Projections
+    /// Story 1.5: Exempts domain tests that validate <c>ModelBuilder</c> projections requiring EF Core metadata namespaces.
     /// </summary>
+    /// <param name="usingDirective">The directive that possibly references EF Core metadata.</param>
+    /// <param name="context">The analysis context used to inspect the surrounding syntax tree.</param>
+    /// <returns><c>true</c> when the directive appears in a domain test verifying projections; otherwise, <c>false</c>.</returns>
     private static bool IsDomainTestsValidatingModelBuilderProjections(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -361,8 +417,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.6: Exempt SqlConnectionStringBuilder for Guard Logic
+    /// Story 1.6: Exempts <c>SqlConnectionStringBuilder</c> references used exclusively for guard logic inside domain validators.
     /// </summary>
+    /// <param name="usingDirective">The directive referencing SQL client namespaces.</param>
+    /// <param name="context">The syntax context that exposes the containing class structure.</param>
+    /// <returns><c>true</c> when the directive is used by guard utilities validating connection strings; otherwise, <c>false</c>.</returns>
     private static bool IsSqlConnectionStringBuilderForGuardLogic(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -385,8 +444,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.7: Exempt Provider-Specific Validation in Domain Rules
+    /// Story 1.7: Exempts provider-specific validation logic embedded inside domain rules.
     /// </summary>
+    /// <param name="usingDirective">The directive that may reference provider namespaces.</param>
+    /// <param name="context">The syntax context granting access to file-level information.</param>
+    /// <returns><c>true</c> when the directive supports provider-specific domain validation; otherwise, <c>false</c>.</returns>
     private static bool IsProviderSpecificValidationInDomainRules(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -415,8 +477,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.8: Exempt Domain Enum Synchronization Scripts
+    /// Story 1.8: Exempts domain enum synchronization scripts that legitimately touch SQL client APIs.
     /// </summary>
+    /// <param name="usingDirective">The directive referencing SQL client namespaces.</param>
+    /// <param name="context">The syntax context utilised to identify synchronization helper classes.</param>
+    /// <returns><c>true</c> when the directive assists in enum synchronization scripts; otherwise, <c>false</c>.</returns>
     private static bool IsDomainEnumSynchronizationScripts(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -438,8 +503,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.9: Exempt ValueComparer Usage in Domain Tests
+    /// Story 1.9: Exempts domain tests that rely on EF Core <c>ValueComparer</c> instances.
     /// </summary>
+    /// <param name="usingDirective">The directive referencing change-tracking infrastructure.</param>
+    /// <param name="context">The syntax context used to recognise test scenarios.</param>
+    /// <returns><c>true</c> when the directive exists in a domain test leveraging value comparers; otherwise, <c>false</c>.</returns>
     private static bool IsValueComparerUsageInDomainTests(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -468,8 +536,11 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Story 1.10: Exempt Migration Snapshot Verification in Domain Tests
+    /// Story 1.10: Exempts domain tests that verify migration snapshots and therefore reference migrations namespaces.
     /// </summary>
+    /// <param name="usingDirective">The directive referencing EF Core migration APIs.</param>
+    /// <param name="context">The syntax context that confirms the file is a domain test.</param>
+    /// <returns><c>true</c> when the directive belongs to a migration snapshot verification test; otherwise, <c>false</c>.</returns>
     private static bool IsMigrationSnapshotVerificationInDomainTests(UsingDirectiveSyntax usingDirective, SyntaxNodeAnalysisContext context)
     {
         var namespaceName = usingDirective.Name?.ToString() ?? string.Empty;
@@ -498,8 +569,10 @@ public class DomainShouldNotReferenceInfrastructureAnalyzer : DiagnosticAnalyzer
     }
 
     /// <summary>
-    /// Helper method to check if an attribute is a test attribute.
+    /// Determines whether the specified attribute represents a unit-testing attribute from common frameworks.
     /// </summary>
+    /// <param name="attribute">The attribute syntax node to evaluate.</param>
+    /// <returns><c>true</c> when the attribute denotes a test-case decorator; otherwise, <c>false</c>.</returns>
     private static bool IsTestAttribute(Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax attribute)
     {
         var attributeName = attribute.Name.ToString();

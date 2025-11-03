@@ -50,11 +50,14 @@ public class Neo4jKnowledgeGraphAdapterTests
         _mockDriver.AsyncSession(Arg.Any<Action<SessionConfigBuilder>>()).Returns(_mockSession);
         _mockSession.RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>())
             .Returns(_mockResultCursor);
+        // Don't mock DisposeAsync - NSubstitute has trouble with IAsyncDisposable.DisposeAsync()
+        // The using statement will call it, but we can verify behavior without mocking it
+        // NSubstitute will handle the call automatically without explicit mocking
 
         _adapter = new Neo4jKnowledgeGraphAdapter(_mockDriver, _mockOptions, _mockLogger);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreNodeAsync_Should_ReturnSuccess_When_ValidNodeProvided()
     {
         // Arrange
@@ -71,7 +74,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreNodeAsync_Should_ReturnFailure_When_NodeValidationFails()
     {
         // Arrange
@@ -85,7 +88,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreNodeAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
@@ -101,7 +104,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreNodesAsync_Should_ReturnSuccess_When_ValidNodesProvided()
     {
         // Arrange
@@ -122,7 +125,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreNodesAsync_Should_ReturnSuccess_When_EmptyListProvided()
     {
         // Arrange
@@ -136,14 +139,23 @@ public class Neo4jKnowledgeGraphAdapterTests
         await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails()
     {
         // Arrange
+        // Create an invalid node directly (with empty Id) instead of using 'with' expression
+        // The 'with' expression might not work correctly with records that have both parameter and property with same name
+        var invalidNode = new KnowledgeNode(
+            Id: string.Empty, // Invalid: empty Id
+            Label: "TestLabel",
+            Properties: new Dictionary<string, object> { { "key", "value" } },
+            CreatedAt: DateTimeOffset.UtcNow,
+            UpdatedAt: DateTimeOffset.UtcNow);
+        
         var nodes = new List<KnowledgeNode>
         {
             CreateValidKnowledgeNode("node1"),
-            CreateValidKnowledgeNode("node2") with { Id = string.Empty }
+            invalidNode
         };
 
         // Act
@@ -154,7 +166,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreNodesAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
@@ -174,7 +186,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreRelationshipAsync_Should_ReturnSuccess_When_ValidRelationshipProvided()
     {
         // Arrange
@@ -191,7 +203,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreRelationshipAsync_Should_ReturnFailure_When_RelationshipValidationFails()
     {
         // Arrange
@@ -205,7 +217,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         await _mockSession.DidNotReceive().RunAsync(Arg.Any<string>(), Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task StoreRelationshipAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
@@ -221,7 +233,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetNodeByIdAsync_Should_ReturnNode_When_NodeExists()
     {
         // Arrange
@@ -233,7 +245,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         record["createdAt"].Returns(DateTimeOffset.UtcNow);
         record["updatedAt"].Returns(DateTimeOffset.UtcNow);
 
-        _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns(record);
+        _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns(ValueTask.FromResult<IRecord?>(record));
 
         // Act
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: CancellationToken.None);
@@ -244,12 +256,12 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.Value!.Label.ShouldBe("TestLabel");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetNodeByIdAsync_Should_ReturnFailure_When_NodeNotFound()
     {
         // Arrange
         var nodeId = "non-existent-node";
-        _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns((IRecord?)null);
+        _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>()).Returns(ValueTask.FromResult<IRecord?>((IRecord?)null));
 
         // Act
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: CancellationToken.None);
@@ -258,13 +270,13 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldFailWith(ErrorCodes.EntityNotFound);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException()
     {
         // Arrange
         var nodeId = "test-node-id";
         _mockResultCursor.SingleOrDefaultAsync(Arg.Any<CancellationToken>())
-            .ReturnsForAnyArgs(ValueTask.FromException<IRecord?>(new Exception("Neo4j query failed")));
+            .Returns<ValueTask<IRecord?>>(_ => ValueTask.FromException<IRecord?>(new Exception("Neo4j query failed")));
 
         // Act
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: CancellationToken.None);
@@ -273,7 +285,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldFailWith(ErrorCodes.GraphDatabaseError);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetNodeByIdAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
@@ -289,7 +301,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetRelationshipsForNodeAsync_Should_ReturnRelationships_When_NodeHasRelationships()
     {
         // Arrange
@@ -303,7 +315,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         record["targetId"].Returns("target-id");
 
         var cancellationToken = CancellationToken.None;
-        _mockResultCursor.ToListAsync(cancellationToken).Returns(new List<IRecord> { record });
+        _mockResultCursor.ToListAsync(cancellationToken).Returns(Task.FromResult<List<IRecord>>(new List<IRecord> { record }));
 
         // Act
         var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: cancellationToken);
@@ -315,13 +327,13 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.Value![0].RelationshipType.ShouldBe("RELATES_TO");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetRelationshipsForNodeAsync_Should_ReturnEmptyList_When_NodeHasNoRelationships()
     {
         // Arrange
         var nodeId = "test-node-id";
         var cancellationToken = CancellationToken.None;
-        _mockResultCursor.ToListAsync(cancellationToken).Returns(new List<IRecord>());
+        _mockResultCursor.ToListAsync(cancellationToken).Returns(Task.FromResult<List<IRecord>>(new List<IRecord>()));
 
         // Act
         var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: cancellationToken);
@@ -331,7 +343,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.Value!.Count.ShouldBe(0);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetRelationshipsForNodeAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
@@ -347,7 +359,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task ExecuteGraphQueryAsync_Should_ReturnResults_When_QueryExecutesSuccessfully()
     {
         // Arrange
@@ -355,7 +367,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         var record = Substitute.For<IRecord>();
         record.Values.Returns(new Dictionary<string, object> { { "n", "test-value" } });
         var cancellationToken = CancellationToken.None;
-        _mockResultCursor.ToListAsync(cancellationToken).Returns(new List<IRecord> { record });
+        _mockResultCursor.ToListAsync(cancellationToken).Returns(Task.FromResult<List<IRecord>>(new List<IRecord> { record }));
 
         // Act
         var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: cancellationToken);
@@ -366,7 +378,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.Value![0]["n"].ShouldBe("test-value");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails()
     {
         // Arrange
@@ -382,7 +394,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldFailWith(ErrorCodes.CypherQueryFailed);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task ExecuteGraphQueryAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
@@ -398,7 +410,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task DeleteNodeAsync_Should_ReturnSuccess_When_NodeExists()
     {
         // Arrange
@@ -415,7 +427,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task DeleteNodeAsync_Should_ReturnFailure_When_Neo4jThrowsException()
     {
         // Arrange
@@ -430,7 +442,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldFailWith(ErrorCodes.GraphDatabaseError);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task DeleteNodeAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling
@@ -446,7 +458,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldBeCancelled();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task DeleteRelationshipAsync_Should_ReturnSuccess_When_RelationshipExists()
     {
         // Arrange
@@ -463,7 +475,7 @@ public class Neo4jKnowledgeGraphAdapterTests
             Arg.Any<Dictionary<string, object>>());
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task DeleteRelationshipAsync_Should_ReturnFailure_When_Neo4jThrowsException()
     {
         // Arrange
@@ -478,7 +490,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         result.ShouldFailWith(ErrorCodes.GraphDatabaseError);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task DeleteRelationshipAsync_WithCancellation_ShouldReturnCancelled()
     {
         // ✅ TDD: Test cancellation handling

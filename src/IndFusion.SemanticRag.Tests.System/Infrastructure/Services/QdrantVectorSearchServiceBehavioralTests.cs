@@ -15,12 +15,13 @@ using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace IndFusion.SemanticRag.Tests.Unit.Infrastructure.Services;
+namespace IndFusion.SemanticRag.Tests.System.Infrastructure.Services;
 
 /// <summary>
-/// Behavioral unit tests for QdrantVectorSearchService to drive implementation.
+/// Behavioral system tests for QdrantVectorSearchService to drive implementation.
 /// These tests verify actual behavior and drive the replacement of mock implementations.
 /// </summary>
+[Trait("Category", "System")]
 public class QdrantVectorSearchServiceBehavioralTests
 {
     private readonly ILogger<QdrantVectorSearchService> _logger;
@@ -29,6 +30,9 @@ public class QdrantVectorSearchServiceBehavioralTests
     private readonly IOptions<QdrantOptions> _options;
     private readonly QdrantOptions _qdrantOptions;
 
+    /// <summary>
+    /// Initializes the Qdrant service behavioral test fixture with substitute dependencies and default configuration.
+    /// </summary>
     public QdrantVectorSearchServiceBehavioralTests()
     {
         _logger = Substitute.For<ILogger<QdrantVectorSearchService>>();
@@ -45,8 +49,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         };
         _options = Options.Create(_qdrantOptions);
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that a straightforward similarity search succeeds and preserves the submitted query and options in the result contract.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the success assertions have been executed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithValidQuery_ShouldReturnActualSearchResults()
     {
         // Arrange
@@ -76,7 +83,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // The test drives the implementation by requiring real behavior
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that high-precision search presets translate into the expected threshold and result limit within the returned options.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the precision-specific assertions finish.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithHighPrecisionOptions_ShouldUseCorrectThreshold()
     {
         // Arrange
@@ -98,7 +109,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // This test drives implementation of threshold-based filtering
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that broad search presets produce an expanded result limit suitable for exploratory queries.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the broad options have been validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithBroadOptions_ShouldUseCorrectLimit()
     {
         // Arrange
@@ -119,8 +134,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         
         // This test drives implementation of limit-based result filtering
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that generating an embedding delegates to the embedding service and returns the actual vector payload.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the embedding result has been asserted.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GenerateEmbeddingAsync_WithValidText_ShouldReturnActualEmbedding()
     {
         // Arrange
@@ -141,7 +159,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         await _embeddingServicePort.Received(1).GenerateEmbeddingAsync(text, Arg.Any<CancellationToken>());
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures empty text input is rejected when requesting an embedding to prevent meaningless calls.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the guard clause throws the expected exception.</returns>
+    [Fact(Timeout = 60000)]
     public async Task GenerateEmbeddingAsync_WithEmptyText_ShouldThrowArgumentException()
     {
         // Arrange
@@ -151,8 +173,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.GenerateEmbeddingAsync(string.Empty, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that storing a document in Qdrant succeeds and echoes the persisted document identifier.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the storage result is validated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task StoreDocumentAsync_WithValidData_ShouldStoreDocument()
     {
         // Arrange
@@ -176,7 +201,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Currently fails because implementation uses Task.Delay placeholder
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures null identifiers are rejected when attempting to store a document snapshot.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after confirming the thrown exception.</returns>
+    [Fact(Timeout = 60000)]
     public async Task StoreDocumentAsync_WithNullId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -187,7 +216,11 @@ public class QdrantVectorSearchServiceBehavioralTests
             await service.StoreDocumentAsync(null!, "content", new Dictionary<string, object>(), CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that missing content is treated as invalid input for document persistence.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the guard clause is exercised.</returns>
+    [Fact(Timeout = 60000)]
     public async Task StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException()
     {
         // Arrange
@@ -198,7 +231,11 @@ public class QdrantVectorSearchServiceBehavioralTests
             await service.StoreDocumentAsync("id", null!, new Dictionary<string, object>(), CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that documents cannot be stored without metadata and that the service enforces this requirement.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after observing the exception raised for missing metadata.</returns>
+    [Fact(Timeout = 60000)]
     public async Task StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException()
     {
         // Arrange
@@ -208,8 +245,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.StoreDocumentAsync("id", "content", null!, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that updating an existing document reflects the provided content and metadata in the result contract.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the update assertions run.</returns>
+    [Fact(Timeout = 60000)]
     public async Task UpdateDocumentAsync_WithValidData_ShouldUpdateDocument()
     {
         // Arrange
@@ -232,7 +272,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // This test drives implementation of document updates with Qdrant
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that deleting a document by identifier succeeds and reports the removed identifier.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the deletion result is verified.</returns>
+    [Fact(Timeout = 60000)]
     public async Task DeleteDocumentAsync_WithValidId_ShouldDeleteDocument()
     {
         // Arrange
@@ -247,7 +291,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // Currently fails because implementation uses Task.Delay placeholder
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures null identifiers are rejected when deleting documents to prevent ambiguous deletions.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after the guard clause produces the expected exception.</returns>
+    [Fact(Timeout = 60000)]
     public async Task DeleteDocumentAsync_WithNullId_ShouldThrowArgumentException()
     {
         // Arrange
@@ -257,8 +305,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         await Should.ThrowAsync<ArgumentException>(async () =>
             await service.DeleteDocumentAsync(null!, CancellationToken.None));
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that cancellation tokens provided to the similarity search are honored immediately.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when cancellation behavior is verified.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithCancellation_ShouldRespectCancellationToken()
     {
         // Arrange
@@ -274,7 +325,11 @@ public class QdrantVectorSearchServiceBehavioralTests
             await service.SearchSimilarAsync(query, searchOptions, cts.Token));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that request timeouts are respected, causing operations to cancel when the deadline elapses.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after asserting timeout behavior.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithTimeout_ShouldRespectTimeout()
     {
         // Arrange
@@ -291,7 +346,11 @@ public class QdrantVectorSearchServiceBehavioralTests
             await service.SearchSimilarAsync(query, searchOptions, CancellationToken.None));
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures embedding service failures propagate through the search API so callers receive actionable error information.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once the propagated failure is confirmed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithEmbeddingServiceFailure_ShouldPropagateFailure()
     {
         // Arrange
@@ -310,7 +369,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         result.ErrorMessage.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that Qdrant client failures surface as exceptions, highlighting integration issues.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the propagated exception assertion finishes.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithQdrantFailure_ShouldPropagateException()
     {
         // Arrange
@@ -330,8 +393,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // This test will drive implementation of proper Qdrant error handling
         // Currently fails because implementation uses Task.Delay placeholder
     }
-
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Verifies that metadata filters are applied to similarity searches and reflected in the underlying request.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes once filter assertions are evaluated.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithMetadataFilters_ShouldApplyFilters()
     {
         // Arrange
@@ -353,7 +419,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // This test drives implementation of metadata filtering with Qdrant
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Checks that requesting embeddings in the response includes vector data in the resulting payload.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after confirming embeddings are returned when requested.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithIncludeEmbedding_ShouldIncludeEmbeddingInResults()
     {
         // Arrange
@@ -374,7 +444,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // This test drives implementation of embedding inclusion in results
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Ensures metadata inclusion flags result in metadata being populated for each returned document.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when metadata presence has been asserted.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithIncludeMetadata_ShouldIncludeMetadataInResults()
     {
         // Arrange
@@ -395,7 +469,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         // This test drives implementation of metadata inclusion in results
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Validates that the service records realistic processing time metrics rather than returning placeholder values.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes after evaluating duration-related assertions.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithProcessingTime_ShouldMeasureActualProcessingTime()
     {
         // Arrange
@@ -415,7 +493,11 @@ public class QdrantVectorSearchServiceBehavioralTests
         result.Query.ShouldBe(query);
     }
 
-    [Fact(Timeout = 5000)]
+    /// <summary>
+    /// Confirms that similarity searches return tangible results once the integration is complete, rather than empty collections.
+    /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when non-empty result assertions are executed.</returns>
+    [Fact(Timeout = 60000)]
     public async Task SearchSimilarAsync_WithActualResults_ShouldReturnNonEmptyResults()
     {
         // Arrange

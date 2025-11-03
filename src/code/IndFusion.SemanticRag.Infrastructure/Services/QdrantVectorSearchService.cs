@@ -144,6 +144,9 @@ public class QdrantVectorSearchService : IVectorSearchService
         string text, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(text))
+            throw new ArgumentException("Text cannot be null or empty", nameof(text));
+
         try
         {
             _logger.LogDebug("Generating embedding for text of length: {Length}", text.Length);
@@ -171,6 +174,15 @@ public class QdrantVectorSearchService : IVectorSearchService
         Dictionary<string, object> metadata, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(id))
+            throw new ArgumentException("ID cannot be null or empty", nameof(id));
+        
+        if (string.IsNullOrWhiteSpace(content))
+            throw new ArgumentException("Content cannot be null or empty", nameof(content));
+        
+        if (metadata == null)
+            throw new ArgumentNullException(nameof(metadata));
+
         try
         {
             _logger.LogInformation("Storing document with ID: {Id}", id);
@@ -201,6 +213,9 @@ public class QdrantVectorSearchService : IVectorSearchService
         string id, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(id))
+            throw new ArgumentException("ID cannot be null or empty", nameof(id));
+
         try
         {
             _logger.LogInformation("Deleting document with ID: {Id}", id);

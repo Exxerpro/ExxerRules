@@ -9,7 +9,7 @@ namespace IndFusion.SemanticRag.Tests.Unit.Domain.ValueObjects;
 /// </summary>
 public class SearchQueryTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateSearchQuery_When_ValidParametersProvided()
     {
         // Arrange
@@ -28,7 +28,7 @@ public class SearchQueryTests
         query.Filters.ShouldBe(filters);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateSearchQuery_When_OnlyTextProvided()
     {
         // Arrange
@@ -44,7 +44,7 @@ public class SearchQueryTests
         query.Filters.ShouldBeNull(); // Default value
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateSuccessfully_When_ValidQuery()
     {
         // Arrange
@@ -58,7 +58,7 @@ public class SearchQueryTests
         result.IsFailure.ShouldBeFalse();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("")]
     [InlineData("   ")]
     [InlineData(null)]
@@ -75,7 +75,7 @@ public class SearchQueryTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_TextExceedsMaxLength()
     {
         // Arrange
@@ -90,7 +90,7 @@ public class SearchQueryTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData(0)]
     [InlineData(-1)]
     [InlineData(-10)]
@@ -107,7 +107,7 @@ public class SearchQueryTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_LimitExceedsMaxValue()
     {
         // Arrange
@@ -121,7 +121,7 @@ public class SearchQueryTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData(-0.1f)]
     [InlineData(1.1f)]
     [InlineData(2.0f)]
@@ -139,7 +139,7 @@ public class SearchQueryTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData(0.0f)]
     [InlineData(0.5f)]
     [InlineData(1.0f)]
@@ -155,7 +155,7 @@ public class SearchQueryTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateSuccessfully_When_ValidParametersProvided()
     {
         // Arrange
@@ -176,7 +176,7 @@ public class SearchQueryTests
         result.Value.Filters.ShouldBe(filters);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateSuccessfully_When_OnlyTextProvided()
     {
         // Arrange
@@ -194,7 +194,7 @@ public class SearchQueryTests
         result.Value.Filters.ShouldBeNull();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateFailure_When_InvalidParametersProvided()
     {
         // Arrange
@@ -208,7 +208,7 @@ public class SearchQueryTests
         result.Error!.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_GetFilterValue_When_FilterExists()
     {
         // Arrange
@@ -224,7 +224,7 @@ public class SearchQueryTests
         countValue.ShouldBe(42);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnDefaultValue_When_FilterDoesNotExist()
     {
         // Arrange
@@ -238,7 +238,7 @@ public class SearchQueryTests
         value.ShouldBeNull();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnDefaultValue_When_FiltersIsNull()
     {
         // Arrange
@@ -251,7 +251,7 @@ public class SearchQueryTests
         value.ShouldBeNull();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnDefaultValue_When_FilterTypeMismatch()
     {
         // Arrange
@@ -265,7 +265,7 @@ public class SearchQueryTests
         value.ShouldBe(0); // Default value for int
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CheckFilterExists_When_FilterExists()
     {
         // Arrange
@@ -279,7 +279,7 @@ public class SearchQueryTests
         exists.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CheckFilterExists_When_FilterDoesNotExist()
     {
         // Arrange
@@ -293,7 +293,7 @@ public class SearchQueryTests
         exists.ShouldBeFalse();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CheckFilterExists_When_FiltersIsNull()
     {
         // Arrange
@@ -306,7 +306,7 @@ public class SearchQueryTests
         exists.ShouldBeFalse();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ReturnStringRepresentation_When_ToStringCalled()
     {
         // Arrange

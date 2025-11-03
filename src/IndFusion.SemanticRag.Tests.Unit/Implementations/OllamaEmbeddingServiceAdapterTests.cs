@@ -15,6 +15,7 @@ using IndQuestResults;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using Meziantou.Extensions.Logging.Xunit.v3;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -33,11 +34,20 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 	private ILogger<OllamaEmbeddingServiceAdapter> _logger = null!;
 	private OllamaOptions _ollamaOptions = null!;
 
+	/// <summary>
+	/// Initializes a new instance of the <see cref="OllamaEmbeddingServiceAdapterTests"/> class.
+	/// </summary>
+	/// <param name="output">The test output helper for logging.</param>
+	public OllamaEmbeddingServiceAdapterTests(ITestOutputHelper output) : base(output)
+	{
+	}
+
 	protected override OllamaEmbeddingServiceAdapter CreateImplementation()
 	{
-		// ✅ TDD: Use real HttpClient with mocked responses (or test double)
-		_httpClient = new HttpClient();
-		_logger = NullLogger<OllamaEmbeddingServiceAdapter>.Instance;
+		// ✅ Phase 1.3: Use mocked HttpClient consistently - prevents hanging on real HTTP calls
+		// For validation tests, validation happens before HTTP calls, so mock is safe
+		_httpClient = CreateMockHttpClient(new float[] { 0.1f, 0.2f, 0.3f });
+		_logger = Logger; // Use Meziantou logger from base class
 		
 		_ollamaOptions = new OllamaOptions
 		{
@@ -53,7 +63,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		return new OllamaEmbeddingServiceAdapter(_httpClient, _logger, _options);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingAsync_WithNullText_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter validates before calling HTTP
@@ -64,7 +74,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		result.Error.ShouldNotBeNullOrEmpty();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingAsync_WithEmptyText_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -75,7 +85,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		result.Error.ShouldNotBeNullOrEmpty();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingAsync_WithWhitespaceText_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -86,7 +96,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		result.Error.ShouldNotBeNullOrEmpty();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingsAsync_WithNullTexts_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -97,7 +107,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		result.Error.ShouldNotBeNullOrEmpty();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void GetEmbeddingDimension_ShouldReturnConfiguredDimension()
 	{
 		// ✅ TDD: Test implementation behavior - adapter returns configured dimension
@@ -108,7 +118,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		dimension.ShouldBeGreaterThan(0);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void GetMaxTextLength_ShouldReturnConfiguredMaxLength()
 	{
 		// ✅ TDD: Test implementation behavior - adapter returns configured max length
@@ -119,7 +129,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		maxLength.ShouldBeGreaterThan(0);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void ValidateTextLength_WithValidText_ShouldReturnSuccess()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -131,7 +141,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		AssertResultSuccess(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void ValidateTextLength_WithTooLongText_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior - adapter validates text length
@@ -144,7 +154,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		result.Error.ShouldNotBeNullOrEmpty();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public void ValidateTextLength_WithNullText_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -155,7 +165,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		result.Error.ShouldNotBeNullOrEmpty();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingWithMetadataAsync_WithNullText_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -168,7 +178,7 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		result.Error.ShouldNotBeNullOrEmpty();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GenerateEmbeddingWithMetadataAsync_WithEmptyText_ShouldReturnFailure()
 	{
 		// ✅ TDD: Test implementation behavior
@@ -179,6 +189,54 @@ public class OllamaEmbeddingServiceAdapterTests : BaseTDDTest<OllamaEmbeddingSer
 		// ✅ TDD: Assert implementation handles invalid input correctly
 		AssertResultFailure(result);
 		result.Error.ShouldNotBeNullOrEmpty();
+	}
+
+	/// <summary>
+	/// Creates a mocked HttpClient with the specified embedding response.
+	/// Used to prevent hanging on real HTTP calls in unit tests.
+	/// </summary>
+	/// <param name="expectedEmbedding">The embedding array to return in the mock response.</param>
+	/// <returns>A mocked HttpClient instance.</returns>
+	private HttpClient CreateMockHttpClient(float[] expectedEmbedding)
+	{
+		var response = new
+		{
+			Embedding = expectedEmbedding  // Match OllamaEmbeddingResponse record property name (uppercase E)
+		};
+
+		var json = JsonSerializer.Serialize(response);
+		var handler = new MockHttpMessageHandler(json, HttpStatusCode.OK);
+		return new HttpClient(handler);
+	}
+
+	/// <summary>
+	/// Mock HttpMessageHandler for testing HTTP responses without real network calls.
+	/// </summary>
+	private class MockHttpMessageHandler : HttpMessageHandler
+	{
+		private readonly string _response;
+		private readonly HttpStatusCode _statusCode;
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="MockHttpMessageHandler"/> class.
+		/// </summary>
+		/// <param name="response">The response body to return.</param>
+		/// <param name="statusCode">The HTTP status code to return.</param>
+		public MockHttpMessageHandler(string response, HttpStatusCode statusCode)
+		{
+			_response = response;
+			_statusCode = statusCode;
+		}
+
+		/// <inheritdoc />
+		protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		{
+			return Task.FromResult(new HttpResponseMessage
+			{
+				StatusCode = _statusCode,
+				Content = new StringContent(_response)
+			});
+		}
 	}
 }
 

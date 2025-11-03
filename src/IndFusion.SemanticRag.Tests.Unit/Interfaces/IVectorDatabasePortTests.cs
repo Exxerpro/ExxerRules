@@ -44,7 +44,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		};
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task SearchAsync_WithValidRequest_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract using mock
@@ -76,7 +76,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		// ✅ DO NOT assert: result.Value.Count, ExecutionTimeMs, etc. (implementation details)
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task SearchAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null collection name should fail
@@ -98,7 +98,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		// ✅ Use error code if available: AssertFailure(result, ErrorCodes.CollectionNameRequired);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GetCollectionInfoAsync_WithValidCollectionName_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -123,7 +123,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		// ✅ This assertion is valid because Name is part of the contract (required by interface)
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task GetCollectionInfoAsync_WithNonExistentCollection_ShouldReturnNull()
 	{
 		// ✅ IITDD: Test contract - non-existent collection should return null (not failure)
@@ -141,7 +141,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		result.Value.ShouldBeNull();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task CreateCollectionAsync_WithValidParameters_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -162,7 +162,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		AssertSuccess(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task CreateCollectionAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null collection name should fail
@@ -182,7 +182,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task UpsertAsync_WithValidParameters_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -204,7 +204,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		AssertSuccess(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task UpsertAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null collection name should fail
@@ -225,7 +225,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task DeleteAsync_WithValidParameters_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -245,7 +245,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 		AssertSuccess(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task DeleteAsync_WithNullCollectionName_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null collection name should fail

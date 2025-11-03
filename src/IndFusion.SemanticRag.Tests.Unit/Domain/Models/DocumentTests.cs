@@ -13,7 +13,7 @@ namespace IndFusion.SemanticRag.Tests.Unit.Domain.Models;
 /// </summary>
 public class DocumentTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateDocument_When_ValidParametersProvided()
     {
         // Arrange
@@ -44,7 +44,7 @@ public class DocumentTests
         document.UpdatedAt.ShouldBe(updatedAt);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateSuccessfully_When_ValidDocument()
     {
         // ✅ Use fluent builder from TestDataBuilders
@@ -60,7 +60,7 @@ public class DocumentTests
         result.IsFailure.ShouldBeFalse();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData("", "Content", "SourcePath", "Repository", "CommitHash")]
     [InlineData("Id", "", "SourcePath", "Repository", "CommitHash")]
     [InlineData("Id", "Content", "", "Repository", "CommitHash")]
@@ -88,7 +88,7 @@ public class DocumentTests
         result.Error!.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_IdIsNull()
     {
         // Arrange
@@ -105,7 +105,7 @@ public class DocumentTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_ContentIsNull()
     {
         // Arrange
@@ -122,7 +122,7 @@ public class DocumentTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_SourcePathIsNull()
     {
         // Arrange
@@ -139,7 +139,7 @@ public class DocumentTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_RepositoryIsNull()
     {
         // Arrange
@@ -156,7 +156,7 @@ public class DocumentTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_CommitHashIsNull()
     {
         // Arrange
@@ -173,7 +173,7 @@ public class DocumentTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_ValidateFailure_When_MetadataIsNull()
     {
         // Arrange

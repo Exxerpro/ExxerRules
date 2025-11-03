@@ -30,7 +30,7 @@ public class SemanticRagServiceTests
         _logger = Substitute.For<ILogger<IVectorSearchPort>>();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_SearchAsync_Should_Return_Similar_Vectors()
     {
         // Arrange
@@ -72,7 +72,7 @@ public class SemanticRagServiceTests
         result.Value.Rank.ShouldBe(1);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_IndexAsync_Should_Index_Vector_Successfully()
     {
         // Arrange
@@ -95,7 +95,7 @@ public class SemanticRagServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_CreateEntityAsync_Should_Create_Entity_Successfully()
     {
         // Arrange
@@ -124,7 +124,7 @@ public class SemanticRagServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_CreateRelationshipAsync_Should_Create_Relationship_Successfully()
     {
         // Arrange
@@ -148,7 +148,7 @@ public class SemanticRagServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_GetEntityAsync_Should_Return_Entity_When_Found()
     {
         // Arrange
@@ -176,7 +176,7 @@ public class SemanticRagServiceTests
         result.Value.Type.ShouldBe("Person");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_SearchEntitiesAsync_Should_Return_Matching_Entities()
     {
         // Arrange
@@ -202,7 +202,7 @@ public class SemanticRagServiceTests
         result.Value.All(e => e.Type == "Person").ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_GetStatisticsAsync_Should_Return_Index_Statistics()
     {
         // Arrange
@@ -228,7 +228,7 @@ public class SemanticRagServiceTests
         result.Value.AverageVectorDimension.ShouldBe(384);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_GetStatisticsAsync_Should_Return_Graph_Statistics()
     {
         // Arrange
@@ -256,7 +256,7 @@ public class SemanticRagServiceTests
         result.Value.RelationshipTypes.Count.ShouldBe(3);
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData(0.5f)]
     [InlineData(0.7f)]
     [InlineData(0.9f)]
@@ -275,11 +275,15 @@ public class SemanticRagServiceTests
             embeddingSize: queryVector.Length);
         vectorResult.IsSuccess.ShouldBeTrue();
         var vectorEmbedding = vectorResult.Value;
+        
+        // Use similarity value that is always >= threshold (threshold + 0.05 for safety margin)
+        var similarity = Math.Max(threshold + 0.05f, 0.95f);
+        
         var expectedResults = new List<VectorSearchResult>
         {
             new VectorSearchResult(
                 Vector: vectorEmbedding,
-                Similarity: 0.85f,
+                Similarity: similarity,
                 Rank: 1
             )
         };

@@ -18,10 +18,24 @@ namespace IndFusion.Analyzers.Async;
 public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnalyzer
 {
 #pragma warning disable IDE1006 // Naming styles for analyzer fields
+    /// <summary>
+    /// Gets the localized title describing the cancellation-token guideline.
+    /// </summary>
     private static readonly LocalizableString Title = "Async methods should accept CancellationToken";
+
+    /// <summary>
+    /// Gets the localized message format emitted when an async method lacks a cancellation-token parameter.
+    /// </summary>
     private static readonly LocalizableString MessageFormat = "Async method '{0}' should accept a CancellationToken parameter to support graceful cancellation";
+
+    /// <summary>
+    /// Gets the descriptive text that accompanies diagnostics for missing cancellation tokens.
+    /// </summary>
     private static readonly LocalizableString Description = "Async methods should accept a CancellationToken parameter to enable graceful cancellation and prevent unresponsive applications, following fail-safe defaults principles.";
 
+    /// <summary>
+    /// The diagnostic descriptor representing the cancellation-token enforcement rule.
+    /// </summary>
     private static readonly DiagnosticDescriptor Rule = new(
         DiagnosticIds.AsyncMethodsShouldAcceptCancellationToken,
         Title,
@@ -31,10 +45,19 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         isEnabledByDefault: true,
         description: Description);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Gets the diagnostic descriptors supported by this analyzer.
+    /// </summary>
+    /// <value>An immutable array containing the cancellation-token enforcement rule.</value>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
-    /// <inheritdoc/>
+    /// <summary>
+    /// Registers the callbacks necessary to evaluate async method declarations for cancellation-token parameters.
+    /// </summary>
+    /// <param name="context">The Roslyn analysis context used to register actions.</param>
+    /// <remarks>
+    /// Generated code is excluded and concurrent execution is enabled prior to examining each <see cref="MethodDeclarationSyntax"/> node.
+    /// </remarks>
     public override void Initialize(AnalysisContext context)
     {
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
@@ -43,6 +66,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         context.RegisterSyntaxNodeAction(AnalyzeMethod, SyntaxKind.MethodDeclaration);
     }
 
+    /// <summary>
+    /// Analyzes async method declarations and reports diagnostics when cancellation-token support is missing.
+    /// </summary>
+    /// <param name="context">The syntax analysis context supplying the target method declaration.</param>
     private static void AnalyzeMethod(SyntaxNodeAnalysisContext context)
     {
         var methodDeclaration = (MethodDeclarationSyntax)context.Node;
@@ -151,15 +178,30 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         context.ReportDiagnostic(diagnostic);
     }
 
+    /// <summary>
+    /// Determines whether the supplied method carries the <c>async</c> modifier.
+    /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when the async modifier is present; otherwise, <c>false</c>.</returns>
     private static bool IsAsyncMethod(MethodDeclarationSyntax method) =>
         // Check if method has async modifier
         method.Modifiers.Any(SyntaxKind.AsyncKeyword);
 
+    /// <summary>
+    /// Determines whether the async method returns <see cref="void"/>, which typically indicates an event handler.
+    /// </summary>
+    /// <param name="method">The method declaration being evaluated.</param>
+    /// <returns><c>true</c> when the method is async void; otherwise, <c>false</c>.</returns>
     private static bool IsAsyncVoidMethod(MethodDeclarationSyntax method) =>
         // Check if return type is void (async void methods are typically event handlers)
         method.ReturnType is PredefinedTypeSyntax predefined &&
                predefined.Keyword.IsKind(SyntaxKind.VoidKeyword);
 
+    /// <summary>
+    /// Determines whether the method should be skipped from analysis due to naming patterns or architectural considerations.
+    /// </summary>
+    /// <param name="method">The method declaration to evaluate.</param>
+    /// <returns><c>true</c> when the method qualifies for skipping; otherwise, <c>false</c>.</returns>
     private static bool IsSkippableMethod(MethodDeclarationSyntax method)
     {
         // Skip Main method
@@ -193,6 +235,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the method is part of application-layer code that can legitimately omit cancellation tokens.
+    /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when the surrounding class or namespace indicates application code; otherwise, <c>false</c>.</returns>
     private static bool IsApplicationCode(MethodDeclarationSyntax method)
     {
         // Check if we're in a class that looks like application code
@@ -226,6 +273,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return false;
     }
 
+    /// <summary>
+    /// Determines whether the provided type symbol represents <see cref="System.Threading.CancellationToken"/>.
+    /// </summary>
+    /// <param name="typeSymbol">The type symbol to evaluate.</param>
+    /// <returns><c>true</c> when the symbol resolves to <c>CancellationToken</c>; otherwise, <c>false</c>.</returns>
     private static bool IsCancellationTokenType(ITypeSymbol typeSymbol)
     {
         // Check if type is System.Threading.CancellationToken
@@ -242,6 +294,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
                "CancellationToken";
     }
 
+    /// <summary>
+    /// Builds the fully qualified type name for the supplied symbol, including containing types and namespaces.
+    /// </summary>
+    /// <param name="typeSymbol">The type symbol to translate.</param>
+    /// <returns>A dotted type name suitable for comparisons.</returns>
     private static string GetFullTypeName(ITypeSymbol typeSymbol)
     {
         if (typeSymbol == null)
@@ -275,6 +332,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return string.Join(".", parts);
     }
 
+    /// <summary>
+    /// Determines whether the provided node resides within boundary-layer artifacts such as controllers or API endpoints.
+    /// </summary>
+    /// <param name="node">The node whose ancestors should be inspected.</param>
+    /// <returns><c>true</c> when the ancestor chain identifies a boundary layer; otherwise, <c>false</c>.</returns>
     private static bool IsInBoundaryLayer(SyntaxNode node)
     {
         var containingClass = node.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -304,11 +366,15 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     /// <summary>
     /// Determines whether an override can be skipped because the base signature already provides a cancellation token.
     /// </summary>
+    /// <param name="methodSymbol">The method symbol representing the override.</param>
+    /// <returns><c>true</c> when the method overrides a base member; otherwise, <c>false</c>.</returns>
     private static bool ShouldSkipOverride(IMethodSymbol methodSymbol) => methodSymbol.IsOverride;
 
     /// <summary>
     /// Determines whether an explicit interface implementation can be skipped because the interface already mandates a cancellation token.
     /// </summary>
+    /// <param name="methodSymbol">The method symbol representing the explicit implementation.</param>
+    /// <returns><c>true</c> when every implemented interface member already includes a cancellation token; otherwise, <c>false</c>.</returns>
     private static bool ShouldSkipExplicitInterfaceImplementation(IMethodSymbol methodSymbol)
     {
         if (methodSymbol.ExplicitInterfaceImplementations.Length == 0)
@@ -319,6 +385,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
         return methodSymbol.ExplicitInterfaceImplementations.All(MethodHasCancellationToken);
     }
 
+    /// <summary>
+    /// Determines whether the provided method symbol includes a cancellation-token parameter.
+    /// </summary>
+    /// <param name="methodSymbol">The method symbol to inspect.</param>
+    /// <returns><c>true</c> when at least one parameter is a cancellation token; otherwise, <c>false</c>.</returns>
     private static bool MethodHasCancellationToken(IMethodSymbol methodSymbol)
     {
         foreach (var parameter in methodSymbol.Parameters)
@@ -337,8 +408,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.2: Exempt Blazor Lifecycle Methods
 
     /// <summary>
-    /// Checks if the method is a Blazor lifecycle method.
+    /// Determines whether the supplied method is a Blazor component lifecycle callback.
     /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <param name="semanticModel">The semantic model used to resolve the containing type.</param>
+    /// <returns><c>true</c> when the method matches a known lifecycle signature on a <c>ComponentBase</c>-derived class; otherwise, <c>false</c>.</returns>
     private static bool IsBlazorLifecycleMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
     {
         // Check if the containing class inherits from ComponentBase
@@ -369,8 +443,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     }
 
     /// <summary>
-    /// Checks if the class inherits from ComponentBase.
+    /// Determines whether the provided class symbol derives from <c>ComponentBase</c>.
     /// </summary>
+    /// <param name="classSymbol">The class symbol to inspect.</param>
+    /// <returns><c>true</c> when the inheritance chain includes <c>ComponentBase</c>; otherwise, <c>false</c>.</returns>
     private static bool InheritsFromComponentBase(INamedTypeSymbol classSymbol)
     {
         var current = classSymbol.BaseType;
@@ -392,8 +468,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.3: Exempt SignalR Hub Lifecycle Methods
 
     /// <summary>
-    /// Checks if the method is a SignalR hub lifecycle method.
+    /// Determines whether the method is part of the SignalR hub lifecycle.
     /// </summary>
+    /// <param name="method">The method declaration being evaluated.</param>
+    /// <param name="semanticModel">The semantic model used to inspect the containing hub type.</param>
+    /// <returns><c>true</c> when the method matches SignalR lifecycle signatures; otherwise, <c>false</c>.</returns>
     private static bool IsSignalRHubLifecycleMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
     {
         // Check if the containing class inherits from Hub
@@ -422,8 +501,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     }
 
     /// <summary>
-    /// Checks if the class inherits from Hub.
+    /// Determines whether the provided class symbol derives from <c>Hub</c>.
     /// </summary>
+    /// <param name="classSymbol">The class symbol to inspect.</param>
+    /// <returns><c>true</c> when the inheritance chain includes SignalR hub types; otherwise, <c>false</c>.</returns>
     private static bool InheritsFromHub(INamedTypeSymbol classSymbol)
     {
         var current = classSymbol.BaseType;
@@ -445,8 +526,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.4: Exempt Test Methods
 
     /// <summary>
-    /// Checks if the method is a test method.
+    /// Determines whether the method is decorated as a test case.
     /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when a known test attribute is present; otherwise, <c>false</c>.</returns>
     private static bool IsTestMethod(MethodDeclarationSyntax method)
     {
         // Check for test attributes
@@ -470,8 +553,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.5: Exempt Test Class Helper Methods
 
     /// <summary>
-    /// Checks if the method is a helper method in a test class.
+    /// Determines whether the method belongs to a test class and serves as a helper utility.
     /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when the containing class name indicates a test helper; otherwise, <c>false</c>.</returns>
     private static bool IsTestClassHelperMethod(MethodDeclarationSyntax method)
     {
         var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -493,8 +578,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.6: Exempt IAsyncLifetime Contract Methods
 
     /// <summary>
-    /// Checks if the method is an IAsyncLifetime method.
+    /// Determines whether the method implements the <c>IAsyncLifetime</c> contract provided by xUnit.
     /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <param name="semanticModel">The semantic model used to resolve the containing type.</param>
+    /// <returns><c>true</c> when the method is <c>InitializeAsync</c> or <c>DisposeAsync</c> on an <c>IAsyncLifetime</c> type; otherwise, <c>false</c>.</returns>
     private static bool IsIAsyncLifetimeMethod(MethodDeclarationSyntax method, SemanticModel semanticModel)
     {
         var methodName = method.Identifier.Text;
@@ -523,8 +611,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     }
 
     /// <summary>
-    /// Checks if the class implements IAsyncLifetime.
+    /// Determines whether the supplied class symbol implements <c>IAsyncLifetime</c>.
     /// </summary>
+    /// <param name="classSymbol">The class symbol to inspect.</param>
+    /// <returns><c>true</c> when the interface is implemented; otherwise, <c>false</c>.</returns>
     private static bool ImplementsIAsyncLifetime(INamedTypeSymbol classSymbol)
     {
         foreach (var interfaceSymbol in classSymbol.AllInterfaces)
@@ -543,8 +633,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.7: Exempt Test Fixture Methods
 
     /// <summary>
-    /// Checks if the method is in a test fixture class.
+    /// Determines whether the method belongs to an xUnit test fixture class.
     /// </summary>
+    /// <param name="method">The method declaration under evaluation.</param>
+    /// <returns><c>true</c> when the containing class matches fixture patterns; otherwise, <c>false</c>.</returns>
     private static bool IsTestFixtureMethod(MethodDeclarationSyntax method)
     {
         var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
@@ -580,8 +672,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.8: Exempt Blazor EventCallback Handlers
 
     /// <summary>
-    /// Checks if the method is a Blazor event handler.
+    /// Determines whether the method signature aligns with Blazor event handlers where cancellation might not apply.
     /// </summary>
+    /// <param name="method">The method declaration to inspect.</param>
+    /// <returns><c>true</c> when the method matches known Blazor event handler conventions; otherwise, <c>false</c>.</returns>
     private static bool IsBlazorEventHandler(MethodDeclarationSyntax method)
     {
         // Check if method is private (typical for event handlers)
@@ -604,8 +698,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.9: Analyze Cancellation Availability
 
     /// <summary>
-    /// Checks if cancellation is available for awaited calls in the method.
+    /// Determines whether the method awaits operations that support cancellation tokens.
     /// </summary>
+    /// <param name="method">The method declaration to analyze.</param>
+    /// <param name="semanticModel">The semantic model used for invocation inspection.</param>
+    /// <returns><c>true</c> when an awaited call supports cancellation; otherwise, <c>false</c>.</returns>
     private static bool HasCancellationAvailable(MethodDeclarationSyntax method, SemanticModel semanticModel)
     {
         // Check if the method actually awaits anything
@@ -648,8 +745,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     }
 
     /// <summary>
-    /// Gets the method name from an invocation expression.
+    /// Extracts the invoked method name from an invocation expression.
     /// </summary>
+    /// <param name="invocation">The invocation expression to analyse.</param>
+    /// <returns>The method name referenced by the invocation, or an empty string when unavailable.</returns>
     private static string GetMethodName(InvocationExpressionSyntax invocation)
     {
         if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
@@ -666,8 +765,10 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     }
 
     /// <summary>
-    /// Checks if a method doesn't support cancellation.
+    /// Determines whether the specified method name represents an API without cancellation-token overloads.
     /// </summary>
+    /// <param name="methodName">The name of the awaited method.</param>
+    /// <returns><c>true</c> when the method is known to lack cancellation support; otherwise, <c>false</c>.</returns>
     private static bool IsMethodWithoutCancellationSupport(string methodName)
     {
         // Common methods that don't have CancellationToken overloads
@@ -690,8 +791,11 @@ public class AsyncMethodsShouldAcceptCancellationTokenAnalyzer : DiagnosticAnaly
     #region Story 1.10: Be Aware of Captured Tokens
 
     /// <summary>
-    /// Checks if the method has access to a captured CancellationToken.
+    /// Determines whether the method accesses a previously captured cancellation token.
     /// </summary>
+    /// <param name="method">The method declaration being analysed.</param>
+    /// <param name="semanticModel">The semantic model used for identifier resolution.</param>
+    /// <returns><c>true</c> when a captured token is referenced; otherwise, <c>false</c>.</returns>
     private static bool HasCapturedToken(MethodDeclarationSyntax method, SemanticModel semanticModel)
     {
         // Check if method uses a CancellationToken from a field or property

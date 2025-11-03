@@ -40,7 +40,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		};
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadAsync_WithValidQuery_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract using mock
@@ -68,7 +68,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		result.Value.ShouldNotBeNull();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null cypher query should fail
@@ -85,7 +85,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadAsync_WithEmptyCypher_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - empty cypher query should fail
@@ -102,7 +102,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteAsync_WithValidQuery_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -124,7 +124,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		result.Value.ShouldNotBeNull();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteAsync_WithNullCypher_ShouldReturnFailure()
 	{
 		// ✅ IITDD: Test contract - null cypher query should fail
@@ -141,7 +141,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		AssertFailure(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadSingleAsync_WithValidQuery_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -165,7 +165,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		result.Value.ShouldNotBeNull();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadSingleAsync_WithNoResults_ShouldReturnNull()
 	{
 		// ✅ IITDD: Test contract - no results should return null (not failure)
@@ -186,7 +186,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		result.Value.ShouldBeNull();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteSingleAsync_WithValidQuery_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -210,7 +210,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		result.Value.ShouldNotBeNull();
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteReadVoidAsync_WithValidQuery_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract
@@ -230,7 +230,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 		AssertSuccess(result);
 	}
 
-	[Fact]
+	[Fact(Timeout = 5000)]
 	public async Task ExecuteWriteVoidAsync_WithValidQuery_ShouldReturnSuccess()
 	{
 		// ✅ IITDD: Test interface contract

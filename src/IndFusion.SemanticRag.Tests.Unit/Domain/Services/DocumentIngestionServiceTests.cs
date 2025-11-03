@@ -27,7 +27,7 @@ public class DocumentIngestionServiceTests
         _logger = Substitute.For<ILogger<IDocumentIngestionPort>>();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task IngestDocumentAsync_Should_Return_Success_Result_For_Valid_Input()
     {
         // Arrange
@@ -78,7 +78,7 @@ public class DocumentIngestionServiceTests
         result.Value.ProgressPercentage.ShouldBe(100);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task IngestDocumentAsync_Should_Return_Failure_Result_For_Invalid_Input()
     {
         // Arrange
@@ -102,7 +102,7 @@ public class DocumentIngestionServiceTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task IngestDocumentsAsync_Should_Process_Multiple_Documents()
     {
         // Arrange
@@ -133,7 +133,7 @@ public class DocumentIngestionServiceTests
         result.Value[1].DocumentId.ShouldBe("doc-2");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task IngestRepositoryAsync_Should_Process_Repository_Successfully()
     {
         // Arrange
@@ -164,7 +164,7 @@ public class DocumentIngestionServiceTests
         result.Value.Success.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task GetIngestionStatusAsync_Should_Return_Current_Status()
     {
         // Arrange
@@ -195,7 +195,7 @@ public class DocumentIngestionServiceTests
         result.Value.CurrentStage.ShouldBe("Processing document");
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task CancelIngestionAsync_Should_Cancel_Ongoing_Ingestion()
     {
         // Arrange
@@ -212,7 +212,7 @@ public class DocumentIngestionServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task CancelIngestionAsync_Should_Handle_Non_Existent_Document()
     {
         // Arrange
@@ -230,7 +230,7 @@ public class DocumentIngestionServiceTests
         result.Error.ShouldNotBeNullOrEmpty();
     }
 
-    [Theory]
+    [Theory(Timeout = 5000)]
     [InlineData(IngestionStatusEnum.Pending, 0)]
     [InlineData(IngestionStatusEnum.Processing, 50)]
     [InlineData(IngestionStatusEnum.Completed, 100)]

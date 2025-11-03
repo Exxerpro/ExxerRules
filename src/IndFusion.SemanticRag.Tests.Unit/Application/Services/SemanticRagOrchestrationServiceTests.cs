@@ -46,7 +46,7 @@ public class SemanticRagOrchestrationServiceTests
 
     public class ComprehensiveSearchAsyncTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnComprehensiveSearchResult_When_ValidQueryProvided()
         {
             // Arrange
@@ -74,17 +74,56 @@ public class SemanticRagOrchestrationServiceTests
             semanticRagService.GetContextAsync(query, options.RagConfig, Arg.Any<CancellationToken>())
                 .Returns(Result<SemanticContext>.Success(context));
 
+            // Mock extraction service since EnableKnowledgeExtraction is true by default
+            // Create a simple extraction result inline since CreateTestKnowledgeExtractionResult is in IngestRepositoryAsyncTests nested class
+            var entities = new[] { new KnowledgeEntity("entity-1", "Test Entity", "TestType", "Description", new Dictionary<string, object>(), 0.9f, DateTime.UtcNow) };
+            var relationships = new[] { new KnowledgeRelationship("rel-1", "entity-1", "entity-2", "RELATED_TO", new Dictionary<string, object>(), DateTimeOffset.UtcNow) };
+            var codeEntities = new List<IndFusion.SemanticRag.Domain.Services.CodeEntity>();
+            var concepts = new List<IndFusion.SemanticRag.Domain.Services.SemanticConcept>();
+            var extractionResult = new IndFusion.SemanticRag.Domain.Services.KnowledgeExtractionResult(
+                entities,
+                relationships,
+                codeEntities,
+                concepts,
+                ProcessingTimeMs: 1000,
+                Confidence: 0.8f);
+            
+            extractionService.ExtractKnowledgeAsync(Arg.Any<SemanticDocument>(), Arg.Any<ComprehensiveExtractionOptions>(), Arg.Any<CancellationToken>())
+                .Returns(Result<IndFusion.SemanticRag.Domain.Services.KnowledgeExtractionResult>.Success(extractionResult));
+
             // Act
             var result = await orchestrationService.ComprehensiveSearchAsync(query, options, cancellationToken: TestContext.Current.CancellationToken);
 
             // Assert
-            result.IsSuccess.ShouldBeTrue();
+            result.IsSuccess.ShouldBeTrue($"Expected success but got error: {result.Error}");
             result.Value.Query.ShouldBe(query);
-            result.Value.SearchResults.ShouldBe(searchResponse.Results);
-            result.Value.AdditionalContext.ShouldBe(context);
+            
+            // Compare SearchResults by content, not reference
+            result.Value.SearchResults.ShouldNotBeNull();
+            result.Value.SearchResults.Count.ShouldBe(searchResponse.Results.Count);
+            for (int i = 0; i < result.Value.SearchResults.Count; i++)
+            {
+                result.Value.SearchResults[i].Id.ShouldBe(searchResponse.Results[i].Id);
+                result.Value.SearchResults[i].Document?.Id.ShouldBe(searchResponse.Results[i].Document?.Id);
+            }
+            
+            // Compare AdditionalContext by content, not reference
+            // Note: SemanticContext does not have a Query property - it has Id, Name, Description, etc.
+            if (context != null)
+            {
+                result.Value.AdditionalContext.ShouldNotBeNull();
+                result.Value.AdditionalContext!.Id.ShouldBe(context.Id);
+                result.Value.AdditionalContext!.Name.ShouldBe(context.Name);
+            }
+            else
+            {
+                // If context is null, AdditionalContext should also be null (since EnableContextRetrieval is true by default)
+                // But the mock returns a context, so we verify it's not null
+                result.Value.AdditionalContext.ShouldNotBeNull();
+            }
         }
 
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnFailure_When_SearchFails()
         {
             // Arrange
@@ -185,7 +224,7 @@ public class SemanticRagOrchestrationServiceTests
 
     public class IngestRepositoryAsyncTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnIngestionResult_When_ValidRepositoryPathProvided()
         {
             // Arrange
@@ -238,7 +277,7 @@ public class SemanticRagOrchestrationServiceTests
             result.Value.Success.ShouldBeTrue();
         }
 
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnFailure_When_DocumentIngestionFails()
         {
             // Arrange
@@ -356,7 +395,7 @@ public class SemanticRagOrchestrationServiceTests
 
     public class AnswerQuestionAsyncTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnAnswerResult_When_ValidQuestionProvided()
         {
             // Arrange
@@ -403,7 +442,7 @@ public class SemanticRagOrchestrationServiceTests
             result.Value.SupportingDocuments.Count.ShouldBeGreaterThan(0);
         }
 
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnFailure_When_ContextRetrievalFails()
         {
             // Arrange
@@ -511,7 +550,7 @@ public class SemanticRagOrchestrationServiceTests
 
     public class GetSystemHealthAsyncTests
     {
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnHealthResult_When_SystemIsHealthy()
         {
             // Arrange
@@ -550,7 +589,7 @@ public class SemanticRagOrchestrationServiceTests
             result.Value.TotalRelationships.ShouldBe(25);
         }
 
-        [Fact]
+        [Fact(Timeout = 5000)]
         public async Task Should_ReturnFailure_When_StatsRetrievalFails()
         {
             // Arrange
@@ -587,7 +626,7 @@ public class SemanticRagOrchestrationServiceTests
 /// </summary>
 public class ComprehensiveSearchOptionsTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateDefaultOptions_When_DefaultCalled()
     {
         // Act
@@ -610,7 +649,7 @@ public class ComprehensiveSearchOptionsTests
 /// </summary>
 public class QuestionAnswerOptionsTests
 {
-    [Fact]
+    [Fact(Timeout = 5000)]
     public void Should_CreateQuestionAnswerOptions_When_ValidParametersProvided()
     {
         // Arrange

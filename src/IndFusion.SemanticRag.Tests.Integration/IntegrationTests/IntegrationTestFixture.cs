@@ -8,18 +8,22 @@ using NSubstitute;
 namespace IndFusion.SemanticRag.Tests.Integration.IntegrationTests;
 
 /// <summary>
-/// Integration test fixture for setting up the test environment.
+/// Provides a reusable integration-test service container composed from application and infrastructure registrations.
 /// </summary>
 public class IntegrationTestFixture : IDisposable
 {
     /// <summary>
-    /// Gets the service provider for the test environment.
+    /// Gets the fully initialized service provider that integration tests use to resolve dependencies.
     /// </summary>
     public IServiceProvider ServiceProvider { get; }
 
     /// <summary>
-    /// Initializes a new instance of the IntegrationTestFixture class.
+    /// Initializes a new instance of the <see cref="IntegrationTestFixture"/> class and composes the application service graph.
     /// </summary>
+    /// <remarks>
+    /// The underlying <see cref="ServiceCollection"/> registers logging along with the application and infrastructure layers,
+    /// mirroring real production wiring so that integration tests exercise concrete implementations.
+    /// </remarks>
     public IntegrationTestFixture()
     {
         var services = new ServiceCollection();
@@ -35,8 +39,9 @@ public class IntegrationTestFixture : IDisposable
     }
 
     /// <summary>
-    /// Clears all vectors from the repository.
+    /// Removes all vector entries from the underlying <see cref="IVectorSearchPort"/> storage to ensure isolated test runs.
     /// </summary>
+    /// <returns>A <see cref="Task"/> that completes when the repository purge finishes.</returns>
     public async Task ClearRepositoryAsync()
     {
         var vectorSearchPort = ServiceProvider.GetRequiredService<IVectorSearchPort>();
@@ -44,7 +49,7 @@ public class IntegrationTestFixture : IDisposable
     }
 
     /// <summary>
-    /// Disposes the test fixture.
+    /// Disposes the service provider and any scoped resources created during integration testing.
     /// </summary>
     public void Dispose()
     {

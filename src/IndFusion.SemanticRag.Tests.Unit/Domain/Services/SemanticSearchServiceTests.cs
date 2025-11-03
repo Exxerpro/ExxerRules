@@ -30,7 +30,7 @@ public class SemanticSearchServiceTests
         _logger = Substitute.For<ILogger<IVectorSearchPort>>();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_SearchBatchAsync_Should_Process_Multiple_Queries()
     {
         // Arrange
@@ -75,7 +75,7 @@ public class SemanticSearchServiceTests
         result.Value.Count.ShouldBe(2);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_IndexBatchAsync_Should_Index_Multiple_Vectors()
     {
         // Arrange
@@ -96,7 +96,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_UpdateAsync_Should_Update_Existing_Vector()
     {
         // Arrange
@@ -119,7 +119,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_DeleteAsync_Should_Delete_Vector_Successfully()
     {
         // Arrange
@@ -136,7 +136,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task VectorSearchPort_ClearAsync_Should_Clear_All_Vectors()
     {
         // Arrange
@@ -151,7 +151,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_CreateEntitiesAsync_Should_Create_Multiple_Entities()
     {
         // Arrange
@@ -172,7 +172,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_CreateRelationshipsAsync_Should_Create_Multiple_Relationships()
     {
         // Arrange
@@ -193,7 +193,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_GetEntitiesAsync_Should_Return_Multiple_Entities()
     {
         // Arrange
@@ -217,7 +217,7 @@ public class SemanticSearchServiceTests
         result.Value.Count.ShouldBe(2);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_GetRelationshipsAsync_Should_Return_Multiple_Relationships()
     {
         // Arrange
@@ -241,7 +241,7 @@ public class SemanticSearchServiceTests
         result.Value.Count.ShouldBe(2);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_SearchRelationshipsAsync_Should_Return_Matching_Relationships()
     {
         // Arrange
@@ -267,7 +267,7 @@ public class SemanticSearchServiceTests
         result.Value.All(r => r.RelationshipType == "WORKS_FOR").ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_FindConnectedEntitiesAsync_Should_Return_Connected_Entities()
     {
         // Arrange
@@ -292,7 +292,7 @@ public class SemanticSearchServiceTests
         result.Value.Count.ShouldBe(2);
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_UpdateEntityAsync_Should_Update_Entity_Successfully()
     {
         // Arrange
@@ -317,7 +317,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_UpdateRelationshipAsync_Should_Update_Relationship_Successfully()
     {
         // Arrange
@@ -341,7 +341,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_DeleteEntityAsync_Should_Delete_Entity_Successfully()
     {
         // Arrange
@@ -358,7 +358,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_DeleteRelationshipAsync_Should_Delete_Relationship_Successfully()
     {
         // Arrange
@@ -375,7 +375,7 @@ public class SemanticSearchServiceTests
         result.IsSuccess.ShouldBeTrue();
     }
 
-    [Fact]
+    [Fact(Timeout = 5000)]
     public async Task KnowledgeGraphServicePort_ClearAsync_Should_Clear_All_Data()
     {
         // Arrange

@@ -75,7 +75,7 @@ public class SemanticRagOrchestrationService
 
             // Extract knowledge from top results if enabled
             var extractedKnowledge = new List<IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult>();
-            if (options.EnableKnowledgeExtraction && searchResponse.Results.Any())
+            if (options.EnableKnowledgeExtraction && searchResponse.Results != null && searchResponse.Results.Any())
             {
                 var topResults = searchResponse.Results.Take(options.MaxResultsForExtraction);
                 foreach (var result in topResults)
@@ -93,15 +93,15 @@ public class SemanticRagOrchestrationService
                         var servicesResult = extractionResult.Value;
                         var modelsResult = new IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult(
                             DocumentId: result.Document.Id,
-                            Entities: servicesResult.Entities,
-                            Relationships: servicesResult.Relationships,
-                            Summary: $"Extracted {servicesResult.Entities.Count} entities and {servicesResult.Relationships.Count} relationships",
+                            Entities: servicesResult.Entities ?? new List<KnowledgeEntity>(),
+                            Relationships: servicesResult.Relationships ?? new List<KnowledgeRelationship>(),
+                            Summary: $"Extracted {servicesResult.Entities?.Count ?? 0} entities and {servicesResult.Relationships?.Count ?? 0} relationships",
                             Confidence: servicesResult.Confidence,
                             Metadata: new Dictionary<string, object>
                             {
                                 ["ProcessingTimeMs"] = servicesResult.ProcessingTimeMs,
-                                ["CodeEntitiesCount"] = servicesResult.CodeEntities.Count,
-                                ["ConceptsCount"] = servicesResult.Concepts.Count
+                                ["CodeEntitiesCount"] = servicesResult.CodeEntities?.Count ?? 0,
+                                ["ConceptsCount"] = servicesResult.Concepts?.Count ?? 0
                             }
                         );
                         extractedKnowledge.Add(modelsResult);
@@ -125,7 +125,7 @@ public class SemanticRagOrchestrationService
             }
 
             var comprehensiveResult = new ComprehensiveSearchResult(
-                SearchResults: searchResponse.Results,
+                SearchResults: searchResponse.Results ?? new List<SemanticSearchResult>(),
                 TotalCount: searchResponse.TotalCount,
                 Query: query,
                 ProcessingTimeMs: searchResponse.ProcessingTimeMs,
@@ -169,11 +169,17 @@ public class SemanticRagOrchestrationService
             }
 
             // Ingest documents
-            // TODO: Fix RepositoryIngestionConfig type mismatch - create conversion or fix service interface
-            // For now, create a temporary conversion
+            // Map from Models.RepositoryIngestionConfig to Services.RepositoryIngestionConfig
+            // Note: DocumentIngestionOptions doesn't have ExtractCodeEntities/ExtractComments/ProcessDependencies,
+            // so we use defaults (true) or check if EnableEntityExtraction is enabled
             var servicesConfig = new IndFusion.SemanticRag.Domain.Services.RepositoryIngestionConfig(
-                // Map properties from Models version to Services version
-                // This is a temporary fix until the proper type is defined
+                IncludePatterns: config.IncludePatterns ?? new List<string>(),
+                ExcludePatterns: config.ExcludePatterns ?? new List<string>(),
+                MaxFileSize: config.MaxFileSize,
+                ExtractCodeEntities: config.IngestionOptions?.EnableEntityExtraction ?? true,
+                ExtractComments: config.IngestionOptions?.EnableEntityExtraction ?? true,
+                ProcessDependencies: config.IngestionOptions?.EnableKnowledgeGraph ?? true,
+                MaxDepth: config.MaxDepth
             );
             var documentsResult = await _ingestionService.IngestRepositoryAsync(
                 repositoryPath,

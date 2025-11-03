@@ -7,7 +7,9 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <PackageVersion>1.0.8</PackageVersion>
     <Authors>IndFusion</Authors>
-    <Description>Core library for IndFusion CLI tools - refactoring and code analysis</Description>
+	  <OutputType>Library</OutputType>
+
+	  <Description>Core library for IndFusion CLI tools - refactoring and code analysis</Description>
     <PackageTags>refactoring;code-analysis;roslyn;cli</PackageTags>
   </PropertyGroup>
 
@@ -24,8 +26,6 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
     <!-- System.CommandLine -->
     <PackageReference Include="System.CommandLine" />
-    <PackageReference Include="System.CommandLine.DragonFruit" />
-    <PackageReference Include="CommandLineParser" />
   </ItemGroup>
 
   <ItemGroup>

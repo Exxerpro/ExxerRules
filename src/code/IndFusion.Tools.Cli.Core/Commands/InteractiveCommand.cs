@@ -1,4 +1,5 @@
 using System.CommandLine;
+using System.CommandLine.Parsing;
 using Microsoft.Extensions.Logging;
 using IndFusion.Tools.Cli.Core.Models;
 using IndFusion.Tools.Cli.Core.Services;
@@ -10,36 +11,43 @@ namespace IndFusion.Tools.Cli.Core.Commands;
 /// </summary>
 public class InteractiveCommand : BaseCommand
 {
-    private static readonly Option<bool> GuidedOption = new(
-        aliases: ["--guided", "-g"],
-        description: "Enable guided mode with step-by-step instructions");
+    private static readonly Option<bool> GuidedOption = new("--guided", "-g")
+    {
+        Description = "Enable guided mode with step-by-step instructions"
+    };
 
-    private static readonly Option<bool> AutoDetectOption = new(
-        aliases: ["--auto-detect"],
-        description: "Automatically detect refactoring opportunities");
+    private static readonly Option<bool> AutoDetectOption = new("--auto-detect")
+    {
+        Description = "Automatically detect refactoring opportunities"
+    };
 
-    private static readonly Option<string> ProfileOption = new(
-        aliases: ["--profile"],
-        description: "Use a specific configuration profile");
+    private static readonly Option<string> ProfileOption = new("--profile")
+    {
+        Description = "Use a specific configuration profile"
+    };
 
     /// <summary>
     /// Initializes a new instance of the InteractiveCommand class
     /// </summary>
     public InteractiveCommand() : base("interactive", "Start interactive guided refactoring workflow")
     {
-        AddOption(GuidedOption);
-        AddOption(AutoDetectOption);
-        AddOption(ProfileOption);
+        Options.Add(GuidedOption);
+        Options.Add(AutoDetectOption);
+        Options.Add(ProfileOption);
 
-        this.SetHandler(ExecuteAsync,
-            SolutionOption,
-            GuidedOption,
-            AutoDetectOption,
-            ProfileOption,
-            VerboseOption,
-            ConfigOption,
-            LogLevelOption,
-            OutputOption);
+        this.SetAction(async (ParseResult parseResult, CancellationToken cancellationToken) =>
+        {
+            var solution = parseResult.GetValue(SolutionOption);
+            var guided = parseResult.GetValue(GuidedOption);
+            var autoDetect = parseResult.GetValue(AutoDetectOption);
+            var profile = parseResult.GetValue(ProfileOption);
+            var verbose = parseResult.GetValue(VerboseOption);
+            var config = parseResult.GetValue(ConfigOption);
+            var logLevel = parseResult.GetValue(LogLevelOption);
+            var output = parseResult.GetValue(OutputOption);
+
+            return await ExecuteAsync(solution, guided, autoDetect, profile, verbose, config, logLevel, output);
+        });
     }
 
     /// <summary>

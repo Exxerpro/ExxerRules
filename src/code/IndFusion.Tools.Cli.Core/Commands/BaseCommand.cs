@@ -11,38 +11,43 @@ public abstract class BaseCommand : Command
     /// <summary>
     /// Global verbose option for detailed output
     /// </summary>
-    protected static readonly Option<bool> VerboseOption = new(
-        aliases: ["--verbose", "-v"],
-        description: "Enable verbose output");
+    protected static readonly Option<bool> VerboseOption = new("--verbose", "-v")
+    {
+        Description = "Enable verbose output"
+    };
 
     /// <summary>
     /// Global configuration file option
     /// </summary>
-    protected static readonly Option<FileInfo?> ConfigOption = new(
-        aliases: ["--config", "-c"],
-        description: "Path to configuration file");
+    protected static readonly Option<FileInfo?> ConfigOption = new("--config", "-c")
+    {
+        Description = "Path to configuration file"
+    };
 
     /// <summary>
     /// Global log level option
     /// </summary>
-    protected static readonly Option<LogLevel> LogLevelOption = new(
-        aliases: ["--log-level"],
-        description: "Set the logging level",
-        getDefaultValue: () => LogLevel.Information);
+    protected static readonly Option<LogLevel> LogLevelOption = new("--log-level")
+    {
+        Description = "Set the logging level",
+        DefaultValueFactory = _ => LogLevel.Information
+    };
 
     /// <summary>
     /// Global solution path option
     /// </summary>
-    protected static readonly Option<FileInfo?> SolutionOption = new(
-        aliases: ["--solution", "-s"],
-        description: "Path to solution file");
+    protected static readonly Option<FileInfo?> SolutionOption = new("--solution", "-s")
+    {
+        Description = "Path to solution file"
+    };
 
     /// <summary>
     /// Global output directory option
     /// </summary>
-    protected static readonly Option<DirectoryInfo?> OutputOption = new(
-        aliases: ["--output", "-o"],
-        description: "Output directory for results");
+    protected static readonly Option<DirectoryInfo?> OutputOption = new("--output", "-o")
+    {
+        Description = "Output directory for results"
+    };
 
     /// <summary>
     /// Initializes a new instance of the BaseCommand class
@@ -52,11 +57,11 @@ public abstract class BaseCommand : Command
     protected BaseCommand(string name, string description) : base(name, description)
     {
         // Add global options to all commands
-        AddGlobalOption(VerboseOption);
-        AddGlobalOption(ConfigOption);
-        AddGlobalOption(LogLevelOption);
-        AddGlobalOption(SolutionOption);
-        AddGlobalOption(OutputOption);
+        Options.Add(VerboseOption);
+        Options.Add(ConfigOption);
+        Options.Add(LogLevelOption);
+        Options.Add(SolutionOption);
+        Options.Add(OutputOption);
     }
 
     /// <summary>

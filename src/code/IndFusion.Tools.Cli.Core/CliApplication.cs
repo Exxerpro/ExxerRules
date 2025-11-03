@@ -1,7 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.CommandLine.Parsing;
-using CommandLine;
 using IndFusion.Tools.Cli.Core.Commands;
 using IndFusion.Tools.Cli.Core.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,9 +35,8 @@ public class CliApplication
     {
         try
         {
-            var parser = BuildCommandLine();
-            var result = await parser.InvokeAsync(args);
-            return result;
+            var rootCommand = BuildCommandLine();
+            return await Task.FromResult(rootCommand.Parse(args).Invoke());
         }
         catch (Exception ex)
         {
@@ -52,41 +50,26 @@ public class CliApplication
     /// <summary>
     /// Builds the command line parser with all commands and options
     /// </summary>
-    /// <returns>Configured command line parser</returns>
-    private Parser BuildCommandLine()
+    /// <returns>Configured root command</returns>
+    private RootCommand BuildCommandLine()
     {
-        var rootCommand = new RootCommand("IndFusion Tools CLI - Professional refactoring and code analysis tools");
-
-        // Add commands
-        var refactorCommand = new RefactorCommand();
-        var analyzeCommand = new AnalyzeCommand();
-        var interactiveCommand = new InteractiveCommand();
-
-        rootCommand.AddCommand(refactorCommand);
-        rootCommand.AddCommand(analyzeCommand);
-        rootCommand.AddCommand(interactiveCommand);
+        var rootCommand = new RootCommand("IndFusion Tools CLI - Professional refactoring and code analysis tools")
+        {
+            new RefactorCommand(),
+            new AnalyzeCommand(),
+            new InteractiveCommand()
+        };
 
         // Set handler for root command - System.CommandLine automatically handles --version and --help
-        rootCommand.SetHandler(async (InvocationContext context) =>
+        rootCommand.SetAction(parseResult =>
         {
             // If no specific command, show help
             Console.WriteLine(rootCommand.Description);
             Console.WriteLine("Use 'indfusion --help' for more information.");
-            context.ExitCode = 0;
-
-            await Task.CompletedTask;
+            return 0;
         });
 
-        var commandLineBuilder = new CommandLineBuilder(rootCommand);
-
-        // Enable standard directives
-        commandLineBuilder.AddMiddleware(async (context, next) =>
-        {
-            // Custom middleware if needed
-            await next(context);
-        });
-
-        return commandLineBuilder.UseDefaults().Build();
+        return rootCommand;
     }
 
     /// <summary>

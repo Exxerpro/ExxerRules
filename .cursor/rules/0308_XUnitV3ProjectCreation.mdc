@@ -25,6 +25,8 @@ description: XUnit v3 universal configuration pattern for creating test projects
   <IsTestProject>true</IsTestProject>
   <OutputType>Exe</OutputType>
   <TargetFramework>net10.0</TargetFramework>
+
+   <ImplicitUsings>enable</ImplicitUsings> 
 </PropertyGroup>
 ```
 </correct-example>
@@ -128,7 +130,7 @@ description: XUnit v3 universal configuration pattern for creating test projects
   <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
   <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   <TestingPlatformServer>true</TestingPlatformServer>
-  <ImplicitUsings>disable</ImplicitUsings>
+  <ImplicitUsings>enable</ImplicitUsings>
 </PropertyGroup>
 ```
 </correct-example>
@@ -178,6 +180,7 @@ description: XUnit v3 universal configuration pattern for creating test projects
   <Using Include="System.Linq" />
   <Using Include="System.Threading" />
   <Using Include="System.Threading.Tasks" />
+  <Using Include="Meziantou.Extensions.Logging.Xunit.v3"/>
 </ItemGroup>
 ```
 </correct-example>
@@ -205,12 +208,14 @@ description: XUnit v3 universal configuration pattern for creating test projects
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings> 
     <RootNamespace>YourProject.Tests</RootNamespace>
     <AssemblyName>YourProject.Tests</AssemblyName>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <IsPackable>false</IsPackable>
+    <IsPackable>false</IsPackable> 
   </PropertyGroup>
   
+
   <!-- TESTING PLATFORM PROPERTIES -->
   <PropertyGroup>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
@@ -258,6 +263,7 @@ description: XUnit v3 universal configuration pattern for creating test projects
     <PackageReference Include="Microsoft.Testing.Platform" />
     <PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+    <<PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
   </ItemGroup>
@@ -352,6 +358,84 @@ This rule is based on extensive research and testing across 56 test projects in 
 2. **Enterprise Features**: TRX reporting, code coverage, logging integration, parallel execution
 3. **Future-Proofing**: Compatible with .NET 11+ and XUnit v3 RTM
 4. **Developer Experience**: Global usings, type safety, IntelliSense support
+
+
+Update 1, Oct 2025 MTP2.0 RC1, has a bug non imlemented method making test non discovered, Keep version 1.8.4 and versiones XunitV3 2.0.1  and SDK compatible
+Update 2, Oct 2025 MTP2.0 Released, has a bug non imlemented method making test non discovered, Keep version 1.8.4 and versiones XunitV3 2.0.1, can be updated to 2.10  and SDK compatible
+Update 3, 2 Nov 2025 XunitV3.2 Relsease requir update to MTP2.0Udate 3, MTP2.0 Still has a non imlemented method making test non discovered Keep version 1.8.4 nd versiones XunitV2 2.0.1, can be updated to 2.10 SDK compatible
+Update 4 3 Mov 2025l MTP2.0.1 Release yet to probe if bug was fixed, git research before testing nad release notes
+
+Latest know well set of well behave configuration version is these one:
+recommende to use CPM
+
+ <!-- =========================
+			 "Microsoft Testing Platform
+			 ========================= -->
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+    <PackageVersion Include="Microsoft.Testing.Platform" Version="1.8.4" />
+    <PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.8.4" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.Telemetry" Version="1.8.4" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.HangDump" Version="1.8.4" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.VSTestBridge" Version="1.8.4" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.8.4" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="1.8.4" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
+    
+ 
+    <!-- =========================
+			 X Unit V3
+			 ========================= -->
+    <PackageVersion Include="xunit.v3" Version="3.1.0" />
+    <PackageVersion Include="xunit.v3.core" Version="3.1.0" />
+    <PackageVersion Include="xunit.v3.common" Version="3.0.1" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+    <PackageVersion Include="xunit.v3.runner.msbuild" Version="3.1.0" />
+    <PackageVersion Include="xunit.v3.runner.inproc.console" Version="3.1.0" />
+    <PackageVersion Include="xunit.v3.runner.console" Version="3.1.0" />
+    <PackageVersion Include="xunit.v3.runner.common" Version="3.0.1" />
+    <PackageVersion Include="xunit.v3.runner.utility" Version="3.0.1" />
+    <PackageVersion Include="xunit.analyzers" Version="1.24.0" />
+
+    <!-- =========================
+			 TESTING & TEST UTILITIES
+			 ========================= -->
+    <PackageVersion Include="Microsoft.Playwright" Version="1.55.0" />
+    <PackageVersion Include="Meziantou.Extensions.Logging.Xunit.v3" Version="1.1.16" />
+    <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0-rc.2.25502.107" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Testing" Version="9.10.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.0-rc.2.25502.107" />
+    <PackageVersion Include="NetArchTest.Rules" Version="1.3.2" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="coverlet.msbuild" Version="6.0.2" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="NSubstitute.Analyzers.CSharp" Version="1.0.17" />
+    <PackageVersion Include="Respawn" Version="6.0.0" />
+    <PackageVersion Include="Selenium.Support" Version="4.26.0" />
+    <PackageVersion Include="Selenium.WebDriver" Version="4.26.0" />
+    <!--<PackageVersion Include="Moq" Version="4.20.72" />-->
+    <PackageVersion Include="FakeClock" Version="1.1.1" />
+    <PackageVersion Include="EmptyFiles" Version="8.14.0" />
+    <!-- =========================
+			 RESULTS FUNCTIONAL FLUENT API
+		========================= -->
+    <PackageVersion Include="IndQuestResults" Version="1.0.9" />
+    <PackageVersion Include="IndQuestResults.Analyzers" Version="1.0.9" />
+    <!-- =========================
+			TEST CONTAINERS
+		 ========================= -->
+    <PackageVersion Include="Testcontainers" Version="4.8.0" />
+    <PackageVersion Include="Testcontainers.XunitV3" Version="4.8.1" /> 
+    <PackageVersion Include="Testcontainers.Neo4j" Version="4.8.0" />
+    <PackageVersion Include="Testcontainers.MsSql" Version="4.8.0" />
+    <PackageVersion Include="Testcontainers.PostgreSql" Version="4.8.0" />
+    <PackageVersion Include="Testcontainers.Qdrant" Version="4.8.0" />
+    <PackageVersion Include="Testcontainers.Ollama" Version="4.8.0" />
+    <!-- =========================
+			DOCKER
+		 =========================  -->
+    <PackageVersion Include="Docker.DotNet" Version="3.125.15" />
+
 
 The pattern eliminates common XUnit v3 configuration issues and provides a proven foundation for modern .NET testing.
 

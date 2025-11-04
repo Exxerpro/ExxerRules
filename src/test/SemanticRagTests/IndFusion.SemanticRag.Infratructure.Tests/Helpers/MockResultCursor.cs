@@ -14,6 +14,8 @@ public class MockResultCursor : IResultCursor
 	private Exception? _exceptionToThrow;
 	private bool _throwOnSingleOrDefault;
 	private bool _throwOnToList;
+	private bool _isOpen = true;
+	private IRecord? _current = null;
 
 	/// <summary>
 	/// Gets or sets the record to return from SingleOrDefaultAsync.
@@ -99,9 +101,32 @@ public class MockResultCursor : IResultCursor
 		return ValueTask.CompletedTask;
 	}
 
+	/// <inheritdoc />
+	public Task<string[]> KeysAsync()
+	{
+		return Task.FromResult<string[]>(Array.Empty<string>());
+	}
+
+	/// <inheritdoc />
+	public Task<IResultSummary> ConsumeAsync()
+	{
+		return Task.FromException<IResultSummary>(new NotImplementedException("ConsumeAsync not implemented in mock"));
+	}
+
+	/// <inheritdoc />
+	public Task<bool> FetchAsync()
+	{
+		return Task.FromResult(false);
+	}
+
+	/// <inheritdoc />
+	public IRecord? Current => _current;
+
+	/// <inheritdoc />
+	public bool IsOpen => _isOpen;
+
 	// Other IResultCursor members that may not be used in tests but are required by the interface
 	public IAsyncEnumerable<IRecord> StreamAsync() => throw new NotImplementedException("StreamAsync not implemented in mock");
-	public Task ConsumeAsync() => throw new NotImplementedException("ConsumeAsync not implemented in mock");
 	public Task<IRecord?> PeekAsync() => throw new NotImplementedException("PeekAsync not implemented in mock");
 	public IAsyncEnumerator<IRecord> GetAsyncEnumerator(CancellationToken cancellationToken = default) => throw new NotImplementedException("GetAsyncEnumerator not implemented in mock");
 }

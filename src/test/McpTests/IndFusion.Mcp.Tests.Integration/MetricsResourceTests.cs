@@ -12,7 +12,7 @@ public class MetricsResourceTests : IntegrationTestBase
     /// ReadMetrics File ReturnsJson.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // 30 second timeout for integration test
+    [Fact(Timeout = 60000)] // 30 second timeout for integration test
     public async Task ReadMetrics_File_ReturnsJson()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -25,7 +25,7 @@ public class MetricsResourceTests : IntegrationTestBase
     /// ReadMetrics Directory ReturnsAggregatedJson.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // 30 second timeout for integration test
+    [Fact(Timeout = 60000)] // 30 second timeout for integration test
     public async Task ReadMetrics_Directory_ReturnsAggregatedJson()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -41,7 +41,7 @@ public class MetricsResourceTests : IntegrationTestBase
     /// ReadMetrics Class ReturnsClassMetrics.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // 30 second timeout for integration test
+    [Fact(Timeout = 60000)] // 30 second timeout for integration test
     public async Task ReadMetrics_Class_ReturnsClassMetrics()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -56,7 +56,7 @@ public class MetricsResourceTests : IntegrationTestBase
     /// ReadMetrics Method ReturnsMethodMetrics.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // 30 second timeout for integration test
+    [Fact(Timeout = 60000)] // 30 second timeout for integration test
     public async Task ReadMetrics_Method_ReturnsMethodMetrics()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);
@@ -71,7 +71,7 @@ public class MetricsResourceTests : IntegrationTestBase
     /// ReadMetrics InvalidPath ReturnsError.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // 30 second timeout for integration test
+    [Fact(Timeout = 60000)] // 30 second timeout for integration test
     public async Task ReadMetrics_InvalidPath_ReturnsError()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);

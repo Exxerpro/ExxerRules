@@ -37,7 +37,7 @@ public class IPatternGraphQueryServiceTests
             Query: "MATCH (p:Pattern) RETURN p",
             Parameters: new Dictionary<string, object> { ["limit"] = 10 },
             MaxResults: 10,
-            TimeoutMs: 30000);
+            TimeoutMs: 60000);
 
         var expectedResult = new PatternGraphResult(
             Patterns:
@@ -92,7 +92,7 @@ public class IPatternGraphQueryServiceTests
             Query: "INVALID QUERY",
             Parameters: null,
             MaxResults: 10,
-            TimeoutMs: 30000);
+            TimeoutMs: 60000);
 
         var expectedError = "Invalid query syntax";
 
@@ -509,7 +509,7 @@ public class IPatternGraphQueryServiceTests
             Query: "MATCH (p:Pattern) RETURN p",
             Parameters: null,
             MaxResults: 10,
-            TimeoutMs: 30000);
+            TimeoutMs: 60000);
 
         var expectedResult = new PatternGraphResult(
             Patterns: [],

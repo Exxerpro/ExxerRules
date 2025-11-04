@@ -33,7 +33,7 @@ public class CodeTransformationServiceContractTests : ServiceContractTestBase<IC
                 RunAnalyzers: true,
                 BuildValidation: true,
                 CheckForNewIssues: true,
-                TimeoutMs: 30000,
+                TimeoutMs: 60000,
                 SeverityThreshold: "Warning"
             ),
             DryRun: false,
@@ -67,7 +67,7 @@ public class CodeTransformationServiceContractTests : ServiceContractTestBase<IC
                 RunAnalyzers: true,
                 BuildValidation: true,
                 CheckForNewIssues: true,
-                TimeoutMs: 30000,
+                TimeoutMs: 60000,
                 SeverityThreshold: "Error"
             ),
             DryRun: true,

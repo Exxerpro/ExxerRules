@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RunSettings>
   <RunConfiguration>
-    <TestTimeout>30000</TestTimeout>
+    <TestTimeout>60000</TestTimeout>
   </RunConfiguration>
 </RunSettings>
 

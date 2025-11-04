@@ -63,23 +63,21 @@ public sealed class McpServerHttpIntegrationTests : IAsyncLifetime
     [Fact]
     public async Task ListToolsCommand_ShouldReturnToolInventory()
     {
-        // Using StdioClientTransport for a local server
-        var transport = new StdioClientTransport(new StdioClientTransportOptions
-        {
-            Name = "MyLocalServer",
-            Command = "dotnet",
-            Arguments = ["run", "--project", "path/to/your/server.csproj"]
-        });
-
         var endpoint = _endpoint ?? throw new InvalidOperationException("Endpoint unavailable.");
+        var loggerFactory = _loggerFactory ?? throw new InvalidOperationException("Logger factory unavailable.");
+
+        // Use HTTP/WebSocket transport to connect to the server started in InitializeAsync
+        var transportOptions = new HttpClientTransportOptions
+        {
+            Endpoint = endpoint
+        };
+        var transport = new HttpClientTransport(transportOptions, loggerFactory);
 
         using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
 
         var clientOptions = new McpClientOptions()
         {
-            //Fill the clients options as documented above
             ProtocolVersion = "1.0.0",
-
             InitializationTimeout = TimeSpan.FromSeconds(30),
         };
 

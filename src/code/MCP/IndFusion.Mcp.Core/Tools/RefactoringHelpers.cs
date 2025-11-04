@@ -402,7 +402,15 @@ public static class ExxerFactoringHelpers
         string filePath,
         CancellationToken cancellationToken = default)
     {
-        var bytes = await File.ReadAllBytesAsync(filePath, cancellationToken);
+        // Normalize to absolute path to avoid issues with current directory changes
+        var absolutePath = Path.GetFullPath(filePath);
+        
+        if (!File.Exists(absolutePath))
+        {
+            throw new FileNotFoundException($"File not found: {absolutePath} (original path: {filePath})", absolutePath);
+        }
+        
+        var bytes = await File.ReadAllBytesAsync(absolutePath, cancellationToken);
         var encoding = DetectEncoding(bytes);
         var text = encoding.GetString(bytes);
         // Strip UTF-8 BOM from text when present so content comparisons match expectations

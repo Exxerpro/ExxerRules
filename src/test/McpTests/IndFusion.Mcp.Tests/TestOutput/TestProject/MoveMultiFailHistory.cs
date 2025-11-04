@@ -6,7 +6,7 @@
 /// </summary>
 public class Calculator
 {
-    private List<int> numbers = new List<int>();
+    private List<int> numbers = [];
     private readonly string operatorSymbol;
 
     /// <summary> ///  Calculator. /// </summary> /// <param name="op"></param>

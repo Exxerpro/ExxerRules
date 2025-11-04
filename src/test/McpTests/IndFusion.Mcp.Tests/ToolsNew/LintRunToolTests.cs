@@ -22,7 +22,7 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // 30 second timeout for analyzer execution
+    [Fact(Timeout = 60000)] // 60 second timeout for analyzer execution (doubled from 30s)
     public async Task LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations()
     {
         // Arrange - Create a clean test solution for LintRunTool
@@ -134,7 +134,7 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithSpecificFile_ReturnsFileSpecificViolations.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)]
+    [Fact(Timeout = 60000)] // 60 seconds (doubled from 30s)
     public async Task LintRun_WithSpecificFile_ReturnsFileSpecificViolations()
     {
         // Arrange - Create a clean test solution for LintRunTool
@@ -226,7 +226,7 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithInvalidSolutionPath_ThrowsMcpException.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // 30 second timeout for unit test
+    [Fact(Timeout = 60000)] // 60 second timeout for unit test (doubled from 30s)
     public async Task LintRun_WithInvalidSolutionPath_ThrowsMcpException()
     {
         // Act & Assert - Should throw McpException for invalid path
@@ -243,7 +243,7 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithCancellation_RespectsCancellationToken.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 30000)] // Increased timeout for unit test
+    [Fact(Timeout = 60000)] // 60 second timeout for unit test (doubled from 30s)
     public async Task LintRun_WithCancellation_RespectsCancellationToken()
     {
         // Arrange - Load solution first

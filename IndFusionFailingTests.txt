@@ -1,0 +1,1325 @@
+ test (52 tests) [47:58.282] Failed: 52 tests failed
+  AnalyzerTests (3 tests) [4:12.309] Failed: 3 tests failed
+   IndFusion.Analyzer.Tests (3 tests) [4:12.309] Failed: 3 tests failed
+    IndFusion.Analyzer.Tests.TestCases (3 tests) [4:12.309] Failed: 3 tests failed
+     Async (2 tests) [0:24.729] Failed: 2 tests failed
+      AvoidAsyncVoidFalsePositiveTests (1 test) [0:00.328] Failed: One or more child tests failed: 1 test failed
+       Should_Not_Report_For_Partial_Methods_In_Blazor_Components [0:00.007] Failed: Shouldly.ShouldAssertException: [(10,28): warning EXXER302: Method 'OnButtonClick' should not be async void; return Task instead, (15,28): warning EXXER302: Method 'OnFormSubmit' should not be async v…
+Shouldly.ShouldAssertException
+[(10,28): warning EXXER302: Method 'OnButtonClick' should not be async void; return Task instead, (15,28): warning EXXER302: Method 'OnFormSubmit' should not be async void; return Task instead]
+    should be empty but had
+2
+    items and was not empty
+   at IndFusion.Analyzer.Tests.TestCases.Async.AvoidAsyncVoidFalsePositiveTests.Should_Not_Report_For_Partial_Methods_In_Blazor_Components() in /_/src/test/IndFusion.Analyzer.Tests/TestCases/Async/AvoidAsyncVoidFalsePositiveTests.cs:line 293
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+
+      UseConfigureAwaitFalseFalsePositiveTests (1 test) [0:12.268] Failed: One or more child tests failed: 1 test failed
+       Should_Not_Report_For_Blazor_Component_Lifecycle_Methods [0:00.373] Failed: Shouldly.ShouldAssertException: [(11,13): warning EXXER301: Await expression should use ConfigureAwait(false) to avoid deadlocks in library code, (16,13): warning EXXER301: Await expression should use…
+Shouldly.ShouldAssertException
+[(11,13): warning EXXER301: Await expression should use ConfigureAwait(false) to avoid deadlocks in library code, (16,13): warning EXXER301: Await expression should use ConfigureAwait(false) to avoid deadlocks in library code, (21,13): warning EXXER301: Await expression should use ConfigureAwait(false) to avoid deadlocks in library code]
+    should be empty but had
+3
+    items and was not empty
+   at IndFusion.Analyzer.Tests.TestCases.Async.UseConfigureAwaitFalseFalsePositiveTests.Should_Not_Report_For_Blazor_Component_Lifecycle_Methods() in /_/src/test/IndFusion.Analyzer.Tests/TestCases/Async/UseConfigureAwaitFalseFalsePositiveTests.cs:line 271
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+
+     CodeQuality (1 test) [0:12.611] Failed: 1 test failed
+      DoNotUseRegionsFalsePositiveTests (1 test) [0:12.200] Failed: One or more child tests failed: 1 test failed
+       Should_Report_For_Regular_Regions [0:00.393] Failed: Shouldly.ShouldAssertException: [] (System.Collections.Immutable.ImmutableArray`1[Microsoft.CodeAnalysis.Diagnostic])
+Shouldly.ShouldAssertException
+[] (System.Collections.Immutable.ImmutableArray`1[Microsoft.CodeAnalysis.Diagnostic])
+    should not be empty but was
+   at IndFusion.Analyzer.Tests.TestCases.CodeQuality.DoNotUseRegionsFalsePositiveTests.Should_Report_For_Regular_Regions() in /_/src/test/IndFusion.Analyzer.Tests/TestCases/CodeQuality/DoNotUseRegionsFalsePositiveTests.cs:line 484
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+
+  McpTests (5 tests) [39:57.303] Failed: 5 tests failed
+   IndFusion.Mcp.Server.Tests (1 test) [0:04.704] Failed: 1 test failed
+    IndFusion.Mcp.Server.Tests (1 test) [0:04.704] Failed: 1 test failed
+     Integration (1 test) [0:02.712] Failed: 1 test failed
+      McpServerHttpIntegrationTests (1 test) [0:02.712] Failed: One or more child tests failed: 1 test failed
+       ListToolsCommand_ShouldReturnToolInventory [0:02.695] Failed: System.IO.IOException: MCP server process exited unexpectedly (exit code: 1)
+System.IO.IOException
+MCP server process exited unexpectedly (exit code: 1)
+Server's stderr tail:
+The provided file path does not exist: path/to/your/server.csproj.
+   at System.Threading.Channels.AsyncOperation`2.GetResult(Int16 token)
+   at System.Threading.Channels.ChannelReader`1.ReadAllAsync(CancellationToken cancellationToken)+MoveNext()
+   at ModelContextProtocol.McpSessionHandler.ProcessMessagesCoreAsync(CancellationToken cancellationToken)
+   at ModelContextProtocol.McpSessionHandler.ProcessMessagesCoreAsync(CancellationToken cancellationToken)
+   at ModelContextProtocol.McpSessionHandler.DisposeAsync()
+   at ModelContextProtocol.Client.McpClientImpl.DisposeAsync()
+   at ModelContextProtocol.Client.McpClientImpl.ConnectAsync(CancellationToken cancellationToken)
+   at ModelContextProtocol.Client.McpClient.CreateAsync(IClientTransport clientTransport, McpClientOptions clientOptions, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+   at ModelContextProtocol.Client.McpClient.CreateAsync(IClientTransport clientTransport, McpClientOptions clientOptions, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+   at IndFusion.Mcp.Server.Tests.Integration.McpServerHttpIntegrationTests.ListToolsCommand_ShouldReturnToolInventory() in /_/src/test/McpTests/IndFusion.Mcp.Server.Tests/Integration/McpServerHttpIntegrationTests.cs:line 86
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.Mcp.Tests (4 tests) [37:46.636] Failed: 4 tests failed
+    IndFusion.Mcp.Tests (4 tests) [37:46.636] Failed: 4 tests failed
+     ToolsNew (2 tests) [12:38.470] Failed: 2 tests failed
+      LintRunToolTests (1 test) [1:27.659] Failed: One or more child tests failed: 1 test failed
+       LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations [0:30.750] Failed: Test execution timed out after 30000 milliseconds
+Xunit.Sdk.TestTimeoutException
+Test execution timed out after 30000 milliseconds
+   at Xunit.v3.XunitTestRunnerBase`2.<>c__DisplayClass10_0.<<RunTestWithTimeout>b__0>d.MoveNext() in /_/src/xunit.v3.core/Runners/XunitTestRunnerBase.cs:line 164
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+=== Test Logging Started ===
+Test: LintRunToolTests
+Log File: C:\Users\Abel Briones\AppData\Local\Temp\IndFusion.Tests\Logs\LintRunToolTests_20251103_193239.log
+
+      LoadSolutionToolTests (1 test) [1:03.659] Failed: One or more child tests failed: 1 test failed
+       LoadSolution_ValidPath_ReturnsSuccess [0:30.531] Failed: Test execution timed out after 30000 milliseconds
+Xunit.Sdk.TestTimeoutException
+Test execution timed out after 30000 milliseconds
+   at Xunit.v3.XunitTestRunnerBase`2.<>c__DisplayClass10_0.<<RunTestWithTimeout>b__0>d.MoveNext() in /_/src/xunit.v3.core/Runners/XunitTestRunnerBase.cs:line 164
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     AnalyzeExxerFactoringOpportunitiesTests (1 test) [1:54.216] Failed: One or more child tests failed: 1 test failed
+      AnalyzeExampleCode_ReturnsSuggestions [1:54.216] Failed: ModelContextProtocol.McpException: Error analyzing file: Could not find a part of the path 'F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\src\test\IndFusion.Mcp.Tests\ExampleCode.cs'.
+ModelContextProtocol.McpException
+Error analyzing file: Could not find a part of the path 'F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\src\test\IndFusion.Mcp.Tests\ExampleCode.cs'.
+   at IndFusion.Mcp.Core.Tools.AnalyzeExxerFactoringOpportunitiesTool.AnalyzeExxerFactoringOpportunities(String solutionPath, String filePath, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Tools/AnalyzeRefactoringOpportunitiesTool.cs:line 46
+   at IndFusion.Mcp.Tests.AnalyzeExxerFactoringOpportunitiesTests.AnalyzeExampleCode_ReturnsSuggestions() in /_/src/test/McpTests/IndFusion.Mcp.Tests/AnalyzeRefactoringOpportunitiesTests.cs:line 40
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+System.IO.DirectoryNotFoundException
+Could not find a part of the path 'F:\Dynamic\IndFusion\IndFusion.Mcp\ExxerRules\src\test\IndFusion.Mcp.Tests\ExampleCode.cs'.
+   at Microsoft.Win32.SafeHandles.SafeFileHandle.CreateFile(String fullPath, FileMode mode, FileAccess access, FileShare share, FileOptions options)
+   at System.IO.File.ReadAllBytesAsync(String path, CancellationToken cancellationToken)
+   at IndFusion.Mcp.Core.Tools.ExxerFactoringHelpers.ReadFileWithEncodingAsync(String filePath, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Tools/RefactoringHelpers.cs:line 405
+   at IndFusion.Mcp.Core.Tools.AnalyzeExxerFactoringOpportunitiesTool.LoadSyntaxTreeAndModel(String solutionPath, String filePath, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Tools/AnalyzeRefactoringOpportunitiesTool.cs:line 66
+   at IndFusion.Mcp.Core.Tools.AnalyzeExxerFactoringOpportunitiesTool.AnalyzeExxerFactoringOpportunities(String solutionPath, String filePath, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Tools/AnalyzeRefactoringOpportunitiesTool.cs:line 31
+
+
+     MetricsProviderTests (1 test) [0:30.552] Failed: One or more child tests failed: 1 test failed
+      GetFileMetrics_CachesToDiskAndMemory [0:30.534] Failed: Test execution timed out after 30000 milliseconds
+Xunit.Sdk.TestTimeoutException
+Test execution timed out after 30000 milliseconds
+   at Xunit.v3.XunitTestRunnerBase`2.<>c__DisplayClass10_0.<<RunTestWithTimeout>b__0>d.MoveNext() in /_/src/xunit.v3.core/Runners/XunitTestRunnerBase.cs:line 164
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+  SemanticRagTests (44 tests) [3:48.669] Failed: 44 tests failed
+   IndFusion.SemanticRag.Integration.Tests (3 tests) [0:22.029] Failed: 3 tests failed
+    IndFusion.SemanticRag.Integration.Tests.IntegrationTests (3 tests) [0:22.029] Failed: 3 tests failed
+     VectorSearchIntegrationTests (3 tests) [0:22.029] Failed: One or more child tests failed: 3 tests failed
+      Should_HandleEmptyRepository_Gracefully [0:07.580] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_HandleEmptyRepository_Gracefully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 198
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      Should_SearchSimilarVectors_Successfully [0:00.009] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_SearchSimilarVectors_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 119
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      Should_StoreAndRetrieveVectors_Successfully [0:03.760] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_StoreAndRetrieveVectors_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 69
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.System.Tests (20 tests) [0:20.142] Failed: 20 tests failed
+    IndFusion.SemanticRag.System.Tests.Infrastructure (20 tests) [0:20.142] Failed: 20 tests failed
+     Services (19 tests) [0:12.718] Failed: 19 tests failed
+      Neo4jKnowledgeGraphServiceBehavioralTests (3 tests) [0:07.946] Failed: One or more child tests failed: 3 tests failed
+       QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults [0:00.159] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.Neo4jKnowledgeGraphServiceBehavioralTests.QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/Neo4jKnowledgeGraphServiceBehavioralTests.cs:line 655
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Executing graph query: MATCH (p:Person) RETURN p.department, COUNT(p) as employeeCount ORDER BY employeeCount DESC
+
+       QueryAsync_WithInvalidQuery_ShouldReturnFailure [0:00.198] Failed: Shouldly.ShouldAssertException: True
+Shouldly.ShouldAssertException
+True
+    should be
+False
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.Neo4jKnowledgeGraphServiceBehavioralTests.QueryAsync_WithInvalidQuery_ShouldReturnFailure() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/Neo4jKnowledgeGraphServiceBehavioralTests.cs:line 191
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Executing graph query: INVALID CYPHER QUERY
+
+       QueryAsync_WithTimeout_ShouldRespectTimeout [0:00.124] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.OperationCanceledException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.Neo4jKnowledgeGraphServiceBehavioralTests.QueryAsync_WithTimeout_ShouldRespectTimeout() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/Neo4jKnowledgeGraphServiceBehavioralTests.cs:line 150
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Executing graph query: MATCH (n) RETURN n
+
+      QdrantVectorSearchServiceBehavioralTests (16 tests) [0:04.753] Failed: One or more child tests failed: 16 tests failed
+       DeleteDocumentAsync_WithValidId_ShouldDeleteDocument [0:00.015] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.DeleteDocumentAsync_WithValidId_ShouldDeleteDocument() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 296
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc-123
+Getting collection info for: test-collection-f4daa363d27d4ca8a4641869b451b9e6
+Failed to get collection info for: test-collection-f4daa363d27d4ca8a4641869b451b9e6
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error storing document with ID: doc-123
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+
+       GenerateEmbeddingAsync_WithValidText_ShouldReturnActualEmbedding [0:04.141] Failed: System.InvalidOperationException: Failed to generate embedding: VE008: No connection could be made because the target machine actively refused it. (localhost:11434)
+System.InvalidOperationException
+Failed to generate embedding: VE008: No connection could be made because the target machine actively refused it. (localhost:11434)
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.GenerateEmbeddingAsync(String text, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 158
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.GenerateEmbeddingAsync_WithValidText_ShouldReturnActualEmbedding() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 184
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Generating embedding for text of length: 25
+Generating embedding for text of length 25
+HTTP request failed while generating embedding
+System.Net.Http.HttpRequestException: No connection could be made because the target machine actively refused it. (localhost:11434)
+ ---> System.Net.Sockets.SocketException (10061): No connection could be made because the target machine actively refused it.
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.ThrowException(SocketError error, CancellationToken cancellationToken)
+   at System.Net.Sockets.Socket.AwaitableSocketAsyncEventArgs.System.Threading.Tasks.Sources.IValueTaskSource.GetResult(Int16 token)
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.HttpConnectionPool.ConnectToTcpHostAsync(String host, Int32 port, HttpRequestMessage initialRequest, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.ConnectAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.CreateHttp11ConnectionAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.InjectNewHttp11ConnectionAsync(QueueItem queueItem)
+   at System.Threading.Tasks.TaskCompletionSourceWithCancellation`1.WaitWithCancellationAsync(CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.SocketsHttpHandler.<SendAsync>g__CreateHandlerAndSendAsync|115_0(HttpRequestMessage request, CancellationToken cancellationToken)
+   at System.Net.Http.HttpClient.<SendAsync>g__Core|83_0(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationTokenSource cts, Boolean disposeCts, CancellationTokenSource pendingRequestsCts, CancellationToken originalCancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.OllamaEmbeddingServiceAdapter.<>c__DisplayClass4_0.<<GenerateEmbeddingAsync>b__0>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/OllamaEmbeddingServiceAdapter.cs:line 88
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.OllamaEmbeddingServiceAdapter.GenerateEmbeddingAsync(String text, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/OllamaEmbeddingServiceAdapter.cs:line 68
+Failed to generate embedding: VE008: No connection could be made because the target machine actively refused it. (localhost:11434)
+Error generating embedding for text
+System.InvalidOperationException: Failed to generate embedding: VE008: No connection could be made because the target machine actively refused it. (localhost:11434)
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.GenerateEmbeddingAsync(String text, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 158
+
+       SearchSimilarAsync_WithActualResults_ShouldReturnNonEmptyResults [0:00.030] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithActualResults_ShouldReturnNonEmptyResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 483
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc1
+Getting collection info for: test-collection-43c52d071eba4179a837b3ef1151efd8
+Failed to get collection info for: test-collection-43c52d071eba4179a837b3ef1151efd8
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error storing document with ID: doc1
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+
+       SearchSimilarAsync_WithBroadOptions_ShouldUseCorrectLimit [0:00.021] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithBroadOptions_ShouldUseCorrectLimit() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 164
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: broad query
+Getting collection info for: test-collection-5caa6c54b0794d3289b17f71a220366d
+Failed to get collection info for: test-collection-5caa6c54b0794d3289b17f71a220366d
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: broad query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithCancellation_ShouldRespectCancellationToken [0:00.010] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.OperationCanceledException
+    but threw
+System.InvalidOperationException
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithCancellation_ShouldRespectCancellationToken() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 334
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Failed to get collection info: GV006
+Failed to ensure collection exists: GV006
+Error during vector search for query: test query
+System.InvalidOperationException: Failed to ensure collection exists: GV006
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithEmbeddingServiceFailure_ShouldPropagateFailure [0:00.046] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithEmbeddingServiceFailure_ShouldPropagateFailure() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 369
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-45e03e894bad4341a9364433c21c50c7
+Failed to get collection info for: test-collection-45e03e894bad4341a9364433c21c50c7
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: test query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithHighPrecisionOptions_ShouldUseCorrectThreshold [0:00.010] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithHighPrecisionOptions_ShouldUseCorrectThreshold() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 143
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: precise query
+Getting collection info for: test-collection-12a3f07240424f4f8d500befba13295e
+Failed to get collection info for: test-collection-12a3f07240424f4f8d500befba13295e
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: precise query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithIncludeEmbedding_ShouldIncludeEmbeddingInResults [0:00.037] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithIncludeEmbedding_ShouldIncludeEmbeddingInResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 430
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: query with embedding
+Getting collection info for: test-collection-f4bff9c3e28c4153ac7e9df7f5eaf7ef
+Failed to get collection info for: test-collection-f4bff9c3e28c4153ac7e9df7f5eaf7ef
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.SendDataAsync(ReadOnlyMemory`1 buffer, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.StreamExtensions.WriteMessageAsync[TMessage](Stream stream, GrpcCall call, TMessage message, Action`2 serializer, CallOptions callOptions)
+   at Grpc.Net.Client.Internal.PushUnaryContent`2.WriteMessageCore(Task writeMessageTask)
+   at System.Net.Http.Http2Connection.Http2Stream.SendRequestBodyAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: query with embedding
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithIncludeMetadata_ShouldIncludeMetadataInResults [0:00.017] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithIncludeMetadata_ShouldIncludeMetadataInResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 449
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: query with metadata
+Getting collection info for: test-collection-7e795aa3eeac4cd984c2080e278a5525
+Failed to get collection info for: test-collection-7e795aa3eeac4cd984c2080e278a5525
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: query with metadata
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithMetadataFilters_ShouldApplyFilters [0:00.015] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithMetadataFilters_ShouldApplyFilters() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 411
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: filtered query
+Getting collection info for: test-collection-de24d68f952f41ed9c47f4fe6360b385
+Failed to get collection info for: test-collection-de24d68f952f41ed9c47f4fe6360b385
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: filtered query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithProcessingTime_ShouldMeasureActualProcessingTime [0:00.015] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithProcessingTime_ShouldMeasureActualProcessingTime() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 468
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: timing query
+Getting collection info for: test-collection-770e78dfe7ab40f387097915efef1932
+Failed to get collection info for: test-collection-770e78dfe7ab40f387097915efef1932
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: timing query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithQdrantFailure_ShouldPropagateException [0:00.016] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithQdrantFailure_ShouldPropagateException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 389
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-2af30b40e9a94687b239d60d5cebb41f
+Failed to get collection info for: test-collection-2af30b40e9a94687b239d60d5cebb41f
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: test query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithTimeout_ShouldRespectTimeout [0:00.021] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.OperationCanceledException
+    but threw
+System.InvalidOperationException
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithTimeout_ShouldRespectTimeout() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 350
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-b57efdc1b0464ea19e97bf5c10af9d46
+Failed to get collection info for: test-collection-b57efdc1b0464ea19e97bf5c10af9d46
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: test query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       SearchSimilarAsync_WithValidQuery_ShouldReturnActualSearchResults [0:00.016] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithValidQuery_ShouldReturnActualSearchResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 122
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-4ad46bdb535e4c6ba0a73bb86dc93253
+Failed to get collection info for: test-collection-4ad46bdb535e4c6ba0a73bb86dc93253
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error during vector search for query: test query
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.SearchSimilarAsync(String query, VectorSearchOptions options, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 105
+
+       StoreDocumentAsync_WithValidData_ShouldStoreDocument [0:00.014] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithValidData_ShouldStoreDocument() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 216
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc-123
+Getting collection info for: test-collection-eaf4d852ca214cb08466f657f38b5cd2
+Failed to get collection info for: test-collection-eaf4d852ca214cb08466f657f38b5cd2
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error storing document with ID: doc-123
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+
+       UpdateDocumentAsync_WithValidData_ShouldUpdateDocument [0:00.022] Failed: System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data o…
+System.InvalidOperationException
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.UpdateDocumentAsync_WithValidData_ShouldUpdateDocument() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 271
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc-123
+Getting collection info for: test-collection-d2cc72324d9343d09a21620f83735284
+Failed to get collection info for: test-collection-d2cc72324d9343d09a21620f83735284
+Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+ ---> System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+ ---> System.Net.Http.HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   --- End of inner exception stack trace ---
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+   --- End of inner exception stack trace ---
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+Failed to get collection info: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+Error storing document with ID: doc-123
+System.InvalidOperationException: Failed to ensure collection exists: VE005: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.StoreDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 195
+
+     DockerConnectivityTests (1 test) [0:07.424] Failed: One or more child tests failed: 1 test failed
+      QdrantClient_ShouldListCollections_When_DockerIsRunning [0:00.399] Failed: Grpc.Core.RpcException: Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' …
+Grpc.Core.RpcException
+Status(StatusCode="Internal", Detail="Error starting gRPC call. HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError) HttpProtocolException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)", DebugException="System.Net.Http.HttpRequestException: The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)")
+   at Qdrant.Client.QdrantClient.ListCollectionsAsync(CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.DockerConnectivityTests.QdrantClient_ShouldListCollections_When_DockerIsRunning() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/DockerConnectivityTests.cs:line 96
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+System.Net.Http.HttpRequestException
+The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.HttpConnectionPool.SendWithVersionDetectionAndRetryAsync(HttpRequestMessage request, Boolean async, Boolean doRequestAuth, CancellationToken cancellationToken)
+   at System.Net.Http.RedirectHandler.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+   at System.Net.Http.SocketsHttpHandler.<SendAsync>g__CreateHandlerAndSendAsync|115_0(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Balancer.Internal.BalancerHttpHandler.SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+   at Grpc.Net.Client.Internal.GrpcCall`2.RunCall(HttpRequestMessage request, Nullable`1 timeout)
+
+System.Net.Http.HttpProtocolException
+The HTTP/2 server sent invalid data on the connection. HTTP/2 error code 'PROTOCOL_ERROR' (0x1). (HttpProtocolError)
+   at System.Net.Http.Http2Connection.ThrowRequestAborted(Exception innerException)
+   at System.Net.Http.Http2Connection.Http2Stream.CheckResponseBodyState()
+   at System.Net.Http.Http2Connection.Http2Stream.TryEnsureHeaders()
+   at System.Net.Http.Http2Connection.Http2Stream.ReadResponseHeadersAsync(CancellationToken cancellationToken)
+   at System.Net.Http.Http2Connection.SendAsync(HttpRequestMessage request, Boolean async, CancellationToken cancellationToken)
+
+🧪 Listing Qdrant collections...
+
+   IndFusion.SemanticRag.Tests (17 tests) [1:07.116] Failed: 17 tests failed
+    IndFusion.SemanticRag.Tests (17 tests) [1:07.116] Failed: 17 tests failed
+     Implementations (13 tests) [0:21.105] Failed: 13 tests failed
+      DocumentProcessingPipelineTests (6 tests) [0:05.190] Failed: One or more child tests failed: 6 tests failed
+       DetectDocumentTypeAsync_Should_Detect_By_Content_Analysis [0:05.034] Failed: Shouldly.ShouldAssertException: DocumentType.Text
+Shouldly.ShouldAssertException
+DocumentType.Text
+    should be
+DocumentType.CSharpCode
+    but was not
+
+Additional Info:
+    Failed for content analysis: public class Test {}
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.DetectDocumentTypeAsync_Should_Detect_By_Content_Analysis() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 299
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       DetectDocumentTypeAsync_Should_Detect_By_File_Extension [0:00.048] Failed: Shouldly.ShouldAssertException: DocumentType.Text
+Shouldly.ShouldAssertException
+DocumentType.Text
+    should be
+DocumentType.Markdown
+    but was not
+
+Additional Info:
+    Failed for file extension: test.md
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.DetectDocumentTypeAsync_Should_Detect_By_File_Extension() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 274
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Create_Chunks_With_Fixed_Size_Strategy [0:00.003] Failed: Shouldly.ShouldAssertException: 1
+Shouldly.ShouldAssertException
+1
+    should be greater than
+1
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Create_Chunks_With_Fixed_Size_Strategy() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 350
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Handle_Cancellation [0:00.004] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.OperationCanceledException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Handle_Cancellation() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 409
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Not_Extract_Metadata_When_Disabled [0:00.004] Failed: Shouldly.ShouldAssertException: [] (System.Collections.Generic.Dictionary`2[System.String,System.Object])
+Shouldly.ShouldAssertException
+[] (System.Collections.Generic.Dictionary`2[System.String,System.Object])
+    should be null but was
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Not_Extract_Metadata_When_Disabled() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 468
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Process_Text_Document_Successfully [0:00.003] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Process_Text_Document_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 53
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      GraphQueryServiceTests (1 test) [0:05.466] Failed: One or more child tests failed: 1 test failed
+       FindShortestPathAsync_Should_Return_Null_For_No_Path [0:00.007] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.GraphQueryServiceTests.FindShortestPathAsync_Should_Return_Null_For_No_Path() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/GraphQueryServiceTests.cs:line 427
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      PatternGraphQueryServiceTests (4 tests) [0:05.171] Failed: One or more child tests failed: 4 tests failed
+       FindPatternRelationshipsAsync_Should_Find_Pattern_Relationships [0:00.011] Failed: Shouldly.ShouldAssertException: 1f
+Shouldly.ShouldAssertException
+1f
+    should be
+0.8f
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindPatternRelationshipsAsync_Should_Find_Pattern_Relationships() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 183
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       FindSimilarPatternsAsync_Should_Calculate_Similarity_Correctly [0:00.038] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindSimilarPatternsAsync_Should_Calculate_Similarity_Correctly() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 644
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       FindSimilarPatternsAsync_Should_Find_Similar_Patterns [0:00.221] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindSimilarPatternsAsync_Should_Find_Similar_Patterns() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 281
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       QueryPatternGraphAsync_Should_Execute_Pattern_Graph_Query [0:00.011] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.QueryPatternGraphAsync_Should_Execute_Pattern_Graph_Query() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 100
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      PatternSuggestServiceTests (2 tests) [0:05.276] Failed: One or more child tests failed: 2 tests failed
+       AnalyzePatternAsync_Should_Analyze_Specific_Pattern [0:00.004] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternSuggestServiceTests.AnalyzePatternAsync_Should_Analyze_Specific_Pattern() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternSuggestServiceTests.cs:line 220
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       SuggestPatternsAsync_Should_Use_ConfigureAwait_False [0:00.003] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternSuggestServiceTests.SuggestPatternsAsync_Should_Use_ConfigureAwait_False() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternSuggestServiceTests.cs:line 564
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     Integration (3 tests) [0:06.901] Failed: 3 tests failed
+      GraphRagLayerIntegrationTests (3 tests) [0:06.901] Failed: One or more child tests failed: 3 tests failed
+       Error_Handling_Workflow_Should_Handle_Failures_Gracefully [0:00.000] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Error_Handling_Workflow_Should_Handle_Failures_Gracefully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 327
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       Pattern_Suggestion_Workflow_Should_Handle_Complex_Code [0:00.011] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Pattern_Suggestion_Workflow_Should_Handle_Complex_Code() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 232
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       Performance_Workflow_Should_Complete_Within_Reasonable_Time [0:00.008] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Performance_Workflow_Should_Complete_Within_Reasonable_Time() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 412
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     Interfaces (1 test) [0:34.847] Failed: 1 test failed
+      IGraphQueryServiceTests (1 test) [0:05.077] Failed: One or more child tests failed: 1 test failed
+       FindShortestPathAsync_Should_Return_Null_For_No_Path [0:00.222] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Interfaces.IGraphQueryServiceTests.FindShortestPathAsync_Should_Return_Null_For_No_Path() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Interfaces/IGraphQueryServiceTests.cs:line 271
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:31.936] Failed: 4 tests failed
+    IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:31.936] Failed: 4 tests failed
+     Infrastructure.Adapters (4 tests) [0:08.189] Failed: 4 tests failed
+      Neo4jKnowledgeGraphAdapterTests (4 tests) [0:04.195] Failed: One or more child tests failed: 4 tests failed
+       ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails [0:00.005] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 45
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 57
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 389
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException [0:00.011] Failed: Shouldly.ShouldAssertException: "KG009"
+Shouldly.ShouldAssertException
+"KG009"
+    should be
+"KG007"
+    but was not
+    difference
+Difference     |                      |   
+               |                     \|/  
+Index          | 0    1    2    3    4    
+Expected Value | K    G    0    0    7    
+Actual Value   | K    G    0    0    9    
+Expected Code  | 75   71   48   48   55   
+Actual Code    | 75   71   48   48   57   
+
+Additional Info:
+    Expected error code 'KG007', but got 'KG009'
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 58
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 285
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnNode_When_NodeExists [0:00.119] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be successful, but it failed with error: KG009
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldSucceed[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 17
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnNode_When_NodeExists() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 255
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails [0:00.004] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail(Result result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 76
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith(Result result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 87
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 161
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+

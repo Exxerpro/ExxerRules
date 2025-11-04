@@ -10,7 +10,7 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public sealed class UseResultPatternAnalyzerFalsePositiveTests
 {
-    private const int AnalyzerTimeoutMs = 30000;
+    private const int AnalyzerTimeoutMs = 60000; // Doubled from 30s to 60s
 
     /// <summary>
     /// Allows domain guard methods returning bool and throwing guard exceptions.

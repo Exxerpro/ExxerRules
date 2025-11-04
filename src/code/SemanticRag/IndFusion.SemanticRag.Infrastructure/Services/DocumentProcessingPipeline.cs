@@ -138,12 +138,21 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     {
         try
         {
-            // Check MIME type first
+            var content = Encoding.UTF8.GetString(input.Content);
+            
+            // Analyze content first - content analysis can override MIME type/extension
+            if (IsCodeContent(content))
+            {
+                return DetectCodeLanguage(content);
+            }
+
+            // Check MIME type second (but not for text/plain if content suggests code)
             if (!string.IsNullOrEmpty(input.MimeType))
             {
-                return input.MimeType.ToLowerInvariant() switch
+                var mimeType = input.MimeType.ToLowerInvariant();
+                return mimeType switch
                 {
-                    "text/plain" => DocumentType.Text,
+                    "text/plain" => DocumentType.Text, // Only if not detected as code above
                     "text/markdown" => DocumentType.Markdown,
                     "application/pdf" => DocumentType.Pdf,
                     "image/png" or "image/jpeg" or "image/jpg" or "image/gif" => DocumentType.Image,
@@ -154,7 +163,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
                 };
             }
 
-            // Check file extension
+            // Check file extension third
             if (!string.IsNullOrEmpty(input.FilePath))
             {
                 var extension = Path.GetExtension(input.FilePath).ToLowerInvariant();
@@ -169,13 +178,6 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
                     ".txt" => DocumentType.Text,
                     _ => DocumentType.Unknown
                 };
-            }
-
-            // Analyze content for code patterns
-            var content = Encoding.UTF8.GetString(input.Content);
-            if (IsCodeContent(content))
-            {
-                return DetectCodeLanguage(content);
             }
 
             return DocumentType.Unknown;
@@ -547,14 +549,40 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     /// </summary>
     private static DocumentType DetectCodeLanguage(string content)
     {
-        if (content.Contains("using ") || content.Contains("namespace ") || content.Contains("public class"))
+        // Check C# patterns first (most specific)
+        if (content.Contains("using ", StringComparison.OrdinalIgnoreCase) || 
+            content.Contains("namespace ", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("public class", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("private class", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("public interface", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("public enum", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("public static", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("private static", StringComparison.OrdinalIgnoreCase))
+        {
             return DocumentType.CSharpCode;
+        }
         
-        if (content.Contains("import ") || content.Contains("def ") || content.Contains("class "))
-            return DocumentType.PythonCode;
-        
-        if (content.Contains("function ") || content.Contains("const ") || content.Contains("let "))
+        // Check TypeScript/JavaScript patterns second
+        if (content.Contains("function ", StringComparison.OrdinalIgnoreCase) || 
+            content.Contains("const ", StringComparison.OrdinalIgnoreCase) || 
+            content.Contains("let ", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("var ", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("export ", StringComparison.OrdinalIgnoreCase))
+        {
             return DocumentType.TypeScriptCode;
+        }
+        
+        // Check Python patterns last (but also check for Python-specific patterns)
+        if (content.Contains("def ", StringComparison.OrdinalIgnoreCase) || 
+            content.Contains("import ", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("from ", StringComparison.OrdinalIgnoreCase) ||
+            content.Contains("if __name__", StringComparison.OrdinalIgnoreCase) ||
+            (content.Contains("class ", StringComparison.OrdinalIgnoreCase) && 
+             !content.Contains("public class", StringComparison.OrdinalIgnoreCase) &&
+             !content.Contains("private class", StringComparison.OrdinalIgnoreCase)))
+        {
+            return DocumentType.PythonCode;
+        }
         
         return DocumentType.Text;
     }

@@ -513,7 +513,7 @@ public class McpToolCompositionServiceStub : IMcpToolCompositionService
             PerformanceSettings: new CompositionPerformanceSettings(
                 MaxExecutionTimeMs: 30000,
                 MaxMemoryUsage: 100 * 1024 * 1024,
-                TimeoutMs: 30000,
+                TimeoutMs: 60000,
                 RetryAttempts: 3
             ),
             Version: "1.0.0",

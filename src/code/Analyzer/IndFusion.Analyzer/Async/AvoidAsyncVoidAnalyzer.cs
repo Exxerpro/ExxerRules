@@ -286,12 +286,6 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
     /// <returns><c>true</c> when the method matches Blazor event-handler patterns; otherwise, <c>false</c>.</returns>
     private static bool IsBlazorComponentEventHandler(MethodDeclarationSyntax method, SemanticModel semanticModel)
     {
-        // Check if method is private (typical for event handlers)
-        if (!method.Modifiers.Any(SyntaxKind.PrivateKeyword))
-        {
-            return false;
-        }
-
         // Check if the containing class inherits from ComponentBase
         var containingClass = method.Ancestors().OfType<ClassDeclarationSyntax>().FirstOrDefault();
         if (containingClass == null)
@@ -299,26 +293,79 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
-        if (classSymbol == null)
+        // Check if class is partial (Blazor components are often partial)
+        var isPartialClass = containingClass.Modifiers.Any(SyntaxKind.PartialKeyword);
+
+        // Check syntax for ComponentBase inheritance first (more reliable for partial classes)
+        var inheritsFromComponentBase = false;
+        if (containingClass.BaseList != null)
         {
-            return false;
+            foreach (var baseType in containingClass.BaseList.Types)
+            {
+                var typeName = baseType.Type.ToString();
+                // Check for ComponentBase with or without namespace
+                if (typeName == "ComponentBase" || 
+                    typeName.EndsWith(".ComponentBase") ||
+                    typeName.Contains("Microsoft.AspNetCore.Components.ComponentBase"))
+                {
+                    inheritsFromComponentBase = true;
+                    break;
+                }
+            }
         }
 
-        // Check if class inherits from ComponentBase
-        if (!InheritsFromComponentBase(classSymbol))
+        // Also check semantic model if syntax check didn't find it (for fully qualified names)
+        if (!inheritsFromComponentBase)
+        {
+            var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
+            if (classSymbol != null)
+            {
+                inheritsFromComponentBase = InheritsFromComponentBase(classSymbol);
+            }
+        }
+
+        // If it's a partial class and inherits from ComponentBase, allow all On* methods and event handlers
+        if (isPartialClass && inheritsFromComponentBase)
+        {
+            var methodName = method.Identifier.Text;
+            return methodName.StartsWith("On") ||
+                   methodName.Contains("Click") ||
+                   methodName.Contains("Submit") ||
+                   methodName.Contains("Change");
+        }
+
+        // For non-partial classes, also check if they inherit from ComponentBase
+        if (inheritsFromComponentBase)
+        {
+            var methodName = method.Identifier.Text;
+            // Allow all On* methods in Blazor components (even if not private)
+            if (methodName.StartsWith("On"))
+            {
+                return true;
+            }
+            // Allow event handlers (private methods with Click/Submit/Change)
+            if (method.Modifiers.Any(SyntaxKind.PrivateKeyword))
+            {
+                return methodName.Contains("Click") ||
+                       methodName.Contains("Submit") ||
+                       methodName.Contains("Change");
+            }
+        }
+
+        // For non-partial classes without ComponentBase, require private modifier
+        if (!method.Modifiers.Any(SyntaxKind.PrivateKeyword))
         {
             return false;
         }
 
         // Check for common Blazor event handler patterns
         // Support both partial methods and regular methods in Blazor components
-        var methodName = method.Identifier.Text;
-        return (methodName.StartsWith("On") && methodName.EndsWith("Async")) ||
-               methodName.StartsWith("On") ||
-               methodName.Contains("Click") ||
-               methodName.Contains("Submit") ||
-               methodName.Contains("Change");
+        var methodName3 = method.Identifier.Text;
+        return (methodName3.StartsWith("On") && methodName3.EndsWith("Async")) ||
+               methodName3.StartsWith("On") ||
+               methodName3.Contains("Click") ||
+               methodName3.Contains("Submit") ||
+               methodName3.Contains("Change");
     }
 
     /// <summary>

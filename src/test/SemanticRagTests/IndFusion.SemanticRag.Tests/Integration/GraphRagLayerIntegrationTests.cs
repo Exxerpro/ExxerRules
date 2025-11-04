@@ -90,7 +90,7 @@ public class UserService
             Query: "MATCH (p:PatternDefinition) WHERE p.category = 'Design Patterns' RETURN p",
             Parameters: null,
             MaxResults: 10,
-            TimeoutMs: 30000
+            TimeoutMs: 60000
         );
 
         var graphQueryResult = await patternGraphQueryService.QueryPatternGraphAsync(patternGraphQuery, CancellationToken.None);

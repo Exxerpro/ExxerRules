@@ -458,14 +458,38 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
             return false;
         }
 
-        var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
-        if (classSymbol == null)
+        // Check if class is partial (Blazor components are often partial)
+        var isPartialClass = containingClass.Modifiers.Any(SyntaxKind.PartialKeyword);
+
+        // Check syntax for ComponentBase inheritance first (more reliable for partial classes)
+        var inheritsFromComponentBase = false;
+        if (containingClass.BaseList != null)
         {
-            return false;
+            foreach (var baseType in containingClass.BaseList.Types)
+            {
+                var typeName = baseType.Type.ToString();
+                // Check for ComponentBase with or without namespace
+                if (typeName == "ComponentBase" || 
+                    typeName.EndsWith(".ComponentBase") ||
+                    typeName.Contains("Microsoft.AspNetCore.Components.ComponentBase"))
+                {
+                    inheritsFromComponentBase = true;
+                    break;
+                }
+            }
         }
 
-        // Check if class inherits from ComponentBase
-        if (!InheritsFromComponentBase(classSymbol))
+        // Also check semantic model if syntax check didn't find it (for fully qualified names)
+        if (!inheritsFromComponentBase)
+        {
+            var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
+            if (classSymbol != null)
+            {
+                inheritsFromComponentBase = InheritsFromComponentBase(classSymbol);
+            }
+        }
+
+        if (!inheritsFromComponentBase)
         {
             return false;
         }
@@ -473,13 +497,24 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         // Check if method is a Blazor lifecycle method
         // Support both override and non-override versions (partial methods may not have override)
         var methodName = methodDeclaration.Identifier.Text;
-        return methodName == "OnInitialized" ||
-               methodName == "OnInitializedAsync" ||
-               methodName == "OnParametersSet" ||
-               methodName == "OnParametersSetAsync" ||
-               methodName == "OnAfterRender" ||
-               methodName == "OnAfterRenderAsync" ||
-               (methodName.StartsWith("On") && methodName.EndsWith("Async") && methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword));
+        
+        // Check for standard Blazor lifecycle methods
+        var isLifecycleMethod = methodName == "OnInitialized" ||
+                               methodName == "OnInitializedAsync" ||
+                               methodName == "OnParametersSet" ||
+                               methodName == "OnParametersSetAsync" ||
+                               methodName == "OnAfterRender" ||
+                               methodName == "OnAfterRenderAsync";
+        
+        // For partial classes, be more lenient - allow any On*Async method
+        if (isPartialClass)
+        {
+            return isLifecycleMethod || (methodName.StartsWith("On") && methodName.EndsWith("Async"));
+        }
+        
+        // For regular classes, also allow On*Async methods (with or without override)
+        // Blazor components often override lifecycle methods, but we should allow both
+        return isLifecycleMethod || (methodName.StartsWith("On") && methodName.EndsWith("Async"));
     }
 
     /// <summary>

@@ -1,3 +1,5 @@
+using IndFusion.Mcp.Tests.Tools;
+
 namespace IndFusion.Mcp.Tests;
 
 /// <summary>
@@ -18,11 +20,20 @@ namespace IndFusion.Mcp.Tests;
 public class AnalyzeExxerFactoringOpportunitiesTests : IDisposable
 {
     private static readonly string SolutionPath = TestHelpers.GetSolutionPath();
-    private static readonly string ExampleFilePath = Path.Combine(TestUtilities.GetTestProjectDirectory(), "ExampleCode.cs");
+    private static readonly string ExampleFilePath = Path.GetFullPath(Path.Combine(TestUtilities.GetTestProjectDirectory(), "ExampleCode.cs"));
     private readonly string _originalDir = Directory.GetCurrentDirectory();
 
     /// <summary>
-    /// Constructor AnalyzeExxerFactoringOpportunitiesTests
+    /// Initializes a new instance of the <see cref="AnalyzeExxerFactoringOpportunitiesTests"/> class.
+    /// </summary>
+    public AnalyzeExxerFactoringOpportunitiesTests()
+    {
+        // Ensure ExampleCode.cs file exists before running tests
+        TestUtilities.EnsureExampleCodeFile();
+    }
+
+    /// <summary>
+    /// Disposes the test instance.
     /// </summary>
     public void Dispose()
     {
@@ -30,9 +41,9 @@ public class AnalyzeExxerFactoringOpportunitiesTests : IDisposable
     }
 
     /// <summary>
-    /// AnalyzeExampleCode_ReturnsSuggestions
+    /// Verifies that analyzing example code returns refactoring suggestions.
     /// </summary>
-    /// <returns></returns>
+    /// <returns>A task representing the asynchronous test operation.</returns>
     [Fact]
     public async Task AnalyzeExampleCode_ReturnsSuggestions()
     {

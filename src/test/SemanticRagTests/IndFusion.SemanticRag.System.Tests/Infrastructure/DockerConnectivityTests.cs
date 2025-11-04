@@ -34,18 +34,31 @@ public sealed class DockerConnectivityTests(
 
     /// <summary>
     /// Verifies that the Neo4j container is available when Docker is running.
+    /// This is the first container test, so it has an extended timeout to allow for container startup and health checks.
     /// </summary>
     [Trait("Category", "Smoke")]
-    [Fact(Timeout = 30000)]
-    public void Neo4jContainer_ShouldBeAvailable_When_DockerIsRunning()
+    [Fact(Timeout = 120000)] // 120 seconds for first container test (includes startup + health check)
+    public async Task Neo4jContainer_ShouldBeAvailable_When_DockerIsRunning()
     {
         SkipIfDockerUnavailable();
 
         _logger.LogInformation("🧪 Checking Neo4j container availability...");
-        _neo4jFixture.IsAvailable.ShouldBeTrue();
-        _neo4jFixture.BoltUri.ShouldNotBeNullOrWhiteSpace();
-        _neo4jFixture.Username.ShouldNotBeNullOrWhiteSpace();
-        _neo4jFixture.Password.ShouldNotBeNullOrWhiteSpace();
+        
+        // Health check: Verify container is available
+        _neo4jFixture.IsAvailable.ShouldBeTrue("Neo4j container should be available");
+        _neo4jFixture.BoltUri.ShouldNotBeNullOrWhiteSpace("Neo4j Bolt URI should be set");
+        _neo4jFixture.Username.ShouldNotBeNullOrWhiteSpace("Neo4j username should be set");
+        _neo4jFixture.Password.ShouldNotBeNullOrWhiteSpace("Neo4j password should be set");
+        
+        // Health check: Verify driver can execute a simple query
+        if (_neo4jFixture.Driver != null)
+        {
+            using var session = _neo4jFixture.Driver.AsyncSession();
+            var healthCheckResult = await session.RunAsync("RETURN 1 AS health_check");
+            var healthCheckRecord = await healthCheckResult.SingleAsync(TestContext.Current.CancellationToken);
+            healthCheckRecord["health_check"].As<int>().ShouldBe(1, "Neo4j health check query should return 1");
+        }
+        
         _logger.LogInformation("✅ Neo4j container available at {BoltUri}", _neo4jFixture.BoltUri);
     }
 
@@ -53,15 +66,25 @@ public sealed class DockerConnectivityTests(
     /// Verifies that the Qdrant container is available when Docker is running.
     /// </summary>
     [Trait("Category", "Smoke")]
-    [Fact(Timeout = 30000)]
-    public void QdrantContainer_ShouldBeAvailable_When_DockerIsRunning()
+    [Fact(Timeout = 60000)] // 60 seconds (doubled from 30s)
+    public async Task QdrantContainer_ShouldBeAvailable_When_DockerIsRunning()
     {
         SkipIfDockerUnavailable();
 
         _logger.LogInformation("🧪 Checking Qdrant container availability...");
-        _qdrantFixture.IsAvailable.ShouldBeTrue();
-        _qdrantFixture.HttpEndpoint.ShouldNotBeNullOrWhiteSpace();
-        _qdrantFixture.GrpcEndpoint.ShouldNotBeNullOrWhiteSpace();
+        
+        // Health check: Verify container is available
+        _qdrantFixture.IsAvailable.ShouldBeTrue("Qdrant container should be available");
+        _qdrantFixture.HttpEndpoint.ShouldNotBeNullOrWhiteSpace("Qdrant HTTP endpoint should be set");
+        _qdrantFixture.GrpcEndpoint.ShouldNotBeNullOrWhiteSpace("Qdrant gRPC endpoint should be set");
+        
+        // Health check: Verify client can list collections
+        if (_qdrantFixture.Client != null)
+        {
+            var healthCheckResp = await _qdrantFixture.Client.ListCollectionsAsync(TestContext.Current.CancellationToken);
+            healthCheckResp.ShouldNotBeNull("Qdrant health check (list collections) should succeed");
+        }
+        
         _logger.LogInformation("✅ Qdrant container available at {HttpEndpoint} / {GrpcEndpoint}", _qdrantFixture.HttpEndpoint, _qdrantFixture.GrpcEndpoint);
     }
 
@@ -69,7 +92,7 @@ public sealed class DockerConnectivityTests(
     /// Smoke test: Neo4j driver can execute a trivial query.
     /// </summary>
     [Trait("Category", "Smoke")]
-    [Fact(Timeout = 30000)]
+    [Fact(Timeout = 60000)] // 60 seconds (doubled from 30s)
     public async Task Neo4jDriver_ShouldExecuteSimpleQuery_When_DockerIsRunning()
     {
         SkipIfDockerUnavailable();
@@ -87,7 +110,7 @@ public sealed class DockerConnectivityTests(
     /// Smoke test: Qdrant client can list collections.
     /// </summary>
     [Trait("Category", "Smoke")]
-    [Fact(Timeout = 30000)]
+    [Fact(Timeout = 60000)] // 60 seconds (doubled from 30s)
     public async Task QdrantClient_ShouldListCollections_When_DockerIsRunning()
     {
         SkipIfDockerUnavailable();

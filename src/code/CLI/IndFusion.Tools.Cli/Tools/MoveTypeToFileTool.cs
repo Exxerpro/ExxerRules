@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Moves a top-level type declaration to a separate file with the same name.

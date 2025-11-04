@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Architecture;
+using IndFusion.Analyzer.Architecture;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;

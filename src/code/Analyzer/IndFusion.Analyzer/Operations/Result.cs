@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
-namespace IndFusion.Analyzers.Operations;
+namespace IndFusion.Analyzer.Operations;
 
 /// <summary>
 /// Provides a functional approach to error handling in .NET applications, eliminating the need for exceptions in normal control flow.

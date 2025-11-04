@@ -1,4 +1,4 @@
-using IndFusion.Analyzers.FunctionalPatterns;
+using IndFusion.Analyzer.FunctionalPatterns;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

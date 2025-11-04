@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.ModernCSharp;
+namespace IndFusion.Analyzer.ModernCSharp;
 
 /// <summary>
 /// Analyzer that enforces using expression-bodied members where appropriate.

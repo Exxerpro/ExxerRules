@@ -1,6 +1,7 @@
 using IndFusion.Mcp.Core.Services;
+using IndFusion.Tools.Cli.Move;
 
-namespace IndFusion.Tools.Mcp.App.Tools;
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Initializes a refactoring session, clears caches, and loads a solution into the shared workspace.

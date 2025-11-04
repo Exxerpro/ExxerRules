@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.SyntaxRewriters;
+namespace IndFusion.Tools.Cli.SyntaxRewriters;
 
 /// <summary>
 /// Base rewriter that replaces a target expression with a provided

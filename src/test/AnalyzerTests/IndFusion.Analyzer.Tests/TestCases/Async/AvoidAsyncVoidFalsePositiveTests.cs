@@ -1,8 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Async;
+using IndFusion.Analyzer.Async;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

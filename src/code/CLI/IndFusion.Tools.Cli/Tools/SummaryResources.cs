@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+using IndFusion.Tools.Cli.SyntaxRewriters;
+
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// MCP resource that returns a summarized view of a C# source file by

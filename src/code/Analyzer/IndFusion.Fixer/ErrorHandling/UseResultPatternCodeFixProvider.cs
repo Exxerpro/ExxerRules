@@ -1,15 +1,14 @@
 using System.Collections.Immutable;
 using System.Composition;
-using IndFusion.Analyzers;
+using IndFusion.Analyzer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using System.Linq;
 
-namespace IndFusion.CodeFixes.ErrorHandling;
+namespace IndFusion.Fixer.ErrorHandling;
 
 /// <summary>
 /// Code fix provider that converts exception-throwing code to use the Result pattern.

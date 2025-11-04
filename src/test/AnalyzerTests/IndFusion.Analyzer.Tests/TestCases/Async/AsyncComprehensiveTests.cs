@@ -1,5 +1,5 @@
 using System.Linq;
-using IndFusion.Analyzers.Async;
+using IndFusion.Analyzer.Async;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;
@@ -27,7 +27,7 @@ namespace TestProject
 }";
 
 		var diags = AnalyzerTestHelper.RunAnalyzer(code, new AvoidAsyncVoidAnalyzer());
-		diags.Any(d => d.Id == IndFusion.Analyzers.DiagnosticIds.AvoidAsyncVoid).ShouldBeTrue();
+		diags.Any(d => d.Id == DiagnosticIds.AvoidAsyncVoid).ShouldBeTrue();
 	}
 
 	/// <summary>

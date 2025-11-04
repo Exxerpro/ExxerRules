@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+using IndFusion.Tools.Cli.SyntaxRewriters;
+
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Extracts a selected block of code into a new method in solution or single-file mode.

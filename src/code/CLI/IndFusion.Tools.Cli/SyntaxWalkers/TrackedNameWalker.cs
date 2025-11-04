@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.SyntaxWalkers;
+namespace IndFusion.Tools.Cli.SyntaxWalkers;
 
 internal abstract class TrackedNameWalker : CSharpSyntaxWalker
 {

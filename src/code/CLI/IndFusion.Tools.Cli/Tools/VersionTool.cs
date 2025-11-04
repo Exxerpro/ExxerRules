@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Tool that reports the running assembly version and build timestamp.

@@ -1,13 +1,10 @@
 using System.Collections.Immutable;
-using System.Linq;
-using IndFusion.Analyzers.Common;
-using IndFusion.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.FunctionalPatterns;
+namespace IndFusion.Analyzer.FunctionalPatterns;
 
 /// <summary>
 /// Analyzer that enforces Result&lt;T&gt; pattern instead of throwing exceptions.

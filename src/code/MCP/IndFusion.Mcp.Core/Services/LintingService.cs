@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.MSBuild;
 using Microsoft.Extensions.Logging;
 using IndFusion.Mcp.Core.Abstractions;
 using System.Collections.Immutable;
-using IndFusion.Analyzers;
+using IndFusion.Analyzer;
 
 namespace IndFusion.Mcp.Core.Services;
 

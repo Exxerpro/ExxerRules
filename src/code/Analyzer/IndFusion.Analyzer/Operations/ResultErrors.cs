@@ -1,4 +1,4 @@
-namespace IndFusion.Analyzers.Operations;
+namespace IndFusion.Analyzer.Operations;
 
 /// <summary>
 /// Specialized error constants for specific Result scenarios.

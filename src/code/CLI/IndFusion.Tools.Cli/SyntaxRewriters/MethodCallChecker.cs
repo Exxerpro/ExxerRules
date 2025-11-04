@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.SyntaxRewriters;
+using IndFusion.Tools.Cli.SyntaxWalkers;
+
+namespace IndFusion.Tools.Cli.SyntaxRewriters;
 
 internal class MethodCallChecker : TrackedNameWalker
 {

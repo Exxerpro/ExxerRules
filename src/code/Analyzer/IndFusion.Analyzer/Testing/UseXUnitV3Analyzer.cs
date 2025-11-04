@@ -1,13 +1,11 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.Testing;
+namespace IndFusion.Analyzer.Testing;
 
 /// <summary>
 /// Analyzer that enforces XUnit v3 usage for testing.

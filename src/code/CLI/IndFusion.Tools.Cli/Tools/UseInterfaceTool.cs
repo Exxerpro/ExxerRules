@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Tool to change a method parameter's type to a specified interface, either via solution context or single-file edit.

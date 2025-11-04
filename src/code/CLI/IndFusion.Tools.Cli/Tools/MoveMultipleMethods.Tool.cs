@@ -1,4 +1,7 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+using IndFusion.Tools.Cli.Move;
+using IndFusion.Tools.Cli.SyntaxWalkers;
+
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Moves multiple methods between classes with support for static or instance injection.

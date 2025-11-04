@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// MCP tools to unload solutions and clear solution cache used by refactoring helpers.

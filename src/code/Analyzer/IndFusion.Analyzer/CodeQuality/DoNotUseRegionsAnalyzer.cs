@@ -1,12 +1,9 @@
 using System.Collections.Immutable;
-using System.Linq;
-using IndFusion.Analyzers.Common;
-using IndFusion.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.CodeQuality;
+namespace IndFusion.Analyzer.CodeQuality;
 
 /// <summary>
 /// Analyzer that enforces not using regions for code organization.

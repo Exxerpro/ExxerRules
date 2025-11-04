@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.FunctionalPatterns;
+using IndFusion.Analyzer.FunctionalPatterns;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;

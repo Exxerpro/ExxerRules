@@ -1,8 +1,7 @@
 using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.CodeQuality;
+using IndFusion.Analyzer.CodeQuality;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

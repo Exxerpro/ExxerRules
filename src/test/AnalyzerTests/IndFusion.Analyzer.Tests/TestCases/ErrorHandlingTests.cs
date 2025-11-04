@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.ErrorHandling;
+using IndFusion.Analyzer.ErrorHandling;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;

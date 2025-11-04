@@ -1,6 +1,6 @@
-using IndFusion.Analyzers.Operations;
+using IndFusion.Analyzer.Operations;
 
-namespace IndFusion.Analyzers.Common;
+namespace IndFusion.Analyzer.Common;
 
 /// <summary>
 /// Represents the result of an analysis operation using ExxerRules.Analyzers.Operations.

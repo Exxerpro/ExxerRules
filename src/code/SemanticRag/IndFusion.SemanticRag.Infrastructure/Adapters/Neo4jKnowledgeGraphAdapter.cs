@@ -12,7 +12,7 @@ using IndQuestResults.Operations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Neo4j.Driver;
-using static IndQuestResults.Operations.ResultExtensionsWithErrorCodes;
+using static IndFusion.SemanticRag.Domain.Errors.ResultExtensionsWithErrorCodes;
 
 namespace IndFusion.SemanticRag.Infrastructure.Adapters;
 

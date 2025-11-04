@@ -1,15 +1,11 @@
-using System;
 using System.Collections.Immutable;
-using System.Linq;
-using System.Text.RegularExpressions;
-using IndFusion.Analyzers.Common;
-using IndFusion.Analyzers.Operations;
+using IndFusion.Analyzer.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.Testing;
+namespace IndFusion.Analyzer.Testing;
 
 /// <summary>
 /// Analyzer that enforces test naming convention: Should_Action_When_Condition.

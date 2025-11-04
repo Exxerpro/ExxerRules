@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Creates a simple decorator class that wraps calls to an existing method.

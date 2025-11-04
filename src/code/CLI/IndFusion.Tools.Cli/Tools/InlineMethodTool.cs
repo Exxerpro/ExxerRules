@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+using IndFusion.Tools.Cli.SyntaxRewriters;
+
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Inlines a method at its call sites and removes the original definition.

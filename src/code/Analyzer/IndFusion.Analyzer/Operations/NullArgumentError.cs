@@ -1,4 +1,4 @@
-namespace IndFusion.Analyzers.Operations;
+namespace IndFusion.Analyzer.Operations;
 
 /// <summary>
 /// Represents a single null-argument validation failure discovered during guard evaluation.

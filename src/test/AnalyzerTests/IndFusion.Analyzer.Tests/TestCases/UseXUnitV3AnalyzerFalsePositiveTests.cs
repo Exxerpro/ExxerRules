@@ -1,8 +1,7 @@
 // file: test/IndFusion.Analyzer.Tests/TestCases/UseXUnitV3AnalyzerFalsePositiveTests.cs
 
+using IndFusion.Analyzer.Testing;
 using IndFusion.Analyzer.Tests.Testing;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;
 using Xunit;

@@ -1,4 +1,7 @@
-namespace IndFusion.Tools.Mcp.App.Move;
+using IndFusion.Tools.Cli.SyntaxWalkers;
+using IndFusion.Tools.Cli.Tools;
+
+namespace IndFusion.Tools.Cli.Move;
 
 /// <summary>
 /// MCP tool for moving methods between classes at the file/solution level,

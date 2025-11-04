@@ -1,4 +1,4 @@
-namespace IndFusion.Analyzers.Operations;
+namespace IndFusion.Analyzer.Operations;
 
 /// <summary>
 /// Provides extension methods for working with enumerables.

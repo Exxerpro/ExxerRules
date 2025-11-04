@@ -1,7 +1,6 @@
 #pragma warning disable CS1998, CS8031, CS0117, IDE0053
 
-using IndFusion.Analyzers;
-using IndFusion.CodeFixes.Async;
+using IndFusion.Fixer.Async;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;

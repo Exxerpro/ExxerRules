@@ -1,8 +1,7 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.CodeQuality;
-using IndFusion.Analyzers.ErrorHandling;
-using IndFusion.Analyzers.Testing;
+using IndFusion.Analyzer.CodeQuality;
+using IndFusion.Analyzer.ErrorHandling;
+using IndFusion.Analyzer.Testing;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;

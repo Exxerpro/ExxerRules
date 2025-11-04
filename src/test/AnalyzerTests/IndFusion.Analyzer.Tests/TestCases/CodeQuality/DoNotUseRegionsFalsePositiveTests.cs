@@ -1,6 +1,5 @@
 using System;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.CodeQuality;
+using IndFusion.Analyzer.CodeQuality;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

@@ -1,5 +1,6 @@
 using System.Collections.Immutable;
 using System.Composition;
+using IndFusion.Analyzer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -7,7 +8,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
 
-namespace IndFusion.CodeFixes.Async;
+namespace IndFusion.Fixer.Async;
 
 /// <summary>
 /// Code fix provider that converts async void methods to async Task.
@@ -19,7 +20,7 @@ public class AvoidAsyncVoidCodeFixProvider : CodeFixProvider
 	/// Gets the diagnostic IDs that this code fix can address.
 	/// </summary>
 	public override ImmutableArray<string> FixableDiagnosticIds =>
-		ImmutableArray.Create(IndFusion.Analyzers.DiagnosticIds.AvoidAsyncVoid);
+		ImmutableArray.Create(DiagnosticIds.AvoidAsyncVoid);
 
 	/// <summary>
 	/// Gets the provider used to implement Fix All operations for this code fix.

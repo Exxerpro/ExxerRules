@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+using IndFusion.Tools.Cli.SyntaxRewriters;
+
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Makes a field readonly when it is only assigned during initialization.

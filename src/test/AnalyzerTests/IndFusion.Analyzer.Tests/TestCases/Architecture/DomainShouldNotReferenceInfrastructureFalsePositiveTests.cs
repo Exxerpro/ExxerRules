@@ -1,7 +1,6 @@
 using System;
+using IndFusion.Analyzer.Architecture;
 using Microsoft.EntityFrameworkCore;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Architecture;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IndFusion.Analyzers.Architecture;
-using IndFusion.Analyzers.Async;
-using IndFusion.Analyzers.Common;
-using IndFusion.Analyzers.NullSafety;
+using IndFusion.Analyzer.Architecture;
+using IndFusion.Analyzer.Async;
+using IndFusion.Analyzer.NullSafety;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

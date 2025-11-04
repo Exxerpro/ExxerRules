@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using Qdrant.Client;
 using QdrantCollectionInfo = Qdrant.Client.Grpc.CollectionInfo;
 using Qdrant.Client.Grpc;
-using static IndQuestResults.Operations.ResultExtensionsWithErrorCodes;
+using static IndFusion.SemanticRag.Domain.Errors.ResultExtensionsWithErrorCodes;
 using static Qdrant.Client.Grpc.Conditions;
 
 namespace IndFusion.SemanticRag.Infrastructure.Adapters;

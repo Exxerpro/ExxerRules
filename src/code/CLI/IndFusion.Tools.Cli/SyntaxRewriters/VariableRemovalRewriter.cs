@@ -1,4 +1,4 @@
-namespace IndFusion.Tools.Mcp.App.SyntaxRewriters;
+namespace IndFusion.Tools.Cli.SyntaxRewriters;
 
 internal class VariableRemovalRewriter : DeclarationRemovalRewriter<LocalDeclarationStatementSyntax>
 {

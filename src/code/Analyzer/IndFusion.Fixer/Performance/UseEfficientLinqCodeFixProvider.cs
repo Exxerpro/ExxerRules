@@ -1,15 +1,14 @@
 using System.Collections.Immutable;
 using System.Composition;
-using IndFusion.Analyzers;
+using IndFusion.Analyzer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using Microsoft.CodeAnalysis.Formatting;
 
-namespace IndFusion.CodeFixes.Performance;
+namespace IndFusion.Fixer.Performance;
 
 /// <summary>
 /// Code fix provider that optimizes LINQ expressions for better performance.

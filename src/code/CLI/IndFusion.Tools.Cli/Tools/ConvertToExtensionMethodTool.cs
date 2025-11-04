@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+using IndFusion.Tools.Cli.SyntaxRewriters;
+
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Converts an instance method into a static extension method and leaves a wrapper.

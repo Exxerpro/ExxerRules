@@ -1,8 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Documentation;
+using IndFusion.Analyzer.Documentation;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

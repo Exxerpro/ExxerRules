@@ -1,12 +1,13 @@
 using System.Text.Json;
 using IndFusion.Mcp.Core.Logging;
+using IndFusion.Mcp.Server.Extensions;
 using IndFusion.Mcp.Web.Services;
 using MudBlazor.Services;
-using OpenTelemetry;
-using OpenTelemetry.Trace;
 using OpenTelemetry.Resources;
-using IndFusion.Mcp.Server.Extensions;
+using OpenTelemetry.Trace;
 using Serilog;
+
+namespace IndFusion.Mcp.Web;
 
 internal class Program
 {
@@ -107,11 +108,8 @@ internal class Program
     }
 }
 
-namespace IndFusion.Mcp.Web
-{
-    /// <summary>
-    /// Partial type used by ASP.NET hosting and tests to reference the web application entry point.
-    /// </summary>
-    public partial class Program
-    { }
-}
+/// <summary>
+/// Partial type used by ASP.NET hosting and tests to reference the web application entry point.
+/// </summary>
+public partial class Program
+{ }

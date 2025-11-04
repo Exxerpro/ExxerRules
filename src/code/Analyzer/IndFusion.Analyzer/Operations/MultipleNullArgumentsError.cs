@@ -1,4 +1,4 @@
-namespace IndFusion.Analyzers.Operations;
+namespace IndFusion.Analyzer.Operations;
 
 /// <summary>
 /// Represents a collection of null argument validation errors discovered during a single validation pass.

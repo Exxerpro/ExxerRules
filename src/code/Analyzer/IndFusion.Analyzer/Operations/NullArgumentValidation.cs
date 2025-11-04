@@ -1,4 +1,4 @@
-namespace IndFusion.Analyzers.Operations;
+namespace IndFusion.Analyzer.Operations;
 
 /// <summary>
 /// Provides factory methods for creating <see cref="Result"/> instances that capture null argument validation failures.

@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Performance;
+using IndFusion.Analyzer.Performance;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

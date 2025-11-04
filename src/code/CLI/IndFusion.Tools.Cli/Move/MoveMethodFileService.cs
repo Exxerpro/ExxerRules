@@ -1,4 +1,7 @@
-namespace IndFusion.Tools.Mcp.App.Move;
+using IndFusion.Tools.Cli.SyntaxRewriters;
+using IndFusion.Tools.Cli.Tools;
+
+namespace IndFusion.Tools.Cli.Move;
 
 /// <summary>
 /// File-based orchestration for moving methods between classes/files, built on the AST layer.

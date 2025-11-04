@@ -1,0 +1,278 @@
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Tests.Unit.Shared;
+using IndQuestResults;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
+using Shouldly;
+using Xunit;
+
+namespace IndFusion.SemanticRag.Tests.Unit.Interfaces;
+
+/// <summary>
+/// <para>
+/// <strong>EXAMPLE: Interface Contract Tests Using Liskov Substitution Pattern</strong>
+/// </para>
+/// <para>
+/// This is a COMPLETE EXAMPLE showing how to use the sealed, generic test pattern to enforce
+/// Liskov Substitution Principle and prevent IITDD violations.
+/// </para>
+/// <para>
+/// <strong>PATTERN:</strong>
+/// </para>
+/// <list type="number">
+/// <item>Define interface contract tests ONCE using mocks (this file)</item>
+/// <item>Reuse SAME contract tests with ALL implementations (see companion LSP test files)</item>
+/// <item>If any implementation fails these tests - it violates Liskov Substitution Principle!</item>
+/// </list>
+/// <para>
+/// <strong>HOW TO USE THIS PATTERN:</strong>
+/// </para>
+/// <code>
+/// // 1. Copy this file and rename to: IVectorDatabasePortContractTests.cs
+/// // 2. Remove ".example" extension
+/// // 3. Implement CreateValidRequest() and CreateInvalidRequest()
+/// // 4. Define contract tests (using mocks)
+/// // 
+/// // 5. Create companion LSP test files:
+/// //    - QdrantVectorDatabaseAdapterLSPTests.cs
+/// //    - InMemoryVectorDatabaseAdapterLSPTests.cs
+/// //    - MockVectorDatabaseAdapterLSPTests.cs
+/// //    
+/// // Each LSP test file inherits from this class and overrides CreateImplementation()
+/// // to provide a real implementation. SAME contract tests validate all implementations!
+/// </code>
+/// </summary>
+/// <remarks>
+/// <para>
+/// <strong>IITDD vs TDD - CRITICAL DISTINCTION:</strong>
+/// </para>
+/// <list type="bullet">
+/// <item><strong>IITDD (this class):</strong> Tests interface CONTRACT using mocks. Must pass for ANY implementation.</item>
+/// <item><strong>TDD (BaseTDDTest):</strong> Tests concrete IMPLEMENTATION behavior using real objects.</item>
+/// </list>
+/// <para>
+/// <strong>DO NOT confuse IITDD with TDD!</strong>
+/// </para>
+/// </remarks>
+public sealed class IVectorDatabasePortContractTests
+    : InterfaceContractTests<IVectorDatabasePort, string, CollectionInfo?>
+{
+    /// <summary>
+    /// Initializes test setup. Override if you need custom setup.
+    /// </summary>
+    protected override void SetUp()
+    {
+        base.SetUp();
+        // Add any custom setup here
+    }
+
+    /// <summary>
+    /// Creates a valid request for testing.
+    /// <para>
+    /// <strong>IITDD Principle:</strong> This creates a valid request that satisfies the interface contract.
+    /// </para>
+    /// </summary>
+    /// <returns>A valid collection name.</returns>
+    protected override string CreateValidRequest()
+    {
+        return "test-collection";
+    }
+
+    /// <summary>
+    /// Creates an invalid request for testing.
+    /// <para>
+    /// <strong>IITDD Principle:</strong> This creates an invalid request to test the error contract.
+    /// </para>
+    /// </summary>
+    /// <returns>An invalid collection name (null or empty).</returns>
+    protected override string CreateInvalidRequest()
+    {
+        return null!; // Invalid: null collection name
+    }
+
+    // ====================================================================
+    // CONTRACT TESTS - These validate the INTERFACE CONTRACT, not implementations
+    // ====================================================================
+
+    /// <summary>
+    /// Contract test: GetCollectionInfoAsync with valid collection name must return success.
+    /// <para>
+    /// <strong>Liskov Principle:</strong> This test MUST pass for ANY valid implementation.
+    /// </para>
+    /// <para>
+    /// <strong>IITDD Principle:</strong> Uses mock to test contract, not implementation details.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task GetCollectionInfoAsync_WithValidCollectionName_ShouldReturnSuccess()
+    {
+        // Arrange: Setup mock to return success (validates contract)
+        var expectedInfo = new CollectionInfo(
+            CollectionName: "test-collection",
+            VectorSize: 384,
+            Distance: VectorDistance.Cosine,
+            PointsCount: 1000);
+        
+        MockPort.GetCollectionInfoAsync(
+            Arg.Is<string>(name => name == CreateValidRequest()),
+            Arg.Any<CancellationToken>())
+            .Returns(Result<CollectionInfo?>.Success(expectedInfo));
+
+        // Act: Test interface contract
+        var result = await MockPort.GetCollectionInfoAsync(CreateValidRequest());
+
+        // Assert: Validate CONTRACT (not implementation details)
+        AssertContractSuccess(result);
+        
+        // ✅ GOOD: Assert contract requirements
+        result.Value.ShouldNotBeNull();
+        result.Value!.CollectionName.ShouldBe("test-collection");
+        
+        // ❌ BAD: DO NOT assert implementation details:
+        // - result.Value.PointsCount.ShouldBeGreaterThan(0); // Implementation detail!
+        // - result.Value.VectorSize.ShouldBe(384); // Unless contract requires it
+    }
+
+    /// <summary>
+    /// Contract test: GetCollectionInfoAsync with invalid collection name must return failure.
+    /// <para>
+    /// <strong>Liskov Principle:</strong> This test MUST pass for ANY valid implementation.
+    /// All implementations must return failure for invalid input (contract requirement).
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task GetCollectionInfoAsync_WithInvalidCollectionName_ShouldReturnFailure()
+    {
+        // Arrange: Setup mock to return failure for invalid input (error contract)
+        MockPort.GetCollectionInfoAsync(
+            Arg.Is<string>(string.IsNullOrWhiteSpace),
+            Arg.Any<CancellationToken>())
+            .Returns(Result<CollectionInfo?>.WithFailure("Collection name cannot be null or empty"));
+
+        // Act: Test error contract
+        var result = await MockPort.GetCollectionInfoAsync(CreateInvalidRequest());
+
+        // Assert: Validate error CONTRACT
+        AssertContractFailure(result);
+        
+        // ✅ GOOD: Validate error exists (contract requirement)
+        result.Error.ShouldNotBeNullOrEmpty();
+        
+        // ❌ BAD: DO NOT assert exact error message (fragile):
+        // result.Error.ShouldBe("Collection name cannot be null or empty"); // Fragile!
+        
+        // ✅ BETTER: Use error codes if available:
+        // AssertContractFailure(result, ErrorCodes.CollectionNameRequired);
+    }
+
+    /// <summary>
+    /// Contract test: GetCollectionInfoAsync with non-existent collection should return null (contract requirement).
+    /// <para>
+    /// <strong>Liskov Principle:</strong> This test validates the "not found" contract.
+    /// All implementations must return null (not failure) when collection doesn't exist.
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task GetCollectionInfoAsync_WithNonExistentCollection_ShouldReturnNull()
+    {
+        // Arrange: Setup mock to return null (not found contract)
+        MockPort.GetCollectionInfoAsync(
+            Arg.Is<string>(name => name == "non-existent"),
+            Arg.Any<CancellationToken>())
+            .Returns(Result<CollectionInfo?>.Success(null)); // Contract: null means not found
+
+        // Act: Test "not found" contract
+        var result = await MockPort.GetCollectionInfoAsync("non-existent");
+
+        // Assert: Validate "not found" contract
+        AssertContractSuccess(result);
+        result.Value.ShouldBeNull(); // Contract: null means collection doesn't exist
+    }
+
+    // ====================================================================
+    // LISKOV SUBSTITUTION PRINCIPLE VALIDATION
+    // ====================================================================
+
+    /// <summary>
+    /// LSP validation: Validates that real implementation satisfies the interface contract.
+    /// <para>
+    /// <strong>Liskov Principle:</strong> If CreateImplementation() returns a real instance,
+    /// this test validates that the real implementation satisfies the same contract.
+    /// </para>
+    /// <para>
+    /// <strong>Pattern:</strong> Override CreateImplementation() in derived LSP test classes
+    /// to provide real implementations. Same contract tests validate all implementations!
+    /// </para>
+    /// </summary>
+    [Fact]
+    public async Task GetCollectionInfoAsync_RealImplementation_SatisfiesContract()
+    {
+        // Skip LSP validation if no real implementation provided (pure IITDD)
+        if (RealImplementation == null)
+        {
+            // Pure IITDD test - only testing contract with mock
+            return;
+        }
+
+        // Validate real implementation satisfies same contract (Liskov Substitution Principle)
+        // If this fails, the real implementation violates LSP!
+        ValidateRealImplementationSatisfiesContract(async impl =>
+        {
+            var result = await impl.GetCollectionInfoAsync(CreateValidRequest());
+            
+            // Same contract assertion validates real implementation
+            AssertContractSuccess(result);
+        });
+    }
+}
+
+// ====================================================================
+// COMPANION LSP TEST FILES - Reuse same contract tests!
+// ====================================================================
+
+/*
+// File: Implementations/QdrantVectorDatabaseAdapterLSPTests.cs
+namespace IndFusion.SemanticRag.Tests.Unit.Implementations;
+
+/// <summary>
+/// LSP validation: QdrantVectorDatabaseAdapter must satisfy IVectorDatabasePort contract.
+/// </summary>
+public sealed class QdrantVectorDatabaseAdapterLSPTests 
+    : IVectorDatabasePortContractTests
+{
+    protected override IVectorDatabasePort? CreateImplementation() 
+    {
+        var client = new QdrantClient("localhost", 6333);
+        var logger = Substitute.For<ILogger<QdrantVectorDatabaseAdapter>>();
+        return new QdrantVectorDatabaseAdapter(client, logger);
+    }
+    
+    // SAME contract tests from base class validate QdrantAdapter!
+    // If QdrantAdapter fails - it violates Liskov Substitution Principle!
+}
+
+// File: Implementations/InMemoryVectorDatabaseAdapterLSPTests.cs
+namespace IndFusion.SemanticRag.Tests.Unit.Implementations;
+
+/// <summary>
+/// LSP validation: InMemoryVectorDatabaseAdapter must satisfy IVectorDatabasePort contract.
+/// </summary>
+public sealed class InMemoryVectorDatabaseAdapterLSPTests 
+    : IVectorDatabasePortContractTests
+{
+    protected override IVectorDatabasePort? CreateImplementation() 
+    {
+        var logger = Substitute.For<ILogger<InMemoryVectorDatabaseAdapter>>();
+        return new InMemoryVectorDatabaseAdapter(logger);
+    }
+    
+    // SAME contract tests from base class validate InMemoryAdapter!
+    // If InMemoryAdapter fails - it violates Liskov Substitution Principle!
+}
+
+// RESULT: All implementations validated by SAME contract tests!
+// If QdrantAdapter fails but InMemoryAdapter passes - QdrantAdapter violates LSP!
+*/

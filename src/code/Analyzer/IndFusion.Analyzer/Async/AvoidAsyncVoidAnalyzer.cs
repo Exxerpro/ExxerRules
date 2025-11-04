@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.Async;
+namespace IndFusion.Analyzer.Async;
 
 /// <summary>
 /// Flags <c>async void</c> methods so teams prefer <see cref="System.Threading.Tasks.Task"/>-returning async APIs outside valid event-handling scenarios.

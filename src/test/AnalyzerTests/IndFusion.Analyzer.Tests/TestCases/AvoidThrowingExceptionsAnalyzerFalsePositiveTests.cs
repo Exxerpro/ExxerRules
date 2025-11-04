@@ -1,4 +1,4 @@
-using IndFusion.Analyzers.ErrorHandling;
+using IndFusion.Analyzer.ErrorHandling;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

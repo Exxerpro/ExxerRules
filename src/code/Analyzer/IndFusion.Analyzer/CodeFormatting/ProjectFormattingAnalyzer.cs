@@ -1,10 +1,10 @@
 using System.Collections.Immutable;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.CodeFormatting;
+namespace IndFusion.Analyzer.CodeFormatting;
 
 /// <summary>
 /// Analyzer that provides a mechanism to trigger project formatting on demand.

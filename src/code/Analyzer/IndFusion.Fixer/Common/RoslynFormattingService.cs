@@ -1,13 +1,9 @@
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Formatting;
-using Microsoft.CodeAnalysis.Editing;
 using Microsoft.CodeAnalysis.Formatting;
 using Microsoft.CodeAnalysis.Options;
-using Microsoft.CodeAnalysis.Text;
-using Microsoft.CodeAnalysis.Host;
 
-namespace IndFusion.CodeFixes.Common;
+namespace IndFusion.Fixer.Common;
 
 /// <summary>
 /// Provides Roslyn-based formatting services to replace shell command execution.

@@ -11,7 +11,7 @@ using Microsoft.Extensions.Options;
 using Neo4j.Driver;
 using Qdrant.Client;
 
-namespace IndFusion.SemanticRag.Infrastructure;
+namespace IndFusion.SemanticRag.Infrastructure.Extensions;
 
 /// <summary>
 /// Extension methods for configuring Semantic RAG services.

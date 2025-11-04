@@ -1,7 +1,4 @@
-using IndQuestResults;
-using IndFusion.SemanticRag.Domain.Errors;
-
-namespace IndQuestResults.Operations;
+namespace IndFusion.SemanticRag.Domain.Errors;
 
 /// <summary>
 /// Temporary extensions for error codes with exceptions until IndQuestResults is extended.

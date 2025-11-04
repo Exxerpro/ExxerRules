@@ -1,4 +1,8 @@
-namespace IndFusion.Tools.Mcp.App.Move;
+using IndFusion.Tools.Cli.SyntaxRewriters;
+using IndFusion.Tools.Cli.SyntaxWalkers;
+using IndFusion.Tools.Cli.Tools;
+
+namespace IndFusion.Tools.Cli.Move;
 
 /// <summary>
 /// Roslyn-based AST transformations to support moving methods between classes.

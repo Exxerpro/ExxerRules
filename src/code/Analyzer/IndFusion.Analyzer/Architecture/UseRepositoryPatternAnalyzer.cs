@@ -1,11 +1,10 @@
 using System.Collections.Immutable;
-using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.Architecture;
+namespace IndFusion.Analyzer.Architecture;
 
 /// <summary>
 /// Encourages teams to rely on repository abstractions instead of leaking direct data-access dependencies into higher layers.

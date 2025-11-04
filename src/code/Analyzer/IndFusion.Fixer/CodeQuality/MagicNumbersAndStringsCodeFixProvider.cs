@@ -1,15 +1,14 @@
 using System.Collections.Immutable;
 using System.Composition;
-using IndFusion.Analyzers;
+using IndFusion.Analyzer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using Microsoft.CodeAnalysis.Formatting;
 
-namespace IndFusion.CodeFixes.CodeQuality;
+namespace IndFusion.Fixer.CodeQuality;
 
 /// <summary>
 /// Code fix provider that extracts magic numbers and strings to constants.

@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.Tools;
+using IndFusion.Tools.Cli.SyntaxWalkers;
+
+namespace IndFusion.Tools.Cli.Tools;
 
 /// <summary>
 /// Analyzes a C# file for refactoring opportunities (e.g., long methods, unused code).

@@ -1,9 +1,9 @@
 using System.Text.RegularExpressions;
-using IndFusion.Analyzers.Operations;
+using IndFusion.Analyzer.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-namespace IndFusion.Analyzers.Common;
+namespace IndFusion.Analyzer.Common;
 
 /// <summary>
 /// Utility class for detecting code patterns using functional approach with ExxerRules.Analyzers.Operations.

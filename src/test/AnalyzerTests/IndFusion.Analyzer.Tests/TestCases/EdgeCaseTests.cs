@@ -1,10 +1,6 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Async;
-using IndFusion.Analyzers.NullSafety;
-using IndFusion.Analyzers.Logging;
-using IndFusion.Analyzers.ModernCSharp;
-using IndFusion.Analyzers.ErrorHandling;
+using IndFusion.Analyzer.Async;
+using IndFusion.Analyzer.NullSafety;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;

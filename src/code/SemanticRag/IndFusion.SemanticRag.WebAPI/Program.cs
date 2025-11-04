@@ -1,5 +1,6 @@
 using IndFusion.SemanticRag.Application;
 using IndFusion.SemanticRag.Infrastructure;
+using IndFusion.SemanticRag.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

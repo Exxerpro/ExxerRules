@@ -1,14 +1,12 @@
 using System.Collections.Immutable;
 using System.Composition;
-using System.Diagnostics;
-using System.IO;
-using IndFusion.Analyzers;
-using IndFusion.CodeFixes.Common;
+using IndFusion.Analyzer;
+using IndFusion.Fixer.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 
-namespace IndFusion.CodeFixes.CodeFormatting;
+namespace IndFusion.Fixer.CodeFormatting;
 
 /// <summary>
 /// Code fix provider that provides project-level formatting actions.

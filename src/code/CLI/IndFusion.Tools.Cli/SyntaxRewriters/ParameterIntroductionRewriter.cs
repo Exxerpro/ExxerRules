@@ -1,4 +1,6 @@
-namespace IndFusion.Tools.Mcp.App.SyntaxRewriters;
+using IndFusion.Tools.Cli.Tools;
+
+namespace IndFusion.Tools.Cli.SyntaxRewriters;
 
 internal class ParameterIntroductionRewriter : ExpressionIntroductionRewriter<MethodDeclarationSyntax>
 {

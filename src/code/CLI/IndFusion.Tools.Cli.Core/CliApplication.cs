@@ -12,18 +12,13 @@ namespace IndFusion.Tools.Cli.Core;
 /// <summary>
 /// Main CLI application class that can be called from console wrapper or unit tests
 /// </summary>
-public class CliApplication
+/// <remarks>
+/// Initializes a new instance of the CliApplication class
+/// </remarks>
+/// <param name="serviceProvider">The service provider for dependency injection</param>
+public class CliApplication(IServiceProvider serviceProvider)
 {
-    private readonly IServiceProvider _serviceProvider;
-
-    /// <summary>
-    /// Initializes a new instance of the CliApplication class
-    /// </summary>
-    /// <param name="serviceProvider">The service provider for dependency injection</param>
-    public CliApplication(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     /// <summary>
     /// Executes the CLI application with the given arguments
@@ -36,7 +31,9 @@ public class CliApplication
         try
         {
             var rootCommand = BuildCommandLine();
-            return await rootCommand.InvokeAsync(args, cancellationToken);
+            // Fix: Use rootCommand.Parse(args).Invoke() for System.CommandLine 2.x or earlier
+            var parseResult = rootCommand.Parse(args);
+            return parseResult.Invoke();
         }
         catch (Exception ex)
         {

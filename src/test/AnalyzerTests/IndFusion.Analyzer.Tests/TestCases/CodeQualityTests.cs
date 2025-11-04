@@ -1,6 +1,6 @@
 using System.Collections.Immutable;
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.CodeQuality;
+using IndFusion.Analyzer.CodeQuality;
+using IndFusion.Analyzer.Logging;
 using IndFusion.Analyzer.Tests.Testing;
 using Microsoft.CodeAnalysis;
 using Shouldly;
@@ -279,7 +279,7 @@ namespace TestProject
 	}
 }";
 
-		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new IndFusion.Analyzers.Logging.UseStructuredLoggingAnalyzer());
+		var diagnostics = AnalyzerTestHelper.RunAnalyzer(testCode, new UseStructuredLoggingAnalyzer());
 		diagnostics.Length.ShouldBeGreaterThanOrEqualTo(1);
 	}
 }

@@ -1,4 +1,4 @@
-namespace IndFusion.Analyzers;
+namespace IndFusion.Analyzer;
 
 /// <summary>
 /// Defines diagnostic categories for IndFusion analyzers.

@@ -1,16 +1,15 @@
 using System.Collections.Immutable;
 using System.Composition;
-using IndFusion.Analyzers;
+using System.Text.RegularExpressions;
+using IndFusion.Analyzer;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Editing;
-using Microsoft.CodeAnalysis.Formatting;
-using System.Text.RegularExpressions;
 
-namespace IndFusion.CodeFixes.Testing;
+namespace IndFusion.Fixer.Testing;
 
 /// <summary>
 /// Code fix provider that renames test methods to follow the Should_Action_When_Condition naming convention.

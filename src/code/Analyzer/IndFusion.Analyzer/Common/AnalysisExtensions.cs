@@ -1,9 +1,8 @@
-using IndFusion.Analyzers.Operations;
+using IndFusion.Analyzer.Operations;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.Common;
+namespace IndFusion.Analyzer.Common;
 
 /// <summary>
 /// Extension methods for functional analysis operations using ExxerRules.Analyzers.Operations.

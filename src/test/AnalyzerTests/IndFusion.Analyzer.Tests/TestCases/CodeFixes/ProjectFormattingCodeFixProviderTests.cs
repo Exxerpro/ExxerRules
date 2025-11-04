@@ -1,6 +1,6 @@
 #pragma warning disable CS1998, CS0452, CS1022, IDE0053
-using IndFusion.Analyzers;
-using IndFusion.CodeFixes.CodeFormatting;
+using IndFusion.Fixer.CodeFormatting;
+using IndFusion.Fixer.Common;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.Text;
@@ -230,7 +230,7 @@ public class TestClass
     private static async Task<Document> FormatProjectAsync(Document document, CancellationToken cancellationToken)
     {
         var project = document.Project;
-        var formattedSolution = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatProjectAsync(project.Solution, project.Id, cancellationToken);
+        var formattedSolution = await RoslynFormattingService.FormatProjectAsync(project.Solution, project.Id, cancellationToken);
         var result = formattedSolution.GetDocument(document.Id) ?? document;
         if (ReferenceEquals(result, document))
         {
@@ -255,7 +255,7 @@ public class TestClass
     /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectWhitespaceAsync(Document document, CancellationToken cancellationToken)
     {
-        var result = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatWhitespaceAsync(document, cancellationToken);
+        var result = await RoslynFormattingService.FormatWhitespaceAsync(document, cancellationToken);
         if (ReferenceEquals(result, document))
         {
             var workspace = new AdhocWorkspace();
@@ -278,8 +278,8 @@ public class TestClass
     /// <returns>A task that produces the formatted document.</returns>
     private static async Task<Document> FormatProjectWithDotNetStandardsAsync(Document document, CancellationToken cancellationToken)
     {
-        var options = IndFusion.CodeFixes.Common.RoslynFormattingService.CreateDotNetFormattingOptions();
-        var result = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatDocumentAsync(document, options, cancellationToken);
+        var options = RoslynFormattingService.CreateDotNetFormattingOptions();
+        var result = await RoslynFormattingService.FormatDocumentAsync(document, options, cancellationToken);
         if (ReferenceEquals(result, document))
         {
             var workspace = new AdhocWorkspace();
@@ -302,7 +302,7 @@ public class TestClass
     /// <returns>A task that produces a document from the formatted solution.</returns>
     private static async Task<Document> FormatSolutionAsync(Document document, CancellationToken cancellationToken)
     {
-        var formattedSolution = await IndFusion.CodeFixes.Common.RoslynFormattingService.FormatSolutionAsync(document.Project.Solution, cancellationToken);
+        var formattedSolution = await RoslynFormattingService.FormatSolutionAsync(document.Project.Solution, cancellationToken);
         var result = formattedSolution.GetDocument(document.Id) ?? document;
         if (ReferenceEquals(result, document))
         {

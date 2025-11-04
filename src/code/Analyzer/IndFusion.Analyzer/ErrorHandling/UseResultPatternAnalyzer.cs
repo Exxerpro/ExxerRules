@@ -1,14 +1,10 @@
-using System;
 using System.Collections.Immutable;
-using System.Linq;
-using IndFusion.Analyzers.Common;
-using IndFusion.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.ErrorHandling;
+namespace IndFusion.Analyzer.ErrorHandling;
 
 /// <summary>
 /// Analyzer that detects methods throwing exceptions instead of returning Result&lt;T&gt;.

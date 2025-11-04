@@ -1,4 +1,4 @@
-namespace IndFusion.Analyzers.Operations;
+namespace IndFusion.Analyzer.Operations;
 
 #pragma warning disable CS0702
 #pragma warning disable EXXER200 // This extension method is designed to be used with Result<T> and Result types, following the Open/Closed Principle for extensibility.

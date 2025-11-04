@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.Async;
+namespace IndFusion.Analyzer.Async;
 
 /// <summary>
 /// Ensures <c>await</c> expressions in library code opt into <c>ConfigureAwait(false)</c> to avoid deadlocks and improve responsiveness.

@@ -1,5 +1,4 @@
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.Logging;
+using IndFusion.Analyzer.Logging;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

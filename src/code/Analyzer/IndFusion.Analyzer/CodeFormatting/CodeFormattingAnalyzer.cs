@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.CodeFormatting;
+namespace IndFusion.Analyzer.CodeFormatting;
 
 /// <summary>
 /// Analyzer that detects common formatting issues and suggests running dotnet format.

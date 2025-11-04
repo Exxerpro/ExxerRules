@@ -1,5 +1,4 @@
-using IndFusion.Analyzers;
-using IndFusion.Analyzers.CodeFormatting;
+using IndFusion.Analyzer.CodeFormatting;
 using IndFusion.Analyzer.Tests.Testing;
 using Shouldly;
 using Xunit;

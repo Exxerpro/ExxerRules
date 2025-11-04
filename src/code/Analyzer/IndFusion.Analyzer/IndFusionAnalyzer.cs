@@ -1,20 +1,20 @@
 using System.Collections.Immutable;
+using IndFusion.Analyzer.Architecture;
+using IndFusion.Analyzer.Async;
+using IndFusion.Analyzer.CodeFormatting;
+using IndFusion.Analyzer.CodeQuality;
+using IndFusion.Analyzer.Documentation;
+using IndFusion.Analyzer.ErrorHandling;
+using IndFusion.Analyzer.FunctionalPatterns;
+using IndFusion.Analyzer.Logging;
+using IndFusion.Analyzer.ModernCSharp;
+using IndFusion.Analyzer.NullSafety;
+using IndFusion.Analyzer.Performance;
+using IndFusion.Analyzer.Testing;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
-using IndFusion.Analyzers.Architecture;
-using IndFusion.Analyzers.Async;
-using IndFusion.Analyzers.CodeFormatting;
-using IndFusion.Analyzers.CodeQuality;
-using IndFusion.Analyzers.Documentation;
-using IndFusion.Analyzers.ErrorHandling;
-using IndFusion.Analyzers.FunctionalPatterns;
-using IndFusion.Analyzers.Logging;
-using IndFusion.Analyzers.ModernCSharp;
-using IndFusion.Analyzers.NullSafety;
-using IndFusion.Analyzers.Performance;
-using IndFusion.Analyzers.Testing;
 
-namespace IndFusion.Analyzers;
+namespace IndFusion.Analyzer;
 
 /// <summary>
 /// Coordinates registration of every diagnostics analyzer shipped in the IndFusion suite so the compiler loads a single entry point.

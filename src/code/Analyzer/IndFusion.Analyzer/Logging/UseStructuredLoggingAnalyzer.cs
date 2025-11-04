@@ -1,13 +1,10 @@
 using System.Collections.Immutable;
-using System.Linq;
-using IndFusion.Analyzers.Common;
-using IndFusion.Analyzers.Operations;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace IndFusion.Analyzers.Logging;
+namespace IndFusion.Analyzer.Logging;
 
 /// <summary>
 /// Analyzer that enforces structured logging instead of string concatenation.

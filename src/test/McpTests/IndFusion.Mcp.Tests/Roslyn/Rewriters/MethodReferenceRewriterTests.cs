@@ -12,7 +12,7 @@ public partial class RoslynTransformationTests
     public void MethodReferenceRewriter_QualifiesUnqualifiedReference()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void Test(){ obj.Evt += OnEvt; }") as MethodDeclarationSyntax;
-        var rewriter = new MethodReferenceRewriter(new HashSet<string> { "OnEvt" }, "inst");
+        var rewriter = new MethodReferenceRewriter(["OnEvt"], "inst");
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("obj.Evt += inst.OnEvt", result);
     }
@@ -24,7 +24,7 @@ public partial class RoslynTransformationTests
     public void MethodReferenceRewriter_QualifiesThisReference()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void Test(){ obj.Evt += this.OnEvt; }") as MethodDeclarationSyntax;
-        var rewriter = new MethodReferenceRewriter(new HashSet<string> { "OnEvt" }, "inst");
+        var rewriter = new MethodReferenceRewriter(["OnEvt"], "inst");
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("obj.Evt += inst.OnEvt", result);
         Assert.DoesNotContain("this.OnEvt", result);

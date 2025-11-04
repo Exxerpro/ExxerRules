@@ -12,7 +12,7 @@ public class PrivateFieldInfoWalker : CSharpSyntaxWalker
     /// <summary>
     /// Gets a map from field name to its declared <see cref="TypeSyntax"/>.
     /// </summary>
-    public Dictionary<string, TypeSyntax> Infos { get; } = new();
+    public Dictionary<string, TypeSyntax> Infos { get; } = [];
 
     /// <inheritdoc />
     public override void VisitFieldDeclaration(FieldDeclarationSyntax node)

@@ -13,15 +13,15 @@ public class UnusedMembersWalker : CSharpSyntaxWalker
     private readonly SemanticModel? _model;
     private readonly Solution? _solution;
 
-    private readonly Dictionary<string, MethodDeclarationSyntax> _methods = new();
-    private readonly Dictionary<string, VariableDeclaratorSyntax> _fields = new();
-    private readonly Dictionary<string, int> _invocations = new();
-    private readonly Dictionary<string, int> _fieldRefs = new();
+    private readonly Dictionary<string, MethodDeclarationSyntax> _methods = [];
+    private readonly Dictionary<string, VariableDeclaratorSyntax> _fields = [];
+    private readonly Dictionary<string, int> _invocations = [];
+    private readonly Dictionary<string, int> _fieldRefs = [];
 
     /// <summary>
     /// Gets the list of textual suggestions produced by the analysis.
     /// </summary>
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="UnusedMembersWalker"/> class.

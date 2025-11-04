@@ -5,7 +5,7 @@ internal abstract class TrackedNameWalker : CSharpSyntaxWalker
     private readonly HashSet<string> _names;
     private readonly Action<string>? _onMatch;
 
-    public HashSet<string> Matches { get; } = new();
+    public HashSet<string> Matches { get; } = [];
 
     protected TrackedNameWalker(HashSet<string> names, Action<string>? onMatch = null)
     {

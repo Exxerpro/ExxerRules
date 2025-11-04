@@ -108,8 +108,8 @@ public class SymbolGraphBuilderTests
         var graph = new SymbolGraph(
             ProjectPath: "/test/project",
             ProjectHash: "test-hash",
-            Nodes: new List<GraphNode>(),
-            Edges: new List<GraphEdge>(),
+            Nodes: [],
+            Edges: [],
             CreatedAt: DateTime.UtcNow,
             LastUpdated: DateTime.UtcNow,
             Metadata: new Dictionary<string, object>());

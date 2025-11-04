@@ -31,11 +31,11 @@ public class MethodAndMemberVisitor : CSharpSyntaxWalker
     /// <summary>
     /// Collected methods keyed by method name.
     /// </summary>
-    public Dictionary<string, MethodInfo> Methods { get; } = new();
+    public Dictionary<string, MethodInfo> Methods { get; } = [];
     /// <summary>
     /// Collected members keyed by member name.
     /// </summary>
-    public Dictionary<string, MemberInfo> Members { get; } = new();
+    public Dictionary<string, MemberInfo> Members { get; } = [];
 
     /// <summary>
     /// Visits method declarations and records their basic metadata.

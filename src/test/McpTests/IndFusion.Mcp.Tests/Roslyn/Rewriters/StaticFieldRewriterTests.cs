@@ -12,7 +12,7 @@ public partial class RoslynTransformationTests
     public void StaticFieldRewriter_QualifiesStaticField()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void Test(){ x = 1; }") as MethodDeclarationSyntax;
-        var rewriter = new StaticFieldRewriter(new HashSet<string> { "x" }, "C");
+        var rewriter = new StaticFieldRewriter(["x"], "C");
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("C.x", result);
     }

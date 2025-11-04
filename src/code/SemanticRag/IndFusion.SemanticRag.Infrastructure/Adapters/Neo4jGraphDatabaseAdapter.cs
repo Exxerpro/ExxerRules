@@ -75,7 +75,7 @@ public class Neo4jGraphDatabaseAdapter : IGraphDatabasePort
 						_logger.LogInformation("Executing read query: {Cypher}", query);
 
 						using var session = _driver.AsyncSession(ConfigureSession(database));
-						var result = await session.RunAsync(query, parameters ?? new Dictionary<string, object>());
+						var result = await session.RunAsync(query, parameters ?? []);
 						var records = await result.ToListAsync(cancellationToken);
 
 						var cypherRecords = records.Select(MapToCypherRecord).ToList();
@@ -130,7 +130,7 @@ public class Neo4jGraphDatabaseAdapter : IGraphDatabasePort
 						_logger.LogInformation("Executing write query: {Cypher}", query);
 
 						using var session = _driver.AsyncSession(ConfigureSession(database));
-						var result = await session.RunAsync(query, parameters ?? new Dictionary<string, object>());
+						var result = await session.RunAsync(query, parameters ?? []);
 						var records = await result.ToListAsync(cancellationToken);
 
 						var cypherRecords = records.Select(MapToCypherRecord).ToList();
@@ -185,7 +185,7 @@ public class Neo4jGraphDatabaseAdapter : IGraphDatabasePort
 						_logger.LogInformation("Executing read single query: {Cypher}", query);
 
 						using var session = _driver.AsyncSession(ConfigureSession(database));
-						var result = await session.RunAsync(query, parameters ?? new Dictionary<string, object>());
+						var result = await session.RunAsync(query, parameters ?? []);
 						var record = await result.SingleOrDefaultAsync(cancellationToken);
 
 						if (record == null)
@@ -246,7 +246,7 @@ public class Neo4jGraphDatabaseAdapter : IGraphDatabasePort
 						_logger.LogInformation("Executing write single query: {Cypher}", query);
 
 						using var session = _driver.AsyncSession(ConfigureSession(database));
-						var result = await session.RunAsync(query, parameters ?? new Dictionary<string, object>());
+						var result = await session.RunAsync(query, parameters ?? []);
 						var record = await result.SingleOrDefaultAsync(cancellationToken);
 
 						if (record == null)
@@ -307,7 +307,7 @@ public class Neo4jGraphDatabaseAdapter : IGraphDatabasePort
 						_logger.LogInformation("Executing read void query: {Cypher}", query);
 
 						using var session = _driver.AsyncSession(ConfigureSession(database));
-						await session.RunAsync(query, parameters ?? new Dictionary<string, object>());
+						await session.RunAsync(query, parameters ?? []);
 
 						_logger.LogInformation("Read void query completed successfully");
 						return Result.Success();
@@ -359,7 +359,7 @@ public class Neo4jGraphDatabaseAdapter : IGraphDatabasePort
 						_logger.LogInformation("Executing write void query: {Cypher}", query);
 
 						using var session = _driver.AsyncSession(ConfigureSession(database));
-						await session.RunAsync(query, parameters ?? new Dictionary<string, object>());
+						await session.RunAsync(query, parameters ?? []);
 
 						_logger.LogInformation("Write void query completed successfully");
 						return Result.Success();

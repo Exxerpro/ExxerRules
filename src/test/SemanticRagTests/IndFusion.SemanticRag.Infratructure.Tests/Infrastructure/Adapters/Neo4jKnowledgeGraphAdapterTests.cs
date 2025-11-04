@@ -314,7 +314,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         record["sourceId"].Returns("source-id");
         record["targetId"].Returns("target-id");
 
-        _mockResultCursor.RecordsList = new List<IRecord> { record };
+        _mockResultCursor.RecordsList = [record];
 
         // Act
         var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
@@ -331,7 +331,7 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var nodeId = "test-node-id";
-        _mockResultCursor.RecordsList = new List<IRecord>();
+        _mockResultCursor.RecordsList = [];
 
         // Act
         var result = await _adapter.GetRelationshipsForNodeAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
@@ -364,7 +364,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         var query = "MATCH (n) RETURN n";
         var record = Substitute.For<IRecord>();
         record.Values.Returns(new Dictionary<string, object> { { "n", "test-value" } });
-        _mockResultCursor.RecordsList = new List<IRecord> { record };
+        _mockResultCursor.RecordsList = [record];
 
         // Act
         var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken);

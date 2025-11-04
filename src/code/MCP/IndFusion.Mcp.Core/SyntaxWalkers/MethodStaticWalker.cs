@@ -14,7 +14,7 @@ public class MethodStaticWalker : CSharpSyntaxWalker
     /// <summary>
     /// Gets a map from method name to whether it is declared static.
     /// </summary>
-    public Dictionary<string, bool> IsStaticMap { get; } = new();
+    public Dictionary<string, bool> IsStaticMap { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MethodStaticWalker"/> class.
@@ -22,7 +22,7 @@ public class MethodStaticWalker : CSharpSyntaxWalker
     /// <param name="methodNames">The method names to observe.</param>
     public MethodStaticWalker(IEnumerable<string> methodNames)
     {
-        _methodNames = new HashSet<string>(methodNames);
+        _methodNames = [.. methodNames];
     }
 
     /// <inheritdoc />

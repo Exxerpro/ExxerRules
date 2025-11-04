@@ -64,14 +64,14 @@ public static class ExtractInterfaceTool
                         case MethodDeclarationSyntax m:
                             members.Add(m.WithBody(null)
                                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
-                                .WithModifiers(new SyntaxTokenList()));
+                                .WithModifiers([]));
                             break;
                         case PropertyDeclarationSyntax p:
                             var accessors = p.AccessorList ?? SyntaxFactory.AccessorList();
                             accessors = SyntaxFactory.AccessorList(SyntaxFactory.List(
                                 accessors.Accessors.Select(a => a.WithBody(null)
                                     .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)))));
-                            members.Add(p.WithAccessorList(accessors).WithModifiers(new SyntaxTokenList()));
+                            members.Add(p.WithAccessorList(accessors).WithModifiers([]));
                             break;
                     }
                 }

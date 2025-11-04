@@ -3,7 +3,7 @@ namespace IndFusion.Tools.Cli.SyntaxWalkers;
 internal class UseInterfaceWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel? _model;
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     public UseInterfaceWalker(SemanticModel? model)
     {
@@ -43,7 +43,7 @@ internal class UseInterfaceWalker : CSharpSyntaxWalker
     {
         private readonly SemanticModel _model;
         private readonly string _name;
-        public List<ISymbol> Members { get; } = new();
+        public List<ISymbol> Members { get; } = [];
 
         public ParameterMemberCollector(SemanticModel model, string name)
         {

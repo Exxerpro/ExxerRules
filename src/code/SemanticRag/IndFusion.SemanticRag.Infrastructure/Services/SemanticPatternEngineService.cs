@@ -37,7 +37,7 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         // TODO: Implement semantic pattern analysis
         await Task.Delay(100, cancellationToken); // Placeholder
         
-        return new List<PatternViolation>();
+        return [];
     }
 
     /// <inheritdoc />
@@ -55,7 +55,7 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         // TODO: Implement project pattern analysis
         await Task.Delay(100, cancellationToken); // Placeholder
         
-        return new List<PatternViolation>();
+        return [];
     }
 
     /// <inheritdoc />
@@ -71,7 +71,7 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         // TODO: Implement pattern suggestion logic
         await Task.Delay(100, cancellationToken); // Placeholder
         
-        return new List<PatternSuggestion>();
+        return [];
     }
 
     /// <inheritdoc />
@@ -95,7 +95,7 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         return new ConsistencyReport
         {
             ConsistencyScore = 1.0f,
-            Inconsistencies = new List<Inconsistency>(),
+            Inconsistencies = [],
             PatternFamily = patternFamily,
             FilesAnalyzed = 0,
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
@@ -128,7 +128,7 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
             Success = true,
             ViolationsFound = 0,
             ViolationsFixed = 0,
-            RemainingViolations = new List<PatternViolation>(),
+            RemainingViolations = [],
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds
         };
     }
@@ -150,10 +150,10 @@ public class SemanticPatternEngineService : ISemanticPatternEngine
         return new PatternGuidance
         {
             Context = context,
-            RecommendedPatterns = new List<PatternDefinition>(),
-            AvoidPatterns = new List<PatternDefinition>(),
-            BestPractices = new List<string>(),
-            CommonPitfalls = new List<string>()
+            RecommendedPatterns = [],
+            AvoidPatterns = [],
+            BestPractices = [],
+            CommonPitfalls = []
         };
     }
 }

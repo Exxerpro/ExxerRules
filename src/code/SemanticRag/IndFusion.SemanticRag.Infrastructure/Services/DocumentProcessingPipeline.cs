@@ -65,7 +65,7 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
             // Extract metadata
             var metadata = options.ExtractMetadata 
                 ? await ExtractMetadataAsync(input, documentType, cancellationToken)
-                : new Dictionary<string, object>();
+                : [];
 
             var elapsedMs = (long)(DateTime.UtcNow - startTime).TotalMilliseconds;
 
@@ -95,8 +95,8 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
                 Id = Guid.NewGuid().ToString(),
                 DocumentId = input.Id,
                 Content = string.Empty,
-                Chunks = new List<DocumentChunk>(),
-                Metadata = new Dictionary<string, object>(),
+                Chunks = [],
+                Metadata = [],
                 DocumentType = DocumentType.Unknown,
                 Status = ProcessingStatus.Failed,
                 ErrorMessage = ex.Message,

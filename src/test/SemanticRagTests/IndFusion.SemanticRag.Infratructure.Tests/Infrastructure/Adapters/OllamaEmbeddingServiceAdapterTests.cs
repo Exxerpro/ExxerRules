@@ -285,7 +285,7 @@ public class OllamaEmbeddingServiceAdapterTests
         // Act
         var result = await adapter.GenerateEmbeddingWithMetadataAsync(
             "test text",
-            new Dictionary<string, object>(),
+            [],
             cancellationTokenSource.Token);
 
         // ✅ TDD: Assert cancellation contract - result must be a failure with OperationCancelled error code

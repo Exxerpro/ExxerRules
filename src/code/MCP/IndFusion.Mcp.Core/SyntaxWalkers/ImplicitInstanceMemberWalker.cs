@@ -10,10 +10,10 @@ namespace IndFusion.Mcp.Core.SyntaxWalkers;
 /// </summary>
 public class ImplicitInstanceMemberWalker : CSharpSyntaxWalker
 {
-    private readonly HashSet<string> _parameters = new();
-    private readonly HashSet<string> _locals = new();
+    private readonly HashSet<string> _parameters = [];
+    private readonly HashSet<string> _locals = [];
     /// <summary>Collected member names inferred to be instance members.</summary>
-    public HashSet<string> Members { get; } = new();
+    public HashSet<string> Members { get; } = [];
 
     /// <summary>
     /// Records parameter names so they are not treated as instance members.

@@ -15,7 +15,7 @@ public static class McpTestDataBuilder
         return new McpToolCallRequest
         {
             ToolName = toolName,
-            Parameters = parameters ?? new Dictionary<string, JsonElement>()
+            Parameters = parameters ?? []
         };
     }
 

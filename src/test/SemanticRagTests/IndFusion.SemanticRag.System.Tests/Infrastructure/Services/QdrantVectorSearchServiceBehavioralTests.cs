@@ -39,7 +39,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
 
         if (!_fixture.IsAvailable || DockerSkipConditions.ShouldSkipDockerTests)
         {
-            throw new SkipException("Docker is not available - system tests require real containers");
+            Assert.Skip("Docker is not available - system tests require real containers");
         }
 
         // Create real logger using Meziantou XUnit logger
@@ -104,6 +104,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
             // HttpClient is managed by the adapter, so we don't dispose it directly
             // The adapter should handle HttpClient lifecycle
         }
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -229,7 +230,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
     {
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.StoreDocumentAsync(null!, "content", new Dictionary<string, object>(), TestContext.Current.CancellationToken));
+            await _service.StoreDocumentAsync(null!, "content", [], TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -241,7 +242,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
     {
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.StoreDocumentAsync("id", null!, new Dictionary<string, object>(), TestContext.Current.CancellationToken));
+            await _service.StoreDocumentAsync("id", null!, [], TestContext.Current.CancellationToken));
     }
 
     /// <summary>

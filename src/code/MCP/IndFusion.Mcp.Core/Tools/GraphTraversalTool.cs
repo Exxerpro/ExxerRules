@@ -178,7 +178,7 @@ public static class GraphTraversalTool
 
             // Format the response
             var response = new GraphNodeResponse(
-                Nodes: result.Value ?? new List<GraphNode>(),
+                Nodes: result.Value ?? [],
                 TotalNodes: result.Value?.Count ?? 0,
                 NodeType: nodeType
             );

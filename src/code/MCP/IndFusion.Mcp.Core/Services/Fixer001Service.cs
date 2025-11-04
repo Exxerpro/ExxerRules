@@ -20,7 +20,7 @@ public class Fixer001Service : IFixer001Service
     private readonly IBuildValidationService _buildValidationService;
 
     // Static workspace cache to prevent duplicate solution loading
-    private static readonly Dictionary<string, (MSBuildWorkspace Workspace, Solution Solution, DateTime LastAccessed)> _workspaceCache = new();
+    private static readonly Dictionary<string, (MSBuildWorkspace Workspace, Solution Solution, DateTime LastAccessed)> _workspaceCache = [];
     private static readonly object _cacheLock = new();
     private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(5);
 
@@ -141,14 +141,14 @@ public class Fixer001Service : IFixer001Service
                         }
                         else
                         {
-                            validationResults.Add(new ValidationResult("FixApplication", false, fixResult.ErrorMessage, new Dictionary<string, object>()));
+                            validationResults.Add(new ValidationResult("FixApplication", false, fixResult.ErrorMessage, []));
                         }
                     }
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error processing file: {FilePath}", targetFile);
-                    validationResults.Add(new ValidationResult("FileProcessing", false, $"Error processing {targetFile}: {ex.Message}", new Dictionary<string, object>()));
+                    validationResults.Add(new ValidationResult("FileProcessing", false, $"Error processing {targetFile}: {ex.Message}", []));
                 }
             }
 
@@ -595,15 +595,16 @@ public class Fixer001Service : IFixer001Service
         Fixer001Request request, 
         CancellationToken cancellationToken)
     {
-        var preview = new List<string>();
-        
-        // This would generate actual diff previews
-        // For now, return a basic preview
-        preview.Add($"--- {document.FilePath} (original)");
-        preview.Add($"+++ {document.FilePath} (fixed)");
-        preview.Add($"@@ -1,1 +1,1 @@");
-        preview.Add($"-// TODO: Apply {request.DiagnosticId} fix");
-        preview.Add($"+// Fixed {request.DiagnosticId} violation");
+        var preview = new List<string>
+        {
+            // This would generate actual diff previews
+            // For now, return a basic preview
+            $"--- {document.FilePath} (original)",
+            $"+++ {document.FilePath} (fixed)",
+            $"@@ -1,1 +1,1 @@",
+            $"-// TODO: Apply {request.DiagnosticId} fix",
+            $"+// Fixed {request.DiagnosticId} violation"
+        };
 
         return preview;
     }
@@ -629,26 +630,26 @@ public class Fixer001Service : IFixer001Service
 
     private async Task<IEnumerable<TransformationInfo>> GetAvailableTransformationsAsync(Solution solution, CancellationToken cancellationToken)
     {
-        var transformations = new List<TransformationInfo>();
-
-        // Mock transformations based on common EXXER rules
-        transformations.Add(new TransformationInfo(
+        var transformations = new List<TransformationInfo>
+        {
+            // Mock transformations based on common EXXER rules
+            new TransformationInfo(
             Id: "EXXER001",
             Name: "Add XML Documentation",
             Description: "Adds missing XML documentation to public members",
             SupportedLanguages: new[] { "C#" },
             IsEnabled: true,
-            Parameters: new Dictionary<string, object>()
-        ));
-
-        transformations.Add(new TransformationInfo(
+            Parameters: []
+        ),
+            new TransformationInfo(
             Id: "EXXER002",
             Name: "Use ConfigureAwait",
             Description: "Adds ConfigureAwait(false) to async calls",
             SupportedLanguages: new[] { "C#" },
             IsEnabled: true,
-            Parameters: new Dictionary<string, object>()
-        ));
+            Parameters: []
+        )
+        };
 
         return transformations;
     }
@@ -665,11 +666,11 @@ public class Fixer001Service : IFixer001Service
         {
             // This would integrate with the build validation service
             // For now, return a basic validation result
-            validationResults.Add(new ValidationResult("BuildValidation", true, "Build validation completed", new Dictionary<string, object>()));
+            validationResults.Add(new ValidationResult("BuildValidation", true, "Build validation completed", []));
         }
         catch (Exception ex)
         {
-            validationResults.Add(new ValidationResult("BuildValidation", false, $"Build validation failed: {ex.Message}", new Dictionary<string, object>()));
+            validationResults.Add(new ValidationResult("BuildValidation", false, $"Build validation failed: {ex.Message}", []));
         }
 
         return validationResults;

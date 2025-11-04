@@ -121,8 +121,8 @@ public class SemanticRagModelsTests
             var queryId = "query-1";
             var results = new List<SearchResultItem>
             {
-                new("item-1", "Content 1", 0.9, new Dictionary<string, object>(), "source-1"),
-                new("item-2", "Content 2", 0.8, new Dictionary<string, object>(), "source-2")
+                new("item-1", "Content 1", 0.9, [], "source-1"),
+                new("item-2", "Content 2", 0.8, [], "source-2")
             };
             // ✅ Use fluent builder from TestDataBuilders
             var documentResult = TestDataBuilders.CreateValidSemanticDocument(
@@ -160,15 +160,15 @@ public class SemanticRagModelsTests
             var description = "A test context for semantic operations";
             var documents = new List<SemanticDocument>
             {
-                new("doc-1", "Title 1", "Content 1", new Dictionary<string, object>(), DateTime.UtcNow, DateTime.UtcNow)
+                new("doc-1", "Title 1", "Content 1", [], DateTime.UtcNow, DateTime.UtcNow)
             };
             var entities = new List<KnowledgeEntity>
             {
-                new("entity-1", "Entity 1", "Person", "Description", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+                new("entity-1", "Entity 1", "Person", "Description", [], 0.9, DateTime.UtcNow)
             };
             var relationships = new List<EntityRelationship>
             {
-                new("rel-1", "entity-1", "entity-2", "RELATES_TO", 0.9, new Dictionary<string, object>())
+                new("rel-1", "entity-1", "entity-2", "RELATES_TO", 0.9, [])
             };
             var properties = new Dictionary<string, object> { ["context_type"] = "test" };
             var createdAt = DateTime.UtcNow;

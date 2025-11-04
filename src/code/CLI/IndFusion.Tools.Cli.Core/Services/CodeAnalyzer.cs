@@ -489,17 +489,17 @@ public class AnalysisData
     /// <summary>
     /// Gets or sets the code metrics
     /// </summary>
-    public List<FileMetrics> Metrics { get; set; } = new();
+    public List<FileMetrics> Metrics { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the complexity issues
     /// </summary>
-    public List<ComplexityIssue> ComplexityIssues { get; set; } = new();
+    public List<ComplexityIssue> ComplexityIssues { get; set; } = [];
 
     /// <summary>
     /// Gets or sets the refactoring opportunities
     /// </summary>
-    public List<RefactoringOpportunity> Opportunities { get; set; } = new();
+    public List<RefactoringOpportunity> Opportunities { get; set; } = [];
 }
 
 /// <summary>
@@ -628,7 +628,7 @@ public class ComplexityAnalyzer : CSharpSyntaxWalker
     /// <summary>
     /// Gets the list of complex methods
     /// </summary>
-    public List<ComplexMethod> ComplexMethods { get; } = new();
+    public List<ComplexMethod> ComplexMethods { get; } = [];
 
     /// <summary>
     /// Visits a method declaration
@@ -698,7 +698,7 @@ public class OpportunityAnalyzer : CSharpSyntaxWalker
     /// <summary>
     /// Gets the list of refactoring opportunities
     /// </summary>
-    public List<OpportunityInfo> Opportunities { get; } = new();
+    public List<OpportunityInfo> Opportunities { get; } = [];
 
     /// <summary>
     /// Visits a method declaration

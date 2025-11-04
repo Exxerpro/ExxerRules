@@ -5,12 +5,12 @@ internal class UnusedMembersWalker : CSharpSyntaxWalker
     private readonly SemanticModel? _model;
     private readonly Solution? _solution;
 
-    private readonly Dictionary<string, MethodDeclarationSyntax> _methods = new();
-    private readonly Dictionary<string, VariableDeclaratorSyntax> _fields = new();
-    private readonly Dictionary<string, int> _invocations = new();
-    private readonly Dictionary<string, int> _fieldRefs = new();
+    private readonly Dictionary<string, MethodDeclarationSyntax> _methods = [];
+    private readonly Dictionary<string, VariableDeclaratorSyntax> _fields = [];
+    private readonly Dictionary<string, int> _invocations = [];
+    private readonly Dictionary<string, int> _fieldRefs = [];
 
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     public UnusedMembersWalker(SemanticModel? model = null, Solution? solution = null)
         : base(SyntaxWalkerDepth.Token)

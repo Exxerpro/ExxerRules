@@ -29,8 +29,8 @@ public class IGraphCacheManagerContractTests
 		var expectedGraph = new SymbolGraph(
 			ProjectPath: "/test/project",
 			ProjectHash: projectHash,
-			Nodes: new List<GraphNode>(),
-			Edges: new List<GraphEdge>(),
+			Nodes: [],
+			Edges: [],
 			CreatedAt: DateTime.UtcNow,
 			LastUpdated: DateTime.UtcNow,
 			Metadata: new Dictionary<string, object>());
@@ -92,8 +92,8 @@ public class IGraphCacheManagerContractTests
 		var graph = new SymbolGraph(
 			ProjectPath: "/test/project",
 			ProjectHash: projectHash,
-			Nodes: new List<GraphNode>(),
-			Edges: new List<GraphEdge>(),
+			Nodes: [],
+			Edges: [],
 			CreatedAt: DateTime.UtcNow,
 			LastUpdated: DateTime.UtcNow,
 			Metadata: new Dictionary<string, object>());
@@ -189,8 +189,8 @@ public class IGraphCacheManagerContractTests
 		var graph = new SymbolGraph(
 			ProjectPath: "/test/project",
 			ProjectHash: projectHash,
-			Nodes: new List<GraphNode>(),
-			Edges: new List<GraphEdge>(),
+			Nodes: [],
+			Edges: [],
 			CreatedAt: DateTime.UtcNow,
 			LastUpdated: DateTime.UtcNow,
 			Metadata: new Dictionary<string, object>());

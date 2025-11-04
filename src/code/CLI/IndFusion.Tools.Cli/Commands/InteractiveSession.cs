@@ -110,11 +110,11 @@ public class InteractiveSession
         // For now, return a placeholder
         await Task.Delay(100, cancellationToken); // Simulate async work
 
-        return new List<RefactoringOpportunity>
-        {
+        return
+        [
             new() { Type = "ExtractMethod", File = "Sample.cs", Line = 10, Description = "Extract method from long function" },
             new() { Type = "MoveMethod", File = "Sample.cs", Line = 25, Description = "Move method to appropriate class" }
-        };
+        ];
     }
 
     /// <summary>

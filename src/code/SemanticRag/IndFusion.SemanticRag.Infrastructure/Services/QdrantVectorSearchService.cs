@@ -478,7 +478,7 @@ public class QdrantVectorSearchService : IVectorSearchService
                 }
                 // Convert Qdrant filter conditions to domain filter dictionary
                 // Note: This is a simplified conversion - complex filters may not map perfectly
-                domainFilter = new Dictionary<string, object>();
+                domainFilter = [];
                 foreach (var kvp in options.Filters ?? new Dictionary<string, object>())
                 {
                     domainFilter[kvp.Key] = kvp.Value;
@@ -503,7 +503,7 @@ public class QdrantVectorSearchService : IVectorSearchService
                 if (searchResult.IsFailure)
                 {
                     _logger.LogWarning("Failed to search with vector: {Error}", searchResult.Error);
-                    return new List<VectorSearchResult>();
+                    return [];
                 }
 
                 var results = new List<VectorSearchResult>();
@@ -821,7 +821,7 @@ public class QdrantVectorSearchService : IVectorSearchService
             // Delete all points using an empty filter dictionary (note: port interface expects Dictionary, not Qdrant Filter)
             // Since we can't delete all with empty filter easily, we'll pass null filter and pointIds
             // This is a limitation - ideally the port interface would support deleting all points
-            var deleteResult = await _vectorDatabasePort.DeleteAsync(_options.CollectionName, pointIds: null, filter: new Dictionary<string, object>(), cancellationToken);
+            var deleteResult = await _vectorDatabasePort.DeleteAsync(_options.CollectionName, pointIds: null, filter: [], cancellationToken);
             if (deleteResult.IsFailure)
             {
                 _logger.LogError("Failed to delete all points: {Error}", deleteResult.Error);

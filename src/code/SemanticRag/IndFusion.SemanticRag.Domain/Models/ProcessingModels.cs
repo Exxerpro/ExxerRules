@@ -127,7 +127,7 @@ public record DocumentProcessingResult
     /// <summary>
     /// Document chunks created during processing.
     /// </summary>
-    public IReadOnlyList<DocumentChunk> Chunks { get; init; } = new List<DocumentChunk>();
+    public IReadOnlyList<DocumentChunk> Chunks { get; init; } = [];
 
     /// <summary>
     /// Processing metadata.

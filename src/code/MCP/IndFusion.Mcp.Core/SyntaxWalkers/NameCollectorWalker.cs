@@ -10,7 +10,7 @@ public abstract class NameCollectorWalker : CSharpSyntaxWalker
     /// <summary>
     /// Gets the set of collected names.
     /// </summary>
-    public HashSet<string> Names { get; } = new();
+    public HashSet<string> Names { get; } = [];
 
     /// <summary>
     /// Adds the specified name to the collection.

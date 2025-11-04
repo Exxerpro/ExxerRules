@@ -24,7 +24,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
             QueryVector = new float[] { 0.1f, 0.2f, 0.3f },
             Limit = 10,
             ScoreThreshold = 0.5f,
-            Filter = new Dictionary<string, object>()
+            Filter = []
         };
     }
 

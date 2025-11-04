@@ -35,7 +35,7 @@ public static class ConvertToStaticWithParametersTool
                     continue;
 
                 string memberName = member.Name;
-                var checker = new InstanceMemberUsageChecker(new HashSet<string> { memberName });
+                var checker = new InstanceMemberUsageChecker([memberName]);
                 checker.Visit(method);
                 if (!checker.HasInstanceMemberUsage)
                     continue;
@@ -58,7 +58,7 @@ public static class ConvertToStaticWithParametersTool
         }
         else
         {
-            renameMap = new();
+            renameMap = [];
             var classMembers = new Dictionary<string, string>();
 
             foreach (var field in classDecl.Members.OfType<FieldDeclarationSyntax>())
@@ -79,7 +79,7 @@ public static class ConvertToStaticWithParametersTool
 
             foreach (var kvp in classMembers)
             {
-                var checker = new InstanceMemberUsageChecker(new HashSet<string> { kvp.Key });
+                var checker = new InstanceMemberUsageChecker([kvp.Key]);
                 checker.Visit(method);
                 if (!checker.HasInstanceMemberUsage)
                     continue;

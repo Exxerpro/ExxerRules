@@ -3,11 +3,11 @@ namespace IndFusion.Tools.Cli.SyntaxWalkers;
 internal class MethodStaticWalker : CSharpSyntaxWalker
 {
     private readonly HashSet<string> _methodNames;
-    public Dictionary<string, bool> IsStaticMap { get; } = new();
+    public Dictionary<string, bool> IsStaticMap { get; } = [];
 
     public MethodStaticWalker(IEnumerable<string> methodNames)
     {
-        _methodNames = new HashSet<string>(methodNames);
+        _methodNames = [.. methodNames];
     }
 
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)

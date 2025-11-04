@@ -21,7 +21,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
         return new CypherQuery
         {
             Cypher = "MATCH (n) RETURN n LIMIT 10",
-            Parameters = new Dictionary<string, object>()
+            Parameters = []
         };
     }
 
@@ -30,7 +30,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
         return new CypherQuery
         {
             Cypher = null!, // Invalid: null cypher query
-            Parameters = new Dictionary<string, object>()
+            Parameters = []
         };
     }
 

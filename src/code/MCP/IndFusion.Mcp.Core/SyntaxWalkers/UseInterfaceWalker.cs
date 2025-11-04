@@ -12,7 +12,7 @@ public class UseInterfaceWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel? _model;
     /// <summary>Collected suggestions in human-readable form.</summary>
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     /// <summary>
     /// Creates a new instance bound to an optional <see cref="SemanticModel"/>.
@@ -61,7 +61,7 @@ public class UseInterfaceWalker : CSharpSyntaxWalker
     {
         private readonly SemanticModel _model;
         private readonly string _name;
-        public List<ISymbol> Members { get; } = new();
+        public List<ISymbol> Members { get; } = [];
 
         public ParameterMemberCollector(SemanticModel model, string name)
         {

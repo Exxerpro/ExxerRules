@@ -50,8 +50,8 @@ public class PatternGraphServiceTests
         var mockGraph = new SymbolGraph(
             ProjectPath: query.ProjectPath,
             ProjectHash: "test-hash",
-            Nodes: new List<GraphNode>(),
-            Edges: new List<GraphEdge>(),
+            Nodes: [],
+            Edges: [],
             CreatedAt: DateTime.UtcNow,
             LastUpdated: DateTime.UtcNow,
             Metadata: new Dictionary<string, object>());
@@ -123,8 +123,8 @@ public class PatternGraphServiceTests
         var mockGraph = new SymbolGraph(
             ProjectPath: projectPath,
             ProjectHash: "test-hash",
-            Nodes: new List<GraphNode>
-            {
+            Nodes:
+            [
                 new GraphNode(
                     Id: "node1",
                     Type: "Class",
@@ -132,8 +132,8 @@ public class PatternGraphServiceTests
                     FullName: "TestNamespace.TestClass",
                     Location: new SourceLocation("Test.cs", 1, 10, 1, 20),
                     Metadata: new Dictionary<string, object>())
-            },
-            Edges: new List<GraphEdge>(),
+            ],
+            Edges: [],
             CreatedAt: DateTime.UtcNow,
             LastUpdated: DateTime.UtcNow,
             Metadata: new Dictionary<string, object>());
@@ -184,9 +184,9 @@ public class PatternGraphServiceTests
         var mockGraph = new SymbolGraph(
             ProjectPath: projectPath,
             ProjectHash: "test-hash",
-            Nodes: new List<GraphNode>(),
-            Edges: new List<GraphEdge>
-            {
+            Nodes: [],
+            Edges:
+            [
                 new GraphEdge(
                     Id: "edge1",
                     SourceNodeId: "node1",
@@ -194,7 +194,7 @@ public class PatternGraphServiceTests
                     RelationshipType: "Inheritance",
                     Weight: 1.0,
                     Metadata: new Dictionary<string, object>())
-            },
+            ],
             CreatedAt: DateTime.UtcNow,
             LastUpdated: DateTime.UtcNow,
             Metadata: new Dictionary<string, object>());

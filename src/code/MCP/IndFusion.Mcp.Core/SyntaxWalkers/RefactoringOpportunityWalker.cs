@@ -15,7 +15,7 @@ public class ExxerFactoringOpportunityWalker
     /// <summary>
     /// Gets the generated list of refactoring suggestions.
     /// </summary>
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ExxerFactoringOpportunityWalker"/> class.

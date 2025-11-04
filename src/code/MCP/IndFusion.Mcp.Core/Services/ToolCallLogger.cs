@@ -204,7 +204,7 @@ public static class ToolCallLogger
     private class ToolCallRecord
     {
         public string Tool { get; set; } = string.Empty;
-        public Dictionary<string, string?> Parameters { get; set; } = new();
+        public Dictionary<string, string?> Parameters { get; set; } = [];
         public DateTime Timestamp { get; set; }
     }
 }

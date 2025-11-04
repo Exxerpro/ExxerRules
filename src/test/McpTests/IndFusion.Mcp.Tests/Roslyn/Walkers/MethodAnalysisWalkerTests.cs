@@ -31,7 +31,7 @@ public partial class RoslynTransformationTests
         var root = tree.GetRoot(cancellationToken: TestContext.Current.CancellationToken);
         var methodA = root.DescendantNodes().OfType<MethodDeclarationSyntax>().First();
         var methodNames = new HashSet<string> { "A" };
-        var walker = new MethodAnalysisWalker(new HashSet<string>(), methodNames, "A");
+        var walker = new MethodAnalysisWalker([], methodNames, "A");
         walker.Visit(methodA);
         Assert.True(walker.IsRecursive);
     }

@@ -7,7 +7,7 @@ internal class ExxerFactoringOpportunityWalker
     private readonly UnusedMembersWalker _unusedMembers;
     private readonly UseInterfaceWalker _useInterface;
 
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     public ExxerFactoringOpportunityWalker(SemanticModel? model = null, Solution? solution = null)
     {

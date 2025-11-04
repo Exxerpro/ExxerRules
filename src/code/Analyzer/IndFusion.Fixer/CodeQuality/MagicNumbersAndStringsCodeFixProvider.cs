@@ -314,7 +314,7 @@ public class MagicNumbersAndStringsCodeFixProvider : CodeFixProvider
     /// </summary>
     private class MagicNumberExtractorRewriter : CSharpSyntaxRewriter
     {
-        public List<FieldDeclarationSyntax> ExtractedConstants { get; } = new();
+        public List<FieldDeclarationSyntax> ExtractedConstants { get; } = [];
 
         public override SyntaxNode? VisitLiteralExpression(LiteralExpressionSyntax node)
         {

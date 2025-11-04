@@ -137,7 +137,7 @@ public class WebApplicationTests : IClassFixture<WebApplicationFactory<Program>>
         var request = new McpToolCallRequest
         {
             ToolName = "nonexistent-tool", // This should fail gracefully
-            Parameters = new Dictionary<string, JsonElement>()
+            Parameters = []
         };
 
         var json = JsonSerializer.Serialize(request);

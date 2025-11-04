@@ -86,7 +86,7 @@ public class PatternGraphQueryServiceTests
         _knowledgeGraphPort.QueryNodesAsync(query.Query, query.Parameters, Arg.Any<CancellationToken>())
             .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(patternNodes));
         _knowledgeGraphPort.QueryRelationshipsAsync(query.Query, query.Parameters, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(new List<KnowledgeRelationship>()));
+            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
 
         // Act
         var result = await _patternGraphQueryService.QueryPatternGraphAsync(query, CancellationToken.None);
@@ -268,7 +268,7 @@ public class PatternGraphQueryServiceTests
         };
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Is<string>(q => q.Contains("WHERE p.id = $patternId")), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode> { sourcePatternNode }));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([sourcePatternNode]));
         _knowledgeGraphPort.QueryNodesAsync(Arg.Is<string>(q => q.Contains("WHERE p.id <> $patternId")), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
             .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(similarPatternNodes));
 
@@ -343,7 +343,7 @@ public class PatternGraphQueryServiceTests
             UpdatedAt: DateTimeOffset.UtcNow);
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode> { usageNode }));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([usageNode]));
 
         // Act
         var result = await _patternGraphQueryService.GetPatternUsageStatisticsAsync(patternId, CancellationToken.None);
@@ -430,7 +430,7 @@ public class PatternGraphQueryServiceTests
         var severity = PatternSeverity.Info;
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>()));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([]));
 
         // Act
         var result = await _patternGraphQueryService.FindAntiPatternsAsync(null, severity, CancellationToken.None);
@@ -568,9 +568,9 @@ public class PatternGraphQueryServiceTests
             TimeoutMs: 30000);
 
         _knowledgeGraphPort.QueryNodesAsync(query.Query, query.Parameters, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>()));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([]));
         _knowledgeGraphPort.QueryRelationshipsAsync(query.Query, query.Parameters, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(new List<KnowledgeRelationship>()));
+            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
 
         // Act
         var result = await _patternGraphQueryService.QueryPatternGraphAsync(query, CancellationToken.None);
@@ -631,7 +631,7 @@ public class PatternGraphQueryServiceTests
         };
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Is<string>(q => q.Contains("WHERE p.id = $patternId")), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode> { sourcePatternNode }));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([sourcePatternNode]));
         _knowledgeGraphPort.QueryNodesAsync(Arg.Is<string>(q => q.Contains("WHERE p.id <> $patternId")), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
             .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(similarPatternNodes));
 

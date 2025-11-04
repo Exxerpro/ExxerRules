@@ -12,7 +12,7 @@ public partial class RoslynTransformationTests
     public void InstanceMemberQualifierRewriter_QualifiesMember()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void M(){ Value = 1; }") as MethodDeclarationSyntax;
-        var rewriter = new InstanceMemberQualifierRewriter("inst", knownMembers: new HashSet<string> { "Value" });
+        var rewriter = new InstanceMemberQualifierRewriter("inst", knownMembers: ["Value"]);
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("inst.Value", result);
     }

@@ -16,7 +16,7 @@ public class BuildValidationService : IBuildValidationService
     private readonly ILogger<BuildValidationService> _logger;
     
     // Static workspace cache to prevent duplicate solution loading
-    private static readonly Dictionary<string, (MSBuildWorkspace Workspace, Solution Solution, DateTime LastAccessed)> _workspaceCache = new();
+    private static readonly Dictionary<string, (MSBuildWorkspace Workspace, Solution Solution, DateTime LastAccessed)> _workspaceCache = [];
     private static readonly object _cacheLock = new();
     private static readonly TimeSpan _cacheExpiration = TimeSpan.FromMinutes(5);
 

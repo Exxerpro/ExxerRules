@@ -29,7 +29,7 @@ public class FeatureFlagRewriter : CSharpSyntaxRewriter
         _flagName = flagName;
         _interfaceName = $"I{flagName}Strategy";
         _strategyField = $"_{char.ToLower(flagName[0])}{flagName.Substring(1)}Strategy";
-        GeneratedMembers = new SyntaxList<MemberDeclarationSyntax>();
+        GeneratedMembers = [];
     }
 
     private static bool IsFlagCheck(ExpressionSyntax condition, string flag)
@@ -126,7 +126,7 @@ public class FeatureFlagRewriter : CSharpSyntaxRewriter
             .AddBaseListTypes(SyntaxFactory.SimpleBaseType(SyntaxFactory.IdentifierName(_interfaceName)))
             .AddMembers(applyMethod.WithBody(noBody));
 
-        return new SyntaxList<MemberDeclarationSyntax>(new MemberDeclarationSyntax[] { iface, strat, noStrat });
+        return [.. new MemberDeclarationSyntax[] { iface, strat, noStrat }];
     }
 
     private BlockSyntax GetTrueBlock()

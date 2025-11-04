@@ -48,10 +48,10 @@ public class IDocumentIngestionPortTests
                 Status = ProcessingStatus.Success,
                 ElapsedMilliseconds = 100
             },
-            VectorEmbeddings = new List<VectorEmbedding>(),
-            ExtractedEntities = new List<KnowledgeEntity>(),
-            MappedRelationships = new List<KnowledgeRelationship>(),
-            Metadata = new Dictionary<string, object>(),
+            VectorEmbeddings = [],
+            ExtractedEntities = [],
+            MappedRelationships = [],
+            Metadata = [],
             StartedAt = DateTimeOffset.UtcNow,
             CompletedAt = DateTimeOffset.UtcNow,
             DurationMs = 150,
@@ -145,12 +145,12 @@ public class IDocumentIngestionPortTests
         var repositoryPath = "/path/to/repo";
         var config = RepositoryIngestionConfig.Default();
         var expectedResult = new RepositoryIngestionResult(
-            ProcessedDocuments: new List<SemanticDocument>
-            {
-                new("doc-1", "Test Document", "Content", new Dictionary<string, object>(), DateTime.UtcNow, DateTime.UtcNow)
-            },
+            ProcessedDocuments:
+            [
+                new("doc-1", "Test Document", "Content", [], DateTime.UtcNow, DateTime.UtcNow)
+            ],
             TotalDocuments: 1,
-            ExtractedKnowledge: new List<KnowledgeExtractionResult>(),
+            ExtractedKnowledge: [],
             ProcessingTimeMs: 1000,
             Success: true
         );
@@ -184,7 +184,7 @@ public class IDocumentIngestionPortTests
             ProgressPercentage = 50,
             CurrentStage = "Processing document",
             StartedAt = DateTimeOffset.UtcNow.AddMinutes(-1),
-            Metadata = new Dictionary<string, object>()
+            Metadata = []
         };
 
         _mockIngestionPort.GetIngestionStatusAsync(documentId, CancellationToken.None)
@@ -291,7 +291,7 @@ public class IDocumentIngestionPortTests
             ProgressPercentage = expectedProgress,
             CurrentStage = expectedStatus.ToString(),
             StartedAt = DateTimeOffset.UtcNow,
-            Metadata = new Dictionary<string, object>()
+            Metadata = []
         };
 
         _mockIngestionPort.GetIngestionStatusAsync(documentId, CancellationToken.None)

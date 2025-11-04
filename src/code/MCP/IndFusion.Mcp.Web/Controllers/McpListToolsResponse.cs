@@ -6,5 +6,5 @@ namespace IndFusion.Mcp.Web.Controllers;
 public class McpListToolsResponse
 {
     /// <summary>Collection of available tools.</summary>
-    public List<McpTool> Tools { get; set; } = new();
+    public List<McpTool> Tools { get; set; } = [];
 }

@@ -43,11 +43,11 @@ public class ICodeTransformationServiceContractTests
                 FilesAffected: 1,
                 Confidence: 0.98
             ),
-            ValidationResults: new List<ValidationResult>
-            {
-                new("DiagnosticValidation", true, "Diagnostic is valid", new Dictionary<string, object>()),
-                new("BuildValidation", true, "Build succeeded", new Dictionary<string, object>())
-            },
+            ValidationResults:
+            [
+                new("DiagnosticValidation", true, "Diagnostic is valid", []),
+                new("BuildValidation", true, "Build succeeded", [])
+            ],
             DiffPreview: "Preview of fixes...",
             ModifiedFiles: new[] { "TestFile.cs" },
             ExecutionTimeMs: 2000
@@ -90,11 +90,11 @@ public class ICodeTransformationServiceContractTests
                 FilesAffected: 1,
                 Confidence: 0.95
             ),
-            ValidationResults: new List<ValidationResult>
-            {
-                new("PatternValidation", true, "Pattern is valid", new Dictionary<string, object>()),
-                new("BuildValidation", true, "Build succeeded", new Dictionary<string, object>())
-            },
+            ValidationResults:
+            [
+                new("PatternValidation", true, "Pattern is valid", []),
+                new("BuildValidation", true, "Build succeeded", [])
+            ],
             DiffPreview: "Preview of changes...",
             ModifiedFiles: new[] { "TestFile.cs" },
             ExecutionTimeMs: 1500
@@ -221,7 +221,7 @@ public class ICodeTransformationServiceContractTests
                     Description: "Adds missing XML documentation to public members",
                     SupportedLanguages: new[] { "C#" },
                     IsEnabled: true,
-                    Parameters: new Dictionary<string, object>()
+                    Parameters: []
                 )
             },
             DefaultSettings: new Dictionary<string, object>

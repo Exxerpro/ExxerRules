@@ -105,7 +105,7 @@ public static class PatternSuggestTool
 
             // Format the response
             var response = new PatternSuggestionResponse(
-                Suggestions: result.Value ?? new List<PatternSuggestion>(),
+                Suggestions: result.Value ?? [],
                 TotalSuggestions: result.Value?.Count ?? 0,
                 AnalysisTimeMs: 0, // Would be calculated in real implementation
                 ConfidenceThreshold: minConfidence,
@@ -264,7 +264,7 @@ public static class PatternSuggestTool
 
             // Format the response
             var response = new PatternViolationResponse(
-                Violations: result.Value ?? new List<PatternViolation>(),
+                Violations: result.Value ?? [],
                 TotalViolations: result.Value?.Count ?? 0,
                 FilePath: filePath,
                 AnalysisTimeMs: 0 // Would be calculated in real implementation

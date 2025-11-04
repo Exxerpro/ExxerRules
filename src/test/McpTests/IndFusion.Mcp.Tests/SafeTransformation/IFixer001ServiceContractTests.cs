@@ -45,11 +45,11 @@ public class IFixer001ServiceContractTests
                 DiagnosticId: "EXXER001",
                 FixerVersion: "1.0.0"
             ),
-            ValidationResults: new List<ValidationResult>
-            {
-                new("DiagnosticValidation", true, "Diagnostic is valid", new Dictionary<string, object>()),
-                new("BuildValidation", true, "Build succeeded", new Dictionary<string, object>())
-            },
+            ValidationResults:
+            [
+                new("DiagnosticValidation", true, "Diagnostic is valid", []),
+                new("BuildValidation", true, "Build succeeded", [])
+            ],
             DiffPreview: "Preview of fixes...",
             ModifiedFiles: new[] { "TestFile.cs" },
             ExecutionTimeMs: 2000
@@ -133,7 +133,7 @@ public class IFixer001ServiceContractTests
                     Description: "Adds missing XML documentation to public members",
                     SupportedLanguages: new[] { "C#" },
                     IsEnabled: true,
-                    Parameters: new Dictionary<string, object>()
+                    Parameters: []
                 )
             },
             DefaultSettings: new Dictionary<string, object>

@@ -319,9 +319,9 @@ public class CodeTransformationService : ICodeTransformationService
                 BehavioralChanges: behavioralChanges,
                 ImpactAnalysis: new ImpactAnalysis(
                     OverallImpact: "Low",
-                    AffectedComponents: new List<string>(),
+                    AffectedComponents: [],
                     RiskLevel: "Low",
-                    MitigationStrategies: new List<string>()
+                    MitigationStrategies: []
                 ),
                 ConfidenceScore: 0.8
             );
@@ -330,8 +330,8 @@ public class CodeTransformationService : ICodeTransformationService
                 DriftDetected: driftDetected,
                 DriftType: driftDetected ? "Structural" : "None",
                 DriftSeverity: driftDetected ? "Low" : "None",
-                AffectedAreas: new List<string>(),
-                Recommendations: new List<string>()
+                AffectedAreas: [],
+                Recommendations: []
             );
 
             var result = new SemanticChangeReviewResult(
@@ -389,7 +389,7 @@ public class CodeTransformationService : ICodeTransformationService
                 return new Fixer001Configuration(
                     SolutionPath: solutionPath,
                     AvailableTransformations: Enumerable.Empty<TransformationInfo>(),
-                    DefaultSettings: new Dictionary<string, object>(),
+                    DefaultSettings: [],
                     Version: "1.0.0",
                     LastUpdated: DateTime.UtcNow
                 );
@@ -403,7 +403,7 @@ public class CodeTransformationService : ICodeTransformationService
             return new Fixer001Configuration(
                 SolutionPath: solutionPath,
                 AvailableTransformations: Enumerable.Empty<TransformationInfo>(),
-                DefaultSettings: new Dictionary<string, object>(),
+                DefaultSettings: [],
                 Version: "1.0.0",
                 LastUpdated: DateTime.UtcNow
             );

@@ -38,7 +38,7 @@ public class MockAsyncSession : IAsyncSession, IAsyncQueryRunner
 	/// <summary>
 	/// Gets all queries executed on this mock session.
 	/// </summary>
-	public List<string> AllQueries { get; } = new List<string>();
+	public List<string> AllQueries { get; } = [];
 
 	/// <summary>
 	/// Gets or sets the exception to throw on the next RunAsync call. Set to null to clear.

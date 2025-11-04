@@ -10,7 +10,7 @@ public class MethodCollectorWalker : CSharpSyntaxWalker
 {
     private readonly HashSet<string> _targets;
     /// <summary>Discovered methods keyed as <c>ClassName.MethodName</c>.</summary>
-    public Dictionary<string, MethodDeclarationSyntax> Methods { get; } = new();
+    public Dictionary<string, MethodDeclarationSyntax> Methods { get; } = [];
 
     /// <summary>
     /// Initializes a new instance with a set of target identifiers to collect.

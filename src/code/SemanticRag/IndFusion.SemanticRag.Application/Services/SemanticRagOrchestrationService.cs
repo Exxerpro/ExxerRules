@@ -93,8 +93,8 @@ public class SemanticRagOrchestrationService
                         var servicesResult = extractionResult.Value;
                         var modelsResult = new IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult(
                             DocumentId: result.Document.Id,
-                            Entities: servicesResult.Entities ?? new List<KnowledgeEntity>(),
-                            Relationships: servicesResult.Relationships ?? new List<KnowledgeRelationship>(),
+                            Entities: servicesResult.Entities ?? [],
+                            Relationships: servicesResult.Relationships ?? [],
                             Summary: $"Extracted {servicesResult.Entities?.Count ?? 0} entities and {servicesResult.Relationships?.Count ?? 0} relationships",
                             Confidence: servicesResult.Confidence,
                             Metadata: new Dictionary<string, object>
@@ -125,7 +125,7 @@ public class SemanticRagOrchestrationService
             }
 
             var comprehensiveResult = new ComprehensiveSearchResult(
-                SearchResults: searchResponse.Results ?? new List<SemanticSearchResult>(),
+                SearchResults: searchResponse.Results ?? [],
                 TotalCount: searchResponse.TotalCount,
                 Query: query,
                 ProcessingTimeMs: searchResponse.ProcessingTimeMs,
@@ -173,8 +173,8 @@ public class SemanticRagOrchestrationService
             // Note: DocumentIngestionOptions doesn't have ExtractCodeEntities/ExtractComments/ProcessDependencies,
             // so we use defaults (true) or check if EnableEntityExtraction is enabled
             var servicesConfig = new IndFusion.SemanticRag.Domain.Services.RepositoryIngestionConfig(
-                IncludePatterns: config.IncludePatterns ?? new List<string>(),
-                ExcludePatterns: config.ExcludePatterns ?? new List<string>(),
+                IncludePatterns: config.IncludePatterns ?? [],
+                ExcludePatterns: config.ExcludePatterns ?? [],
                 MaxFileSize: config.MaxFileSize,
                 ExtractCodeEntities: config.IngestionOptions?.EnableEntityExtraction ?? true,
                 ExtractComments: config.IngestionOptions?.EnableEntityExtraction ?? true,
@@ -192,7 +192,7 @@ public class SemanticRagOrchestrationService
                 return Result<RepositoryIngestionResult>.WithFailure(documentsResult.Error!);
             }
 
-            var documents = documentsResult.Value ?? new List<SemanticDocument>();
+            var documents = documentsResult.Value ?? [];
             var processedDocuments = new List<SemanticDocument>();
             var extractedKnowledge = new List<IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult>();
 
@@ -449,7 +449,7 @@ public readonly record struct ComprehensiveSearchOptions(
             VectorDimensions: 1536,
             SimilarityThreshold: 0.7,
             MaxResults: 10,
-            Properties: new Dictionary<string, object>()
+            Properties: []
         ),
         EnableKnowledgeExtraction: true,
         MaxResultsForExtraction: 5,

@@ -29,9 +29,9 @@ public class ISymbolGraphBuilderContractTests
 		var expectedGraph = new SymbolGraph(
 			ProjectPath: projectPath,
 			ProjectHash: "abc123def456",
-			Nodes: new List<GraphNode>
-			{
-				new GraphNode(
+			Nodes:
+            [
+                new GraphNode(
 					Id: "node-1",
 					Type: "Class",
 					Name: "TestClass",
@@ -43,17 +43,17 @@ public class ISymbolGraphBuilderContractTests
 						StartColumn: 1,
 						EndColumn: 1),
 					Metadata: new Dictionary<string, object>())
-			},
-			Edges: new List<GraphEdge>
-			{
-				new GraphEdge(
+			],
+			Edges:
+            [
+                new GraphEdge(
 					Id: "edge-1",
 					SourceNodeId: "node-1",
 					TargetNodeId: "node-2",
 					RelationshipType: "Calls",
 					Weight: 0.8,
 					Metadata: new Dictionary<string, object>())
-			},
+			],
 			CreatedAt: DateTime.UtcNow,
 			LastUpdated: DateTime.UtcNow,
 			Metadata: new Dictionary<string, object>());
@@ -101,8 +101,8 @@ public class ISymbolGraphBuilderContractTests
 		var graph = new SymbolGraph(
 			ProjectPath: "/test/project",
 			ProjectHash: "abc123def456",
-			Nodes: new List<GraphNode>(),
-			Edges: new List<GraphEdge>(),
+			Nodes: [],
+			Edges: [],
 			CreatedAt: DateTime.UtcNow,
 			LastUpdated: DateTime.UtcNow,
 			Metadata: new Dictionary<string, object>());
@@ -147,8 +147,8 @@ public class ISymbolGraphBuilderContractTests
 		var graph = new SymbolGraph(
 			ProjectPath: "/test/project",
 			ProjectHash: "abc123def456",
-			Nodes: new List<GraphNode>(),
-			Edges: new List<GraphEdge>(),
+			Nodes: [],
+			Edges: [],
 			CreatedAt: DateTime.UtcNow,
 			LastUpdated: DateTime.UtcNow,
 			Metadata: new Dictionary<string, object>());
@@ -193,8 +193,8 @@ public class ISymbolGraphBuilderContractTests
 		var graph = new SymbolGraph(
 			ProjectPath: "/test/project",
 			ProjectHash: "abc123def456",
-			Nodes: new List<GraphNode>(),
-			Edges: new List<GraphEdge>(),
+			Nodes: [],
+			Edges: [],
 			CreatedAt: DateTime.UtcNow,
 			LastUpdated: DateTime.UtcNow,
 			Metadata: new Dictionary<string, object>());

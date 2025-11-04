@@ -18,7 +18,7 @@ namespace IndFusion.Mcp.Core.Move;
 [McpServerToolType]
 public static class MoveMethodTool
 {
-    private static readonly HashSet<string> _movedMethods = new();
+    private static readonly HashSet<string> _movedMethods = [];
 
     private static string GetKey(string filePath, string methodName) =>
         $"{Path.GetFullPath(filePath)}::{methodName}";
@@ -113,7 +113,7 @@ public static class MoveMethodTool
         public string TargetPath { get; set; } = string.Empty;
         public bool SameFile { get; set; }
         public SyntaxNode SourceRoot { get; set; } = null!;
-        public List<UsingDirectiveSyntax> SourceUsings { get; set; } = new();
+        public List<UsingDirectiveSyntax> SourceUsings { get; set; } = [];
         public string TargetClassName { get; set; } = string.Empty;
         public Encoding SourceEncoding { get; set; } = Encoding.UTF8;
         public string? Namespace { get; set; }

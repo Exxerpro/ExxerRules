@@ -111,7 +111,6 @@ public sealed class Neo4jContainerFixture : IAsyncLifetime
             _logger.LogInformation("✅ Neo4j container started - Bolt: {BoltUri}", BoltUri);
             _logger.LogInformation("📊 Credentials: {Username}/{Password}", Username, Password);
         }
-        
         catch (Exception ex) when (ex.Message.Contains("Docker", StringComparison.OrdinalIgnoreCase) ||
                                   ex.Message.Contains("docker", StringComparison.OrdinalIgnoreCase))
         {

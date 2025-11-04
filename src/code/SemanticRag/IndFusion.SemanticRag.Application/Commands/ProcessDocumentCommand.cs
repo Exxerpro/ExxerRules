@@ -22,7 +22,7 @@ public class ProcessDocumentCommand
     /// <summary>
     /// Gets or sets the document metadata.
     /// </summary>
-    public Dictionary<string, object> Metadata { get; set; } = new();
+    public Dictionary<string, object> Metadata { get; set; } = [];
 }
 
 /// <summary>

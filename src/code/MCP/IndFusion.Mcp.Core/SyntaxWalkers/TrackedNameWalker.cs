@@ -15,7 +15,7 @@ public abstract class TrackedNameWalker : CSharpSyntaxWalker
     /// <summary>
     /// Gets the set of matched identifier names encountered during traversal.
     /// </summary>
-    public HashSet<string> Matches { get; } = new();
+    public HashSet<string> Matches { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TrackedNameWalker"/> class.

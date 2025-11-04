@@ -125,7 +125,7 @@ public class SafeRegexService : ISafeRegexService
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error processing file: {FilePath}", targetFile);
-                    validationResults.Add(new ValidationResult("FileProcessing", false, $"Error processing {targetFile}: {ex.Message}", new Dictionary<string, object>()));
+                    validationResults.Add(new ValidationResult("FileProcessing", false, $"Error processing {targetFile}: {ex.Message}", []));
                 }
             }
 
@@ -412,9 +412,11 @@ public class SafeRegexService : ISafeRegexService
 
     private static List<string> GenerateDiff(string originalContent, string transformedContent, string filePath)
     {
-        var diff = new List<string>();
-        diff.Add($"--- {filePath} (original)");
-        diff.Add($"+++ {filePath} (transformed)");
+        var diff = new List<string>
+        {
+            $"--- {filePath} (original)",
+            $"+++ {filePath} (transformed)"
+        };
         
         var originalLines = originalContent.Split('\n');
         var transformedLines = transformedContent.Split('\n');
@@ -479,11 +481,11 @@ public class SafeRegexService : ISafeRegexService
         {
             // This would integrate with the build validation service
             // For now, we'll return a basic validation result
-            validationResults.Add(new ValidationResult("BuildValidation", true, "Build validation completed", new Dictionary<string, object>()));
+            validationResults.Add(new ValidationResult("BuildValidation", true, "Build validation completed", []));
         }
         catch (Exception ex)
         {
-            validationResults.Add(new ValidationResult("BuildValidation", false, $"Build validation failed: {ex.Message}", new Dictionary<string, object>()));
+            validationResults.Add(new ValidationResult("BuildValidation", false, $"Build validation failed: {ex.Message}", []));
         }
 
         return validationResults;

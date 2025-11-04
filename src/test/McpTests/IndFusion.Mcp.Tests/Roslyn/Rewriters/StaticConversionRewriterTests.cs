@@ -12,7 +12,7 @@ public partial class RoslynTransformationTests
     public void StaticConversionRewriter_ConvertsInstanceMethod()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("int GetX(){ return x; }") as MethodDeclarationSyntax;
-        var rewriter = new StaticConversionRewriter(System.Array.Empty<(string Name, string Type)>(), "inst", new HashSet<string> { "x" });
+        var rewriter = new StaticConversionRewriter(System.Array.Empty<(string Name, string Type)>(), "inst", ["x"]);
         var result = rewriter.Rewrite(method!).NormalizeWhitespace().ToFullString();
         Assert.Contains("static", result);
         Assert.Contains("inst.x", result);

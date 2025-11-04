@@ -8,7 +8,7 @@ public class OpportunityAnalyzer : CSharpSyntaxWalker
     /// <summary>
     /// Gets the list of refactoring opportunities
     /// </summary>
-    public List<OpportunityInfo> Opportunities { get; } = new();
+    public List<OpportunityInfo> Opportunities { get; } = [];
 
     /// <summary>
     /// Visits a method declaration

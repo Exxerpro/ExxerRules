@@ -13,7 +13,7 @@ public class TypeCollectorWalker<T> : CSharpSyntaxWalker where T : TypeDeclarati
     /// <summary>
     /// Gets a map from type name to its declaration node.
     /// </summary>
-    public Dictionary<string, T> Types { get; } = new();
+    public Dictionary<string, T> Types { get; } = [];
 
     /// <inheritdoc />
     public override void Visit(SyntaxNode? node)

@@ -51,7 +51,7 @@ public class ClassDuplicationTests
             {
                 if (!allClasses.ContainsKey(cls.Name))
                 {
-                    allClasses[cls.Name] = new List<string>();
+                    allClasses[cls.Name] = [];
                 }
                 allClasses[cls.Name].Add($"{cls.FullName} (in {cls.Assembly})");
             }

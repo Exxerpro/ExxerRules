@@ -39,8 +39,8 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         
         return new CodeAnalysisResult
         {
-            Violations = new List<PatternViolation>(),
-            Suggestions = new List<PatternSuggestion>(),
+            Violations = [],
+            Suggestions = [],
             ComplianceScore = 1.0f,
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
             FilesAnalyzed = 0,
@@ -67,8 +67,8 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         
         return new CodeAnalysisResult
         {
-            Violations = new List<PatternViolation>(),
-            Suggestions = new List<PatternSuggestion>(),
+            Violations = [],
+            Suggestions = [],
             ComplianceScore = 1.0f,
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
             FilesAnalyzed = 1,
@@ -99,8 +99,8 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         
         return new CodeAnalysisResult
         {
-            Violations = new List<PatternViolation>(),
-            Suggestions = new List<PatternSuggestion>(),
+            Violations = [],
+            Suggestions = [],
             ComplianceScore = 1.0f,
             ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
             FilesAnalyzed = 1,
@@ -117,6 +117,6 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         // TODO: Implement analyzer discovery
         await Task.Delay(100, cancellationToken); // Placeholder
         
-        return new List<AnalyzerInfo>();
+        return [];
     }
 }

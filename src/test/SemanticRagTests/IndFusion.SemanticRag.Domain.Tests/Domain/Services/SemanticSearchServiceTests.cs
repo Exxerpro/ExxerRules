@@ -150,8 +150,8 @@ public class SemanticSearchServiceTests
         // Arrange
         var entities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+            new("entity-1", "Entity 1", "Person", "First entity", [], 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", [], 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.CreateEntitiesAsync(entities, CancellationToken.None)
@@ -193,8 +193,8 @@ public class SemanticSearchServiceTests
         var entityIds = new List<string> { "entity-1", "entity-2" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+            new("entity-1", "Entity 1", "Person", "First entity", [], 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", [], 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.GetEntitiesAsync(entityIds, CancellationToken.None)
@@ -268,8 +268,8 @@ public class SemanticSearchServiceTests
         var relationshipTypes = new List<string> { "WORKS_FOR", "MANAGES" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-2", "Connected Entity 1", "Person", "Connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+            new("entity-2", "Connected Entity 1", "Person", "Connected entity", [], 0.9, DateTime.UtcNow),
+            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", [], 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.FindConnectedEntitiesAsync(entityId, relationshipTypes, 2, CancellationToken.None)

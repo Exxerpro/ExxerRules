@@ -36,10 +36,9 @@ public class IGraphQueryServiceTests
         var query = "MATCH (n) RETURN n";
         var parameters = new Dictionary<string, object> { ["limit"] = 10 };
         var expectedResult = new GraphQueryResult(
-            new List<GraphRecord>
-            {
-                new(new List<object> { "test" }, new List<string> { "n" })
-            },
+            [
+                new(["test"], ["n"])
+            ],
             100,
             1,
             true);
@@ -111,7 +110,7 @@ public class IGraphQueryServiceTests
         var filters = new Dictionary<string, object> { ["language"] = "C#" };
         var expectedNodes = new List<GraphNode>
         {
-            new("node1", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" })
+            new("node1", "CodeNode", new Dictionary<string, object>(), ["CodeNode"])
         };
 
         _mockGraphQueryService.GetNodesAsync(nodeType, filters, Arg.Any<CancellationToken>())
@@ -189,16 +188,14 @@ public class IGraphQueryServiceTests
         var maxDepth = 2;
         var relationshipTypes = new List<string> { "DEPENDS_ON", "REFERENCES" };
         var expectedTraversal = new GraphTraversalResult(
-            new List<GraphNode>
-            {
-                new("startNode", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" }),
-                new("targetNode", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" })
-            },
-            new List<GraphRelationship>
-            {
+            [
+                new("startNode", "CodeNode", new Dictionary<string, object>(), ["CodeNode"]),
+                new("targetNode", "CodeNode", new Dictionary<string, object>(), ["CodeNode"])
+            ],
+            [
                 new("rel1", "DEPENDS_ON", "startNode", "targetNode", new Dictionary<string, object>())
-            },
-            new List<GraphPath>(),
+            ],
+            [],
             2,
             2,
             1);
@@ -228,17 +225,15 @@ public class IGraphQueryServiceTests
         var endNodeId = "endNode";
         var maxDepth = 5;
         var expectedPath = new GraphPath(
-            new List<GraphNode>
-            {
-                new("startNode", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" }),
-                new("middleNode", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" }),
-                new("endNode", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" })
-            },
-            new List<GraphRelationship>
-            {
+            [
+                new("startNode", "CodeNode", new Dictionary<string, object>(), ["CodeNode"]),
+                new("middleNode", "CodeNode", new Dictionary<string, object>(), ["CodeNode"]),
+                new("endNode", "CodeNode", new Dictionary<string, object>(), ["CodeNode"])
+            ],
+            [
                 new("rel1", "DEPENDS_ON", "startNode", "middleNode", new Dictionary<string, object>()),
                 new("rel2", "DEPENDS_ON", "middleNode", "endNode", new Dictionary<string, object>())
-            },
+            ],
             2);
 
         _mockGraphQueryService.FindShortestPathAsync(startNodeId, endNodeId, maxDepth, Arg.Any<CancellationToken>())
@@ -319,7 +314,7 @@ public class IGraphQueryServiceTests
         // Arrange
         var query = "MATCH (n) RETURN n";
         var expectedResult = new GraphQueryResult(
-            new List<GraphRecord>(),
+            [],
             50,
             0,
             true);
@@ -346,8 +341,8 @@ public class IGraphQueryServiceTests
         var nodeType = "CodeNode";
         var expectedNodes = new List<GraphNode>
         {
-            new("node1", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" }),
-            new("node2", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" })
+            new("node1", "CodeNode", new Dictionary<string, object>(), ["CodeNode"]),
+            new("node2", "CodeNode", new Dictionary<string, object>(), ["CodeNode"])
         };
 
         _mockGraphQueryService.GetNodesAsync(nodeType, null, Arg.Any<CancellationToken>())
@@ -398,12 +393,11 @@ public class IGraphQueryServiceTests
         var startNodeId = "startNode";
         var maxDepth = 3;
         var expectedTraversal = new GraphTraversalResult(
-            new List<GraphNode>
-            {
-                new("startNode", "CodeNode", new Dictionary<string, object>(), new List<string> { "CodeNode" })
-            },
-            new List<GraphRelationship>(),
-            new List<GraphPath>(),
+            [
+                new("startNode", "CodeNode", new Dictionary<string, object>(), ["CodeNode"])
+            ],
+            [],
+            [],
             0,
             1,
             0);

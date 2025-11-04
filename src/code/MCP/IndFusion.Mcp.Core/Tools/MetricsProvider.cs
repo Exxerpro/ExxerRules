@@ -198,14 +198,14 @@ public static class MetricsProvider
         public int NumberOfClasses { get; set; }
         public int NumberOfPublicMethods { get; set; }
         public int NumberOfPrivateMethods { get; set; }
-        public List<ClassMetrics> Classes { get; } = new();
+        public List<ClassMetrics> Classes { get; } = [];
     }
 
     private class ClassMetrics
     {
         public string Name { get; set; } = string.Empty;
         public int LinesOfCode { get; set; }
-        public List<MethodMetrics> Methods { get; } = new();
+        public List<MethodMetrics> Methods { get; } = [];
     }
 
     private class MethodMetrics

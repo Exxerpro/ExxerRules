@@ -124,7 +124,7 @@ public class RagController : ControllerBase
             await _vectorSearchService.StoreDocumentAsync(
                 request.Id, 
                 request.Content, 
-                request.Metadata ?? new Dictionary<string, object>(), 
+                request.Metadata ?? [], 
                 cancellationToken);
 
             return Ok(new DocumentStorageResult

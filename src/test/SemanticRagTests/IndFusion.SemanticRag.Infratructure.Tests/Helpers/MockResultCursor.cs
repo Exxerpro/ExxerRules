@@ -118,7 +118,7 @@ public class MockResultCursor : IResultCursor
 			return Task.FromException<List<IRecord>>(ex);
 		}
 
-		return Task.FromResult(_recordsList ?? new List<IRecord>());
+		return Task.FromResult(_recordsList ?? []);
 	}
 
 	/// <inheritdoc />
@@ -158,10 +158,10 @@ public class MockResultCursor : IResultCursor
 	public bool IsOpen => _isOpen;
 
 	// Other IResultCursor members that may not be used in tests but are required by the interface
-	public IAsyncEnumerable<IRecord> StreamAsync() => new RecordAsyncEnumerable(_recordsList ?? new List<IRecord>());
+	public IAsyncEnumerable<IRecord> StreamAsync() => new RecordAsyncEnumerable(_recordsList ?? []);
 	public Task<IRecord?> PeekAsync() => throw new NotImplementedException("PeekAsync not implemented in mock");
 	public IAsyncEnumerator<IRecord> GetAsyncEnumerator(CancellationToken cancellationToken = default) 
-		=> new RecordAsyncEnumerator(_recordsList ?? new List<IRecord>(), cancellationToken);
+		=> new RecordAsyncEnumerator(_recordsList ?? [], cancellationToken);
 }
 
 /// <summary>

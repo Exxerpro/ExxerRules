@@ -3,7 +3,7 @@ namespace IndFusion.Tools.Cli.SyntaxWalkers;
 internal class MethodDependencyWalker : CSharpSyntaxWalker
 {
     private readonly HashSet<string> _candidateMethods;
-    public HashSet<string> Dependencies { get; } = new();
+    public HashSet<string> Dependencies { get; } = [];
 
     public MethodDependencyWalker(HashSet<string> candidateMethods)
     {

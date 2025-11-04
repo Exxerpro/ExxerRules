@@ -176,10 +176,10 @@ public class KnowledgeExtractionServiceTests
         var maxDepth = 3;
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-2", "Direct Report 1", "Person", "Direct report", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-3", "Direct Report 2", "Person", "Another direct report", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-4", "Colleague 1", "Person", "Colleague", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-5", "Manager", "Person", "Manager", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+            new("entity-2", "Direct Report 1", "Person", "Direct report", [], 0.9, DateTime.UtcNow),
+            new("entity-3", "Direct Report 2", "Person", "Another direct report", [], 0.9, DateTime.UtcNow),
+            new("entity-4", "Colleague 1", "Person", "Colleague", [], 0.9, DateTime.UtcNow),
+            new("entity-5", "Manager", "Person", "Manager", [], 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphServicePort.FindConnectedEntitiesAsync(entityId, relationshipTypes, maxDepth, CancellationToken.None)
@@ -205,17 +205,17 @@ public class KnowledgeExtractionServiceTests
         var expectedPaths = new List<GraphPath>
         {
             new(
-                Nodes: new List<GraphNode>
-                {
-                    new("entity-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" }),
-                    new("entity-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" }),
-                    new("entity-5", "Person", new Dictionary<string, object>(), new List<string> { "Person" })
-                },
-                Relationships: new List<GraphRelationship>
-                {
+                Nodes:
+                [
+                    new("entity-1", "Person", new Dictionary<string, object>(), ["Person"]),
+                    new("entity-2", "Person", new Dictionary<string, object>(), ["Person"]),
+                    new("entity-5", "Person", new Dictionary<string, object>(), ["Person"])
+                ],
+                Relationships:
+                [
                     new("rel-1", "entity-1", "entity-2", "MANAGES", new Dictionary<string, object>()),
                     new("rel-2", "entity-2", "entity-5", "COLLABORATES_WITH", new Dictionary<string, object>())
-                },
+                ],
                 Length: 2
             )
         };
@@ -288,7 +288,7 @@ public class KnowledgeExtractionServiceTests
             var entityResult = TestDataBuilders
                 .CreateValidKnowledgeEntity(id: $"entity-{i}", name: $"Entity {i}", type: entityType)
                 .Map(e => new KnowledgeEntity(e.Id, e.Name, e.Type, $"Description {i}",
-                    new Dictionary<string, object>(), 0.9, DateTime.UtcNow));
+                    [], 0.9, DateTime.UtcNow));
             entityResult.IsSuccess.ShouldBeTrue();
             expectedEntities.Add(entityResult.Value!); // Null-forgiving: IsSuccess guarantees non-null
         }

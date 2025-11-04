@@ -35,10 +35,10 @@ public class IndexPageTests : BunitContext
             new ExxerFactoringActivity(DateTime.Now.AddMinutes(-10), "move-method", "AnotherProject", false, TimeSpan.FromSeconds(1.8), "Target class not found")
         });
 
-        mockMetricsService.GetPerformanceMetricsAsync(Arg.Any<TimeSpan>()).Returns(new List<PerformanceMetric>
-        {
+        mockMetricsService.GetPerformanceMetricsAsync(Arg.Any<TimeSpan>()).Returns(
+        [
             new PerformanceMetric(DateTime.Now, "Performance", 95.5, "%")
-        });
+        ]);
 
         Services.AddSingleton(mockDashboardService);
         Services.AddSingleton(mockMetricsService);

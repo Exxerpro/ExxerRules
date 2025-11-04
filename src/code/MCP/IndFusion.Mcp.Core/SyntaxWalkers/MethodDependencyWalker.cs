@@ -13,7 +13,7 @@ public class MethodDependencyWalker : CSharpSyntaxWalker
     /// <summary>
     /// Gets the set of method names that were invoked and matched the candidates.
     /// </summary>
-    public HashSet<string> Dependencies { get; } = new();
+    public HashSet<string> Dependencies { get; } = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MethodDependencyWalker"/> class.

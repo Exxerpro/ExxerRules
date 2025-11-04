@@ -32,7 +32,7 @@ public class McpControllerTests
         var request = new McpToolCallRequest
         {
             ToolName = "nonexistent-tool",
-            Parameters = new Dictionary<string, JsonElement>()
+            Parameters = []
         };
 
         // Act
@@ -58,7 +58,7 @@ public class McpControllerTests
         var request = new McpToolCallRequest
         {
             ToolName = "test-tool",
-            Parameters = new Dictionary<string, JsonElement>()
+            Parameters = []
         };
 
         // Act

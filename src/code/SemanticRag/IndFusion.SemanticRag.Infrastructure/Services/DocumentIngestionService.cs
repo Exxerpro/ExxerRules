@@ -17,8 +17,8 @@ public class DocumentIngestionService : IDocumentIngestionService
     private readonly IKnowledgeGraphService _knowledgeGraphService;
     private readonly IEmbeddingServicePort _embeddingService;
     private readonly ILogger<DocumentIngestionService> _logger;
-    private readonly Dictionary<string, DocumentIngestionStatus> _ingestionStatuses = new();
-    private readonly Dictionary<string, CancellationTokenSource> _activeIngestions = new();
+    private readonly Dictionary<string, DocumentIngestionStatus> _ingestionStatuses = [];
+    private readonly Dictionary<string, CancellationTokenSource> _activeIngestions = [];
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DocumentIngestionService"/> class.
@@ -169,7 +169,7 @@ public class DocumentIngestionService : IDocumentIngestionService
                     Name: input.Name,
                     Type: "Document",
                     Description: $"Document: {input.Name}",
-                    Properties: processingResult.Metadata ?? new Dictionary<string, object>(),
+                    Properties: processingResult.Metadata ?? [],
                     Confidence: 1.0,
                     CreatedAt: DateTime.UtcNow
                 );
@@ -500,7 +500,7 @@ public class DocumentIngestionService : IDocumentIngestionService
                                 Id: ingestionResult.DocumentId,
                                 Title: input.Name,
                                 Content: ingestionResult.ProcessingResult?.Content ?? string.Empty,
-                                Metadata: input.Metadata?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? new Dictionary<string, object>(),
+                                Metadata: input.Metadata?.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) ?? [],
                                 CreatedAt: ingestionResult.StartedAt.DateTime,
                                 UpdatedAt: ingestionResult.CompletedAt?.DateTime ?? ingestionResult.StartedAt.DateTime
                             );

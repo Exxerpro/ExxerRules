@@ -2,9 +2,9 @@ namespace IndFusion.Tools.Cli.SyntaxWalkers;
 
 internal class ImplicitInstanceMemberWalker : CSharpSyntaxWalker
 {
-    private readonly HashSet<string> _parameters = new();
-    private readonly HashSet<string> _locals = new();
-    public HashSet<string> Members { get; } = new();
+    private readonly HashSet<string> _parameters = [];
+    private readonly HashSet<string> _locals = [];
+    public HashSet<string> Members { get; } = [];
 
     public override void VisitMethodDeclaration(MethodDeclarationSyntax node)
     {

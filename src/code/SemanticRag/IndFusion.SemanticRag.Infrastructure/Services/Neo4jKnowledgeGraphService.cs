@@ -50,7 +50,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         
         return new GraphQueryResult
         {
-            Records = new List<GraphRecord>(),
+            Records = [],
             ExecutionTimeMs = stopwatch.ElapsedMilliseconds,
             RecordsAffected = 0,
             Success = true
@@ -201,7 +201,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         
         return new GraphQueryResult
         {
-            Records = new List<GraphRecord>(),
+            Records = [],
             ExecutionTimeMs = stopwatch.ElapsedMilliseconds,
             RecordsAffected = 0,
             Success = true
@@ -250,7 +250,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 ["name"] = entity.Name,
                 ["type"] = entity.Type,
                 ["description"] = entity.Description ?? string.Empty,
-                ["properties"] = entity.Properties ?? new Dictionary<string, object>(),
+                ["properties"] = entity.Properties ?? [],
                 ["confidence"] = entity.Confidence,
                 ["createdAt"] = entity.CreatedAt
             };
@@ -302,7 +302,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                     ["name"] = e.Name,
                     ["type"] = e.Type,
                     ["description"] = e.Description ?? string.Empty,
-                    ["properties"] = e.Properties ?? new Dictionary<string, object>(),
+                    ["properties"] = e.Properties ?? [],
                     ["confidence"] = e.Confidence,
                     ["createdAt"] = e.CreatedAt
                 }).ToList()
@@ -483,7 +483,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 Name: cypherRecord.Values["name"].ToString() ?? string.Empty,
                 Type: cypherRecord.Values["type"].ToString() ?? string.Empty,
                 Description: cypherRecord.Values["description"].ToString() ?? string.Empty,
-                Properties: cypherRecord.Values["properties"] as Dictionary<string, object> ?? new Dictionary<string, object>(),
+                Properties: cypherRecord.Values["properties"] as Dictionary<string, object> ?? [],
                 Confidence: Convert.ToDouble(cypherRecord.Values["confidence"]),
                 CreatedAt: (DateTime)cypherRecord.Values["createdAt"]
             );
@@ -530,10 +530,10 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 Name: cypherRecord.Values["name"].ToString() ?? string.Empty,
                 Type: cypherRecord.Values["type"].ToString() ?? string.Empty,
                 Description: cypherRecord.Values["description"].ToString() ?? string.Empty,
-                Properties: cypherRecord.Values["properties"] as Dictionary<string, object> ?? new Dictionary<string, object>(),
+                Properties: cypherRecord.Values["properties"] as Dictionary<string, object> ?? [],
                 Confidence: Convert.ToDouble(cypherRecord.Values["confidence"]),
                 CreatedAt: (DateTime)cypherRecord.Values["createdAt"]
-            )).ToList() ?? new List<KnowledgeEntity>();
+            )).ToList() ?? [];
 
             _logger.LogInformation("Successfully retrieved {Count} entities", entities.Count);
             return Result<IReadOnlyList<KnowledgeEntity>>.Success(entities);
@@ -624,9 +624,9 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 FromNodeId: cypherRecord.Values["fromNodeId"].ToString() ?? string.Empty,
                 ToNodeId: cypherRecord.Values["toNodeId"].ToString() ?? string.Empty,
                 RelationshipType: cypherRecord.Values["relationshipType"].ToString() ?? string.Empty,
-                Properties: cypherRecord.Values["properties"] as Dictionary<string, object> ?? new Dictionary<string, object>(),
+                Properties: cypherRecord.Values["properties"] as Dictionary<string, object> ?? [],
                 CreatedAt: (DateTimeOffset)cypherRecord.Values["createdAt"]
-            )).ToList() ?? new List<KnowledgeRelationship>();
+            )).ToList() ?? [];
 
             _logger.LogInformation("Successfully retrieved {Count} relationships", relationships.Count);
             return Result<IReadOnlyList<KnowledgeRelationship>>.Success(relationships);
@@ -692,7 +692,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 Name: record.Values["name"]?.ToString() ?? string.Empty,
                 Type: record.Values["type"]?.ToString() ?? string.Empty,
                 Description: record.Values.GetValueOrDefault("description")?.ToString() ?? string.Empty,
-                Properties: record.Values.GetValueOrDefault("properties") is Dictionary<string, object> props ? props : new Dictionary<string, object>(),
+                Properties: record.Values.GetValueOrDefault("properties") is Dictionary<string, object> props ? props : [],
                 Confidence: record.Values.GetValueOrDefault("confidence") is double conf ? (float)conf : 0.0f,
                 CreatedAt: record.Values.GetValueOrDefault("createdAt") is DateTimeOffset dt ? dt.DateTime : DateTime.MinValue
             )).ToList();
@@ -812,7 +812,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 Name: record.Values["name"]?.ToString() ?? string.Empty,
                 Type: record.Values["type"]?.ToString() ?? string.Empty,
                 Description: record.Values.GetValueOrDefault("description")?.ToString() ?? string.Empty,
-                Properties: record.Values.GetValueOrDefault("properties") is Dictionary<string, object> props ? props : new Dictionary<string, object>(),
+                Properties: record.Values.GetValueOrDefault("properties") is Dictionary<string, object> props ? props : [],
                 Confidence: record.Values.GetValueOrDefault("confidence") is double conf ? (float)conf : 0.0f,
                 CreatedAt: record.Values.GetValueOrDefault("createdAt") is DateTimeOffset dt ? dt.DateTime : DateTime.MinValue
             )).ToList();
@@ -918,7 +918,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 ["name"] = entity.Name,
                 ["type"] = entity.Type,
                 ["description"] = entity.Description ?? string.Empty,
-                ["properties"] = entity.Properties ?? new Dictionary<string, object>(),
+                ["properties"] = entity.Properties ?? [],
                 ["confidence"] = entity.Confidence,
                 ["createdAt"] = entity.CreatedAt
             };
@@ -1103,7 +1103,7 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
                 MATCH (n:KnowledgeEntity)
                 DETACH DELETE n";
 
-            var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, new Dictionary<string, object>(), _options.Database, cancellationToken);
+            var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, [], _options.Database, cancellationToken);
             if (result.IsFailure)
             {
                 _logger.LogError("Failed to clear graph: {Error}", result.Error);

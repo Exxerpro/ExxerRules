@@ -37,7 +37,7 @@ public class IPatternSuggestServiceTests
         var options = new PatternSuggestionOptions(
             MaxSuggestions: 5,
             MinConfidence: 0.7f,
-            Categories: new List<string> { "Design Patterns" },
+            Categories: ["Design Patterns"],
             IncludeCodeExamples: true,
             IncludeEffortEstimate: true);
 
@@ -80,7 +80,7 @@ public class IPatternSuggestServiceTests
         var options = new PatternSuggestionOptions();
 
         _mockPatternSuggestService.SuggestPatternsAsync(codeContext, options, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<PatternSuggestion>>.Success(new List<PatternSuggestion>()));
+            .Returns(Result<IReadOnlyList<PatternSuggestion>>.Success([]));
 
         // Act
         var result = await _mockPatternSuggestService.SuggestPatternsAsync(codeContext, options, CancellationToken.None);
@@ -124,25 +124,25 @@ public class IPatternSuggestServiceTests
         var patternType = "Singleton";
         var expectedAnalysis = new PatternAnalysis(
             PatternType: "Singleton",
-            Matches: new List<Domain.Models.PatternMatch>
-            {
+            Matches:
+            [
                 new(
                     Pattern: new SemanticPattern("singleton1", "Singleton", "Singleton pattern", "class.*Singleton", "Design Patterns"),
                     Match: "public class Singleton",
                     StartIndex: 0,
                     EndIndex: 20,
                     Confidence: 0.9f)
-            },
-            Violations: new List<PatternViolation>(),
-            Suggestions: new List<PatternSuggestion>
-            {
+            ],
+            Violations: [],
+            Suggestions:
+            [
                 new(
                     Id: "suggestion1",
                     ViolationId: "violation1",
                     Title: "Implement thread-safe Singleton",
                     Description: "Consider using thread-safe implementation",
                     Confidence: 0.8f)
-            },
+            ],
             Confidence: 0.85f,
             AnalysisTimeMs: 150);
 
@@ -234,7 +234,7 @@ public class IPatternSuggestServiceTests
         var filePath = "Test.cs";
 
         _mockPatternSuggestService.FindViolationsAsync(code, filePath, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<PatternViolation>>.Success(new List<PatternViolation>()));
+            .Returns(Result<IReadOnlyList<PatternViolation>>.Success([]));
 
         // Act
         var result = await _mockPatternSuggestService.FindViolationsAsync(code, filePath, CancellationToken.None);
@@ -293,7 +293,7 @@ public class IPatternSuggestServiceTests
                 Category: category,
                 Severity: PatternSeverity.Info,
                 Pattern: "class.*Singleton",
-                Tags: new List<string> { "creational", "singleton" })
+                Tags: ["creational", "singleton"])
         };
 
         _mockPatternSuggestService.GetPatternDefinitionsAsync(category, Arg.Any<CancellationToken>())
@@ -322,7 +322,7 @@ public class IPatternSuggestServiceTests
         var category = "Unknown Category";
 
         _mockPatternSuggestService.GetPatternDefinitionsAsync(category, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<PatternDefinition>>.Success(new List<PatternDefinition>()));
+            .Returns(Result<IReadOnlyList<PatternDefinition>>.Success([]));
 
         // Act
         var result = await _mockPatternSuggestService.GetPatternDefinitionsAsync(category, CancellationToken.None);
@@ -378,7 +378,7 @@ public class IPatternSuggestServiceTests
             Category: "Test",
             Severity: PatternSeverity.Info,
             Pattern: "test.*pattern",
-            Tags: new List<string> { "test" });
+            Tags: ["test"]);
 
         _mockPatternSuggestService.ValidatePatternDefinitionAsync(patternDefinition, Arg.Any<CancellationToken>())
             .Returns(Result.Success());
@@ -404,7 +404,7 @@ public class IPatternSuggestServiceTests
             Category: "Test",
             Severity: PatternSeverity.Info,
             Pattern: "test.*pattern",
-            Tags: new List<string> { "test" });
+            Tags: ["test"]);
 
         var expectedError = "Pattern ID cannot be empty";
 
@@ -459,7 +459,7 @@ public class IPatternSuggestServiceTests
         categoriesResult.IsFailure.ShouldBeTrue();
 
         var validateResult = await _mockPatternSuggestService.ValidatePatternDefinitionAsync(
-            new PatternDefinition("test", "test", "test", "test", PatternSeverity.Info, "test", new List<string>()), cts.Token);
+            new PatternDefinition("test", "test", "test", "test", PatternSeverity.Info, "test", []), cts.Token);
         validateResult.IsFailure.ShouldBeTrue();
     }
 

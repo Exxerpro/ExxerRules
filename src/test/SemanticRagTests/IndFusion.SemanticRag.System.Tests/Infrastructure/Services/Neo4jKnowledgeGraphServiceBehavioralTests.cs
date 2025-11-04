@@ -22,12 +22,12 @@ namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Services;
 public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 {
     private readonly Neo4jContainerFixture _fixture;
-    
+
     /// <summary>
     /// Gets a value indicating whether tests should be skipped due to Docker unavailability.
     /// </summary>
     private static bool SkipTests => DockerSkipConditions.ShouldSkipDockerTests;
-    
+
     /// <summary>
     /// Throws SkipException if Docker is unavailable. Call this at the start of each test.
     /// </summary>
@@ -35,10 +35,10 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         if (SkipTests || !_fixture.IsAvailable)
         {
-            throw new SkipException();
+            Assert.Skip("Docker is not available - system tests require real containers");
         }
     }
-    
+
     private readonly ILogger<Neo4jKnowledgeGraphService> _logger;
     private readonly IGraphDatabasePort _graphDatabasePort = null!;
     private readonly IOptions<Neo4jOptions> _options;
@@ -85,6 +85,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         // Clear database after tests
         Task.Run(async () => await TestCleanupHelpers.ClearNeo4jDatabase(_fixture.Driver!, _fixture.Options.Database))
             .Wait(TimeSpan.FromSeconds(5));
+        GC.SuppressFinalize(this);
     }
 
     /// <summary>
@@ -95,7 +96,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task QueryAsync_WithValidQuery_ShouldReturnActualResults()
     {
         SkipIfDockerUnavailable();
-        
+
         // Arrange
         var query = new GraphQuery("MATCH (n) RETURN n LIMIT 10");
 
@@ -118,7 +119,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task QueryAsync_WithParameters_ShouldUseParametersInQuery()
     {
         SkipIfDockerUnavailable();
-        
+
         // Arrange
         var parameters = new Dictionary<string, object> { { "name", "test" }, { "age", 25 } };
         var query = new GraphQuery("MATCH (n {name: $name, age: $age}) RETURN n", parameters);
@@ -141,7 +142,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task QueryAsync_WithTimeout_ShouldRespectTimeout()
     {
         SkipIfDockerUnavailable();
-        
+
         // Arrange
         var query = new GraphQuery("MATCH (n) RETURN n", TimeoutMs: 100); // Very short timeout
 
@@ -160,7 +161,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task QueryAsync_WithCancellation_ShouldRespectCancellationToken()
     {
         SkipIfDockerUnavailable();
-        
+
         // Arrange
         var query = new GraphQuery("MATCH (n) RETURN n");
         using var cts = new CancellationTokenSource();
@@ -179,7 +180,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task QueryAsync_WithInvalidQuery_ShouldReturnFailure()
     {
         SkipIfDockerUnavailable();
-        
+
         // Arrange
         var query = new GraphQuery("INVALID CYPHER QUERY");
 
@@ -201,13 +202,13 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task AddNodeAsync_WithValidNode_ShouldAddNode()
     {
         SkipIfDockerUnavailable();
-        
+
         // Arrange
         var node = new GraphNode(
             "node-1",
             "Person",
             new Dictionary<string, object> { { "name", "John" }, { "age", 30 } },
-            new List<string> { "Person" });
+            ["Person"]);
 
         // Act
         var result = await _service.AddNodeAsync(node, TestContext.Current.CancellationToken);
@@ -240,7 +241,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task AddNodeAsync_WithInvalidNode_ShouldThrowArgumentException()
     {
         // Arrange
-        var invalidNode = new GraphNode("", "", new Dictionary<string, object>(), new List<string>());
+        var invalidNode = new GraphNode("", "", new Dictionary<string, object>(), []);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -261,14 +262,14 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             nodeId,
             "Person",
             new Dictionary<string, object> { { "name", "John" }, { "age", 30 } },
-            new List<string> { "Person" });
+            ["Person"]);
         await _service.AddNodeAsync(initialNode, TestContext.Current.CancellationToken);
 
         var updatedNode = new GraphNode(
             nodeId,
             "Person",
             new Dictionary<string, object> { { "name", "Jane" }, { "age", 35 } },
-            new List<string> { "Person" });
+            ["Person"]);
 
         // Act
         var result = await _service.UpdateNodeAsync(nodeId, updatedNode, TestContext.Current.CancellationToken);
@@ -289,7 +290,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task UpdateNodeAsync_WithNullNodeId_ShouldThrowArgumentException()
     {
         // Arrange
-        var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+        var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), ["Person"]);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -304,7 +305,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task UpdateNodeAsync_WithEmptyNodeId_ShouldThrowArgumentException()
     {
         // Arrange
-        var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+        var node = new GraphNode("node-1", "Person", new Dictionary<string, object>(), ["Person"]);
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
@@ -325,7 +326,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             nodeId,
             "Person",
             new Dictionary<string, object> { { "name", "John" } },
-            new List<string> { "Person" });
+            ["Person"]);
         await _service.AddNodeAsync(node, TestContext.Current.CancellationToken);
 
         // Act
@@ -369,8 +370,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         SkipIfDockerUnavailable();
         // Arrange - Create nodes first
-        var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
-        var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+        var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), ["Person"]);
+        var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), ["Person"]);
         await _service.AddNodeAsync(node1, TestContext.Current.CancellationToken);
         await _service.AddNodeAsync(node2, TestContext.Current.CancellationToken);
 
@@ -442,8 +443,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         SkipIfDockerUnavailable();
         // Arrange - Create nodes and relationship first
-        var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
-        var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
+        var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), ["Person"]);
+        var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), ["Person"]);
         await _service.AddNodeAsync(node1, TestContext.Current.CancellationToken);
         await _service.AddNodeAsync(node2, TestContext.Current.CancellationToken);
         var relationship = new GraphRelationship("rel-1", "KNOWS", "node-1", "node-2", new Dictionary<string, object>());
@@ -554,9 +555,9 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             50,
             "public int CalculateTotal(int a, int b) { return a + b; }",
             "C#",
-            new List<string> { "public", "method" },
+            ["public", "method"],
             new Dictionary<string, object> { { "visibility", "public" } },
-            new float[] { 0.1f, 0.2f, 0.3f },
+            [0.1f, 0.2f, 0.3f],
             DateTimeOffset.UtcNow,
             DateTimeOffset.UtcNow);
 
@@ -593,7 +594,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             0,
             "",
             "",
-            new List<string>(),
+            [],
             new Dictionary<string, object>(),
             null,
             DateTimeOffset.UtcNow,

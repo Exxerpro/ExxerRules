@@ -32,8 +32,8 @@ public class IPatternGraphServiceContractTests
 			IncludeMetadata: true);
 
 		var expectedResult = new PatternGraphQueryResult(
-			Nodes: new List<GraphNode>(),
-			Edges: new List<GraphEdge>(),
+			Nodes: [],
+			Edges: [],
 			QueryMetadata: new QueryMetadata(
 				QueryId: "test-query-1",
 				Timestamp: DateTime.UtcNow,

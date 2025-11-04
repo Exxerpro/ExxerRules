@@ -241,7 +241,7 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
                             Id: Guid.NewGuid().ToString(),
                             Content: text,
                             Embedding: embedding,
-                            Metadata: metadata ?? new Dictionary<string, object>(),
+                            Metadata: metadata ?? [],
                             CreatedAt: DateTimeOffset.UtcNow
                         );
 

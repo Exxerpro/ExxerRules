@@ -44,7 +44,7 @@ public class PatternSuggestServiceTests
         var options = new PatternSuggestionOptions(
             MaxSuggestions: 5,
             MinConfidence: 0.5f,
-            Categories: new List<string> { "Design Patterns" },
+            Categories: ["Design Patterns"],
             IncludeCodeExamples: true,
             IncludeEffortEstimate: true);
 
@@ -126,7 +126,7 @@ public class PatternSuggestServiceTests
     {
         // Arrange
         var codeContext = "public class Test { }";
-        var options = new PatternSuggestionOptions(Categories: new List<string> { "Design Patterns" });
+        var options = new PatternSuggestionOptions(Categories: ["Design Patterns"]);
 
         var patternNodes = new List<KnowledgeNode>
         {
@@ -250,7 +250,7 @@ public class PatternSuggestServiceTests
         var patternType = "UnknownPattern";
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>()));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([]));
 
         // Act
         var result = await _patternSuggestService.AnalyzePatternAsync(code, patternType, CancellationToken.None);
@@ -469,7 +469,7 @@ public class PatternSuggestServiceTests
             Category: "Test",
             Severity: PatternSeverity.Info,
             Pattern: "test.*pattern",
-            Tags: new List<string> { "test" });
+            Tags: ["test"]);
 
         // Act
         var result = await _patternSuggestService.ValidatePatternDefinitionAsync(patternDefinition, CancellationToken.None);
@@ -492,7 +492,7 @@ public class PatternSuggestServiceTests
             Category: "Test",
             Severity: PatternSeverity.Info,
             Pattern: "test.*pattern",
-            Tags: new List<string> { "test" });
+            Tags: ["test"]);
 
         // Act
         var result = await _patternSuggestService.ValidatePatternDefinitionAsync(patternDefinition, CancellationToken.None);
@@ -538,7 +538,7 @@ public class PatternSuggestServiceTests
         categoriesResult.Error.ShouldContain("cancelled");
 
         var validateResult = await _patternSuggestService.ValidatePatternDefinitionAsync(
-            new PatternDefinition("test", "test", "test", "test", PatternSeverity.Info, "test", new List<string>()), cts.Token);
+            new PatternDefinition("test", "test", "test", "test", PatternSeverity.Info, "test", []), cts.Token);
         validateResult.IsFailure.ShouldBeTrue();
         validateResult.Error.ShouldNotBeNull();
         validateResult.Error.ShouldContain("cancelled");
@@ -555,7 +555,7 @@ public class PatternSuggestServiceTests
         var options = new PatternSuggestionOptions();
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), null, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>()));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([]));
 
         // Act
         var result = await _patternSuggestService.SuggestPatternsAsync(codeContext, options, CancellationToken.None);

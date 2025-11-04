@@ -45,7 +45,7 @@ public partial class RoslynTransformationTests
         var qualified = AstTransformations.QualifyInstanceMembers(
             method!,
             "instance",
-            new HashSet<string> { "Value" });
+            ["Value"]);
 
         var output = qualified.NormalizeWhitespace().ToFullString();
         Assert.Contains("instance.Value", output);

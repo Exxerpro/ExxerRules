@@ -67,7 +67,7 @@ public class SemanticRagOrchestrationServiceTests
 
             // Mock extraction service since EnableKnowledgeExtraction is true by default
             // Create a simple extraction result inline since CreateTestKnowledgeExtractionResult is in IngestRepositoryAsyncTests nested class
-            var entities = new[] { new KnowledgeEntity("entity-1", "Test Entity", "TestType", "Description", new Dictionary<string, object>(), 0.9f, DateTime.UtcNow) };
+            var entities = new[] { new KnowledgeEntity("entity-1", "Test Entity", "TestType", "Description", [], 0.9f, DateTime.UtcNow) };
             var relationships = new[] { new KnowledgeRelationship("rel-1", "entity-1", "entity-2", "RELATED_TO", new Dictionary<string, object>(), DateTimeOffset.UtcNow) };
             var codeEntities = new List<IndFusion.SemanticRag.Domain.Services.CodeEntity>();
             var concepts = new List<IndFusion.SemanticRag.Domain.Services.SemanticConcept>();
@@ -175,9 +175,9 @@ public class SemanticRagOrchestrationServiceTests
 
             var results = new List<SearchResultItem>
             {
-                new SearchResultItem("result-1", "test content", score, new Dictionary<string, object>(), document.Id)
+                new SearchResultItem("result-1", "test content", score, [], document.Id)
             };
-            return new SemanticSearchResult("search-1", "query-1", results, document, 1L, TimeSpan.FromMilliseconds(100), new Dictionary<string, object>());
+            return new SemanticSearchResult("search-1", "query-1", results, document, 1L, TimeSpan.FromMilliseconds(100), []);
         }
 
         private static SemanticContext CreateTestContext()
@@ -209,7 +209,7 @@ public class SemanticRagOrchestrationServiceTests
             var relationships = new[] { relationship! }; // Null-forgiving: IsSuccess guarantees non-null
 
             var relationshipsList = relationships.Select(r => new EntityRelationship(r.Id, r.FromNodeId, r.ToNodeId, r.RelationshipType, 0.9, r.Properties.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))).ToList();
-            return new SemanticContext("context-1", "Test Context", "A test context", documents, entities, relationshipsList, new Dictionary<string, object>(), DateTime.UtcNow);
+            return new SemanticContext("context-1", "Test Context", "A test context", documents, entities, relationshipsList, [], DateTime.UtcNow);
         }
     }
 
@@ -238,8 +238,8 @@ public class SemanticRagOrchestrationServiceTests
             var extractionResult = CreateTestKnowledgeExtractionResult();
 
             var servicesConfig = new IndFusion.SemanticRag.Domain.Services.RepositoryIngestionConfig(
-                IncludePatterns: config.IncludePatterns ?? new List<string>(),
-                ExcludePatterns: config.ExcludePatterns ?? new List<string>(),
+                IncludePatterns: config.IncludePatterns ?? [],
+                ExcludePatterns: config.ExcludePatterns ?? [],
                 MaxFileSize: config.MaxFileSize,
                 ExtractCodeEntities: true,
                 ExtractComments: true
@@ -290,8 +290,8 @@ public class SemanticRagOrchestrationServiceTests
             var errorMessage = "Document ingestion failed";
 
             var servicesConfig = new IndFusion.SemanticRag.Domain.Services.RepositoryIngestionConfig(
-                IncludePatterns: config.IncludePatterns ?? new List<string>(),
-                ExcludePatterns: config.ExcludePatterns ?? new List<string>(),
+                IncludePatterns: config.IncludePatterns ?? [],
+                ExcludePatterns: config.ExcludePatterns ?? [],
                 MaxFileSize: config.MaxFileSize,
                 ExtractCodeEntities: true,
                 ExtractComments: true
@@ -413,7 +413,7 @@ public class SemanticRagOrchestrationServiceTests
                     VectorDimensions: 1536,
                     SimilarityThreshold: 0.7,
                     MaxResults: 10,
-                    Properties: new Dictionary<string, object>()));
+                    Properties: []));
             var context = CreateTestContext();
             var searchResponse = CreateTestSearchResponse();
 
@@ -460,7 +460,7 @@ public class SemanticRagOrchestrationServiceTests
                     VectorDimensions: 1536,
                     SimilarityThreshold: 0.7,
                     MaxResults: 10,
-                    Properties: new Dictionary<string, object>()));
+                    Properties: []));
             var errorMessage = "Context retrieval failed";
 
             semanticRagService.GetContextAsync(question, options.RagConfig, Arg.Any<CancellationToken>())
@@ -503,7 +503,7 @@ public class SemanticRagOrchestrationServiceTests
             var relationships = new[] { relationship! }; // Null-forgiving: IsSuccess guarantees non-null
 
             var relationshipsList = relationships.Select(r => new EntityRelationship(r.Id, r.FromNodeId, r.ToNodeId, r.RelationshipType, 0.9, r.Properties.ToDictionary(kvp => kvp.Key, kvp => kvp.Value))).ToList();
-            return new SemanticContext("context-1", "Test Context", "A test context", documents, entities, relationshipsList, new Dictionary<string, object>(), DateTime.UtcNow);
+            return new SemanticContext("context-1", "Test Context", "A test context", documents, entities, relationshipsList, [], DateTime.UtcNow);
         }
 
         private static SemanticSearchResponse CreateTestSearchResponse()
@@ -533,9 +533,9 @@ public class SemanticRagOrchestrationServiceTests
 
             var results = new List<SearchResultItem>
             {
-                new SearchResultItem("result-1", "test content", score, new Dictionary<string, object>(), document.Id)
+                new SearchResultItem("result-1", "test content", score, [], document.Id)
             };
-            return new SemanticSearchResult("search-1", "query-1", results, document, 1L, TimeSpan.FromMilliseconds(100), new Dictionary<string, object>());
+            return new SemanticSearchResult("search-1", "query-1", results, document, 1L, TimeSpan.FromMilliseconds(100), []);
         }
     }
 
@@ -652,7 +652,7 @@ public class QuestionAnswerOptionsTests
             VectorDimensions: 1536,
             SimilarityThreshold: 0.7,
             MaxResults: 10,
-            Properties: new Dictionary<string, object>());
+            Properties: []);
         var maxContextDocuments = 10;
         var includeEntityContext = true;
         var includeRelationshipContext = true;

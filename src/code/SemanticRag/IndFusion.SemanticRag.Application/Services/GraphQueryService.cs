@@ -157,11 +157,11 @@ public class GraphQueryService : IGraphQueryService
                 return Result<IReadOnlyList<GraphNode>>.WithFailure(nodesResult.Error!);
             }
 
-            var graphNodes = (nodesResult.Value ?? new List<KnowledgeNode>()).Select(knowledgeNode => new GraphNode(
+            var graphNodes = (nodesResult.Value ?? []).Select(knowledgeNode => new GraphNode(
                 knowledgeNode.Id,
                 knowledgeNode.Label,
                 knowledgeNode.Properties,
-                new List<string> { knowledgeNode.Label }
+                [knowledgeNode.Label]
             )).ToList();
 
             _logger.LogDebug("Retrieved {Count} nodes of type {NodeType}", graphNodes.Count, nodeType);
@@ -215,7 +215,7 @@ public class GraphQueryService : IGraphQueryService
                 return Result<IReadOnlyList<GraphRelationship>>.WithFailure(relationshipsResult.Error!);
             }
 
-            var graphRelationships = (relationshipsResult.Value ?? new List<KnowledgeRelationship>()).Select(rel => new GraphRelationship(
+            var graphRelationships = (relationshipsResult.Value ?? []).Select(rel => new GraphRelationship(
                 rel.Id,
                 rel.RelationshipType,
                 rel.FromNodeId,
@@ -299,7 +299,7 @@ public class GraphQueryService : IGraphQueryService
             {
                 foreach (var node in nodesResult.Value)
                 {
-                    visitedNodes.Add(new GraphNode(node.Id, node.Label, node.Properties, new List<string> { node.Label }));
+                    visitedNodes.Add(new GraphNode(node.Id, node.Label, node.Properties, [node.Label]));
                 }
             }
 
@@ -411,7 +411,7 @@ public class GraphQueryService : IGraphQueryService
                     node.Id,
                     node.Label,
                     node.Properties,
-                    new List<string> { node.Label }
+                    [node.Label]
                 )).ToList();
 
                 var pathRelationships = relationshipsResult.IsSuccess && relationshipsResult.Value != null
@@ -422,7 +422,7 @@ public class GraphQueryService : IGraphQueryService
                         rel.ToNodeId,
                         rel.Properties
                     )).ToList()
-                    : new List<GraphRelationship>();
+                    : [];
 
                 var path = new GraphPath(pathNodes, pathRelationships, pathRelationships.Count);
                 

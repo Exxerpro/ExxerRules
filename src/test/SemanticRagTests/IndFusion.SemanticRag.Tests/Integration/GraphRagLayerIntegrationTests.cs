@@ -71,7 +71,7 @@ public class UserService
         var suggestionOptions = new PatternSuggestionOptions(
             MaxSuggestions: 5,
             MinConfidence: 0.6f,
-            Categories: new List<string> { "Design Patterns" },
+            Categories: ["Design Patterns"],
             IncludeCodeExamples: true,
             IncludeEffortEstimate: true
         );
@@ -129,7 +129,7 @@ public class UserService
         relationshipsByTypeResult.Value.ShouldNotBeNull();
 
         // Step 11: Traverse graph
-        var traverseResult = await graphQueryService.TraverseAsync("user-service-node", 3, new List<string> { "DEPENDS_ON" }, CancellationToken.None);
+        var traverseResult = await graphQueryService.TraverseAsync("user-service-node", 3, ["DEPENDS_ON"], CancellationToken.None);
         traverseResult.IsSuccess.ShouldBeTrue();
         traverseResult.Value.ShouldNotBe<GraphTraversalResult>(default);
 
@@ -221,7 +221,7 @@ namespace MyApp.Services
         var suggestionOptions = new PatternSuggestionOptions(
             MaxSuggestions: 10,
             MinConfidence: 0.5f,
-            Categories: new List<string> { "Design Patterns", "Best Practices", "Error Handling" },
+            Categories: ["Design Patterns", "Best Practices", "Error Handling"],
             IncludeCodeExamples: true,
             IncludeEffortEstimate: true
         );
@@ -459,18 +459,18 @@ public class IntegrationTestFixture : IDisposable
     {
         // Setup mock responses for common queries
         mockPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>
-            {
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(
+            [
                 new(
                     Id: "test-node",
                     Label: "CodeNode",
                     Properties: new Dictionary<string, object> { ["name"] = "TestNode" },
                     CreatedAt: DateTimeOffset.UtcNow,
                     UpdatedAt: DateTimeOffset.UtcNow)
-            }));
+            ]));
 
         mockPort.QueryRelationshipsAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(new List<KnowledgeRelationship>()));
+            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
 
         mockPort.GetNodeCountAsync(Arg.Any<CancellationToken>())
             .Returns(Result<int>.Success(1000));

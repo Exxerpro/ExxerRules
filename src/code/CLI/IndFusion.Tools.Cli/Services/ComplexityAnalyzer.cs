@@ -8,7 +8,7 @@ public class ComplexityAnalyzer : CSharpSyntaxWalker
     /// <summary>
     /// Gets the list of complex methods
     /// </summary>
-    public List<ComplexMethod> ComplexMethods { get; } = new();
+    public List<ComplexMethod> ComplexMethods { get; } = [];
 
     /// <summary>
     /// Visits a method declaration

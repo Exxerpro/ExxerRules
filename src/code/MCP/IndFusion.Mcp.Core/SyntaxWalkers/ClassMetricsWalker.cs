@@ -9,7 +9,7 @@ namespace IndFusion.Mcp.Core.SyntaxWalkers;
 public class ClassMetricsWalker : CSharpSyntaxWalker
 {
     /// <summary>Collected suggestions derived from class metrics.</summary>
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     /// <summary>
     /// Visits class declarations and records metrics such as member count and line span.

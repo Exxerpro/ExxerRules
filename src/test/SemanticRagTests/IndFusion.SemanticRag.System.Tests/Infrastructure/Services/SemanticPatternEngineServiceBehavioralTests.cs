@@ -477,7 +477,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.EnforcePatternsAsync(null!, new[] { "SOLID" }, TestContext.Current.CancellationToken));
+            await service.EnforcePatternsAsync(null!, ["SOLID"], TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -492,7 +492,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.EnforcePatternsAsync(string.Empty, new[] { "SOLID" }, TestContext.Current.CancellationToken));
+            await service.EnforcePatternsAsync(string.Empty, ["SOLID"], TestContext.Current.CancellationToken));
     }
 
     /// <summary>

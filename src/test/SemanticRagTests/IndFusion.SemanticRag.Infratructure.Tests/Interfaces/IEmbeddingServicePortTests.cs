@@ -32,7 +32,7 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
         return new EmbeddingRequest
         {
             Text = null!, // Invalid: null text
-            Metadata = new Dictionary<string, object>()
+            Metadata = []
         };
     }
 

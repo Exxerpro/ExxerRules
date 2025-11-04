@@ -9,7 +9,7 @@ namespace IndFusion.Mcp.Tests.TestInfrastructure;
 public static class TestSolutionFactory
 {
     private static readonly Lazy<string> _testSolutionPath = new(() => CreateTestSolution());
-    private static readonly ConcurrentBag<string> _tempDirectories = new();
+    private static readonly ConcurrentBag<string> _tempDirectories = [];
     private static readonly object _cleanupLock = new();
 
     /// <summary>

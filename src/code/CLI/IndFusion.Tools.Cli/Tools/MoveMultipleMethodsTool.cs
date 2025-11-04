@@ -28,7 +28,7 @@ public static partial class MoveMultipleMethodsTool
             var key = $"{sourceClasses[i]}.{methodNames[i]}";
             if (!map.TryGetValue(key, out var method))
             {
-                deps[key] = new HashSet<string>();
+                deps[key] = [];
                 continue;
             }
 

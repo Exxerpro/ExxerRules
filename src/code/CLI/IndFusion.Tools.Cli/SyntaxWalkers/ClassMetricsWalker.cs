@@ -2,7 +2,7 @@ namespace IndFusion.Tools.Cli.SyntaxWalkers;
 
 internal class ClassMetricsWalker : CSharpSyntaxWalker
 {
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     public override void VisitClassDeclaration(ClassDeclarationSyntax node)
     {

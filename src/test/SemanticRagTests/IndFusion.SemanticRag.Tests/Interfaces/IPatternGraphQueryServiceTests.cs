@@ -40,8 +40,8 @@ public class IPatternGraphQueryServiceTests
             TimeoutMs: 30000);
 
         var expectedResult = new PatternGraphResult(
-            Patterns: new List<PatternDefinition>
-            {
+            Patterns:
+            [
                 new(
                     Id: "singleton",
                     Name: "Singleton Pattern",
@@ -49,10 +49,10 @@ public class IPatternGraphQueryServiceTests
                     Category: "Design Patterns",
                     Severity: PatternSeverity.Info,
                     Pattern: "class.*Singleton",
-                    Tags: new List<string> { "creational" })
-            },
-            Relationships: new List<PatternRelationship>
-            {
+                    Tags: ["creational"])
+            ],
+            Relationships:
+            [
                 new(
                     Id: "rel1",
                     Type: "RELATED_TO",
@@ -60,7 +60,7 @@ public class IPatternGraphQueryServiceTests
                     TargetPatternId: "factory",
                     Properties: new Dictionary<string, object>(),
                     Strength: 0.8f)
-            },
+            ],
             ExecutionTimeMs: 150,
             TotalResults: 1,
             HasMoreResults: false);
@@ -160,7 +160,7 @@ public class IPatternGraphQueryServiceTests
         var maxDepth = 3;
 
         _mockPatternGraphQueryService.FindPatternRelationshipsAsync(patternId, maxDepth, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<PatternRelationship>>.Success(new List<PatternRelationship>()));
+            .Returns(Result<IReadOnlyList<PatternRelationship>>.Success([]));
 
         // Act
         var result = await _mockPatternGraphQueryService.FindPatternRelationshipsAsync(patternId, maxDepth, CancellationToken.None);
@@ -187,12 +187,12 @@ public class IPatternGraphQueryServiceTests
                 PatternId: "factory",
                 SimilarityScore: 0.85f,
                 SimilarityType: "structural",
-                CommonElements: new List<string> { "creational", "object-creation" }),
+                CommonElements: ["creational", "object-creation"]),
             new(
                 PatternId: "builder",
                 SimilarityScore: 0.75f,
                 SimilarityType: "semantic",
-                CommonElements: new List<string> { "creational" })
+                CommonElements: ["creational"])
         };
 
         _mockPatternGraphQueryService.FindSimilarPatternsAsync(patternId, similarityThreshold, maxResults, Arg.Any<CancellationToken>())
@@ -223,7 +223,7 @@ public class IPatternGraphQueryServiceTests
         var maxResults = 10;
 
         _mockPatternGraphQueryService.FindSimilarPatternsAsync(patternId, similarityThreshold, maxResults, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<PatternSimilarity>>.Success(new List<PatternSimilarity>()));
+            .Returns(Result<IReadOnlyList<PatternSimilarity>>.Success([]));
 
         // Act
         var result = await _mockPatternGraphQueryService.FindSimilarPatternsAsync(patternId, similarityThreshold, maxResults, CancellationToken.None);
@@ -350,7 +350,7 @@ public class IPatternGraphQueryServiceTests
         var severity = PatternSeverity.Error;
 
         _mockPatternGraphQueryService.FindAntiPatternsAsync(category, severity, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<AntiPatternViolation>>.Success(new List<AntiPatternViolation>()));
+            .Returns(Result<IReadOnlyList<AntiPatternViolation>>.Success([]));
 
         // Act
         var result = await _mockPatternGraphQueryService.FindAntiPatternsAsync(category, severity, CancellationToken.None);
@@ -443,7 +443,7 @@ public class IPatternGraphQueryServiceTests
         var patternId = "new-pattern";
 
         _mockPatternGraphQueryService.GetPatternEvolutionAsync(patternId, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<PatternEvolution>>.Success(new List<PatternEvolution>()));
+            .Returns(Result<IReadOnlyList<PatternEvolution>>.Success([]));
 
         // Act
         var result = await _mockPatternGraphQueryService.GetPatternEvolutionAsync(patternId, CancellationToken.None);
@@ -512,8 +512,8 @@ public class IPatternGraphQueryServiceTests
             TimeoutMs: 30000);
 
         var expectedResult = new PatternGraphResult(
-            Patterns: new List<PatternDefinition>(),
-            Relationships: new List<PatternRelationship>(),
+            Patterns: [],
+            Relationships: [],
             ExecutionTimeMs: 100,
             TotalResults: 0,
             HasMoreResults: false);

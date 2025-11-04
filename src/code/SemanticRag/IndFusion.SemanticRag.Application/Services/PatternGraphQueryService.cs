@@ -79,7 +79,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                     Category: node.GetProperty<string>("category") ?? "Unknown",
                     Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
                     Pattern: node.GetProperty<string>("pattern") ?? "",
-                    Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
+                    Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? [],
                     IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
                     CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
                     UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
@@ -172,7 +172,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                 return Result<IReadOnlyList<PatternRelationship>>.WithFailure(relationshipsResult.Error!);
             }
 
-            var patternRelationships = (relationshipsResult.Value ?? new List<KnowledgeRelationship>()).Select(rel => new PatternRelationship(
+            var patternRelationships = (relationshipsResult.Value ?? []).Select(rel => new PatternRelationship(
                 Id: rel.Id,
                 Type: rel.RelationshipType,
                 SourcePatternId: rel.FromNodeId,
@@ -258,7 +258,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
 
             var similarities = new List<PatternSimilarity>();
 
-            foreach (var node in nodesResult.Value ?? new List<KnowledgeNode>())
+            foreach (var node in nodesResult.Value ?? [])
             {
                 var targetPattern = new PatternDefinition(
                     Id: node.GetProperty<string>("id") ?? node.Id,
@@ -267,7 +267,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                     Category: node.GetProperty<string>("category") ?? "Unknown",
                     Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
                     Pattern: node.GetProperty<string>("pattern") ?? "",
-                    Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
+                    Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? [],
                     IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
                     CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
                     UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")
@@ -431,7 +431,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
 
             var violations = new List<AntiPatternViolation>();
 
-            foreach (var node in nodesResult.Value ?? new List<KnowledgeNode>())
+            foreach (var node in nodesResult.Value ?? [])
             {
                 var antiPatternId = node.GetProperty<string>("antiPatternId") ?? node.Id;
                 var antiPatternName = node.GetProperty<string>("antiPatternName") ?? "Unknown Anti-Pattern";
@@ -510,7 +510,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
                 return Result<IReadOnlyList<PatternEvolution>>.WithFailure(nodesResult.Error!);
             }
 
-            var evolutionHistory = (nodesResult.Value ?? new List<KnowledgeNode>()).Select(node => new PatternEvolution(
+            var evolutionHistory = (nodesResult.Value ?? []).Select(node => new PatternEvolution(
                 PatternId: patternId,
                 Version: node.GetProperty<string>("version") ?? "1.0",
                 ChangeType: Enum.TryParse<PatternChangeType>(node.GetProperty<string>("changeType"), out var changeType) ? changeType : PatternChangeType.Updated,
@@ -560,7 +560,7 @@ public class PatternGraphQueryService : IPatternGraphQueryService
             Category: node.GetProperty<string>("category") ?? "Unknown",
             Severity: Enum.TryParse<PatternSeverity>(node.GetProperty<string>("severity"), out var severity) ? severity : PatternSeverity.Info,
             Pattern: node.GetProperty<string>("pattern") ?? "",
-            Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? new List<string>(),
+            Tags: node.GetProperty<IReadOnlyList<string>>("tags") ?? [],
             IsEnabled: node.GetProperty<bool?>("isEnabled") ?? true,
             CreatedAt: node.GetProperty<DateTimeOffset?>("createdAt"),
             UpdatedAt: node.GetProperty<DateTimeOffset?>("updatedAt")

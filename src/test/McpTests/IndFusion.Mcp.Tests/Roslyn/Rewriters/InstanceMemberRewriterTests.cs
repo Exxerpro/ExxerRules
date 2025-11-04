@@ -10,7 +10,7 @@ public partial class RoslynTransformationTests
     public void InstanceMemberRewriter_QualifiesMembers()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void Test(){ Value = 1; }") as MethodDeclarationSyntax;
-        var rewriter = new InstanceMemberRewriter("inst", new HashSet<string> { "Value" });
+        var rewriter = new InstanceMemberRewriter("inst", ["Value"]);
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("inst.Value", result);
     }
@@ -20,7 +20,7 @@ public partial class RoslynTransformationTests
     public void InstanceMemberRewriter_QualifiesThisMember()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void Test(){ var x = this.Value; }") as MethodDeclarationSyntax;
-        var rewriter = new InstanceMemberRewriter("inst", new HashSet<string> { "Value" });
+        var rewriter = new InstanceMemberRewriter("inst", ["Value"]);
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("inst.Value", result);
         Assert.DoesNotContain("this.Value", result);
@@ -47,7 +47,7 @@ public partial class RoslynTransformationTests
     public void InstanceMemberRewriter_QualifiesBasePropertyAccess()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void Test(){ var n = base.Value; }") as MethodDeclarationSyntax;
-        var rewriter = new InstanceMemberRewriter("inst", new HashSet<string> { "Value" });
+        var rewriter = new InstanceMemberRewriter("inst", ["Value"]);
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("inst.Value", result);
         Assert.DoesNotContain("base.Value", result);
@@ -58,7 +58,7 @@ public partial class RoslynTransformationTests
     public void InstanceMemberRewriter_IgnoresPropertyPatternNames()
     {
         var method = SyntaxFactory.ParseMemberDeclaration("void Test(){ if(this is { Value: > 0 }) { } }") as MethodDeclarationSyntax;
-        var rewriter = new InstanceMemberRewriter("inst", new HashSet<string> { "Value" });
+        var rewriter = new InstanceMemberRewriter("inst", ["Value"]);
         var result = rewriter.Visit(method!)!.NormalizeWhitespace().ToFullString();
         Assert.Contains("this is { Value: > 0 }", result);
         Assert.DoesNotContain("inst.Value", result);

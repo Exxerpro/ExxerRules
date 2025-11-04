@@ -314,7 +314,7 @@ public static class MoveMethodAst
         instanceMembers.UnionWith(GetImplicitInstanceMembers(method));
         var methodNames = GetMethodNames(originClass);
         var privateFieldInfos = GetPrivateFieldInfos(originClass);
-        var usedPrivateFields = GetUsedPrivateFields(method, new HashSet<string>(privateFieldInfos.Keys));
+        var usedPrivateFields = GetUsedPrivateFields(method, [.. privateFieldInfos.Keys]);
 
         var membersForAnalysis = new HashSet<string>(instanceMembers);
         foreach (var f in usedPrivateFields)
@@ -582,9 +582,9 @@ public static class MoveMethodAst
 
         if (isRecursive)
         {
-            var recursiveCallRewriter = new MethodCallRewriter(new HashSet<string> { methodName }, parameterName);
+            var recursiveCallRewriter = new MethodCallRewriter([methodName], parameterName);
             method = (MethodDeclarationSyntax)recursiveCallRewriter.Visit(method)!;
-            var recursiveRefRewriter = new MethodReferenceRewriter(new HashSet<string> { methodName }, parameterName);
+            var recursiveRefRewriter = new MethodReferenceRewriter([methodName], parameterName);
             method = (MethodDeclarationSyntax)recursiveRefRewriter.Visit(method)!;
         }
 

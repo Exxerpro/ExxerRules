@@ -56,8 +56,8 @@ public class IKnowledgeGraphServicePortTests
         // Arrange
         var entities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+            new("entity-1", "Entity 1", "Person", "First entity", [], 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", [], 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphService.CreateEntitiesAsync(entities, CancellationToken.None)
@@ -135,7 +135,7 @@ public class IKnowledgeGraphServicePortTests
             Name: "Test Entity",
             Type: "Person",
             Description: "A test entity",
-            Properties: new Dictionary<string, object>(),
+            Properties: [],
             Confidence: 0.9,
             CreatedAt: DateTime.UtcNow
         );
@@ -186,8 +186,8 @@ public class IKnowledgeGraphServicePortTests
         var entityIds = new List<string> { "entity-1", "entity-2" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-1", "Entity 1", "Person", "First entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-2", "Entity 2", "Organization", "Second entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+            new("entity-1", "Entity 1", "Person", "First entity", [], 0.9, DateTime.UtcNow),
+            new("entity-2", "Entity 2", "Organization", "Second entity", [], 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphService.GetEntitiesAsync(entityIds, CancellationToken.None)
@@ -303,8 +303,8 @@ public class IKnowledgeGraphServicePortTests
         var relationshipTypes = new List<string> { "WORKS_FOR", "MANAGES" };
         var expectedEntities = new List<KnowledgeEntity>
         {
-            new("entity-2", "Connected Entity 1", "Person", "Connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow),
-            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", new Dictionary<string, object>(), 0.9, DateTime.UtcNow)
+            new("entity-2", "Connected Entity 1", "Person", "Connected entity", [], 0.9, DateTime.UtcNow),
+            new("entity-3", "Connected Entity 2", "Organization", "Another connected entity", [], 0.9, DateTime.UtcNow)
         };
 
         _mockKnowledgeGraphService.FindConnectedEntitiesAsync(entityId, relationshipTypes, 2, CancellationToken.None)
@@ -332,17 +332,17 @@ public class IKnowledgeGraphServicePortTests
         var expectedPaths = new List<GraphPath>
         {
             new(
-                Nodes: new List<GraphNode>
-                {
-                    new("entity-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" }),
-                    new("entity-2", "Organization", new Dictionary<string, object>(), new List<string> { "Organization" }),
-                    new("entity-3", "Person", new Dictionary<string, object>(), new List<string> { "Person" })
-                },
-                Relationships: new List<GraphRelationship>
-                {
+                Nodes:
+                [
+                    new("entity-1", "Person", new Dictionary<string, object>(), ["Person"]),
+                    new("entity-2", "Organization", new Dictionary<string, object>(), ["Organization"]),
+                    new("entity-3", "Person", new Dictionary<string, object>(), ["Person"])
+                ],
+                Relationships:
+                [
                     new("rel-1", "entity-1", "entity-2", "WORKS_FOR", new Dictionary<string, object>()),
                     new("rel-2", "entity-2", "entity-3", "MANAGES", new Dictionary<string, object>())
-                },
+                ],
                 Length: 2,
                 Weight: 2.0
             )
@@ -520,7 +520,7 @@ public class IKnowledgeGraphServicePortTests
     {
         // Arrange
         var expectedEntities = Enumerable.Range(0, Math.Min(limit, 10))
-            .Select(i => new KnowledgeEntity($"entity-{i}", $"Entity {i}", entityType, $"Description {i}", new Dictionary<string, object>(), 0.9, DateTime.UtcNow))
+            .Select(i => new KnowledgeEntity($"entity-{i}", $"Entity {i}", entityType, $"Description {i}", [], 0.9, DateTime.UtcNow))
             .ToList();
 
         _mockKnowledgeGraphService.SearchEntitiesAsync(entityType, null, limit, CancellationToken.None)

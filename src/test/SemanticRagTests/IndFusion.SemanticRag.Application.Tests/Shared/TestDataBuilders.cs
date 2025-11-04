@@ -42,7 +42,7 @@ public static class TestDataBuilders
             name: "John Doe",
             type: "Person",
             description: "Test entity description",
-            properties: new Dictionary<string, object>(),
+            properties: [],
             confidence: 0.9,
             createdAt: DateTime.UtcNow);
     }
@@ -194,7 +194,7 @@ public static class TestDataBuilders
             id: null!, // Invalid: null ID
             title: "Test Document",
             content: "Test semantic document content",
-            metadata: new Dictionary<string, object>(),
+            metadata: [],
             createdAt: DateTime.UtcNow,
             updatedAt: DateTime.UtcNow);
     }

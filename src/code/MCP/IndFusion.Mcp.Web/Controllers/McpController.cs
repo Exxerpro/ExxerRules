@@ -74,14 +74,14 @@ public class McpController : ControllerBase
 
             return Ok(new McpToolCallResponse
             {
-                Content = new List<McpContent>
-                {
+                Content =
+                [
                     new McpContent
                     {
                         Type = "text",
                         Text = responseText
                     }
-                }
+                ]
             });
         }
         catch (Exception ex)

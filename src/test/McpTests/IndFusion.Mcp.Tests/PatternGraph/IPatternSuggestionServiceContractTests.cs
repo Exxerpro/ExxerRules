@@ -43,7 +43,7 @@ public class IPatternSuggestionServiceContractTests
 				Confidence: 0.85,
 				Effort: "Low",
 				Benefits: new[] { "Improved readability", "Better maintainability" },
-				Citations: new List<PatternCitation>())
+				Citations: [])
 		};
 
 		_mockService.SuggestAsync(request, _cancellationToken)
@@ -93,7 +93,7 @@ public class IPatternSuggestionServiceContractTests
 			Confidence: 0.85,
 			Effort: "Low",
 			Benefits: new[] { "Improved readability", "Better maintainability" },
-			Citations: new List<PatternCitation>());
+			Citations: []);
 
 		_mockService.GetSuggestionAsync(patternId, _cancellationToken)
 			.Returns(Result<PatternSuggestion>.Success(expectedSuggestion));

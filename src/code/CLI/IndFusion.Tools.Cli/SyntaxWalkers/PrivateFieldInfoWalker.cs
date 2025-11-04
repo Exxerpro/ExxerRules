@@ -2,7 +2,7 @@ namespace IndFusion.Tools.Cli.SyntaxWalkers;
 
 internal class PrivateFieldInfoWalker : CSharpSyntaxWalker
 {
-    public Dictionary<string, TypeSyntax> Infos { get; } = new();
+    public Dictionary<string, TypeSyntax> Infos { get; } = [];
 
     public override void VisitFieldDeclaration(FieldDeclarationSyntax node)
     {

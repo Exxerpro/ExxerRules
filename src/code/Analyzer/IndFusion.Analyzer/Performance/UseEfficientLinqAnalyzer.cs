@@ -265,7 +265,7 @@ public sealed class UseEfficientLinqAnalyzer : DiagnosticAnalyzer
         var key = new EnumerationTarget(targetSymbol, targetExpression.ToString());
         if (!enumerations.TryGetValue(key, out var list))
         {
-            list = new List<InvocationExpressionSyntax>();
+            list = [];
             enumerations.Add(key, list);
         }
 

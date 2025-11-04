@@ -55,7 +55,7 @@ public class GraphQueryServiceTests
         _knowledgeGraphPort.QueryNodesAsync(query, parameters, Arg.Any<CancellationToken>())
             .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(expectedNodes));
         _knowledgeGraphPort.QueryRelationshipsAsync(query, parameters, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(new List<KnowledgeRelationship>()));
+            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
 
         // Act
         var result = await _graphQueryService.ExecuteQueryAsync(query, parameters, CancellationToken.None);
@@ -416,9 +416,9 @@ public class GraphQueryServiceTests
         var maxDepth = 5;
 
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>()));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([]));
         _knowledgeGraphPort.QueryRelationshipsAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(new List<KnowledgeRelationship>()));
+            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
 
         // Act
         var result = await _graphQueryService.FindShortestPathAsync(startNodeId, endNodeId, maxDepth, CancellationToken.None);
@@ -461,9 +461,9 @@ public class GraphQueryServiceTests
         _knowledgeGraphPort.GetRelationshipCountAsync(Arg.Any<CancellationToken>())
             .Returns(Result<int>.Success(relationshipCount));
         _knowledgeGraphPort.QueryNodesAsync(Arg.Any<string>(), null, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>()));
+            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success([]));
         _knowledgeGraphPort.QueryRelationshipsAsync(Arg.Any<string>(), null, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(new List<KnowledgeRelationship>()));
+            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
 
         // Act
         var result = await _graphQueryService.GetStatisticsAsync(CancellationToken.None);
@@ -563,7 +563,7 @@ public class GraphQueryServiceTests
         _knowledgeGraphPort.QueryNodesAsync(query, null, Arg.Any<CancellationToken>())
             .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(expectedNodes));
         _knowledgeGraphPort.QueryRelationshipsAsync(query, null, Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success(new List<KnowledgeRelationship>()));
+            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
 
         // Act
         var result = await _graphQueryService.ExecuteQueryAsync(query, null, CancellationToken.None);

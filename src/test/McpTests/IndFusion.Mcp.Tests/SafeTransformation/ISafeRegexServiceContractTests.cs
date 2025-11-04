@@ -46,11 +46,11 @@ public class ISafeRegexServiceContractTests
                 Pattern: request.Pattern,
                 Replacement: request.Replacement
             ),
-            ValidationResults: new List<ValidationResult>
-            {
-                new("PatternValidation", true, "Pattern is valid", new Dictionary<string, object>()),
-                new("BuildValidation", true, "Build succeeded", new Dictionary<string, object>())
-            },
+            ValidationResults:
+            [
+                new("PatternValidation", true, "Pattern is valid", []),
+                new("BuildValidation", true, "Build succeeded", [])
+            ],
             DiffPreview: "Preview of changes...",
             ModifiedFiles: new[] { "TestFile.cs" },
             ExecutionTimeMs: 1500

@@ -35,7 +35,7 @@ public class ExxerFactoringServiceTests
         var request = new ExxerFactoringRequest(
             "test-tool",
             "/path/to/solution.sln",
-            new Dictionary<string, object>()
+            []
         );
 
         // Act
@@ -273,7 +273,7 @@ namespace TestNamespace
         var request = new ExxerFactoringRequest(
             toolName ?? string.Empty,
             "/path/to/solution.sln",
-            new Dictionary<string, object>()
+            []
         );
 
         // Act
@@ -294,7 +294,7 @@ namespace TestNamespace
         var request = new ExxerFactoringRequest(
             "test-tool",
             "/path/to/solution.sln",
-            new Dictionary<string, object>()
+            []
         );
 
         var result = await _service.ExecuteExxerFactoringAsync(request, cancellationToken: Xunit.TestContext.Current.CancellationToken);

@@ -188,7 +188,7 @@ public static class PatternGraphQueryTool
 
             // Format the response
             var response = new PatternRelationshipResponse(
-                Relationships: result.Value ?? new List<PatternRelationship>(),
+                Relationships: result.Value ?? [],
                 TotalRelationships: result.Value?.Count ?? 0,
                 PatternId: patternId,
                 MaxDepth: maxDepth
@@ -277,7 +277,7 @@ public static class PatternGraphQueryTool
 
             // Format the response
             var response = new PatternSimilarityResponse(
-                Similarities: result.Value ?? new List<PatternSimilarity>(),
+                Similarities: result.Value ?? [],
                 TotalSimilarities: result.Value?.Count ?? 0,
                 PatternId: patternId,
                 SimilarityThreshold: similarityThreshold

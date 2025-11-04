@@ -11,7 +11,7 @@ public class MethodMetricsWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel? _model;
     /// <summary>Collected suggestions derived from method metrics.</summary>
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     /// <summary>
     /// Initializes a new instance using an optional semantic model for symbol analysis.

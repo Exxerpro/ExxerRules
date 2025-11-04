@@ -3,7 +3,7 @@ namespace IndFusion.Tools.Cli.SyntaxWalkers;
 internal class MethodMetricsWalker : CSharpSyntaxWalker
 {
     private readonly SemanticModel? _model;
-    public List<string> Suggestions { get; } = new();
+    public List<string> Suggestions { get; } = [];
 
     public MethodMetricsWalker(SemanticModel? model)
     {

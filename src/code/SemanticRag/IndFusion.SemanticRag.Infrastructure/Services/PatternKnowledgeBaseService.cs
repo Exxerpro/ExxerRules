@@ -32,7 +32,7 @@ public class PatternKnowledgeBaseService : IPatternKnowledgeBase
         // TODO: Implement pattern matching logic
         await Task.Delay(100, cancellationToken); // Placeholder
         
-        return new List<PatternMatch>();
+        return [];
     }
 
     /// <inheritdoc />
@@ -79,7 +79,7 @@ public class PatternKnowledgeBaseService : IPatternKnowledgeBase
         // TODO: Implement pattern retrieval logic
         await Task.Delay(100, cancellationToken); // Placeholder
         
-        return new List<PatternDefinition>();
+        return [];
     }
 
     /// <inheritdoc />

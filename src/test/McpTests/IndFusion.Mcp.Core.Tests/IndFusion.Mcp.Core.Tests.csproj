@@ -81,10 +81,10 @@
 	<PackageReference Include="NSubstitute" />
 	<PackageReference Include="Shouldly" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+  </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
-  <ItemGroup>
-	<ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
-  </ItemGroup>
 </Project>

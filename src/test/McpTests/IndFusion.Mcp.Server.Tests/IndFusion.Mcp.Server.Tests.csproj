@@ -60,11 +60,12 @@
 	  <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
+    <ProjectReference Include="..\..\..\code\Mcp\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
+  </ItemGroup>
+
 	<!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
-  <ItemGroup>
-    <ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Server\IndFusion.Mcp.Server.csproj" />
-    <ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
-  </ItemGroup>
 </Project>

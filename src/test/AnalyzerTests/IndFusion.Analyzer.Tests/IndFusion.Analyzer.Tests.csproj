@@ -61,12 +61,11 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" />
 
 	</ItemGroup>
-
-	<ItemGroup>
-	<ProjectReference Include="..\..\code\IndFusion.Analyzer\IndFusion.Analyzer.csproj" />
-	<ProjectReference Include="..\..\code\IndFusion.Fixer\IndFusion.Fixer.csproj" />
-  </ItemGroup>
   <ItemGroup>
     <Folder Include="TestCases\Operations\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\code\Analyzer\IndFusion.Analyzer\IndFusion.Analyzer.csproj" />
+    <ProjectReference Include="..\..\..\code\Analyzer\IndFusion.Fixer\IndFusion.Fixer.csproj" />
   </ItemGroup>
 </Project>

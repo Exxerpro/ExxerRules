@@ -82,9 +82,6 @@
   <!-- ===================================================================== -->
   <!-- Project References                                                     -->
   <!-- ===================================================================== -->
-  <ItemGroup>
-    <ProjectReference Include="..\..\code\MCP\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
-  </ItemGroup>
   <!-- ===================================================================== -->
   <!-- Build Configuration                                                    -->
   <!-- ===================================================================== -->
@@ -117,5 +114,8 @@
   <ItemGroup>
     <Folder Include="Architecture\" />
     <Folder Include="PatternGraph\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>
 </Project>

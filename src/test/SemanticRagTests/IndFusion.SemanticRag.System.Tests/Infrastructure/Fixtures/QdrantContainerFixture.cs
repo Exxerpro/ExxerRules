@@ -98,7 +98,9 @@ public sealed class QdrantContainerFixture : IAsyncLifetime
                 ApiKey = null
             };
 
-            Client = new QdrantClient(Options.Host, Options.Port);
+            // QdrantClient uses gRPC which requires the gRPC port (6334), not the HTTP port (6333)
+            // Use GrpcPort instead of HTTP port to avoid HTTP/2 protocol errors
+            Client = new QdrantClient(_container.Hostname, GrpcPort);
 
             _logger.LogInformation("✅ Qdrant container started - HTTP: {HttpEndpoint}, gRPC: {GrpcEndpoint}",
                 HttpEndpoint, GrpcEndpoint);
@@ -131,6 +133,7 @@ public sealed class QdrantContainerFixture : IAsyncLifetime
     /// <summary>
     /// Asynchronously disposes of the Qdrant container resources.
     /// Ensures proper cleanup of Docker containers and client connections.
+    /// Explicitly stops containers before disposal to prevent resource leaks.
     /// </summary>
     /// <returns>A ValueTask representing the asynchronous disposal operation</returns>
     public async ValueTask DisposeAsync()
@@ -139,13 +142,43 @@ public sealed class QdrantContainerFixture : IAsyncLifetime
         {
             _logger.LogInformation("🧹 Cleaning up Qdrant container...");
 
-            Client?.Dispose();
+            // Dispose client first
+            if (Client != null)
+            {
+                Client.Dispose();
+                Client = null;
+                _logger.LogInformation("✅ Qdrant client disposed");
+            }
 
+            // Explicitly stop and dispose container
             if (_container != null)
             {
-                await _container.DisposeAsync();
-                _logger.LogInformation("✅ Qdrant container cleaned up successfully");
+                try
+                {
+                    // Stop the container first (ensures proper cleanup)
+                    await _container.StopAsync();
+                    _logger.LogInformation("✅ Qdrant container stopped");
+                }
+                catch (Exception stopEx)
+                {
+                    _logger.LogWarning(stopEx, "⚠️ Error stopping Qdrant container (non-fatal, will attempt disposal)");
+                }
+
+                try
+                {
+                    // Dispose the container (removes it)
+                    await _container.DisposeAsync();
+                    _logger.LogInformation("✅ Qdrant container disposed");
+                }
+                catch (Exception disposeEx)
+                {
+                    _logger.LogWarning(disposeEx, "⚠️ Error disposing Qdrant container (non-fatal)");
+                }
+
+                _container = null;
             }
+
+            _logger.LogInformation("✅ Qdrant container cleanup completed");
         }
         catch (Exception ex)
         {

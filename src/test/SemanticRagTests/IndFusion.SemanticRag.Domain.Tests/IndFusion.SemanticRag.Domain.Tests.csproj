@@ -1,41 +1,116 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- CORE PROPERTIES -->
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <OutputType>Exe</OutputType>
-    <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-
+    <RootNamespace>IndFusion.SemanticRag.Domain.Tests</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" />
+  <!-- TESTING PLATFORM PROPERTIES -->
+  <PropertyGroup>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    <TestingPlatformServer>true</TestingPlatformServer>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- CORE TESTING -->
+  <ItemGroup Label="Core Testing">
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
+  </ItemGroup>
+
+  <!-- TESTING UTILITIES -->
+  <ItemGroup Label="Testing Utilities">
+    <PackageReference Include="NSubstitute" />
+    <PackageReference Include="Shouldly" />
+    <PackageReference Include="IndQuestResults" />
+    <PackageReference Include="NSubstitute.Analyzers.CSharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- LOGGING -->
+  <ItemGroup Label="Logging">
+    <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
+  </ItemGroup>
+
+  <!-- CODE ANALYSIS -->
+  <ItemGroup Label="Code Analysis">
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <!-- MICROSOFT TESTING PLATFORM -->
+  <ItemGroup Label="Microsoft Testing Platform">
+    <PackageReference Include="Microsoft.Testing.Platform" />
+    <PackageReference Include="Microsoft.Testing.Platform.MSBuild" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
+    <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
+  </ItemGroup>
+
+  <!-- XUNIT V3 FRAMEWORK -->
+  <ItemGroup Label="xUnit v3">
     <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.v3.core" />
     <PackageReference Include="xunit.runner.visualstudio">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="NSubstitute" />
-    <PackageReference Include="Shouldly" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
-    <PackageReference Include="Microsoft.Extensions.Options" />
-    <PackageReference Include="Neo4j.Driver" />
-    <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
+    <PackageReference Include="xunit.v3.runner.inproc.console" />
+    <PackageReference Include="xunit.v3.runner.msbuild">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
+  <!-- PROJECT CAPABILITIES -->
+  <ItemGroup Label="Testing Platform Capabilities">
+    <ProjectCapability Include="DiagnoseCapabilities" />
+    <ProjectCapability Include="TestingPlatformServer" />
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <!-- PROJECT REFERENCES -->
   <ItemGroup>
     <ProjectReference Include="..\..\..\code\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- DOMAIN DEPENDENCIES -->
+  <ItemGroup Label="Domain Dependencies">
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="Neo4j.Driver" />
+  </ItemGroup>
+
+  <!-- GLOBAL USINGS -->
+  <ItemGroup Label="Global Usings">
+    <!-- Testing Framework -->
     <Using Include="Xunit" />
+    <Using Include="NSubstitute" />
     <Using Include="Shouldly" />
     <Using Include="IndQuestResults" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    
+    <!-- System Namespaces -->
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Text" />
+    <Using Include="System.IO" />
   </ItemGroup>
 
 </Project>

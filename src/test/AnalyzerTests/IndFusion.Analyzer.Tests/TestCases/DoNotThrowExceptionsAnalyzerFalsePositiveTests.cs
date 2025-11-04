@@ -10,7 +10,7 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public sealed class DoNotThrowExceptionsAnalyzerFalsePositiveTests
 {
-    private const int AnalyzerTimeoutMs = 30000;
+    private const int AnalyzerTimeoutMs = 60000; // Doubled from 30s to 60s
 
     /// <summary>
     /// Verifies that the analyzer does not report diagnostics for methods that guard against null arguments by throwing

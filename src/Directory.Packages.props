@@ -66,6 +66,7 @@
 		<PackageVersion Include="Microsoft.Testing.Platform.MSBuild" Version="1.8.4" />
 		<PackageVersion Include="Microsoft.Testing.Extensions.Telemetry" Version="1.8.4" />
 		<PackageVersion Include="Microsoft.Testing.Extensions.VSTestBridge" Version="1.8.4" />
+		<PackageVersion Include="Microsoft.Testing.Extensions.HangDump" Version="1.8.4" />
 		<PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.8.4" />
 		<PackageVersion Include="Microsoft.Testing.Extensions.TrxReport.Abstractions" Version="1.8.4" />
 		<PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
@@ -79,6 +80,7 @@
 		<PackageVersion Include="xunit.v3.runner.console" Version="3.1.0" />
 		<PackageVersion Include="xunit.v3.runner.common" Version="3.0.1" />
 		<PackageVersion Include="xunit.v3.runner.utility" Version="3.0.1" />
+
 		<PackageVersion Include="Testcontainers.XunitV3" Version="4.8.1" />
 		<PackageVersion Include="Testcontainers" Version="4.8.1" />
 		<PackageVersion Include="Testcontainers.Qdrant" Version="4.8.1" />

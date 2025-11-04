@@ -38,7 +38,7 @@ public class PatternGraphQueryServiceTests
             Query: "MATCH (p:PatternDefinition) RETURN p",
             Parameters: new Dictionary<string, object> { ["limit"] = 10 },
             MaxResults: 10,
-            TimeoutMs: 30000);
+            TimeoutMs: 60000);
 
         var patternNodes = new List<KnowledgeNode>
         {
@@ -105,7 +105,7 @@ public class PatternGraphQueryServiceTests
             Query: "INVALID QUERY",
             Parameters: null,
             MaxResults: 10,
-            TimeoutMs: 30000);
+            TimeoutMs: 60000);
 
         _knowledgeGraphPort.QueryNodesAsync(query.Query, query.Parameters, Arg.Any<CancellationToken>())
             .Returns(Result<IReadOnlyList<KnowledgeNode>>.WithFailure("Invalid query syntax"));
@@ -128,7 +128,7 @@ public class PatternGraphQueryServiceTests
             Query: "",
             Parameters: null,
             MaxResults: 10,
-            TimeoutMs: 30000);
+            TimeoutMs: 60000);
 
         // Act
         var result = await _patternGraphQueryService.QueryPatternGraphAsync(query, CancellationToken.None);
@@ -520,7 +520,7 @@ public class PatternGraphQueryServiceTests
             Query: "MATCH (p:PatternDefinition) RETURN p",
             Parameters: null,
             MaxResults: 10,
-            TimeoutMs: 30000);
+            TimeoutMs: 60000);
 
         _knowledgeGraphPort.QueryNodesAsync(query.Query, query.Parameters, Arg.Any<CancellationToken>())
             .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(new List<KnowledgeNode>()));

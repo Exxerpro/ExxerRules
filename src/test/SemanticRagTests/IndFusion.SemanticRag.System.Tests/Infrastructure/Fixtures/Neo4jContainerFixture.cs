@@ -137,6 +137,7 @@ public sealed class Neo4jContainerFixture : IAsyncLifetime
     /// <summary>
     /// Asynchronously disposes of the Neo4j container resources.
     /// Ensures proper cleanup of Docker containers and driver connections.
+    /// Explicitly stops containers before disposal to prevent resource leaks.
     /// </summary>
     /// <returns>A ValueTask representing the asynchronous disposal operation</returns>
     public async ValueTask DisposeAsync()
@@ -145,17 +146,53 @@ public sealed class Neo4jContainerFixture : IAsyncLifetime
         {
             _logger.LogInformation("🧹 Cleaning up Neo4j container...");
 
+            // Dispose driver first
             if (_driver != null)
             {
-                await _driver.DisposeAsync();
-                _logger.LogInformation("✅ Neo4j driver disposed");
+                try
+                {
+                    await _driver.DisposeAsync();
+                    _logger.LogInformation("✅ Neo4j driver disposed");
+                }
+                catch (Exception driverEx)
+                {
+                    _logger.LogWarning(driverEx, "⚠️ Error disposing Neo4j driver (non-fatal)");
+                }
+                finally
+                {
+                    _driver = null;
+                }
             }
 
+            // Explicitly stop and dispose container
             if (_container != null)
             {
-                await _container.DisposeAsync();
-                _logger.LogInformation("✅ Neo4j container cleaned up successfully");
+                try
+                {
+                    // Stop the container first (ensures proper cleanup)
+                    await _container.StopAsync();
+                    _logger.LogInformation("✅ Neo4j container stopped");
+                }
+                catch (Exception stopEx)
+                {
+                    _logger.LogWarning(stopEx, "⚠️ Error stopping Neo4j container (non-fatal, will attempt disposal)");
+                }
+
+                try
+                {
+                    // Dispose the container (removes it)
+                    await _container.DisposeAsync();
+                    _logger.LogInformation("✅ Neo4j container disposed");
+                }
+                catch (Exception disposeEx)
+                {
+                    _logger.LogWarning(disposeEx, "⚠️ Error disposing Neo4j container (non-fatal)");
+                }
+
+                _container = null;
             }
+
+            _logger.LogInformation("✅ Neo4j container cleanup completed");
         }
         catch (Exception ex)
         {

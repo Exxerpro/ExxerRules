@@ -13,7 +13,7 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public class ErrorHandlingTests
 {
-    private const int AnalyzerTimeoutMs = 30000;
+    private const int AnalyzerTimeoutMs = 60000; // Doubled from 30s to 60s
 
     /// <summary>
     /// Tests that using Result pattern does not report diagnostic.

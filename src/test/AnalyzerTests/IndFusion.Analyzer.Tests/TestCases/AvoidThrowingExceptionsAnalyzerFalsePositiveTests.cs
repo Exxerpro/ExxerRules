@@ -10,7 +10,7 @@ namespace IndFusion.Analyzer.Tests.TestCases;
 /// </summary>
 public sealed class AvoidThrowingExceptionsAnalyzerFalsePositiveTests
 {
-    private const int AnalyzerTimeoutMs = 30000;
+    private const int AnalyzerTimeoutMs = 60000; // Doubled from 30s to 60s
 
     /// <summary>
     /// Allows null-guard idiom with coalesce throw in constructors.

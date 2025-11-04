@@ -30,6 +30,7 @@
   <ItemGroup Label="Testing Utilities">
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Shouldly" />
+    <PackageReference Include="IndQuestResults" />
     <PackageReference Include="NSubstitute.Analyzers.CSharp">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -61,6 +62,7 @@
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
     <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
     <PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
+    <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
   </ItemGroup>
   
   <!-- XUNIT V3 FRAMEWORK -->
@@ -128,6 +130,7 @@
     <Using Include="Xunit" />
     <Using Include="NSubstitute" />
     <Using Include="Shouldly" />
+    <Using Include="IndQuestResults" />
     <Using Include="Microsoft.Extensions.Logging" />
     
     <!-- System Namespaces -->

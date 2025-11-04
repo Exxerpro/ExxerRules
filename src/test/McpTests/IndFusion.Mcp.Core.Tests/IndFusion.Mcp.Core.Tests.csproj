@@ -4,21 +4,17 @@
   <!-- ===================================================================== -->
   <PropertyGroup>
 	<!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
+	<IsTestProject>true</IsTestProject>
 	<OutputType>Exe</OutputType>
-	<EnableMSTestRunner>true</EnableMSTestRunner>
-	<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-	<ImplicitUsings>enable</ImplicitUsings>
+	<ImplicitUsings>disable</ImplicitUsings>
 	<Nullable>enable</Nullable>
 	<IsPackable>false</IsPackable>
-	<IsTestProject>true</IsTestProject>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	<ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 	<RootNamespace>IndFusion.Mcp.Core.Tests</RootNamespace>
-	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  
+	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
 		<!-- Shared testing platform + xUnit v3 configuration for robust discovery across runners -->
@@ -28,6 +24,7 @@
 			<TestingPlatformServer>true</TestingPlatformServer>
 			<IsTestingPlatformApplication>false</IsTestingPlatformApplication>
 			<GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+			<ImplicitUsings>disable</ImplicitUsings>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -47,6 +44,7 @@
 			<PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
 			<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
 			<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+			<PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
 		</ItemGroup>
 
 
@@ -59,9 +57,9 @@
 	<PackageReference Include="Microsoft.Extensions.Configuration.Json" />
 	<PackageReference Include="Microsoft.Extensions.Logging.Console" />
 	<!-- Testing Framework & Tools -->
-	<!-- Removed Microsoft.Testing.Platform due to instability in prerelease -->
 	<PackageReference Include="Microsoft.NET.Test.Sdk" />
 	<PackageReference Include="xunit.v3" />
+	<PackageReference Include="xunit.v3.core" />
 	<PackageReference Update="xunit.v3.runner.console">
 	  <PrivateAssets>all</PrivateAssets>
 	</PackageReference>
@@ -80,7 +78,37 @@
 	</PackageReference>
 	<PackageReference Include="NSubstitute" />
 	<PackageReference Include="Shouldly" />
+	<PackageReference Include="IndQuestResults" />
+	<PackageReference Include="NSubstitute.Analyzers.CSharp">
+	  <PrivateAssets>all</PrivateAssets>
+	  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	</PackageReference>
+	<PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
   </ItemGroup>
+
+  <!-- PROJECT CAPABILITIES -->
+  <ItemGroup Label="Testing Platform Capabilities">
+    <ProjectCapability Include="DiagnoseCapabilities" />
+    <ProjectCapability Include="TestingPlatformServer" />
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <!-- GLOBAL USINGS -->
+  <ItemGroup Label="Global Usings">
+    <Using Include="Xunit" />
+    <Using Include="NSubstitute" />
+    <Using Include="Shouldly" />
+    <Using Include="IndQuestResults" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Text" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>

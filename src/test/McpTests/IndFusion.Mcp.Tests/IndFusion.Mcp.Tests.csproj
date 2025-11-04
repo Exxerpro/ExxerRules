@@ -4,6 +4,7 @@
   <!-- ===================================================================== -->
   <PropertyGroup>
     <!-- CENTRALLY MANAGED - DO NOT ADD ANOTHER TargetFramework HERE -->
+    <IsTestProject>true</IsTestProject>
     <OutputType>Exe</OutputType>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -11,8 +12,7 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	<NoWarn>$(NoWarn);CS1591;CA1707;CA1859</NoWarn>
-    <EnableMSTestRunner>true</EnableMSTestRunner>
+	<EnableMSTestRunner>true</EnableMSTestRunner>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     <TestingPlatformServer>true</TestingPlatformServer>
@@ -51,25 +51,29 @@
 	  <PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
 	  <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
 	  <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+	  <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
   </ItemGroup>
 
   <ItemGroup>
 	  <PackageReference Include="coverlet.collector" />
 	  <PackageReference Include="Microsoft.NET.Test.Sdk" />
 	  <PackageReference Include="Xunit.v3" />
+	  <PackageReference Include="xunit.v3.core" />
 	  <PackageReference Include="xunit.runner.visualstudio" />
 	  <PackageReference Include="Shouldly" />
 	  <PackageReference Include="NSubstitute" />
+	  <PackageReference Include="IndQuestResults" />
 	  <PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
   </ItemGroup>
 
 	<!-- ===================================================================== -->
   <!-- Global Using Statements                                                -->
   <!-- ===================================================================== -->
-  <ItemGroup>
+  <ItemGroup Label="Global Usings">
     <Using Include="Xunit" />
     <Using Include="NSubstitute" />
     <Using Include="Shouldly" />
+    <Using Include="IndQuestResults" />
     <Using Include="Microsoft.Extensions.Logging" />
     <Using Include="System" />
     <Using Include="System.Collections.Generic" />

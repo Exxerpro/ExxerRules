@@ -198,7 +198,7 @@ public class ExxerFactoringHelpersTests : IDisposable
     /// <summary>
     /// FindClassInSolution WithExistingClass ShouldReturnDocument().
     /// </summary>
-    [Fact(Skip = "Test solution file path issues - needs proper test setup")]
+    [Fact(Timeout = 60000)]
     public async Task FindClassInSolution_WithExistingClass_ShouldReturnDocument()
     {
         // Arrange
@@ -247,7 +247,7 @@ public class ExxerFactoringHelpersTests : IDisposable
     /// <summary>
     /// FindTypeInSolution WithExistingType ShouldReturnDocument().
     /// </summary>
-    [Fact(Skip = "Hanging - attempts to load real solution file from temp directory")]
+    [Fact(Timeout = 60000)]
     public async Task FindTypeInSolution_WithExistingType_ShouldReturnDocument()
     {
 
@@ -374,7 +374,7 @@ public class ExxerFactoringHelpersTests : IDisposable
     }
 
     /// <summary> /// RunWithSolutionOrFile WithDocumentInSolution ShouldUseSolution. /// </summary> /// <returns>A task that represents the asynchronous operation.</returns>
-    [Fact(Skip = "Hanging - attempts to load real solution file from temp directory")]
+    [Fact(Timeout = 60000)]
     public async Task RunWithSolutionOrFile_WithDocumentInSolution_ShouldUseSolution()
     {
         // Arrange

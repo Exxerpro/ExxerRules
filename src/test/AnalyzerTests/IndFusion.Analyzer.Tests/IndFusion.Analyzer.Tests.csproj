@@ -8,6 +8,7 @@
 	<RootNamespace>IndFusion.Analyzer.Tests</RootNamespace>
 	<AssemblyName>IndFusion.Analyzer.Tests</AssemblyName>
 	<IsTestProject>true</IsTestProject>
+	<OutputType>Exe</OutputType>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	  <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
  
@@ -19,6 +20,7 @@
 		<TestingPlatformServer>true</TestingPlatformServer>
 		<IsTestingPlatformApplication>false</IsTestingPlatformApplication>
 		<GenerateTestingPlatformEntryPoint>false</GenerateTestingPlatformEntryPoint>
+		<ImplicitUsings>disable</ImplicitUsings>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -43,15 +45,18 @@
 		<PackageReference Include="Microsoft.Testing.Extensions.VSTestBridge" />
 		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
 		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+		<PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="coverlet.collector" />
 		<PackageReference Include="Microsoft.NET.Test.Sdk" />
 		<PackageReference Include="xunit.v3" />
+		<PackageReference Include="xunit.v3.core" />
 		<PackageReference Include="xunit.runner.visualstudio" />
 		<PackageReference Include="Shouldly" />
 		<PackageReference Include="NSubstitute" />
+		<PackageReference Include="IndQuestResults" />
 		<PackageReference Include="Meziantou.Extensions.Logging.Xunit.v3" />
 	</ItemGroup>
 
@@ -61,6 +66,29 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore" />
 
 	</ItemGroup>
+  <!-- PROJECT CAPABILITIES -->
+  <ItemGroup Label="Testing Platform Capabilities">
+    <ProjectCapability Include="DiagnoseCapabilities" />
+    <ProjectCapability Include="TestingPlatformServer" />
+    <ProjectCapability Include="TestContainer" />
+  </ItemGroup>
+
+  <!-- GLOBAL USINGS -->
+  <ItemGroup Label="Global Usings">
+    <Using Include="Xunit" />
+    <Using Include="NSubstitute" />
+    <Using Include="Shouldly" />
+    <Using Include="IndQuestResults" />
+    <Using Include="Microsoft.Extensions.Logging" />
+    <Using Include="System" />
+    <Using Include="System.Collections.Generic" />
+    <Using Include="System.Linq" />
+    <Using Include="System.Threading" />
+    <Using Include="System.Threading.Tasks" />
+    <Using Include="System.Text" />
+    <Using Include="System.IO" />
+  </ItemGroup>
+
   <ItemGroup>
     <Folder Include="TestCases\Operations\" />
   </ItemGroup>

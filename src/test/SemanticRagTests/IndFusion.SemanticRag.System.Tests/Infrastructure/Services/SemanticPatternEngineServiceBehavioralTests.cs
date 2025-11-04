@@ -1,3 +1,5 @@
+using IndFusion.SemanticRag.Domain.Models;
+
 namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Services;
 
 /// <summary>

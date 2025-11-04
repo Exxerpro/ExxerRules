@@ -1,4 +1,5 @@
 using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Infrastructure.Adapters;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndFusion.SemanticRag.Infrastructure.Services;
 using IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;

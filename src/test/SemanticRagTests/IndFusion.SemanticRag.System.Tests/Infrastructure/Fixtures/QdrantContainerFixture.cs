@@ -1,26 +1,46 @@
-using DotNet.Testcontainers.Builders;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndFusion.SemanticRag.System.Tests.Infrastructure.Utilities;
 using Qdrant.Client;
 using Testcontainers.Qdrant;
-using Xunit;
 
 namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;
 
 /// <summary>
-/// xUnit fixture for Qdrant container lifecycle management.
-/// Provides Qdrant container, options, and client instance for system tests.
+/// Qdrant vector database container fixture for SemanticRag system tests.
+/// Implements xUnit v3 IAsyncLifetime pattern for proper container lifecycle management.
+/// Provides containerized Qdrant instance for vector similarity search and embeddings testing.
 /// Handles Docker unavailability gracefully - when Docker is not available, IsAvailable is set to false
-/// and tests should skip using SkipWhen attribute.
+/// and tests should skip gracefully using SkipException.
 /// </summary>
-public class QdrantContainerFixture : IAsyncLifetime
+public sealed class QdrantContainerFixture : IAsyncLifetime
 {
     private QdrantContainer? _container;
+    private readonly ILogger<QdrantContainerFixture> _logger;
 
     /// <summary>
-    /// Gets a value indicating whether the Qdrant container is available and running.
+    /// Gets the hostname where the Qdrant container is accessible.
     /// </summary>
-    public bool IsAvailable { get; private set; }
+    public string Hostname => _container?.Hostname ?? "localhost";
+
+    /// <summary>
+    /// Gets the mapped HTTP port for Qdrant (default: 6333).
+    /// </summary>
+    public int HttpPort => _container?.GetMappedPublicPort(6333) ?? 6333;
+
+    /// <summary>
+    /// Gets the mapped gRPC port for Qdrant (default: 6334).
+    /// </summary>
+    public int GrpcPort => _container?.GetMappedPublicPort(6334) ?? 6334;
+
+    /// <summary>
+    /// Gets the HTTP endpoint for Qdrant.
+    /// </summary>
+    public string HttpEndpoint { get; private set; } = null!;
+
+    /// <summary>
+    /// Gets the gRPC endpoint for Qdrant.
+    /// </summary>
+    public string GrpcEndpoint { get; private set; } = null!;
 
     /// <summary>
     /// Gets the Qdrant configuration options with container endpoints.
@@ -33,32 +53,41 @@ public class QdrantContainerFixture : IAsyncLifetime
     public QdrantClient? Client { get; private set; }
 
     /// <summary>
-    /// Gets the container hostname for connection.
+    /// Gets a value indicating whether the Qdrant container is running and ready.
     /// </summary>
-    public string Hostname => _container?.Hostname ?? "localhost";
+    public bool IsAvailable => _container != null && !string.IsNullOrEmpty(HttpEndpoint);
 
     /// <summary>
-    /// Gets the mapped HTTP port for Qdrant.
+    /// Initializes a new instance of the <see cref="QdrantContainerFixture"/> class.
     /// </summary>
-    public int HttpPort => _container?.GetMappedPublicPort(6333) ?? 6333;
+    public QdrantContainerFixture()
+    {
+        _logger = XUnitLogger.CreateLogger<QdrantContainerFixture>();
+    }
 
     /// <summary>
-    /// Gets the mapped gRPC port for Qdrant.
+    /// Asynchronously initializes the Qdrant container.
+    /// Starts the container, waits for readiness, and creates the connection endpoints.
+    /// Handles Docker unavailability gracefully by setting IsAvailable to false.
     /// </summary>
-    public int GrpcPort => _container?.GetMappedPublicPort(6334) ?? 6334;
-
-    /// <inheritdoc />
+    /// <returns>A ValueTask representing the asynchronous initialization operation</returns>
     public async ValueTask InitializeAsync()
     {
         try
         {
+            _logger.LogInformation("🚀 Initializing Qdrant container for SemanticRag system tests...");
+
             _container = new QdrantBuilder()
                 .WithImage("qdrant/qdrant:latest")
                 .WithAutoRemove(true)
                 .WithCleanUp(true)
                 .Build();
 
+            _logger.LogInformation("⏳ Starting Qdrant container...");
             await _container.StartAsync();
+
+            HttpEndpoint = $"http://{Hostname}:{HttpPort}";
+            GrpcEndpoint = $"http://{Hostname}:{GrpcPort}";
 
             Options = new QdrantOptions
             {
@@ -70,15 +99,19 @@ public class QdrantContainerFixture : IAsyncLifetime
             };
 
             Client = new QdrantClient(Options.Host, Options.Port);
-            IsAvailable = true;
+
+            _logger.LogInformation("✅ Qdrant container started - HTTP: {HttpEndpoint}, gRPC: {GrpcEndpoint}",
+                HttpEndpoint, GrpcEndpoint);
         }
-        catch (DockerUnavailableException)
+        
+        catch (Exception ex) when (ex.Message.Contains("Docker", StringComparison.OrdinalIgnoreCase) ||
+                                  ex.Message.Contains("docker", StringComparison.OrdinalIgnoreCase))
         {
-            // Docker is not available - set defaults and mark as unavailable
-            IsAvailable = false;
+            _logger.LogWarning(ex, "⚠️ Docker-related error - Qdrant container will not be started");
             DockerSkipConditions.ShouldSkipDockerTests = true;
-            
-            // Set default options to prevent null reference exceptions
+
+            HttpEndpoint = "http://localhost:6333";
+            GrpcEndpoint = "http://localhost:6334";
             Options = new QdrantOptions
             {
                 Host = "localhost",
@@ -87,34 +120,36 @@ public class QdrantContainerFixture : IAsyncLifetime
                 VectorSize = 384,
                 ApiKey = null
             };
-            
-            // Don't throw - let tests skip via attribute
         }
-        catch (Exception ex) when (ex.Message.Contains("Docker") || ex.Message.Contains("docker"))
+        catch (Exception ex)
         {
-            // Other Docker-related exceptions
-            IsAvailable = false;
-            DockerSkipConditions.ShouldSkipDockerTests = true;
-            
-            Options = new QdrantOptions
-            {
-                Host = "localhost",
-                Port = 6333,
-                CollectionName = "test-collection",
-                VectorSize = 384,
-                ApiKey = null
-            };
+            _logger.LogError(ex, "❌ Failed to initialize Qdrant container");
+            throw;
         }
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Asynchronously disposes of the Qdrant container resources.
+    /// Ensures proper cleanup of Docker containers and client connections.
+    /// </summary>
+    /// <returns>A ValueTask representing the asynchronous disposal operation</returns>
     public async ValueTask DisposeAsync()
     {
-        Client?.Dispose();
-
-        if (_container != null)
+        try
         {
-            await _container.DisposeAsync();
+            _logger.LogInformation("🧹 Cleaning up Qdrant container...");
+
+            Client?.Dispose();
+
+            if (_container != null)
+            {
+                await _container.DisposeAsync();
+                _logger.LogInformation("✅ Qdrant container cleaned up successfully");
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "⚠️ Error during Qdrant container cleanup (non-fatal)");
         }
     }
 }

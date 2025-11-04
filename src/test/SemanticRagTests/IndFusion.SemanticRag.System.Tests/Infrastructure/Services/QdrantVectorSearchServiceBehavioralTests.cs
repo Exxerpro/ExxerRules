@@ -6,7 +6,9 @@ using IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Qdrant.Client;
+using IndFusion.SemanticRag.System.Tests.Infrastructure.Utilities;
 using Xunit;
+using Xunit.Sdk;
 
 namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Services;
 
@@ -35,12 +37,17 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
     {
         _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
 
+        if (!_fixture.IsAvailable || DockerSkipConditions.ShouldSkipDockerTests)
+        {
+            throw new SkipException("Docker is not available - system tests require real containers");
+        }
+
         // Create real logger using Meziantou XUnit logger
         _logger = XUnitLogger.CreateLogger<QdrantVectorSearchService>(output);
 
         // Create real Qdrant vector database adapter with container client
         var vectorAdapterLogger = XUnitLogger.CreateLogger<QdrantVectorDatabaseAdapter>(output);
-        _vectorDatabasePort = new QdrantVectorDatabaseAdapter(_fixture.Client, vectorAdapterLogger);
+        _vectorDatabasePort = new QdrantVectorDatabaseAdapter(_fixture.Client!, vectorAdapterLogger);
 
         // Create real Ollama embedding service adapter (uses localhost:11434 or docker-compose Ollama)
         var httpClient = new HttpClient
@@ -88,7 +95,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
     public void Dispose()
     {
         // Clear collection after tests
-        Task.Run(async () => await TestCleanupHelpers.ClearQdrantCollection(_fixture.Client, _collectionName))
+        Task.Run(async () => await TestCleanupHelpers.ClearQdrantCollection(_fixture.Client!, _collectionName))
             .Wait(TimeSpan.FromSeconds(5));
 
         // Dispose HttpClient if needed (embedding service uses HttpClient which implements IDisposable)

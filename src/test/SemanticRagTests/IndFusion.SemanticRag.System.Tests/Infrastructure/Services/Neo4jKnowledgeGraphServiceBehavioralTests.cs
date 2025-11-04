@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Neo4j.Driver;
 using Xunit;
+using Xunit.Sdk;
 
 namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Services;
 
@@ -34,14 +35,14 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         if (SkipTests || !_fixture.IsAvailable)
         {
-            throw new SkipException("Docker is not available - system tests require real containers");
+            throw new SkipException();
         }
     }
     
     private readonly ILogger<Neo4jKnowledgeGraphService> _logger;
-    private readonly IGraphDatabasePort _graphDatabasePort;
+    private readonly IGraphDatabasePort _graphDatabasePort = null!;
     private readonly IOptions<Neo4jOptions> _options;
-    private readonly Neo4jKnowledgeGraphService _service;
+    private readonly Neo4jKnowledgeGraphService _service = null!;
 
     /// <summary>
     /// Initializes the test fixture with real services from container.
@@ -82,7 +83,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public void Dispose()
     {
         // Clear database after tests
-        Task.Run(async () => await TestCleanupHelpers.ClearNeo4jDatabase(_fixture.Driver, _fixture.Options.Database))
+        Task.Run(async () => await TestCleanupHelpers.ClearNeo4jDatabase(_fixture.Driver!, _fixture.Options.Database))
             .Wait(TimeSpan.FromSeconds(5));
     }
 
@@ -253,6 +254,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task UpdateNodeAsync_WithValidNode_ShouldUpdateNode()
     {
+        SkipIfDockerUnavailable();
         // Arrange - Create node first
         var nodeId = "node-1";
         var initialNode = new GraphNode(
@@ -316,6 +318,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task DeleteNodeAsync_WithValidNodeId_ShouldDeleteNode()
     {
+        SkipIfDockerUnavailable();
         // Arrange - Create node first
         var nodeId = "node-1";
         var node = new GraphNode(
@@ -364,6 +367,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task CreateRelationshipAsync_WithValidRelationship_ShouldCreateRelationship()
     {
+        SkipIfDockerUnavailable();
         // Arrange - Create nodes first
         var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
         var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
@@ -436,6 +440,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task DeleteRelationshipAsync_WithValidRelationshipId_ShouldDeleteRelationship()
     {
+        SkipIfDockerUnavailable();
         // Arrange - Create nodes and relationship first
         var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
         var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
@@ -491,6 +496,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task GetContextAsync_WithValidQuery_ShouldReturnContext()
     {
+        SkipIfDockerUnavailable();
         // Arrange
         var query = "What is the relationship between Person and Company?";
 
@@ -534,6 +540,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task AddCodeNodeAsync_WithValidCodeNode_ShouldAddCodeNode()
     {
+        SkipIfDockerUnavailable();
         // Arrange
         var codeNode = new CodeNode(
             "code-1",
@@ -604,6 +611,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithComplexQuery_ShouldExecuteComplexQuery()
     {
+        SkipIfDockerUnavailable();
         // Arrange
         var complexQuery = new GraphQuery(
             "MATCH (p:Person)-[r:KNOWS]->(f:Person) " +
@@ -631,6 +639,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults()
     {
+        SkipIfDockerUnavailable();
         // Arrange
         var aggregationQuery = new GraphQuery(
             "MATCH (p:Person) " +
@@ -654,6 +663,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithPathQuery_ShouldReturnPathResults()
     {
+        SkipIfDockerUnavailable();
         // Arrange
         var pathQuery = new GraphQuery(
             "MATCH path = (start:Person)-[*1..3]->(end:Company) " +
@@ -680,6 +690,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithMultipleQueries_ShouldExecuteSequentially()
     {
+        SkipIfDockerUnavailable();
         // Arrange
         var queries = new[]
         {

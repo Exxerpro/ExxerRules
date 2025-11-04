@@ -312,8 +312,10 @@ public class AvoidAsyncVoidAnalyzer : DiagnosticAnalyzer
         }
 
         // Check for common Blazor event handler patterns
+        // Support both partial methods and regular methods in Blazor components
         var methodName = method.Identifier.Text;
-        return methodName.StartsWith("On") && methodName.EndsWith("Async") ||
+        return (methodName.StartsWith("On") && methodName.EndsWith("Async")) ||
+               methodName.StartsWith("On") ||
                methodName.Contains("Click") ||
                methodName.Contains("Submit") ||
                methodName.Contains("Change");

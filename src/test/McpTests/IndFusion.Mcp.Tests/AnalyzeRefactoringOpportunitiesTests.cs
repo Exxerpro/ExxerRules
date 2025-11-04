@@ -18,7 +18,7 @@ namespace IndFusion.Mcp.Tests;
 public class AnalyzeExxerFactoringOpportunitiesTests : IDisposable
 {
     private static readonly string SolutionPath = TestHelpers.GetSolutionPath();
-    private static readonly string ExampleFilePath = Path.Combine(Path.GetDirectoryName(SolutionPath)!, "test", "IndFusion.Mcp.Tests", "ExampleCode.cs");
+    private static readonly string ExampleFilePath = Path.Combine(TestUtilities.GetTestProjectDirectory(), "ExampleCode.cs");
     private readonly string _originalDir = Directory.GetCurrentDirectory();
 
     /// <summary>

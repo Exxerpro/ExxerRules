@@ -1,6 +1,38 @@
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Neo4j.Driver;
 
 namespace IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers;
+
+/// <summary>
+/// Simple async enumerator for records.
+/// </summary>
+internal sealed class RecordAsyncEnumerator : IAsyncEnumerator<IRecord>
+{
+	private readonly IReadOnlyList<IRecord> _records;
+	private readonly CancellationToken _cancellationToken;
+	private int _index = -1;
+
+	public RecordAsyncEnumerator(IReadOnlyList<IRecord> records, CancellationToken cancellationToken)
+	{
+		_records = records;
+		_cancellationToken = cancellationToken;
+	}
+
+	public IRecord Current => _index >= 0 && _index < _records.Count ? _records[_index] : throw new InvalidOperationException();
+
+	public ValueTask<bool> MoveNextAsync()
+	{
+		_cancellationToken.ThrowIfCancellationRequested();
+		_index++;
+		return ValueTask.FromResult(_index < _records.Count);
+	}
+
+	public ValueTask DisposeAsync()
+	{
+		return ValueTask.CompletedTask;
+	}
+}
 
 /// <summary>
 /// Manual mock implementation of IResultCursor to work around NSubstitute's limitation
@@ -126,8 +158,25 @@ public class MockResultCursor : IResultCursor
 	public bool IsOpen => _isOpen;
 
 	// Other IResultCursor members that may not be used in tests but are required by the interface
-	public IAsyncEnumerable<IRecord> StreamAsync() => throw new NotImplementedException("StreamAsync not implemented in mock");
+	public IAsyncEnumerable<IRecord> StreamAsync() => new RecordAsyncEnumerable(_recordsList ?? new List<IRecord>());
 	public Task<IRecord?> PeekAsync() => throw new NotImplementedException("PeekAsync not implemented in mock");
-	public IAsyncEnumerator<IRecord> GetAsyncEnumerator(CancellationToken cancellationToken = default) => throw new NotImplementedException("GetAsyncEnumerator not implemented in mock");
+	public IAsyncEnumerator<IRecord> GetAsyncEnumerator(CancellationToken cancellationToken = default) 
+		=> new RecordAsyncEnumerator(_recordsList ?? new List<IRecord>(), cancellationToken);
+}
+
+/// <summary>
+/// Simple async enumerable for records.
+/// </summary>
+internal sealed class RecordAsyncEnumerable : IAsyncEnumerable<IRecord>
+{
+	private readonly IReadOnlyList<IRecord> _records;
+
+	public RecordAsyncEnumerable(IReadOnlyList<IRecord> records)
+	{
+		_records = records;
+	}
+
+	public IAsyncEnumerator<IRecord> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+		=> new RecordAsyncEnumerator(_records, cancellationToken);
 }
 

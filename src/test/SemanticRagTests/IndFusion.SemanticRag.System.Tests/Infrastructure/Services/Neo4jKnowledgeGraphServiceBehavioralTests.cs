@@ -3,6 +3,7 @@ using IndFusion.SemanticRag.Infrastructure.Adapters;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndFusion.SemanticRag.Infrastructure.Services;
 using IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;
+using IndFusion.SemanticRag.System.Tests.Infrastructure.Utilities;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Neo4j.Driver;
@@ -13,12 +14,30 @@ namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Services;
 /// <summary>
 /// Behavioral system tests for Neo4jKnowledgeGraphService to drive implementation.
 /// These tests verify actual behavior using real containerized Neo4j instance.
+/// Tests skip gracefully when Docker is unavailable (system tests require real containers).
 /// </summary>
 [Collection("System")]
 [Trait("Category", "System")]
 public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 {
     private readonly Neo4jContainerFixture _fixture;
+    
+    /// <summary>
+    /// Gets a value indicating whether tests should be skipped due to Docker unavailability.
+    /// </summary>
+    private static bool SkipTests => DockerSkipConditions.ShouldSkipDockerTests;
+    
+    /// <summary>
+    /// Throws SkipException if Docker is unavailable. Call this at the start of each test.
+    /// </summary>
+    private void SkipIfDockerUnavailable()
+    {
+        if (SkipTests || !_fixture.IsAvailable)
+        {
+            throw new SkipException("Docker is not available - system tests require real containers");
+        }
+    }
+    
     private readonly ILogger<Neo4jKnowledgeGraphService> _logger;
     private readonly IGraphDatabasePort _graphDatabasePort;
     private readonly IOptions<Neo4jOptions> _options;
@@ -33,12 +52,22 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
 
+        // Skip initialization if Docker is unavailable
+        if (!_fixture.IsAvailable || DockerSkipConditions.ShouldSkipDockerTests)
+        {
+            // Set defaults to prevent null reference exceptions
+            _logger = XUnitLogger.CreateLogger<Neo4jKnowledgeGraphService>(output);
+            _options = Options.Create(_fixture.Options);
+            // Service and port will be null - tests will skip via SkipWhen attribute
+            return;
+        }
+
         // Create real logger using Meziantou XUnit logger
         _logger = XUnitLogger.CreateLogger<Neo4jKnowledgeGraphService>(output);
 
         // Create real Neo4j graph database adapter with container driver
         var graphAdapterLogger = XUnitLogger.CreateLogger<Neo4jGraphDatabaseAdapter>(output);
-        _graphDatabasePort = new Neo4jGraphDatabaseAdapter(_fixture.Driver, Options.Create(_fixture.Options), graphAdapterLogger);
+        _graphDatabasePort = new Neo4jGraphDatabaseAdapter(_fixture.Driver!, Options.Create(_fixture.Options), graphAdapterLogger);
 
         // Use container options
         _options = Options.Create(_fixture.Options);
@@ -64,6 +93,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithValidQuery_ShouldReturnActualResults()
     {
+        SkipIfDockerUnavailable();
+        
         // Arrange
         var query = new GraphQuery("MATCH (n) RETURN n LIMIT 10");
 
@@ -85,6 +116,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithParameters_ShouldUseParametersInQuery()
     {
+        SkipIfDockerUnavailable();
+        
         // Arrange
         var parameters = new Dictionary<string, object> { { "name", "test" }, { "age", 25 } };
         var query = new GraphQuery("MATCH (n {name: $name, age: $age}) RETURN n", parameters);
@@ -106,6 +139,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithTimeout_ShouldRespectTimeout()
     {
+        SkipIfDockerUnavailable();
+        
         // Arrange
         var query = new GraphQuery("MATCH (n) RETURN n", TimeoutMs: 100); // Very short timeout
 
@@ -123,6 +158,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithCancellation_ShouldRespectCancellationToken()
     {
+        SkipIfDockerUnavailable();
+        
         // Arrange
         var query = new GraphQuery("MATCH (n) RETURN n");
         using var cts = new CancellationTokenSource();
@@ -140,6 +177,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task QueryAsync_WithInvalidQuery_ShouldReturnFailure()
     {
+        SkipIfDockerUnavailable();
+        
         // Arrange
         var query = new GraphQuery("INVALID CYPHER QUERY");
 
@@ -160,6 +199,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task AddNodeAsync_WithValidNode_ShouldAddNode()
     {
+        SkipIfDockerUnavailable();
+        
         // Arrange
         var node = new GraphNode(
             "node-1",

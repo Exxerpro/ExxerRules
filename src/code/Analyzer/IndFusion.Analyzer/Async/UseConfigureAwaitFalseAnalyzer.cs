@@ -471,10 +471,15 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         }
 
         // Check if method is a Blazor lifecycle method
+        // Support both override and non-override versions (partial methods may not have override)
         var methodName = methodDeclaration.Identifier.Text;
-        return methodName == "OnInitializedAsync" ||
+        return methodName == "OnInitialized" ||
+               methodName == "OnInitializedAsync" ||
+               methodName == "OnParametersSet" ||
                methodName == "OnParametersSetAsync" ||
-               methodName == "OnAfterRenderAsync";
+               methodName == "OnAfterRender" ||
+               methodName == "OnAfterRenderAsync" ||
+               (methodName.StartsWith("On") && methodName.EndsWith("Async") && methodDeclaration.Modifiers.Any(SyntaxKind.OverrideKeyword));
     }
 
     /// <summary>

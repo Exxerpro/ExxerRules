@@ -23,9 +23,37 @@ public class IntegrationTestFixture : IDisposable
     /// <remarks>
     /// The underlying <see cref="ServiceCollection"/> registers logging along with the application and infrastructure layers,
     /// mirroring real production wiring so that integration tests exercise concrete implementations.
+    /// xUnit v3 doesn't auto-inject IConfiguration, so we build it internally with test configuration.
     /// </remarks>
-    public IntegrationTestFixture(IConfiguration configuration)
+    public IntegrationTestFixture()
     {
+        // Build test configuration with required sections
+        var configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                // Qdrant configuration
+                ["Qdrant:Host"] = "localhost",
+                ["Qdrant:Port"] = "6333",
+                ["Qdrant:CollectionName"] = "test-collection",
+                ["Qdrant:VectorSize"] = "384",
+                
+                // Ollama configuration
+                ["Ollama:BaseUrl"] = "http://localhost:11434",
+                ["Ollama:Model"] = "llama2",
+                ["Ollama:TimeoutSeconds"] = "30",
+                
+                // Neo4j configuration
+                ["Neo4j:Uri"] = "bolt://localhost:7687",
+                ["Neo4j:Username"] = "neo4j",
+                ["Neo4j:Password"] = "test-password",
+                ["Neo4j:Database"] = "neo4j",
+                
+                // Redis configuration
+                ["Redis:ConnectionString"] = "localhost:6379",
+                ["Redis:Database"] = "0"
+            })
+            .Build();
+
         var services = new ServiceCollection();
 
         // Add logging

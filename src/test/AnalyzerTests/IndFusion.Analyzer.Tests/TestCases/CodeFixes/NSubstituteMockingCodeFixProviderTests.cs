@@ -1,4 +1,3 @@
-using IndFusion.CodeFixes;
 using IndFusion.Fixer.Testing;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;

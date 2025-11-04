@@ -1,6 +1,3 @@
-#pragma warning disable CS0103, CS8602, IDE0053, IDE0031
-
-using IndFusion.CodeFixes;
 using IndFusion.Fixer.Async;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;

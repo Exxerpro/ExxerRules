@@ -1,3 +1,8 @@
+using IndFusion.SemanticRag.Infrastructure.Configuration;
+using Neo4j.Driver;
+using Testcontainers.Neo4j;
+using Xunit;
+
 namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;
 
 /// <summary>

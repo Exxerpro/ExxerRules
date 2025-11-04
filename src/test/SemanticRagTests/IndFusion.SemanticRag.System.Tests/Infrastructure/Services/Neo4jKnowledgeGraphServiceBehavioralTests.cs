@@ -1,3 +1,12 @@
+using IndFusion.SemanticRag.Domain.Ports;
+using IndFusion.SemanticRag.Infrastructure.Configuration;
+using IndFusion.SemanticRag.Infrastructure.Services;
+using IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Neo4j.Driver;
+using Xunit;
+
 namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Services;
 
 /// <summary>
@@ -58,7 +67,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         var query = new GraphQuery("MATCH (n) RETURN n LIMIT 10");
 
         // Act
-        var result = await _service.QueryAsync(query, CancellationToken.None);
+        var result = await _service.QueryAsync(query, TestContext.Current.CancellationToken);
 
         // Assert - Verify contract, not implementation details
         result.IsSuccess.ShouldBeTrue();
@@ -80,7 +89,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         var query = new GraphQuery("MATCH (n {name: $name, age: $age}) RETURN n", parameters);
 
         // Act
-        var result = await _service.QueryAsync(query, CancellationToken.None);
+        var result = await _service.QueryAsync(query, TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -101,7 +110,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 
         // Act & Assert
         await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.QueryAsync(query, CancellationToken.None));
+            await _service.QueryAsync(query, TestContext.Current.CancellationToken));
 
         // This test drives implementation of timeout handling
     }
@@ -134,7 +143,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         var query = new GraphQuery("INVALID CYPHER QUERY");
 
         // Act
-        var result = await _service.QueryAsync(query, CancellationToken.None);
+        var result = await _service.QueryAsync(query, TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeFalse();
@@ -158,7 +167,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             new List<string> { "Person" });
 
         // Act
-        var result = await _service.AddNodeAsync(node, CancellationToken.None);
+        var result = await _service.AddNodeAsync(node, TestContext.Current.CancellationToken);
 
         // Assert
         result.Id.ShouldBe(node.Id);
@@ -177,7 +186,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.AddNodeAsync(default, CancellationToken.None));
+            await _service.AddNodeAsync(default, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -192,7 +201,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.AddNodeAsync(invalidNode, CancellationToken.None));
+            await _service.AddNodeAsync(invalidNode, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -209,7 +218,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             "Person",
             new Dictionary<string, object> { { "name", "John" }, { "age", 30 } },
             new List<string> { "Person" });
-        await _service.AddNodeAsync(initialNode, CancellationToken.None);
+        await _service.AddNodeAsync(initialNode, TestContext.Current.CancellationToken);
 
         var updatedNode = new GraphNode(
             nodeId,
@@ -218,7 +227,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             new List<string> { "Person" });
 
         // Act
-        var result = await _service.UpdateNodeAsync(nodeId, updatedNode, CancellationToken.None);
+        var result = await _service.UpdateNodeAsync(nodeId, updatedNode, TestContext.Current.CancellationToken);
 
         // Assert
         result.Id.ShouldBe(nodeId);
@@ -240,7 +249,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.UpdateNodeAsync(null!, node, CancellationToken.None));
+            await _service.UpdateNodeAsync(null!, node, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -255,7 +264,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.UpdateNodeAsync(string.Empty, node, CancellationToken.None));
+            await _service.UpdateNodeAsync(string.Empty, node, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -272,10 +281,10 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             "Person",
             new Dictionary<string, object> { { "name", "John" } },
             new List<string> { "Person" });
-        await _service.AddNodeAsync(node, CancellationToken.None);
+        await _service.AddNodeAsync(node, TestContext.Current.CancellationToken);
 
         // Act
-        await _service.DeleteNodeAsync(nodeId, CancellationToken.None);
+        await _service.DeleteNodeAsync(nodeId, TestContext.Current.CancellationToken);
 
         // Assert
         // This test drives implementation of actual node deletion
@@ -291,7 +300,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.DeleteNodeAsync(null!, CancellationToken.None));
+            await _service.DeleteNodeAsync(null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -303,7 +312,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.DeleteNodeAsync(string.Empty, CancellationToken.None));
+            await _service.DeleteNodeAsync(string.Empty, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -316,8 +325,8 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         // Arrange - Create nodes first
         var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
         var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
-        await _service.AddNodeAsync(node1, CancellationToken.None);
-        await _service.AddNodeAsync(node2, CancellationToken.None);
+        await _service.AddNodeAsync(node1, TestContext.Current.CancellationToken);
+        await _service.AddNodeAsync(node2, TestContext.Current.CancellationToken);
 
         var relationship = new GraphRelationship(
             "rel-1",
@@ -327,7 +336,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             new Dictionary<string, object> { { "since", "2023" } });
 
         // Act
-        var result = await _service.CreateRelationshipAsync(relationship, CancellationToken.None);
+        var result = await _service.CreateRelationshipAsync(relationship, TestContext.Current.CancellationToken);
 
         // Assert
         result.Id.ShouldBe(relationship.Id);
@@ -355,7 +364,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.CreateRelationshipAsync(invalidRelationship, CancellationToken.None));
+            await _service.CreateRelationshipAsync(invalidRelationship, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -375,7 +384,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.CreateRelationshipAsync(selfReferencingRelationship, CancellationToken.None));
+            await _service.CreateRelationshipAsync(selfReferencingRelationship, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -388,15 +397,15 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         // Arrange - Create nodes and relationship first
         var node1 = new GraphNode("node-1", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
         var node2 = new GraphNode("node-2", "Person", new Dictionary<string, object>(), new List<string> { "Person" });
-        await _service.AddNodeAsync(node1, CancellationToken.None);
-        await _service.AddNodeAsync(node2, CancellationToken.None);
+        await _service.AddNodeAsync(node1, TestContext.Current.CancellationToken);
+        await _service.AddNodeAsync(node2, TestContext.Current.CancellationToken);
         var relationship = new GraphRelationship("rel-1", "KNOWS", "node-1", "node-2", new Dictionary<string, object>());
-        await _service.CreateRelationshipAsync(relationship, CancellationToken.None);
+        await _service.CreateRelationshipAsync(relationship, TestContext.Current.CancellationToken);
 
         var relationshipId = "rel-1";
 
         // Act
-        var result = await _service.DeleteRelationshipAsync(relationshipId, CancellationToken.None);
+        var result = await _service.DeleteRelationshipAsync(relationshipId, TestContext.Current.CancellationToken);
 
         // Assert: DeleteRelationshipAsync returns Result<T> instead of void (functional pattern)
         result.IsSuccess.ShouldBeTrue();
@@ -411,7 +420,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task DeleteRelationshipAsync_WithNullRelationshipId_ShouldReturnFailure()
     {
         // Act
-        var result = await _service.DeleteRelationshipAsync(null!, CancellationToken.None);
+        var result = await _service.DeleteRelationshipAsync(null!, TestContext.Current.CancellationToken);
 
         // Assert: DeleteRelationshipAsync returns Result<T> instead of throwing exceptions (functional pattern)
         result.IsFailure.ShouldBeTrue();
@@ -426,7 +435,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task DeleteRelationshipAsync_WithEmptyRelationshipId_ShouldReturnFailure()
     {
         // Act
-        var result = await _service.DeleteRelationshipAsync(string.Empty, CancellationToken.None);
+        var result = await _service.DeleteRelationshipAsync(string.Empty, TestContext.Current.CancellationToken);
 
         // Assert: DeleteRelationshipAsync returns Result<T> instead of throwing exceptions (functional pattern)
         result.IsFailure.ShouldBeTrue();
@@ -444,7 +453,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         var query = "What is the relationship between Person and Company?";
 
         // Act
-        var result = await _service.GetContextAsync(query, CancellationToken.None);
+        var result = await _service.GetContextAsync(query, TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -461,7 +470,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.GetContextAsync(null!, CancellationToken.None));
+            await _service.GetContextAsync(null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -473,7 +482,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     {
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.GetContextAsync(string.Empty, CancellationToken.None));
+            await _service.GetContextAsync(string.Empty, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -503,7 +512,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             DateTimeOffset.UtcNow);
 
         // Act
-        var result = await _service.AddCodeNodeAsync(codeNode, CancellationToken.None);
+        var result = await _service.AddCodeNodeAsync(codeNode, TestContext.Current.CancellationToken);
 
         // Assert
         result.Id.ShouldBe(codeNode.Id);
@@ -543,7 +552,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.AddCodeNodeAsync(invalidCodeNode, CancellationToken.None));
+            await _service.AddCodeNodeAsync(invalidCodeNode, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -562,7 +571,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             new Dictionary<string, object> { { "minAge", 18 } });
 
         // Act
-        var result = await _service.QueryAsync(complexQuery, CancellationToken.None);
+        var result = await _service.QueryAsync(complexQuery, TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -587,7 +596,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             "ORDER BY employeeCount DESC");
 
         // Act
-        var result = await _service.QueryAsync(aggregationQuery, CancellationToken.None);
+        var result = await _service.QueryAsync(aggregationQuery, TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -611,7 +620,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
             new Dictionary<string, object> { { "startName", "John" } });
 
         // Act
-        var result = await _service.QueryAsync(pathQuery, CancellationToken.None);
+        var result = await _service.QueryAsync(pathQuery, TestContext.Current.CancellationToken);
 
         // Assert
         result.IsSuccess.ShouldBeTrue();
@@ -641,7 +650,7 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         var results = new List<GraphQueryResult>();
         foreach (var query in queries)
         {
-            var result = await _service.QueryAsync(query, CancellationToken.None);
+            var result = await _service.QueryAsync(query, TestContext.Current.CancellationToken);
             results.Add(result);
         }
 

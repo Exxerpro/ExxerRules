@@ -1,3 +1,8 @@
+using IndFusion.SemanticRag.Infrastructure.Configuration;
+using Qdrant.Client;
+using Testcontainers.Qdrant;
+using Xunit;
+
 namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;
 
 /// <summary>

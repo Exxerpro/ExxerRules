@@ -40,7 +40,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeCodeAsync(code, context, CancellationToken.None);
+        var result = await service.AnalyzeCodeAsync(code, context, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -82,7 +82,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeCodeAsync(cleanCode, context, CancellationToken.None);
+        var result = await service.AnalyzeCodeAsync(cleanCode, context, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -103,7 +103,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync(null!, "context", CancellationToken.None));
+            await service.AnalyzeCodeAsync(null!, "context", TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -118,7 +118,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync(string.Empty, "context", CancellationToken.None));
+            await service.AnalyzeCodeAsync(string.Empty, "context", TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -133,7 +133,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync("code", null!, CancellationToken.None));
+            await service.AnalyzeCodeAsync("code", null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -148,7 +148,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync("code", string.Empty, CancellationToken.None));
+            await service.AnalyzeCodeAsync("code", string.Empty, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -183,7 +183,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, null, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, null, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -215,7 +215,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, patternTypes, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, patternTypes, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -241,7 +241,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, null, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, null, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -262,7 +262,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeProjectAsync(null!, null, CancellationToken.None));
+            await service.AnalyzeProjectAsync(null!, null, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -277,7 +277,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeProjectAsync(string.Empty, null, CancellationToken.None));
+            await service.AnalyzeProjectAsync(string.Empty, null, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -302,7 +302,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.SuggestAlternativesAsync(violation, CancellationToken.None);
+        var result = await service.SuggestAlternativesAsync(violation, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -334,7 +334,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.SuggestAlternativesAsync(default, CancellationToken.None));
+            await service.SuggestAlternativesAsync(default, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -350,7 +350,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeConsistencyAsync(projectPath, patternFamily, CancellationToken.None);
+        var result = await service.AnalyzeConsistencyAsync(projectPath, patternFamily, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -386,7 +386,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeConsistencyAsync(projectPath, patternFamily, CancellationToken.None);
+        var result = await service.AnalyzeConsistencyAsync(projectPath, patternFamily, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -409,7 +409,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeConsistencyAsync(null!, "all", CancellationToken.None));
+            await service.AnalyzeConsistencyAsync(null!, "all", TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -424,7 +424,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeConsistencyAsync(string.Empty, "all", CancellationToken.None));
+            await service.AnalyzeConsistencyAsync(string.Empty, "all", TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -440,7 +440,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.EnforcePatternsAsync(projectPath, patternTypes, CancellationToken.None);
+        var result = await service.EnforcePatternsAsync(projectPath, patternTypes, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -475,7 +475,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.EnforcePatternsAsync(null!, new[] { "SOLID" }, CancellationToken.None));
+            await service.EnforcePatternsAsync(null!, new[] { "SOLID" }, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -490,7 +490,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.EnforcePatternsAsync(string.Empty, new[] { "SOLID" }, CancellationToken.None));
+            await service.EnforcePatternsAsync(string.Empty, new[] { "SOLID" }, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -505,7 +505,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.EnforcePatternsAsync(@"C:\TestProject\TestProject.csproj", null!, CancellationToken.None));
+            await service.EnforcePatternsAsync(@"C:\TestProject\TestProject.csproj", null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -520,7 +520,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.EnforcePatternsAsync(@"C:\TestProject\TestProject.csproj", Array.Empty<string>(), CancellationToken.None));
+            await service.EnforcePatternsAsync(@"C:\TestProject\TestProject.csproj", Array.Empty<string>(), TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -536,7 +536,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.GetPatternGuidanceAsync(context, patternTypes, CancellationToken.None);
+        var result = await service.GetPatternGuidanceAsync(context, patternTypes, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -573,7 +573,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.GetPatternGuidanceAsync(context, null, CancellationToken.None);
+        var result = await service.GetPatternGuidanceAsync(context, null, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -597,7 +597,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.GetPatternGuidanceAsync(null!, null, CancellationToken.None));
+            await service.GetPatternGuidanceAsync(null!, null, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -612,7 +612,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.GetPatternGuidanceAsync(string.Empty, null, CancellationToken.None));
+            await service.GetPatternGuidanceAsync(string.Empty, null, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -637,7 +637,7 @@ public class TestClass
         // Act & Assert
         foreach (var context in contexts)
         {
-            var result = await service.AnalyzeCodeAsync(code, context, CancellationToken.None);
+            var result = await service.AnalyzeCodeAsync(code, context, TestContext.Current.CancellationToken);
 
             result.ShouldNotBeNull();
             // Different contexts might have different violation counts
@@ -659,7 +659,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, null, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, null, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -680,7 +680,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.EnforcePatternsAsync(projectPath, patternTypes, CancellationToken.None);
+        var result = await service.EnforcePatternsAsync(projectPath, patternTypes, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -713,7 +713,7 @@ public class TestClass
         var service = new SemanticPatternEngineService(_logger);
 
         // Act
-        var result = await service.AnalyzeConsistencyAsync(projectPath, patternFamily, CancellationToken.None);
+        var result = await service.AnalyzeConsistencyAsync(projectPath, patternFamily, TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();

@@ -29,7 +29,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, TestContext.Current.CancellationToken);
 
         // Assert - Verify actual behavior, not mock behavior
         result.Violations.ShouldNotBeNull();
@@ -56,7 +56,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -80,7 +80,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeProjectAsync(null!, CancellationToken.None));
+            await service.AnalyzeProjectAsync(null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -95,7 +95,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeProjectAsync(string.Empty, CancellationToken.None));
+            await service.AnalyzeProjectAsync(string.Empty, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeFileAsync(filePath, CancellationToken.None);
+        var result = await service.AnalyzeFileAsync(filePath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -155,7 +155,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeFileAsync(filePath, CancellationToken.None);
+        var result = await service.AnalyzeFileAsync(filePath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -179,7 +179,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeFileAsync(null!, CancellationToken.None));
+            await service.AnalyzeFileAsync(null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -194,7 +194,7 @@ public class RoslynCodeAnalysisServiceBehavioralTests
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeFileAsync(string.Empty, CancellationToken.None));
+            await service.AnalyzeFileAsync(string.Empty, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -219,7 +219,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeCodeAsync(code, language, CancellationToken.None);
+        var result = await service.AnalyzeCodeAsync(code, language, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -256,7 +256,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeCodeAsync(codeWithViolations, language, CancellationToken.None);
+        var result = await service.AnalyzeCodeAsync(codeWithViolations, language, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -289,7 +289,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync(null!, "C#", CancellationToken.None));
+            await service.AnalyzeCodeAsync(null!, "C#", TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -304,7 +304,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync(string.Empty, "C#", CancellationToken.None));
+            await service.AnalyzeCodeAsync(string.Empty, "C#", TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -319,7 +319,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync("code", null!, CancellationToken.None));
+            await service.AnalyzeCodeAsync("code", null!, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -334,7 +334,7 @@ public class TestClass
 
         // Act & Assert
         await Should.ThrowAsync<ArgumentException>(async () =>
-            await service.AnalyzeCodeAsync("code", string.Empty, CancellationToken.None));
+            await service.AnalyzeCodeAsync("code", string.Empty, TestContext.Current.CancellationToken));
     }
 
     /// <summary>
@@ -350,7 +350,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeCodeAsync(code, language, CancellationToken.None);
+        var result = await service.AnalyzeCodeAsync(code, language, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -375,7 +375,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.GetAvailableAnalyzersAsync(CancellationToken.None);
+        var result = await service.GetAvailableAnalyzersAsync(TestContext.Current.CancellationToken);
 
         // Assert
         result.ShouldNotBeNull();
@@ -406,7 +406,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -430,7 +430,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -454,7 +454,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeFileAsync(filePath, CancellationToken.None);
+        var result = await service.AnalyzeFileAsync(filePath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -502,7 +502,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeCodeAsync(codeWithSuggestions, language, CancellationToken.None);
+        var result = await service.AnalyzeCodeAsync(codeWithSuggestions, language, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -534,7 +534,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -570,7 +570,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();
@@ -603,7 +603,7 @@ public class TestClass
         var service = new RoslynCodeAnalysisService(_logger);
 
         // Act
-        var result = await service.AnalyzeProjectAsync(projectPath, CancellationToken.None);
+        var result = await service.AnalyzeProjectAsync(projectPath, TestContext.Current.CancellationToken);
 
         // Assert
         result.Violations.ShouldNotBeNull();

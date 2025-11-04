@@ -9,8 +9,15 @@ using Serilog;
 
 namespace IndFusion.Mcp.Web;
 
-internal class Program
+/// <summary>
+/// The main entry point for the ExxerFactor.Mcp web application.
+/// </summary>
+public class Program
 {
+    /// <summary>
+    /// The main entry point for the ExxerFactor.Mcp web application.
+    /// </summary>
+    /// <param name="args"></param>
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
@@ -107,9 +114,3 @@ internal class Program
         app.Run();
     }
 }
-
-/// <summary>
-/// Partial type used by ASP.NET hosting and tests to reference the web application entry point.
-/// </summary>
-public partial class Program
-{ }

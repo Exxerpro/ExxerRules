@@ -31,6 +31,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\code\SemanticRag\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
     <ProjectReference Include="..\..\..\code\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
+    <ProjectReference Include="..\..\..\code\SemanticRag\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

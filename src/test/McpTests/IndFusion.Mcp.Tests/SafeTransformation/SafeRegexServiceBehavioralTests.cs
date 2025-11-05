@@ -74,6 +74,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Ensures invalid regex patterns cause the safe regex operation to return a failure result.
     /// </summary>
+    /// <remarks>
+    /// The service should validate patterns before executing them and surface the parser error so callers can correct the input.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithInvalidPattern_ShouldReturnFailureResult()
     {
@@ -103,6 +107,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Confirms the service rejects transformation requests that do not specify any target files.
     /// </summary>
+    /// <remarks>
+    /// Target files are required to calculate diffs; the service should therefore stop early and report the configuration problem.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithEmptyTargetFiles_ShouldReturnFailureResult()
     {
@@ -128,6 +136,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Ensures valid regex patterns pass validation with a positive safety score.
     /// </summary>
+    /// <remarks>
+    /// A typical pattern should evaluate as safe, providing callers with confidence to proceed to preview or execution.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithValidPattern_ShouldReturnSuccessResult()
     {
@@ -149,6 +161,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Verifies invalid regex syntax is detected and surfaced with validation issues.
     /// </summary>
+    /// <remarks>
+    /// Even though validation returns success, it should flag the pattern as invalid and supply detailed issues to the caller.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithInvalidPattern_ShouldReturnFailureResult()
     {
@@ -170,6 +186,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Checks that patterns susceptible to ReDoS are flagged with warnings and reduced safety scores.
     /// </summary>
+    /// <remarks>
+    /// ReDoS-prone patterns must be downgraded in safety so that tooling can discourage unsafe transformations.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithReDoSPattern_ShouldReturnWarningResult()
     {
@@ -190,6 +210,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Verifies previewing a valid transformation succeeds and returns estimated changes.
     /// </summary>
+    /// <remarks>
+    /// Preview results should echo back the original pattern metadata and provide change estimates without modifying files.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -223,6 +247,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Ensures the preview operation succeeds even when no files match the pattern.
     /// </summary>
+    /// <remarks>
+    /// The service should communicate that no files were affected while still succeeding, mirroring typical user expectations.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithNoMatches_ShouldReturnSuccessResult()
     {
@@ -254,6 +282,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Confirms the safe regex operation honors cancellation requests and reports the cancellation.
     /// </summary>
+    /// <remarks>
+    /// Cancelling before execution should prevent any filesystem writes and return a descriptive cancellation error.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -286,6 +318,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Validates cancellation is respected when checking regex safety.
     /// </summary>
+    /// <remarks>
+    /// Validation should stop promptly when cancellation is requested so callers can maintain responsive experiences.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithCancellation_ShouldRespectCancellationToken()
     {

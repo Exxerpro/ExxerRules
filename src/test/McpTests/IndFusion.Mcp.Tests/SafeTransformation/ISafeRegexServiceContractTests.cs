@@ -10,6 +10,9 @@ namespace IndFusion.Mcp.Tests.SafeTransformation;
 /// Contract tests for ISafeRegexService interface.
 /// These tests verify the contract behavior using mocks and should ALWAYS PASS.
 /// </summary>
+/// <remarks>
+/// Each test configures a substitute implementation to express the contract that production code expects from the service.
+/// </remarks>
 public class ISafeRegexServiceContractTests
 {
     private readonly ISafeRegexService _mockService;
@@ -18,6 +21,9 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Initializes the contract tests with a mocked ISafeRegexService.
     /// </summary>
+    /// <remarks>
+    /// The substitute allows the tests to define the expected responses for each scenario without coupling to real implementations.
+    /// </remarks>
     public ISafeRegexServiceContractTests()
     {
         _mockService = Substitute.For<ISafeRegexService>();
@@ -26,6 +32,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Ensures applying a valid safe regex request returns a successful result payload.
     /// </summary>
+    /// <remarks>
+    /// The contract dictates that callers receive a populated <see cref="SafeRegexResult"/> when the request is well formed.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -80,6 +90,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Verifies invalid regex patterns cause the safe regex apply operation to fail.
     /// </summary>
+    /// <remarks>
+    /// Failing fast for malformed patterns keeps the contract predictable for clients and tools that surface validation feedback.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithInvalidPattern_ShouldReturnFailureResult()
     {
@@ -108,6 +122,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Validates the service rejects requests that specify no target files.
     /// </summary>
+    /// <remarks>
+    /// The contract requires the service to guard against empty input so that callers can provide helpful guidance to users.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithEmptyTargetFiles_ShouldReturnFailureResult()
     {
@@ -136,6 +154,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Confirms safe regex validation passes for well-formed patterns.
     /// </summary>
+    /// <remarks>
+    /// The contract guarantees that valid patterns return a validation payload with a high safety score and no issues.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithValidPattern_ShouldReturnSuccessResult()
     {
@@ -167,6 +189,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Ensures potentially dangerous patterns are flagged with safety issues.
     /// </summary>
+    /// <remarks>
+    /// Patterns that could trigger ReDoS must be reported as invalid with actionable issues so that tooling can block unsafe usage.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithDangerousPattern_ShouldReturnFailureResult()
     {
@@ -202,6 +228,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Confirms previewing a valid safe regex transformation succeeds.
     /// </summary>
+    /// <remarks>
+    /// The preview workflow should surface estimated changes and metadata without mutating the target files.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -246,6 +276,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Verifies preview operations honor cancellation requests.
     /// </summary>
+    /// <remarks>
+    /// Cancellation ensures user-driven aborts do not persist partial results or hang callers.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -276,6 +310,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Ensures apply operations respect cancellation tokens.
     /// </summary>
+    /// <remarks>
+    /// The contract requires cancellation to be surfaced as a failure so callers can differentiate between errors and aborts.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -306,6 +344,10 @@ public class ISafeRegexServiceContractTests
     /// <summary>
     /// Validates regex pattern checks observe cancellation tokens.
     /// </summary>
+    /// <remarks>
+    /// Validation must stop promptly on cancellation to keep IDE experiences responsive.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that verifies the mocked service behaviour.</returns>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithCancellation_ShouldRespectCancellationToken()
     {

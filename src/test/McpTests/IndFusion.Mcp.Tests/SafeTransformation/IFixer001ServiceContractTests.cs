@@ -10,6 +10,9 @@ namespace IndFusion.Mcp.Tests.SafeTransformation;
 /// Contract tests for IFixer001Service interface.
 /// These tests verify the contract behavior using mocks and should ALWAYS PASS.
 /// </summary>
+/// <remarks>
+/// The scenarios capture the contract that orchestration layers rely on when invoking Fixer001 operations.
+/// </remarks>
 public class IFixer001ServiceContractTests
 {
     private readonly IFixer001Service _mockService;
@@ -18,6 +21,9 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Initializes the contract tests with a mocked IFixer001Service.
     /// </summary>
+    /// <remarks>
+    /// Substituting the service keeps the tests focused on contract semantics instead of implementation details.
+    /// </remarks>
     public IFixer001ServiceContractTests()
     {
         _mockService = Substitute.For<IFixer001Service>();
@@ -26,6 +32,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Verifies applying Fixer001 succeeds when the request is valid.
     /// </summary>
+    /// <remarks>
+    /// A successful contract response must include transformation metadata and confirm that fixes were applied.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplyFixer001Async_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -79,6 +89,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Ensures unknown diagnostic identifiers cause the apply operation to fail.
     /// </summary>
+    /// <remarks>
+    /// The contract requires diagnostic validation before work begins so that callers can surface precise failure reasons.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplyFixer001Async_WithInvalidDiagnosticId_ShouldReturnFailureResult()
     {
@@ -106,6 +120,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Validates the service rejects Fixer001 requests without target files.
     /// </summary>
+    /// <remarks>
+    /// An empty target list is a caller error; the contract mandates a clear failure response.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplyFixer001Async_WithEmptyTargetFiles_ShouldReturnFailureResult()
     {
@@ -133,6 +151,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Confirms Fixer001 configuration can be retrieved for a valid solution path.
     /// </summary>
+    /// <remarks>
+    /// Tooling relies on the configuration payload to describe available transformations and defaults.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithValidSolutionPath_ShouldReturnSuccessResult()
     {
@@ -177,6 +199,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Ensures configuration retrieval fails when the solution path is invalid.
     /// </summary>
+    /// <remarks>
+    /// Calling code must be able to distinguish IO failures from successful configuration loads.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithInvalidSolutionPath_ShouldReturnFailureResult()
     {
@@ -199,6 +225,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Verifies previewing Fixer001 transformations succeeds for a valid request.
     /// </summary>
+    /// <remarks>
+    /// Previews should supply diff metadata without committing changes, enabling safe UX flows.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task PreviewFixer001TransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -241,6 +271,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Confirms readiness checks pass when prerequisites are met.
     /// </summary>
+    /// <remarks>
+    /// A ready response signals that downstream components can safely run the fixer.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -277,6 +311,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Ensures readiness issues are surfaced as a failure result.
     /// </summary>
+    /// <remarks>
+    /// Even when the call succeeds, the payload should indicate that the fixer is not ready and list actionable issues.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithIssues_ShouldReturnFailureResult()
     {
@@ -317,6 +355,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Verifies Fixer001 application respects cancellation tokens.
     /// </summary>
+    /// <remarks>
+    /// Cancellation should cascade to callers so that they can distinguish aborts from operational failures.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task ApplyFixer001Async_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -346,6 +388,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Ensures configuration retrieval honors cancellation requests.
     /// </summary>
+    /// <remarks>
+    /// Long-running configuration retrieval must observe cancellation to remain responsive in tooling scenarios.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -369,6 +415,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Verifies preview requests for Fixer001 respect cancellation tokens.
     /// </summary>
+    /// <remarks>
+    /// Preview operations should terminate promptly when cancellation is requested to avoid stale diffs.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task PreviewFixer001TransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -398,6 +448,10 @@ public class IFixer001ServiceContractTests
     /// <summary>
     /// Confirms readiness validation respects cancellation tokens.
     /// </summary>
+    /// <remarks>
+    /// Cancellation should propagate without marking the fixer as ready or not ready, preserving caller intent.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> that validates the mocked service behaviour.</returns>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithCancellation_ShouldRespectCancellationToken()
     {

@@ -41,7 +41,7 @@ public class SimpleMediatorTests
         };
 
         var handler = Substitute.For<ICommandHandler<ProcessDocumentCommand>>();
-        _serviceProvider.GetService<ICommandHandler<ProcessDocumentCommand>>().Returns(handler);
+        _serviceProvider.GetService(typeof(ICommandHandler<ProcessDocumentCommand>)).Returns(handler);
 
         // Act
         await _mediator.Send(command, TestContext.Current.CancellationToken);
@@ -74,7 +74,8 @@ public class SimpleMediatorTests
     {
         // Arrange
         var command = new ProcessDocumentCommand();
-        _serviceProvider.GetService<ICommandHandler<ProcessDocumentCommand>>().Returns((ICommandHandler<ProcessDocumentCommand>?)null);
+
+        _serviceProvider.GetService(typeof(ICommandHandler<ProcessDocumentCommand>)).Returns((ICommandHandler<ProcessDocumentCommand>?)null);
 
         // Act
         var result = await _mediator.Send(command, TestContext.Current.CancellationToken);

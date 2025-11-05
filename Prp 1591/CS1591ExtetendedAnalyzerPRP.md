@@ -1,5 +1,24 @@
 ### Doc Quality Analyzer – Story & Plan
 
+**📋 Review Notes & Architecture Alignment Required**
+
+> **⚠️ IMPORTANT**: This proposal has been reviewed and requires alignment with ExxerRules conventions before architect approval.  
+> **See**: `CS1591ExtetendedAnalyzerPRP_REVIEW.md` for comprehensive review notes, enhancements, and recommendations.
+
+**Key Changes Required:**
+1. **Diagnostic IDs**: `DQ0001-DQ0004` → `EXXER401-EXXER404` (Documentation range: EXXER400-EXXER499)
+2. **Project Structure**: Integrate into `IndFusion.Analyzer.Documentation.DocQuality` (not separate project)
+3. **Fixers**: All 4 rules should have corresponding fixers (not optional)
+4. **Shared Code**: Extract common helpers for reuse with `PublicMembersShouldHaveXmlDocumentationAnalyzer`
+5. **Severity**: Consider phased rollout (Info → Warning → Error)
+
+**Documentation Examples:**
+- All references to `DQ0001-DQ0004` should be updated to `EXXER401-EXXER404`
+- All references to `DQxxxx` should be updated to `EXXER401-EXXER404`
+- Project name references should align with chosen structure
+
+---
+
 **Context**
 
 - We keep finding XML docs that technically satisfy CS1591 but provide no real information (e.g., summaries that just repeat the member name or `<param>` descriptions that echo the identifier).
@@ -46,9 +65,10 @@
    - Include regression tests for auto-generated code (should suppress diagnostics).
 
 5. **Repository Integration**
-   - Wire the analyzer into `Directory.Build.props` so it runs on all projects, but allow opt-out via `#pragma warning disable DQxxxx` for generated files.
-   - Update CI to treat DQ000x warnings as errors.
-   - Provide fixer suggestions (optional but nice-to-have) for DQ0002 and DQ0003 (inserting TODO comments).
+   - Wire the analyzer into `Directory.Build.props` so it runs on all projects, but allow opt-out via `#pragma warning disable EXXER401-EXXER404` for generated files.
+   - Update CI to treat EXXER401-EXXER404 warnings as errors.
+   - **CRITICAL**: All 4 rules MUST have intelligent fixers that generate complete, meaningful documentation from code analysis (semantic model, method signatures, types, etc.). Fixers should NOT insert TODO placeholders - they must generate production-ready documentation.
+   - Diagnostic messages must include clear guidance: `Run 'dotnet format --diagnostics EXXER401,EXXER402,EXXER403,EXXER404 --fix' to auto-fix documentation issues.`
 
 6. **Documentation**
    - Write a README under the analyzer project describing each rule, suppression guidance, and sample fixes.
@@ -63,11 +83,14 @@
 
 ### Next Steps
 
-- [ ] Scaffold `IndFusion.Analyzers.DocQuality` and `…Tests` projects.
-- [ ] Implement rules DQ0001–DQ0004.
-- [ ] Create unit tests mirroring the bad patterns we’ve already spotted.
+- [ ] Scaffold `IndFusion.Analyzer.Documentation.DocQuality` and `…Tests` projects.
+- [ ] Implement analyzers EXXER401–EXXER404.
+- [ ] **MANDATORY**: Implement intelligent fixers for all 4 rules that generate complete, meaningful documentation from code analysis (semantic model, patterns, types).
+- [ ] Create unit tests mirroring the bad patterns we've already spotted.
+- [ ] Create fixer tests verifying generated documentation quality and correctness.
 - [ ] Integrate into CI and repository build.
-- [ ] Sweep the codebase and resolve new diagnostics.
+- [ ] Sweep the codebase and auto-fix existing violations using `dotnet format --fix`.
+- [ ] Verify generated documentation is production-ready (no TODOs, placeholders, or boilerplate).
 
 Once those boxes are checked, we’ll have automated guardrails that prevent the “Field name” style docs from sneaking back in, and we can build additional rules as needed.
 
@@ -146,13 +169,20 @@ Proposed test structure for `IndFusion.Analyzers.DocQuality.Tests`:
 - Build reusable parsing helpers for `DocumentationCommentTriviaSyntax`, including:
 	- `TryGetSummaryText(SyntaxNode node, out string text)`
 	- `GetParameterBlocks(SyntaxNode node)` returning parameter name + text pairs.
-- Leverage semantic model to normalize type names (e.g., distinguish `Task` vs `Task<T>`).
+- **CRITICAL - Intelligent Documentation Generation**:
+	- Leverage semantic model to analyze method signatures, return types, parameter types, and method body patterns.
+	- Generate meaningful summaries by analyzing method names, parameters, and return types.
+	- Generate parameter descriptions by analyzing parameter types, names, and usage context.
+	- Generate return descriptions by analyzing return types, nullable annotations, and method semantics.
+	- Use pattern matching to identify common patterns (e.g., `Get*Async` → "Retrieves the {type} asynchronously", `Create*` → "Creates a new instance of {type}").
+	- Analyze method body to infer behavior when possible (e.g., validation, computation, transformation).
 - String analysis utilities:
 	- Tokenize on whitespace + punctuation, lower-case comparison.
-	- Detect verbs via small curated list (`get`, `set`, `return`, `provide`, etc.) to guard against repetition in summaries.
+	- Detect verbs via curated list (`get`, `set`, `return`, `provide`, `compute`, `calculate`, `process`, `validate`, `create`, `retrieve`, etc.).
+	- Generate appropriate verbs based on method name patterns.
 - Consider static analysis caching per document to avoid reprocessing identical trivia.
 - Introduce `DocQualityAnalyzerResources.resx` for diagnostic messages; ensures localization readiness.
-- Optional: provide fixer scaffolding that inserts TODO text with placeholders for human edits, keeping implementation simple for first iteration.
+- **MANDATORY**: Intelligent fixers that generate production-ready documentation - NO TODOs or placeholders. Fixers must analyze code and generate complete, meaningful XML comments.
 
 These refinements should help us move quickly: write failing tests, implement the helper(s), flesh out analyzers, and iterate until the suite passes before integrating into the repo.
 
@@ -160,11 +190,16 @@ These refinements should help us move quickly: write failing tests, implement th
 
 ### CI & Pre-Commit Integration
 
-- Extend `Directory.Build.props` so the analyzer is referenced everywhere, ensuring CI builds surface `DQ000x` diagnostics.
-- Update `.editorconfig` with `dotnet_diagnostic.DQ0001.severity = warning` (and friends) so severity is consistent locally and in pipelines.
-- Add a dotnet tool manifest (`dotnet new tool-manifest`) and install `dotnet-format`; document usage via `dotnet format --diagnostics DQ0001,DQ0002,DQ0003,DQ0004 --fix`.
+- Extend `Directory.Build.props` so the analyzer is referenced everywhere, ensuring CI builds surface `EXXER401-EXXER404` diagnostics.
+- Update `.editorconfig` with `dotnet_diagnostic.EXXER401.severity = warning` (and friends) so severity is consistent locally and in pipelines.
+- Add a dotnet tool manifest (`dotnet new tool-manifest`) and install `dotnet-format`; document usage via `dotnet format --diagnostics EXXER401,EXXER402,EXXER403,EXXER404 --fix`.
+- **CRITICAL**: Diagnostic messages must include clear fix instructions:
+  ```
+  "XML summary is not informative. Run 'dotnet format --diagnostics EXXER401 --fix' to auto-generate documentation from code analysis."
+  ```
 - Introduce a lightweight git pre-commit hook (`.githooks/pre-commit.docquality`) that:
 	- Checks for a repo-level opt-out flag (`DOCQUALITY_SKIP=1` or `--skip-docquality` on commit command).
-	- Runs `dotnet format --verify-no-changes --diagnostics DQ0001,DQ0002,DQ0003,DQ0004` when the flag is absent.
-	- Fails the commit with a friendly message pointing to the proposal doc when issues are found.
+	- Runs `dotnet format --verify-no-changes --diagnostics EXXER401,EXXER402,EXXER403,EXXER404` when the flag is absent.
+	- Fails the commit with a friendly message: "Documentation quality issues detected. Run 'dotnet format --diagnostics EXXER401,EXXER402,EXXER403,EXXER404 --fix' to auto-fix."
 - In CI, run the same command (without the skip flag) after `dotnet build` to guarantee consistent enforcement between local devs and automation.
+- **Goal**: Projects should have complete, ready-to-use documentation generated automatically from code analysis - no manual documentation writing required for standard patterns.

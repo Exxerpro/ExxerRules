@@ -14,6 +14,11 @@ public sealed class FileLogger<T> : ILogger<T>, IDisposable
     private readonly string _logFilePath;
     private readonly object _lockObject = new();
 
+    /// <summary>
+    /// Initializes a logger that mirrors messages to xUnit output and a timestamped log file.
+    /// </summary>
+    /// <param name="output">The xUnit output helper for the current test.</param>
+    /// <param name="testName">The name used to derive the log file.</param>
     public FileLogger(Xunit.ITestOutputHelper output, string testName)
     {
         // Create xUnit logger via Meziantou
@@ -33,8 +38,17 @@ public sealed class FileLogger<T> : ILogger<T>, IDisposable
         _xunitLogger.LogInformation("Log File: {LogFilePath}", _logFilePath);
     }
 
+    /// <summary>
+    /// Gets the full path to the log file generated for the test.
+    /// </summary>
     public string LogFilePath => _logFilePath;
 
+    /// <summary>
+    /// Begins a logging scope recorded in both xUnit output and the file log.
+    /// </summary>
+    /// <typeparam name="TState">The type representing the scope state.</typeparam>
+    /// <param name="state">The scope state.</param>
+    /// <returns>An <see cref="IDisposable"/> that ends the scope when disposed.</returns>
     public IDisposable? BeginScope<TState>(TState state) where TState : notnull
     {
         var scope = _xunitLogger.BeginScope(state);
@@ -42,8 +56,22 @@ public sealed class FileLogger<T> : ILogger<T>, IDisposable
         return scope;
     }
 
+    /// <summary>
+    /// Determines whether the specified log level is enabled.
+    /// </summary>
+    /// <param name="logLevel">The log level to evaluate.</param>
+    /// <returns><c>true</c> when logging at the level is enabled; otherwise, <c>false</c>.</returns>
     public bool IsEnabled(LogLevel logLevel) => _xunitLogger.IsEnabled(logLevel);
 
+    /// <summary>
+    /// Writes a log entry to xUnit output and the backing log file.
+    /// </summary>
+    /// <typeparam name="TState">The type of the log state.</typeparam>
+    /// <param name="logLevel">The severity of the entry.</param>
+    /// <param name="eventId">The event identifier associated with the entry.</param>
+    /// <param name="state">The log state to record.</param>
+    /// <param name="exception">An optional exception related to the entry.</param>
+    /// <param name="formatter">The formatter used to render the message.</param>
     public void Log<TState>(
         LogLevel logLevel,
         EventId eventId,
@@ -83,6 +111,9 @@ public sealed class FileLogger<T> : ILogger<T>, IDisposable
         }
     }
 
+    /// <summary>
+    /// Completes logging for the test and releases file resources.
+    /// </summary>
     public void Dispose()
     {
         _xunitLogger.LogInformation("=== Test Logging Completed ===");

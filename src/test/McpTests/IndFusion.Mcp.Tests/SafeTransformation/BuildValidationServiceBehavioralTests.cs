@@ -18,6 +18,9 @@ public class BuildValidationServiceBehavioralTests
     private readonly ILogger<BuildValidationService> _logger;
     private readonly CancellationToken _cancellationToken = Xunit.TestContext.Current.CancellationToken;
 
+    /// <summary>
+    /// Builds a BuildValidationService instance backed by real dependencies for behavioral coverage.
+    /// </summary>
     public BuildValidationServiceBehavioralTests()
     {
         // Use simple logger factory
@@ -26,6 +29,9 @@ public class BuildValidationServiceBehavioralTests
         _service = new BuildValidationService(_logger);
     }
 
+    /// <summary>
+    /// Verifies build validation succeeds when provided a valid transformation request.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -61,6 +67,9 @@ public class BuildValidationServiceBehavioralTests
         result.Value.ValidationChecks.ShouldNotBeEmpty("Should have validation checks");
     }
 
+    /// <summary>
+    /// Ensures build validation fails when the solution path cannot be resolved.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithInvalidSolutionPath_ShouldReturnFailureResult()
     {
@@ -84,6 +93,9 @@ public class BuildValidationServiceBehavioralTests
         result.Error.ShouldContain("Solution file not found");
     }
 
+    /// <summary>
+    /// Confirms file validation succeeds when the transformation result is valid.
+    /// </summary>
     [Fact]
     public async Task ValidateFileTransformationAsync_WithValidFile_ShouldReturnSuccessResult()
     {
@@ -104,6 +116,9 @@ public class BuildValidationServiceBehavioralTests
         result.Value.ValidationChecks.ShouldNotBeEmpty("Should have validation checks");
     }
 
+    /// <summary>
+    /// Ensures file validation reports a failure when the transformed content is invalid.
+    /// </summary>
     [Fact]
     public async Task ValidateFileTransformationAsync_WithInvalidContent_ShouldReturnFailureResult()
     {
@@ -124,6 +139,9 @@ public class BuildValidationServiceBehavioralTests
         result.Value.NewIssues.ShouldNotBeEmpty("Should have syntax issues");
     }
 
+    /// <summary>
+    /// Verifies a temporary workspace can be provisioned when the solution path exists.
+    /// </summary>
     [Fact]
     public async Task CreateTemporaryWorkspaceAsync_WithValidSolutionPath_ShouldReturnSuccessResult()
     {
@@ -145,6 +163,9 @@ public class BuildValidationServiceBehavioralTests
         await _service.CleanupTemporaryWorkspaceAsync(result.Value, _cancellationToken);
     }
 
+    /// <summary>
+    /// Ensures workspace provisioning fails when the solution path is invalid.
+    /// </summary>
     [Fact]
     public async Task CreateTemporaryWorkspaceAsync_WithInvalidSolutionPath_ShouldReturnFailureResult()
     {
@@ -161,6 +182,9 @@ public class BuildValidationServiceBehavioralTests
         result.Error.ShouldContain("Solution file not found");
     }
 
+    /// <summary>
+    /// Confirms temporary workspaces can be cleaned up after validation completes.
+    /// </summary>
     [Fact]
     public async Task CleanupTemporaryWorkspaceAsync_WithValidWorkspace_ShouldReturnSuccessResult()
     {
@@ -177,6 +201,9 @@ public class BuildValidationServiceBehavioralTests
         result.IsSuccess.ShouldBeTrue("Workspace cleanup should succeed");
     }
 
+    /// <summary>
+    /// Ensures build validation honors cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -201,6 +228,9 @@ public class BuildValidationServiceBehavioralTests
         result.Error.ShouldContain("Operation was cancelled");
     }
 
+    /// <summary>
+    /// Confirms file validation respects cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ValidateFileTransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {

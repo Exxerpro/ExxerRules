@@ -17,6 +17,9 @@ public class CodeTransformationServiceBehavioralTests
     private readonly ILogger<CodeTransformationService> _logger;
     private readonly CancellationToken _cancellationToken = Xunit.TestContext.Current.CancellationToken;
 
+    /// <summary>
+    /// Builds a fully wired CodeTransformationService for behavioral verification.
+    /// </summary>
     public CodeTransformationServiceBehavioralTests()
     {
         // Use simple logger factory
@@ -34,6 +37,9 @@ public class CodeTransformationServiceBehavioralTests
         _service = new CodeTransformationService(_logger, fixer001Service, safeRegexService, buildValidationService);
     }
 
+    /// <summary>
+    /// Verifies the composite service applies Fixer001 transformations successfully.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -61,6 +67,9 @@ public class CodeTransformationServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures invalid Fixer001 requests are rejected by the service.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithInvalidRequest_ShouldReturnFailureResult()
     {
@@ -82,6 +91,9 @@ public class CodeTransformationServiceBehavioralTests
         result.ErrorDetails.ShouldNotBeNullOrEmpty();
     }
 
+    /// <summary>
+    /// Confirms safe regex transformations succeed through the composite service.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -110,6 +122,9 @@ public class CodeTransformationServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures invalid safe regex requests surface a failure result.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithInvalidRequest_ShouldReturnFailureResult()
     {
@@ -132,6 +147,9 @@ public class CodeTransformationServiceBehavioralTests
         result.ErrorDetails.ShouldNotBeNullOrEmpty();
     }
 
+    /// <summary>
+    /// Verifies aggregate validation succeeds for valid transformation requests.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -157,6 +175,9 @@ public class CodeTransformationServiceBehavioralTests
         result.NewIssues.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Confirms semantic review generation succeeds for valid requests.
+    /// </summary>
     [Fact]
     public async Task ReviewSemanticChangesAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -181,6 +202,9 @@ public class CodeTransformationServiceBehavioralTests
         result.FixSuggestions.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Ensures Fixer001 configuration retrieval works in the behavioral scenario.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithValidSolutionPath_ShouldReturnSuccessResult()
     {
@@ -198,6 +222,9 @@ public class CodeTransformationServiceBehavioralTests
         result.DefaultSettings.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Verifies the composite service falls back when the solution path is invalid.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithInvalidSolutionPath_ShouldReturnDefaultConfiguration()
     {
@@ -215,6 +242,9 @@ public class CodeTransformationServiceBehavioralTests
         result.DefaultSettings.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Confirms Fixer001 application respects cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -241,6 +271,9 @@ public class CodeTransformationServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures safe regex application respects cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithCancellation_ShouldRespectCancellationToken()
     {

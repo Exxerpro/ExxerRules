@@ -21,6 +21,9 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Creates a configured SafeRegexService with real dependencies for behavioral testing.
     /// </summary>
+    /// <remarks>
+    /// The constructor wires up concrete logging and build-validation services so each test exercises the production pipeline end to end.
+    /// </remarks>
     public SafeRegexServiceBehavioralTests()
     {
         // Use simple logger factory
@@ -33,6 +36,10 @@ public class SafeRegexServiceBehavioralTests
     /// <summary>
     /// Verifies that applying a well-formed safe regex request reports success and transformation details.
     /// </summary>
+    /// <remarks>
+    /// The test mimics a user file on disk and expects the service to acknowledge the pattern, replacement, and overall success flags.
+    /// </remarks>
+    /// <returns>A <see cref="Task"/> representing asynchronous test execution.</returns>
     [Fact]
     public async Task ApplySafeRegexAsync_WithValidRequest_ShouldReturnSuccessResult()
     {

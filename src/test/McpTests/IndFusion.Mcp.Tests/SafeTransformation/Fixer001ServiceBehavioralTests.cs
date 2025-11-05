@@ -329,6 +329,9 @@ public class Fixer001ServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures configuration retrieval observes cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithCancellation_ShouldRespectCancellationToken()
     {

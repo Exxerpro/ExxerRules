@@ -120,6 +120,9 @@
     <Folder Include="PatternGraph\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\code\Mcp\IndFusion.Mcp.Core\IndFusion.Mcp.Core.csproj" />
   </ItemGroup>
 </Project>

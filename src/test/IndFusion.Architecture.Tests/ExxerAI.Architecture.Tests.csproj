@@ -143,5 +143,9 @@
     <ProjectCapability Include="TestingPlatformServer" />
     <ProjectCapability Include="TestContainer" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

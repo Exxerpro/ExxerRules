@@ -114,6 +114,9 @@
     <InternalsVisibleTo Include="IndFusion.SemanticRag.Tests.Integration" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\code\SemanticRag\IndFusion.SemanticRag.Application\IndFusion.SemanticRag.Application.csproj" />
     <ProjectReference Include="..\..\..\code\SemanticRag\IndFusion.SemanticRag.Domain\IndFusion.SemanticRag.Domain.csproj" />
     <ProjectReference Include="..\..\..\code\SemanticRag\IndFusion.SemanticRag.Infrastructure\IndFusion.SemanticRag.Infrastructure.csproj" />

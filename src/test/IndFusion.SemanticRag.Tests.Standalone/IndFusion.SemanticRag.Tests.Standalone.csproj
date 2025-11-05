@@ -104,5 +104,9 @@
     <Using Include="System.Text" />
     <Using Include="System.IO" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

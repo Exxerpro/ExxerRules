@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Infrastructure.Adapters;
@@ -40,7 +41,7 @@ public class OllamaEmbeddingServiceAdapterTests
         // Arrange
         var text = "This is a test text";
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        
+
         var httpClient = CreateMockHttpClient(expectedEmbedding);
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
@@ -108,7 +109,7 @@ public class OllamaEmbeddingServiceAdapterTests
         // Arrange
         var texts = new List<string> { "Text 1", "Text 2", "Text 3" }.AsReadOnly();
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        
+
         var httpClient = CreateMockHttpClient(expectedEmbedding);
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
@@ -128,7 +129,7 @@ public class OllamaEmbeddingServiceAdapterTests
         var text = "This is a test text";
         var metadata = new Dictionary<string, object> { { "source", "test" } };
         var expectedEmbedding = new float[] { 0.1f, 0.2f, 0.3f };
-        
+
         var httpClient = CreateMockHttpClient(expectedEmbedding);
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
 
@@ -240,7 +241,7 @@ public class OllamaEmbeddingServiceAdapterTests
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
-        
+
         // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
         var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
@@ -258,7 +259,7 @@ public class OllamaEmbeddingServiceAdapterTests
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
-        
+
         // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
         var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
@@ -277,7 +278,7 @@ public class OllamaEmbeddingServiceAdapterTests
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
-        
+
         // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
         var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
@@ -298,7 +299,7 @@ public class OllamaEmbeddingServiceAdapterTests
         // ✅ TDD: Test cancellation handling
         var cancellationTokenSource = new CancellationTokenSource();
         cancellationTokenSource.Cancel();
-        
+
         // ✅ Phase 1.3: Use mocked HttpClient consistently - validation tests don't need real HTTP
         var httpClient = CreateMockHttpClient(new float[] { 0.1f }); // Mock not used (validation/test logic doesn't call HTTP)
         var adapter = new OllamaEmbeddingServiceAdapter(httpClient, _logger, _options);
@@ -343,4 +344,3 @@ public class OllamaEmbeddingServiceAdapterTests
         }
     }
 }
-

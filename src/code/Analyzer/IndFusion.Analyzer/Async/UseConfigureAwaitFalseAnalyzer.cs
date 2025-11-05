@@ -471,7 +471,8 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
                 // Check for ComponentBase with or without namespace
                 if (typeName == "ComponentBase" || 
                     typeName.EndsWith(".ComponentBase") ||
-                    typeName.Contains("Microsoft.AspNetCore.Components.ComponentBase"))
+                    typeName.Contains("Microsoft.AspNetCore.Components.ComponentBase") ||
+                    typeName.Contains("ComponentBase"))
                 {
                     inheritsFromComponentBase = true;
                     break;
@@ -480,12 +481,30 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
         }
 
         // Also check semantic model if syntax check didn't find it (for fully qualified names)
+        // Always try semantic model check as well to catch cases where syntax check might miss
         if (!inheritsFromComponentBase)
         {
             var classSymbol = semanticModel.GetDeclaredSymbol(containingClass);
             if (classSymbol != null)
             {
                 inheritsFromComponentBase = InheritsFromComponentBase(classSymbol);
+            }
+        }
+        
+        // If still not found, try checking the base type directly from syntax
+        if (!inheritsFromComponentBase && containingClass.BaseList != null)
+        {
+            foreach (var baseType in containingClass.BaseList.Types)
+            {
+                var typeInfo = semanticModel.GetTypeInfo(baseType.Type);
+                if (typeInfo.Type != null && typeInfo.Type is INamedTypeSymbol namedType)
+                {
+                    inheritsFromComponentBase = InheritsFromComponentBase(namedType);
+                    if (inheritsFromComponentBase)
+                    {
+                        break;
+                    }
+                }
             }
         }
 
@@ -522,8 +541,13 @@ public class UseConfigureAwaitFalseAnalyzer : DiagnosticAnalyzer
     /// </summary>
     /// <param name="classSymbol">The class symbol to inspect.</param>
     /// <returns><c>true</c> when the inheritance chain includes <c>ComponentBase</c>; otherwise, <c>false</c>.</returns>
-    private static bool InheritsFromComponentBase(INamedTypeSymbol classSymbol)
+    private static bool InheritsFromComponentBase(INamedTypeSymbol? classSymbol)
     {
+        if (classSymbol == null)
+        {
+            return false;
+        }
+        
         var current = classSymbol.BaseType;
         while (current != null)
         {

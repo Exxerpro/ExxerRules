@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http;
 using System.Text.Json;
 using IndFusion.SemanticRag.Infrastructure.Adapters;
 using IndFusion.SemanticRag.Infrastructure.Configuration;

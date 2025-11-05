@@ -20,8 +20,49 @@ namespace IndFusion.Mcp.Tests;
 public class AnalyzeExxerFactoringOpportunitiesTests : IDisposable
 {
     private static readonly string SolutionPath = TestHelpers.GetSolutionPath();
-    private static readonly string ExampleFilePath = Path.GetFullPath(Path.Combine(TestUtilities.GetTestProjectDirectory(), "ExampleCode.cs"));
     private readonly string _originalDir = Directory.GetCurrentDirectory();
+
+    /// <summary>
+    /// Gets the path to the ExampleCode.cs file, ensuring it exists first.
+    /// </summary>
+    private static string ExampleFilePath
+    {
+        get
+        {
+            // Ensure the file exists first
+            TestUtilities.EnsureExampleCodeFile();
+            
+            // Get the path from TestUtilities
+            var testProjectDir = TestUtilities.GetTestProjectDirectory();
+            var examplePath = Path.Combine(testProjectDir, "ExampleCode.cs");
+            
+            // If file doesn't exist at the expected path, try alternative locations
+            if (!File.Exists(examplePath))
+            {
+                // Try the actual test project directory
+                var assemblyLocation = typeof(AnalyzeExxerFactoringOpportunitiesTests).Assembly.Location;
+                var assemblyDir = Path.GetDirectoryName(assemblyLocation);
+                if (!string.IsNullOrEmpty(assemblyDir))
+                {
+                    var alternativePath = Path.Combine(assemblyDir, "ExampleCode.cs");
+                    if (File.Exists(alternativePath))
+                    {
+                        return alternativePath;
+                    }
+                }
+                
+                // Try relative to the test project directory
+                var currentDir = Directory.GetCurrentDirectory();
+                var relativePath = Path.Combine(currentDir, "ExampleCode.cs");
+                if (File.Exists(relativePath))
+                {
+                    return relativePath;
+                }
+            }
+            
+            return Path.GetFullPath(examplePath);
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AnalyzeExxerFactoringOpportunitiesTests"/> class.
@@ -30,6 +71,12 @@ public class AnalyzeExxerFactoringOpportunitiesTests : IDisposable
     {
         // Ensure ExampleCode.cs file exists before running tests
         TestUtilities.EnsureExampleCodeFile();
+        
+        // Verify the file exists at the expected path
+        if (!File.Exists(ExampleFilePath))
+        {
+            throw new FileNotFoundException($"ExampleCode.cs not found at expected path: {ExampleFilePath}");
+        }
     }
 
     /// <summary>

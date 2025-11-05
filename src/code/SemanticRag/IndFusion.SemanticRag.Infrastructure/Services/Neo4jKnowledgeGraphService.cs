@@ -43,18 +43,89 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         
         _logger.LogInformation("Executing graph query: {Cypher}", query.Query);
         
-        // TODO: 2025-01-27 - [IMPLEMENT] Implement Neo4j Cypher query execution using Neo4j driver
-        await Task.Delay(100, cancellationToken); // Placeholder
-        
-        stopwatch.Stop();
-        
-        return new GraphQueryResult
+        try
         {
-            Records = [],
-            ExecutionTimeMs = stopwatch.ElapsedMilliseconds,
-            RecordsAffected = 0,
-            Success = true
-        };
+            // Handle timeout from query.TimeoutMs
+            using var timeoutCts = query.TimeoutMs > 0 
+                ? new CancellationTokenSource(TimeSpan.FromMilliseconds(query.TimeoutMs))
+                : null;
+            
+            var linkedCts = timeoutCts != null
+                ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token)
+                : null;
+            
+            var effectiveToken = linkedCts?.Token ?? cancellationToken;
+            
+            // Execute the query using the graph database port
+            var queryResult = await _graphDatabasePort.ExecuteReadAsync(
+                query.Query,
+                query.Parameters != null ? new Dictionary<string, object>(query.Parameters) : null,
+                _options.Database,
+                effectiveToken);
+            
+            stopwatch.Stop();
+            
+            // Handle query failure
+            if (queryResult.IsFailure)
+            {
+                _logger.LogError("Graph query failed: {Error}", queryResult.Error);
+                return new GraphQueryResult(
+                    Records: [],
+                    ExecutionTimeMs: stopwatch.ElapsedMilliseconds,
+                    RecordsAffected: 0,
+                    Success: false,
+                    ErrorMessage: queryResult.Error ?? "Query execution failed");
+            }
+            
+            // Map CypherRecord to GraphRecord
+            var records = new List<GraphRecord>();
+            if (queryResult.Value != null)
+            {
+                foreach (var cypherRecord in queryResult.Value)
+                {
+                    // Convert Dictionary<string, object> Values to IReadOnlyList<object>
+                    // Order by Keys to maintain consistency
+                    var values = new List<object>();
+                    foreach (var key in cypherRecord.Keys)
+                    {
+                        values.Add(cypherRecord.Values.GetValueOrDefault(key) ?? (object)string.Empty);
+                    }
+                    
+                    records.Add(new GraphRecord(
+                        Values: values,
+                        Keys: cypherRecord.Keys));
+                }
+            }
+            
+            _logger.LogInformation(
+                "Graph query executed successfully in {ExecutionTimeMs}ms, {RecordsAffected} records returned",
+                stopwatch.ElapsedMilliseconds,
+                records.Count);
+            
+            return new GraphQueryResult(
+                Records: records,
+                ExecutionTimeMs: stopwatch.ElapsedMilliseconds,
+                RecordsAffected: records.Count,
+                Success: true,
+                ErrorMessage: null);
+        }
+        catch (OperationCanceledException)
+        {
+            stopwatch.Stop();
+            _logger.LogWarning("Graph query was cancelled or timed out");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            stopwatch.Stop();
+            _logger.LogError(ex, "Error executing graph query: {Query}", query.Query);
+            return new GraphQueryResult(
+                Records: [],
+                ExecutionTimeMs: stopwatch.ElapsedMilliseconds,
+                RecordsAffected: 0,
+                Success: false,
+                ErrorMessage: ex.Message);
+        }
     }
 
     // Note: AddNodeAsync, UpdateNodeAsync, DeleteNodeAsync, CreateRelationshipAsync, DeleteRelationshipAsync, AddCodeNodeAsync

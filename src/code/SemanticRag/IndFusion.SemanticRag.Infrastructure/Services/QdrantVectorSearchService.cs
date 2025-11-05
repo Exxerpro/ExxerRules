@@ -51,15 +51,57 @@ public class QdrantVectorSearchService : IVectorSearchService
         try
         {
             var collectionInfoResult = await _vectorDatabasePort.GetCollectionInfoAsync(_options.CollectionName, cancellationToken);
+            
+            // If collection exists, return success
+            if (collectionInfoResult.IsSuccess && collectionInfoResult.Value != null)
+            {
+                _logger.LogDebug("Collection already exists: {CollectionName}", _options.CollectionName);
+                return Result.Success();
+            }
+            
+            // If collection doesn't exist (NotFound error), create it
             if (collectionInfoResult.IsFailure)
             {
-                _logger.LogError("Failed to get collection info: {Error}", collectionInfoResult.Error);
+                var errorMessage = collectionInfoResult.Error ?? string.Empty;
+                _logger.LogDebug("GetCollectionInfoAsync returned failure: {Error}", errorMessage);
+                
+                // Check if the error is "NotFound" - this means collection doesn't exist and we should create it
+                // Error format is typically: "VE005: Status(StatusCode="NotFound", Detail="...")"
+                var isNotFoundError = errorMessage.Contains("NotFound", StringComparison.OrdinalIgnoreCase) ||
+                                     errorMessage.Contains("doesn't exist", StringComparison.OrdinalIgnoreCase) ||
+                                     errorMessage.Contains("VE005", StringComparison.OrdinalIgnoreCase) ||
+                                     errorMessage.Contains("StatusCode=\"NotFound\"", StringComparison.OrdinalIgnoreCase) ||
+                                     errorMessage.Contains("StatusCode=NotFound", StringComparison.OrdinalIgnoreCase);
+                
+                if (isNotFoundError)
+                {
+                    _logger.LogInformation("Collection does not exist, creating: {CollectionName}", _options.CollectionName);
+                    
+                    var createResult = await _vectorDatabasePort.CreateCollectionAsync(
+                        _options.CollectionName,
+                        (uint)_options.VectorSize,
+                        VectorDistance.Cosine,
+                        cancellationToken);
+                    
+                    if (createResult.IsFailure)
+                    {
+                        _logger.LogError("Failed to create collection: {Error}", createResult.Error);
+                        return createResult;
+                    }
+                    
+                    _logger.LogInformation("Collection created successfully: {CollectionName}", _options.CollectionName);
+                    return Result.Success();
+                }
+                
+                // If it's a different error, return it
+                _logger.LogError("Failed to get collection info (non-NotFound error): {Error}", collectionInfoResult.Error);
                 return Result.WithFailure(collectionInfoResult.Error ?? ErrorCodes.VectorDatabaseError);
             }
 
+            // If result is success but value is null, collection doesn't exist - create it
             if (collectionInfoResult.Value == null)
             {
-                _logger.LogInformation("Creating collection: {CollectionName}", _options.CollectionName);
+                _logger.LogInformation("Collection does not exist, creating: {CollectionName}", _options.CollectionName);
                 
                 var createResult = await _vectorDatabasePort.CreateCollectionAsync(
                     _options.CollectionName,
@@ -91,51 +133,137 @@ public class QdrantVectorSearchService : IVectorSearchService
         VectorSearchOptions options, 
         CancellationToken cancellationToken = default)
     {
+        var startTime = DateTime.UtcNow;
         try
         {
             _logger.LogInformation("Starting vector search for query: {Query}", query);
-
-            var startTime = DateTime.UtcNow;
 
             // Ensure collection exists
             var ensureResult = await EnsureCollectionExistsAsync(cancellationToken);
             if (ensureResult.IsFailure)
             {
                 _logger.LogError("Failed to ensure collection exists: {Error}", ensureResult.Error);
-                throw new InvalidOperationException($"Failed to ensure collection exists: {ensureResult.Error}");
+                return new VectorSearchResponse(
+                    Results: [],
+                    TotalCount: 0,
+                    Query: query,
+                    ProcessingTimeMs: (long)(DateTime.UtcNow - startTime).TotalMilliseconds,
+                    SearchOptions: options,
+                    Success: false,
+                    ErrorMessage: $"Failed to ensure collection exists: {ensureResult.Error}");
             }
 
             // Generate embeddings for the query
             var embedding = await GenerateEmbeddingAsync(query, cancellationToken);
 
-            // TODO: 2025-01-27 - [IMPLEMENT] Implement Qdrant vector search using QdrantClient.SearchAsync with embedding vector
-            _logger.LogInformation("Search placeholder - would search for: {Query}", query);
-            await Task.Delay(100, cancellationToken); // Placeholder
-            
-            var response = new List<object>(); // Placeholder response
+            // Convert EmbeddingVector to float[] for search
+            var queryVector = embedding.Values.ToArray();
+
+            // Build filter from options
+            Dictionary<string, object>? domainFilter = null;
+            if (options.Filters != null && options.Filters.Count > 0)
+            {
+                domainFilter = new Dictionary<string, object>(options.Filters);
+            }
+
+            // Execute vector search using the vector database port
+            var searchResult = await _vectorDatabasePort.SearchAsync(
+                collectionName: _options.CollectionName,
+                queryVector: queryVector,
+                limit: (uint)options.Limit,
+                scoreThreshold: options.Threshold > 0 ? options.Threshold : null,
+                filter: domainFilter,
+                cancellationToken: cancellationToken);
 
             var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
 
-            // Map results - placeholder implementation
+            // Handle search failure
+            if (searchResult.IsFailure)
+            {
+                _logger.LogError("Vector search failed: {Error}", searchResult.Error);
+                return new VectorSearchResponse(
+                    Results: [],
+                    TotalCount: 0,
+                    Query: query,
+                    ProcessingTimeMs: (long)elapsedMs,
+                    SearchOptions: options,
+                    Success: false,
+                    ErrorMessage: searchResult.Error ?? "Vector search failed");
+            }
+
+            // Map VectorSearchHit to VectorSearchResult
             var results = new List<VectorSearchResult>();
+            int rank = 1;
+            
+            if (searchResult.Value != null)
+            {
+                foreach (var hit in searchResult.Value)
+                {
+                    var score = hit.Score;
+                    
+                    // Apply threshold filter
+                    if (score < options.Threshold)
+                        continue;
+
+                    // Extract metadata from payload
+                    var metadata = new Dictionary<string, object>();
+                    if (options.IncludeMetadata && hit.Payload != null)
+                    {
+                        foreach (var payloadKvp in hit.Payload)
+                        {
+                            metadata[payloadKvp.Key] = payloadKvp.Value;
+                        }
+                    }
+
+                    // Extract content from payload or use default
+                    var content = metadata.GetValueOrDefault("content")?.ToString() ?? string.Empty;
+
+                    // Extract embedding vector if requested
+                    var embeddingVector = options.IncludeEmbedding && hit.Vector != null
+                        ? hit.Vector.ToArray()
+                        : Array.Empty<float>();
+
+                    var vectorEmbedding = new VectorEmbedding(
+                        Id: hit.PointId.ToString(),
+                        Content: content,
+                        Embedding: embeddingVector,
+                        Metadata: metadata as IReadOnlyDictionary<string, object> ?? new Dictionary<string, object>(metadata),
+                        CreatedAt: DateTimeOffset.UtcNow
+                    );
+
+                    results.Add(new VectorSearchResult(
+                        Vector: vectorEmbedding,
+                        Similarity: score,
+                        Rank: rank++));
+                }
+            }
 
             _logger.LogInformation(
                 "Vector search completed. Found {Count} results in {ElapsedMs}ms", 
                 results.Count, 
                 elapsedMs);
 
-            return new VectorSearchResponse
-            {
-                Query = query,
-                Results = results,
-                TotalCount = results.Count,
-                ProcessingTimeMs = (long)elapsedMs
-            };
+            return new VectorSearchResponse(
+                Results: results,
+                TotalCount: results.Count,
+                Query: query,
+                ProcessingTimeMs: (long)elapsedMs,
+                SearchOptions: options,
+                Success: true,
+                ErrorMessage: null);
         }
         catch (Exception ex)
         {
+            var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
             _logger.LogError(ex, "Error during vector search for query: {Query}", query);
-            throw;
+            return new VectorSearchResponse(
+                Results: [],
+                TotalCount: 0,
+                Query: query,
+                ProcessingTimeMs: (long)elapsedMs,
+                SearchOptions: options,
+                Success: false,
+                ErrorMessage: ex.Message);
         }
     }
 
@@ -195,9 +323,37 @@ public class QdrantVectorSearchService : IVectorSearchService
                 throw new InvalidOperationException($"Failed to ensure collection exists: {ensureResult.Error}");
             }
 
-        // TODO: 2025-01-27 - [IMPLEMENT] Implement Qdrant vector upsert using QdrantClient.UpsertAsync with embedding and metadata
-        _logger.LogInformation("Upsert placeholder - would upsert vector with ID: {Id}", id);
-        await Task.Delay(100, cancellationToken); // Placeholder
+            // Generate embedding for document content
+            var embedding = await GenerateEmbeddingAsync(content, cancellationToken);
+
+            // Convert document ID to ulong (use hash if not numeric)
+            if (!ulong.TryParse(id, out var pointId))
+            {
+                pointId = (ulong)id.GetHashCode();
+            }
+
+            // Create payload with metadata and content
+            var payload = new Dictionary<string, object>(metadata);
+            payload["content"] = content;
+            payload["id"] = id;
+
+            // Create QdrantPoint with embedding and metadata
+            var point = new QdrantPoint(
+                Id: pointId,
+                Vector: embedding.Values.ToArray(),
+                Payload: payload);
+
+            // Upsert the point into the collection
+            var upsertResult = await _vectorDatabasePort.UpsertAsync(
+                _options.CollectionName,
+                new[] { point },
+                cancellationToken);
+
+            if (upsertResult.IsFailure)
+            {
+                _logger.LogError("Failed to upsert document: {Error}", upsertResult.Error);
+                throw new InvalidOperationException($"Failed to store document: {upsertResult.Error}");
+            }
 
             _logger.LogInformation("Document stored successfully with ID: {Id}", id);
         }
@@ -220,9 +376,32 @@ public class QdrantVectorSearchService : IVectorSearchService
         {
             _logger.LogInformation("Deleting document with ID: {Id}", id);
 
-        // TODO: 2025-01-27 - [IMPLEMENT] Implement Qdrant vector deletion using QdrantClient.DeleteAsync
-        _logger.LogInformation("Delete placeholder - would delete vector with ID: {Id}", id);
-        await Task.Delay(100, cancellationToken); // Placeholder
+            // Ensure collection exists
+            var ensureResult = await EnsureCollectionExistsAsync(cancellationToken);
+            if (ensureResult.IsFailure)
+            {
+                _logger.LogError("Failed to ensure collection exists: {Error}", ensureResult.Error);
+                throw new InvalidOperationException($"Failed to ensure collection exists: {ensureResult.Error}");
+            }
+
+            // Convert document ID to ulong (use hash if not numeric)
+            if (!ulong.TryParse(id, out var pointId))
+            {
+                pointId = (ulong)id.GetHashCode();
+            }
+
+            // Delete the point from the collection
+            var deleteResult = await _vectorDatabasePort.DeleteAsync(
+                _options.CollectionName,
+                pointIds: new[] { pointId },
+                filter: null,
+                cancellationToken);
+
+            if (deleteResult.IsFailure)
+            {
+                _logger.LogError("Failed to delete document: {Error}", deleteResult.Error);
+                throw new InvalidOperationException($"Failed to delete document: {deleteResult.Error}");
+            }
 
             _logger.LogInformation("Document deleted successfully with ID: {Id}", id);
         }
@@ -240,13 +419,58 @@ public class QdrantVectorSearchService : IVectorSearchService
         Dictionary<string, object> metadata, 
         CancellationToken cancellationToken = default)
     {
+        if (string.IsNullOrWhiteSpace(id))
+            throw new ArgumentException("ID cannot be null or empty", nameof(id));
+        
+        if (string.IsNullOrWhiteSpace(content))
+            throw new ArgumentException("Content cannot be null or empty", nameof(content));
+        
+        if (metadata == null)
+            throw new ArgumentNullException(nameof(metadata));
+
         try
         {
             _logger.LogInformation("Updating document with ID: {Id}", id);
 
-        // TODO: 2025-01-27 - [IMPLEMENT] Implement Qdrant vector update using QdrantClient.SetPayloadAsync or UpsertAsync
-        _logger.LogInformation("Update placeholder - would update vector with ID: {Id}", id);
-        await Task.Delay(100, cancellationToken); // Placeholder
+            // Ensure collection exists
+            var ensureResult = await EnsureCollectionExistsAsync(cancellationToken);
+            if (ensureResult.IsFailure)
+            {
+                _logger.LogError("Failed to ensure collection exists: {Error}", ensureResult.Error);
+                throw new InvalidOperationException($"Failed to ensure collection exists: {ensureResult.Error}");
+            }
+
+            // Generate new embedding for updated content
+            var embedding = await GenerateEmbeddingAsync(content, cancellationToken);
+
+            // Convert document ID to ulong (use hash if not numeric)
+            if (!ulong.TryParse(id, out var pointId))
+            {
+                pointId = (ulong)id.GetHashCode();
+            }
+
+            // Create payload with updated metadata and content
+            var payload = new Dictionary<string, object>(metadata);
+            payload["content"] = content;
+            payload["id"] = id;
+
+            // Create QdrantPoint with same ID but new vector and metadata
+            var point = new QdrantPoint(
+                Id: pointId,
+                Vector: embedding.Values.ToArray(),
+                Payload: payload);
+
+            // Upsert the point (upsert updates existing points with same ID)
+            var upsertResult = await _vectorDatabasePort.UpsertAsync(
+                _options.CollectionName,
+                new[] { point },
+                cancellationToken);
+
+            if (upsertResult.IsFailure)
+            {
+                _logger.LogError("Failed to upsert document: {Error}", upsertResult.Error);
+                throw new InvalidOperationException($"Failed to update document: {upsertResult.Error}");
+            }
 
             _logger.LogInformation("Document updated successfully with ID: {Id}", id);
         }

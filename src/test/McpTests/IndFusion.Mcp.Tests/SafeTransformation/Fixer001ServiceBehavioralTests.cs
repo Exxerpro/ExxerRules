@@ -19,6 +19,9 @@ public class Fixer001ServiceBehavioralTests
     private readonly IBuildValidationService _buildValidationService;
     private readonly CancellationToken _cancellationToken = Xunit.TestContext.Current.CancellationToken;
 
+    /// <summary>
+    /// Creates a Fixer001Service instance with real collaborative dependencies for behavioral validation.
+    /// </summary>
     public Fixer001ServiceBehavioralTests()
     {
         // Use simple logger factory
@@ -28,6 +31,9 @@ public class Fixer001ServiceBehavioralTests
         _service = new Fixer001Service(_logger, _buildValidationService);
     }
 
+    /// <summary>
+    /// Verifies the Fixer001 service succeeds with a valid behavioral request.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -58,6 +64,9 @@ public class Fixer001ServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures invalid diagnostic identifiers cause the Fixer001 run to fail.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithInvalidDiagnosticId_ShouldReturnFailureResult()
     {
@@ -83,6 +92,9 @@ public class Fixer001ServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Validates the behavior when no target files are supplied to Fixer001.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithEmptyTargetFiles_ShouldReturnFailureResult()
     {
@@ -104,6 +116,9 @@ public class Fixer001ServiceBehavioralTests
         result.Error.ShouldContain("No target files specified");
     }
 
+    /// <summary>
+    /// Confirms configuration retrieval succeeds for a valid solution path.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithValidSolutionPath_ShouldReturnSuccessResult()
     {
@@ -123,6 +138,9 @@ public class Fixer001ServiceBehavioralTests
         result.Value.DefaultSettings.ShouldNotBeNull();
     }
 
+    /// <summary>
+    /// Ensures configuration retrieval fails when the solution path is invalid.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithInvalidSolutionPath_ShouldReturnFailureResult()
     {
@@ -139,6 +157,9 @@ public class Fixer001ServiceBehavioralTests
         result.Error.ShouldContain("Solution file not found");
     }
 
+    /// <summary>
+    /// Verifies previewing Fixer001 changes succeeds and returns expected metadata.
+    /// </summary>
     [Fact]
     public async Task PreviewFixer001TransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -166,6 +187,9 @@ public class Fixer001ServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures previewing fails when the diagnostic identifier is invalid.
+    /// </summary>
     [Fact]
     public async Task PreviewFixer001TransformationAsync_WithInvalidDiagnosticId_ShouldReturnFailureResult()
     {
@@ -191,6 +215,9 @@ public class Fixer001ServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Confirms readiness checks pass when Fixer001 prerequisites are met.
+    /// </summary>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -219,6 +246,9 @@ public class Fixer001ServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures readiness validation fails when referencing an invalid diagnostic identifier.
+    /// </summary>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithInvalidDiagnosticId_ShouldReturnFailureResult()
     {
@@ -245,6 +275,9 @@ public class Fixer001ServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Verifies the readiness check reports not-ready when no target files are supplied.
+    /// </summary>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithEmptyTargetFiles_ShouldReturnSuccessWithNotReady()
     {
@@ -267,6 +300,9 @@ public class Fixer001ServiceBehavioralTests
         result.Value.Issues.ShouldNotBeEmpty("Should have issues with no target files");
     }
 
+    /// <summary>
+    /// Confirms Fixer001 operations honor cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithCancellation_ShouldRespectCancellationToken()
     {

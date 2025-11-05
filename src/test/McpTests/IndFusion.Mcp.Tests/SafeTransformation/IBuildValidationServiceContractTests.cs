@@ -224,6 +224,9 @@ public class IBuildValidationServiceContractTests
         result.Value.NewIssues.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Verifies a temporary workspace can be created for a valid solution path.
+    /// </summary>
     [Fact]
     public async Task CreateTemporaryWorkspaceAsync_WithValidSolutionPath_ShouldReturnSuccessResult()
     {
@@ -250,6 +253,9 @@ public class IBuildValidationServiceContractTests
         result.Value.WorkspacePath.ShouldNotBeNullOrEmpty();
     }
 
+    /// <summary>
+    /// Ensures workspace creation fails when the solution path is invalid.
+    /// </summary>
     [Fact]
     public async Task CreateTemporaryWorkspaceAsync_WithInvalidSolutionPath_ShouldReturnFailureResult()
     {
@@ -269,6 +275,9 @@ public class IBuildValidationServiceContractTests
         result.Error.ShouldContain("not found");
     }
 
+    /// <summary>
+    /// Confirms temporary workspaces can be cleaned up successfully.
+    /// </summary>
     [Fact]
     public async Task CleanupTemporaryWorkspaceAsync_WithValidWorkspace_ShouldReturnSuccessResult()
     {
@@ -291,6 +300,9 @@ public class IBuildValidationServiceContractTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies cleanup is a safe no-op when the workspace no longer exists.
+    /// </summary>
     [Fact]
     public async Task CleanupTemporaryWorkspaceAsync_WithNonExistentWorkspace_ShouldReturnSuccessResult()
     {
@@ -313,6 +325,9 @@ public class IBuildValidationServiceContractTests
         result.IsSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Ensures transformation validation honors cancellation requests.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -341,6 +356,9 @@ public class IBuildValidationServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Confirms file validation observes cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ValidateFileTransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -365,6 +383,9 @@ public class IBuildValidationServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Validates workspace creation respects cancellation requests.
+    /// </summary>
     [Fact]
     public async Task CreateTemporaryWorkspaceAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -385,6 +406,9 @@ public class IBuildValidationServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Ensures workspace cleanup honors cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task CleanupTemporaryWorkspaceAsync_WithCancellation_ShouldRespectCancellationToken()
     {

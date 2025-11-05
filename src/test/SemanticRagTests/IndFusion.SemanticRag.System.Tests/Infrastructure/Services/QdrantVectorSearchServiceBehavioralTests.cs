@@ -21,6 +21,7 @@ namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Services;
 public class QdrantVectorSearchServiceBehavioralTests : IDisposable
 {
     private readonly QdrantContainerFixture _fixture;
+    private readonly OllamaContainerFixture _ollamaFixture;
     private readonly ILogger<QdrantVectorSearchService> _logger;
     private readonly IVectorDatabasePort _vectorDatabasePort;
     private readonly IEmbeddingServicePort _embeddingServicePort;
@@ -32,12 +33,14 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
     /// Initializes the Qdrant service behavioral test fixture with real services from container.
     /// </summary>
     /// <param name="fixture">Qdrant container fixture providing real Qdrant instance.</param>
+    /// <param name="ollamaFixture">Ollama container fixture providing real Ollama instance.</param>
     /// <param name="output">Test output helper for logging.</param>
-    public QdrantVectorSearchServiceBehavioralTests(QdrantContainerFixture fixture, ITestOutputHelper output)
+    public QdrantVectorSearchServiceBehavioralTests(QdrantContainerFixture fixture, OllamaContainerFixture ollamaFixture, ITestOutputHelper output)
     {
         _fixture = fixture ?? throw new ArgumentNullException(nameof(fixture));
+        _ollamaFixture = ollamaFixture ?? throw new ArgumentNullException(nameof(ollamaFixture));
 
-        if (!_fixture.IsAvailable || DockerSkipConditions.ShouldSkipDockerTests)
+        if (!_fixture.IsAvailable || !_ollamaFixture.IsAvailable || DockerSkipConditions.ShouldSkipDockerTests)
         {
             Assert.Skip("Docker is not available - system tests require real containers");
         }
@@ -49,20 +52,20 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
         var vectorAdapterLogger = XUnitLogger.CreateLogger<QdrantVectorDatabaseAdapter>(output);
         _vectorDatabasePort = new QdrantVectorDatabaseAdapter(_fixture.Client!, vectorAdapterLogger);
 
-        // Create real Ollama embedding service adapter (uses localhost:11434 or docker-compose Ollama)
+        // Create real Ollama embedding service adapter using container fixture
         var httpClient = new HttpClient
         {
-            BaseAddress = new Uri("http://localhost:11434"),
+            BaseAddress = new Uri(_ollamaFixture.HttpEndpoint),
             Timeout = TimeSpan.FromSeconds(30)
         };
         var ollamaOptions = new OllamaOptions
         {
-            BaseUrl = "http://localhost:11434",
-            EmbeddingModel = "nomic-embed-text",
-            EmbeddingDimension = 384,
-            MaxTextLength = 8192,
-            MaxConcurrency = 5,
-            TimeoutSeconds = 30
+            BaseUrl = _ollamaFixture.Options.BaseUrl,
+            EmbeddingModel = _ollamaFixture.Options.EmbeddingModel,
+            EmbeddingDimension = _ollamaFixture.Options.EmbeddingDimension,
+            MaxTextLength = _ollamaFixture.Options.MaxTextLength,
+            MaxConcurrency = _ollamaFixture.Options.MaxConcurrency,
+            TimeoutSeconds = _ollamaFixture.Options.TimeoutSeconds
         };
         var embeddingAdapterLogger = XUnitLogger.CreateLogger<OllamaEmbeddingServiceAdapter>(output);
         _embeddingServicePort = new OllamaEmbeddingServiceAdapter(

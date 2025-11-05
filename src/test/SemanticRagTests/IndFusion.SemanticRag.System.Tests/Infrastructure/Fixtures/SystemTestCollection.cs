@@ -6,7 +6,7 @@ namespace IndFusion.SemanticRag.System.Tests.Infrastructure.Fixtures;
 /// Containers are started once per collection and disposed after all tests complete.
 /// </summary>
 [CollectionDefinition("System")]
-public class SystemTestCollection : ICollectionFixture<QdrantContainerFixture>, ICollectionFixture<Neo4jContainerFixture>
+public class SystemTestCollection : ICollectionFixture<QdrantContainerFixture>, ICollectionFixture<Neo4jContainerFixture>, ICollectionFixture<OllamaContainerFixture>
 {
 	// Collection definition only - no implementation needed
 }

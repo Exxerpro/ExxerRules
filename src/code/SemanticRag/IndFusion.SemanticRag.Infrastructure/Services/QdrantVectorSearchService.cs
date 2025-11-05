@@ -62,20 +62,28 @@ public class QdrantVectorSearchService : IVectorSearchService
             // If collection doesn't exist (NotFound error), create it
             if (collectionInfoResult.IsFailure)
             {
+                // Result.Error might be a collection, so join all errors into a single string
                 var errorMessage = collectionInfoResult.Error ?? string.Empty;
-                _logger.LogDebug("GetCollectionInfoAsync returned failure: {Error}", errorMessage);
+                // Normalize error message by removing newlines and extra whitespace for easier matching
+                var normalizedErrorMessage = errorMessage.Replace("\r", " ").Replace("\n", " ").Replace("\t", " ");
+                
+                _logger.LogInformation("GetCollectionInfoAsync returned failure: {Error}", errorMessage);
                 
                 // Check if the error is "NotFound" - this means collection doesn't exist and we should create it
                 // Error format is typically: "VE005: Status(StatusCode="NotFound", Detail="...")"
-                var isNotFoundError = errorMessage.Contains("NotFound", StringComparison.OrdinalIgnoreCase) ||
-                                     errorMessage.Contains("doesn't exist", StringComparison.OrdinalIgnoreCase) ||
-                                     errorMessage.Contains("VE005", StringComparison.OrdinalIgnoreCase) ||
-                                     errorMessage.Contains("StatusCode=\"NotFound\"", StringComparison.OrdinalIgnoreCase) ||
-                                     errorMessage.Contains("StatusCode=NotFound", StringComparison.OrdinalIgnoreCase);
+                // The error message contains both the error code (VE005) and the exception details
+                // Normalize the error message to handle newlines and special characters
+                var isNotFoundError = !string.IsNullOrEmpty(normalizedErrorMessage) &&
+                                     (normalizedErrorMessage.Contains("NotFound", StringComparison.OrdinalIgnoreCase) ||
+                                     normalizedErrorMessage.Contains("doesn't exist", StringComparison.OrdinalIgnoreCase) ||
+                                     normalizedErrorMessage.Contains("VE005", StringComparison.OrdinalIgnoreCase) ||
+                                     normalizedErrorMessage.Contains("StatusCode=\"NotFound\"", StringComparison.OrdinalIgnoreCase) ||
+                                     normalizedErrorMessage.Contains("StatusCode=NotFound", StringComparison.OrdinalIgnoreCase) ||
+                                     normalizedErrorMessage.Contains("StatusCode='NotFound'", StringComparison.OrdinalIgnoreCase));
                 
                 if (isNotFoundError)
                 {
-                    _logger.LogInformation("Collection does not exist, creating: {CollectionName}", _options.CollectionName);
+                    _logger.LogInformation("Collection does not exist (NotFound detected), creating: {CollectionName}", _options.CollectionName);
                     
                     var createResult = await _vectorDatabasePort.CreateCollectionAsync(
                         _options.CollectionName,

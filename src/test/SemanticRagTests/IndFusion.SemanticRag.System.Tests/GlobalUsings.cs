@@ -18,3 +18,4 @@ global using IndFusion.SemanticRag.Domain.Errors;
 global using Qdrant.Client;
 global using Testcontainers.Neo4j;
 global using Testcontainers.Qdrant;
+global using Testcontainers.Ollama;

@@ -79,6 +79,7 @@
     <PackageReference Include="Testcontainers.XunitV3" />
     <PackageReference Include="Testcontainers.Qdrant" />
     <PackageReference Include="Testcontainers.Neo4j" />
+    <PackageReference Include="Testcontainers.Ollama" />
   </ItemGroup>
 
   <!-- PROJECT CAPABILITIES -->

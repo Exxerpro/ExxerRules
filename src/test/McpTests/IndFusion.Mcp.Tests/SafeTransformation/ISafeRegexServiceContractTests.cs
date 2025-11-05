@@ -15,11 +15,17 @@ public class ISafeRegexServiceContractTests
     private readonly ISafeRegexService _mockService;
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+    /// <summary>
+    /// Initializes the contract tests with a mocked ISafeRegexService.
+    /// </summary>
     public ISafeRegexServiceContractTests()
     {
         _mockService = Substitute.For<ISafeRegexService>();
     }
 
+    /// <summary>
+    /// Ensures applying a valid safe regex request returns a successful result payload.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -71,6 +77,9 @@ public class ISafeRegexServiceContractTests
         result.Value.FilesAffected.ShouldBe(1);
     }
 
+    /// <summary>
+    /// Verifies invalid regex patterns cause the safe regex apply operation to fail.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithInvalidPattern_ShouldReturnFailureResult()
     {
@@ -96,6 +105,9 @@ public class ISafeRegexServiceContractTests
         result.Error.ShouldContain("Invalid regex pattern");
     }
 
+    /// <summary>
+    /// Validates the service rejects requests that specify no target files.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithEmptyTargetFiles_ShouldReturnFailureResult()
     {
@@ -121,6 +133,9 @@ public class ISafeRegexServiceContractTests
         result.Error.ShouldContain("No target files specified");
     }
 
+    /// <summary>
+    /// Confirms safe regex validation passes for well-formed patterns.
+    /// </summary>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithValidPattern_ShouldReturnSuccessResult()
     {
@@ -149,6 +164,9 @@ public class ISafeRegexServiceContractTests
         result.Value.SafetyScore.ShouldBe(0.95);
     }
 
+    /// <summary>
+    /// Ensures potentially dangerous patterns are flagged with safety issues.
+    /// </summary>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithDangerousPattern_ShouldReturnFailureResult()
     {
@@ -181,6 +199,9 @@ public class ISafeRegexServiceContractTests
         result.Value.Issues.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Confirms previewing a valid safe regex transformation succeeds.
+    /// </summary>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -222,6 +243,9 @@ public class ISafeRegexServiceContractTests
         result.Value.AffectedFiles.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Verifies preview operations honor cancellation requests.
+    /// </summary>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -249,6 +273,9 @@ public class ISafeRegexServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Ensures apply operations respect cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -276,6 +303,9 @@ public class ISafeRegexServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Validates regex pattern checks observe cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithCancellation_ShouldRespectCancellationToken()
     {

@@ -15,11 +15,17 @@ public class IFixer001ServiceContractTests
     private readonly IFixer001Service _mockService;
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+    /// <summary>
+    /// Initializes the contract tests with a mocked IFixer001Service.
+    /// </summary>
     public IFixer001ServiceContractTests()
     {
         _mockService = Substitute.For<IFixer001Service>();
     }
 
+    /// <summary>
+    /// Verifies applying Fixer001 succeeds when the request is valid.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -70,6 +76,9 @@ public class IFixer001ServiceContractTests
         result.Value.FilesAffected.ShouldBe(1);
     }
 
+    /// <summary>
+    /// Ensures unknown diagnostic identifiers cause the apply operation to fail.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithInvalidDiagnosticId_ShouldReturnFailureResult()
     {
@@ -94,6 +103,9 @@ public class IFixer001ServiceContractTests
         result.Error.ShouldContain("Unknown diagnostic ID");
     }
 
+    /// <summary>
+    /// Validates the service rejects Fixer001 requests without target files.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithEmptyTargetFiles_ShouldReturnFailureResult()
     {
@@ -118,6 +130,9 @@ public class IFixer001ServiceContractTests
         result.Error.ShouldContain("No target files specified");
     }
 
+    /// <summary>
+    /// Confirms Fixer001 configuration can be retrieved for a valid solution path.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithValidSolutionPath_ShouldReturnSuccessResult()
     {
@@ -159,6 +174,9 @@ public class IFixer001ServiceContractTests
         result.Value.AvailableTransformations.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Ensures configuration retrieval fails when the solution path is invalid.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithInvalidSolutionPath_ShouldReturnFailureResult()
     {
@@ -178,6 +196,9 @@ public class IFixer001ServiceContractTests
         result.Error.ShouldContain("not found");
     }
 
+    /// <summary>
+    /// Verifies previewing Fixer001 transformations succeeds for a valid request.
+    /// </summary>
     [Fact]
     public async Task PreviewFixer001TransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -217,6 +238,9 @@ public class IFixer001ServiceContractTests
         result.Value.AffectedFiles.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Confirms readiness checks pass when prerequisites are met.
+    /// </summary>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -250,6 +274,9 @@ public class IFixer001ServiceContractTests
         result.Value.ReadinessScore.ShouldBe(0.95);
     }
 
+    /// <summary>
+    /// Ensures readiness issues are surfaced as a failure result.
+    /// </summary>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithIssues_ShouldReturnFailureResult()
     {
@@ -287,6 +314,9 @@ public class IFixer001ServiceContractTests
         result.Value.Issues.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Verifies Fixer001 application respects cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -313,6 +343,9 @@ public class IFixer001ServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Ensures configuration retrieval honors cancellation requests.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -333,6 +366,9 @@ public class IFixer001ServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Verifies preview requests for Fixer001 respect cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task PreviewFixer001TransformationAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -359,6 +395,9 @@ public class IFixer001ServiceContractTests
         result.Error!.ShouldContain("cancelled");
     }
 
+    /// <summary>
+    /// Confirms readiness validation respects cancellation tokens.
+    /// </summary>
     [Fact]
     public async Task ValidateFixer001ReadinessAsync_WithCancellation_ShouldRespectCancellationToken()
     {

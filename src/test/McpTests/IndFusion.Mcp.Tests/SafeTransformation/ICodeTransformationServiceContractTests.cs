@@ -15,11 +15,17 @@ public class ICodeTransformationServiceContractTests
     private readonly ICodeTransformationService _mockService;
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+    /// <summary>
+    /// Initializes the contract tests with a mocked ICodeTransformationService.
+    /// </summary>
     public ICodeTransformationServiceContractTests()
     {
         _mockService = Substitute.For<ICodeTransformationService>();
     }
 
+    /// <summary>
+    /// Verifies the Facade applies Fixer001 requests successfully when inputs are valid.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -66,6 +72,9 @@ public class ICodeTransformationServiceContractTests
         result.TransformationDetails.FilesAffected.ShouldBe(1);
     }
 
+    /// <summary>
+    /// Confirms the Facade delegates valid safe regex transformations successfully.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -113,6 +122,9 @@ public class ICodeTransformationServiceContractTests
         result.TransformationDetails.FilesAffected.ShouldBe(1);
     }
 
+    /// <summary>
+    /// Ensures transformation validation succeeds for well-formed requests.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -154,6 +166,9 @@ public class ICodeTransformationServiceContractTests
         result.BuildSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Verifies semantic change reviews succeed for valid review requests.
+    /// </summary>
     [Fact]
     public async Task ReviewSemanticChangesAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -206,6 +221,9 @@ public class ICodeTransformationServiceContractTests
         result.ConfidenceScore.ShouldBe(0.95);
     }
 
+    /// <summary>
+    /// Confirms Fixer001 configuration retrieval succeeds for a valid solution path.
+    /// </summary>
     [Fact]
     public async Task GetFixer001ConfigurationAsync_WithValidSolutionPath_ShouldReturnSuccessResult()
     {
@@ -247,6 +265,9 @@ public class ICodeTransformationServiceContractTests
         result.AvailableTransformations.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Ensures invalid fixer requests are surfaced as failures.
+    /// </summary>
     [Fact]
     public async Task ApplyFixer001Async_WithInvalidRequest_ShouldReturnFailureResult()
     {

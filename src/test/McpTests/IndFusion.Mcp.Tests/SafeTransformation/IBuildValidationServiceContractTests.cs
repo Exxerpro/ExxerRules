@@ -16,11 +16,17 @@ public class IBuildValidationServiceContractTests
     private readonly IBuildValidationService _mockService;
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+    /// <summary>
+    /// Initializes the contract tests with a mocked IBuildValidationService.
+    /// </summary>
     public IBuildValidationServiceContractTests()
     {
         _mockService = Substitute.For<IBuildValidationService>();
     }
 
+    /// <summary>
+    /// Verifies build validation succeeds for a valid transformation request.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -72,6 +78,9 @@ public class IBuildValidationServiceContractTests
         result.Value.BuildSuccess.ShouldBeTrue();
     }
 
+    /// <summary>
+    /// Ensures build validation reports failures when the build cannot succeed.
+    /// </summary>
     [Fact]
     public async Task ValidateTransformationAsync_WithBuildFailure_ShouldReturnFailureResult()
     {
@@ -130,6 +139,9 @@ public class IBuildValidationServiceContractTests
         result.Value.NewIssues.ShouldNotBeEmpty();
     }
 
+    /// <summary>
+    /// Confirms file-level validation succeeds when the transformed file is valid.
+    /// </summary>
     [Fact]
     public async Task ValidateFileTransformationAsync_WithValidFile_ShouldReturnSuccessResult()
     {
@@ -165,6 +177,9 @@ public class IBuildValidationServiceContractTests
         result.Value.FilePath.ShouldBe(filePath);
     }
 
+    /// <summary>
+    /// Ensures file validation reports a failure when the file content is invalid.
+    /// </summary>
     [Fact]
     public async Task ValidateFileTransformationAsync_WithInvalidFile_ShouldReturnFailureResult()
     {

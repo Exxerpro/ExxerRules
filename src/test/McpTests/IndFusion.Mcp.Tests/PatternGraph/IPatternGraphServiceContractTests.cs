@@ -16,11 +16,17 @@ public class IPatternGraphServiceContractTests
 	private readonly IPatternGraphService _mockService;
 	private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+	/// <summary>
+	/// Initializes the contract tests with a mocked IPatternGraphService instance.
+	/// </summary>
 	public IPatternGraphServiceContractTests()
 	{
 		_mockService = Substitute.For<IPatternGraphService>();
 	}
 
+	/// <summary>
+	/// Verifies queries with valid parameters succeed and return graph data.
+	/// </summary>
 	[Fact]
 	public async Task QueryAsync_WithValidQuery_ShouldReturnSuccessResult()
 	{
@@ -57,6 +63,9 @@ public class IPatternGraphServiceContractTests
 		result.Value.QueryMetadata.ShouldNotBeNull();
 	}
 
+	/// <summary>
+	/// Ensures null queries are rejected with a failure result.
+	/// </summary>
 	[Fact]
 	public async Task QueryAsync_WithNullQuery_ShouldReturnFailureResult()
 	{
@@ -75,6 +84,9 @@ public class IPatternGraphServiceContractTests
 		result.Error.ShouldContain("Query cannot be null");
 	}
 
+	/// <summary>
+	/// Confirms graph nodes can be retrieved for a valid project path.
+	/// </summary>
 	[Fact]
 	public async Task GetNodesAsync_WithValidProjectPath_ShouldReturnSuccessResult()
 	{
@@ -111,6 +123,9 @@ public class IPatternGraphServiceContractTests
 		result.Value.First().Type.ShouldBe("Class");
 	}
 
+	/// <summary>
+	/// Confirms graph edges can be retrieved for a valid project path.
+	/// </summary>
 	[Fact]
 	public async Task GetEdgesAsync_WithValidProjectPath_ShouldReturnSuccessResult()
 	{
@@ -142,6 +157,9 @@ public class IPatternGraphServiceContractTests
 		result.Value.First().RelationshipType.ShouldBe("Calls");
 	}
 
+	/// <summary>
+	/// Verifies the query operation respects cancellation tokens.
+	/// </summary>
 	[Fact]
 	public async Task QueryAsync_WithCancellation_ShouldRespectCancellationToken()
 	{

@@ -18,6 +18,9 @@ public class SafeRegexServiceBehavioralTests
     private readonly IBuildValidationService _buildValidationService;
     private readonly CancellationToken _cancellationToken = Xunit.TestContext.Current.CancellationToken;
 
+    /// <summary>
+    /// Creates a configured SafeRegexService with real dependencies for behavioral testing.
+    /// </summary>
     public SafeRegexServiceBehavioralTests()
     {
         // Use simple logger factory
@@ -27,6 +30,9 @@ public class SafeRegexServiceBehavioralTests
         _service = new SafeRegexService(_logger, _buildValidationService);
     }
 
+    /// <summary>
+    /// Verifies that applying a well-formed safe regex request reports success and transformation details.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -58,6 +64,9 @@ public class SafeRegexServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures invalid regex patterns cause the safe regex operation to return a failure result.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithInvalidPattern_ShouldReturnFailureResult()
     {
@@ -84,6 +93,9 @@ public class SafeRegexServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Confirms the service rejects transformation requests that do not specify any target files.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithEmptyTargetFiles_ShouldReturnFailureResult()
     {
@@ -106,6 +118,9 @@ public class SafeRegexServiceBehavioralTests
         result.Error.ShouldContain("No target files specified");
     }
 
+    /// <summary>
+    /// Ensures valid regex patterns pass validation with a positive safety score.
+    /// </summary>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithValidPattern_ShouldReturnSuccessResult()
     {
@@ -124,6 +139,9 @@ public class SafeRegexServiceBehavioralTests
         result.Value.Issues.ShouldBeEmpty("Valid pattern should have no issues");
     }
 
+    /// <summary>
+    /// Verifies invalid regex syntax is detected and surfaced with validation issues.
+    /// </summary>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithInvalidPattern_ShouldReturnFailureResult()
     {
@@ -142,6 +160,9 @@ public class SafeRegexServiceBehavioralTests
         result.Value.Issues.ShouldNotBeEmpty("Invalid pattern should have issues");
     }
 
+    /// <summary>
+    /// Checks that patterns susceptible to ReDoS are flagged with warnings and reduced safety scores.
+    /// </summary>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithReDoSPattern_ShouldReturnWarningResult()
     {
@@ -159,6 +180,9 @@ public class SafeRegexServiceBehavioralTests
         result.Value.Issues.ShouldNotBeEmpty("ReDoS vulnerable pattern should have issues");
     }
 
+    /// <summary>
+    /// Verifies previewing a valid transformation succeeds and returns estimated changes.
+    /// </summary>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithValidRequest_ShouldReturnSuccessResult()
     {
@@ -189,6 +213,9 @@ public class SafeRegexServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Ensures the preview operation succeeds even when no files match the pattern.
+    /// </summary>
     [Fact]
     public async Task PreviewRegexTransformationAsync_WithNoMatches_ShouldReturnSuccessResult()
     {
@@ -217,6 +244,9 @@ public class SafeRegexServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Confirms the safe regex operation honors cancellation requests and reports the cancellation.
+    /// </summary>
     [Fact]
     public async Task ApplySafeRegexAsync_WithCancellation_ShouldRespectCancellationToken()
     {
@@ -246,6 +276,9 @@ public class SafeRegexServiceBehavioralTests
         CleanupTestFile(testFile);
     }
 
+    /// <summary>
+    /// Validates cancellation is respected when checking regex safety.
+    /// </summary>
     [Fact]
     public async Task ValidateRegexPatternAsync_WithCancellation_ShouldRespectCancellationToken()
     {

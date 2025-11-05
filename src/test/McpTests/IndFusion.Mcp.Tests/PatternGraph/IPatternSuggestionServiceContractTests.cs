@@ -15,11 +15,17 @@ public class IPatternSuggestionServiceContractTests
 	private readonly IPatternSuggestionService _mockService;
 	private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+	/// <summary>
+	/// Initializes the contract tests with a mocked IPatternSuggestionService.
+	/// </summary>
 	public IPatternSuggestionServiceContractTests()
 	{
 		_mockService = Substitute.For<IPatternSuggestionService>();
 	}
 
+	/// <summary>
+	/// Ensures valid suggestion requests produce a successful result with returned suggestions.
+	/// </summary>
 	[Fact]
 	public async Task SuggestAsync_WithValidRequest_ShouldReturnSuccessResult()
 	{
@@ -62,6 +68,9 @@ public class IPatternSuggestionServiceContractTests
 		result.Value.First().Confidence.ShouldBe(0.85);
 	}
 
+	/// <summary>
+	/// Verifies the service rejects null suggestion requests.
+	/// </summary>
 	[Fact]
 	public async Task SuggestAsync_WithNullRequest_ShouldReturnFailureResult()
 	{
@@ -80,6 +89,9 @@ public class IPatternSuggestionServiceContractTests
 		result.Error.ShouldContain("Request cannot be null");
 	}
 
+	/// <summary>
+	/// Confirms individual suggestions can be retrieved when a valid identifier is provided.
+	/// </summary>
 	[Fact]
 	public async Task GetSuggestionAsync_WithValidId_ShouldReturnSuccessResult()
 	{
@@ -109,6 +121,9 @@ public class IPatternSuggestionServiceContractTests
 		result.Value.PatternType.ShouldBe("Refactor");
 	}
 
+	/// <summary>
+	/// Ensures the service reports a failure when a suggestion identifier cannot be found.
+	/// </summary>
 	[Fact]
 	public async Task GetSuggestionAsync_WithNonExistentId_ShouldReturnFailureResult()
 	{
@@ -127,6 +142,9 @@ public class IPatternSuggestionServiceContractTests
 		result.Error.ShouldContain("not found");
 	}
 
+	/// <summary>
+	/// Validates that empty requests complete successfully and return no suggestions.
+	/// </summary>
 	[Fact]
 	public async Task SuggestAsync_WithEmptyRequest_ShouldReturnEmptySuggestions()
 	{
@@ -152,6 +170,9 @@ public class IPatternSuggestionServiceContractTests
 		result.Value.Count.ShouldBe(0);
 	}
 
+	/// <summary>
+	/// Verifies the suggestion operation respects cancellation tokens.
+	/// </summary>
 	[Fact]
 	public async Task SuggestAsync_WithCancellation_ShouldRespectCancellationToken()
 	{

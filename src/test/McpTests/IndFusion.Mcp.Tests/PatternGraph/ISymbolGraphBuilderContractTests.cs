@@ -16,11 +16,17 @@ public class ISymbolGraphBuilderContractTests
 	private readonly ISymbolGraphBuilder _mockService;
 	private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+	/// <summary>
+	/// Initializes the contract tests with a mocked ISymbolGraphBuilder instance.
+	/// </summary>
 	public ISymbolGraphBuilderContractTests()
 	{
 		_mockService = Substitute.For<ISymbolGraphBuilder>();
 	}
 
+	/// <summary>
+	/// Ensures building a graph for a valid project path succeeds and returns expected data.
+	/// </summary>
 	[Fact]
 	public async Task BuildAsync_WithValidProjectPath_ShouldReturnSuccessResult()
 	{
@@ -76,6 +82,9 @@ public class ISymbolGraphBuilderContractTests
 		result.Value.Edges.Count.ShouldBe(1);
 	}
 
+	/// <summary>
+	/// Verifies the builder surfaces an error when the project path does not exist.
+	/// </summary>
 	[Fact]
 	public async Task BuildAsync_WithInvalidProjectPath_ShouldReturnFailureResult()
 	{
@@ -94,6 +103,9 @@ public class ISymbolGraphBuilderContractTests
 		result.Error.ShouldContain("does not exist");
 	}
 
+	/// <summary>
+	/// Confirms updating an existing graph with changed files succeeds.
+	/// </summary>
 	[Fact]
 	public async Task UpdateAsync_WithValidGraphAndFiles_ShouldReturnSuccessResult()
 	{
@@ -120,6 +132,9 @@ public class ISymbolGraphBuilderContractTests
 		result.IsSuccess.ShouldBeTrue();
 	}
 
+	/// <summary>
+	/// Ensures a null graph argument is rejected with a failure result.
+	/// </summary>
 	[Fact]
 	public async Task UpdateAsync_WithNullGraph_ShouldReturnFailureResult()
 	{
@@ -140,6 +155,9 @@ public class ISymbolGraphBuilderContractTests
 		result.Error.ShouldContain("cannot be null");
 	}
 
+	/// <summary>
+	/// Validates the update operation succeeds when there are no file changes.
+	/// </summary>
 	[Fact]
 	public async Task UpdateAsync_WithEmptyChangedFiles_ShouldReturnSuccessResult()
 	{
@@ -166,6 +184,9 @@ public class ISymbolGraphBuilderContractTests
 		result.IsSuccess.ShouldBeTrue();
 	}
 
+	/// <summary>
+	/// Verifies the build operation respects cancellation tokens.
+	/// </summary>
 	[Fact]
 	public async Task BuildAsync_WithCancellation_ShouldRespectCancellationToken()
 	{
@@ -186,6 +207,9 @@ public class ISymbolGraphBuilderContractTests
 		result.Error!.ShouldContain("cancelled");
 	}
 
+	/// <summary>
+	/// Ensures the update operation respects cancellation tokens.
+	/// </summary>
 	[Fact]
 	public async Task UpdateAsync_WithCancellation_ShouldRespectCancellationToken()
 	{

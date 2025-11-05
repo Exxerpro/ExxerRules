@@ -16,11 +16,17 @@ public class IGraphCacheManagerContractTests
 	private readonly IGraphCacheManager _mockService;
 	private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
+	/// <summary>
+	/// Initializes the contract tests with a mocked IGraphCacheManager instance.
+	/// </summary>
 	public IGraphCacheManagerContractTests()
 	{
 		_mockService = Substitute.For<IGraphCacheManager>();
 	}
 
+	/// <summary>
+	/// Verifies cached graphs can be retrieved when the project hash exists.
+	/// </summary>
 	[Fact]
 	public async Task GetAsync_WithValidProjectHash_ShouldReturnSuccessResult()
 	{
@@ -48,6 +54,9 @@ public class IGraphCacheManagerContractTests
 		result.Value.ProjectHash.ShouldBe(projectHash);
 	}
 
+	/// <summary>
+	/// Ensures a missing cache entry is reported as a failure.
+	/// </summary>
 	[Fact]
 	public async Task GetAsync_WithNonExistentHash_ShouldReturnFailureResult()
 	{
@@ -66,6 +75,9 @@ public class IGraphCacheManagerContractTests
 		result.Error.ShouldContain("not found");
 	}
 
+	/// <summary>
+	/// Validates an empty project hash is rejected.
+	/// </summary>
 	[Fact]
 	public async Task GetAsync_WithEmptyHash_ShouldReturnFailureResult()
 	{
@@ -84,6 +96,9 @@ public class IGraphCacheManagerContractTests
 		result.Error.ShouldContain("cannot be empty");
 	}
 
+	/// <summary>
+	/// Confirms caching a valid graph succeeds.
+	/// </summary>
 	[Fact]
 	public async Task SetAsync_WithValidGraph_ShouldReturnSuccessResult()
 	{
@@ -109,6 +124,9 @@ public class IGraphCacheManagerContractTests
 		result.IsSuccess.ShouldBeTrue();
 	}
 
+	/// <summary>
+	/// Ensures attempting to cache a null graph returns a failure.
+	/// </summary>
 	[Fact]
 	public async Task SetAsync_WithNullGraph_ShouldReturnFailureResult()
 	{
@@ -129,6 +147,9 @@ public class IGraphCacheManagerContractTests
 		result.Error.ShouldContain("cannot be null");
 	}
 
+	/// <summary>
+	/// Validates cache entries can be invalidated when the hash exists.
+	/// </summary>
 	[Fact]
 	public async Task InvalidateAsync_WithValidHash_ShouldReturnSuccessResult()
 	{
@@ -145,6 +166,9 @@ public class IGraphCacheManagerContractTests
 		result.IsSuccess.ShouldBeTrue();
 	}
 
+	/// <summary>
+	/// Confirms cache invalidation is a no-op success when the hash is missing.
+	/// </summary>
 	[Fact]
 	public async Task InvalidateAsync_WithNonExistentHash_ShouldReturnSuccessResult()
 	{
@@ -161,6 +185,9 @@ public class IGraphCacheManagerContractTests
 		result.IsSuccess.ShouldBeTrue();
 	}
 
+	/// <summary>
+	/// Verifies cache retrieval honors cancellation requests.
+	/// </summary>
 	[Fact]
 	public async Task GetAsync_WithCancellation_ShouldRespectCancellationToken()
 	{
@@ -181,6 +208,9 @@ public class IGraphCacheManagerContractTests
 		result.Error!.ShouldContain("cancelled");
 	}
 
+	/// <summary>
+	/// Ensures caching operations respect cancellation tokens.
+	/// </summary>
 	[Fact]
 	public async Task SetAsync_WithCancellation_ShouldRespectCancellationToken()
 	{
@@ -210,6 +240,9 @@ public class IGraphCacheManagerContractTests
 		result.Error!.ShouldContain("cancelled");
 	}
 
+	/// <summary>
+	/// Confirms cache invalidation honors cancellation tokens.
+	/// </summary>
 	[Fact]
 	public async Task InvalidateAsync_WithCancellation_ShouldRespectCancellationToken()
 	{

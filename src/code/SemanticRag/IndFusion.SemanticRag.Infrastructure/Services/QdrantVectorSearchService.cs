@@ -51,14 +51,14 @@ public class QdrantVectorSearchService : IVectorSearchService
         try
         {
             var collectionInfoResult = await _vectorDatabasePort.GetCollectionInfoAsync(_options.CollectionName, cancellationToken);
-            
+
             // If collection exists, return success
             if (collectionInfoResult.IsSuccess && collectionInfoResult.Value != null)
             {
                 _logger.LogDebug("Collection already exists: {CollectionName}", _options.CollectionName);
                 return Result.Success();
             }
-            
+
             // If collection doesn't exist (NotFound error), create it
             if (collectionInfoResult.IsFailure)
             {
@@ -66,9 +66,9 @@ public class QdrantVectorSearchService : IVectorSearchService
                 var errorMessage = collectionInfoResult.Error ?? string.Empty;
                 // Normalize error message by removing newlines and extra whitespace for easier matching
                 var normalizedErrorMessage = errorMessage.Replace("\r", " ").Replace("\n", " ").Replace("\t", " ");
-                
+
                 _logger.LogInformation("GetCollectionInfoAsync returned failure: {Error}", errorMessage);
-                
+
                 // Check if the error is "NotFound" - this means collection doesn't exist and we should create it
                 // Error format is typically: "VE005: Status(StatusCode="NotFound", Detail="...")"
                 // The error message contains both the error code (VE005) and the exception details
@@ -80,27 +80,27 @@ public class QdrantVectorSearchService : IVectorSearchService
                                      normalizedErrorMessage.Contains("StatusCode=\"NotFound\"", StringComparison.OrdinalIgnoreCase) ||
                                      normalizedErrorMessage.Contains("StatusCode=NotFound", StringComparison.OrdinalIgnoreCase) ||
                                      normalizedErrorMessage.Contains("StatusCode='NotFound'", StringComparison.OrdinalIgnoreCase));
-                
+
                 if (isNotFoundError)
                 {
                     _logger.LogInformation("Collection does not exist (NotFound detected), creating: {CollectionName}", _options.CollectionName);
-                    
+
                     var createResult = await _vectorDatabasePort.CreateCollectionAsync(
                         _options.CollectionName,
                         (uint)_options.VectorSize,
                         VectorDistance.Cosine,
                         cancellationToken);
-                    
+
                     if (createResult.IsFailure)
                     {
                         _logger.LogError("Failed to create collection: {Error}", createResult.Error);
                         return createResult;
                     }
-                    
+
                     _logger.LogInformation("Collection created successfully: {CollectionName}", _options.CollectionName);
                     return Result.Success();
                 }
-                
+
                 // If it's a different error, return it
                 _logger.LogError("Failed to get collection info (non-NotFound error): {Error}", collectionInfoResult.Error);
                 return Result.WithFailure(collectionInfoResult.Error ?? ErrorCodes.VectorDatabaseError);
@@ -110,19 +110,19 @@ public class QdrantVectorSearchService : IVectorSearchService
             if (collectionInfoResult.Value == null)
             {
                 _logger.LogInformation("Collection does not exist, creating: {CollectionName}", _options.CollectionName);
-                
+
                 var createResult = await _vectorDatabasePort.CreateCollectionAsync(
                     _options.CollectionName,
                     (uint)_options.VectorSize,
                     VectorDistance.Cosine,
                     cancellationToken);
-                
+
                 if (createResult.IsFailure)
                 {
                     _logger.LogError("Failed to create collection: {Error}", createResult.Error);
                     return createResult;
                 }
-                
+
                 _logger.LogInformation("Collection created successfully: {CollectionName}", _options.CollectionName);
             }
 
@@ -136,9 +136,8 @@ public class QdrantVectorSearchService : IVectorSearchService
     }
 
     /// <inheritdoc />
-    public async Task<VectorSearchResponse> SearchSimilarAsync(
-        string query, 
-        VectorSearchOptions options, 
+    public async Task<VectorSearchResponse> SearchSimilarAsync(string query,
+        VectorSearchOptions options,
         CancellationToken cancellationToken = default)
     {
         var startTime = DateTime.UtcNow;
@@ -202,13 +201,13 @@ public class QdrantVectorSearchService : IVectorSearchService
             // Map VectorSearchHit to VectorSearchResult
             var results = new List<VectorSearchResult>();
             int rank = 1;
-            
+
             if (searchResult.Value != null)
             {
                 foreach (var hit in searchResult.Value)
                 {
                     var score = hit.Score;
-                    
+
                     // Apply threshold filter
                     if (score < options.Threshold)
                         continue;
@@ -247,8 +246,8 @@ public class QdrantVectorSearchService : IVectorSearchService
             }
 
             _logger.LogInformation(
-                "Vector search completed. Found {Count} results in {ElapsedMs}ms", 
-                results.Count, 
+                "Vector search completed. Found {Count} results in {ElapsedMs}ms",
+                results.Count,
                 elapsedMs);
 
             return new VectorSearchResponse(
@@ -277,7 +276,7 @@ public class QdrantVectorSearchService : IVectorSearchService
 
     /// <inheritdoc />
     public async Task<EmbeddingVector> GenerateEmbeddingAsync(
-        string text, 
+        string text,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -304,20 +303,19 @@ public class QdrantVectorSearchService : IVectorSearchService
     }
 
     /// <inheritdoc />
-    public async Task StoreDocumentAsync(
-        string id, 
-        string content, 
-        Dictionary<string, object> metadata, 
+    public async Task<Result> StoreDocumentAsync(string id,
+        string content,
+        Dictionary<string, object> metadata,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(id))
-            throw new ArgumentException("ID cannot be null or empty", nameof(id));
-        
+            return Result.WithFailure($"ID cannot be null or empty {nameof(id)}");
+
         if (string.IsNullOrWhiteSpace(content))
-            throw new ArgumentException("Content cannot be null or empty", nameof(content));
-        
+            return Result.WithFailure($"Content cannot be null or empty {nameof(content)}");
+
         if (metadata == null)
-            throw new ArgumentNullException(nameof(metadata));
+            return Result.WithFailure($"Content cannot be null or empty {nameof(metadata)}");
 
         try
         {
@@ -328,7 +326,7 @@ public class QdrantVectorSearchService : IVectorSearchService
             if (ensureResult.IsFailure)
             {
                 _logger.LogError("Failed to ensure collection exists: {Error}", ensureResult.Error);
-                throw new InvalidOperationException($"Failed to ensure collection exists: {ensureResult.Error}");
+                return Result.WithFailure($"Failed to ensure collection exists: {ensureResult.Error}");
             }
 
             // Generate embedding for document content
@@ -360,21 +358,23 @@ public class QdrantVectorSearchService : IVectorSearchService
             if (upsertResult.IsFailure)
             {
                 _logger.LogError("Failed to upsert document: {Error}", upsertResult.Error);
-                throw new InvalidOperationException($"Failed to store document: {upsertResult.Error}");
+                return Result.WithFailure($"Failed to store document: {upsertResult.Error}");
             }
 
             _logger.LogInformation("Document stored successfully with ID: {Id}", id);
+
+            return Result.Success();
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error storing document with ID: {Id}", id);
-            throw;
+            return Result.WithFailure($"Error storing document: {ex.Message}");
         }
     }
 
     /// <inheritdoc />
     public async Task DeleteDocumentAsync(
-        string id, 
+        string id,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(id))
@@ -422,17 +422,17 @@ public class QdrantVectorSearchService : IVectorSearchService
 
     /// <inheritdoc />
     public async Task UpdateDocumentAsync(
-        string id, 
-        string content, 
-        Dictionary<string, object> metadata, 
+        string id,
+        string content,
+        Dictionary<string, object> metadata,
         CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrWhiteSpace(id))
             throw new ArgumentException("ID cannot be null or empty", nameof(id));
-        
+
         if (string.IsNullOrWhiteSpace(content))
             throw new ArgumentException("Content cannot be null or empty", nameof(content));
-        
+
         if (metadata == null)
             throw new ArgumentNullException(nameof(metadata));
 
@@ -600,7 +600,7 @@ public class QdrantVectorSearchService : IVectorSearchService
                 var embedding = new VectorEmbedding(
                     Id: hit.PointId.ToString(),
                     Content: content,
-                    Embedding: options.IncludeEmbedding && hit.Vector != null 
+                    Embedding: options.IncludeEmbedding && hit.Vector != null
                         ? hit.Vector
                         : Array.Empty<float>(),
                     Metadata: metadata,
@@ -760,7 +760,7 @@ public class QdrantVectorSearchService : IVectorSearchService
                     var embedding = new VectorEmbedding(
                         Id: hit.PointId.ToString(),
                         Content: content,
-                        Embedding: options.IncludeEmbedding && hit.Vector != null 
+                        Embedding: options.IncludeEmbedding && hit.Vector != null
                             ? hit.Vector
                             : Array.Empty<float>(),
                         Metadata: metadata,
@@ -1069,5 +1069,4 @@ public class QdrantVectorSearchService : IVectorSearchService
             return Result.WithFailure($"Failed to clear vector index: {ex.Message}");
         }
     }
-
 }

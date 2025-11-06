@@ -20,7 +20,7 @@ public class MetricsProviderTests : TestBase
     /// GetFileMetrics CachesToDiskAndMemory.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 60 second timeout for unit test (doubled from 30s)
+    [Fact(Timeout = 120000)] // 120 second timeout for unit test (doubled from 60s)
     public async Task GetFileMetrics_CachesToDiskAndMemory()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);

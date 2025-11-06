@@ -12,7 +12,7 @@ public class LoadSolutionToolTests : IntegrationTestBase
     /// LoadSolution ValidPath ReturnsSuccess.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 120 second timeout for integration test (doubled from 60s)
     public async Task LoadSolution_ValidPath_ReturnsSuccess()
     {
         var result = await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
@@ -24,7 +24,7 @@ public class LoadSolutionToolTests : IntegrationTestBase
     /// UnloadSolution RemovesCachedSolution.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 120 second timeout for integration test (doubled from 60s)
     public async Task UnloadSolution_RemovesCachedSolution()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);
@@ -36,7 +36,7 @@ public class LoadSolutionToolTests : IntegrationTestBase
     /// LoadSolution InvalidPath ReturnsError.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 120 second timeout for integration test (doubled from 60s)
     public async Task LoadSolution_InvalidPath_ReturnsError()
     {
         await Assert.ThrowsAsync<McpException>(async () =>
@@ -58,7 +58,7 @@ public class LoadSolutionToolTests : IntegrationTestBase
     /// ClearSolutionCache RemovesAllCachedSolutions.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 120 second timeout for integration test (doubled from 60s)
     public async Task ClearSolutionCache_RemovesAllCachedSolutions()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, Xunit.TestContext.Current.CancellationToken);

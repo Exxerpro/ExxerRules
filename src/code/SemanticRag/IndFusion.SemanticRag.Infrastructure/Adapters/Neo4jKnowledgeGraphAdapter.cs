@@ -93,7 +93,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                         };
 
                         await session.RunAsync(cypher, parameters);
-                        
+
                         _logger.LogInformation("Successfully stored node: {NodeId}", n.Id);
                         return Result.Success();
                     });
@@ -181,7 +181,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                         };
 
                         await session.RunAsync(cypher, parameters);
-                        
+
                         _logger.LogInformation("Successfully stored {Count} nodes", nodesList.Count);
                         return Result.Success();
                     });
@@ -228,7 +228,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                             return Result.WithFailure(ErrorCodes.OperationCancelled);
                         }
 
-                        _logger.LogInformation("Storing relationship: {RelationshipId} from {SourceId} to {TargetId}", 
+                        _logger.LogInformation("Storing relationship: {RelationshipId} from {SourceId} to {TargetId}",
                             r.Id, r.FromNodeId, r.ToNodeId);
 
                         using var session = _driver.AsyncSession(ConfigureSession);
@@ -252,7 +252,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                         };
 
                         await session.RunAsync(cypher, parameters);
-                        
+
                         _logger.LogInformation("Successfully stored relationship: {RelationshipId}", r.Id);
                         return Result.Success();
                     });
@@ -304,7 +304,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                             var validation = relationship.Validate();
                             if (validation.IsFailure)
                             {
-                                _logger.LogWarning("Relationship validation failed for {RelationshipId}: {Error}", 
+                                _logger.LogWarning("Relationship validation failed for {RelationshipId}: {Error}",
                                     relationship.Id, validation.Error);
                                 return validation;
                             }
@@ -334,7 +334,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                         };
 
                         await session.RunAsync(cypher, parameters);
-                        
+
                         _logger.LogInformation("Successfully stored {Count} relationships", relationshipsList.Count);
                         return Result.Success();
                     });
@@ -354,7 +354,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     public async Task<Result<KnowledgeNode?>> GetNodeAsync(string nodeId, CancellationToken cancellationToken = default)
     {
         var result = await GetNodeByIdAsync(nodeId, cancellationToken);
-        return result.IsSuccess 
+        return result.IsSuccess
             ? Result<KnowledgeNode?>.Success(result.Value)
             : Result<KnowledgeNode?>.WithFailure(result.Error!);
     }
@@ -386,7 +386,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                         using var session = _driver.AsyncSession(ConfigureSession);
                         var cypher = @"
                             MATCH (n:KnowledgeNode {id: $id})
-                            RETURN n.id AS id, n.label AS label, n.properties AS properties, 
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties,
                                    n.createdAt AS createdAt, n.updatedAt AS updatedAt";
 
                         var parameters = new Dictionary<string, object> { ["id"] = id };
@@ -424,8 +424,8 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
 
     /// <inheritdoc />
     public async Task<Result<IReadOnlyList<KnowledgeNode>>> GetNodesByLabelAsync(
-        string label, 
-        int limit = 100, 
+        string label,
+        int limit = 100,
         CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -452,16 +452,16 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                         using var session = _driver.AsyncSession(ConfigureSession);
                         var cypher = @"
                             MATCH (n:KnowledgeNode {label: $label})
-                            RETURN n.id AS id, n.label AS label, n.properties AS properties, 
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties,
                                    n.createdAt AS createdAt, n.updatedAt AS updatedAt
                             LIMIT $limit";
 
-                        var parameters = new Dictionary<string, object> 
-                        { 
+                        var parameters = new Dictionary<string, object>
+                        {
                             ["label"] = labelValue,
                             ["limit"] = limit
                         };
-                        
+
                         var result = await session.RunAsync(cypher, parameters);
                         var records = await result.ToListAsync(cancellationToken);
 
@@ -541,7 +541,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                             record["createdAt"].As<DateTimeOffset>()
                         )).ToList();
 
-                        _logger.LogInformation("Successfully retrieved {Count} relationships for node: {NodeId}", 
+                        _logger.LogInformation("Successfully retrieved {Count} relationships for node: {NodeId}",
                             relationships.Count, id);
                         return Result<IReadOnlyList<KnowledgeRelationship>>.Success(relationships);
                     });
@@ -706,7 +706,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
             };
 
             await session.RunAsync(cypher, parameters);
-            
+
             _logger.LogInformation("Successfully updated node: {NodeId}", node.Id);
             return Result.Success();
         }
@@ -815,7 +815,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
             using var session = _driver.AsyncSession(ConfigureSession);
             var cypher = "MATCH (n) DETACH DELETE n";
             await session.RunAsync(cypher, new Dictionary<string, object>());
-            
+
             _logger.LogInformation("Successfully cleared all nodes and relationships");
             return Result.Success();
         }
@@ -832,6 +832,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
 
     /// <inheritdoc />
     public async Task<Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>> ExecuteGraphQueryAsync(
+
         string query,
         IReadOnlyDictionary<string, object>? parameters = null,
         CancellationToken cancellationToken = default)
@@ -861,7 +862,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                         var result = await session.RunAsync(q, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
                         var records = await result.ToListAsync(cancellationToken);
 
-                        var queryResults = records.Select(record => 
+                        var queryResults = records.Select(record =>
                             record.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) as IReadOnlyDictionary<string, object>
                         ).ToList();
 
@@ -911,7 +912,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
 
                         var parameters = new Dictionary<string, object> { ["id"] = id };
                         await session.RunAsync(cypher, parameters);
-                        
+
                         _logger.LogInformation("Successfully deleted node: {NodeId}", id);
                         return Result.Success();
                     });
@@ -958,7 +959,7 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
 
                         var parameters = new Dictionary<string, object> { ["id"] = id };
                         await session.RunAsync(cypher, parameters);
-                        
+
                         _logger.LogInformation("Successfully deleted relationship: {RelationshipId}", id);
                         return Result.Success();
                     });
@@ -982,7 +983,6 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
     {
         config.WithDatabase(_options.Database);
     }
-
 
     /// <summary>
     /// Disposes the Neo4j driver.

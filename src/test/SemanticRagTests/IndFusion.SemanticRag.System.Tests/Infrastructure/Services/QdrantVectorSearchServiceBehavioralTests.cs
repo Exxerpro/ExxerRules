@@ -1,3 +1,4 @@
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
@@ -124,6 +125,8 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
         // Act
         var result = await _service.SearchSimilarAsync(query, searchOptions, TestContext.Current.CancellationToken);
 
+        result.IsSuccess.ShouldBeTrue();
+
         // Assert - Verify actual behavior with real services
         result.Query.ShouldBe(query);
         result.SearchOptions.ShouldBe(searchOptions);
@@ -144,6 +147,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
 
         // Act
         var result = await _service.SearchSimilarAsync(query, searchOptions, TestContext.Current.CancellationToken);
+        result.IsSuccess.ShouldBeTrue();
 
         // Assert
         result.SearchOptions.Threshold.ShouldBe(0.9f); // High precision threshold
@@ -165,6 +169,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
 
         // Act
         var result = await _service.SearchSimilarAsync(query, searchOptions, TestContext.Current.CancellationToken);
+        result.IsSuccess.ShouldBeTrue();
 
         // Assert
         result.SearchOptions.Limit.ShouldBe(50); // Broad search limit
@@ -282,7 +287,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
         // Assert - Verify update by searching for updated content
         var searchOptions = VectorSearchOptions.Default();
         var searchResult = await _service.SearchSimilarAsync(content, searchOptions, TestContext.Current.CancellationToken);
-        searchResult.Success.ShouldBeTrue();
+        searchResult.IsSuccess.ShouldBeTrue();
     }
 
     /// <summary>
@@ -304,7 +309,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
         // Assert - Verify deletion by searching (should not find the document)
         var searchOptions = VectorSearchOptions.Default();
         var searchResult = await _service.SearchSimilarAsync(content, searchOptions, TestContext.Current.CancellationToken);
-        searchResult.Success.ShouldBeTrue();
+        searchResult.IsSuccess.ShouldBeTrue();
         // Note: Search may still return results if other documents are similar, but the deleted document should not appear
     }
 
@@ -333,9 +338,13 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
         using var cts = new CancellationTokenSource();
         cts.Cancel(); // Cancel immediately
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.SearchSimilarAsync(query, searchOptions, cts.Token));
+        // Act
+        var result = await _service.SearchSimilarAsync(query, searchOptions, cts.Token);
+
+        // Assert: After functional refactoring, cancellation returns Result<T> with cancellation error code
+        result.Success.ShouldBeFalse();
+        result.ErrorMessage.ShouldNotBeNull();
+        result.ErrorMessage.ShouldContain(ErrorCodes.OperationCancelled);
     }
 
     /// <summary>
@@ -349,9 +358,13 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
         var query = "test query";
         var searchOptions = new VectorSearchOptions(TimeoutMs: 100); // Very short timeout
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.SearchSimilarAsync(query, searchOptions, TestContext.Current.CancellationToken));
+        // Act
+        var result = await _service.SearchSimilarAsync(query, searchOptions, TestContext.Current.CancellationToken);
+
+        // Assert: After functional refactoring, cancellation returns Result<T> with cancellation error code
+        result.Success.ShouldBeFalse();
+        result.ErrorMessage.ShouldNotBeNull();
+        result.ErrorMessage.ShouldContain(ErrorCodes.OperationCancelled);
     }
 
     /// <summary>
@@ -370,7 +383,7 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
 
         // Act
         var result = await _service.SearchSimilarAsync(query, searchOptions, TestContext.Current.CancellationToken);
-
+        result.IsSuccess.ShouldBeTrue();
         // Assert - Either succeeds (if Ollama works) or fails gracefully (if it doesn't)
         // VectorSearchResponse is a value type, so we check properties directly
         result.Query.ShouldBe(query);
@@ -393,6 +406,8 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
 
         // Assert - Verify service handles Qdrant operations
         // VectorSearchResponse is a value type, so we check properties directly
+        result.IsSuccess.ShouldBeTrue();
+
         result.Query.ShouldBe(query);
         result.Results.ShouldNotBeNull();
         // Note: Actual failure handling depends on Qdrant container state
@@ -414,6 +429,8 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
         var result = await _service.SearchSimilarAsync(query, searchOptions, TestContext.Current.CancellationToken);
 
         // Assert
+        result.IsSuccess.ShouldBeTrue();
+
         result.SearchOptions.Filters.ShouldBe(filters);
         result.Success.ShouldBeTrue();
     }

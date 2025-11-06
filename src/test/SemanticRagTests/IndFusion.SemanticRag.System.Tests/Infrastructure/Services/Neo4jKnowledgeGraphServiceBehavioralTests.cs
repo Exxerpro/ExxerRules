@@ -1,3 +1,4 @@
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Infrastructure.Adapters;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
@@ -167,9 +168,13 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
         using var cts = new CancellationTokenSource();
         cts.Cancel(); // Cancel immediately
 
-        // Act & Assert
-        await Should.ThrowAsync<OperationCanceledException>(async () =>
-            await _service.QueryAsync(query, cts.Token));
+        // Act
+        var result = await _service.QueryAsync(query, cts.Token);
+
+        // Assert: After functional refactoring, cancellation returns Result<T> with cancellation error code
+        result.Success.ShouldBeFalse();
+        result.ErrorMessage.ShouldNotBeNull();
+        result.ErrorMessage.ShouldContain(ErrorCodes.OperationCancelled);
     }
 
     /// <summary>
@@ -641,7 +646,18 @@ public class Neo4jKnowledgeGraphServiceBehavioralTests : IDisposable
     public async Task QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults()
     {
         SkipIfDockerUnavailable();
-        // Arrange
+
+        // Arrange - Seed test data with Person nodes having department properties
+        var person1 = new GraphNode("person-1", "Person", new Dictionary<string, object> { { "department", "Engineering" } }, ["Person"]);
+        var person2 = new GraphNode("person-2", "Person", new Dictionary<string, object> { { "department", "Engineering" } }, ["Person"]);
+        var person3 = new GraphNode("person-3", "Person", new Dictionary<string, object> { { "department", "Sales" } }, ["Person"]);
+        var person4 = new GraphNode("person-4", "Person", new Dictionary<string, object> { { "department", "Marketing" } }, ["Person"]);
+
+        await _service.AddNodeAsync(person1, TestContext.Current.CancellationToken);
+        await _service.AddNodeAsync(person2, TestContext.Current.CancellationToken);
+        await _service.AddNodeAsync(person3, TestContext.Current.CancellationToken);
+        await _service.AddNodeAsync(person4, TestContext.Current.CancellationToken);
+
         var aggregationQuery = new GraphQuery(
             "MATCH (p:Person) " +
             "RETURN p.department, COUNT(p) as employeeCount " +

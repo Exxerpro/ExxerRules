@@ -17,8 +17,7 @@ public interface IVectorSearchService : IVectorSearchPort
     /// <param name="options">Search options including filters and limits.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A VectorSearchResponse containing the search results.</returns>
-    Task<VectorSearchResponse> SearchSimilarAsync(
-        string query,
+    Task<VectorSearchResponse> SearchSimilarAsync(string query,
         VectorSearchOptions options,
         CancellationToken cancellationToken = default);
 
@@ -30,8 +29,7 @@ public interface IVectorSearchService : IVectorSearchPort
     /// <param name="metadata">Additional metadata for the document.</param>
     /// <param name="cancellationToken">Cancellation token.</param>
     /// <returns>A task representing the asynchronous operation.</returns>
-    Task StoreDocumentAsync(
-        string id,
+    Task<Result> StoreDocumentAsync(string id,
         string content,
         Dictionary<string, object> metadata,
         CancellationToken cancellationToken = default);

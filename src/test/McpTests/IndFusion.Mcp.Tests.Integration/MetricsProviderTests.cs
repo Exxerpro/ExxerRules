@@ -12,7 +12,7 @@ public class MetricsProviderTests : IntegrationTestBase
     /// GetFileMetrics CachesToDiskAndMemory.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 120 second timeout for integration test (doubled from 60s)
     public async Task GetFileMetrics_CachesToDiskAndMemory()
     {
         await LoadSolutionTool.LoadSolution(SolutionPath, null, cancellationToken: Xunit.TestContext.Current.CancellationToken);

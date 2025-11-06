@@ -95,7 +95,11 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
                         }
 
                         var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                        var embeddingResponse = JsonSerializer.Deserialize<OllamaEmbeddingResponse>(responseContent);
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+                        var embeddingResponse = JsonSerializer.Deserialize<OllamaEmbeddingResponse>(responseContent, options);
 
                         if (embeddingResponse?.Embedding == null || embeddingResponse.Embedding.Length == 0)
                         {
@@ -316,7 +320,11 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
                         }
 
                         var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
-                        var tagsResponse = JsonSerializer.Deserialize<OllamaTagsResponse>(responseContent);
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+                        var tagsResponse = JsonSerializer.Deserialize<OllamaTagsResponse>(responseContent, options);
 
                         var model = tagsResponse?.Models?.FirstOrDefault(m => m.Name.StartsWith(_options.EmbeddingModel));
                         if (model == null)
@@ -351,7 +359,7 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
 /// Response model for Ollama embedding API.
 /// </summary>
 internal record OllamaEmbeddingResponse(
-    float[] Embedding);
+    [property: System.Text.Json.Serialization.JsonPropertyName("embedding")] float[] Embedding);
 
 /// <summary>
 /// Response model for Ollama tags API.

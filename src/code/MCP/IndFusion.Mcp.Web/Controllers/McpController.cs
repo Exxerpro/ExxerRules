@@ -120,7 +120,7 @@ public class McpController : ControllerBase
         {
             Name = "ExxerFactor.Mcp",
             Version = "1.0.6",
-            ProtocolVersion = "2024-11-05",
+            ProtocolVersion = "1.0.0",
             Capabilities = new McpCapabilities
             {
                 Tools = new McpToolsCapability(),

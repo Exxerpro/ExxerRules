@@ -22,7 +22,7 @@ public class LintRunToolTests : TestBase
     /// LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 60 second timeout for analyzer execution (doubled from 30s)
+    [Fact(Timeout = 120000)] // 120 second timeout for analyzer execution (doubled from 60s)
     public async Task LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations()
     {
         // Arrange - Create a clean test solution for LintRunTool

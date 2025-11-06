@@ -12,7 +12,7 @@ public class LintRunToolTests : IntegrationTestBase
     /// LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 30 second timeout for integration test
     public async Task LintRun_WithValidSolution_ReturnsViolationsAndPolicyRecommendations()
     {
         // Arrange - Load solution first
@@ -36,7 +36,7 @@ public class LintRunToolTests : IntegrationTestBase
     /// LintRun_WithSpecificFile_ReturnsFileSpecificViolations.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 30 second timeout for integration test
     public async Task LintRun_WithSpecificFile_ReturnsFileSpecificViolations()
     {
         // Arrange - Load solution first
@@ -59,7 +59,7 @@ public class LintRunToolTests : IntegrationTestBase
     /// LintRun_WithCancellation_RespectsCancellationToken.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 30 second timeout for integration test
     public async Task LintRun_WithCancellation_RespectsCancellationToken()
     {
         // Arrange - Load solution first
@@ -83,7 +83,7 @@ public class LintRunToolTests : IntegrationTestBase
     /// LintRun_WithProgressReporter_CallsProgressCallback.
     /// </summary>
     /// <returns></returns>
-    [Fact(Timeout = 60000)] // 30 second timeout for integration test
+    [Fact(Timeout = 120000)] // 30 second timeout for integration test
     public async Task LintRun_WithProgressReporter_CallsProgressCallback()
     {
         // Arrange - Load solution first

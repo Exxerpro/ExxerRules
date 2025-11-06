@@ -281,8 +281,8 @@ public class Neo4jKnowledgeGraphAdapterTests
         // Act
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
 
-        // Assert: Use error code assertion
-        result.ShouldFailWith(ErrorCodes.GraphDatabaseError);
+        // Assert: Use error code assertion - adapter returns CypherQueryFailed for exceptions
+        result.ShouldFailWith(ErrorCodes.CypherQueryFailed);
     }
 
     [Fact(Timeout = 5000)]

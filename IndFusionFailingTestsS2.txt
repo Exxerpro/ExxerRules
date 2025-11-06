@@ -1,0 +1,1543 @@
+ test (56 tests) [43:51.471] Failed: 56 tests failed
+  McpTests (5 tests) [39:09.912] Failed: 5 tests failed
+   IndFusion.Mcp.Server.Tests (1 test) [0:02.264] Failed: 1 test failed
+    IndFusion.Mcp.Server.Tests (1 test) [0:02.264] Failed: 1 test failed
+     Integration (1 test) [0:01.635] Failed: 1 test failed
+      McpServerHttpIntegrationTests (1 test) [0:01.635] Failed: One or more child tests failed: 1 test failed
+       ListToolsCommand_ShouldReturnToolInventory [0:01.634] Failed: ModelContextProtocol.McpException: Server protocol version mismatch. Expected 1.0.0, got 2025-06-18
+ModelContextProtocol.McpException
+Server protocol version mismatch. Expected 1.0.0, got 2025-06-18
+   at ModelContextProtocol.Client.McpClientImpl.ConnectAsync(CancellationToken cancellationToken)
+   at ModelContextProtocol.Client.McpClientImpl.ConnectAsync(CancellationToken cancellationToken)
+   at ModelContextProtocol.Client.McpClient.CreateAsync(IClientTransport clientTransport, McpClientOptions clientOptions, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+   at ModelContextProtocol.Client.McpClient.CreateAsync(IClientTransport clientTransport, McpClientOptions clientOptions, ILoggerFactory loggerFactory, CancellationToken cancellationToken)
+   at IndFusion.Mcp.Server.Tests.Integration.McpServerHttpIntegrationTests.ListToolsCommand_ShouldReturnToolInventory() in /_/src/test/McpTests/IndFusion.Mcp.Server.Tests/Integration/McpServerHttpIntegrationTests.cs:line 84
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.Mcp.Tests (3 tests) [35:38.835] Failed: 3 tests failed
+    IndFusion.Mcp.Tests (3 tests) [35:38.835] Failed: 3 tests failed
+     Services (2 tests) [1:39.919] Failed: 2 tests failed
+      LintingServiceTests (2 tests) [1:39.919] Failed: One or more child tests failed: 2 tests failed
+       RunLintingAsync_ValidSolutionPath_ReturnsSuccessWithViolations [1:00.816] Failed: System.Threading.Tasks.TaskCanceledException: A task was canceled.
+System.Threading.Tasks.TaskCanceledException
+A task was canceled.
+   at Roslyn.Utilities.SemaphoreSlimExtensions.DisposableWaitAsync(SemaphoreSlim semaphore, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.RpcClient.InvokeCoreAsync(Int32 targetObject, String methodName, List`1 parameters, Type expectedReturnType, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.RpcClient.InvokeAsync[T](Int32 targetObject, String methodName, List`1 parameters, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadProjectFileInfosAsync(String projectPath, DiagnosticReportingOptions reportingOptions, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadProjectInfosFromPathAsync(String projectPath, DiagnosticReportingOptions reportingOptions, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadAsync(CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.LoadSolutionInfoAsync(String solutionFilePath, IProgress`1 progress, ILogger msbuildLogger, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.LoadSolutionInfoAsync(String solutionFilePath, IProgress`1 progress, ILogger msbuildLogger, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.OpenSolutionAsync(String solutionFilePath, ILogger msbuildLogger, IProgress`1 progress, CancellationToken cancellationToken)
+   at IndFusion.Mcp.Core.Services.LintingService.GetOrCreateSolutionAsync(String solutionPath, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Services/LintingService.cs:line 1016
+   at IndFusion.Mcp.Core.Services.LintingService.RunLintingAsync(LintingRequest request, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Services/LintingService.cs:line 64
+   at IndFusion.Mcp.Tests.Services.LintingServiceTests.RunLintingAsync_ValidSolutionPath_ReturnsSuccessWithViolations() in /_/src/test/McpTests/IndFusion.Mcp.Tests/Services/LintingServiceTests.cs:line 40
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       RunLintingAsync_WithScope_ReturnsFilteredResults [0:38.085] Failed: System.Threading.Tasks.TaskCanceledException: A task was canceled.
+System.Threading.Tasks.TaskCanceledException
+A task was canceled.
+   at Roslyn.Utilities.SemaphoreSlimExtensions.DisposableWaitAsync(SemaphoreSlim semaphore, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.RpcClient.InvokeCoreAsync(Int32 targetObject, String methodName, List`1 parameters, Type expectedReturnType, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.RpcClient.InvokeAsync[T](Int32 targetObject, String methodName, List`1 parameters, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadProjectFileInfosAsync(String projectPath, DiagnosticReportingOptions reportingOptions, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadProjectInfosFromPathAsync(String projectPath, DiagnosticReportingOptions reportingOptions, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadAsync(CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.LoadSolutionInfoAsync(String solutionFilePath, IProgress`1 progress, ILogger msbuildLogger, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.LoadSolutionInfoAsync(String solutionFilePath, IProgress`1 progress, ILogger msbuildLogger, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.OpenSolutionAsync(String solutionFilePath, ILogger msbuildLogger, IProgress`1 progress, CancellationToken cancellationToken)
+   at IndFusion.Mcp.Core.Services.LintingService.GetOrCreateSolutionAsync(String solutionPath, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Services/LintingService.cs:line 1016
+   at IndFusion.Mcp.Core.Services.LintingService.RunLintingAsync(LintingRequest request, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Services/LintingService.cs:line 64
+   at IndFusion.Mcp.Tests.Services.LintingServiceTests.RunLintingAsync_WithScope_ReturnsFilteredResults() in /_/src/test/McpTests/IndFusion.Mcp.Tests/Services/LintingServiceTests.cs:line 84
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     ToolsNew (1 test) [14:57.843] Failed: 1 test failed
+      LintRunToolTests (1 test) [7:21.462] Failed: One or more child tests failed: 1 test failed
+       LintRun_WithSpecificFile_ReturnsFileSpecificViolations [0:59.787] Failed: System.Threading.Tasks.TaskCanceledException: A task was canceled.
+System.Threading.Tasks.TaskCanceledException
+A task was canceled.
+   at Roslyn.Utilities.SemaphoreSlimExtensions.DisposableWaitAsync(SemaphoreSlim semaphore, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.RpcClient.InvokeCoreAsync(Int32 targetObject, String methodName, List`1 parameters, Type expectedReturnType, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.RpcClient.InvokeAsync[T](Int32 targetObject, String methodName, List`1 parameters, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadProjectFileInfosAsync(String projectPath, DiagnosticReportingOptions reportingOptions, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadProjectInfosFromPathAsync(String projectPath, DiagnosticReportingOptions reportingOptions, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.Worker.LoadAsync(CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.LoadSolutionInfoAsync(String solutionFilePath, IProgress`1 progress, ILogger msbuildLogger, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildProjectLoader.LoadSolutionInfoAsync(String solutionFilePath, IProgress`1 progress, ILogger msbuildLogger, CancellationToken cancellationToken)
+   at Microsoft.CodeAnalysis.MSBuild.MSBuildWorkspace.OpenSolutionAsync(String solutionFilePath, ILogger msbuildLogger, IProgress`1 progress, CancellationToken cancellationToken)
+   at IndFusion.Mcp.Core.Services.LintingService.GetOrCreateSolutionAsync(String solutionPath, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Services/LintingService.cs:line 1016
+   at IndFusion.Mcp.Core.Services.LintingService.RunLintingAsync(LintingRequest request, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Services/LintingService.cs:line 64
+   at IndFusion.Mcp.Core.Tools.LintRunTool.LintRun(String solutionPath, String scope, String severityConfig, IProgress`1 progress, CancellationToken cancellationToken) in /_/src/code/Mcp/IndFusion.Mcp.Core/Tools/LintRunTool.cs:line 114
+   at IndFusion.Mcp.Tests.ToolsNew.LintRunToolTests.LintRun_WithSpecificFile_ReturnsFileSpecificViolations() in /_/src/test/McpTests/IndFusion.Mcp.Tests/ToolsNew/LintRunToolTests.cs:line 213
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+=== Test Logging Started ===
+Test: LintRunToolTests
+Log File: C:\Users\Abel Briones\AppData\Local\Temp\IndFusion.Tests\Logs\LintRunToolTests_20251105_184632.log
+
+   IndFusion.Mcp.Web.Tests (1 test) [0:40.366] Failed: 1 test failed
+    IndFusion.Mcp.Web.Tests (1 test) [0:40.366] Failed: 1 test failed
+     Controllers (1 test) [0:03.248] Failed: 1 test failed
+      McpControllerTests (1 test) [0:03.248] Failed: One or more child tests failed: 1 test failed
+       GetServerInfo_ShouldReturnCorrectServerInfo [0:00.526] Failed: Shouldly.ShouldAssertException: "1.0.0"
+Shouldly.ShouldAssertException
+"1.0.0"
+    should be
+"2024-11-05"
+    but was not
+    difference
+Difference     |  |    |    |    |    |    |    |    |    |    |   
+               | \|/  \|/  \|/  \|/  \|/  \|/  \|/  \|/  \|/  \|/  
+Index          | 0    1    2    3    4    5    6    7    8    9    
+Expected Value | 2    0    2    4    -    1    1    -    0    5    
+Actual Value   | 1    .    0    .    0                             
+Expected Code  | 50   48   50   52   45   49   49   45   48   53   
+Actual Code    | 49   46   48   46   48                            
+   at IndFusion.Mcp.Web.Tests.Controllers.McpControllerTests.GetServerInfo_ShouldReturnCorrectServerInfo() in /_/src/test/McpTests/IndFusion.Mcp.Web.Tests/Controllers/McpControllerTests.cs:line 112
+   at System.RuntimeMethodHandle.InvokeMethod(ObjectHandleOnStack target, Void** arguments, ObjectHandleOnStack sig, BOOL isConstructor, ObjectHandleOnStack result)
+   at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)
+   at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)
+
+
+  SemanticRagTests (51 tests) [3:17.372] Failed: 51 tests failed
+   IndFusion.SemanticRag.Integration.Tests (3 tests) [0:14.899] Failed: 3 tests failed
+    IndFusion.SemanticRag.Integration.Tests.IntegrationTests (3 tests) [0:14.899] Failed: 3 tests failed
+     VectorSearchIntegrationTests (3 tests) [0:14.899] Failed: One or more child tests failed: 3 tests failed
+      Should_HandleEmptyRepository_Gracefully [0:08.069] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_HandleEmptyRepository_Gracefully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 198
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      Should_SearchSimilarVectors_Successfully [0:00.051] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_SearchSimilarVectors_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 119
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      Should_StoreAndRetrieveVectors_Successfully [0:00.091] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_StoreAndRetrieveVectors_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 69
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.System.Tests (29 tests) [2:36.459] Failed: 29 tests failed
+    IndFusion.SemanticRag.System.Tests.Infrastructure (29 tests) [2:36.459] Failed: 29 tests failed
+     Services (29 tests) [1:51.650] Failed: 29 tests failed
+      Neo4jKnowledgeGraphServiceBehavioralTests (2 tests) [0:14.798] Failed: One or more child tests failed: 2 tests failed
+       QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults [0:01.391] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.Neo4jKnowledgeGraphServiceBehavioralTests.QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/Neo4jKnowledgeGraphServiceBehavioralTests.cs:line 671
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Adding node: person-1
+Adding node: person-2
+Adding node: person-3
+Adding node: person-4
+Executing graph query: MATCH (p:Person) RETURN p.department, COUNT(p) as employeeCount ORDER BY employeeCount DESC
+Executing read query: MATCH (p:Person) RETURN p.department, COUNT(p) as employeeCount ORDER BY employeeCount DESC
+Read query completed: 0 records returned
+Graph query executed successfully in 825ms, 0 records returned
+
+       QueryAsync_WithTimeout_ShouldRespectTimeout [0:00.153] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.OperationCanceledException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.Neo4jKnowledgeGraphServiceBehavioralTests.QueryAsync_WithTimeout_ShouldRespectTimeout() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/Neo4jKnowledgeGraphServiceBehavioralTests.cs:line 151
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Executing graph query: MATCH (n) RETURN n
+Executing read query: MATCH (n) RETURN n
+Read query completed: 0 records returned
+Graph query executed successfully in 117ms, 0 records returned
+
+      QdrantVectorSearchServiceBehavioralTests (17 tests) [1:09.711] Failed: One or more child tests failed: 17 tests failed
+       DeleteDocumentAsync_WithValidId_ShouldDeleteDocument [0:06.186] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.DeleteDocumentAsync_WithValidId_ShouldDeleteDocument() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 312
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc-123
+Getting collection info for: test-collection-45136f747c03470e9c52eee259ee1943
+Failed to get collection info for: test-collection-45136f747c03470e9c52eee259ee1943
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-45136f747c03470e9c52eee259ee1943` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-45136f747c03470e9c52eee259ee1943` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-45136f747c03470e9c52eee259ee1943
+Creating collection: test-collection-45136f747c03470e9c52eee259ee1943 with vector size: 384
+Successfully created collection: test-collection-45136f747c03470e9c52eee259ee1943
+Collection created successfully: test-collection-45136f747c03470e9c52eee259ee1943
+Generating embedding for text of length: 18
+Generating embedding for text of length 18
+Successfully generated embedding with dimension 768
+Upserting 1 points to collection: test-collection-45136f747c03470e9c52eee259ee1943
+Failed to upsert points to collection: test-collection-45136f747c03470e9c52eee259ee1943
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.UpsertAsync(String collectionName, IReadOnlyList`1 points, Boolean wait, Nullable`1 ordering, ShardKeySelector shardKeySelector, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass6_0.<<UpsertAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 328
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.UpsertAsync(String collectionName, IReadOnlyList`1 points, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 290
+Failed to upsert document: VE005
+Deleting document with ID: doc-123
+Getting collection info for: test-collection-45136f747c03470e9c52eee259ee1943
+Successfully retrieved collection info for: test-collection-45136f747c03470e9c52eee259ee1943
+Collection already exists: test-collection-45136f747c03470e9c52eee259ee1943
+Deleting points from collection: test-collection-45136f747c03470e9c52eee259ee1943
+Successfully deleted 1 points by ID from collection: test-collection-45136f747c03470e9c52eee259ee1943
+Document deleted successfully with ID: doc-123
+Starting vector search for query: document to delete
+Getting collection info for: test-collection-45136f747c03470e9c52eee259ee1943
+Successfully retrieved collection info for: test-collection-45136f747c03470e9c52eee259ee1943
+Collection already exists: test-collection-45136f747c03470e9c52eee259ee1943
+Generating embedding for text of length: 18
+Generating embedding for text of length 18
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-45136f747c03470e9c52eee259ee1943 with limit: 10
+Failed to search collection: test-collection-45136f747c03470e9c52eee259ee1943
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithActualResults_ShouldReturnNonEmptyResults [0:04.020] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithActualResults_ShouldReturnNonEmptyResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 513
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc1
+Getting collection info for: test-collection-6c8e42f9a753475a879294be3fbcb985
+Failed to get collection info for: test-collection-6c8e42f9a753475a879294be3fbcb985
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-6c8e42f9a753475a879294be3fbcb985` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-6c8e42f9a753475a879294be3fbcb985` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-6c8e42f9a753475a879294be3fbcb985
+Creating collection: test-collection-6c8e42f9a753475a879294be3fbcb985 with vector size: 384
+Successfully created collection: test-collection-6c8e42f9a753475a879294be3fbcb985
+Collection created successfully: test-collection-6c8e42f9a753475a879294be3fbcb985
+Generating embedding for text of length: 22
+Generating embedding for text of length 22
+Successfully generated embedding with dimension 768
+Upserting 1 points to collection: test-collection-6c8e42f9a753475a879294be3fbcb985
+Failed to upsert points to collection: test-collection-6c8e42f9a753475a879294be3fbcb985
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.UpsertAsync(String collectionName, IReadOnlyList`1 points, Boolean wait, Nullable`1 ordering, ShardKeySelector shardKeySelector, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass6_0.<<UpsertAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 328
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.UpsertAsync(String collectionName, IReadOnlyList`1 points, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 290
+Failed to upsert document: VE005
+Storing document with ID: doc2
+Getting collection info for: test-collection-6c8e42f9a753475a879294be3fbcb985
+Successfully retrieved collection info for: test-collection-6c8e42f9a753475a879294be3fbcb985
+Collection already exists: test-collection-6c8e42f9a753475a879294be3fbcb985
+Generating embedding for text of length: 23
+Generating embedding for text of length 23
+Successfully generated embedding with dimension 768
+Upserting 1 points to collection: test-collection-6c8e42f9a753475a879294be3fbcb985
+Failed to upsert points to collection: test-collection-6c8e42f9a753475a879294be3fbcb985
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.UpsertAsync(String collectionName, IReadOnlyList`1 points, Boolean wait, Nullable`1 ordering, ShardKeySelector shardKeySelector, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass6_0.<<UpsertAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 328
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.UpsertAsync(String collectionName, IReadOnlyList`1 points, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 290
+Failed to upsert document: VE005
+Starting vector search for query: document content
+Getting collection info for: test-collection-6c8e42f9a753475a879294be3fbcb985
+Successfully retrieved collection info for: test-collection-6c8e42f9a753475a879294be3fbcb985
+Collection already exists: test-collection-6c8e42f9a753475a879294be3fbcb985
+Generating embedding for text of length: 16
+Generating embedding for text of length 16
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-6c8e42f9a753475a879294be3fbcb985 with limit: 10
+Failed to search collection: test-collection-6c8e42f9a753475a879294be3fbcb985
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithBroadOptions_ShouldUseCorrectLimit [0:00.835] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithBroadOptions_ShouldUseCorrectLimit() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 172
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: broad query
+Getting collection info for: test-collection-f6d529ec3fd14c458124b743bbff26e3
+Failed to get collection info for: test-collection-f6d529ec3fd14c458124b743bbff26e3
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-f6d529ec3fd14c458124b743bbff26e3` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-f6d529ec3fd14c458124b743bbff26e3` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-f6d529ec3fd14c458124b743bbff26e3
+Creating collection: test-collection-f6d529ec3fd14c458124b743bbff26e3 with vector size: 384
+Successfully created collection: test-collection-f6d529ec3fd14c458124b743bbff26e3
+Collection created successfully: test-collection-f6d529ec3fd14c458124b743bbff26e3
+Generating embedding for text of length: 11
+Generating embedding for text of length 11
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-f6d529ec3fd14c458124b743bbff26e3 with limit: 50
+Failed to search collection: test-collection-f6d529ec3fd14c458124b743bbff26e3
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithEmbeddingServiceFailure_ShouldPropagateFailure [0:00.648] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithEmbeddingServiceFailure_ShouldPropagateFailure() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 386
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c
+Failed to get collection info for: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-41fb1c4a5e11447ca5d6c01a048ed24c` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-41fb1c4a5e11447ca5d6c01a048ed24c` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c
+Creating collection: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c with vector size: 384
+Successfully created collection: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c
+Collection created successfully: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c
+Generating embedding for text of length: 10
+Generating embedding for text of length 10
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c with limit: 10
+Failed to search collection: test-collection-41fb1c4a5e11447ca5d6c01a048ed24c
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithHighPrecisionOptions_ShouldUseCorrectThreshold [0:06.020] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithHighPrecisionOptions_ShouldUseCorrectThreshold() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 150
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: precise query
+Getting collection info for: test-collection-ba46e148aec7451ab04b8f4d954d7c37
+Failed to get collection info for: test-collection-ba46e148aec7451ab04b8f4d954d7c37
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-ba46e148aec7451ab04b8f4d954d7c37` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-ba46e148aec7451ab04b8f4d954d7c37` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-ba46e148aec7451ab04b8f4d954d7c37
+Creating collection: test-collection-ba46e148aec7451ab04b8f4d954d7c37 with vector size: 384
+Successfully created collection: test-collection-ba46e148aec7451ab04b8f4d954d7c37
+Collection created successfully: test-collection-ba46e148aec7451ab04b8f4d954d7c37
+Generating embedding for text of length: 13
+Generating embedding for text of length 13
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-ba46e148aec7451ab04b8f4d954d7c37 with limit: 5
+Failed to search collection: test-collection-ba46e148aec7451ab04b8f4d954d7c37
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithIncludeEmbedding_ShouldIncludeEmbeddingInResults [0:17.603] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithIncludeEmbedding_ShouldIncludeEmbeddingInResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 454
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: query with embedding
+Getting collection info for: test-collection-ddd590b0d01647898a45bd1018e1a924
+Failed to get collection info for: test-collection-ddd590b0d01647898a45bd1018e1a924
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-ddd590b0d01647898a45bd1018e1a924` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-ddd590b0d01647898a45bd1018e1a924` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-ddd590b0d01647898a45bd1018e1a924
+Creating collection: test-collection-ddd590b0d01647898a45bd1018e1a924 with vector size: 384
+Successfully created collection: test-collection-ddd590b0d01647898a45bd1018e1a924
+Collection created successfully: test-collection-ddd590b0d01647898a45bd1018e1a924
+Generating embedding for text of length: 20
+Generating embedding for text of length 20
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-ddd590b0d01647898a45bd1018e1a924 with limit: 10
+Failed to search collection: test-collection-ddd590b0d01647898a45bd1018e1a924
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithIncludeMetadata_ShouldIncludeMetadataInResults [0:01.940] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithIncludeMetadata_ShouldIncludeMetadataInResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 473
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: query with metadata
+Getting collection info for: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1
+Failed to get collection info for: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-0e74b1217b144df1bb0a3a92a9adb9c1` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-0e74b1217b144df1bb0a3a92a9adb9c1` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1
+Creating collection: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1 with vector size: 384
+Successfully created collection: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1
+Collection created successfully: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1
+Generating embedding for text of length: 19
+Generating embedding for text of length 19
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1 with limit: 10
+Failed to search collection: test-collection-0e74b1217b144df1bb0a3a92a9adb9c1
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithMetadataFilters_ShouldApplyFilters [0:01.956] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithMetadataFilters_ShouldApplyFilters() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 432
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: filtered query
+Getting collection info for: test-collection-df7fa848bc5a41c5b74a44c19d1ba538
+Failed to get collection info for: test-collection-df7fa848bc5a41c5b74a44c19d1ba538
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-df7fa848bc5a41c5b74a44c19d1ba538` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-df7fa848bc5a41c5b74a44c19d1ba538` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-df7fa848bc5a41c5b74a44c19d1ba538
+Creating collection: test-collection-df7fa848bc5a41c5b74a44c19d1ba538 with vector size: 384
+Successfully created collection: test-collection-df7fa848bc5a41c5b74a44c19d1ba538
+Collection created successfully: test-collection-df7fa848bc5a41c5b74a44c19d1ba538
+Generating embedding for text of length: 14
+Generating embedding for text of length 14
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-df7fa848bc5a41c5b74a44c19d1ba538 with limit: 10
+Failed to search collection: test-collection-df7fa848bc5a41c5b74a44c19d1ba538
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithProcessingTime_ShouldMeasureActualProcessingTime [0:06.001] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithProcessingTime_ShouldMeasureActualProcessingTime() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 491
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: timing query
+Getting collection info for: test-collection-93ba1204a52345fbbb8a35348daeb1c1
+Failed to get collection info for: test-collection-93ba1204a52345fbbb8a35348daeb1c1
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-93ba1204a52345fbbb8a35348daeb1c1` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-93ba1204a52345fbbb8a35348daeb1c1` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-93ba1204a52345fbbb8a35348daeb1c1
+Creating collection: test-collection-93ba1204a52345fbbb8a35348daeb1c1 with vector size: 384
+Successfully created collection: test-collection-93ba1204a52345fbbb8a35348daeb1c1
+Collection created successfully: test-collection-93ba1204a52345fbbb8a35348daeb1c1
+Generating embedding for text of length: 12
+Generating embedding for text of length 12
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-93ba1204a52345fbbb8a35348daeb1c1 with limit: 10
+Failed to search collection: test-collection-93ba1204a52345fbbb8a35348daeb1c1
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithQdrantFailure_ShouldPropagateException [0:02.190] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithQdrantFailure_ShouldPropagateException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 409
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-4de9dec2b48e4367be2f0bb0b95dac26
+Failed to get collection info for: test-collection-4de9dec2b48e4367be2f0bb0b95dac26
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-4de9dec2b48e4367be2f0bb0b95dac26` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-4de9dec2b48e4367be2f0bb0b95dac26` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-4de9dec2b48e4367be2f0bb0b95dac26
+Creating collection: test-collection-4de9dec2b48e4367be2f0bb0b95dac26 with vector size: 384
+Successfully created collection: test-collection-4de9dec2b48e4367be2f0bb0b95dac26
+Collection created successfully: test-collection-4de9dec2b48e4367be2f0bb0b95dac26
+Generating embedding for text of length: 10
+Generating embedding for text of length 10
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-4de9dec2b48e4367be2f0bb0b95dac26 with limit: 10
+Failed to search collection: test-collection-4de9dec2b48e4367be2f0bb0b95dac26
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithTimeout_ShouldRespectTimeout [0:02.500] Failed: Shouldly.ShouldAssertException: "VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected di..."
+Shouldly.ShouldAssertException
+"VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected di..."
+    should contain (case insensitive comparison)
+"GV006"
+    but did not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithTimeout_ShouldRespectTimeout() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 367
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-0357ee06c76b4af8b12b77ae72dd15a8
+Failed to get collection info for: test-collection-0357ee06c76b4af8b12b77ae72dd15a8
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-0357ee06c76b4af8b12b77ae72dd15a8` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-0357ee06c76b4af8b12b77ae72dd15a8` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-0357ee06c76b4af8b12b77ae72dd15a8
+Creating collection: test-collection-0357ee06c76b4af8b12b77ae72dd15a8 with vector size: 384
+Successfully created collection: test-collection-0357ee06c76b4af8b12b77ae72dd15a8
+Collection created successfully: test-collection-0357ee06c76b4af8b12b77ae72dd15a8
+Generating embedding for text of length: 10
+Generating embedding for text of length 10
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-0357ee06c76b4af8b12b77ae72dd15a8 with limit: 10
+Failed to search collection: test-collection-0357ee06c76b4af8b12b77ae72dd15a8
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       SearchSimilarAsync_WithValidQuery_ShouldReturnActualSearchResults [0:02.396] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithValidQuery_ShouldReturnActualSearchResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 128
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-8d7c2d6242b34488ae5e54a12926421b
+Failed to get collection info for: test-collection-8d7c2d6242b34488ae5e54a12926421b
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-8d7c2d6242b34488ae5e54a12926421b` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-8d7c2d6242b34488ae5e54a12926421b` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-8d7c2d6242b34488ae5e54a12926421b
+Creating collection: test-collection-8d7c2d6242b34488ae5e54a12926421b with vector size: 384
+Successfully created collection: test-collection-8d7c2d6242b34488ae5e54a12926421b
+Collection created successfully: test-collection-8d7c2d6242b34488ae5e54a12926421b
+Generating embedding for text of length: 10
+Generating embedding for text of length 10
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-8d7c2d6242b34488ae5e54a12926421b with limit: 10
+Failed to search collection: test-collection-8d7c2d6242b34488ae5e54a12926421b
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException [0:00.009] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.ArgumentException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 252
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreDocumentAsync_WithNullId_ShouldThrowArgumentException [0:00.013] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.ArgumentException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithNullId_ShouldThrowArgumentException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 240
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException [0:00.017] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.ArgumentException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 264
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreDocumentAsync_WithValidData_ShouldStoreDocument [0:07.019] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithValidData_ShouldStoreDocument() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 229
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc-123
+Getting collection info for: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Failed to get collection info for: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Creating collection: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7 with vector size: 384
+Successfully created collection: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Collection created successfully: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Generating embedding for text of length: 16
+Generating embedding for text of length 16
+Successfully generated embedding with dimension 768
+Upserting 1 points to collection: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Failed to upsert points to collection: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.UpsertAsync(String collectionName, IReadOnlyList`1 points, Boolean wait, Nullable`1 ordering, ShardKeySelector shardKeySelector, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass6_0.<<UpsertAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 328
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.UpsertAsync(String collectionName, IReadOnlyList`1 points, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 290
+Failed to upsert document: VE005
+Starting vector search for query: document content
+Getting collection info for: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Successfully retrieved collection info for: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Collection already exists: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Generating embedding for text of length: 16
+Generating embedding for text of length 16
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7 with limit: 10
+Failed to search collection: test-collection-a6ee84d7a3e443a8b8fdc0cf66dfcfd7
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.SearchAsync(String collectionName, ReadOnlyMemory`1 vector, Filter filter, SearchParams searchParams, UInt64 limit, UInt64 offset, WithPayloadSelector payloadSelector, WithVectorsSelector vectorsSelector, Nullable`1 scoreThreshold, String vectorName, ReadConsistency readConsistency, ShardKeySelector shardKeySelector, Nullable`1 sparseIndices, Nullable`1 timeout, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass5_0.<<SearchAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 212
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.SearchAsync(String collectionName, Single[] queryVector, UInt32 limit, Nullable`1 scoreThreshold, Dictionary`2 filter, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 188
+Vector search failed: VE007: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+
+       UpdateDocumentAsync_WithValidData_ShouldUpdateDocument [0:06.017] Failed: System.InvalidOperationException: Failed to update document: VE005
+System.InvalidOperationException
+Failed to update document: VE005
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.UpdateDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 480
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.UpdateDocumentAsync_WithValidData_ShouldUpdateDocument() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 285
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Storing document with ID: doc-123
+Getting collection info for: test-collection-06ea00075dc149ffafb79580336fe4bd
+Failed to get collection info for: test-collection-06ea00075dc149ffafb79580336fe4bd
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-06ea00075dc149ffafb79580336fe4bd` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-06ea00075dc149ffafb79580336fe4bd` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-06ea00075dc149ffafb79580336fe4bd
+Creating collection: test-collection-06ea00075dc149ffafb79580336fe4bd with vector size: 384
+Successfully created collection: test-collection-06ea00075dc149ffafb79580336fe4bd
+Collection created successfully: test-collection-06ea00075dc149ffafb79580336fe4bd
+Generating embedding for text of length: 15
+Generating embedding for text of length 15
+Successfully generated embedding with dimension 768
+Upserting 1 points to collection: test-collection-06ea00075dc149ffafb79580336fe4bd
+Failed to upsert points to collection: test-collection-06ea00075dc149ffafb79580336fe4bd
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.UpsertAsync(String collectionName, IReadOnlyList`1 points, Boolean wait, Nullable`1 ordering, ShardKeySelector shardKeySelector, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass6_0.<<UpsertAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 328
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.UpsertAsync(String collectionName, IReadOnlyList`1 points, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 290
+Failed to upsert document: VE005
+Updating document with ID: doc-123
+Getting collection info for: test-collection-06ea00075dc149ffafb79580336fe4bd
+Successfully retrieved collection info for: test-collection-06ea00075dc149ffafb79580336fe4bd
+Collection already exists: test-collection-06ea00075dc149ffafb79580336fe4bd
+Generating embedding for text of length: 15
+Generating embedding for text of length 15
+Successfully generated embedding with dimension 768
+Upserting 1 points to collection: test-collection-06ea00075dc149ffafb79580336fe4bd
+Failed to upsert points to collection: test-collection-06ea00075dc149ffafb79580336fe4bd
+Grpc.Core.RpcException: Status(StatusCode="InvalidArgument", Detail="Wrong input: Vector dimension error: expected dim: 384, got 768")
+   at Qdrant.Client.QdrantClient.UpsertAsync(String collectionName, IReadOnlyList`1 points, Boolean wait, Nullable`1 ordering, ShardKeySelector shardKeySelector, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass6_0.<<UpsertAsync>b__2>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 328
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.UpsertAsync(String collectionName, IReadOnlyList`1 points, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 290
+Failed to upsert document: VE005
+Error updating document with ID: doc-123
+System.InvalidOperationException: Failed to update document: VE005
+   at IndFusion.SemanticRag.Infrastructure.Services.QdrantVectorSearchService.UpdateDocumentAsync(String id, String content, Dictionary`2 metadata, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Services/QdrantVectorSearchService.cs:line 480
+
+      RoslynCodeAnalysisServiceBehavioralTests (6 tests) [0:14.072] Failed: One or more child tests failed: 6 tests failed
+       AnalyzeCodeAsync_WithUnsupportedLanguage_ShouldReturnEmptyResults [0:00.072] Failed: Shouldly.ShouldAssertException: 1
+Shouldly.ShouldAssertException
+1
+    should be
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeCodeAsync_WithUnsupportedLanguage_ShouldReturnEmptyResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 362
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeFileAsync_WithValidFilePath_ShouldReturnActualAnalysisResults [0:00.012] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be
+1
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeFileAsync_WithValidFilePath_ShouldReturnActualAnalysisResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 140
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithLargeProject_ShouldHandleLargeProjects [0:00.483] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithLargeProject_ShouldHandleLargeProjects() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 415
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithProjectContainingMixedSeverities_ShouldReturnAllSeverities [0:00.116] Failed: Shouldly.ShouldAssertException: [] (System.Collections.Generic.List`1[IndFusion.SemanticRag.Domain.Models.PatternSeverity])
+Shouldly.ShouldAssertException
+[] (System.Collections.Generic.List`1[IndFusion.SemanticRag.Domain.Models.PatternSeverity])
+    should not be empty but was
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithProjectContainingMixedSeverities_ShouldReturnAllSeverities() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 614
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithProjectContainingMultipleLanguages_ShouldAnalyzeAllLanguages [0:00.007] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithProjectContainingMultipleLanguages_ShouldAnalyzeAllLanguages() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 438
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualAnalysisResults [0:00.037] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualAnalysisResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 39
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      SemanticPatternEngineServiceBehavioralTests (4 tests) [0:13.068] Failed: One or more child tests failed: 4 tests failed
+       AnalyzeConsistencyAsync_WithAllPatternFamily_ShouldAnalyzeAllPatterns [0:00.003] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.AnalyzeConsistencyAsync_WithAllPatternFamily_ShouldAnalyzeAllPatterns() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 396
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeConsistencyAsync_WithValidProjectPath_ShouldReturnActualConsistencyReport [0:00.009] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.AnalyzeConsistencyAsync_WithValidProjectPath_ShouldReturnActualConsistencyReport() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 362
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualViolations [0:00.010] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualViolations() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 192
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetPatternGuidanceAsync_WithValidContext_ShouldReturnActualGuidance [0:00.053] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.GetPatternGuidanceAsync_WithValidContext_ShouldReturnActualGuidance() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 547
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.Tests (15 tests) [0:06.390] Failed: 15 tests failed
+    IndFusion.SemanticRag.Tests (15 tests) [0:06.390] Failed: 15 tests failed
+     Implementations (11 tests) [0:02.332] Failed: 11 tests failed
+      DocumentProcessingPipelineTests (4 tests) [0:00.464] Failed: One or more child tests failed: 4 tests failed
+       DetectDocumentTypeAsync_Should_Detect_By_File_Extension [0:00.006] Failed: Shouldly.ShouldAssertException: DocumentType.Text
+Shouldly.ShouldAssertException
+DocumentType.Text
+    should be
+DocumentType.Markdown
+    but was not
+
+Additional Info:
+    Failed for file extension: test.md
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.DetectDocumentTypeAsync_Should_Detect_By_File_Extension() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 274
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Create_Chunks_With_Fixed_Size_Strategy [0:00.005] Failed: Shouldly.ShouldAssertException: 1
+Shouldly.ShouldAssertException
+1
+    should be greater than
+1
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Create_Chunks_With_Fixed_Size_Strategy() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 350
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Handle_Cancellation [0:00.005] Failed: Shouldly.ShouldAssertException: ProcessingStatus.Success
+Shouldly.ShouldAssertException
+ProcessingStatus.Success
+    should be
+ProcessingStatus.Failed
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Handle_Cancellation() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 414
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Not_Extract_Metadata_When_Disabled [0:00.006] Failed: Shouldly.ShouldAssertException: [] (System.Collections.Generic.Dictionary`2[System.String,System.Object])
+Shouldly.ShouldAssertException
+[] (System.Collections.Generic.Dictionary`2[System.String,System.Object])
+    should be null but was
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Not_Extract_Metadata_When_Disabled() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 473
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      GraphQueryServiceTests (1 test) [0:01.226] Failed: One or more child tests failed: 1 test failed
+       FindShortestPathAsync_Should_Return_Null_For_No_Path [0:00.091] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.GraphQueryServiceTests.FindShortestPathAsync_Should_Return_Null_For_No_Path() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/GraphQueryServiceTests.cs:line 427
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      PatternGraphQueryServiceTests (4 tests) [0:00.127] Failed: One or more child tests failed: 4 tests failed
+       FindPatternRelationshipsAsync_Should_Find_Pattern_Relationships [0:00.013] Failed: Shouldly.ShouldAssertException: 1f
+Shouldly.ShouldAssertException
+1f
+    should be
+0.8f
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindPatternRelationshipsAsync_Should_Find_Pattern_Relationships() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 183
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       FindSimilarPatternsAsync_Should_Calculate_Similarity_Correctly [0:00.008] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindSimilarPatternsAsync_Should_Calculate_Similarity_Correctly() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 644
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       FindSimilarPatternsAsync_Should_Find_Similar_Patterns [0:00.000] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindSimilarPatternsAsync_Should_Find_Similar_Patterns() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 281
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       QueryPatternGraphAsync_Should_Execute_Pattern_Graph_Query [0:00.000] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.QueryPatternGraphAsync_Should_Execute_Pattern_Graph_Query() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 100
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      PatternSuggestServiceTests (2 tests) [0:00.513] Failed: One or more child tests failed: 2 tests failed
+       AnalyzePatternAsync_Should_Analyze_Specific_Pattern [0:00.004] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternSuggestServiceTests.AnalyzePatternAsync_Should_Analyze_Specific_Pattern() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternSuggestServiceTests.cs:line 220
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       SuggestPatternsAsync_Should_Use_ConfigureAwait_False [0:00.001] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternSuggestServiceTests.SuggestPatternsAsync_Should_Use_ConfigureAwait_False() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternSuggestServiceTests.cs:line 564
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     Integration (3 tests) [0:00.765] Failed: 3 tests failed
+      GraphRagLayerIntegrationTests (3 tests) [0:00.765] Failed: One or more child tests failed: 3 tests failed
+       Error_Handling_Workflow_Should_Handle_Failures_Gracefully [0:00.039] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Error_Handling_Workflow_Should_Handle_Failures_Gracefully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 327
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       Pattern_Suggestion_Workflow_Should_Handle_Complex_Code [0:00.210] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Pattern_Suggestion_Workflow_Should_Handle_Complex_Code() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 232
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       Performance_Workflow_Should_Complete_Within_Reasonable_Time [0:00.075] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Performance_Workflow_Should_Complete_Within_Reasonable_Time() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 412
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     Interfaces (1 test) [0:02.581] Failed: 1 test failed
+      IGraphQueryServiceTests (1 test) [0:00.068] Failed: One or more child tests failed: 1 test failed
+       FindShortestPathAsync_Should_Return_Null_For_No_Path [0:00.002] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Interfaces.IGraphQueryServiceTests.FindShortestPathAsync_Should_Return_Null_For_No_Path() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Interfaces/IGraphQueryServiceTests.cs:line 271
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:05.535] Failed: 4 tests failed
+    IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:05.535] Failed: 4 tests failed
+     Infrastructure.Adapters (4 tests) [0:01.973] Failed: 4 tests failed
+      Neo4jKnowledgeGraphAdapterTests (4 tests) [0:01.380] Failed: One or more child tests failed: 4 tests failed
+       ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails [0:00.004] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 45
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 57
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 389
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException [0:00.007] Failed: Shouldly.ShouldAssertException: "KG009"
+Shouldly.ShouldAssertException
+"KG009"
+    should be
+"KG008"
+    but was not
+    difference
+Difference     |                      |   
+               |                     \|/  
+Index          | 0    1    2    3    4    
+Expected Value | K    G    0    0    8    
+Actual Value   | K    G    0    0    9    
+Expected Code  | 75   71   48   48   56   
+Actual Code    | 75   71   48   48   57   
+
+Additional Info:
+    Expected error code 'KG008', but got 'KG009'
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 58
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 285
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnNode_When_NodeExists [0:00.189] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be successful, but it failed with error: KG009
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldSucceed[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 17
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnNode_When_NodeExists() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 255
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails [0:00.004] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail(Result result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 76
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith(Result result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 87
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 161
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+

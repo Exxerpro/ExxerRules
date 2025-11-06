@@ -86,7 +86,7 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
                         var content = new StringContent(json, Encoding.UTF8, "application/json");
 
                         var response = await _httpClient.PostAsync($"{_options.BaseUrl}/api/embeddings", content, cancellationToken);
-                        
+
                         if (!response.IsSuccessStatusCode)
                         {
                             var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -95,15 +95,26 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
                         }
 
                         var responseContent = await response.Content.ReadAsStringAsync(cancellationToken);
+
+                        // Diagnostic logging for debugging response structure
+                        _logger.LogDebug("Ollama API response content (first 500 chars): {ResponseContent}",
+                            responseContent.Length > 500 ? responseContent.Substring(0, 500) : responseContent);
+
                         var options = new JsonSerializerOptions
                         {
                             PropertyNameCaseInsensitive = true
                         };
                         var embeddingResponse = JsonSerializer.Deserialize<OllamaEmbeddingResponse>(responseContent, options);
 
-                        if (embeddingResponse?.Embedding == null || embeddingResponse.Embedding.Length == 0)
+                        if (embeddingResponse == null)
                         {
-                            _logger.LogError("Invalid embedding response from Ollama API");
+                            _logger.LogError("Failed to deserialize Ollama API response. Response content: {ResponseContent}", responseContent);
+                            return Result<float[]>.WithFailure(ErrorCodes.EmbeddingGenerationFailed);
+                        }
+
+                        if (embeddingResponse.Embedding == null || embeddingResponse.Embedding.Length == 0)
+                        {
+                            _logger.LogError("Invalid embedding response from Ollama API - embedding is null or empty. Response: {ResponseContent}", responseContent);
                             return Result<float[]>.WithFailure(ErrorCodes.EmbeddingGenerationFailed);
                         }
 
@@ -134,7 +145,7 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
 
     /// <inheritdoc />
     public async Task<Result<IReadOnlyList<float[]>>> GenerateEmbeddingsAsync(
-        IReadOnlyList<string> texts, 
+        IReadOnlyList<string> texts,
         CancellationToken cancellationToken = default)
     {
         // Early validation to avoid NullReferenceException
@@ -221,8 +232,8 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
 
     /// <inheritdoc />
     public async Task<Result<VectorEmbedding>> GenerateEmbeddingWithMetadataAsync(
-        string text, 
-        Dictionary<string, object> metadata, 
+        string text,
+        Dictionary<string, object> metadata,
         CancellationToken cancellationToken = default)
     {
         if (cancellationToken.IsCancellationRequested)
@@ -311,7 +322,7 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
                         }
 
                         var response = await _httpClient.GetAsync($"{baseUrl}/api/tags", cancellationToken);
-                        
+
                         if (!response.IsSuccessStatusCode)
                         {
                             var errorContent = await response.Content.ReadAsStringAsync(cancellationToken);
@@ -354,23 +365,3 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
         }
     }
 }
-
-/// <summary>
-/// Response model for Ollama embedding API.
-/// </summary>
-internal record OllamaEmbeddingResponse(
-    [property: System.Text.Json.Serialization.JsonPropertyName("embedding")] float[] Embedding);
-
-/// <summary>
-/// Response model for Ollama tags API.
-/// </summary>
-internal record OllamaTagsResponse(
-    OllamaModel[] Models);
-
-/// <summary>
-/// Model information from Ollama tags API.
-/// </summary>
-internal record OllamaModel(
-    string Name,
-    DateTime ModifiedAt,
-    long Size);

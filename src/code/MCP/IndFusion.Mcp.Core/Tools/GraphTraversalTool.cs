@@ -2,7 +2,6 @@ using System.ComponentModel;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol;
 using ModelContextProtocol.Server;
-using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Services;
 using IndQuestResults;
 
@@ -617,58 +616,3 @@ public static class GraphTraversalTool
         });
     }
 }
-
-/// <summary>
-/// Response model for graph query operations.
-/// </summary>
-/// <param name="Result">The graph query result.</param>
-/// <param name="Success">Whether the query was successful.</param>
-/// <param name="ErrorMessage">Error message if query failed.</param>
-public readonly record struct GraphQueryResponse(
-    GraphQueryResult Result,
-    bool Success,
-    string? ErrorMessage);
-
-/// <summary>
-/// Response model for graph node operations.
-/// </summary>
-/// <param name="Nodes">The graph nodes found.</param>
-/// <param name="TotalNodes">Total number of nodes.</param>
-/// <param name="NodeType">The node type that was searched.</param>
-public readonly record struct GraphNodeResponse(
-    IReadOnlyList<GraphNode> Nodes,
-    int TotalNodes,
-    string NodeType);
-
-/// <summary>
-/// Response model for graph traversal operations.
-/// </summary>
-/// <param name="TraversalResult">The graph traversal result.</param>
-/// <param name="Success">Whether the traversal was successful.</param>
-/// <param name="ErrorMessage">Error message if traversal failed.</param>
-public readonly record struct GraphTraversalResponse(
-    GraphTraversalResult TraversalResult,
-    bool Success,
-    string? ErrorMessage);
-
-/// <summary>
-/// Response model for graph path operations.
-/// </summary>
-/// <param name="Path">The graph path found.</param>
-/// <param name="Success">Whether the path search was successful.</param>
-/// <param name="ErrorMessage">Error message if path search failed.</param>
-public readonly record struct GraphPathResponse(
-    GraphPath? Path,
-    bool Success,
-    string? ErrorMessage);
-
-/// <summary>
-/// Response model for graph statistics operations.
-/// </summary>
-/// <param name="Statistics">The graph statistics.</param>
-/// <param name="Success">Whether the operation was successful.</param>
-/// <param name="ErrorMessage">Error message if operation failed.</param>
-public readonly record struct GraphStatisticsResponse(
-    GraphStatistics Statistics,
-    bool Success,
-    string? ErrorMessage);

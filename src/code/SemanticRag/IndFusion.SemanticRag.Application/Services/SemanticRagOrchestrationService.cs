@@ -81,7 +81,7 @@ public class SemanticRagOrchestrationService
                 foreach (var result in topResults)
                 {
                     if (result.Document == null) continue;
-                    
+
                     var extractionResult = await _extractionService.ExtractKnowledgeAsync(
                         result.Document,
                         options.ExtractionOptions,
@@ -385,14 +385,14 @@ public class SemanticRagOrchestrationService
         }
     }
 
-    private string GenerateAnswer(string question, IReadOnlyList<SemanticDocument> documents, 
+    private string GenerateAnswer(string question, IReadOnlyList<SemanticDocument> documents,
         IReadOnlyList<KnowledgeEntity> entities, QuestionAnswerOptions options)
     {
         // TODO: Implement actual answer generation using LLM
         // This is a placeholder implementation
         var documentCount = documents.Count;
         var entityCount = entities.Count;
-        
+
         return $"Based on {documentCount} documents and {entityCount} entities, " +
                $"I found relevant information about '{question}'. " +
                $"The answer would be generated using an LLM with the provided context.";
@@ -410,138 +410,12 @@ public class SemanticRagOrchestrationService
         // TODO: Implement actual health score calculation
         // This is a placeholder implementation
         var score = 0.0f;
-        
+
         if (stats.TotalDocuments > 0) score += 0.4f;
         if (stats.TotalEntities > 0) score += 0.3f;
         if (stats.TotalRelationships > 0) score += 0.2f;
         if (stats.LastIndexedAt.HasValue) score += 0.1f;
-        
+
         return Math.Min(1.0f, score);
     }
 }
-
-/// <summary>
-/// Options for comprehensive search operations.
-/// </summary>
-/// <param name="SearchOptions">Basic search options.</param>
-/// <param name="RagConfig">RAG configuration.</param>
-/// <param name="EnableKnowledgeExtraction">Whether to extract knowledge from results.</param>
-/// <param name="MaxResultsForExtraction">Maximum number of results to extract knowledge from.</param>
-/// <param name="ExtractionOptions">Knowledge extraction options.</param>
-/// <param name="EnableContextRetrieval">Whether to retrieve additional context.</param>
-public readonly record struct ComprehensiveSearchOptions(
-    SemanticSearchOptions SearchOptions,
-    SemanticRagConfig RagConfig,
-    bool EnableKnowledgeExtraction = true,
-    int MaxResultsForExtraction = 5,
-    ComprehensiveExtractionOptions ExtractionOptions = default,
-    bool EnableContextRetrieval = true)
-{
-    /// <summary>
-    /// Default comprehensive search options.
-    /// </summary>
-    public static ComprehensiveSearchOptions Default() => new(
-        SearchOptions: new SemanticSearchOptions(),
-        RagConfig: new SemanticRagConfig(
-            Id: "default",
-            Name: "Default Configuration",
-            EmbeddingModel: "text-embedding-ada-002",
-            VectorDimensions: 1536,
-            SimilarityThreshold: 0.7,
-            MaxResults: 10,
-            Properties: []
-        ),
-        EnableKnowledgeExtraction: true,
-        MaxResultsForExtraction: 5,
-        ExtractionOptions: ComprehensiveExtractionOptions.Default(),
-        EnableContextRetrieval: true);
-}
-
-/// <summary>
-/// Result of comprehensive search operations.
-/// </summary>
-/// <param name="SearchResults">The search results.</param>
-/// <param name="TotalCount">Total number of results found.</param>
-/// <param name="Query">The original query.</param>
-/// <param name="ProcessingTimeMs">Time taken for processing in milliseconds.</param>
-/// <param name="ExtractedKnowledge">Knowledge extracted from results.</param>
-/// <param name="AdditionalContext">Additional context retrieved.</param>
-/// <param name="SearchSuggestions">Search suggestions for refinement.</param>
-public readonly record struct ComprehensiveSearchResult(
-    IReadOnlyList<SemanticSearchResult> SearchResults,
-    int TotalCount,
-    string Query,
-    long ProcessingTimeMs,
-    IReadOnlyList<IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult> ExtractedKnowledge,
-    SemanticContext? AdditionalContext,
-    IReadOnlyList<string>? SearchSuggestions = null);
-
-/// <summary>
-/// Result of repository ingestion operations.
-/// </summary>
-/// <param name="ProcessedDocuments">Documents that were successfully processed.</param>
-/// <param name="TotalDocuments">Total number of documents found.</param>
-/// <param name="ExtractedKnowledge">Knowledge extracted from documents.</param>
-/// <param name="ProcessingTimeMs">Time taken for processing in milliseconds.</param>
-/// <param name="Success">Whether the ingestion was successful.</param>
-public readonly record struct RepositoryIngestionResult(
-    IReadOnlyList<SemanticDocument> ProcessedDocuments,
-    int TotalDocuments,
-    IReadOnlyList<IndFusion.SemanticRag.Domain.Models.KnowledgeExtractionResult> ExtractedKnowledge,
-    long ProcessingTimeMs,
-    bool Success);
-
-/// <summary>
-/// Options for question answering operations.
-/// </summary>
-/// <param name="SearchOptions">Search options for finding relevant context.</param>
-/// <param name="RagConfig">RAG configuration for context retrieval.</param>
-/// <param name="MaxContextDocuments">Maximum number of documents to use as context.</param>
-/// <param name="IncludeEntityContext">Whether to include entity context.</param>
-/// <param name="IncludeRelationshipContext">Whether to include relationship context.</param>
-public readonly record struct QuestionAnswerOptions(
-    SemanticSearchOptions SearchOptions,
-    SemanticRagConfig RagConfig,
-    int MaxContextDocuments = 10,
-    bool IncludeEntityContext = true,
-    bool IncludeRelationshipContext = true);
-
-/// <summary>
-/// Result of question answering operations.
-/// </summary>
-/// <param name="Question">The original question.</param>
-/// <param name="Answer">The generated answer.</param>
-/// <param name="SupportingDocuments">Documents used to generate the answer.</param>
-/// <param name="SupportingEntities">Entities used to generate the answer.</param>
-/// <param name="SupportingRelationships">Relationships used to generate the answer.</param>
-/// <param name="Confidence">Confidence score for the answer (0.0 to 1.0).</param>
-/// <param name="ProcessingTimeMs">Time taken for processing in milliseconds.</param>
-public readonly record struct QuestionAnswerResult(
-    string Question,
-    string Answer,
-    IReadOnlyList<SemanticDocument> SupportingDocuments,
-    IReadOnlyList<KnowledgeEntity> SupportingEntities,
-    IReadOnlyList<KnowledgeRelationship> SupportingRelationships,
-    float Confidence,
-    long ProcessingTimeMs);
-
-/// <summary>
-/// Result of system health checks.
-/// </summary>
-/// <param name="IsHealthy">Whether the system is healthy.</param>
-/// <param name="TotalDocuments">Total number of indexed documents.</param>
-/// <param name="TotalEntities">Total number of knowledge entities.</param>
-/// <param name="TotalRelationships">Total number of relationships.</param>
-/// <param name="LastIndexedAt">When the last document was indexed.</param>
-/// <param name="AverageDocumentSize">Average size of documents in characters.</param>
-/// <param name="EmbeddingDimension">Dimension of the embedding vectors.</param>
-/// <param name="HealthScore">Overall health score (0.0 to 1.0).</param>
-public readonly record struct SystemHealthResult(
-    bool IsHealthy,
-    int TotalDocuments,
-    int TotalEntities,
-    int TotalRelationships,
-    DateTimeOffset? LastIndexedAt,
-    double AverageDocumentSize,
-    int EmbeddingDimension,
-    float HealthScore);

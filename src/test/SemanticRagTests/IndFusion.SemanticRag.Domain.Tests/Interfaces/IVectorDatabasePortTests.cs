@@ -260,11 +260,3 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
 }
 
 // Helper request class for test data
-public class SearchRequest
-{
-    public string? CollectionName { get; set; }
-    public float[]? QueryVector { get; set; }
-    public uint Limit { get; set; }
-    public float? ScoreThreshold { get; set; }
-    public Dictionary<string, object>? Filter { get; set; }
-}

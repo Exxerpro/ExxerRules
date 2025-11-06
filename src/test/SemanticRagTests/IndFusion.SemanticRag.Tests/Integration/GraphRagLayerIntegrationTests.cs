@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using IndFusion.SemanticRag.Application.Services;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Domain.Services;
@@ -49,12 +48,12 @@ public class GraphRagLayerIntegrationTests : IClassFixture<IntegrationTestFixtur
 public class UserService
 {
     private readonly IUserRepository _userRepository;
-    
+
     public UserService(IUserRepository userRepository)
     {
         _userRepository = userRepository;
     }
-    
+
     public async Task<User> GetUserAsync(int id)
     {
         return await _userRepository.GetByIdAsync(id);
@@ -165,7 +164,7 @@ namespace MyApp.Services
         private readonly IOrderRepository _orderRepository;
         private readonly IEmailService _emailService;
         private readonly ILogger<OrderService> _logger;
-        
+
         public OrderService(
             IOrderRepository orderRepository,
             IEmailService emailService,
@@ -175,13 +174,13 @@ namespace MyApp.Services
             _emailService = emailService ?? throw new ArgumentNullException(nameof(emailService));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
-        
+
         public async Task<Order> CreateOrderAsync(CreateOrderRequest request)
         {
             try
             {
                 _logger.LogInformation(""Creating order for customer {CustomerId}"", request.CustomerId);
-                
+
                 var order = new Order
                 {
                     Id = Guid.NewGuid(),
@@ -189,13 +188,13 @@ namespace MyApp.Services
                     Items = request.Items,
                     CreatedAt = DateTimeOffset.UtcNow
                 };
-                
+
                 await _orderRepository.SaveAsync(order);
-                
+
                 await _emailService.SendOrderConfirmationAsync(order);
-                
+
                 _logger.LogInformation(""Order {OrderId} created successfully"", order.Id);
-                
+
                 return order;
             }
             catch (Exception ex)
@@ -419,74 +418,5 @@ ORDER BY r.strength DESC",
 
         graphQueryResult.IsSuccess.ShouldBeTrue();
         graphQueryTime.TotalMilliseconds.ShouldBeLessThan(2000); // Should complete within 2 seconds
-    }
-}
-
-/// <summary>
-/// Integration test fixture for setting up the test environment.
-/// </summary>
-public class IntegrationTestFixture : IDisposable
-{
-    /// <summary>
-    /// Gets the service provider.
-    /// </summary>
-    public IServiceProvider ServiceProvider { get; }
-
-    /// <summary>
-    /// Initializes a new instance of the IntegrationTestFixture class.
-    /// </summary>
-    public IntegrationTestFixture()
-    {
-        var services = new ServiceCollection();
-
-        // Add logging
-        services.AddLogging(builder => builder.AddConsole());
-
-        // Add mock knowledge graph port
-        var mockKnowledgeGraphPort = Substitute.For<IKnowledgeGraphPort>();
-        SetupMockKnowledgeGraphPort(mockKnowledgeGraphPort);
-        services.AddSingleton(mockKnowledgeGraphPort);
-
-        // Add services
-        services.AddScoped<IGraphQueryService, GraphQueryService>();
-        services.AddScoped<IPatternSuggestService, PatternSuggestService>();
-        services.AddScoped<IPatternGraphQueryService, PatternGraphQueryService>();
-
-        ServiceProvider = services.BuildServiceProvider();
-    }
-
-    private static void SetupMockKnowledgeGraphPort(IKnowledgeGraphPort mockPort)
-    {
-        // Setup mock responses for common queries
-        mockPort.QueryNodesAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeNode>>.Success(
-            [
-                new(
-                    Id: "test-node",
-                    Label: "CodeNode",
-                    Properties: new Dictionary<string, object> { ["name"] = "TestNode" },
-                    CreatedAt: DateTimeOffset.UtcNow,
-                    UpdatedAt: DateTimeOffset.UtcNow)
-            ]));
-
-        mockPort.QueryRelationshipsAsync(Arg.Any<string>(), Arg.Any<IReadOnlyDictionary<string, object>>(), Arg.Any<CancellationToken>())
-            .Returns(Result<IReadOnlyList<KnowledgeRelationship>>.Success([]));
-
-        mockPort.GetNodeCountAsync(Arg.Any<CancellationToken>())
-            .Returns(Result<int>.Success(1000));
-
-        mockPort.GetRelationshipCountAsync(Arg.Any<CancellationToken>())
-            .Returns(Result<int>.Success(2500));
-    }
-
-    /// <summary>
-    /// Disposes the integration test fixture.
-    /// </summary>
-    public void Dispose()
-    {
-        if (ServiceProvider is IDisposable disposable)
-        {
-            disposable.Dispose();
-        }
     }
 }

@@ -1,4 +1,5 @@
 #pragma warning disable CS1998, CS0452, CS1022, IDE0053
+
 using IndFusion.Fixer.CodeFormatting;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -169,15 +170,4 @@ public class TestClass
     }
 }
 
-/// <summary>
-/// Base class for code fix provider tests.
-/// </summary>
-/// <typeparam name="T">The code fix provider type.</typeparam>
-public abstract class CodeFixProviderTest<T> where T : CodeFixProvider, new()
-{
-    /// <summary>
-    /// Gets the code fix provider under test.
-    /// </summary>
-    protected T CodeFixProvider { get; } = new T();
-}
 #pragma warning restore CS1998, CS0452, CS1022, IDE0053

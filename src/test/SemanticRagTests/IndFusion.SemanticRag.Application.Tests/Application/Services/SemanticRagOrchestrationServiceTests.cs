@@ -78,7 +78,7 @@ public class SemanticRagOrchestrationServiceTests
                 concepts,
                 ProcessingTimeMs: 1000,
                 Confidence: 0.8f);
-            
+
             extractionService.ExtractKnowledgeAsync(Arg.Any<SemanticDocument>(), Arg.Any<ComprehensiveExtractionOptions>(), Arg.Any<CancellationToken>())
                 .Returns(Result<IndFusion.SemanticRag.Domain.Services.KnowledgeExtractionResult>.Success(extractionResult));
 
@@ -88,7 +88,7 @@ public class SemanticRagOrchestrationServiceTests
             // Assert
             result.IsSuccess.ShouldBeTrue($"Expected success but got error: {result.Error}");
             result.Value.Query.ShouldBe(query);
-            
+
             // Compare SearchResults by content, not reference
             result.Value.SearchResults.ShouldNotBeNull();
             result.Value.SearchResults.Count.ShouldBe(searchResponse.Results.Count);
@@ -97,7 +97,7 @@ public class SemanticRagOrchestrationServiceTests
                 result.Value.SearchResults[i].Id.ShouldBe(searchResponse.Results[i].Id);
                 result.Value.SearchResults[i].Document?.Id.ShouldBe(searchResponse.Results[i].Document?.Id);
             }
-            
+
             // Compare AdditionalContext by content, not reference
             // Note: SemanticContext does not have a Query property - it has Id, Name, Description, etc.
             if (context != null)
@@ -609,67 +609,5 @@ public class SemanticRagOrchestrationServiceTests
             result.IsFailure.ShouldBeTrue();
             result.Error.ShouldNotBeNullOrEmpty();
         }
-    }
-}
-
-/// <summary>
-/// Unit tests for comprehensive search options validation.
-/// </summary>
-public class ComprehensiveSearchOptionsTests
-{
-    [Fact(Timeout = 5000)]
-    public void Should_CreateDefaultOptions_When_DefaultCalled()
-    {
-        // Act
-        var options = ComprehensiveSearchOptions.Default();
-
-        // Assert
-        // Note: SemanticSearchOptions is a struct, so new SemanticSearchOptions() equals default(SemanticSearchOptions)
-        // Instead, we verify that the options are properly configured with expected values
-        options.RagConfig.ShouldNotBe(default(SemanticRagConfig));
-        options.RagConfig.Id.ShouldBe("default");
-        options.RagConfig.Name.ShouldBe("Default Configuration");
-        options.EnableKnowledgeExtraction.ShouldBeTrue();
-        options.MaxResultsForExtraction.ShouldBe(5);
-        options.EnableContextRetrieval.ShouldBeTrue();
-    }
-}
-
-/// <summary>
-/// Unit tests for question answer options validation.
-/// </summary>
-public class QuestionAnswerOptionsTests
-{
-    [Fact(Timeout = 5000)]
-    public void Should_CreateQuestionAnswerOptions_When_ValidParametersProvided()
-    {
-        // Arrange
-        var searchOptions = new SemanticSearchOptions();
-        var ragConfig = new SemanticRagConfig(
-            Id: "test-config",
-            Name: "Test Config",
-            EmbeddingModel: "test-model",
-            VectorDimensions: 1536,
-            SimilarityThreshold: 0.7,
-            MaxResults: 10,
-            Properties: []);
-        var maxContextDocuments = 10;
-        var includeEntityContext = true;
-        var includeRelationshipContext = true;
-
-        // Act
-        var options = new QuestionAnswerOptions(
-            searchOptions,
-            ragConfig,
-            maxContextDocuments,
-            includeEntityContext,
-            includeRelationshipContext);
-
-        // Assert
-        options.SearchOptions.ShouldBe(searchOptions);
-        options.RagConfig.ShouldBe(ragConfig);
-        options.MaxContextDocuments.ShouldBe(maxContextDocuments);
-        options.IncludeEntityContext.ShouldBe(includeEntityContext);
-        options.IncludeRelationshipContext.ShouldBe(includeRelationshipContext);
     }
 }

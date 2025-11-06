@@ -50,9 +50,9 @@ public class RagController : ControllerBase
             }
 
             var result = await _ragService.QueryAsync(
-                request.Query, 
-                request.Context, 
-                request.MaxResults, 
+                request.Query,
+                request.Context,
+                request.MaxResults,
                 cancellationToken);
 
             return Ok(result);
@@ -122,9 +122,9 @@ public class RagController : ControllerBase
             }
 
             await _vectorSearchService.StoreDocumentAsync(
-                request.Id, 
-                request.Content, 
-                request.Metadata ?? [], 
+                request.Id,
+                request.Content,
+                request.Metadata ?? [],
                 cancellationToken);
 
             return Ok(new DocumentStorageResult
@@ -141,72 +141,3 @@ public class RagController : ControllerBase
         }
     }
 }
-
-/// <summary>
-/// Request model for RAG queries.
-/// </summary>
-public record RagQueryRequest
-{
-    /// <summary>
-    /// The query to process.
-    /// </summary>
-    public required string Query { get; init; }
-
-    /// <summary>
-    /// Additional context for the query.
-    /// </summary>
-    public string? Context { get; init; }
-
-    /// <summary>
-    /// Maximum number of relevant documents to retrieve.
-    /// </summary>
-    public int MaxResults { get; init; } = 5;
-}
-
-/// <summary>
-/// Request model for document storage.
-/// </summary>
-public record DocumentStorageRequest
-{
-    /// <summary>
-    /// Unique identifier for the document.
-    /// </summary>
-    public required string Id { get; init; }
-
-    /// <summary>
-    /// Document content.
-    /// </summary>
-    public required string Content { get; init; }
-
-    /// <summary>
-    /// Document metadata.
-    /// </summary>
-    public Dictionary<string, object>? Metadata { get; init; }
-}
-
-/// <summary>
-/// Result model for document storage operations.
-/// </summary>
-public record DocumentStorageResult
-{
-    /// <summary>
-    /// Document identifier.
-    /// </summary>
-    public required string Id { get; init; }
-
-    /// <summary>
-    /// Whether the operation was successful.
-    /// </summary>
-    public required bool Success { get; init; }
-
-    /// <summary>
-    /// Result message.
-    /// </summary>
-    public required string Message { get; init; }
-}
-
-
-
-
-
-

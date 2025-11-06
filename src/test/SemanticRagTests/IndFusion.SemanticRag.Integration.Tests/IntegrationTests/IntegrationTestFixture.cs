@@ -35,7 +35,7 @@ public class IntegrationTestFixture : IDisposable
                 ["Qdrant:Host"] = "localhost",
                 ["Qdrant:Port"] = "6333",
                 ["Qdrant:CollectionName"] = "test-collection",
-                ["Qdrant:VectorSize"] = "384",
+                ["Qdrant:VectorSize"] = "768",
                 
                 // Ollama configuration
                 ["Ollama:BaseUrl"] = "http://localhost:11434",

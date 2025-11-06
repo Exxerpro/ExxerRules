@@ -94,7 +94,7 @@ public sealed class QdrantContainerFixture : IAsyncLifetime
                 Host = _container.Hostname,
                 Port = _container.GetMappedPublicPort(6333),
                 CollectionName = "test-collection",
-                VectorSize = 384,
+                VectorSize = 768,
                 ApiKey = null
             };
 
@@ -119,7 +119,7 @@ public sealed class QdrantContainerFixture : IAsyncLifetime
                 Host = "localhost",
                 Port = 6333,
                 CollectionName = "test-collection",
-                VectorSize = 384,
+                VectorSize = 768,
                 ApiKey = null
             };
         }

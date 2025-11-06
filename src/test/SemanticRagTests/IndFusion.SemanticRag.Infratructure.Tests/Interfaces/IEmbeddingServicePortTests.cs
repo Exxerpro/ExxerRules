@@ -137,14 +137,14 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
         // ✅ IITDD: Test interface contract
         var text = "This is a test text";
         var metadata = new Dictionary<string, object> { ["source"] = "test", ["type"] = "document" };
-        
+
         // Create VectorEmbedding with the same metadata as the input to match contract requirements
         var embedding = new float[3];
         for (int i = 0; i < 3; i++)
         {
             embedding[i] = 0.1f * (i + 1);
         }
-        
+
         var vectorResult = VectorEmbeddingBuilder.Build(
             id: "emb-1",
             content: text,
@@ -282,8 +282,3 @@ public class IEmbeddingServicePortTests : BaseIITDDTest<IEmbeddingServicePort, E
 }
 
 // Helper request class for test data
-public class EmbeddingRequest
-{
-    public string Text { get; set; } = null!;
-    public Dictionary<string, object>? Metadata { get; set; }
-}

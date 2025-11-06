@@ -246,9 +246,3 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
 }
 
 // Helper request class for test data
-public class CypherQuery
-{
-    public string Cypher { get; set; } = null!;
-    public Dictionary<string, object>? Parameters { get; set; }
-    public string? Database { get; set; }
-}

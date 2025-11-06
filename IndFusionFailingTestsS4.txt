@@ -1,0 +1,831 @@
+ test (40 tests) [32:51.142] Failed: 40 tests failed
+  McpTests (3 tests) [28:31.977] Failed: 3 tests failed
+   IndFusion.Mcp.Core.Tests (3 tests) [4:39.129] Failed: 3 tests failed
+    IndFusion.Mcp.Core.Tests (3 tests) [4:39.129] Failed: 3 tests failed
+     Tools (3 tests) [2:32.047] Failed: 3 tests failed
+      ExxerFactoringHelpersTests (3 tests) [0:22.326] Failed: One or more child tests failed: 3 tests failed
+       FindClassInSolution_WithExistingClass_ShouldReturnDocument [0:00.198] Failed: Shouldly.ShouldAssertException: null
+Shouldly.ShouldAssertException
+null
+    should not be null but was
+   at IndFusion.Mcp.Core.Tests.Tools.ExxerFactoringHelpersTests.FindClassInSolution_WithExistingClass_ShouldReturnDocument() in /_/src/test/McpTests/IndFusion.Mcp.Core.Tests/Tools/ExxerFactoringHelpersTests.cs:line 212
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       FindTypeInSolution_WithExistingType_ShouldReturnDocument [0:08.744] Failed: Shouldly.ShouldAssertException: null
+Shouldly.ShouldAssertException
+null
+    should not be null but was
+   at IndFusion.Mcp.Core.Tests.Tools.ExxerFactoringHelpersTests.FindTypeInSolution_WithExistingType_ShouldReturnDocument() in /_/src/test/McpTests/IndFusion.Mcp.Core.Tests/Tools/ExxerFactoringHelpersTests.cs:line 262
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       RunWithSolutionOrFile_WithDocumentInSolution_ShouldUseSolution [0:00.264] Failed: Shouldly.ShouldAssertException: null
+Shouldly.ShouldAssertException
+null
+    should not be null but was
+   at IndFusion.Mcp.Core.Tests.Tools.ExxerFactoringHelpersTests.RunWithSolutionOrFile_WithDocumentInSolution_ShouldUseSolution() in /_/src/test/McpTests/IndFusion.Mcp.Core.Tests/Tools/ExxerFactoringHelpersTests.cs:line 384
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+  SemanticRagTests (37 tests) [3:45.323] Failed: 37 tests failed
+   IndFusion.SemanticRag.Integration.Tests (3 tests) [0:04.729] Failed: 3 tests failed
+    IndFusion.SemanticRag.Integration.Tests.IntegrationTests (3 tests) [0:04.729] Failed: 3 tests failed
+     VectorSearchIntegrationTests (3 tests) [0:04.729] Failed: One or more child tests failed: 3 tests failed
+      Should_HandleEmptyRepository_Gracefully [0:04.554] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_HandleEmptyRepository_Gracefully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 198
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      Should_SearchSimilarVectors_Successfully [0:00.033] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_SearchSimilarVectors_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 119
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      Should_StoreAndRetrieveVectors_Successfully [0:00.028] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Integration.Tests.IntegrationTests.VectorSearchIntegrationTests.Should_StoreAndRetrieveVectors_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Integration.Tests/IntegrationTests/VectorSearchIntegrationTests.cs:line 69
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.System.Tests (16 tests) [2:59.091] Failed: 16 tests failed
+    IndFusion.SemanticRag.System.Tests.Infrastructure (16 tests) [2:59.091] Failed: 16 tests failed
+     Services (16 tests) [2:15.707] Failed: 16 tests failed
+      Neo4jKnowledgeGraphServiceBehavioralTests (2 tests) [0:28.093] Failed: One or more child tests failed: 2 tests failed
+       QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults [0:06.834] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.Neo4jKnowledgeGraphServiceBehavioralTests.QueryAsync_WithAggregationQuery_ShouldReturnAggregatedResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/Neo4jKnowledgeGraphServiceBehavioralTests.cs:line 671
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Adding node: person-1
+Adding node: person-2
+Adding node: person-3
+Adding node: person-4
+Executing graph query: MATCH (p:Person) RETURN p.department, COUNT(p) as employeeCount ORDER BY employeeCount DESC
+Executing read query: MATCH (p:Person) RETURN p.department, COUNT(p) as employeeCount ORDER BY employeeCount DESC
+Read query completed: 0 records returned
+Graph query executed successfully in 6161ms, 0 records returned
+
+       QueryAsync_WithTimeout_ShouldRespectTimeout [0:00.093] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.OperationCanceledException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.Neo4jKnowledgeGraphServiceBehavioralTests.QueryAsync_WithTimeout_ShouldRespectTimeout() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/Neo4jKnowledgeGraphServiceBehavioralTests.cs:line 151
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Executing graph query: MATCH (n) RETURN n
+Executing read query: MATCH (n) RETURN n
+Read query completed: 0 records returned
+Graph query executed successfully in 71ms, 0 records returned
+
+      QdrantVectorSearchServiceBehavioralTests (4 tests) [0:24.247] Failed: One or more child tests failed: 4 tests failed
+       SearchSimilarAsync_WithTimeout_ShouldRespectTimeout [0:01.644] Failed: Shouldly.ShouldAssertException: True
+Shouldly.ShouldAssertException
+True
+    should be
+False
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.SearchSimilarAsync_WithTimeout_ShouldRespectTimeout() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 365
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+Starting vector search for query: test query
+Getting collection info for: test-collection-c92e42c9f71e45859c0a04b8815efc37
+Failed to get collection info for: test-collection-c92e42c9f71e45859c0a04b8815efc37
+Grpc.Core.RpcException: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-c92e42c9f71e45859c0a04b8815efc37` doesn't exist!")
+   at Qdrant.Client.QdrantClient.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.<>c__DisplayClass3_0.<<GetCollectionInfoAsync>b__1>d.MoveNext() in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 71
+--- End of stack trace from previous location ---
+   at IndQuestResults.Operations.ResultExtensions.ThenAsync[TIn,TOut](Task`1 resultTask, Func`2 next)
+   at IndFusion.SemanticRag.Infrastructure.Adapters.QdrantVectorDatabaseAdapter.GetCollectionInfoAsync(String collectionName, CancellationToken cancellationToken) in /_/src/code/SemanticRag/IndFusion.SemanticRag.Infrastructure/Adapters/QdrantVectorDatabaseAdapter.cs:line 58
+GetCollectionInfoAsync returned failure: VE005: Status(StatusCode="NotFound", Detail="Not found: Collection `test-collection-c92e42c9f71e45859c0a04b8815efc37` doesn't exist!")
+Collection does not exist (NotFound detected), creating: test-collection-c92e42c9f71e45859c0a04b8815efc37
+Creating collection: test-collection-c92e42c9f71e45859c0a04b8815efc37 with vector size: 768
+Successfully created collection: test-collection-c92e42c9f71e45859c0a04b8815efc37
+Collection created successfully: test-collection-c92e42c9f71e45859c0a04b8815efc37
+Generating embedding for text of length: 10
+Generating embedding for text of length 10
+Ollama API response content (first 500 chars): {"embedding":[0.48799800872802734,0.6300455331802368,-3.8321452140808105,-0.1299029439687729,1.8443316221237183,-0.8178261518478394,0.9953740239143372,-0.2270524948835373,1.1499700546264648,-0.7834544777870178,0.01566142588853836,1.3374412059783936,1.0264134407043457,-0.44571998715400696,-2.1374614238739014,-1.2524220943450928,1.1189857721328735,-1.5942689180374146,0.1005791574716568,-0.02983705885708332,0.09011098742485046,-0.3732011318206787,-1.5020685195922852,0.1749378889799118,3.11385631561
+Successfully generated embedding with dimension 768
+Searching collection: test-collection-c92e42c9f71e45859c0a04b8815efc37 with limit: 10
+Search completed: 0 results found
+Vector search completed. Found 0 results in 1603.9896ms
+
+       StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException [0:00.006] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.ArgumentException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 252
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreDocumentAsync_WithNullId_ShouldThrowArgumentException [0:00.012] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.ArgumentException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithNullId_ShouldThrowArgumentException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 240
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException [0:00.180] Failed: Shouldly.ShouldAssertException: Task
+Shouldly.ShouldAssertException
+Task
+    should throw
+System.ArgumentException
+    but did not
+   at System.Threading.Tasks.ContinuationResultTaskFromResultTask`2.InnerInvoke()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)
+   at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.QdrantVectorSearchServiceBehavioralTests.StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/QdrantVectorSearchServiceBehavioralTests.cs:line 264
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      RoslynCodeAnalysisServiceBehavioralTests (6 tests) [0:45.407] Failed: One or more child tests failed: 6 tests failed
+       AnalyzeCodeAsync_WithUnsupportedLanguage_ShouldReturnEmptyResults [0:00.036] Failed: Shouldly.ShouldAssertException: 1
+Shouldly.ShouldAssertException
+1
+    should be
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeCodeAsync_WithUnsupportedLanguage_ShouldReturnEmptyResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 362
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeFileAsync_WithValidFilePath_ShouldReturnActualAnalysisResults [0:00.071] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be
+1
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeFileAsync_WithValidFilePath_ShouldReturnActualAnalysisResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 140
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithLargeProject_ShouldHandleLargeProjects [0:00.488] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithLargeProject_ShouldHandleLargeProjects() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 415
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithProjectContainingMixedSeverities_ShouldReturnAllSeverities [0:00.000] Failed: Shouldly.ShouldAssertException: [] (System.Collections.Generic.List`1[IndFusion.SemanticRag.Domain.Models.PatternSeverity])
+Shouldly.ShouldAssertException
+[] (System.Collections.Generic.List`1[IndFusion.SemanticRag.Domain.Models.PatternSeverity])
+    should not be empty but was
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithProjectContainingMixedSeverities_ShouldReturnAllSeverities() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 614
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithProjectContainingMultipleLanguages_ShouldAnalyzeAllLanguages [0:00.017] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithProjectContainingMultipleLanguages_ShouldAnalyzeAllLanguages() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 439
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualAnalysisResults [0:00.066] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.RoslynCodeAnalysisServiceBehavioralTests.AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualAnalysisResults() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/RoslynCodeAnalysisServiceBehavioralTests.cs:line 39
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      SemanticPatternEngineServiceBehavioralTests (4 tests) [0:37.959] Failed: One or more child tests failed: 4 tests failed
+       AnalyzeConsistencyAsync_WithAllPatternFamily_ShouldAnalyzeAllPatterns [0:00.012] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.AnalyzeConsistencyAsync_WithAllPatternFamily_ShouldAnalyzeAllPatterns() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 396
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeConsistencyAsync_WithValidProjectPath_ShouldReturnActualConsistencyReport [0:00.499] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.AnalyzeConsistencyAsync_WithValidProjectPath_ShouldReturnActualConsistencyReport() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 362
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualViolations [0:00.012] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.AnalyzeProjectAsync_WithValidProjectPath_ShouldReturnActualViolations() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 192
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetPatternGuidanceAsync_WithValidContext_ShouldReturnActualGuidance [0:00.012] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.System.Tests.Infrastructure.Services.SemanticPatternEngineServiceBehavioralTests.GetPatternGuidanceAsync_WithValidContext_ShouldReturnActualGuidance() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.System.Tests/Infrastructure/Services/SemanticPatternEngineServiceBehavioralTests.cs:line 547
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.Tests (14 tests) [0:18.073] Failed: 14 tests failed
+    IndFusion.SemanticRag.Tests (14 tests) [0:18.073] Failed: 14 tests failed
+     Implementations (10 tests) [0:14.112] Failed: 10 tests failed
+      DocumentProcessingPipelineTests (5 tests) [0:01.205] Failed: One or more child tests failed: 5 tests failed
+       DetectDocumentTypeAsync_Should_Detect_By_File_Extension [0:00.023] Failed: Shouldly.ShouldAssertException: DocumentType.Text
+Shouldly.ShouldAssertException
+DocumentType.Text
+    should be
+DocumentType.Markdown
+    but was not
+
+Additional Info:
+    Failed for file extension: test.md
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.DetectDocumentTypeAsync_Should_Detect_By_File_Extension() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 274
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Create_Chunks_With_Fixed_Size_Strategy [0:00.295] Failed: Shouldly.ShouldAssertException: 1
+Shouldly.ShouldAssertException
+1
+    should be greater than
+1
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Create_Chunks_With_Fixed_Size_Strategy() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 350
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Handle_Cancellation [0:00.004] Failed: Shouldly.ShouldAssertException: ProcessingStatus.Success
+Shouldly.ShouldAssertException
+ProcessingStatus.Success
+    should be
+ProcessingStatus.Failed
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Handle_Cancellation() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 414
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Not_Extract_Metadata_When_Disabled [0:00.007] Failed: Shouldly.ShouldAssertException: [] (System.Collections.Generic.Dictionary`2[System.String,System.Object])
+Shouldly.ShouldAssertException
+[] (System.Collections.Generic.Dictionary`2[System.String,System.Object])
+    should be null but was
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Not_Extract_Metadata_When_Disabled() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 473
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       ProcessDocumentAsync_Should_Process_Text_Document_Successfully [0:00.017] Failed: Shouldly.ShouldAssertException: 0L
+Shouldly.ShouldAssertException
+0L
+    should be greater than
+0L
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.DocumentProcessingPipelineTests.ProcessDocumentAsync_Should_Process_Text_Document_Successfully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/DocumentProcessingPipelineTests.cs:line 53
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      GraphQueryServiceTests (1 test) [0:01.007] Failed: One or more child tests failed: 1 test failed
+       FindShortestPathAsync_Should_Return_Null_For_No_Path [0:00.021] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.GraphQueryServiceTests.FindShortestPathAsync_Should_Return_Null_For_No_Path() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/GraphQueryServiceTests.cs:line 427
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      PatternGraphQueryServiceTests (3 tests) [0:00.480] Failed: One or more child tests failed: 3 tests failed
+       FindPatternRelationshipsAsync_Should_Find_Pattern_Relationships [0:00.037] Failed: Shouldly.ShouldAssertException: 1f
+Shouldly.ShouldAssertException
+1f
+    should be
+0.8f
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindPatternRelationshipsAsync_Should_Find_Pattern_Relationships() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 183
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       FindSimilarPatternsAsync_Should_Calculate_Similarity_Correctly [0:00.013] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindSimilarPatternsAsync_Should_Calculate_Similarity_Correctly() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 644
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       FindSimilarPatternsAsync_Should_Find_Similar_Patterns [0:00.053] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternGraphQueryServiceTests.FindSimilarPatternsAsync_Should_Find_Similar_Patterns() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternGraphQueryServiceTests.cs:line 281
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+      PatternSuggestServiceTests (1 test) [0:11.418] Failed: One or more child tests failed: 1 test failed
+       SuggestPatternsAsync_Should_Use_ConfigureAwait_False [0:00.288] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Implementations.PatternSuggestServiceTests.SuggestPatternsAsync_Should_Use_ConfigureAwait_False() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Implementations/PatternSuggestServiceTests.cs:line 564
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     Integration (3 tests) [0:00.698] Failed: 3 tests failed
+      GraphRagLayerIntegrationTests (3 tests) [0:00.698] Failed: One or more child tests failed: 3 tests failed
+       Error_Handling_Workflow_Should_Handle_Failures_Gracefully [0:00.025] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Error_Handling_Workflow_Should_Handle_Failures_Gracefully() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 326
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       Pattern_Suggestion_Workflow_Should_Handle_Complex_Code [0:00.031] Failed: Shouldly.ShouldAssertException: 0
+Shouldly.ShouldAssertException
+0
+    should be greater than
+0
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Pattern_Suggestion_Workflow_Should_Handle_Complex_Code() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 231
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       Performance_Workflow_Should_Complete_Within_Reasonable_Time [0:00.245] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Integration.GraphRagLayerIntegrationTests.Performance_Workflow_Should_Complete_Within_Reasonable_Time() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Integration/GraphRagLayerIntegrationTests.cs:line 411
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+     Interfaces (1 test) [0:02.731] Failed: 1 test failed
+      IGraphQueryServiceTests (1 test) [0:01.198] Failed: One or more child tests failed: 1 test failed
+       FindShortestPathAsync_Should_Return_Null_For_No_Path [0:00.295] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+   at IndFusion.SemanticRag.Tests.Interfaces.IGraphQueryServiceTests.FindShortestPathAsync_Should_Return_Null_For_No_Path() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Tests/Interfaces/IGraphQueryServiceTests.cs:line 271
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+   IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:05.043] Failed: 4 tests failed
+    IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:05.043] Failed: 4 tests failed
+     Infrastructure.Adapters (4 tests) [0:02.206] Failed: 4 tests failed
+      Neo4jKnowledgeGraphAdapterTests (4 tests) [0:01.653] Failed: One or more child tests failed: 4 tests failed
+       ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails [0:00.020] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 45
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 57
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 389
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException [0:00.031] Failed: Shouldly.ShouldAssertException: "KG009"
+Shouldly.ShouldAssertException
+"KG009"
+    should be
+"KG008"
+    but was not
+    difference
+Difference     |                      |   
+               |                     \|/  
+Index          | 0    1    2    3    4    
+Expected Value | K    G    0    0    8    
+Actual Value   | K    G    0    0    9    
+Expected Code  | 75   71   48   48   56   
+Actual Code    | 75   71   48   48   57   
+
+Additional Info:
+    Expected error code 'KG008', but got 'KG009'
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 58
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 285
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnNode_When_NodeExists [0:00.923] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be successful, but it failed with error: KG009
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldSucceed[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 17
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnNode_When_NodeExists() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 255
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails [0:00.017] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail(Result result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 76
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith(Result result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 87
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 161
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+

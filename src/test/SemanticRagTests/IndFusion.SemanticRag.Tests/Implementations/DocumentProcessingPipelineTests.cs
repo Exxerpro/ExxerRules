@@ -1,4 +1,5 @@
 using IndFusion.SemanticRag.Application.Interfaces;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
@@ -408,11 +409,10 @@ public class DocumentProcessingPipelineTests : IDisposable
         // Act
         var result = await _pipeline.ProcessDocumentAsync(input, options, cts.Token);
 
-        // Assert: After functional refactoring, cancellation is caught and returns failed status
-        // Since ProcessDocumentAsync catches all exceptions including OperationCanceledException,
-        // it returns DocumentProcessingResult with Status = Failed
-        result.Status.ShouldBe(ProcessingStatus.Failed);
+        // Assert: After functional refactoring, cancellation should return Cancelled status
+        result.Status.ShouldBe(ProcessingStatus.Cancelled);
         result.ErrorMessage.ShouldNotBeNullOrEmpty();
+        result.ErrorMessage.ShouldContain(ErrorCodes.OperationCancelled);
     }
 
     /// <summary>

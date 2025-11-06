@@ -259,6 +259,19 @@ public class QdrantVectorSearchService : IVectorSearchService
                 Success: true,
                 ErrorMessage: null);
         }
+        catch (OperationCanceledException)
+        {
+            var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
+            _logger.LogWarning("Vector search was cancelled or timed out for query: {Query}", query);
+            return new VectorSearchResponse(
+                Results: [],
+                TotalCount: 0,
+                Query: query,
+                ProcessingTimeMs: (long)elapsedMs,
+                SearchOptions: options,
+                Success: false,
+                ErrorMessage: ErrorCodes.OperationCancelled);
+        }
         catch (Exception ex)
         {
             var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;

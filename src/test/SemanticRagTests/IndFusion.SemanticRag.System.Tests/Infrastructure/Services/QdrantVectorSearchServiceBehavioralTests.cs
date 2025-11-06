@@ -232,13 +232,16 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
     /// <summary>
     /// Ensures null identifiers are rejected when attempting to store a document snapshot.
     /// </summary>
-    /// <returns>A <see cref="Task"/> that completes after confirming the thrown exception.</returns>
+    /// <returns>A <see cref="Task"/> that completes after confirming the failure result.</returns>
     [Fact(Timeout = 60000)]
     public async Task StoreDocumentAsync_WithNullId_ShouldThrowArgumentException()
     {
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.StoreDocumentAsync(null!, "content", [], TestContext.Current.CancellationToken));
+        // Act
+        var result = await _service.StoreDocumentAsync(null!, "content", [], TestContext.Current.CancellationToken);
+
+        // Assert: After functional refactoring, null parameters return Result failure
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     /// <summary>
@@ -248,21 +251,27 @@ public class QdrantVectorSearchServiceBehavioralTests : IDisposable
     [Fact(Timeout = 60000)]
     public async Task StoreDocumentAsync_WithNullContent_ShouldThrowArgumentException()
     {
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.StoreDocumentAsync("id", null!, [], TestContext.Current.CancellationToken));
+        // Act
+        var result = await _service.StoreDocumentAsync("id", null!, [], TestContext.Current.CancellationToken);
+
+        // Assert: After functional refactoring, null parameters return Result failure
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     /// <summary>
     /// Checks that documents cannot be stored without metadata and that the service enforces this requirement.
     /// </summary>
-    /// <returns>A <see cref="Task"/> that completes after observing the exception raised for missing metadata.</returns>
+    /// <returns>A <see cref="Task"/> that completes after observing the failure result for missing metadata.</returns>
     [Fact(Timeout = 60000)]
     public async Task StoreDocumentAsync_WithNullMetadata_ShouldThrowArgumentException()
     {
-        // Act & Assert
-        await Should.ThrowAsync<ArgumentException>(async () =>
-            await _service.StoreDocumentAsync("id", "content", null!, TestContext.Current.CancellationToken));
+        // Act
+        var result = await _service.StoreDocumentAsync("id", "content", null!, TestContext.Current.CancellationToken);
+
+        // Assert: After functional refactoring, null parameters return Result failure
+        result.IsFailure.ShouldBeTrue();
+        result.Error.ShouldNotBeNullOrEmpty();
     }
 
     /// <summary>

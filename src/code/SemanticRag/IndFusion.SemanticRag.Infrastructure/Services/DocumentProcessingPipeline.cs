@@ -1,4 +1,5 @@
 using IndFusion.SemanticRag.Application.Interfaces;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using Microsoft.Extensions.Logging;
 using System.Text;
@@ -84,6 +85,23 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
                 DocumentType = documentType,
                 Status = ProcessingStatus.Success,
                 ElapsedMilliseconds = elapsedMs
+            };
+        }
+        catch (OperationCanceledException)
+        {
+            _logger.LogWarning("Document processing was cancelled: {DocumentId}", input.Id);
+            
+            return new DocumentProcessingResult
+            {
+                Id = Guid.NewGuid().ToString(),
+                DocumentId = input.Id,
+                Content = string.Empty,
+                Chunks = [],
+                Metadata = [],
+                DocumentType = DocumentType.Unknown,
+                Status = ProcessingStatus.Cancelled,
+                ErrorMessage = ErrorCodes.OperationCancelled,
+                ElapsedMilliseconds = 0
             };
         }
         catch (Exception ex)

@@ -1,4 +1,5 @@
 using IndFusion.SemanticRag.Application.Interfaces;
+using IndFusion.SemanticRag.Domain.Errors;
 using IndFusion.SemanticRag.Domain.Models;
 using IndFusion.SemanticRag.Domain.Ports;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
@@ -113,7 +114,12 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
         {
             stopwatch.Stop();
             _logger.LogWarning("Graph query was cancelled or timed out");
-            throw;
+            return new GraphQueryResult(
+                Records: [],
+                ExecutionTimeMs: stopwatch.ElapsedMilliseconds,
+                RecordsAffected: 0,
+                Success: false,
+                ErrorMessage: ErrorCodes.OperationCancelled);
         }
         catch (Exception ex)
         {

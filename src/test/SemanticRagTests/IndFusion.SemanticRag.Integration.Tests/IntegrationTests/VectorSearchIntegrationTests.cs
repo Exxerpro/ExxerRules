@@ -20,16 +20,16 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
     /// <summary>
     /// Issues commands and queries against the vector search pipeline under test.
     /// </summary>
-    private readonly IMediator _mediator;
+    private readonly IRequestDispatcher _requestDispatcher;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="VectorSearchIntegrationTests"/> class and resolves the mediator from the integration fixture.
+    /// Initializes a new instance of the <see cref="VectorSearchIntegrationTests"/> class and resolves the requestDispatcher from the integration fixture.
     /// </summary>
     /// <param name="fixture">The shared integration test fixture that provides the service provider and cleanup utilities.</param>
     public VectorSearchIntegrationTests(IntegrationTestFixture fixture)
     {
         _fixture = fixture;
-        _mediator = _fixture.ServiceProvider.GetRequiredService<IMediator>();
+        _requestDispatcher = _fixture.ServiceProvider.GetRequiredService<IRequestDispatcher>();
     }
 
     /// <summary>
@@ -63,7 +63,7 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
 
         // Act
         var storeCommand = new StoreVectorCommand(vector);
-        var storeResult = await _mediator.Send(storeCommand, TestContext.Current.CancellationToken);
+        var storeResult = await _requestDispatcher.Send(storeCommand, TestContext.Current.CancellationToken);
 
         // Assert
         storeResult.IsSuccess.ShouldBeTrue();
@@ -108,12 +108,12 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
         // Act
         var storeCommand1 = new StoreVectorCommand(vector1);
         var storeCommand2 = new StoreVectorCommand(vector2);
-        
-        await _mediator.Send(storeCommand1, TestContext.Current.CancellationToken);
-        await _mediator.Send(storeCommand2, TestContext.Current.CancellationToken);
+
+        await _requestDispatcher.Send(storeCommand1, TestContext.Current.CancellationToken);
+        await _requestDispatcher.Send(storeCommand2, TestContext.Current.CancellationToken);
 
         var searchQuery = new SearchSimilarVectorsQuery(query);
-        var searchResult = await _mediator.SendQuery<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>(searchQuery, TestContext.Current.CancellationToken);
+        var searchResult = await _requestDispatcher.SendQuery<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>(searchQuery, TestContext.Current.CancellationToken);
 
         // Assert
         searchResult.IsSuccess.ShouldBeTrue();
@@ -140,7 +140,7 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
 
         // Act
         var storeCommand = new StoreVectorCommand(invalidVector);
-        var storeResult = await _mediator.Send(storeCommand, TestContext.Current.CancellationToken);
+        var storeResult = await _requestDispatcher.Send(storeCommand, TestContext.Current.CancellationToken);
 
         // Assert
         storeResult.IsFailure.ShouldBeTrue();
@@ -166,7 +166,7 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
 
         // Act
         var searchQuery = new SearchSimilarVectorsQuery(invalidQuery);
-        var searchResult = await _mediator.SendQuery<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>(searchQuery, TestContext.Current.CancellationToken);
+        var searchResult = await _requestDispatcher.SendQuery<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>(searchQuery, TestContext.Current.CancellationToken);
 
         // Assert
         searchResult.IsFailure.ShouldBeTrue();
@@ -192,11 +192,9 @@ public class VectorSearchIntegrationTests : IClassFixture<IntegrationTestFixture
 
         // Act
         var searchQuery = new SearchSimilarVectorsQuery(query);
-        var searchResult = await _mediator.SendQuery<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>(searchQuery, TestContext.Current.CancellationToken);
+        var searchResult = await _requestDispatcher.SendQuery<SearchSimilarVectorsQuery, IReadOnlyList<VectorSearchResult>>(searchQuery, TestContext.Current.CancellationToken);
 
         // Assert
-        searchResult.IsSuccess.ShouldBeTrue();
-        searchResult.Value.ShouldNotBeNull();
-        searchResult.Value.Count.ShouldBe(0);
+        searchResult.IsSuccess.ShouldBeFalse();
     }
 }

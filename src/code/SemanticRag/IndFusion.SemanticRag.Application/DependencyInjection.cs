@@ -20,8 +20,8 @@ public static class DependencyInjection
     /// <returns>The configured service collection.</returns>
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        // Register the SimpleMediator as the IMediator implementation
-        services.AddScoped<IMediator, SimpleMediator>();
+        // Register the RequestDispatcher as the IRequestDispatcher implementation
+        services.AddScoped<IRequestDispatcher, RequestDispatcher>();
 
         // Register command handlers
         services.AddScoped<ICommandHandler<ProcessDocumentCommand>, ProcessDocumentCommandHandler>();

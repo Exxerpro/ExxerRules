@@ -11,17 +11,17 @@ namespace IndFusion.SemanticRag.WebAPI.Controllers;
 [Route("api/[controller]")]
 public class DocumentController : ControllerBase
 {
-    private readonly IMediator _mediator;
+    private readonly IRequestDispatcher _requestDispatcher;
     private readonly ILogger<DocumentController> _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DocumentController"/> class.
     /// </summary>
-    /// <param name="mediator">The mediator for handling commands and queries.</param>
+    /// <param name="requestDispatcher">The requestDispatcher for handling commands and queries.</param>
     /// <param name="logger">Logger instance.</param>
-    public DocumentController(IMediator mediator, ILogger<DocumentController> logger)
+    public DocumentController(IRequestDispatcher requestDispatcher, ILogger<DocumentController> logger)
     {
-        _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        _requestDispatcher = requestDispatcher ?? throw new ArgumentNullException(nameof(requestDispatcher));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
     }
 
@@ -56,7 +56,7 @@ public class DocumentController : ControllerBase
                 }
             };
 
-            await _mediator.Send(command, cancellationToken);
+            await _requestDispatcher.Send(command, cancellationToken);
 
             return Ok("Document processed successfully");
         }

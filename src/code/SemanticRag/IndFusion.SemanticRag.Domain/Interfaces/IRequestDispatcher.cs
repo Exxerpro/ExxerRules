@@ -11,7 +11,7 @@ namespace IndFusion.SemanticRag.Domain.Interfaces;
 /// All operations are cancellation-aware and follow functional programming principles.
 /// Uses IndQuestResults for functional Result pattern implementation.
 /// </summary>
-public interface IMediator
+public interface IRequestDispatcher
 {
     /// <summary>
     /// Sends a command to its handler and returns a Result.

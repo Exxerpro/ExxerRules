@@ -8,22 +8,22 @@ using NSubstitute;
 namespace IndFusion.SemanticRag.Application.Tests.Application.Services;
 
 /// <summary>
-/// Tests for the SimpleMediator class.
+/// Tests for the RequestDispatcher class.
 /// </summary>
-public class SimpleMediatorTests
+public class RequestDispatcherTests
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<SimpleMediator> _logger;
-    private readonly SimpleMediator _mediator;
+    private readonly ILogger<RequestDispatcher> _logger;
+    private readonly RequestDispatcher _mediator;
 
     /// <summary>
-    /// Initializes a new instance of the SimpleMediatorTests class.
+    /// Initializes a new instance of the RequestDispatcherTests class.
     /// </summary>
-    public SimpleMediatorTests()
+    public RequestDispatcherTests()
     {
         _serviceProvider = Substitute.For<IServiceProvider>();
-        _logger = Substitute.For<ILogger<SimpleMediator>>();
-        _mediator = new SimpleMediator(_serviceProvider, _logger);
+        _logger = Substitute.For<ILogger<RequestDispatcher>>();
+        _mediator = new RequestDispatcher(_serviceProvider, _logger);
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class SimpleMediatorTests
         // Act
         var result = await _mediator.Send<ProcessDocumentCommand>(null!, TestContext.Current.CancellationToken);
 
-        // Assert: SimpleMediator returns Result<T> instead of throwing exceptions (functional pattern)
+        // Assert: RequestDispatcher returns Result<T> instead of throwing exceptions (functional pattern)
         result.IsFailure.ShouldBeTrue();
         result.Error.ShouldNotBeNullOrEmpty();
     }
@@ -80,7 +80,7 @@ public class SimpleMediatorTests
         // Act
         var result = await _mediator.Send(command, TestContext.Current.CancellationToken);
 
-        // Assert: SimpleMediator returns Result<T> instead of throwing exceptions (functional pattern)
+        // Assert: RequestDispatcher returns Result<T> instead of throwing exceptions (functional pattern)
         result.IsFailure.ShouldBeTrue();
         result.Error.ShouldNotBeNullOrEmpty();
     }

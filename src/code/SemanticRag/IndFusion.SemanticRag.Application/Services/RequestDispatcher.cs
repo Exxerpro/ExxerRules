@@ -11,23 +11,23 @@ using IndQuestResults;
 namespace IndFusion.SemanticRag.Application.Services;
 
 /// <summary>
-/// A simple implementation of the IMediator interface that uses dependency injection to resolve handlers.
-/// This provides a clean abstraction that matches the personalized MediatR pattern where:
+/// A simple implementation of the IRequestDispatcher interface that uses dependency injection to resolve handlers.
+/// This provides a clean abstraction that matches the Comand Request pattern where:
 /// - Commands can return Result or Result&lt;T&gt;
 /// - Queries return Result&lt;T&gt;
 /// - All errors are handled gracefully and returned as Results, never as exceptions
 /// </summary>
-public class SimpleMediator : IMediator
+public class RequestDispatcher : IRequestDispatcher
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<SimpleMediator> _logger;
+    private readonly ILogger<RequestDispatcher> _logger;
 
     /// <summary>
-    /// Initializes a new instance of the SimpleMediator class.
+    /// Initializes a new instance of the RequestDispatcher class.
     /// </summary>
     /// <param name="serviceProvider">The service provider for resolving handlers.</param>
     /// <param name="logger">The logger instance.</param>
-    public SimpleMediator(IServiceProvider serviceProvider, ILogger<SimpleMediator> logger)
+    public RequestDispatcher(IServiceProvider serviceProvider, ILogger<RequestDispatcher> logger)
     {
         _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -70,7 +70,7 @@ public class SimpleMediator : IMediator
                 return Result<TResponse>.WithFailure("Command cannot be null");
             }
 
-            _logger.LogDebug("Sending command of type {CommandType} expecting response of type {ResponseType}", 
+            _logger.LogDebug("Sending command of type {CommandType} expecting response of type {ResponseType}",
                 typeof(TCommand).Name, typeof(TResponse).Name);
 
             var handler = _serviceProvider.GetService<ICommandHandler<TCommand, TResponse>>();
@@ -83,7 +83,7 @@ public class SimpleMediator : IMediator
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending command of type {CommandType} with response type {ResponseType}", 
+            _logger.LogError(ex, "Error sending command of type {CommandType} with response type {ResponseType}",
                 typeof(TCommand).Name, typeof(TResponse).Name);
             return Result<TResponse>.WithFailure($"Error sending command: {ex.Message}");
         }
@@ -99,7 +99,7 @@ public class SimpleMediator : IMediator
                 return Result<TResponse>.WithFailure("Query cannot be null");
             }
 
-            _logger.LogDebug("Sending query of type {QueryType} expecting response of type {ResponseType}", 
+            _logger.LogDebug("Sending query of type {QueryType} expecting response of type {ResponseType}",
                 typeof(TQuery).Name, typeof(TResponse).Name);
 
             var handler = _serviceProvider.GetService<IQueryHandler<TQuery, TResponse>>();
@@ -112,7 +112,7 @@ public class SimpleMediator : IMediator
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error sending query of type {QueryType} with response type {ResponseType}", 
+            _logger.LogError(ex, "Error sending query of type {QueryType} with response type {ResponseType}",
                 typeof(TQuery).Name, typeof(TResponse).Name);
             return Result<TResponse>.WithFailure($"Error sending query: {ex.Message}");
         }

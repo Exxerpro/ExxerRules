@@ -77,7 +77,7 @@ public sealed class McpServerHttpIntegrationTests : IAsyncLifetime
 
         var clientOptions = new McpClientOptions()
         {
-            ProtocolVersion = "1.0.0",
+            ProtocolVersion = "2025-06-18", // Match the server's protocol version
             InitializationTimeout = TimeSpan.FromSeconds(30),
         };
 

@@ -49,7 +49,7 @@ public class Neo4jKnowledgeGraphAdapterTests
         _adapter = new Neo4jKnowledgeGraphAdapter(_mockDriver, _mockOptions, _mockLogger);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 120000)] // Extended timeout for first test (allows Docker container startup)
     public async Task StoreNodeAsync_Should_ReturnSuccess_When_ValidNodeProvided()
     {
         // Arrange

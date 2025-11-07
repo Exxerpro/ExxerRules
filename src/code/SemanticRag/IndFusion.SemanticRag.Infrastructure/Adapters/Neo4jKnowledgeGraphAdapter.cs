@@ -390,8 +390,17 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
                                    n.createdAt AS createdAt, n.updatedAt AS updatedAt";
 
                         var parameters = new Dictionary<string, object> { ["id"] = id };
-                        var result = await session.RunAsync(cypher, parameters);
-                        var record = await result.SingleOrDefaultAsync(cancellationToken);
+                        IRecord? record;
+                        try
+                        {
+                            var result = await session.RunAsync(cypher, parameters);
+                            record = await result.SingleOrDefaultAsync(cancellationToken);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Exception while retrieving node: {NodeId}", id);
+                            return Result<KnowledgeNode>.WithFailure(ErrorCodes.CypherQueryFailed);
+                        }
 
                         if (record == null)
                         {
@@ -858,16 +867,24 @@ public class Neo4jKnowledgeGraphAdapter : IKnowledgeGraphPort
 
                         _logger.LogInformation("Executing graph query: {Query}", q);
 
-                        using var session = _driver.AsyncSession(ConfigureSession);
-                        var result = await session.RunAsync(q, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
-                        var records = await result.ToListAsync(cancellationToken);
+                        try
+                        {
+                            using var session = _driver.AsyncSession(ConfigureSession);
+                            var result = await session.RunAsync(q, new Dictionary<string, object>(parameters ?? new Dictionary<string, object>()));
+                            var records = await result.ToListAsync(cancellationToken);
 
-                        var queryResults = records.Select(record =>
-                            record.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) as IReadOnlyDictionary<string, object>
-                        ).ToList();
+                            var queryResults = records.Select(record =>
+                                record.Values.ToDictionary(kvp => kvp.Key, kvp => kvp.Value) as IReadOnlyDictionary<string, object>
+                            ).ToList();
 
-                        _logger.LogInformation("Successfully executed graph query, returned {Count} results", queryResults.Count);
-                        return Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>.Success(queryResults);
+                            _logger.LogInformation("Successfully executed graph query, returned {Count} results", queryResults.Count);
+                            return Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>.Success(queryResults);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogError(ex, "Exception while executing graph query: {Query}", q);
+                            return Result<IReadOnlyList<IReadOnlyDictionary<string, object>>>.WithFailure(ErrorCodes.CypherQueryFailed);
+                        }
                     });
         }
         catch (OperationCanceledException)

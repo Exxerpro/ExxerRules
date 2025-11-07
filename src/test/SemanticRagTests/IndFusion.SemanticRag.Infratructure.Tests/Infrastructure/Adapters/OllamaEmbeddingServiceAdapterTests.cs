@@ -35,7 +35,7 @@ public class OllamaEmbeddingServiceAdapterTests
         _options = Options.Create(_ollamaOptions);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 120000)] // Extended timeout for first test (allows Docker container startup)
     public async Task GenerateEmbeddingAsync_WithValidText_ShouldReturnEmbedding()
     {
         // Arrange

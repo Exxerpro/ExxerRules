@@ -38,7 +38,7 @@ public class IVectorDatabasePortTests : BaseIITDDTest<IVectorDatabasePort, Searc
         };
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 120000)] // Extended timeout for first test (allows Docker container startup)
     public async Task SearchAsync_WithValidRequest_ShouldReturnSuccess()
     {
         // ✅ IITDD: Test interface contract using mock

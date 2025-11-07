@@ -160,8 +160,20 @@ public class QdrantVectorSearchService : IVectorSearchService
                     ErrorMessage: $"Failed to ensure collection exists: {ensureResult.Error}");
             }
 
+            // Create timeout cancellation token if TimeoutMs is specified
+            using var timeoutCts = options.TimeoutMs > 0
+                ? CancellationTokenSource.CreateLinkedTokenSource(cancellationToken)
+                : null;
+            
+            if (timeoutCts != null && options.TimeoutMs > 0)
+            {
+                timeoutCts.CancelAfter(TimeSpan.FromMilliseconds(options.TimeoutMs));
+            }
+
+            var effectiveCancellationToken = timeoutCts?.Token ?? cancellationToken;
+
             // Generate embeddings for the query
-            var embedding = await GenerateEmbeddingAsync(query, cancellationToken);
+            var embedding = await GenerateEmbeddingAsync(query, effectiveCancellationToken);
 
             // Convert EmbeddingVector to float[] for search
             var queryVector = embedding.Values.ToArray();
@@ -180,7 +192,7 @@ public class QdrantVectorSearchService : IVectorSearchService
                 limit: (uint)options.Limit,
                 scoreThreshold: options.Threshold > 0 ? options.Threshold : null,
                 filter: domainFilter,
-                cancellationToken: cancellationToken);
+                cancellationToken: effectiveCancellationToken);
 
             var elapsedMs = (DateTime.UtcNow - startTime).TotalMilliseconds;
 

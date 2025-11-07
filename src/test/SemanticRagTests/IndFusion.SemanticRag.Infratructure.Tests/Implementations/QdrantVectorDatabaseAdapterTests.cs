@@ -122,7 +122,7 @@ public class QdrantVectorDatabaseAdapterTests : BaseTDDTest<QdrantVectorDatabase
         return new QdrantVectorDatabaseAdapter(_qdrantClient, _logger);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 120000)] // Extended timeout for first test (allows Docker container startup)
     public async Task SearchAsync_WithNullQueryVector_ShouldReturnFailure()
     {
         // ✅ TDD: Test implementation behavior - adapter validates before calling QdrantClient

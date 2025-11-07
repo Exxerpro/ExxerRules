@@ -34,7 +34,7 @@ public class IGraphDatabasePortTests : BaseIITDDTest<IGraphDatabasePort, CypherQ
         };
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 120000)] // Extended timeout for first test (allows Docker container startup)
     public async Task ExecuteReadAsync_WithValidQuery_ShouldReturnSuccess()
     {
         // ✅ IITDD: Test interface contract using mock

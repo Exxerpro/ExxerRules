@@ -40,7 +40,7 @@ public class Neo4jGraphDatabaseAdapterTests : BaseTDDTest<Neo4jGraphDatabaseAdap
         return new Neo4jGraphDatabaseAdapter(_driver, _options, _logger);
     }
 
-    [Fact(Timeout = 5000)]
+    [Fact(Timeout = 120000)] // Extended timeout for first test (allows Docker container startup)
     public async Task ExecuteReadAsync_WithNullCypher_ShouldReturnFailure()
     {
         // ✅ TDD: Test implementation behavior - adapter validates before calling Neo4j

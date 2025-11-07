@@ -1,4 +1,7 @@
+using Meziantou.Extensions.Logging.Xunit.v3;
+using Microsoft.Extensions.Logging;
 using Neo4j.Driver;
+using Xunit;
 
 namespace IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers;
 
@@ -10,15 +13,23 @@ namespace IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers;
 public class MockAsyncSession : IAsyncSession, IAsyncQueryRunner
 {
     private readonly IResultCursor _resultCursor;
+    private readonly ILogger<MockAsyncSession>? _logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MockAsyncSession"/> class.
     /// </summary>
     /// <param name="resultCursor">The result cursor to return from RunAsync calls.</param>
-    public MockAsyncSession(IResultCursor resultCursor)
+    /// <param name="output">Optional test output helper for logging.</param>
+    public MockAsyncSession(IResultCursor resultCursor, ITestOutputHelper? output = null)
     {
         _resultCursor = resultCursor ?? throw new ArgumentNullException(nameof(resultCursor));
+        if (output != null)
+        {
+            _logger = XUnitLogger.CreateLogger<MockAsyncSession>(output);
+            _logger.LogInformation("MockAsyncSession initialized with resultCursor type: {CursorType}", resultCursor.GetType().Name);
+        }
     }
+
 
     /// <summary>
     /// Gets the last query executed on this mock session.
@@ -48,6 +59,13 @@ public class MockAsyncSession : IAsyncSession, IAsyncQueryRunner
     /// <inheritdoc />
     public Task<IResultCursor> RunAsync(string query, IDictionary<string, object>? parameters = null)
     {
+        _logger?.LogInformation("=== MockAsyncSession.RunAsync CALLED ===");
+        _logger?.LogInformation("Query: {Query}", query);
+        _logger?.LogInformation("Parameters: {Parameters}", parameters != null ? string.Join(", ", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}")) : "null");
+        _logger?.LogInformation("ExceptionToThrow: {HasException} ({ExceptionType})", 
+            ExceptionToThrow != null, ExceptionToThrow?.GetType().Name ?? "null");
+        _logger?.LogInformation("_resultCursor type: {CursorType}", _resultCursor.GetType().Name);
+        
         LastQuery = query;
         LastParameters = parameters != null ? new Dictionary<string, object>(parameters) : null;
         RunAsyncCallCount++;
@@ -56,10 +74,14 @@ public class MockAsyncSession : IAsyncSession, IAsyncQueryRunner
         if (ExceptionToThrow != null)
         {
             var ex = ExceptionToThrow;
+            _logger?.LogInformation("THROWING exception from RunAsync: {ExceptionType}, Message: {Message}", 
+                ex.GetType().Name, ex.Message);
             ExceptionToThrow = null; // Clear after throwing
             return Task.FromException<IResultCursor>(ex);
         }
 
+        _logger?.LogInformation("RETURNING resultCursor. Type: {CursorType}, Instance: {InstanceHash}", 
+            _resultCursor.GetType().Name, _resultCursor.GetHashCode());
         return Task.FromResult(_resultCursor);
     }
 

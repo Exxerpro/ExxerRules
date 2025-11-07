@@ -4,10 +4,12 @@ using IndFusion.SemanticRag.Infrastructure.Adapters;
 using IndFusion.SemanticRag.Infrastructure.Configuration;
 using IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers;
 using IndFusion.SemanticRag.Tests.Infratructure.Tests.Shared;
+using Meziantou.Extensions.Logging.Xunit.v3;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Neo4j.Driver;
 using NSubstitute;
+using Xunit;
 
 namespace IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters;
 
@@ -19,19 +21,25 @@ public class Neo4jKnowledgeGraphAdapterTests
     private readonly IDriver _mockDriver;
     private readonly MockAsyncSession _mockSession;
     private readonly MockResultCursor _mockResultCursor;
-    private readonly ILogger<Neo4jKnowledgeGraphAdapter> _mockLogger;
+    private readonly ILogger<Neo4jKnowledgeGraphAdapter> _logger;
     private readonly IOptions<Neo4jOptions> _mockOptions;
     private readonly Neo4jKnowledgeGraphAdapter _adapter;
+    private readonly ITestOutputHelper _output;
 
-    public Neo4jKnowledgeGraphAdapterTests()
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Neo4jKnowledgeGraphAdapterTests"/> class.
+    /// </summary>
+    /// <param name="output">The test output helper for logging.</param>
+    public Neo4jKnowledgeGraphAdapterTests(ITestOutputHelper output)
     {
+        _output = output ?? throw new ArgumentNullException(nameof(output));
         _mockDriver = Substitute.For<IDriver>();
-        _mockResultCursor = new MockResultCursor();
-        _mockLogger = Substitute.For<ILogger<Neo4jKnowledgeGraphAdapter>>();
+        _mockResultCursor = new MockResultCursor(_output);
+        _logger = XUnitLogger.CreateLogger<Neo4jKnowledgeGraphAdapter>(_output);
 
         // Use manual mocks to work around NSubstitute's limitation
         // with non-generic ValueTask return types in IAsyncDisposable.DisposeAsync()
-        _mockSession = new MockAsyncSession(_mockResultCursor);
+        _mockSession = new MockAsyncSession(_mockResultCursor, _output);
 
         var options = new Neo4jOptions
         {
@@ -46,7 +54,12 @@ public class Neo4jKnowledgeGraphAdapterTests
         // Mock driver to return the manual mock session (cast to IAsyncSession)
         _mockDriver.AsyncSession(Arg.Any<Action<SessionConfigBuilder>>()).Returns((IAsyncSession)_mockSession);
 
-        _adapter = new Neo4jKnowledgeGraphAdapter(_mockDriver, _mockOptions, _mockLogger);
+        _adapter = new Neo4jKnowledgeGraphAdapter(_mockDriver, _mockOptions, _logger);
+        
+        _logger.LogInformation("=== Neo4jKnowledgeGraphAdapterTests Initialized ===");
+        _logger.LogInformation("MockDriver: {DriverType}", _mockDriver.GetType().Name);
+        _logger.LogInformation("MockSession: {SessionType}", _mockSession.GetType().Name);
+        _logger.LogInformation("MockResultCursor: {CursorType}", _mockResultCursor.GetType().Name);
     }
 
     [Fact(Timeout = 120000)] // Extended timeout for first test (allows Docker container startup)
@@ -139,6 +152,8 @@ public class Neo4jKnowledgeGraphAdapterTests
     public async Task StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails()
     {
         // Arrange
+        _logger.LogInformation("=== Test: StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails ===");
+        
         // Create an invalid node directly (with empty Id) instead of using 'with' expression
         // The 'with' expression might not work correctly with records that have both parameter and property with same name
         var invalidNode = new KnowledgeNode(
@@ -148,19 +163,28 @@ public class Neo4jKnowledgeGraphAdapterTests
             CreatedAt: DateTimeOffset.UtcNow,
             UpdatedAt: DateTimeOffset.UtcNow);
 
+        _logger.LogInformation("Created invalid node with empty Id. Node Id: '{NodeId}', Label: {Label}", invalidNode.Id, invalidNode.Label);
+        
         var nodes = new List<KnowledgeNode>
         {
             CreateValidKnowledgeNode("node1"),
             invalidNode
         };
 
+        _logger.LogInformation("Created nodes list with {Count} nodes. First node Id: {FirstNodeId}, Second node Id: '{SecondNodeId}'", 
+            nodes.Count, nodes[0].Id, nodes[1].Id);
+
         // Act
+        _logger.LogInformation("Calling StoreNodesAsync with {Count} nodes", nodes.Count);
         var result = await _adapter.StoreNodesAsync(nodes, cancellationToken: TestContext.Current.CancellationToken);
+        _logger.LogInformation("StoreNodesAsync returned. IsSuccess: {IsSuccess}, Error: {Error}", result.IsSuccess, result.Error);
+        _logger.LogInformation("RunAsync was called {CallCount} times", _mockSession.RunAsyncCallCount);
 
         // Assert: Use error code assertion instead of fragile string assertion
         result.ShouldFailWith(ErrorCodes.KnowledgeNodeIdRequired);
         // Verify RunAsync was not called
         _mockSession.RunAsyncCallCount.ShouldBe(0);
+        _logger.LogInformation("Test passed: Validation failed correctly with error code {ErrorCode}", ErrorCodes.KnowledgeNodeIdRequired);
     }
 
     [Fact(Timeout = 5000)]
@@ -239,6 +263,9 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var nodeId = "test-node-id";
+        _logger.LogInformation("=== Test: GetNodeByIdAsync_Should_ReturnNode_When_NodeExists ===");
+        _logger.LogInformation("Setting up mock record for nodeId: {NodeId}", nodeId);
+        
         var record = Substitute.For<IRecord>();
         record["id"].Returns(nodeId);
         record["label"].Returns("TestLabel");
@@ -246,15 +273,20 @@ public class Neo4jKnowledgeGraphAdapterTests
         record["createdAt"].Returns(DateTimeOffset.UtcNow);
         record["updatedAt"].Returns(DateTimeOffset.UtcNow);
 
+        _logger.LogInformation("Setting SingleRecord on mock cursor");
         _mockResultCursor.SingleRecord = record;
+        _logger.LogInformation("SingleRecord set. Value: {RecordId}", record["id"]);
 
         // Act
+        _logger.LogInformation("Calling GetNodeByIdAsync with nodeId: {NodeId}", nodeId);
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
+        _logger.LogInformation("GetNodeByIdAsync returned. IsSuccess: {IsSuccess}, Error: {Error}", result.IsSuccess, result.Error);
 
         // Assert: Contract-based assertion
         result.ShouldSucceed();
         result.Value!.Id.ShouldBe(nodeId);
         result.Value!.Label.ShouldBe("TestLabel");
+        _logger.LogInformation("Test passed: Node retrieved successfully");
     }
 
     [Fact(Timeout = 5000)]
@@ -276,13 +308,21 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var nodeId = "test-node-id";
-        _mockResultCursor.SetExceptionForSingleOrDefault(new Exception("Neo4j query failed"));
+        _logger.LogInformation("=== Test: GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException ===");
+        _logger.LogInformation("Setting up exception for SingleOrDefaultAsync");
+        
+        var exception = new Exception("Neo4j query failed");
+        _mockResultCursor.SetExceptionForSingleOrDefault(exception);
+        _logger.LogInformation("Exception set on mock cursor: {ExceptionMessage}", exception.Message);
 
         // Act
+        _logger.LogInformation("Calling GetNodeByIdAsync with nodeId: {NodeId}", nodeId);
         var result = await _adapter.GetNodeByIdAsync(nodeId, cancellationToken: TestContext.Current.CancellationToken);
+        _logger.LogInformation("GetNodeByIdAsync returned. IsSuccess: {IsSuccess}, Error: {Error}", result.IsSuccess, result.Error);
 
         // Assert: Use error code assertion - adapter returns CypherQueryFailed for exceptions
         result.ShouldFailWith(ErrorCodes.CypherQueryFailed);
+        _logger.LogInformation("Test passed: Exception handled correctly with error code {ErrorCode}", ErrorCodes.CypherQueryFailed);
     }
 
     [Fact(Timeout = 5000)]
@@ -380,13 +420,21 @@ public class Neo4jKnowledgeGraphAdapterTests
     {
         // Arrange
         var query = "INVALID CYPHER QUERY";
-        _mockResultCursor.SetExceptionForToList(new Exception("Invalid syntax"));
+        _logger.LogInformation("=== Test: ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails ===");
+        _logger.LogInformation("Setting up exception for ToListAsync");
+        
+        var exception = new Exception("Invalid syntax");
+        _mockResultCursor.SetExceptionForToList(exception);
+        _logger.LogInformation("Exception set on mock cursor: {ExceptionMessage}", exception.Message);
 
         // Act
+        _logger.LogInformation("Calling ExecuteGraphQueryAsync with query: {Query}", query);
         var result = await _adapter.ExecuteGraphQueryAsync(query, cancellationToken: TestContext.Current.CancellationToken);
+        _logger.LogInformation("ExecuteGraphQueryAsync returned. IsSuccess: {IsSuccess}, Error: {Error}", result.IsSuccess, result.Error);
 
         // Assert: Use error code assertion
         result.ShouldFailWith(ErrorCodes.CypherQueryFailed);
+        _logger.LogInformation("Test passed: Exception handled correctly with error code {ErrorCode}", ErrorCodes.CypherQueryFailed);
     }
 
     [Fact(Timeout = 5000)]

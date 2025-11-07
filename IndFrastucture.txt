@@ -1,0 +1,101 @@
+   IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:01.809] Failed: 4 tests failed
+    IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:01.809] Failed: 4 tests failed
+     Infrastructure.Adapters (4 tests) [0:00.779] Failed: 4 tests failed
+      Neo4jKnowledgeGraphAdapterTests (4 tests) [0:00.559] Failed: One or more child tests failed: 4 tests failed
+       ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails [0:00.006] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 45
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 57
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 389
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException [0:00.016] Failed: Shouldly.ShouldAssertException: "KG009"
+Shouldly.ShouldAssertException
+"KG009"
+    should be
+"KG008"
+    but was not
+    difference
+Difference     |                      |   
+               |                     \|/  
+Index          | 0    1    2    3    4    
+Expected Value | K    G    0    0    8    
+Actual Value   | K    G    0    0    9    
+Expected Code  | 75   71   48   48   56   
+Actual Code    | 75   71   48   48   57   
+
+Additional Info:
+    Expected error code 'KG008', but got 'KG009'
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 58
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 285
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       GetNodeByIdAsync_Should_ReturnNode_When_NodeExists [0:00.252] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be successful, but it failed with error: KG009
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldSucceed[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 17
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnNode_When_NodeExists() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 255
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+
+       StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails [0:00.010] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail(Result result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 76
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith(Result result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 87
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 161
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+

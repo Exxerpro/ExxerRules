@@ -1,0 +1,214 @@
+   IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:01.844] Failed: 4 tests failed
+    IndFusion.SemanticRag.Tests.Infratructure.Tests (4 tests) [0:01.844] Failed: 4 tests failed
+     Infrastructure.Adapters (4 tests) [0:00.815] Failed: 4 tests failed
+      Neo4jKnowledgeGraphAdapterTests (4 tests) [0:00.595] Failed: One or more child tests failed: 4 tests failed
+       ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails [0:00.009] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 45
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 57
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 436
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+MockResultCursor initialized
+MockAsyncSession initialized with resultCursor type: MockResultCursor
+=== Neo4jKnowledgeGraphAdapterTests Initialized ===
+MockDriver: ObjectProxy
+MockSession: MockAsyncSession
+MockResultCursor: MockResultCursor
+=== Test: ExecuteGraphQueryAsync_Should_ReturnFailure_When_QueryFails ===
+Setting up exception for ToListAsync
+SetExceptionForToList called. Exception: Exception, Message: Invalid syntax
+Exception set. _throwOnToList: True, _recordsList: null
+Exception set on mock cursor: Invalid syntax
+Calling ExecuteGraphQueryAsync with query: INVALID CYPHER QUERY
+Executing graph query: INVALID CYPHER QUERY
+Calling session.RunAsync for query: INVALID CYPHER QUERY
+=== MockAsyncSession.RunAsync CALLED ===
+Query: INVALID CYPHER QUERY
+Parameters: 
+ExceptionToThrow: False (null)
+_resultCursor type: MockResultCursor
+RETURNING resultCursor. Type: MockResultCursor, Instance: 60542136
+session.RunAsync completed. Calling result.ToListAsync
+About to await result.ToListAsync. Result type: MockResultCursor, HashCode: 60542136
+ToListAsync called, got Task. IsCompleted: True, IsFaulted: False
+result.ToListAsync completed. Records count: 0
+Successfully executed graph query, returned 0 results
+ExecuteGraphQueryAsync returned. IsSuccess: True, Error: 
+
+       GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException [0:00.018] Failed: Shouldly.ShouldAssertException: "KG009"
+Shouldly.ShouldAssertException
+"KG009"
+    should be
+"KG008"
+    but was not
+    difference
+Difference     |                      |   
+               |                     \|/  
+Index          | 0    1    2    3    4    
+Expected Value | K    G    0    0    8    
+Actual Value   | K    G    0    0    9    
+Expected Code  | 75   71   48   48   56   
+Actual Code    | 75   71   48   48   57   
+
+Additional Info:
+    Expected error code 'KG008', but got 'KG009'
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith[T](Result`1 result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 58
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 324
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+MockResultCursor initialized
+MockAsyncSession initialized with resultCursor type: MockResultCursor
+=== Neo4jKnowledgeGraphAdapterTests Initialized ===
+MockDriver: ObjectProxy
+MockSession: MockAsyncSession
+MockResultCursor: MockResultCursor
+=== Test: GetNodeByIdAsync_Should_ReturnFailure_When_Neo4jThrowsException ===
+Setting up exception for SingleOrDefaultAsync
+SetExceptionForSingleOrDefault called. Exception: Exception, Message: Neo4j query failed
+Exception set. _throwOnSingleOrDefault: True, _singleRecord: null
+Exception set on mock cursor: Neo4j query failed
+Calling GetNodeByIdAsync with nodeId: test-node-id
+Retrieving node: test-node-id
+Executing Cypher query: 
+                            MATCH (n:KnowledgeNode {id: $id})
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties,
+                                   n.createdAt AS createdAt, n.updatedAt AS updatedAt with parameters: [id, test-node-id]
+Calling session.RunAsync for node: test-node-id
+=== MockAsyncSession.RunAsync CALLED ===
+Query: 
+                            MATCH (n:KnowledgeNode {id: $id})
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties,
+                                   n.createdAt AS createdAt, n.updatedAt AS updatedAt
+Parameters: id=test-node-id
+ExceptionToThrow: False (null)
+_resultCursor type: MockResultCursor
+RETURNING resultCursor. Type: MockResultCursor, Instance: 52400089
+session.RunAsync completed. Calling result.SingleOrDefaultAsync
+About to await result.SingleOrDefaultAsync. Result type: MockResultCursor, HashCode: 52400089
+SingleOrDefaultAsync called, got ValueTask. IsCompleted: True, IsFaulted: False
+result.SingleOrDefaultAsync completed. Record: False
+Node not found: test-node-id. Record is null after SingleOrDefaultAsync
+GetNodeByIdAsync returned. IsSuccess: False, Error: KG009
+
+       GetNodeByIdAsync_Should_ReturnNode_When_NodeExists [0:00.281] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be successful, but it failed with error: KG009
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldSucceed[T](Result`1 result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 17
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.GetNodeByIdAsync_Should_ReturnNode_When_NodeExists() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 286
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+MockResultCursor initialized
+MockAsyncSession initialized with resultCursor type: MockResultCursor
+=== Neo4jKnowledgeGraphAdapterTests Initialized ===
+MockDriver: ObjectProxy
+MockSession: MockAsyncSession
+MockResultCursor: MockResultCursor
+=== Test: GetNodeByIdAsync_Should_ReturnNode_When_NodeExists ===
+Setting up mock record for nodeId: test-node-id
+Setting SingleRecord on mock cursor
+SingleRecord setter called. Previous value: null, New value: not null
+SingleRecord set. _throwOnSingleOrDefault cleared: False
+SingleRecord set. Value: test-node-id
+Calling GetNodeByIdAsync with nodeId: test-node-id
+Retrieving node: test-node-id
+Executing Cypher query: 
+                            MATCH (n:KnowledgeNode {id: $id})
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties,
+                                   n.createdAt AS createdAt, n.updatedAt AS updatedAt with parameters: [id, test-node-id]
+Calling session.RunAsync for node: test-node-id
+=== MockAsyncSession.RunAsync CALLED ===
+Query: 
+                            MATCH (n:KnowledgeNode {id: $id})
+                            RETURN n.id AS id, n.label AS label, n.properties AS properties,
+                                   n.createdAt AS createdAt, n.updatedAt AS updatedAt
+Parameters: id=test-node-id
+ExceptionToThrow: False (null)
+_resultCursor type: MockResultCursor
+RETURNING resultCursor. Type: MockResultCursor, Instance: 56641426
+session.RunAsync completed. Calling result.SingleOrDefaultAsync
+About to await result.SingleOrDefaultAsync. Result type: MockResultCursor, HashCode: 56641426
+SingleOrDefaultAsync called, got ValueTask. IsCompleted: True, IsFaulted: False
+result.SingleOrDefaultAsync completed. Record: False
+Node not found: test-node-id. Record is null after SingleOrDefaultAsync
+GetNodeByIdAsync returned. IsSuccess: False, Error: KG009
+
+       StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails [0:00.012] Failed: Shouldly.ShouldAssertException: False
+Shouldly.ShouldAssertException
+False
+    should be
+True
+    but was not
+
+Additional Info:
+    Expected result to be a failure, but it was successful
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFail(Result result) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 76
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Helpers.ResultAssertions.ShouldFailWith(Result result, String expectedErrorCode) in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Helpers/ResultAssertions.cs:line 87
+   at IndFusion.SemanticRag.Tests.Infratructure.Tests.Infrastructure.Adapters.Neo4jKnowledgeGraphAdapterTests.StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails() in /_/src/test/SemanticRagTests/IndFusion.SemanticRag.Infratructure.Tests/Infrastructure/Adapters/Neo4jKnowledgeGraphAdapterTests.cs:line 184
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.TestRunner`2.<>c__DisplayClass5_0.<<InvokeTest>b__1>d.MoveNext() in /_/src/xunit.v3.core/Runners/TestRunner.cs:line 170
+--- End of stack trace from previous location ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task, ConfigureAwaitOptions options)
+   at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code) in /_/src/xunit.v3.core/Exceptions/ExceptionAggregator.cs:line 124
+
+MockResultCursor initialized
+MockAsyncSession initialized with resultCursor type: MockResultCursor
+=== Neo4jKnowledgeGraphAdapterTests Initialized ===
+MockDriver: ObjectProxy
+MockSession: MockAsyncSession
+MockResultCursor: MockResultCursor
+=== Test: StoreNodesAsync_Should_ReturnFailure_When_AnyNodeValidationFails ===
+Created invalid node with empty Id. Node Id: '', Label: TestLabel
+Created nodes list with 2 nodes. First node Id: node1, Second node Id: ''
+Calling StoreNodesAsync with 2 nodes
+Storing 2 nodes
+Validating 2 nodes
+Validating node: Id='node1', Label=TestLabel
+Node validation result: IsSuccess=True, Error=(null)
+Validating node: Id='', Label=TestLabel
+Node validation result: IsSuccess=False, Error=KG001
+Node validation failed for : KG001
+Returning failure result from validation. IsSuccess: False, Error: KG001
+StoreNodesAsync returned. IsSuccess: True, Error: (null)
+RunAsync was called 0 times

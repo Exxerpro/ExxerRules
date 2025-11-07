@@ -14,13 +14,16 @@ public sealed class Result
     /// </summary>
     /// <param name="succeeded">Indicates whether the operation succeeded.</param>
     /// <param name="errors">A collection of error messages.</param>
-    private Result(bool succeeded, IEnumerable<string> errors)
+    /// <param name="exception">The exception that caused the failure, if any.</param>
+    private Result(bool succeeded, IEnumerable<string> errors, Exception? exception = null)
     {
         var errorArray = errors?.ToArray() ?? [];
         var hasAnyErrors = errorArray.Length > 0;
 
         IsSuccess = succeeded && !hasAnyErrors;
         Errors = errorArray;
+        Exception = exception;
+        IsFaulted = exception is not null && exception is not OperationCanceledException;
     }
 
     /// <summary>
@@ -30,6 +33,8 @@ public sealed class Result
     {
         IsSuccess = false;
         Errors = [];
+        Exception = null;
+        IsFaulted = false;
     }
 
     /// <summary>
@@ -155,6 +160,17 @@ public sealed class Result
     public string? Error => Errors.FirstOrDefault(e => !string.IsNullOrWhiteSpace(e));
 
     /// <summary>
+    /// Gets a value indicating whether the result was created from an exception (excluding cancellation).
+    /// </summary>
+    public bool IsFaulted { get; }
+
+    /// <summary>
+    /// Gets the exception that caused the failure, if any.
+    /// Contains the full stack trace for non-cancelled exceptions.
+    /// </summary>
+    public Exception? Exception { get; }
+
+    /// <summary>
     /// Creates a successful result.
     /// </summary>
     /// <returns>A successful <see cref="Result"/> instance.</returns>
@@ -164,33 +180,55 @@ public sealed class Result
     /// Creates a failed result with the specified errors.
     /// </summary>
     /// <param name="errors">The collection of error messages.</param>
+    /// <param name="exception">The exception that caused the failure, if any.</param>
     /// <returns>A failed <see cref="Result"/> instance.</returns>
-    public static Result WithFailure(IEnumerable<string> errors)
+    public static Result WithFailure(IEnumerable<string> errors, Exception? exception = null)
     {
         var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
-        return new Result(false, normalizedErrors);
+        return new Result(false, normalizedErrors, exception);
     }
 
     /// <summary>
     /// Creates a failed result with the specified errors (overload for string array).
     /// </summary>
     /// <param name="errors">The array of error messages.</param>
+    /// <param name="exception">The exception that caused the failure, if any.</param>
     /// <returns>A failed <see cref="Result"/> instance.</returns>
-    public static Result WithFailure(string[] errors)
+    public static Result WithFailure(string[] errors, Exception? exception = null)
     {
         var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
-        return new Result(false, normalizedErrors);
+        return new Result(false, normalizedErrors, exception);
     }
 
     /// <summary>
     /// Creates a failed result with a single error message.
     /// </summary>
     /// <param name="error">The error message.</param>
+    /// <param name="exception">The exception that caused the failure, if any.</param>
     /// <returns>A failed <see cref="Result"/> instance.</returns>
-    public static Result WithFailure(string error)
+    public static Result WithFailure(string error, Exception? exception = null)
     {
         var normalizedErrors = ResultErrorNormalizer.Normalize(new[] { error });
-        return new Result(false, normalizedErrors);
+        return new Result(false, normalizedErrors, exception);
+    }
+
+    /// <summary>
+    /// Creates a failed result from an exception.
+    /// </summary>
+    /// <param name="exception">The exception that caused the failure.</param>
+    /// <returns>A failed <see cref="Result"/> instance with the exception and its message.</returns>
+    public static Result WithFailure(Exception exception)
+    {
+        if (exception is null)
+        {
+            return new Result(false, [ResultConstants.DefaultErrorMessage], null);
+        }
+
+        var errorMessage = exception is OperationCanceledException
+            ? ResultErrors.OperationCancelled
+            : $"{exception.GetType().Name}: {exception.Message}";
+
+        return new Result(false, [errorMessage], exception);
     }
 
     /// <summary>
@@ -651,13 +689,16 @@ public sealed class Result<T>
     /// <param name="isSuccess">Indicates whether the operation succeeded.</param>
     /// <param name="errors">A collection of error messages.</param>
     /// <param name="value">The value returned by the operation.</param>
-    public Result(bool isSuccess, IEnumerable<string>? errors, T? value = default)
+    /// <param name="exception">The exception that caused the failure, if any.</param>
+    public Result(bool isSuccess, IEnumerable<string>? errors, T? value = default, Exception? exception = null)
     {
         IsRecoverable = isSuccess;
         var errorArray = errors?.ToArray() ?? [];
         HasErrors = errorArray.Length > 0;
         Errors = errorArray;
         Value = value;
+        Exception = exception;
+        IsFaulted = exception is not null && exception is not OperationCanceledException;
 
         // Validate state consistency after deserialization
         ValidateInternalState();
@@ -669,13 +710,16 @@ public sealed class Result<T>
     /// <param name="isSuccess">Indicates whether the operation succeeded.</param>
     /// <param name="errors">A list of error messages.</param>
     /// <param name="value">The value returned by the operation.</param>
-    public Result(bool isSuccess, List<string>? errors, T? value = default)
+    /// <param name="exception">The exception that caused the failure, if any.</param>
+    public Result(bool isSuccess, List<string>? errors, T? value = default, Exception? exception = null)
     {
         IsRecoverable = isSuccess;
         var errorArray = errors?.ToArray() ?? [];
         HasErrors = errorArray.Length > 0;
         Errors = errorArray;
         Value = value;
+        Exception = exception;
+        IsFaulted = exception is not null && exception is not OperationCanceledException;
     }
 
     /// <summary>
@@ -762,6 +806,17 @@ public sealed class Result<T>
     public string? Error => Errors?.FirstOrDefault(e => !string.IsNullOrWhiteSpace(e));
 
     /// <summary>
+    /// Gets a value indicating whether the result was created from an exception (excluding cancellation).
+    /// </summary>
+    public bool IsFaulted { get; }
+
+    /// <summary>
+    /// Gets the exception that caused the failure, if any.
+    /// Contains the full stack trace for non-cancelled exceptions.
+    /// </summary>
+    public Exception? Exception { get; }
+
+    /// <summary>
     /// Creates a successful result with the specified value.
     /// Follows industry standard Result&lt;T&gt; pattern: null values are valid success results when T is nullable.
     /// </summary>
@@ -789,11 +844,12 @@ public sealed class Result<T>
     /// </summary>
     /// <param name="errors">The collection of error messages.</param>
     /// <param name="value">The value to associate with the result (optional).</param>
+    /// <param name="exception">The exception that caused the failure, if any.</param>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
-    public static Result<T> WithFailure(IEnumerable<string>? errors, T? value = default)
+    public static Result<T> WithFailure(IEnumerable<string>? errors, T? value = default, Exception? exception = null)
     {
         var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
-        return new Result<T>(false, normalizedErrors, value);
+        return new Result<T>(false, normalizedErrors, value, exception);
     }
 
     /// <summary>
@@ -801,11 +857,12 @@ public sealed class Result<T>
     /// </summary>
     /// <param name="errors">The collection of error messages.</param>
     /// <param name="value">The value to associate with the result (optional).</param>
+    /// <param name="exception">The exception that caused the failure, if any.</param>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
-    public static Result<T> WithFailure(T? value = default, IEnumerable<string>? errors = default)
+    public static Result<T> WithFailure(T? value = default, IEnumerable<string>? errors = default, Exception? exception = null)
     {
         var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
-        return new Result<T>(false, normalizedErrors, value);
+        return new Result<T>(false, normalizedErrors, value, exception);
     }
 
     /// <summary>
@@ -829,11 +886,12 @@ public sealed class Result<T>
     /// </summary>
     /// <param name="errors">The array of error messages.</param>
     /// <param name="value">The value to associate with the result (optional).</param>
+    /// <param name="exception">The exception that caused the failure, if any.</param>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
-    public static Result<T> WithFailure(string[] errors, T? value = default)
+    public static Result<T> WithFailure(string[] errors, T? value = default, Exception? exception = null)
     {
         var normalizedErrors = ResultErrorNormalizer.Normalize(errors);
-        return new Result<T>(false, normalizedErrors, value);
+        return new Result<T>(false, normalizedErrors, value, exception);
     }
 
     /// <summary>
@@ -841,11 +899,32 @@ public sealed class Result<T>
     /// </summary>
     /// <param name="error">The error message.</param>
     /// <param name="value">The value to associate with the result (optional).</param>
+    /// <param name="exception">The exception that caused the failure, if any.</param>
     /// <returns>A failed <see cref="Result{T}"/> instance.</returns>
-    public static Result<T> WithFailure(string error, T? value = default)
+    public static Result<T> WithFailure(string error, T? value = default, Exception? exception = null)
     {
         var normalizedErrors = ResultErrorNormalizer.Normalize(new[] { error });
-        return new Result<T>(false, normalizedErrors, value);
+        return new Result<T>(false, normalizedErrors, value, exception);
+    }
+
+    /// <summary>
+    /// Creates a failed result from an exception.
+    /// </summary>
+    /// <param name="exception">The exception that caused the failure.</param>
+    /// <param name="value">The value to associate with the result (optional).</param>
+    /// <returns>A failed <see cref="Result{T}"/> instance with the exception and its message.</returns>
+    public static Result<T> WithFailure(Exception exception, T? value = default)
+    {
+        if (exception is null)
+        {
+            return new Result<T>(false, [ResultConstants.DefaultErrorMessage], value, null);
+        }
+
+        var errorMessage = exception is OperationCanceledException
+            ? ResultErrors.OperationCancelled
+            : $"{exception.GetType().Name}: {exception.Message}";
+
+        return new Result<T>(false, [errorMessage], value, exception);
     }
 
     /// <summary>

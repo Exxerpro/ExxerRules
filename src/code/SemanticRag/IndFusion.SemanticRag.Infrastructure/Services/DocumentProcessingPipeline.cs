@@ -45,9 +45,11 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
             // If file size validation is needed, it should be done at the ingestion level using RepositoryIngestionConfig.MaxFileSize
 
             // Detect document type
+            cancellationToken.ThrowIfCancellationRequested();
             var documentType = await DetectDocumentTypeAsync(input, cancellationToken);
 
             // Process based on document type
+            cancellationToken.ThrowIfCancellationRequested();
             var content = documentType switch
             {
                 DocumentType.CSharpCode => await ProcessCodeDocumentAsync(input, cancellationToken),
@@ -61,12 +63,14 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
             };
 
             // Create chunks
+            cancellationToken.ThrowIfCancellationRequested();
             var chunks = CreateChunks(content, options, input);
 
             // Extract metadata
+            cancellationToken.ThrowIfCancellationRequested();
             var metadata = options.ExtractMetadata 
                 ? await ExtractMetadataAsync(input, documentType, cancellationToken)
-                : [];
+                : null;
 
             var elapsedMs = (long)(DateTime.UtcNow - startTime).TotalMilliseconds;
 
@@ -156,6 +160,8 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     {
         try
         {
+            cancellationToken.ThrowIfCancellationRequested();
+            
             var content = Encoding.UTF8.GetString(input.Content);
             
             // Analyze content first - content analysis can override MIME type/extension
@@ -164,7 +170,30 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
                 return DetectCodeLanguage(content);
             }
 
-            // Check MIME type second (but not for text/plain if content suggests code)
+            // Check file extension second (before MIME type) - extension is more specific
+            if (!string.IsNullOrEmpty(input.FilePath))
+            {
+                var extension = Path.GetExtension(input.FilePath).ToLowerInvariant();
+                var typeFromExtension = extension switch
+                {
+                    ".cs" => DocumentType.CSharpCode,
+                    ".ts" or ".tsx" or ".js" or ".jsx" => DocumentType.TypeScriptCode,
+                    ".py" => DocumentType.PythonCode,
+                    ".md" => DocumentType.Markdown,
+                    ".pdf" => DocumentType.Pdf,
+                    ".png" or ".jpg" or ".jpeg" or ".gif" => DocumentType.Image,
+                    ".txt" => DocumentType.Text,
+                    _ => DocumentType.Unknown
+                };
+                
+                // If extension gives us a specific type (not Unknown or Text), use it
+                if (typeFromExtension != DocumentType.Unknown && typeFromExtension != DocumentType.Text)
+                {
+                    return typeFromExtension;
+                }
+            }
+
+            // Check MIME type third (but not for text/plain if extension suggests something else)
             if (!string.IsNullOrEmpty(input.MimeType))
             {
                 var mimeType = input.MimeType.ToLowerInvariant();
@@ -177,23 +206,6 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
                     "text/x-csharp" or "application/x-csharp" => DocumentType.CSharpCode,
                     "text/typescript" or "application/typescript" => DocumentType.TypeScriptCode,
                     "text/x-python" or "application/x-python" => DocumentType.PythonCode,
-                    _ => DocumentType.Unknown
-                };
-            }
-
-            // Check file extension third
-            if (!string.IsNullOrEmpty(input.FilePath))
-            {
-                var extension = Path.GetExtension(input.FilePath).ToLowerInvariant();
-                return extension switch
-                {
-                    ".cs" => DocumentType.CSharpCode,
-                    ".ts" or ".tsx" or ".js" or ".jsx" => DocumentType.TypeScriptCode,
-                    ".py" => DocumentType.PythonCode,
-                    ".md" => DocumentType.Markdown,
-                    ".pdf" => DocumentType.Pdf,
-                    ".png" or ".jpg" or ".jpeg" or ".gif" => DocumentType.Image,
-                    ".txt" => DocumentType.Text,
                     _ => DocumentType.Unknown
                 };
             }
@@ -334,52 +346,53 @@ public class DocumentProcessingPipeline : IDocumentProcessingPipeline
     private List<DocumentChunk> CreateFixedSizeChunks(string content, int maxChunkSize, DocumentInput input)
     {
         var chunks = new List<DocumentChunk>();
-        var lines = content.Split('\n');
-        var currentChunk = new StringBuilder();
+        
+        if (string.IsNullOrEmpty(content))
+        {
+            return chunks;
+        }
+        
         var chunkIndex = 0;
         var startPosition = 0;
+        var contentLength = content.Length;
 
-        foreach (var line in lines)
+        // Split content into chunks of maxChunkSize characters
+        while (startPosition < contentLength)
         {
-            if (currentChunk.Length + line.Length > maxChunkSize && currentChunk.Length > 0)
+            var remainingLength = contentLength - startPosition;
+            var chunkLength = Math.Min(maxChunkSize, remainingLength);
+            var chunkContent = content.Substring(startPosition, chunkLength);
+            
+            // Try to break at word boundary if not at end of content
+            if (startPosition + chunkLength < contentLength && chunkLength == maxChunkSize)
             {
-                chunks.Add(new DocumentChunk(
-                    Id: $"{chunkIndex}",
-                    DocumentId: input.Id,
-                    Content: currentChunk.ToString(),
-                    ChunkIndex: chunkIndex,
-                    StartPosition: startPosition,
-                    EndPosition: startPosition + currentChunk.Length,
-                    Metadata: new Dictionary<string, object>
-                    {
-                        ["chunk_type"] = "fixed_size",
-                        ["chunk_size"] = currentChunk.Length
-                    }
-                ));
-
-                startPosition += currentChunk.Length;
-                currentChunk.Clear();
-                chunkIndex++;
+                var lastSpaceIndex = chunkContent.LastIndexOf(' ');
+                var lastNewlineIndex = chunkContent.LastIndexOf('\n');
+                var breakIndex = Math.Max(lastSpaceIndex, lastNewlineIndex);
+                
+                if (breakIndex > maxChunkSize / 2) // Only break if we're at least halfway through
+                {
+                    chunkLength = breakIndex + 1;
+                    chunkContent = content.Substring(startPosition, chunkLength);
+                }
             }
 
-            currentChunk.AppendLine(line);
-        }
-
-        if (currentChunk.Length > 0)
-        {
             chunks.Add(new DocumentChunk(
                 Id: $"{chunkIndex}",
                 DocumentId: input.Id,
-                Content: currentChunk.ToString(),
+                Content: chunkContent,
                 ChunkIndex: chunkIndex,
                 StartPosition: startPosition,
-                EndPosition: startPosition + currentChunk.Length,
+                EndPosition: startPosition + chunkLength,
                 Metadata: new Dictionary<string, object>
                 {
                     ["chunk_type"] = "fixed_size",
-                    ["chunk_size"] = currentChunk.Length
+                    ["chunk_size"] = chunkLength
                 }
             ));
+
+            startPosition += chunkLength;
+            chunkIndex++;
         }
 
         return chunks;

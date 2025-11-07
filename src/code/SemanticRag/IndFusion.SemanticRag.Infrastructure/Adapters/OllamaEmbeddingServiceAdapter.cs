@@ -122,10 +122,15 @@ public class OllamaEmbeddingServiceAdapter : IEmbeddingServicePort
                         return Result<float[]>.Success(embeddingResponse.Embedding);
                     });
         }
-        catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
+        catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException || ex.CancellationToken.IsCancellationRequested)
         {
-            _logger.LogError(ex, "Timeout while generating embedding");
-            return WithFailure<float[]>(ErrorCodes.EmbeddingGenerationFailed, ex);
+            _logger.LogWarning(ex, "Timeout or cancellation while generating embedding");
+            return Cancelled<float[]>(ErrorCodes.OperationCancelled);
+        }
+        catch (TaskCanceledException)
+        {
+            _logger.LogWarning("Task was cancelled while generating embedding");
+            return Cancelled<float[]>(ErrorCodes.OperationCancelled);
         }
         catch (OperationCanceledException)
         {

@@ -397,29 +397,30 @@ public class RoslynCodeAnalysisService : ICodeAnalysisService
         
         cancellationToken.ThrowIfCancellationRequested();
         
+        // Filter unsupported languages early, before parsing
+        if (!language.Equals("C#", StringComparison.OrdinalIgnoreCase) && 
+            !language.Equals("csharp", StringComparison.OrdinalIgnoreCase) &&
+            !language.Equals("cs", StringComparison.OrdinalIgnoreCase))
+        {
+            _logger.LogWarning("Unsupported language: {Language}, returning empty results", language);
+            stopwatch.Stop();
+            return new CodeAnalysisResult
+            {
+                Violations = [],
+                Suggestions = [],
+                ComplianceScore = 1.0f,
+                ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
+                FilesAnalyzed = 0,
+                LinesOfCode = 0
+            };
+        }
+        
         var violations = new List<PatternViolation>();
         var suggestions = new List<PatternSuggestion>();
         var linesOfCode = code.Split('\n', StringSplitOptions.None).Length;
         
         try
         {
-            // Only support C# for now
-            if (!language.Equals("C#", StringComparison.OrdinalIgnoreCase) && 
-                !language.Equals("csharp", StringComparison.OrdinalIgnoreCase) &&
-                !language.Equals("cs", StringComparison.OrdinalIgnoreCase))
-            {
-                _logger.LogWarning("Unsupported language: {Language}, returning empty results", language);
-                stopwatch.Stop();
-                return new CodeAnalysisResult
-                {
-                    Violations = [],
-                    Suggestions = [],
-                    ComplianceScore = 1.0f,
-                    ElapsedMilliseconds = stopwatch.ElapsedMilliseconds,
-                    FilesAnalyzed = 0,
-                    LinesOfCode = linesOfCode
-                };
-            }
             
             // Parse code using Roslyn
             var syntaxTree = CSharpSyntaxTree.ParseText(code);

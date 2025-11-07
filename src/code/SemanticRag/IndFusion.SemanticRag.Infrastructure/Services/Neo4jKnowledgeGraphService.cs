@@ -156,10 +156,61 @@ public class Neo4jKnowledgeGraphService : IKnowledgeGraphServicePort
 
         _logger.LogInformation("Adding node: {NodeId}", node.Id);
         
-        // TODO: 2025-01-27 - [IMPLEMENT] Implement Neo4j node creation logic using Neo4j driver
-        await Task.Delay(100, cancellationToken); // Placeholder
-        
-        return node;
+        try
+        {
+            // Build labels string from node.Labels - validate labels are safe
+            var labels = node.Labels != null && node.Labels.Count > 0
+                ? string.Join(":", node.Labels.Select(l => l.Replace("`", "").Replace(":", "")))
+                : "Node";
+            
+            // Validate label format (alphanumeric and underscore only)
+            if (!System.Text.RegularExpressions.Regex.IsMatch(labels, @"^[A-Za-z0-9_]+(:[A-Za-z0-9_]+)*$"))
+            {
+                throw new ArgumentException($"Invalid label format: {labels}", nameof(node));
+            }
+            
+            // Build properties dictionary including id and all node properties
+            var properties = new Dictionary<string, object>
+            {
+                ["id"] = node.Id
+            };
+            
+            if (node.Properties != null)
+            {
+                foreach (var prop in node.Properties)
+                {
+                    properties[prop.Key] = prop.Value;
+                }
+            }
+            
+            // Create Cypher query to MERGE node (create if not exists, update if exists)
+            // Note: Using parameterized labels is not directly supported, so we validate labels above
+            var cypher = $@"
+                MERGE (n:{labels} {{id: $id}})
+                SET n += $properties";
+            
+            var parameters = new Dictionary<string, object>
+            {
+                ["id"] = node.Id,
+                ["properties"] = properties
+            };
+            
+            var result = await _graphDatabasePort.ExecuteWriteVoidAsync(cypher, parameters, _options.Database, cancellationToken);
+            
+            if (result.IsFailure)
+            {
+                _logger.LogError("Failed to add node: {Error}", result.Error);
+                throw new InvalidOperationException($"Failed to add node: {result.Error}");
+            }
+            
+            _logger.LogInformation("Successfully added node: {NodeId}", node.Id);
+            return node;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error adding node: {NodeId}", node.Id);
+            throw;
+        }
     }
 
     /// <inheritdoc />
